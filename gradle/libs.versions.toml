@@ -10,7 +10,13 @@ activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 appcompat = "1.6.1"
 material = "1.10.0"
+composeRuntime = "1.8.3"
+material3Android = "1.4.0-alpha17"
+composeMaterial = "1.9.0-beta02"
+composeMaterialIcons = "1.7.8"
 jetbrainsKotlinJvm = "2.0.21"
+navigationCompose = "2.9.1"
+uiToolingPreviewAndroid = "1.8.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +35,48 @@ androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "composeRuntime" }
+androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
+androidx-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterialIcons" }
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+
+[bundles]
+core = [
+    "androidx-core-ktx",
+    "androidx-appcompat",
+    "androidx-lifecycle-runtime-ktx",
+]
+compose = [
+    "androidx-activity-compose",
+    "androidx-compose-bom",
+    "androidx-ui",
+    "androidx-ui-graphics",
+    "androidx-ui-tooling-preview",
+    "androidx-compose-runtime",
+    "androidx-material3-android",
+    "androidx-compose-material",
+    "androidx-compose-material-icons"
+]
+compose-debug = [
+    "androidx-ui-tooling",
+    "androidx-ui-tooling-preview-android"
+]
+compose-test = [
+    "androidx-ui-test-junit4",
+    "androidx-ui-test-manifest"
+]
+test=[
+    "junit",
+]
+android-test = [
+    "androidx-junit",
+    "androidx-espresso-core"
+]
+navigation = [
+    "androidx-navigation-compose"
+]
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
