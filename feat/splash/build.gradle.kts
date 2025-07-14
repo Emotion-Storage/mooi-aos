@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -30,14 +31,21 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
+    implementation(libs.bundles.core)
 
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.bundles.compose)
+    debugImplementation(libs.bundles.compose.debug)
+    androidTestImplementation(libs.bundles.compose.test)
+
+    testImplementation(libs.bundles.test)
+    testImplementation(libs.bundles.android.test)
+
+    implementation(project(":domain"))
+    implementation(project(":feat:auth"))
 }
