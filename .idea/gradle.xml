@@ -11,7 +11,6 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/build-logic" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/local" />
@@ -23,11 +22,8 @@
             <option value="$PROJECT_DIR$/feat/ai-chat" />
             <option value="$PROJECT_DIR$/feat/alarm" />
             <option value="$PROJECT_DIR$/feat/auth" />
-            <option value="$PROJECT_DIR$/feat/daily-report" />
             <option value="$PROJECT_DIR$/feat/home" />
-            <option value="$PROJECT_DIR$/feat/key" />
             <option value="$PROJECT_DIR$/feat/my" />
-            <option value="$PROJECT_DIR$/feat/splash" />
             <option value="$PROJECT_DIR$/feat/time-capsule" />
             <option value="$PROJECT_DIR$/feat/time-capsule-detail" />
             <option value="$PROJECT_DIR$/feat/tutorial" />

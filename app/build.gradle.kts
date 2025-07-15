@@ -51,5 +51,4 @@ dependencies {
     testImplementation(libs.bundles.android.test)
 
     implementation(project(":domain"))
-    implementation(project(":feat:splash"))
 }
