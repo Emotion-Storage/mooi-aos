@@ -18,7 +18,7 @@ gradlePlugin {
     plugins {
         create("androidAppCompose") {
             id = "com.emotionstorage.convention.application.compose"
-            implementationClass = "com.emotionstorage.convention.AndroidAppComposeConventionPlugin"
+            implementationClass = "com.emotionstorage.convention.AndroidApplicationComposeConventionPlugin"
         }
     }
 }
