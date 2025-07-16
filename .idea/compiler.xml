@@ -2,6 +2,8 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel target="11">
+      <module name="build-logic.main" target="21" />
+      <module name="build-logic.test" target="21" />
       <module name="EmotionStorage.feat.daily-report" target="21" />
       <module name="EmotionStorage.feat.key" target="21" />
       <module name="EmotionStorage.feat.splash" target="21" />
