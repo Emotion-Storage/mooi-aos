@@ -16,6 +16,9 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        // Will add in next step
+        create("androidAppCompose") {
+            id = "com.emotionstorage.convention.application.compose"
+            implementationClass = "com.emotionstorage.convention.AndroidAppComposeConventionPlugin"
+        }
     }
 }
