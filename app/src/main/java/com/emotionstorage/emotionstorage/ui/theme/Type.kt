@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.theme
+package com.emotionstorage.emotionstorage.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

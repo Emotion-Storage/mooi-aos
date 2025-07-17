@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.theme
+package com.emotionstorage.emotionstorage.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
