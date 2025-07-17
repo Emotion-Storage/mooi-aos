@@ -57,9 +57,7 @@ internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, 
 
     tasks.withType<KotlinCompile>().configureEach {
         @Suppress("DEPRECATION")
-        kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_17.toString()
-        }
+        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
