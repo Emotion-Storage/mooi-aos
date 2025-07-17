@@ -17,6 +17,7 @@ composeMaterialIcons = "1.7.8"
 jetbrainsKotlinJvm = "2.0.21"
 navigationCompose = "2.9.1"
 uiToolingPreviewAndroid = "1.8.3"
+dependencyGraphGenerator = "0.7.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -86,4 +87,6 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+vanniktech-dependency-graph-generator = { id = "com.vanniktech.dependency.graph.generator", version.ref = "dependencyGraphGenerator" }
+
 
