@@ -26,4 +26,15 @@ android {
 
 dependencies {
     implementation(projects.domain)
+    implementation(projects.core.ui)
+    implementation(projects.core.common)
+    implementation(projects.feat.tutorial)
+    implementation(projects.feat.auth)
+    implementation(projects.feat.home)
+    implementation(projects.feat.aiChat)
+    implementation(projects.feat.timeCapsuleDetail)
+    implementation(projects.feat.timeCapsule)
+    implementation(projects.feat.weeklyReport)
+    implementation(projects.feat.my)
+    implementation(projects.feat.alarm)
 }
