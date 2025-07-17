@@ -43,8 +43,8 @@ internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, 
             minSdk = ApplicationConfig.minSdk
         }
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_11
-            targetCompatibility = JavaVersion.VERSION_11
+            sourceCompatibility = JavaVersion.VERSION_17
+            targetCompatibility = JavaVersion.VERSION_17
         }
         buildFeatures {
             compose = true
@@ -71,7 +71,7 @@ internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, 
     tasks.withType<KotlinCompile>().configureEach {
         @Suppress("DEPRECATION")
         kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_11.toString()
+            jvmTarget = JavaVersion.VERSION_17.toString()
         }
     }
 }
