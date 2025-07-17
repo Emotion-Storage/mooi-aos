@@ -1,5 +1,6 @@
 plugins {
     id("com.emotionstorage.convention.application.compose")
+    id("com.emotionstorage.convention.hilt.android")
 }
 
 android {
