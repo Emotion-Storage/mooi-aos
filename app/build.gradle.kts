@@ -1,5 +1,6 @@
 plugins {
-    id("com.emotionstorage.convention.application.compose")
+    id("com.emotionstorage.convention.application.android")
+    id("com.emotionstorage.convention.compose.android")
     id("com.emotionstorage.convention.hilt.android")
 }
 
@@ -23,6 +24,25 @@ android {
             )
         }
     }
+
+    // set dynamic features in base module(app)'s build.gradle.kts
+    // https://developer.android.com/guide/playcore/feature-delivery?hl=ko#base_feature_relationship
+    setDynamicFeatures(
+        setOf(
+            ":core:ui",
+            ":core:local",
+            ":core:remote",
+            ":feat:tutorial",
+            ":feat:auth",
+            ":feat:home",
+            ":feat:ai-chat",
+            ":feat:time-capsule-detail",
+            ":feat:time-capsule",
+            ":feat:weekly-report",
+            ":feat:my",
+            ":feat:alarm",
+        )
+    )
 }
 
 dependencies {

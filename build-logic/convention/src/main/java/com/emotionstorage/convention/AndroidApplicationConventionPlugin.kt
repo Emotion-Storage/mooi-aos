@@ -12,22 +12,24 @@ import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.gradle.kotlin.dsl.dependencies
 
-class AndroidApplicationComposeConventionPlugin : Plugin<Project>{
+internal object ApplicationConfig{
+    val compileSdk = 35
+    val minSdk = 27
+    val targetSdk = 37
+}
+
+class AndroidApplicationConventionPlugin : Plugin<Project>{
     override fun apply(target: Project) {
-        println("*** AndroidAppComposeConventionPlugin invoked ***")
+        println("*** AndroidApplicationConventionPlugin invoked ***")
 
         with(target) {
             with(pluginManager) {
-                // apply kotlin android plugin
                 apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
-                // apply compose plugin
-                apply("org.jetbrains.kotlin.plugin.compose")
 
                 extensions.configure<ApplicationExtension> {
                     defaultConfig.targetSdk = ApplicationConfig.targetSdk
                     configureKotlinAndroid(this)
-                    configureAndroidCompose(this)
                 }
             }
         }
@@ -58,22 +60,5 @@ internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, 
     tasks.withType<KotlinCompile>().configureEach {
         @Suppress("DEPRECATION")
         kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-}
-
-
-internal fun Project.configureAndroidCompose(commonExtension: CommonExtension<*, *, *, *, *, *>) {
-    val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
-    commonExtension.apply {
-        buildFeatures {
-            compose = true
-        }
-
-        dependencies {
-            add("implementation", libs.findBundle("compose").get())
-            add("debugImplementation", libs.findBundle("compose.debug").get())
-            add("androidTestImplementation", libs.findBundle("compose.test").get())
-        }
     }
 }

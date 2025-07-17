@@ -16,15 +16,23 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("androidAppCompose") {
-            id = "com.emotionstorage.convention.application.compose"
-            implementationClass = "com.emotionstorage.convention.AndroidApplicationComposeConventionPlugin"
+        create("androidApplication") {
+            id = "com.emotionstorage.convention.application.android"
+            implementationClass = "com.emotionstorage.convention.AndroidApplicationConventionPlugin"
+        }
+        create("androidLibrary") {
+            id = "com.emotionstorage.convention.library.android"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryConventionPlugin"
         }
         create("javaKotlinLibrary"){
-            id = "com.emotionstorage.convention.library"
+            id = "com.emotionstorage.convention.library.kotlin"
             implementationClass = "com.emotionstorage.convention.JavaKotlinLibraryConventionPlugin"
         }
 
+        create("androidCompose"){
+            id = "com.emotionstorage.convention.compose.android"
+            implementationClass = "com.emotionstorage.convention.AndroidComposeConventionPlugin"
+        }
         create("androidHilt"){
             id = "com.emotionstorage.convention.hilt.android"
             implementationClass = "com.emotionstorage.convention.AndroidHiltConventionPlugin"
