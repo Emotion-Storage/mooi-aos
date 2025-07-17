@@ -29,6 +29,7 @@ internal fun Project.configureJavaKotlin() {
         targetCompatibility = JavaVersion.VERSION_17
 
         tasks.withType<KotlinCompile>().configureEach {
+            @Suppress("DEPRECATION")
             kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
         }
     }
