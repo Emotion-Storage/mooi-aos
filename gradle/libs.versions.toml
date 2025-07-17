@@ -17,6 +17,9 @@ composeMaterialIcons = "1.7.8"
 jetbrainsKotlinJvm = "2.0.21"
 navigationCompose = "2.9.1"
 uiToolingPreviewAndroid = "1.8.3"
+hiltNavigation = "1.2.0"
+daggerHilt = "2.52"
+ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
 
 [libraries]
@@ -42,6 +45,9 @@ androidx-compose-material = { group = "androidx.compose.material", name = "mater
 androidx-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterialIcons" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
+google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -63,6 +69,9 @@ compose = [
     "androidx-compose-material",
     "androidx-compose-material-icons",
     "androidx-navigation-compose"
+]
+hilt-android = [
+    "hilt-navigation-compose", "google-dagger-hilt"
 ]
 compose-debug = [
     "androidx-ui-tooling",
@@ -87,6 +96,8 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 vanniktech-dependency-graph-generator = { id = "com.vanniktech.dependency.graph.generator", version.ref = "dependencyGraphGenerator" }
 
 

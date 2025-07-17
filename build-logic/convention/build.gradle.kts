@@ -20,5 +20,9 @@ gradlePlugin {
             id = "com.emotionstorage.convention.application.compose"
             implementationClass = "com.emotionstorage.convention.AndroidApplicationComposeConventionPlugin"
         }
+        create("androidHilt"){
+            id = "com.emotionstorage.convention.hilt.android"
+            implementationClass = "com.emotionstorage.convention.AndroidHiltConventionPlugin"
+        }
     }
 }
