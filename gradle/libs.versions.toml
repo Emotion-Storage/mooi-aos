@@ -60,7 +60,8 @@ compose = [
     "androidx-compose-runtime",
     "androidx-material3-android",
     "androidx-compose-material",
-    "androidx-compose-material-icons"
+    "androidx-compose-material-icons",
+    "androidx-navigation-compose"
 ]
 compose-debug = [
     "androidx-ui-tooling",
@@ -69,9 +70,6 @@ compose-debug = [
 compose-test = [
     "androidx-ui-test-junit4",
     "androidx-ui-test-manifest"
-]
-compose-navigation = [
-    "androidx-navigation-compose"
 ]
 test = [
     "junit",

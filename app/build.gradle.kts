@@ -41,7 +41,6 @@ dependencies {
     implementation(libs.bundles.core)
 
     implementation(libs.bundles.compose)
-    implementation(libs.bundles.compose.navigation)
     debugImplementation(libs.bundles.compose.debug)
     androidTestImplementation(libs.bundles.compose.test)
 
