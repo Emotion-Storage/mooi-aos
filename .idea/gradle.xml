@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/build-logic" name="build-logic">
+                <projects>
+                  <project path="$PROJECT_DIR$/build-logic" />
+                  <project path="$PROJECT_DIR$/build-logic/convention" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="testRunner" value="CHOOSE_PER_TEST" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
@@ -11,10 +24,24 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/build-logic" />
+            <option value="$PROJECT_DIR$/build-logic/convention" />
             <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/local" />
+            <option value="$PROJECT_DIR$/core/remote" />
+            <option value="$PROJECT_DIR$/core/ui" />
             <option value="$PROJECT_DIR$/data" />
             <option value="$PROJECT_DIR$/domain" />
-            <option value="$PROJECT_DIR$/feature" />
+            <option value="$PROJECT_DIR$/feat" />
+            <option value="$PROJECT_DIR$/feat/ai-chat" />
+            <option value="$PROJECT_DIR$/feat/alarm" />
+            <option value="$PROJECT_DIR$/feat/auth" />
+            <option value="$PROJECT_DIR$/feat/home" />
+            <option value="$PROJECT_DIR$/feat/my" />
+            <option value="$PROJECT_DIR$/feat/time-capsule" />
+            <option value="$PROJECT_DIR$/feat/time-capsule-detail" />
+            <option value="$PROJECT_DIR$/feat/tutorial" />
+            <option value="$PROJECT_DIR$/feat/weekly-report" />
           </set>
         </option>
       </GradleProjectSettings>

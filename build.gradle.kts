@@ -5,4 +5,15 @@ plugins {
     alias(libs.plugins.kotlin.compose) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
+
+    /**
+     * # module dependency graph generator
+     * - Graphviz installation needed
+     *   https://graphviz.org/download/
+     * - command to generate project dependency graph:
+     *  ./gradlew generateDependencyGraph
+     *  ./gradlew generateProjectDependencyGraph
+     * - results saved in ./build/reports/projects-dependency-graph
+     */
+    alias(libs.plugins.vanniktech.dependency.graph.generator)
 }
