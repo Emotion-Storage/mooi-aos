@@ -1,7 +1,7 @@
 plugins {
-    id("com.emotionstorage.convention.application.android")
-    id("com.emotionstorage.convention.compose.android")
-    id("com.emotionstorage.convention.hilt.android")
+    id("com.emotionstorage.convention.android.application")
+    id("com.emotionstorage.convention.android.application.compose")
+    id("com.emotionstorage.convention.android.application.hilt")
 }
 
 android {
@@ -24,31 +24,12 @@ android {
             )
         }
     }
-
-    // set dynamic features in base module(app)'s build.gradle.kts
-    // https://developer.android.com/guide/playcore/feature-delivery?hl=ko#base_feature_relationship
-    setDynamicFeatures(
-        setOf(
-            ":core:ui",
-            ":core:local",
-            ":core:remote",
-            ":feat:tutorial",
-            ":feat:auth",
-            ":feat:home",
-            ":feat:ai-chat",
-            ":feat:time-capsule-detail",
-            ":feat:time-capsule",
-            ":feat:weekly-report",
-            ":feat:my",
-            ":feat:alarm",
-        )
-    )
 }
 
 dependencies {
     implementation(projects.domain)
-    implementation(projects.core.ui)
     implementation(projects.core.common)
+    implementation(projects.core.ui)
     implementation(projects.feat.tutorial)
     implementation(projects.feat.auth)
     implementation(projects.feat.home)

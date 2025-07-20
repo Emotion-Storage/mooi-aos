@@ -1,6 +1,6 @@
 plugins {
-    id("com.emotionstorage.convention.library.kotlin")
-    id("com.emotionstorage.convention.hilt")
+    id("com.emotionstorage.convention.android.library")
+    id("com.emotionstorage.convention.android.library.hilt")
 }
 
 dependencies {
