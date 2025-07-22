@@ -26,11 +26,11 @@ dependencyResolutionManagement {
 rootProject.name = "EmotionStorage"
 include(":app")
 include(":domain")
+include(":data")
 include(":core:ui")
 include(":core:remote")
 include(":core:local")
 include(":core:common")
-include(":data")
 include(":feat:tutorial")
 include(":feat:auth")
 include(":feat:home")

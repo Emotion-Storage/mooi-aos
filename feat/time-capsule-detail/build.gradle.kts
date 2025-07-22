@@ -1,5 +1,7 @@
 plugins {
-    id("com.emotionstorage.convention.application.compose")
+    id("com.emotionstorage.convention.android.library")
+    id("com.emotionstorage.convention.android.library.compose")
+    id("com.emotionstorage.convention.android.library.hilt")
 }
 
 android {
@@ -23,6 +25,6 @@ android {
 
 dependencies {
     implementation(projects.domain)
-    implementation(projects.core.ui)
     implementation(projects.core.common)
+    implementation(projects.core.ui)
 }

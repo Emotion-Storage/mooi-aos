@@ -16,9 +16,50 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        create("androidAppCompose") {
-            id = "com.emotionstorage.convention.application.compose"
+        /**
+         * android application plugins
+         * applied in :app module
+         */
+        create("androidApplication") {
+            id = "com.emotionstorage.convention.android.application"
+            implementationClass = "com.emotionstorage.convention.AndroidApplicationConventionPlugin"
+        }
+        create("androidApplicationCompose") {
+            id = "com.emotionstorage.convention.android.application.compose"
             implementationClass = "com.emotionstorage.convention.AndroidApplicationComposeConventionPlugin"
+        }
+        create("androidApplicationHilt") {
+            id = "com.emotionstorage.convention.android.application.hilt"
+            implementationClass = "com.emotionstorage.convention.AndroidApplicationHiltConventionPlugin"
+        }
+
+        /**
+         * android library plugins
+         * applied in :feat modules
+         */
+        create("androidLibrary") {
+            id = "com.emotionstorage.convention.android.library"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryConventionPlugin"
+        }
+        create("androidLibraryCompose") {
+            id = "com.emotionstorage.convention.android.library.compose"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryComposeConventionPlugin"
+        }
+        create("androidLibraryHilt") {
+            id = "com.emotionstorage.convention.android.library.hilt"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryHiltConventionPlugin"
+        }
+
+        /**
+         * java kotlin library plugins
+         */
+        create("javaKotlinLibrary"){
+            id = "com.emotionstorage.convention.kotlin.library"
+            implementationClass = "com.emotionstorage.convention.JavaKotlinLibraryConventionPlugin"
+        }
+        create("hilt"){
+            id = "com.emotionstorage.convention.kotlin.library.hilt"
+            implementationClass = "com.emotionstorage.convention.HiltConventionPlugin"
         }
     }
 }
