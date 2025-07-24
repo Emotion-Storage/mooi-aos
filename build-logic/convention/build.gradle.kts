@@ -49,6 +49,10 @@ gradlePlugin {
             id = "com.emotionstorage.convention.android.library.hilt"
             implementationClass = "com.emotionstorage.convention.AndroidLibraryHiltConventionPlugin"
         }
+        create("androidLibraryRoom") {
+            id = "com.emotionstorage.convention.android.library.room"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryRoomConventionPlugin"
+        }
 
         /**
          * java kotlin library plugins

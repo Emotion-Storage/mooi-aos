@@ -19,6 +19,7 @@ navigationCompose = "2.9.1"
 uiToolingPreviewAndroid = "1.8.3"
 hiltNavigation = "1.2.0"
 daggerHilt = "2.52"
+room = "2.7.2"
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
 
@@ -49,6 +50,9 @@ hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-com
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "daggerHilt" }
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -72,10 +76,15 @@ compose = [
     "androidx-navigation-compose"
 ]
 hilt-android = [
-    "hilt-navigation-compose", "google-dagger-hilt"
+    "hilt-navigation-compose",
+    "google-dagger-hilt"
 ]
 hilt-core = [
     "google-dagger-hilt-core"
+]
+room = [
+    "androidx-room-ktx",
+    "androidx-room-runtime"
 ]
 compose-debug = [
     "androidx-ui-tooling",
