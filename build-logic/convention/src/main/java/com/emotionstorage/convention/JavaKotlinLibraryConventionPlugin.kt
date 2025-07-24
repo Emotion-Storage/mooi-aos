@@ -17,20 +17,16 @@ class JavaKotlinLibraryConventionPlugin : Plugin<Project> {
                 apply("java-library")
                 apply("org.jetbrains.kotlin.jvm")
 
-                configureJavaKotlin()
+                extensions.getByType<JavaPluginExtension>().apply {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+
+                    tasks.withType<KotlinCompile>().configureEach {
+                        @Suppress("DEPRECATION")
+                        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+                    }
+                }
             }
-        }
-    }
-}
-
-internal fun Project.configureJavaKotlin() {
-    extensions.getByType<JavaPluginExtension>().apply {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-
-        tasks.withType<KotlinCompile>().configureEach {
-            @Suppress("DEPRECATION")
-            kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
         }
     }
 }
