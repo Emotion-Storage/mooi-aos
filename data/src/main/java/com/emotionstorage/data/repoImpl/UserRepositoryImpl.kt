@@ -11,7 +11,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     override suspend fun getUser(): User? {
         return userLocalDataSource.getUser()?.run {
-            UserMapper.mapToDomain(this)
+            UserMapper.toDomain(this)
         }
     }
 }

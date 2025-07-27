@@ -4,7 +4,7 @@ import com.emotionstorage.data.model.UserEntity
 import com.emotionstorage.domain.model.User
 
 internal object UserMapper {
-    fun mapToDomain(entity: UserEntity): User {
+    fun toDomain(entity: UserEntity): User {
         return User(
             id = entity.id,
             socialType = when (entity.socialType) {
@@ -22,7 +22,7 @@ internal object UserMapper {
         )
     }
 
-    fun mapToData(domain: User): UserEntity {
+    fun toData(domain: User): UserEntity {
         return UserEntity(
             id = domain.id,
             socialType = when (domain.socialType) {
