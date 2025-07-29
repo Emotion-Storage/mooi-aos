@@ -20,6 +20,8 @@ uiToolingPreviewAndroid = "1.8.3"
 hiltNavigation = "1.2.0"
 daggerHilt = "2.52"
 room = "2.7.2"
+credentials = "1.5.0"
+googleId = "1.1.1"
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
 
@@ -53,6 +55,9 @@ google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compil
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+google-android-identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -85,6 +90,11 @@ hilt-core = [
 room = [
     "androidx-room-ktx",
     "androidx-room-runtime"
+]
+credentials = [
+    "androidx-credentials",
+    "androidx-credentials-play-services",
+    "google-android-identity-googleid"
 ]
 compose-debug = [
     "androidx-ui-tooling",
