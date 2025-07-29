@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorial_p0_desc">감정은 나를 돌보는 중요한 신호예요.</string>
+    <string name="tutorial_p1_desc">어렵게 쓰지 않아도 돼요.</string>
+    <string name="tutorial_p2_desc">며칠 뒤, 타임캡슐을 열어보세요.</string>
+    <string name="tutorial_p3_desc">변화를 한 눈에, 효과적인 ‘나’ 돌보기</string>
+</resources>

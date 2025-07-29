@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -21,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emtionstorage.tutorial.ui.component.PagerWithIndicator
@@ -46,9 +48,9 @@ fun TutorialScreen(
             pageCount = TUTORIAL_PAGE_COUNT,
             pages = listOf(
                 {
-                    // 튜토리얼 페이지 1
+                    // page0
                     TutorialPage(
-                        description = "감정은 나를 돌보는 중요한 신호예요.", title = buildAnnotatedString {
+                        description = stringResource(R.string.tutorial_p0_desc), title = buildAnnotatedString {
                             append(
                                 "감정을 기록하면\n" + "나를 더 잘 "
                             )
@@ -64,9 +66,9 @@ fun TutorialScreen(
                     )
                 },
                 {
-                    // 튜토리얼 페이지 2
+                    // page1
                     TutorialPage(
-                        description = "어렵게 쓰지 않아도 돼요.",
+                        description = stringResource(R.string.tutorial_p1_desc),
                         title = buildAnnotatedString {
                             append(
                                 "가까운 친구에게 하듯,\n" +
@@ -79,9 +81,9 @@ fun TutorialScreen(
                         })
                 },
                 {
-                    // 튜토리얼 페이지 3
+                    // page2
                     TutorialPage(
-                        description = "며칠 뒤, 타임캡슐을 열어보세요.",
+                        description = stringResource(R.string.tutorial_p2_desc),
                         title = buildAnnotatedString {
                             append(
                                 "시간을 두고 돌아보면,\n" + "당신의 감정을\n"
@@ -93,9 +95,9 @@ fun TutorialScreen(
                         })
                 },
                 {
-                    // 튜토리얼 페이지 3
+                    // page3
                     TutorialPage(
-                        description = "변화를 한 눈에, 효과적인 ‘나’ 돌보기",
+                        description = stringResource(R.string.tutorial_p3_desc),
                         title = buildAnnotatedString {
                             append(
                                 "지금, 당신의 감정을 기록하고\n"
