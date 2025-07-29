@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 import com.emtionstorage.tutorial.ui.component.PagerWithIndicator
 
 private const val TUTORIAL_PAGE_COUNT = 4
@@ -46,77 +48,49 @@ fun TutorialScreen(
                 .padding(innerPadding)
                 .padding(top = 78.dp, bottom = 41.dp),
             pageCount = TUTORIAL_PAGE_COUNT,
-            pages = listOf(
-                {
-                    // page0
-                    TutorialPage(
-                        description = stringResource(R.string.tutorial_p0_desc), title = buildAnnotatedString {
-                            append(
-                                "감정을 기록하면\n" + "나를 더 잘 "
-                            )
-                            withStyle(style = SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                                append("이해")
+            pageContent =
+                { page ->
+                    when (page) {
+                        0 -> TutorialPage(
+                            description = stringResource(R.string.tutorial_p0_desc),
+                            title = stringResource(R.string.tutorial_p0_title),
+                            titleHighlights = stringResource(R.string.tutorial_p0_title_highlights).split(
+                                ','
+                            ),
+                        )
+
+                        1 ->  TutorialPage(
+                            description = stringResource(R.string.tutorial_p1_desc),
+                            title = stringResource(R.string.tutorial_p1_title),
+                            titleHighlights = stringResource(R.string.tutorial_p1_title_highlights).split(
+                                ','
+                            ),
+                        )
+
+                        2 ->  TutorialPage(
+                            description = stringResource(R.string.tutorial_p2_desc),
+                            title = stringResource(R.string.tutorial_p2_title),
+                            titleHighlights = stringResource(R.string.tutorial_p2_title_highlights).split(
+                                ','
+                            ),
+                        )
+
+                        3 ->  TutorialPage(
+                            description = stringResource(R.string.tutorial_p3_desc),
+                            title = stringResource(R.string.tutorial_p3_title),
+                            titleHighlights = stringResource(R.string.tutorial_p3_title_highlights).split(
+                                ','
+                            ),
+                            content = {
+                                CtaButton(
+                                    label = stringResource(R.string.tutorial_btn_start),
+                                    onClick = navToLogin,
+                                    modifier = Modifier.align(Alignment.BottomCenter)
+                                )
                             }
-                            append("하고\n")
-                            withStyle(style = SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                                append("치유")
-                            }
-                            append("할 수 있어요.")
-                        }
-                    )
-                },
-                {
-                    // page1
-                    TutorialPage(
-                        description = stringResource(R.string.tutorial_p1_desc),
-                        title = buildAnnotatedString {
-                            append(
-                                "가까운 친구에게 하듯,\n" +
-                                        "AI와의 대화를 통해\n"
-                            )
-                            withStyle(style = SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                                append("가볍게")
-                            }
-                            append(" 털어놓아 보세요.")
-                        })
-                },
-                {
-                    // page2
-                    TutorialPage(
-                        description = stringResource(R.string.tutorial_p2_desc),
-                        title = buildAnnotatedString {
-                            append(
-                                "시간을 두고 돌아보면,\n" + "당신의 감정을\n"
-                            )
-                            withStyle(style = SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                                append("새롭게")
-                            }
-                            append(" 마주하게 됩니다.")
-                        })
-                },
-                {
-                    // page3
-                    TutorialPage(
-                        description = stringResource(R.string.tutorial_p3_desc),
-                        title = buildAnnotatedString {
-                            append(
-                                "지금, 당신의 감정을 기록하고\n"
-                            )
-                            withStyle(style = SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                                append("더 단단한")
-                            }
-                            append(" 내가 되어보세요.")
-                        },
-                        content = {
-                            CtaButton(
-                                label = "시작하기",
-                                onClick = navToLogin,
-                                modifier = Modifier.align(Alignment.BottomCenter)
-                            )
-                        }
-                    )
+                        )
+                    }
                 }
-            )
         )
     }
 }
@@ -131,13 +105,13 @@ fun TutorialScreen(
 @Composable
 private fun ColumnScope.TutorialPage(
     description: String,
-    title: AnnotatedString,
+    title: String,
+    titleHighlights: List<String> = emptyList(),
     modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
     Box(
         modifier = modifier
-//            .background(MooiTheme.colorScheme.background)
             .fillMaxSize()
     ) {
         Column(
@@ -155,7 +129,11 @@ private fun ColumnScope.TutorialPage(
                 textAlign = TextAlign.Center,
                 style = MooiTheme.typography.head1,
                 color = Color.White,
-                text = title
+                text = buildHighlightAnnotatedString(
+                    fullString = title,
+                    highlightWords = titleHighlights,
+                    highlightStyle = SpanStyle(color = MooiTheme.colorScheme.primary)
+                )
             )
         }
         content()

@@ -23,9 +23,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -39,7 +41,7 @@ import kotlinx.coroutines.launch
 fun PagerWithIndicator(
     pageCount: Int,
     modifier: Modifier = Modifier,
-    pages: List<@Composable (ColumnScope.() -> Unit)> = emptyList(),
+    pageContent: @Composable (ColumnScope.(page: Int) -> Unit)
 ) {
     val pagerState = rememberPagerState(pageCount = {
         pageCount
@@ -50,15 +52,17 @@ fun PagerWithIndicator(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HorizontalPager(state = pagerState, modifier=Modifier.weight(1f)) { page ->
-            pages[page]()
+        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
+            pageContent(page)
         }
 
-        Box(modifier = Modifier
-            .background(Color.Transparent)
-            .fillMaxWidth()
-            .height(48.dp)
-            .padding(top=30.dp)) {
+        Box(
+            modifier = Modifier
+                .background(Color.Transparent)
+                .fillMaxWidth()
+                .height(48.dp)
+                .padding(top = 30.dp)
+        ) {
             PagerIndicator(
                 modifier = Modifier
                     .align(Alignment.Center),
@@ -83,7 +87,7 @@ fun PagerWithIndicator(
                                 }
                             }),
                     color = MooiTheme.colorScheme.gray600,
-                    text = "건너뛰기"
+                    text = stringResource(R.string.pager_btn_skip),
                 )
             }
         }
@@ -148,36 +152,16 @@ private fun PagerWithIndicatorPreview() {
         PagerWithIndicator(
             modifier = Modifier.fillMaxSize(),
             pageCount = 3,
-            pages = listOf(
-                {
+            pageContent =
+                { page ->
                     Text(
                         modifier = Modifier
                             .background(MooiTheme.colorScheme.background)
                             .fillMaxSize(),
                         color = Color.White,
-                        text = "Page 0"
-                    )
-                },
-                {
-                    Text(
-                        modifier = Modifier
-                            .background(MooiTheme.colorScheme.background)
-                            .fillMaxSize(),
-                        textAlign = TextAlign.Center,
-                        color = Color.White,
-                        text = "Page 1"
-                    )
-                },
-                {
-                    Text(
-                        modifier = Modifier
-                            .background(MooiTheme.colorScheme.background)
-                            .fillMaxSize(),
-                        color = Color.White,
-                        text = "Page 2"
+                        text = "Page $page"
                     )
                 }
-            )
         )
     }
 }
