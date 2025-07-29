@@ -5,18 +5,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,50 +42,52 @@ import kotlinx.coroutines.launch
 fun PagerWithIndicator(
     pageCount: Int,
     modifier: Modifier = Modifier,
-    pages: List<@Composable (BoxScope.() -> Unit)> = emptyList(),
+    pages: List<@Composable (ColumnScope.() -> Unit)> = emptyList(),
 ) {
     val pagerState = rememberPagerState(pageCount = {
         pageCount
     })
     val coroutineScope = rememberCoroutineScope()
 
-    Box(
-        modifier = modifier
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HorizontalPager(state = pagerState) { page ->
+        HorizontalPager(state = pagerState, modifier=Modifier.weight(1f)) { page ->
             pages[page]()
         }
 
-        PagerIndicator(
-            modifier = Modifier
-                .align(Alignment.BottomCenter),
-            pageCount = pageCount,
-            currentPage = pagerState.currentPage,
-            onPageSelected = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(it)
-                }
-            }
-        )
-
-        // todo: style skip text button
-        if (pagerState.currentPage != pageCount - 1) {
-            TextButton(
-                modifier = Modifier.align(Alignment.BottomEnd),
-                onClick = {
+        Box(modifier = Modifier
+            .background(Color.Transparent)
+            .fillMaxWidth()
+            .height(48.dp)
+            .padding(top=30.dp)) {
+            PagerIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                pageCount = pageCount,
+                currentPage = pagerState.currentPage,
+                onPageSelected = {
                     coroutineScope.launch {
-                        pagerState.scrollToPage(pageCount - 1)
+                        pagerState.scrollToPage(it)
                     }
-                },
-                colors = ButtonDefaults.textButtonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = MooiTheme.colorScheme.gray600,
-                    disabledContainerColor = Color.Transparent,
-                    disabledContentColor = MooiTheme.colorScheme.gray600
-                ),
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Text(text = "건너뛰기")
+                }
+            )
+
+            if (pagerState.currentPage != pageCount - 1) {
+                Text(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(end = 16.dp)
+                        .clickable(
+                            onClick = {
+                                coroutineScope.launch {
+                                    pagerState.scrollToPage(pageCount - 1)
+                                }
+                            }),
+                    color = MooiTheme.colorScheme.gray600,
+                    text = "건너뛰기"
+                )
             }
         }
     }
@@ -154,8 +156,7 @@ private fun PagerWithIndicatorPreview() {
                     Text(
                         modifier = Modifier
                             .background(MooiTheme.colorScheme.background)
-                            .fillMaxSize()
-                            .align(Alignment.Center),
+                            .fillMaxSize(),
                         color = Color.White,
                         text = "Page 0"
                     )
@@ -164,8 +165,7 @@ private fun PagerWithIndicatorPreview() {
                     Text(
                         modifier = Modifier
                             .background(MooiTheme.colorScheme.background)
-                            .fillMaxSize()
-                            .align(Alignment.Center),
+                            .fillMaxSize(),
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         text = "Page 1"
@@ -175,8 +175,7 @@ private fun PagerWithIndicatorPreview() {
                     Text(
                         modifier = Modifier
                             .background(MooiTheme.colorScheme.background)
-                            .fillMaxSize()
-                            .align(Alignment.Center),
+                            .fillMaxSize(),
                         color = Color.White,
                         text = "Page 2"
                     )

@@ -112,7 +112,7 @@ fun TutorialScreen(
                             CtaButton(
                                 label = "시작하기",
                                 onClick = navToLogin,
-                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom=30.dp)
+                                modifier = Modifier.align(Alignment.BottomCenter)
                             )
                         }
                     )
@@ -130,7 +130,7 @@ fun TutorialScreen(
  * @param modifier Modifier
  */
 @Composable
-private fun BoxScope.TutorialPage(
+private fun ColumnScope.TutorialPage(
     description: String,
     title: AnnotatedString,
     modifier: Modifier = Modifier,
@@ -138,9 +138,8 @@ private fun BoxScope.TutorialPage(
 ) {
     Box(
         modifier = modifier
-            .background(MooiTheme.colorScheme.background)
+//            .background(MooiTheme.colorScheme.background)
             .fillMaxSize()
-            .align(Alignment.TopCenter)
     ) {
         Column(
             modifier = Modifier.align(Alignment.TopCenter),
