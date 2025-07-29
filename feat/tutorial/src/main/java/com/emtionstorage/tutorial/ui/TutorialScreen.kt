@@ -1,13 +1,15 @@
 package com.emtionstorage.tutorial.ui
 
+import android.graphics.Paint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -110,7 +112,7 @@ fun TutorialScreen(
                             CtaButton(
                                 label = "시작하기",
                                 onClick = navToLogin,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom=30.dp)
                             )
                         }
                     )
@@ -132,28 +134,32 @@ private fun BoxScope.TutorialPage(
     description: String,
     title: AnnotatedString,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit = {},
+    content: @Composable BoxScope.() -> Unit = {},
 ) {
-    Column(
+    Box(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize()
-            .align(Alignment.TopCenter),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .align(Alignment.TopCenter)
     ) {
-        Text(
-            modifier = Modifier.height(37.dp),
-            style = MooiTheme.typography.body1,
-            color = MooiTheme.colorScheme.gray500,
-            text = description
-        )
-        Text(
-            modifier = Modifier.height(121.dp),
-            textAlign = TextAlign.Center,
-            style = MooiTheme.typography.head1,
-            color = Color.White,
-            text = title
-        )
+        Column(
+            modifier = Modifier.align(Alignment.TopCenter),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                modifier = Modifier.height(37.dp),
+                style = MooiTheme.typography.body1,
+                color = MooiTheme.colorScheme.gray500,
+                text = description
+            )
+            Text(
+                modifier = Modifier.height(121.dp),
+                textAlign = TextAlign.Center,
+                style = MooiTheme.typography.head1,
+                color = Color.White,
+                text = title
+            )
+        }
         content()
     }
 }

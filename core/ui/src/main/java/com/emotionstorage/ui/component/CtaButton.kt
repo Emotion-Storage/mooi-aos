@@ -29,7 +29,7 @@ fun CtaButton(
             .height(65.dp),
         shape = RoundedCornerShape(15.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MooiTheme.colorScheme.primary,
+            backgroundColor = MooiTheme.colorScheme.tertiary,
             contentColor = Color.White,
             disabledBackgroundColor = MooiTheme.colorScheme.gray500,
             disabledContentColor = Color.White

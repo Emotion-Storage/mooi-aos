@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -13,7 +14,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -69,11 +70,21 @@ fun PagerWithIndicator(
 
         // todo: style skip text button
         if (pagerState.currentPage != pageCount - 1) {
-            TextButton(onClick = {
-                coroutineScope.launch {
-                    pagerState.scrollToPage(pageCount - 1)
-                }
-            }, modifier = Modifier.align(Alignment.BottomEnd)) {
+            TextButton(
+                modifier = Modifier.align(Alignment.BottomEnd),
+                onClick = {
+                    coroutineScope.launch {
+                        pagerState.scrollToPage(pageCount - 1)
+                    }
+                },
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = MooiTheme.colorScheme.gray600,
+                    disabledContainerColor = Color.Transparent,
+                    disabledContentColor = MooiTheme.colorScheme.gray600
+                ),
+                contentPadding = PaddingValues(0.dp)
+            ) {
                 Text(text = "건너뛰기")
             }
         }
