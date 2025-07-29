@@ -1,17 +1,14 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    id("com.emotionstorage.convention.android.application")
+    id("com.emotionstorage.convention.android.application.compose")
+    id("com.emotionstorage.convention.android.application.hilt")
 }
 
 android {
     namespace = "com.emotionstorage.emotionstorage"
-    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.emotionstorage.emotionstorage"
-        minSdk = 27
-        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -27,28 +24,19 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
-    }
 }
 
 dependencies {
-    implementation(libs.bundles.core)
-
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.compose.navigation)
-    debugImplementation(libs.bundles.compose.debug)
-    androidTestImplementation(libs.bundles.compose.test)
-
-    testImplementation(libs.bundles.test)
-    testImplementation(libs.bundles.android.test)
-
-    implementation(project(":domain"))
+    implementation(projects.domain)
+    implementation(projects.core.common)
+    implementation(projects.core.ui)
+    implementation(projects.feat.tutorial)
+    implementation(projects.feat.auth)
+    implementation(projects.feat.home)
+    implementation(projects.feat.aiChat)
+    implementation(projects.feat.timeCapsuleDetail)
+    implementation(projects.feat.timeCapsule)
+    implementation(projects.feat.weeklyReport)
+    implementation(projects.feat.my)
+    implementation(projects.feat.alarm)
 }
