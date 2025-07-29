@@ -19,7 +19,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
@@ -161,7 +161,7 @@ private fun ColumnScope.TutorialPage(
 }
 
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun TutorialPreview() {
     MooiTheme {
