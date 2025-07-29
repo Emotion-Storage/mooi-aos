@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.EmotionStorageTheme
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emtionstorage.tutorial.ui.component.PagerWithIndicator
@@ -106,12 +107,11 @@ fun TutorialScreen(
                             append(" 내가 되어보세요.")
                         },
                         content = {
-                            // todo: style start button
-                            Button(
-                                onClick = navToLogin
-                            ) {
-                                Text("시작하기")
-                            }
+                            CtaButton(
+                                label = "시작하기",
+                                onClick = navToLogin,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
                         }
                     )
                 }

@@ -12,6 +12,7 @@ private val LocalMooiTypography = staticCompositionLocalOf {
     MooiTypography()
 }
 
+// todo change theme name
 @Composable
 fun EmotionStorageTheme(
 //    darkTheme: Boolean = isSystemInDarkTheme(),
