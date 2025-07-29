@@ -1,4 +1,4 @@
-package com.emotionstorage.emotionstorage.ui.theme
+package com.emotionstorage.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
