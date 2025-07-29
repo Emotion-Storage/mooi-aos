@@ -1,11 +1,9 @@
 package com.emtionstorage.tutorial.ui
 
-import android.graphics.Paint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -24,7 +22,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.CtaButton
-import com.emotionstorage.ui.theme.EmotionStorageTheme
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emtionstorage.tutorial.ui.component.PagerWithIndicator
 
@@ -167,7 +164,7 @@ private fun ColumnScope.TutorialPage(
 @Preview
 @Composable
 private fun TutorialPreview() {
-    EmotionStorageTheme {
+    MooiTheme {
         TutorialScreen()
     }
 }

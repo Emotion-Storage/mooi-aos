@@ -4,11 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
 import dagger.hilt.android.AndroidEntryPoint
-import com.emotionstorage.ui.theme.EmotionStorageTheme
+import com.emotionstorage.ui.theme.MooiTheme
 import com.emtionstorage.tutorial.ui.TutorialScreen
 
 @AndroidEntryPoint
@@ -17,7 +14,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            EmotionStorageTheme {
+            MooiTheme {
                 TutorialScreen()
             }
         }
