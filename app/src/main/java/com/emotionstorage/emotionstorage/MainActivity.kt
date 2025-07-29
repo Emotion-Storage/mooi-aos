@@ -5,12 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.emotionstorage.auth.ui.LoginScreen
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.EmotionStorageTheme
+import com.emtionstorage.tutorial.ui.TutorialScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -19,9 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             EmotionStorageTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    LoginScreen(modifier = Modifier.padding(innerPadding))
-                }
+                TutorialScreen()
             }
         }
     }

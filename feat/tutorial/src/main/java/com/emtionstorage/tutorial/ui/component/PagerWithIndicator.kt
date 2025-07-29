@@ -67,6 +67,7 @@ fun PagerWithIndicator(
             }
         )
 
+        // todo: style skip text button
         if (pagerState.currentPage != pageCount - 1) {
             TextButton(onClick = {
                 coroutineScope.launch {
