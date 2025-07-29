@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--    tutorial screen     -->
+    <string name="tutorial_p0_desc">감정은 나를 돌보는 중요한 신호예요.</string>
+    <string name="tutorial_p0_title">감정을 기록하면\n나를 더 잘 이해하고\n치유할 수 있어요.</string>
+    <string name="tutorial_p0_title_highlights">이해,치유</string>
+
+    <string name="tutorial_p1_desc">어렵게 쓰지 않아도 돼요.</string>
+    <string name="tutorial_p1_title">가까운 친구에게 하듯,\nAI와의 대화를 통해\n가볍게 털어놓아 보세요.</string>
+    <string name="tutorial_p1_title_highlights">가볍게</string>
+
+    <string name="tutorial_p2_desc">며칠 뒤, 타임캡슐을 열어보세요.</string>
+    <string name="tutorial_p2_title">시간을 두고 돌아보면,\n당신의 감정을\n새롭게 마주하게 됩니다.</string>
+    <string name="tutorial_p2_title_highlights">새롭게</string>
+
+    <string name="tutorial_p3_desc">변화를 한 눈에, 효과적인 ‘나’ 돌보기</string>
+    <string name="tutorial_p3_title">지금, 당신의 감정을 기록하고\n더 단단한 내가 되어보세요.</string>
+    <string name="tutorial_p3_title_highlights">더,단단한</string>
+
+    <string name="tutorial_btn_start">시작하기</string>
+
+<!--    components      -->
+    <string name="pager_btn_skip">건너뛰기</string>
+</resources>

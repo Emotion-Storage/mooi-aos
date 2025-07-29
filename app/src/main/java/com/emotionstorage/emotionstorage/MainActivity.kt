@@ -5,8 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import com.emotionstorage.emotionstorage.ui.theme.EmotionStorageTheme
-import com.emotionstorage.tutorial.ui.LoginRoute
+import com.emotionstorage.ui.theme.MooiTheme
+import com.emtionstorage.tutorial.ui.TutorialScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -14,11 +14,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            EmotionStorageTheme {
-                LoginRoute(
-                    navToHome = {},
-                    navToOnboarding = {},
-                    )
+            MooiTheme {
+                TutorialScreen()
             }
         }
     }
