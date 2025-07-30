@@ -22,6 +22,7 @@ daggerHilt = "2.52"
 room = "2.7.2"
 credentials = "1.5.0"
 googleId = "1.1.1"
+coil = "3.3.0"
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
 
@@ -58,6 +59,8 @@ androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = 
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 google-android-identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -78,7 +81,9 @@ compose = [
     "androidx-material3-android",
     "androidx-compose-material",
     "androidx-compose-material-icons",
-    "androidx-navigation-compose"
+    "androidx-navigation-compose",
+    "coil-compose",
+    "coil-network-okhttp"
 ]
 hilt-android = [
     "hilt-navigation-compose",
