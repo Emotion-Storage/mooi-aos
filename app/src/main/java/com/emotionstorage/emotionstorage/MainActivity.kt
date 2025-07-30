@@ -6,7 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emtionstorage.tutorial.ui.TutorialScreen
+import com.emotionstorage.tutorial.ui.TutorialScreen
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
