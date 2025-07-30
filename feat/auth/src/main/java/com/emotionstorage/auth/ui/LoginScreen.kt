@@ -56,6 +56,7 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
+                    modifier = Modifier.height(37.dp),
                     style = MooiTheme.typography.body1,
                     color = MooiTheme.colorScheme.primary,
                     text = stringResource(id = R.string.login_title)
@@ -92,8 +93,24 @@ fun LoginScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                SocialLoginButton(provider = AuthProvider.KAKAO, onClick = {})
-                SocialLoginButton(provider = AuthProvider.GOOGLE, onClick = {})
+                SocialLoginButton(
+                    provider = AuthProvider.KAKAO,
+                    onClick = {
+                        loginViewModel.event.onLoginButtonClick(
+                            AuthProvider.KAKAO,
+                            navToHome,
+                            navToOnBoarding
+                        )
+                    })
+                SocialLoginButton(
+                    provider = AuthProvider.GOOGLE,
+                    onClick = {
+                        loginViewModel.event.onLoginButtonClick(
+                            AuthProvider.GOOGLE,
+                            navToHome,
+                            navToOnBoarding
+                        )
+                    })
             }
         }
     }

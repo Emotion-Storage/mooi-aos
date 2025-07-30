@@ -3,11 +3,12 @@ package com.emotionstorage.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.Text
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,11 +28,11 @@ fun CtaButton(
             .width(330.dp)
             .height(65.dp),
         shape = RoundedCornerShape(15.dp),
-        elevation = ButtonDefaults.elevation(0.dp),
+        elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MooiTheme.colorScheme.tertiary,
+            containerColor = MooiTheme.colorScheme.tertiary,
             contentColor = Color.White,
-            disabledBackgroundColor = MooiTheme.colorScheme.gray500,
+            disabledContainerColor = MooiTheme.colorScheme.gray500,
             disabledContentColor = Color.White
         ),
         enabled = enabled,
@@ -48,7 +49,9 @@ fun CtaButton(
 @Composable
 private fun CtaButtonPreview() {
     MooiTheme {
-        Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(
+            modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
             CtaButton(
                 label = "확인",
             )
