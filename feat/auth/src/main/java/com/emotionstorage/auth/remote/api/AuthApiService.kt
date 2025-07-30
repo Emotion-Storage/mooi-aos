@@ -3,6 +3,7 @@ package com.emotionstorage.auth.remote.api
 import com.emotionstorage.auth.remote.request.LoginRequestBody
 import com.emotionstorage.auth.remote.request.SignupRequestBody
 import com.emotionstorage.auth.remote.response.LoginResponseData
+import com.emotionstorage.remote.interceptor.AuthRequest
 import com.emotionstorage.remote.response.ResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -29,15 +30,15 @@ interface AuthApiService {
         @Body signupRequestBody: SignupRequestBody
     ): ResponseDto<Unit>
 
-    // todo: add auth header
+    @AuthRequest
     @POST("/users/session")
     suspend fun postSession(): ResponseDto<Unit>
 
-    // todo: add auth header
+    @AuthRequest
     @POST("auth/logout")
     suspend fun postLogout(): ResponseDto<Unit>
 
-    // todo: add auth header
+    @AuthRequest
     @DELETE("mypage/account")
     suspend fun deleteAccount(): ResponseDto<Unit>
 }

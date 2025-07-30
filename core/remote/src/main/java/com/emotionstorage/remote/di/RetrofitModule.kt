@@ -1,5 +1,7 @@
 package com.emotionstorage.remote.di
 
+import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -13,7 +15,6 @@ import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
@@ -22,32 +23,37 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(): Retrofit {
-        val loggingInterceptor =
-            HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            }
-
-        val httpClient =
+    fun provideRetrofit(
+        loggingInterceptor: HttpLoggingInterceptor,
+        requestHeaderInterceptor: RequestHeaderInterceptor
+    ) = Retrofit
+        .Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(
+            Json {
+                ignoreUnknownKeys
+            }.asConverterFactory("application/json".toMediaType()),
+        )
+        .client(
             OkHttpClient
                 .Builder()
                 .connectTimeout(20, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
+                .addInterceptor(requestHeaderInterceptor)
                 .build()
+        )
+        .build()
 
-        val json = Json {
-            ignoreUnknownKeys
-        }
-
-        return Retrofit
-            .Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(
-                json.asConverterFactory("application/json".toMediaType()),
-            )
-            .client(httpClient)
-            .build()
+    @Singleton
+    @Provides
+    fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
     }
+
+    @Singleton
+    @Provides
+    fun provideRequestHeaderInterceptor(userLocalDataSource: UserLocalDataSource) =
+        RequestHeaderInterceptor(userLocalDataSource)
 }
