@@ -1,18 +1,16 @@
 package com.emotionstorage.ui.theme
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 
 
-private val pretendard  = FontFamily(
+val pretendard  = FontFamily(
     Font(R.font.pretendard_black, weight = FontWeight.Black),
     Font(R.font.pretendard_bold, weight = FontWeight.Bold),
     Font(R.font.pretendard_extrabold, weight = FontWeight.ExtraBold),
@@ -38,14 +36,14 @@ data class MooiTypography(
         fontWeight = FontWeight.Bold,
         fontSize = 23.sp,
         letterSpacing = (-0.02).em,
-        lineHeight = (26 * 1.4).sp
+        lineHeight = (23 * 1.4).sp
     ),
     val head3: TextStyle = TextStyle(
         fontFamily = pretendard,
         fontWeight = FontWeight.SemiBold,
         fontSize = 21.sp,
         letterSpacing = (-0.02).em,
-        lineHeight = (26 * 1.4).sp
+        lineHeight = (21 * 1.4).sp
     ),
     val body1: TextStyle = TextStyle(
         fontFamily = pretendard,
