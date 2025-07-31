@@ -1,6 +1,8 @@
 package com.emotionstorage.data.di
 
+import com.emotionstorage.data.repoImpl.SessionRepositoryImpl
 import com.emotionstorage.data.repoImpl.UserRepositoryImpl
+import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -14,4 +16,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionRepository(impl: SessionRepositoryImpl): SessionRepository
 }
