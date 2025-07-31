@@ -1,16 +1,13 @@
 package com.emotionstorage.auth.domain.usecase
 
 import com.emotionstorage.auth.domain.repository.AuthRepository
+import com.emotionstorage.domain.model.User
 import javax.inject.Inject
 
-/**
- * Automatic login use case
- * - check if login session is expired using access token
- */
-class AutomaticLoginUseCase @Inject constructor(
+class LogoutUseCase @Inject constructor(
     private val authRepository: AuthRepository
-){
+) {
     suspend operator fun invoke(): Boolean{
-        return authRepository.checkSession()
+        return authRepository.logout()
     }
 }
