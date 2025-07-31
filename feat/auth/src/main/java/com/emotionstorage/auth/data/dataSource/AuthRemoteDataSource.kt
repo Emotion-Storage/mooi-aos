@@ -5,6 +5,8 @@ import com.emotionstorage.domain.model.User
 
 // todo: Add provider model in data layer
 interface AuthRemoteDataSource {
+
+    // todo: change return type to contain boolean & access token
     suspend fun login(provider: User.AuthProvider, idToken: String): Boolean
     suspend fun signup(provider: User.AuthProvider, signupFormEntity: SignupFormEntity): Boolean
     suspend fun checkSession(): Boolean

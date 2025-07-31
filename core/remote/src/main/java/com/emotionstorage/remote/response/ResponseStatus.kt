@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.response
 
-enum class StatusCode(val code: Int) {
+enum class ResponseStatus(val code: Int) {
     Continue(100),
     SwitchingProtocols(101),
     Processing(102),

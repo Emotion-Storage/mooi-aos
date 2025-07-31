@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ResponseDto<T>(
-    val status: StatusCode,
+    val status: ResponseStatus,
     val message: String?,
     val data: T?
 )

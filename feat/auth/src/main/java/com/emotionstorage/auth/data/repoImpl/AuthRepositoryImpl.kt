@@ -14,6 +14,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource
 ) : AuthRepository {
+
+    // todo: change return type to contain boolean & access token
     override suspend fun login(provider: User.AuthProvider): Boolean {
         val idToken = when(provider){
             User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
