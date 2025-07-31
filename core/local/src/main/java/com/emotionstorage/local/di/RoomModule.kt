@@ -26,4 +26,8 @@ internal object RoomModule {
     @Provides
     @Singleton
     fun provideUserDao(appDatabase: AppDatabase) = appDatabase.userDao()
+
+    @Provides
+    @Singleton
+    fun provideSessionDao(appDatabase: AppDatabase) = appDatabase.sessionDao()
 }

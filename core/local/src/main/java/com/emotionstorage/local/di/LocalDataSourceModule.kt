@@ -1,6 +1,8 @@
 package com.emotionstorage.local.di
 
+import com.emotionstorage.data.dataSource.SessionLocalDataSource
 import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.local.dataSourceImpl.SessionLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.UserLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,10 @@ abstract class LocalDataSourceModule {
     abstract fun bindUserLocalDataSource(
         userLocalDataSourceImpl: UserLocalDataSourceImpl
     ): UserLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionLocalDataSource(
+        sessionLocalDataSourceImpl: SessionLocalDataSourceImpl
+    ): SessionLocalDataSource
 }

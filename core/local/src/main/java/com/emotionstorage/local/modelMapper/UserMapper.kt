@@ -12,8 +12,6 @@ internal object UserMapper {
             email = entity.email,
             name = entity.name,
             profileImageUrl = entity.profileImageUrl,
-            accessToken = entity.accessToken,
-            refreshToken = entity.refreshToken,
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
         )
@@ -31,8 +29,6 @@ internal object UserMapper {
             email = local.email,
             name = local.name,
             profileImageUrl = local.profileImageUrl,
-            accessToken = local.accessToken,
-            refreshToken = local.refreshToken,
             createdAt = local.createdAt,
             updatedAt = local.updatedAt,
         )
