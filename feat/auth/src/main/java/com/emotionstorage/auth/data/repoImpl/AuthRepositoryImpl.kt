@@ -6,6 +6,7 @@ import com.emotionstorage.auth.data.dataSource.KakaoRemoteDataSource
 import com.emotionstorage.auth.data.modelMapper.SignupFormMapper
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.repository.AuthRepository
+import com.emotionstorage.common.DataResource
 import com.emotionstorage.domain.model.User
 import javax.inject.Inject
 
@@ -15,13 +16,16 @@ class AuthRepositoryImpl @Inject constructor(
     private val googleRemoteDataSource: GoogleRemoteDataSource
 ) : AuthRepository {
 
-    // todo: change return type to contain boolean & access token
-    override suspend fun login(provider: User.AuthProvider): Boolean {
-        val idToken = when(provider){
-            User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-            User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
+    override suspend fun login(provider: User.AuthProvider): DataResource<String> {
+        try {
+            val idToken = when (provider) {
+                User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
+                User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
+            }
+            return authRemoteDataSource.login(provider, idToken)
+        } catch (e: Exception){
+            return DataResource.Error(e)
         }
-        return authRemoteDataSource.login(provider, idToken)
     }
 
     override suspend fun signup(

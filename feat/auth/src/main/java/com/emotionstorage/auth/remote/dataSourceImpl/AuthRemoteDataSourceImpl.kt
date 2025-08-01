@@ -5,6 +5,7 @@ import com.emotionstorage.auth.data.model.SignupFormEntity
 import com.emotionstorage.auth.remote.api.AuthApiService
 import com.emotionstorage.auth.remote.modelMapper.SignupFormMapper
 import com.emotionstorage.auth.remote.request.LoginRequestBody
+import com.emotionstorage.common.DataResource
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.remote.response.ResponseStatus
 import javax.inject.Inject
@@ -14,20 +15,27 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     private val authApiService: AuthApiService
 ) : AuthRemoteDataSource {
 
-    // todo: change return type to contain boolean & access token
     override suspend fun login(
         provider: User.AuthProvider,
         idToken: String
-    ): Boolean {
+    ): DataResource<String> {
         val response = when (provider) {
             User.AuthProvider.KAKAO -> authApiService.postKakaoLogin(
                 LoginRequestBody(idToken)
             )
+
             User.AuthProvider.GOOGLE -> authApiService.postGoogleLogin(
                 LoginRequestBody(idToken)
             )
         }
-        return response.status == ResponseStatus.Created
+
+        if (response.status == ResponseStatus.Created) {
+            return response.data?.accessToken?.run {
+                DataResource.Success(this)
+            } ?: DataResource.Error(Exception("response data is null"))
+        } else {
+            return DataResource.Error(Exception(response.message))
+        }
     }
 
     override suspend fun signup(
@@ -38,6 +46,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
             User.AuthProvider.KAKAO -> authApiService.postKakaoSignup(
                 SignupFormMapper.toRemote(signupFormEntity)
             )
+
             User.AuthProvider.GOOGLE -> authApiService.postGoogleSignup(
                 SignupFormMapper.toRemote(signupFormEntity)
             )
