@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.interceptor
 
-import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.data.dataSource.SessionLocalDataSource
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,8 +14,9 @@ annotation class AuthRequest
 class RequestHeaderInterceptor
 @Inject
 constructor(
-    private val userLocalDataSource: UserLocalDataSource
+    private val sessionLocalDataSource: SessionLocalDataSource,
 ) : Interceptor {
+
     override fun intercept(chain: Interceptor.Chain): Response {
         // add default headers
         val requestBuilder =
@@ -34,7 +35,7 @@ constructor(
                     when (annotation) {
                         is AuthRequest -> {
                             runBlocking {
-                                userLocalDataSource.getUser()?.accessToken
+                                sessionLocalDataSource.getSession()?.accessToken
                             }?.run {
                                 addHeader("Authorization", this)
                             }

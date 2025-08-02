@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.di
 
-import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.data.dataSource.SessionLocalDataSource
 import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -54,6 +54,6 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRequestHeaderInterceptor(userLocalDataSource: UserLocalDataSource) =
-        RequestHeaderInterceptor(userLocalDataSource)
+    fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
+        RequestHeaderInterceptor(sessionLocalDataSource)
 }
