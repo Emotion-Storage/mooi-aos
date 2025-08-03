@@ -42,9 +42,11 @@ android {
 
 dependencies {
     implementation(projects.domain)
+    implementation(projects.data)
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.remote)
+    implementation(projects.core.local)
 
     implementation(libs.bundles.credentials)
 }
