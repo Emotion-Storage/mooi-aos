@@ -35,6 +35,7 @@ fun InputNicknameScreen(
     inputNicknameViewModel: InputNicknameViewModel = hiltViewModel(),
     navToInputGenderBirth: () -> Unit = {},
 ) {
+    // todo: add top bar with nav back icon
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
