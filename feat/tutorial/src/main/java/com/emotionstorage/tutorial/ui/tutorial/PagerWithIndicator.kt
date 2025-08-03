@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.component
+package com.emotionstorage.tutorial.ui.tutorial
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background

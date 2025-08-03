@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui
+package com.emotionstorage.tutorial.ui.tutorial
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,7 +23,6 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
-import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 
 private const val TUTORIAL_PAGE_COUNT = 4
 
