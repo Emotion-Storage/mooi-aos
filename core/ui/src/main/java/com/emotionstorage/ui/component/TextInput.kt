@@ -168,7 +168,6 @@ private fun TextInputMessage(
 @Preview
 @Composable
 private fun TextInputPreview() {
-
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         TextInput(
             label = "이름",

@@ -38,7 +38,7 @@ fun OnBoardingTitle(
     totalStep: Int = ON_BOARDING_STEP_COUNT,
 ) {
     Row(
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top
     ) {
