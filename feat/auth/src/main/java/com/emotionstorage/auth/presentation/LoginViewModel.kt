@@ -2,33 +2,41 @@ package com.emotionstorage.auth.presentation
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.domain.model.User.AuthProvider
+import androidx.lifecycle.viewModelScope
+import com.emotionstorage.auth.domain.usecase.LoginUseCase
+import com.emotionstorage.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-interface LoginScreenEvent {
-    fun onLoginButtonClick(
-        provider: AuthProvider,
-        navToHome: () -> Unit = {},
-        navToOnBoarding: () -> Unit = {}
+interface LoginEvent {
+    suspend fun onLoginButtonClick(
+        provider: User.AuthProvider,
+        onSuccess: () -> Unit = {},
+        onError: () -> Unit = {}
     )
 }
 
 @HiltViewModel
-class LoginViewModel
-@Inject constructor() : ViewModel(), LoginScreenEvent {
-    val event: LoginScreenEvent = this@LoginViewModel
+class LoginViewModel @Inject constructor(
+    private val login: LoginUseCase
+) : ViewModel(), LoginEvent {
+
+    val event = this@LoginViewModel
 
     init {
-        Log.d("LoginViewModel", "LoginViewModel init")
+        Log.d("LoginViewModel", "LoginViewModel initialized")
     }
 
-    override fun onLoginButtonClick(
-        provider: AuthProvider,
-        navToHome: () -> Unit,
-        navToOnBoarding: () -> Unit
+    override suspend fun onLoginButtonClick(
+        provider: User.AuthProvider,
+        onSuccess: () -> Unit,
+        onError: () -> Unit
     ) {
-        // todo: call login use case
-        Log.d("LoginViewModel", "onLoginButtonClick: $provider")
+        viewModelScope.launch {
+            Log.d("LoginViewModel", "onLoginButtonClick called with provider: $provider")
+            if (login(provider)) onSuccess()
+            else onError()
+        }
     }
 }

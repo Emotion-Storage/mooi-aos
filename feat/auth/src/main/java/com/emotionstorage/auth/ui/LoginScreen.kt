@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +30,7 @@ import com.emotionstorage.auth.R
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.theme.pretendard
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -37,7 +39,8 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
 ) {
-    // 로그인 화면 와이어프레임 - 이미지 및 문구 변경 필요
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         modifier
             .background(MooiTheme.colorScheme.background)
@@ -96,20 +99,24 @@ fun LoginScreen(
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
                     onClick = {
-                        loginViewModel.event.onLoginButtonClick(
-                            AuthProvider.KAKAO,
-                            navToHome,
-                            navToOnBoarding
-                        )
+                        coroutineScope.launch {
+                            loginViewModel.event.onLoginButtonClick(
+                                provider = AuthProvider.KAKAO,
+                                onSuccess = navToHome,
+                                onError = navToOnBoarding
+                            )
+                        }
                     })
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
-                        loginViewModel.event.onLoginButtonClick(
-                            AuthProvider.GOOGLE,
-                            navToHome,
-                            navToOnBoarding
-                        )
+                        coroutineScope.launch {
+                            loginViewModel.event.onLoginButtonClick(
+                                provider = AuthProvider.GOOGLE,
+                                onSuccess = navToHome,
+                                onError = navToOnBoarding
+                            )
+                        }
                     })
             }
         }
