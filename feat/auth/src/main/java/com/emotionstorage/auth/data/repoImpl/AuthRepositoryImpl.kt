@@ -18,12 +18,17 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun login(provider: User.AuthProvider): DataResource<String> {
         try {
-            val idToken = when (provider) {
+            val result = when (provider) {
                 User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                 User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
             }
-            return authRemoteDataSource.login(provider, idToken)
-        } catch (e: Exception){
+
+            return when (result) {
+                is DataResource.Success -> authRemoteDataSource.login(provider, result.data)
+                is DataResource.Error -> result
+                is DataResource.Loading -> result
+            }
+        } catch (e: Exception) {
             return DataResource.Error(e)
         }
     }

@@ -1,3 +1,9 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
+fun getApiKey(propertyKey: String): String {
+    return gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+}
+
 plugins {
     id("com.emotionstorage.convention.android.library")
     id("com.emotionstorage.convention.android.library.compose")
@@ -11,6 +17,12 @@ android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(
+            "String",
+            "GOOGLE_CLIENT_ID",
+            getApiKey("GOOGLE_CLIENT_ID")
+        )
     }
 
     buildTypes {
@@ -21,6 +33,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 
