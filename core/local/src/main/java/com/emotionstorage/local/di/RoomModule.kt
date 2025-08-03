@@ -6,11 +6,13 @@ import com.emotionstorage.local.room.AppDatabase
 import com.emotionstorage.local.room.AppDatabaseConstant
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@Singleton
+@InstallIn(SingletonComponent::class)
 internal object RoomModule {
 
     @Provides
