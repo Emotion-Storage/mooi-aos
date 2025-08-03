@@ -133,7 +133,7 @@ private fun TextInputMessage(
     state: TextInputState,
     modifier: Modifier = Modifier
 ) {
-    if (state.message == null) return
+    if (state.message.isNullOrEmpty()) return
 
     Row(
         modifier = modifier,
@@ -180,7 +180,7 @@ private fun TextInputPreview() {
         )
         TextInput(
             label = "이름",
-            value = "이름",
+            value = "뿅",
             onValueChange = {},
             showCharCount = true,
             maxCharCount = 8,
