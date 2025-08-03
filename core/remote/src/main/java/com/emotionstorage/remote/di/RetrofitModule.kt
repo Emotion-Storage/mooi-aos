@@ -18,8 +18,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    // todo: add mooi backend base url
-    private const val BASE_URL = "~~~~/api/v1"
+    // todo: change mooi backend base url
+    private const val BASE_URL = "https://~~~~/api/v1/"
 
     @Singleton
     @Provides
