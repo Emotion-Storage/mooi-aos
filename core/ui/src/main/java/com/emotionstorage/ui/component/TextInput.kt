@@ -2,20 +2,24 @@ package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -48,14 +52,20 @@ fun TextInput(
         Box(modifier = Modifier.fillMaxWidth()) {
             if (!label.isNullOrEmpty()) {
                 Text(
-                    modifier = Modifier.align(Alignment.CenterStart),
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .padding(bottom = 18.dp),
                     style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                     color = Color.White,
                     text = label
                 )
             }
             if (showCharCount) {
-                Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+                Row(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(bottom = 18.dp)
+                ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = MooiTheme.colorScheme.primary,
@@ -69,36 +79,46 @@ fun TextInput(
                 }
             }
         }
-        TextField(
+
+        BasicTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(min = 0.dp),
-            textStyle = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+            textStyle = MooiTheme.typography.body3.copy(fontSize = 15.sp, color = Color.White),
             value = value,
             onValueChange = onValueChange,
-            placeholder = { Text(placeHolder) },
-            isError = state is TextInputState.Error,
-            colors = TextFieldDefaults.colors(
-                focusedTextColor = Color.White,
-                unfocusedTextColor = Color.White,
-                disabledTextColor = Color.White,
-                errorTextColor = Color.White,
+            maxLines = 1,
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(9.dp)
+            ) {
+                if (value.isEmpty()) {
+                    Text(
+                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        color = MooiTheme.colorScheme.gray500,
+                        text = placeHolder
+                    )
+                } else {
+                    it()
+                }
 
-                focusedContainerColor = MooiTheme.colorScheme.background,
-                unfocusedContainerColor = MooiTheme.colorScheme.background,
-                disabledContainerColor = MooiTheme.colorScheme.background,
-                errorContainerColor = MooiTheme.colorScheme.background,
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(
+                            when (state) {
+                                is TextInputState.Empty -> MooiTheme.colorScheme.gray600
+                                is TextInputState.Error -> MooiTheme.colorScheme.errorRed
+                                is TextInputState.Success -> MooiTheme.colorScheme.primary
+                            }
+                        )
+                )
+            }
+        }
 
-                cursorColor = Color.White,
-                errorCursorColor = Color.White,
-                selectionColors = null,
 
-                focusedIndicatorColor = if (state is TextInputState.Success) MooiTheme.colorScheme.primary else Color.Unspecified,
-                unfocusedIndicatorColor = if (state is TextInputState.Success) MooiTheme.colorScheme.primary else Color.Unspecified,
-                disabledIndicatorColor = if (state is TextInputState.Success) MooiTheme.colorScheme.primary else Color.Unspecified,
-                errorIndicatorColor = MooiTheme.colorScheme.errorRed,
-            )
-        )
         TextInputMessage(
             modifier = Modifier
                 .fillMaxWidth()
