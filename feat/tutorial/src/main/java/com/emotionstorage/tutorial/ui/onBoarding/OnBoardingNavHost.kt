@@ -16,11 +16,11 @@ import androidx.navigation.compose.rememberNavController
 enum class OnBoardingRoute(
     val route: String
 ) {
-    INPUT_NICKNAME("on_boarding/nickname"),
-    INPUT_GENDER_BIRTH("on_boarding/gender_birth"),
-    SELECT_EXPECTATIONS("on_boarding/expectations"),
-    AGREE_TERMS("on_boarding/terms"),
-    SIGNUP_COMPLETE("on_boarding/complete"),
+    NICKNAME("on_boarding/nickname"),
+    GENDER_BIRTH("on_boarding/gender_birth"),
+    EXPECTATIONS("on_boarding/expectations"),
+    AGREE_TERMS("on_boarding/agree_terms"),
+    SIGNUP_COMPLETE("on_boarding/signup_complete"),
 }
 
 @Composable
@@ -36,21 +36,21 @@ fun OnBoardingNavHost(
 
     NavHost(
         navController,
-        startDestination = OnBoardingRoute.INPUT_NICKNAME.route,
+        startDestination = OnBoardingRoute.NICKNAME.route,
         modifier = modifier.fillMaxSize()
     ) {
         OnBoardingRoute.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    OnBoardingRoute.INPUT_NICKNAME -> InputNicknameScreen(
-                        navToInputGenderBirth = { navController.navigate(OnBoardingRoute.INPUT_GENDER_BIRTH.route) }
+                    OnBoardingRoute.NICKNAME -> NicknameScreen(
+                        navToGenderBirth = { navController.navigate(OnBoardingRoute.GENDER_BIRTH.route) }
                     )
 
-                    OnBoardingRoute.INPUT_GENDER_BIRTH -> InputGenderBirthScreen(
-                        navToSelectExpectations = { navController.navigate(OnBoardingRoute.SELECT_EXPECTATIONS.route) }
+                    OnBoardingRoute.GENDER_BIRTH -> GenderBirthScreen(
+                        navToExpectations = { navController.navigate(OnBoardingRoute.EXPECTATIONS.route) }
                     )
 
-                    OnBoardingRoute.SELECT_EXPECTATIONS -> SelectExpectationsScreen(
+                    OnBoardingRoute.EXPECTATIONS -> ExpectationsScreen(
                         navToAgreeTerms = { navController.navigate(OnBoardingRoute.AGREE_TERMS.route) }
                     )
 

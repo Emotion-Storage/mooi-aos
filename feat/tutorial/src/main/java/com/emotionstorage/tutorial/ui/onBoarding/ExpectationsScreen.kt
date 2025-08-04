@@ -8,20 +8,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**
- * On boarding step 2
- * - input user gender
- * - input user birth date
+ * On boarding step 3
+ * - select expectations
  */
 @Composable
-fun InputGenderBirthScreen(
+fun ExpectationsScreen(
     modifier: Modifier = Modifier,
-    onBoardingViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToSelectExpectations: () -> Unit = {},
+    navToAgreeTerms: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier
@@ -29,8 +25,7 @@ fun InputGenderBirthScreen(
             .fillMaxSize()
     ) { padding ->
         Column(modifier = modifier.padding(padding)) {
-            Text("Input Gender")
-            Text("Input BirthDate")
+            Text("Select expectations")
         }
     }
 }

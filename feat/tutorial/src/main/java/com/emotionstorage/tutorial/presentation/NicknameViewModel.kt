@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.emotionstorage.common.DataResource
 import com.emotionstorage.tutorial.domain.NicknameState
 import com.emotionstorage.tutorial.domain.ValidateNicknameUseCase
-import com.emotionstorage.tutorial.presentation.InputNicknameViewModel.State.InputState
+import com.emotionstorage.tutorial.presentation.NicknameViewModel.State.InputState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,7 +21,7 @@ interface InputNicknameEvent {
 }
 
 @HiltViewModel
-class InputNicknameViewModel @Inject constructor(
+class NicknameViewModel @Inject constructor(
     private val validateNicknameUseCase: ValidateNicknameUseCase
 ) : ViewModel(), InputNicknameEvent {
     private val _nickname = MutableStateFlow("")
@@ -39,7 +39,7 @@ class InputNicknameViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = State()
     )
-    val event: InputNicknameEvent = this@InputNicknameViewModel
+    val event: InputNicknameEvent = this@NicknameViewModel
 
     init {
         Log.d("InputNicknameViewModel", "InputNicknameViewModel created!")

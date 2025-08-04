@@ -12,13 +12,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.presentation.InputNicknameViewModel
+import com.emotionstorage.tutorial.presentation.NicknameViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.InputNicknameEvent
-import com.emotionstorage.tutorial.presentation.InputNicknameViewModel.State.InputState
+import com.emotionstorage.tutorial.presentation.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
@@ -29,25 +30,25 @@ import com.emotionstorage.ui.component.TopAppBar
  * - input user nickname
  */
 @Composable
-fun InputNicknameScreen(
+fun NicknameScreen(
     modifier: Modifier = Modifier,
-    viewModel: InputNicknameViewModel = hiltViewModel(),
-    navToInputGenderBirth: () -> Unit = {},
+    viewModel: NicknameViewModel = hiltViewModel(),
+    navToGenderBirth: () -> Unit = {},
 ) {
-    StatelessInputNicknameScreen(
+    StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
         event = viewModel.event,
-        navToInputGenderBirth = navToInputGenderBirth
+        navToGenderBirth = navToGenderBirth
     )
 }
 
 @Composable
-private fun StatelessInputNicknameScreen(
+private fun StatelessNicknameScreen(
     modifier: Modifier = Modifier,
-    state: InputNicknameViewModel.State,
+    state: NicknameViewModel.State,
     event: InputNicknameEvent,
-    navToInputGenderBirth: () -> Unit = {},
+    navToGenderBirth: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier
@@ -98,20 +99,19 @@ private fun StatelessInputNicknameScreen(
                     .padding(bottom = 39.dp),
                 label = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
-                onClick = navToInputGenderBirth
+                onClick = navToGenderBirth
             )
         }
     }
 }
 
 
-//@PreviewScreenSizes
-@Preview
+@PreviewScreenSizes
 @Composable
-private fun InputNicknameScreenPreview() {
+private fun NicknameScreenPreview() {
     MooiTheme {
-        StatelessInputNicknameScreen(
-            state = InputNicknameViewModel.State(),
+        StatelessNicknameScreen(
+            state = NicknameViewModel.State(),
             event = object : InputNicknameEvent {
                 override fun onNicknameChange(nickname: String) {}
             }

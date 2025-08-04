@@ -8,8 +8,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**
@@ -19,7 +17,6 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun SignupCompleteScreen(
     modifier: Modifier = Modifier,
-    onBoardingViewModel: OnBoardingViewModel = hiltViewModel(),
     navToMain: () -> Unit = {},
 ) {
     Scaffold(
