@@ -92,7 +92,6 @@ private fun StatelessInputNicknameScreen(
                 )
             }
 
-            // todo: enable when nickname is valid
             CtaButton(
                 modifier = Modifier
                     .fillMaxWidth()

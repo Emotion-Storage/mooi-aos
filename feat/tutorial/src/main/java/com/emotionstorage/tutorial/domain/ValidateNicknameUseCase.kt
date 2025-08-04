@@ -24,15 +24,10 @@ class ValidateNicknameUseCase @Inject constructor() {
     operator fun invoke(nickname: String): DataResource<NicknameState> {
         if (nickname.isNullOrEmpty())
             return DataResource.Success(NicknameState.INVALID_EMPTY)
-        if (!nickname.matches(Regex("^[a-zA-Z가-힣]*$")))
+        if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎ가-힣]*$")))
             return DataResource.Success(NicknameState.INVALID_CHAR)
         if (nickname.length < 2)
             return DataResource.Success(NicknameState.INVALID_LENGTH)
-
-        // possible errors
-        if (nickname.length > 8)
-            return DataResource.Error(Throwable("nickname is too long"))
-
         return DataResource.Success(NicknameState.VALID)
     }
 }
