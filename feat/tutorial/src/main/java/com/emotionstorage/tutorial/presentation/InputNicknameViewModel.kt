@@ -52,6 +52,7 @@ class InputNicknameViewModel @Inject constructor(
     }
 
     override fun onNicknameChange(nickname: String) {
+        if(nickname.length > 8) return
         viewModelScope.launch {
             _nickname.update { nickname }
         }
