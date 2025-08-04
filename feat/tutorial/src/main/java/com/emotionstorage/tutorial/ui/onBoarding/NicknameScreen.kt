@@ -1,17 +1,17 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
+import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -64,6 +64,7 @@ private fun StatelessNicknameScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp)
+                .imePadding(),
         ) {
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -93,10 +94,11 @@ private fun StatelessNicknameScreen(
                 )
             }
 
+            // todo: add bottom padding when keyboard is hidden
             CtaButton(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 39.dp),
+                    .fillMaxWidth(),
+//                    .padding(bottom = 39.dp),
                 label = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
                 onClick = navToGenderBirth
