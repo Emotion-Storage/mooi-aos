@@ -80,10 +80,12 @@ private fun StatelessGenderBirthScreen(
                 .padding(horizontal = 16.dp)
                 .imePadding(),
         ) {
+            // todo: add nickname to title
+            // todo: change title string to short when nickname length >= 5
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
                 currentStep = 1,
-                title = stringResource(R.string.on_boarding_gender_birth_title_long),
+                title = stringResource(R.string.on_boarding_gender_birth_title_short),
                 titleHighlights = stringResource(R.string.on_boarding_gender_birth_title_highlights).split(
                     ','
                 )
@@ -251,7 +253,7 @@ private fun GenderBirthScreenPreview() {
     MooiTheme {
         StatelessGenderBirthScreen(
             event = object : GenderBirthEvent {
-                override fun onGenderSelect(gender: State.Gender) {}
+                override fun onGenderSelect(gender: Gender?) {}
 
                 override fun onYearPickerSelect(year: String) {}
 
