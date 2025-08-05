@@ -64,9 +64,6 @@ class GoogleRemoteDataSourceImpl @Inject constructor(
                     }
                 }
             } catch (e: Exception) {
-                // todo: fix error
-                // credential response error: androidx.credentials.exceptions.GetCredentialCustomException: [28444] Developer console is not set up correctly.
-
                 Log.e("GoogleRemoteDataSourceImpl", "credential response error: $e")
                 return@async DataResource.Error(e)
             }
