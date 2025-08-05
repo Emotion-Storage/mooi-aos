@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,8 +26,10 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.auth.presentation.LoginViewModel
+import com.emotionstorage.auth.presentation.LoginViewModel.State
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.auth.R
+import com.emotionstorage.auth.presentation.LoginEvent
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.theme.pretendard
@@ -34,11 +37,48 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    navToHome: () -> Unit = {},
-    navToOnBoarding: () -> Unit = {},
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
+    navToHome: () -> Unit = {},
+    navToOnBoarding: () -> Unit = {},
 ) {
+    val state = loginViewModel.state.collectAsState()
+
+    StatelessLoginScreen(
+        event = loginViewModel.event,
+        state = state.value,
+        modifier = modifier,
+        navToHome = navToHome,
+        navToOnBoarding = navToOnBoarding,
+    )
+}
+
+@Composable
+private fun StatelessLoginScreen(
+    event: LoginEvent,
+    state: State,
+    modifier: Modifier = Modifier,
+    navToHome: () -> Unit = {},
+    navToOnBoarding: () -> Unit = {},
+) {
+    when (state.loginState) {
+        State.LoginState.Idle -> {
+            // do nothing
+        }
+
+        State.LoginState.Loading -> {
+            // todo: add loading ui on LoginState.Loading
+        }
+
+        State.LoginState.Success -> {
+            navToHome()
+        }
+
+        State.LoginState.Error -> {
+            navToOnBoarding()
+        }
+    }
+
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -100,10 +140,8 @@ fun LoginScreen(
                     provider = AuthProvider.KAKAO,
                     onClick = {
                         coroutineScope.launch {
-                            loginViewModel.event.onLoginButtonClick(
-                                provider = AuthProvider.KAKAO,
-                                onSuccess = navToHome,
-                                onError = navToOnBoarding
+                            event.onLoginButtonClick(
+                                provider = AuthProvider.KAKAO
                             )
                         }
                     })
@@ -111,10 +149,8 @@ fun LoginScreen(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
                         coroutineScope.launch {
-                            loginViewModel.event.onLoginButtonClick(
-                                provider = AuthProvider.GOOGLE,
-                                onSuccess = navToHome,
-                                onError = navToOnBoarding
+                            event.onLoginButtonClick(
+                                provider = AuthProvider.GOOGLE
                             )
                         }
                     })
@@ -127,6 +163,13 @@ fun LoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     MooiTheme {
-        LoginScreen()
+        StatelessLoginScreen(
+            event = object : LoginEvent {
+                override suspend fun onLoginButtonClick(provider: AuthProvider) {
+                    // do nothing
+                }
+            },
+            state = State()
+        )
     }
 }
