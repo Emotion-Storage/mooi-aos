@@ -18,7 +18,7 @@ private const val MIN_AGE = 14
 private const val MIN_YEAR = 1970
 
 interface GenderBirthEvent {
-    fun onGenderSelect(gender: Gender)
+    fun onGenderSelect(gender: Gender?)
     fun onYearPickerSelect(year: String)
     fun onMonthPickerSelect(month: String)
     fun onDayPickerSelect(day: String)
@@ -77,7 +77,7 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
         }
     }
 
-    override fun onGenderSelect(gender: Gender) {
+    override fun onGenderSelect(gender: Gender?) {
         _gender.update { gender }
     }
 
@@ -108,7 +108,7 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
             enabled = true
         ),
         val dayPickerState: PickerState = PickerState(
-            range = (1..31).toList().map { it.toString().format("%2d")  },
+            range = (1..31).toList().map { it.toString().format("%2d") },
             enabled = true
         ),
     ) {
@@ -121,8 +121,8 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
             val enabled: Boolean = true
         )
 
-        enum class Gender {
-            MALE, FEMALE
+        enum class Gender(val label: String) {
+            MALE("남성"), FEMALE("여성")
         }
     }
 }
