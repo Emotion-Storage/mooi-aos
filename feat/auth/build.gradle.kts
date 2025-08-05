@@ -20,8 +20,8 @@ android {
 
         buildConfigField(
             "String",
-            "GOOGLE_CLIENT_ID",
-            getApiKey("GOOGLE_CLIENT_ID")
+            "GOOGLE_SERVER_CLIENT_ID",
+            getApiKey("GOOGLE_SERVER_CLIENT_ID")
         )
     }
 

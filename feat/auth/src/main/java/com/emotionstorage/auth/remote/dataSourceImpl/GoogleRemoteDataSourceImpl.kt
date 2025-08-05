@@ -35,7 +35,7 @@ class GoogleRemoteDataSourceImpl @Inject constructor(
                     request = GetCredentialRequest.Builder().addCredentialOption(
                         GetSignInWithGoogleOption
                             .Builder(
-                                serverClientId = BuildConfig.GOOGLE_CLIENT_ID
+                                serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID
                             ).build()
                     ).build(),
                     context = context,
