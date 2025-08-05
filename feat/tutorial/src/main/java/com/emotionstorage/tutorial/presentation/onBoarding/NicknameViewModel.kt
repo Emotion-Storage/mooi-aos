@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.presentation
+package com.emotionstorage.tutorial.presentation.onBoarding
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.emotionstorage.common.DataResource
 import com.emotionstorage.tutorial.domain.NicknameState
 import com.emotionstorage.tutorial.domain.ValidateNicknameUseCase
-import com.emotionstorage.tutorial.presentation.NicknameViewModel.State.InputState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -25,7 +24,7 @@ class NicknameViewModel @Inject constructor(
     private val validateNicknameUseCase: ValidateNicknameUseCase
 ) : ViewModel(), InputNicknameEvent {
     private val _nickname = MutableStateFlow("")
-    private val _nicknameInputState = MutableStateFlow(InputState.EMPTY)
+    private val _nicknameInputState = MutableStateFlow(State.InputState.EMPTY)
     private val _nicknameHelperMessage = MutableStateFlow<String?>(null)
 
     val state = combine(
@@ -52,10 +51,8 @@ class NicknameViewModel @Inject constructor(
     }
 
     override fun onNicknameChange(nickname: String) {
-        if(nickname.length > 8) return
-        viewModelScope.launch {
-            _nickname.update { nickname }
-        }
+        if (nickname.length > 8) return
+        _nickname.update { nickname }
     }
 
     private fun validateNickname(nickname: String) {
@@ -64,11 +61,11 @@ class NicknameViewModel @Inject constructor(
         if (result is DataResource.Success) {
             _nicknameInputState.update {
                 when (result.data) {
-                    NicknameState.INVALID_EMPTY -> InputState.EMPTY
-                    NicknameState.INVALID_CHAR -> InputState.INVALID
-                    NicknameState.INVALID_LENGTH -> InputState.INVALID
-                    NicknameState.VALID -> InputState.VALID
-                    else -> InputState.EMPTY
+                    NicknameState.INVALID_EMPTY -> State.InputState.EMPTY
+                    NicknameState.INVALID_CHAR -> State.InputState.INVALID
+                    NicknameState.INVALID_LENGTH -> State.InputState.INVALID
+                    NicknameState.VALID -> State.InputState.VALID
+                    else -> State.InputState.EMPTY
                 }
             }
             _nicknameHelperMessage.update {

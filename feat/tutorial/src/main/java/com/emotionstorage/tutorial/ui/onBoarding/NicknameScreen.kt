@@ -15,11 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.presentation.NicknameViewModel
+import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.InputNicknameEvent
-import com.emotionstorage.tutorial.presentation.NicknameViewModel.State.InputState
+import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
+import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
