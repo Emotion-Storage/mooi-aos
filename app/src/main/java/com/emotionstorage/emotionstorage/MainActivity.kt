@@ -16,8 +16,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MooiTheme {
-//                OnBoardingNavHost()
-                LoginScreen()
+                OnBoardingNavHost()
             }
         }
     }

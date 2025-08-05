@@ -162,6 +162,10 @@ private fun GenderInput(
                             // todo: add gradient bg & border when selected value exists
                             if (selectedGender == it) Color.Gray else Color.Black
                         )
+                        .clickable {
+                            if (selectedGender == it) onGenderSelect(null) else
+                                onGenderSelect(it)
+                        }
                         .padding(14.dp)
                 ) {
                     Text(
@@ -170,11 +174,6 @@ private fun GenderInput(
                         text = it.label,
                         modifier = Modifier
                             .align(Alignment.Center)
-                            .height(24.dp)
-                            .clickable {
-                                if (selectedGender == it) onGenderSelect(null) else
-                                    onGenderSelect(it)
-                            }
                     )
                 }
             }
