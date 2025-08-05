@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +36,6 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.Gender
-import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
 
 /**
@@ -246,7 +246,7 @@ private fun BirthInput(
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun GenderBirthScreenPreview() {
     MooiTheme {
