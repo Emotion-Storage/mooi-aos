@@ -11,9 +11,10 @@ data class User(
     val name: String,
     val profileImageUrl: String? = null,
 
-    val accessToken:String,
-    val refreshToken:String,
-
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-)
+){
+    enum class AuthProvider {
+        GOOGLE, KAKAO
+    }
+}
