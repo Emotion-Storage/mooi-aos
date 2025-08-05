@@ -22,7 +22,6 @@ interface GenderBirthEvent {
     fun onYearPickerSelect(year: String)
     fun onMonthPickerSelect(month: String)
     fun onDayPickerSelect(day: String)
-
 }
 
 @HiltViewModel
@@ -105,11 +104,11 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
             enabled = true
         ),
         val monthPickerState: PickerState = PickerState(
-            range = (1..12).toList().map { it.toString() },
+            range = (1..12).toList().map { it.toString().format("%2d") },
             enabled = true
         ),
         val dayPickerState: PickerState = PickerState(
-            range = (1..31).toList().map { it.toString() },
+            range = (1..31).toList().map { it.toString().format("%2d")  },
             enabled = true
         ),
     ) {
