@@ -28,15 +28,15 @@ enum class OnBoardingRoute(
     GENDER_BIRTH("on_boarding/gender_birth"),
     EXPECTATIONS("on_boarding/expectations"),
     AGREE_TERMS("on_boarding/agree_terms"),
-    SIGNUP_COMPLETE("on_boarding/signup_complete"),
 }
 
 @Composable
 fun OnBoardingNavHost(
+    provider: AuthProvider,
+    idToken: String,
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToMain: () -> Unit = {},
-    navToLogin: () -> Unit = {}
+    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     val navController = rememberNavController()
 
@@ -47,31 +47,26 @@ fun OnBoardingNavHost(
     val signupForm = sharedViewModel.signupForm.collectAsState()
 
     StatelessOnBoardingNavHost(
+        provider = provider,
+        idToken = idToken,
         navController = navController,
         signupForm = signupForm.value,
         event = sharedViewModel,
         modifier = modifier,
-        navToMain = navToMain,
-        navToLogin = navToLogin
+        navToSignupComplete = navToSignupComplete
     )
 }
 
 @Composable
 private fun StatelessOnBoardingNavHost(
+    provider: AuthProvider,
+    idToken: String,
     navController: NavHostController,
     signupForm: SignupForm,
     event: OnBoardingEvent,
     modifier: Modifier = Modifier,
-    navToMain: () -> Unit = {},
-    navToLogin: () -> Unit = {}
+    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    // todo receive provider & id token from nav
-    val provider = AuthProvider.GOOGLE
-    val idToken = ""
-    LaunchedEffect(provider, idToken) {
-        event.onProviderIdTokenReceived(provider, idToken)
-    }
-
     NavHost(
         navController,
         startDestination = OnBoardingRoute.NICKNAME.route,
@@ -104,16 +99,12 @@ private fun StatelessOnBoardingNavHost(
 
                     OnBoardingRoute.AGREE_TERMS -> AgreeTermsScreen(
                         onAgreeTermsInputComplete = event::onAgreeTermsInputComplete,
-                        onSignup = event::onSignup,
+                        onSignup = {
+                            event.onSignup(provider, idToken)
+                        },
                         navToSignupComplete = {
-                            navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route)
+                            navToSignupComplete(provider, idToken)
                         }
-                    )
-
-                    OnBoardingRoute.SIGNUP_COMPLETE -> SignupCompleteScreen(
-                        onLogin = event::onLogin,
-                        navToMain = navToMain,
-                        navToLogin = navToLogin
                     )
                 }
             }

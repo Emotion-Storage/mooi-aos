@@ -18,7 +18,6 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 interface OnBoardingEvent {
-    fun onProviderIdTokenReceived(provider: AuthProvider, idToken: String)
     fun onNicknameInputComplete(nickname: String)
     fun onGenderBirthInputComplete(gender: GENDER, birth: LocalDate)
     fun onExpectationsSelectComplete(expectations: List<String>)
@@ -28,8 +27,7 @@ interface OnBoardingEvent {
         isMarketingAgreed: Boolean
     )
 
-    suspend fun onSignup(): Boolean
-    suspend fun onLogin(): Boolean
+    suspend fun onSignup(provider: AuthProvider, idToken: String): Boolean
 }
 
 /**
@@ -38,18 +36,10 @@ interface OnBoardingEvent {
  */
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
-    private val signup: SignupUseCase,
-    private val login: LoginUseCase
+    private val signup: SignupUseCase
 ) : ViewModel(), OnBoardingEvent {
-    private var _provider: AuthProvider? = null
-
     private val _signupForm = MutableStateFlow(SignupForm())
     val signupForm: StateFlow<SignupForm> = _signupForm.asStateFlow()
-
-    override fun onProviderIdTokenReceived(provider: AuthProvider, idToken: String) {
-        _provider = provider
-        _signupForm.update { it.copy(idToken = idToken) }
-    }
 
     override fun onNicknameInputComplete(nickname: String) {
         _signupForm.update { it.copy(nickname = nickname) }
@@ -77,25 +67,12 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
-    override suspend fun onSignup(): Boolean {
+    override suspend fun onSignup(provider: AuthProvider, idToken: String): Boolean {
         val deferredResult = viewModelScope.async {
-            try {
-                if (_provider == null) throw Exception("Provider is null")
-                return@async signup(provider = _provider!!, signupForm = _signupForm.value)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return@async false
-            }
-        }
-        return deferredResult.await()
-    }
+            _signupForm.update { it.copy(idToken = idToken) }
 
-
-    override suspend fun onLogin(): Boolean {
-        val deferredResult = viewModelScope.async {
             try {
-                if (_provider == null) throw Exception("Provider is null")
-                return@async login(provider = _provider!!)
+                return@async signup(provider = provider, signupForm = _signupForm.value)
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@async false
