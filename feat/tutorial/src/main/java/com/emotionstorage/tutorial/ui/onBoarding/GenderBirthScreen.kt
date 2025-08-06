@@ -35,6 +35,7 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.component.CtaButton
+import java.time.LocalDate
 
 /**
  * On boarding step 2
@@ -45,7 +46,8 @@ import com.emotionstorage.ui.component.CtaButton
 fun GenderBirthScreen(
     modifier: Modifier = Modifier,
     viewModel: GenderBirthViewModel = hiltViewModel(),
-    navToExpectations: () -> Unit = {},
+    nickname: String = "",
+    navToExpectations: (gender: GENDER, birthday: LocalDate) -> Unit = { _, _ -> },
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -53,6 +55,7 @@ fun GenderBirthScreen(
         event = viewModel.event,
         state = state,
         modifier = modifier,
+        nickname = nickname,
         navToExpectations = navToExpectations
     )
 }
@@ -62,7 +65,8 @@ private fun StatelessGenderBirthScreen(
     event: GenderBirthEvent,
     state: State,
     modifier: Modifier = Modifier,
-    navToExpectations: () -> Unit = {},
+    nickname: String = "",
+    navToExpectations: (gender: GENDER, birthday: LocalDate) -> Unit = { _, _ -> },
 ) {
     Scaffold(
         modifier = modifier
@@ -78,12 +82,13 @@ private fun StatelessGenderBirthScreen(
                 .padding(horizontal = 16.dp)
                 .imePadding(),
         ) {
-            // todo: add nickname to title
-            // todo: change title string to short when nickname length >= 5
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
                 currentStep = 1,
-                title = stringResource(R.string.on_boarding_gender_birth_title_short),
+                title = stringResource(
+                    if (nickname.length < 5) R.string.on_boarding_gender_birth_title_short else R.string.on_boarding_gender_birth_title_long,
+                    nickname
+                ),
                 titleHighlights = stringResource(R.string.on_boarding_gender_birth_title_highlights).split(
                     ','
                 )
@@ -125,7 +130,23 @@ private fun StatelessGenderBirthScreen(
 //                    .padding(bottom = 39.dp),
                 label = "다음으로",
                 enabled = state.isNextButtonEnabled,
-                onClick = navToExpectations
+                onClick = {
+                    if (
+                        (state.gender == null) ||
+                        (state.yearPickerState.selectedValue == null) ||
+                        (state.monthPickerState.selectedValue == null) ||
+                        (state.dayPickerState.selectedValue == null)
+                    ) return@CtaButton
+
+                    navToExpectations(
+                        state.gender,
+                        LocalDate.of(
+                            state.yearPickerState.selectedValue.toInt(),
+                            state.monthPickerState.selectedValue.toInt(),
+                            state.dayPickerState.selectedValue.toInt()
+                        )
+                    )
+                }
             )
         }
     }
@@ -259,6 +280,7 @@ private fun GenderBirthScreenPreview() {
                 override fun onDayPickerSelect(day: String) {}
             },
             state = State(),
+            nickname = "찡찡이",
         )
     }
 }

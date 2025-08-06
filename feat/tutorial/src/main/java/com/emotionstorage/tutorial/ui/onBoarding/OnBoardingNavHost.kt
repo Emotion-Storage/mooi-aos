@@ -3,12 +3,19 @@ package com.emotionstorage.tutorial.ui.onBoarding
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.emotionstorage.auth.domain.model.SignupForm
+import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingEvent
+import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
 
 /**
  * On boarding destinations
@@ -26,6 +33,7 @@ enum class OnBoardingRoute(
 @Composable
 fun OnBoardingNavHost(
     modifier: Modifier = Modifier,
+    sharedViewModel: OnBoardingViewModel = hiltViewModel(),
     navToMain: () -> Unit = {},
 ) {
     val navController = rememberNavController()
@@ -33,6 +41,31 @@ fun OnBoardingNavHost(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     Log.d("on boarding nav controller", "currentRoute: $currentRoute")
+
+    val signupForm = sharedViewModel.signupForm.collectAsState()
+
+    StatelessOnBoardingNavHost(
+        navController = navController,
+        signupForm = signupForm.value,
+        event = sharedViewModel,
+        modifier = modifier,
+        navToMain = navToMain
+    )
+}
+
+@Composable
+private fun StatelessOnBoardingNavHost(
+    navController: NavHostController,
+    signupForm: SignupForm,
+    event: OnBoardingEvent,
+    modifier: Modifier = Modifier,
+    navToMain: () -> Unit = {},
+){
+    // todo receive id token from nav
+    val idToken = ""
+    LaunchedEffect(idToken) {
+        event.onIdTokenReceived(idToken)
+    }
 
     NavHost(
         navController,
@@ -43,19 +76,33 @@ fun OnBoardingNavHost(
             composable(destination.route) {
                 when (destination) {
                     OnBoardingRoute.NICKNAME -> NicknameScreen(
-                        navToGenderBirth = { navController.navigate(OnBoardingRoute.GENDER_BIRTH.route) }
+                        navToGenderBirth = { nickname ->
+                            event.onNicknameInputComplete(nickname)
+                            navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
+                        }
                     )
 
                     OnBoardingRoute.GENDER_BIRTH -> GenderBirthScreen(
-                        navToExpectations = { navController.navigate(OnBoardingRoute.EXPECTATIONS.route) }
+                        nickname = signupForm.nickname ?: "",
+                        navToExpectations = {gender, birthday ->
+                            event.onGenderSelectComplete(gender)
+                            event.onBirthdaySelectComplete(birthday)
+                            navController.navigate(OnBoardingRoute.EXPECTATIONS.route)
+                        }
                     )
 
                     OnBoardingRoute.EXPECTATIONS -> ExpectationsScreen(
-                        navToAgreeTerms = { navController.navigate(OnBoardingRoute.AGREE_TERMS.route) }
+                        navToAgreeTerms = { expectations ->
+                            event.onExpectationsSelectComplete(expectations)
+                            navController.navigate(OnBoardingRoute.AGREE_TERMS.route)
+                        }
                     )
 
                     OnBoardingRoute.AGREE_TERMS -> AgreeTermsScreen(
-                        navToSignupComplete = { navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route) }
+                        navToSignupComplete = {
+                            // todo: update agree terms state
+                            navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route)
+                        }
                     )
 
                     OnBoardingRoute.SIGNUP_COMPLETE -> SignupCompleteScreen(
