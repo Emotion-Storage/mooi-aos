@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.Deferred
 
 /**
  * On boarding step 4
@@ -18,6 +19,8 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun AgreeTermsScreen(
     modifier: Modifier = Modifier,
+    onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
+    onSignup: suspend () -> Boolean = { false },
     navToSignupComplete: () -> Unit = {},
 ) {
     Scaffold(

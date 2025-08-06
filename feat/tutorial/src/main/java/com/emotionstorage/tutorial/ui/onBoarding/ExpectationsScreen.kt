@@ -47,7 +47,8 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun ExpectationsScreen(
     modifier: Modifier = Modifier,
     viewModel: ExpectationsViewModel = hiltViewModel(),
-    navToAgreeTerms: (expectations: List<String>) -> Unit = {},
+    onExpectationsSelectComplete: (expectations: List<String>) -> Unit = {},
+    navToAgreeTerms: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -55,6 +56,7 @@ fun ExpectationsScreen(
         state = state,
         event = viewModel.event,
         modifier = modifier,
+        onExpectationsSelectComplete = onExpectationsSelectComplete,
         navToAgreeTerms = navToAgreeTerms
     )
 }
@@ -64,7 +66,8 @@ private fun StatelessExpectationsScreen(
     state: State,
     event: ExpectationsEvent,
     modifier: Modifier = Modifier,
-    navToAgreeTerms: (expectations: List<String>) -> Unit = {},
+    onExpectationsSelectComplete: (expectations: List<String>) -> Unit = {},
+    navToAgreeTerms: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier
@@ -137,7 +140,8 @@ private fun StatelessExpectationsScreen(
                 label = "다음으로",
                 enabled = state.isNextButtonEnabled,
                 onClick = {
-                    navToAgreeTerms(state.expectations.map { it.content })
+                    onExpectationsSelectComplete(state.expectations.map { it.content })
+                    navToAgreeTerms()
                 }
             )
         }

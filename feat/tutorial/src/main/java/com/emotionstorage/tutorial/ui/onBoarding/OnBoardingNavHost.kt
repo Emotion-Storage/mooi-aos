@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -14,8 +15,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.emotionstorage.auth.domain.model.SignupForm
+import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 
 /**
  * On boarding destinations
@@ -60,11 +64,12 @@ private fun StatelessOnBoardingNavHost(
     event: OnBoardingEvent,
     modifier: Modifier = Modifier,
     navToMain: () -> Unit = {},
-){
-    // todo receive id token from nav
+) {
+    // todo receive provider & id token from nav
+    val provider = AuthProvider.GOOGLE
     val idToken = ""
-    LaunchedEffect(idToken) {
-        event.onIdTokenReceived(idToken)
+    LaunchedEffect(provider, idToken) {
+        event.onProviderIdTokenReceived(provider, idToken)
     }
 
     NavHost(
@@ -76,31 +81,31 @@ private fun StatelessOnBoardingNavHost(
             composable(destination.route) {
                 when (destination) {
                     OnBoardingRoute.NICKNAME -> NicknameScreen(
-                        navToGenderBirth = { nickname ->
-                            event.onNicknameInputComplete(nickname)
+                        onNicknameInputComplete = event::onNicknameInputComplete,
+                        navToGenderBirth = {
                             navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
                         }
                     )
 
                     OnBoardingRoute.GENDER_BIRTH -> GenderBirthScreen(
                         nickname = signupForm.nickname ?: "",
-                        navToExpectations = {gender, birthday ->
-                            event.onGenderSelectComplete(gender)
-                            event.onBirthdaySelectComplete(birthday)
+                        onGenderBirthInputComplete = event::onGenderBirthInputComplete,
+                        navToExpectations = {
                             navController.navigate(OnBoardingRoute.EXPECTATIONS.route)
                         }
                     )
 
                     OnBoardingRoute.EXPECTATIONS -> ExpectationsScreen(
-                        navToAgreeTerms = { expectations ->
-                            event.onExpectationsSelectComplete(expectations)
+                        onExpectationsSelectComplete = event::onExpectationsSelectComplete,
+                        navToAgreeTerms = {
                             navController.navigate(OnBoardingRoute.AGREE_TERMS.route)
                         }
                     )
 
                     OnBoardingRoute.AGREE_TERMS -> AgreeTermsScreen(
+                        onAgreeTermsInputComplete = event::onAgreeTermsInputComplete,
+                        onSignup = event::onSignup,
                         navToSignupComplete = {
-                            // todo: update agree terms state
                             navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route)
                         }
                     )

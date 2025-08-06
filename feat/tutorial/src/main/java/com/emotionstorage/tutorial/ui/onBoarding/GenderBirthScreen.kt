@@ -47,7 +47,8 @@ fun GenderBirthScreen(
     modifier: Modifier = Modifier,
     viewModel: GenderBirthViewModel = hiltViewModel(),
     nickname: String = "",
-    navToExpectations: (gender: GENDER, birthday: LocalDate) -> Unit = { _, _ -> },
+    onGenderBirthInputComplete: (gender: GENDER, birth: LocalDate) -> Unit = { _, _ -> },
+    navToExpectations: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -56,6 +57,7 @@ fun GenderBirthScreen(
         state = state,
         modifier = modifier,
         nickname = nickname,
+        onGenderBirthInputComplete = onGenderBirthInputComplete,
         navToExpectations = navToExpectations
     )
 }
@@ -66,7 +68,8 @@ private fun StatelessGenderBirthScreen(
     state: State,
     modifier: Modifier = Modifier,
     nickname: String = "",
-    navToExpectations: (gender: GENDER, birthday: LocalDate) -> Unit = { _, _ -> },
+    onGenderBirthInputComplete: (gender: GENDER, birth: LocalDate) -> Unit = { _, _ -> },
+    navToExpectations: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier
@@ -138,14 +141,15 @@ private fun StatelessGenderBirthScreen(
                         (state.dayPickerState.selectedValue == null)
                     ) return@CtaButton
 
-                    navToExpectations(
-                        state.gender,
+                    onGenderBirthInputComplete(
+                        state.gender!!,
                         LocalDate.of(
                             state.yearPickerState.selectedValue.toInt(),
                             state.monthPickerState.selectedValue.toInt(),
                             state.dayPickerState.selectedValue.toInt()
                         )
                     )
+                    navToExpectations()
                 }
             )
         }
@@ -190,7 +194,7 @@ private fun GenderInput(
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = when(it){
+                        text = when (it) {
                             GENDER.MALE -> "남자"
                             GENDER.FEMALE -> "여자"
                         },

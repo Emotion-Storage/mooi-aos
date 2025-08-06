@@ -33,12 +33,14 @@ import com.emotionstorage.ui.component.TopAppBar
 fun NicknameScreen(
     modifier: Modifier = Modifier,
     viewModel: NicknameViewModel = hiltViewModel(),
-    navToGenderBirth: (nickname: String) -> Unit = {},
+    onNicknameInputComplete: (nickname: String) -> Unit = {},
+    navToGenderBirth: () -> Unit = {},
 ) {
     StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
         event = viewModel.event,
+        onNicknameInputComplete = onNicknameInputComplete,
         navToGenderBirth = navToGenderBirth
     )
 }
@@ -48,7 +50,8 @@ private fun StatelessNicknameScreen(
     modifier: Modifier = Modifier,
     state: NicknameViewModel.State,
     event: InputNicknameEvent,
-    navToGenderBirth: (nickname: String) -> Unit = {},
+    onNicknameInputComplete: (nickname: String) -> Unit = {},
+    navToGenderBirth: () -> Unit = {},
 ) {
     Scaffold(
         modifier = modifier
@@ -102,7 +105,8 @@ private fun StatelessNicknameScreen(
                 label = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
                 onClick = {
-                    navToGenderBirth(state.nickname)
+                    onNicknameInputComplete(state.nickname)
+                    navToGenderBirth()
                 }
             )
         }
