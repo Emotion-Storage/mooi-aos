@@ -190,7 +190,10 @@ private fun GenderInput(
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = it.value,
+                        text = when(it){
+                            GENDER.MALE -> "남자"
+                            GENDER.FEMALE -> "여자"
+                        },
                         modifier = Modifier
                             .align(Alignment.Center)
                     )
