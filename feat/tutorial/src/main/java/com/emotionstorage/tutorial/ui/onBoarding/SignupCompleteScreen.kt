@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.signupComplete
+package com.emotionstorage.tutorial.ui.onBoarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,43 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.SignupCompleteEvent
-import com.emotionstorage.tutorial.presentation.SignupCompleteViewModel
-import com.emotionstorage.tutorial.ui.onBoarding.OnBoardingTitle
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
-
+/**
+ * On boarding step 5
+ * - login & navigate to main
+ */
 @Composable
 fun SignupCompleteScreen(
-    provider: AuthProvider,
-    idToken: String,
     modifier: Modifier = Modifier,
-    viewModel: SignupCompleteViewModel = hiltViewModel(),
-    navToMain: () -> Unit = {},
-    navToLogin: () -> Unit = {}
-) {
-    StatelessSignupCompleteScreen(
-        provider = provider,
-        idToken = idToken,
-        event = viewModel.event,
-        modifier = modifier,
-        navToMain = navToMain,
-        navToLogin = navToLogin
-    )
-}
-
-@Composable
-private fun StatelessSignupCompleteScreen(
-    provider: AuthProvider,
-    idToken: String,
-    event: SignupCompleteEvent,
-    modifier: Modifier = Modifier,
+    onLogin: suspend () -> Boolean,
     navToMain: () -> Unit = {},
     navToLogin: () -> Unit = {}
 ) {
@@ -81,7 +58,7 @@ private fun StatelessSignupCompleteScreen(
                     ','
                 )
             )
-
+            
             // todo: 버튼 위 말풍선 추가하기
             CtaButton(
                 modifier = Modifier
@@ -90,9 +67,9 @@ private fun StatelessSignupCompleteScreen(
                 label = "메인화면으로 이동",
                 onClick = {
                     coroutineScope.launch {
-                        if (event.onLogin(provider, idToken)) {
+                        if(onLogin()){
                             navToMain()
-                        } else {
+                        }else{
                             navToLogin()
                         }
                     }
@@ -104,19 +81,11 @@ private fun StatelessSignupCompleteScreen(
 
 @PreviewScreenSizes
 @Composable
-private fun SignupCompleteScreenPreview() {
-    MooiTheme {
-        StatelessSignupCompleteScreen(
-            provider = AuthProvider.GOOGLE,
-            idToken = "123456",
-            event = object : SignupCompleteEvent {
-                override suspend fun onLogin(
-                    provider: AuthProvider,
-                    idToken: String
-                ): Boolean {
-                    return true
-                }
-            }
+private fun SignupCompleteScreenPreview(){
+    MooiTheme{
+        SignupCompleteScreen(
+            onLogin = { true },
+            navToMain = {}
         )
     }
 }
