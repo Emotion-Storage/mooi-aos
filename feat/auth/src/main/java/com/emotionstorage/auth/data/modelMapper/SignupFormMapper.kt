@@ -5,17 +5,17 @@ import com.emotionstorage.auth.domain.model.SignupForm
 
 internal object SignupFormMapper {
     fun toData(signupForm: SignupForm) = SignupFormEntity(
-        idToken = signupForm.idToken,
-        nickname = signupForm.nickname,
-        gender = when (signupForm.gender) {
-            SignupForm.GENDER.MALE -> "male"
-            SignupForm.GENDER.FEMALE -> "female"
-            else -> ""
-        },
-        birthday = signupForm.birthday,
-        expectations = signupForm.expectations,
-        isTermAgreed = signupForm.isTermAgreed,
-        isPrivacyAgreed = signupForm.isPrivacyAgreed,
+        idToken = signupForm.idToken ?: throw IllegalStateException("id token is null"),
+        nickname = signupForm.nickname ?: throw IllegalStateException("nickname is null"),
+        gender = signupForm.gender?.value ?: throw IllegalStateException("gender is null"),
+        birthday = signupForm.birthday ?: throw IllegalStateException("birthday is null"),
+        expectations = signupForm.expectations
+            ?: throw IllegalStateException("expectations is null"),
+        isTermAgreed = signupForm.isTermAgreed
+            ?: throw IllegalStateException("isTermAgreed is null"),
+        isPrivacyAgreed = signupForm.isPrivacyAgreed
+            ?: throw IllegalStateException("isPrivacyAgreed is null"),
         isMarketingAgreed = signupForm.isMarketingAgreed
+            ?: throw IllegalStateException("isMarketingAgreed is null")
     )
 }

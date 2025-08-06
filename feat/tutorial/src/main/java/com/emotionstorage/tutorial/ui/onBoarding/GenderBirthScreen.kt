@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,11 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.auth.domain.model.SignupForm.GENDER
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State
@@ -35,7 +34,6 @@ import com.emotionstorage.ui.component.ScrollPicker
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.Gender
 import com.emotionstorage.ui.component.CtaButton
 
 /**
@@ -136,8 +134,8 @@ private fun StatelessGenderBirthScreen(
 @Composable
 private fun GenderInput(
     modifier: Modifier = Modifier,
-    selectedGender: Gender? = null,
-    onGenderSelect: (Gender?) -> Unit = {},
+    selectedGender: GENDER? = null,
+    onGenderSelect: (GENDER?) -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -152,7 +150,7 @@ private fun GenderInput(
             modifier = Modifier.height(24.dp)
         )
         Row(modifier = Modifier, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
-            Gender.entries.forEach {
+            GENDER.entries.forEach {
                 Box(
                     modifier = Modifier
                         .height(50.dp)
@@ -171,7 +169,7 @@ private fun GenderInput(
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = it.label,
+                        text = it.value,
                         modifier = Modifier
                             .align(Alignment.Center)
                     )
@@ -252,7 +250,7 @@ private fun GenderBirthScreenPreview() {
     MooiTheme {
         StatelessGenderBirthScreen(
             event = object : GenderBirthEvent {
-                override fun onGenderSelect(gender: Gender?) {}
+                override fun onGenderSelect(gender: GENDER?) {}
 
                 override fun onYearPickerSelect(year: String) {}
 

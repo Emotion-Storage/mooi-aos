@@ -2,8 +2,8 @@ package com.emotionstorage.tutorial.presentation.onBoarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.Gender
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.PickerState
+import com.emotionstorage.auth.domain.model.SignupForm.GENDER
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +18,7 @@ private const val MIN_AGE = 14
 private const val MIN_YEAR = 1970
 
 interface GenderBirthEvent {
-    fun onGenderSelect(gender: Gender?)
+    fun onGenderSelect(gender: GENDER?)
     fun onYearPickerSelect(year: String)
     fun onMonthPickerSelect(month: String)
     fun onDayPickerSelect(day: String)
@@ -26,7 +26,7 @@ interface GenderBirthEvent {
 
 @HiltViewModel
 class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent {
-    private val _gender = MutableStateFlow<Gender?>(null)
+    private val _gender = MutableStateFlow<GENDER?>(null)
     private val _birthYear = MutableStateFlow<String?>(null)
     private val _birthMonth = MutableStateFlow<String?>(null)
     private val _birthDay = MutableStateFlow<String?>(null)
@@ -77,7 +77,7 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
         }
     }
 
-    override fun onGenderSelect(gender: Gender?) {
+    override fun onGenderSelect(gender: GENDER?) {
         _gender.update { gender }
     }
 
@@ -98,7 +98,7 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
 
 
     data class State(
-        val gender: Gender? = null,
+        val gender: GENDER? = null,
         val yearPickerState: PickerState = PickerState(
             range = (LocalDate.now().year - MIN_AGE..MIN_YEAR).toList().map { it.toString() },
             enabled = true
@@ -120,9 +120,5 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
             val range: List<String> = emptyList(),
             val enabled: Boolean = true
         )
-
-        enum class Gender(val label: String) {
-            MALE("남성"), FEMALE("여성")
-        }
     }
 }
