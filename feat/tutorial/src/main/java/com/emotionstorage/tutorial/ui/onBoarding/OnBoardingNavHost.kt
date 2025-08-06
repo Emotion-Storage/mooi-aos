@@ -106,6 +106,7 @@ private fun StatelessOnBoardingNavHost(
                         onAgreeTermsInputComplete = event::onAgreeTermsInputComplete,
                         onSignup = event::onSignup,
                         navToSignupComplete = {
+                            // todo: 회원가입 완료 화면에서 뒤로가기 시, 로그인 화면으로 이동하도록 백스택 비우기
                             navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route)
                         }
                     )

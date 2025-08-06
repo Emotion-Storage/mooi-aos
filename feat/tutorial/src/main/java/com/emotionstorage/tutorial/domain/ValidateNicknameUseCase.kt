@@ -24,6 +24,7 @@ class ValidateNicknameUseCase @Inject constructor() {
     operator fun invoke(nickname: String): DataResource<NicknameState> {
         if (nickname.isNullOrEmpty())
             return DataResource.Success(NicknameState.INVALID_EMPTY)
+        // todo: 모음만 입력되어도 유효하도록 정규식 수정
         if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎ가-힣]*$")))
             return DataResource.Success(NicknameState.INVALID_CHAR)
         if (nickname.length < 2)
