@@ -28,7 +28,7 @@ interface ExpectationsEvent {
 class ExpectationsViewModel @Inject constructor() : ViewModel(), ExpectationsEvent {
     private val _expectations = MutableStateFlow(emptyList<Expectation>())
 
-    val state = combine(_expectations){ (expectations) ->
+    val state = combine(_expectations) { (expectations) ->
         State(expectations)
     }.stateIn(
         scope = viewModelScope,
@@ -39,8 +39,8 @@ class ExpectationsViewModel @Inject constructor() : ViewModel(), ExpectationsEve
 
     init {
         _expectations.update {
-            EXPECTATION_CONTENT.map {
-                Expectation(it, false)
+            EXPECTATION_CONTENT.map { it ->
+                Expectation(content = it, isSelected = false)
             }
         }
     }
