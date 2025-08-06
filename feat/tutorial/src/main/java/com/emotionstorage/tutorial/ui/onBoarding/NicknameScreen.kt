@@ -62,7 +62,7 @@ private fun StatelessNicknameScreen(
         }
     ) { padding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize()
                 .padding(padding)

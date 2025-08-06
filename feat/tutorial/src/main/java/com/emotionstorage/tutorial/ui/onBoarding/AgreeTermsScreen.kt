@@ -86,7 +86,7 @@ private fun StatelessAgreeTermsScreen(
         }
     ) { padding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize()
                 .padding(padding)

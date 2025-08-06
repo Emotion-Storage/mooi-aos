@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
+import com.emotionstorage.auth.domain.usecase.LoginUseCase
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
 import com.emotionstorage.domain.model.User.AuthProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +29,7 @@ interface OnBoardingEvent {
     )
 
     suspend fun onSignup(): Boolean
+    suspend fun onLogin(): Boolean
 }
 
 /**
@@ -36,7 +38,8 @@ interface OnBoardingEvent {
  */
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
-    private val signup: SignupUseCase
+    private val signup: SignupUseCase,
+    private val login: LoginUseCase
 ) : ViewModel(), OnBoardingEvent {
     private var _provider: AuthProvider? = null
 
@@ -79,6 +82,20 @@ class OnBoardingViewModel @Inject constructor(
             try {
                 if (_provider == null) throw Exception("Provider is null")
                 return@async signup(provider = _provider!!, signupForm = _signupForm.value)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return@async false
+            }
+        }
+        return deferredResult.await()
+    }
+
+
+    override suspend fun onLogin(): Boolean {
+        val deferredResult = viewModelScope.async {
+            try {
+                if (_provider == null) throw Exception("Provider is null")
+                return@async login(provider = _provider!!)
             } catch (e: Exception) {
                 e.printStackTrace()
                 return@async false

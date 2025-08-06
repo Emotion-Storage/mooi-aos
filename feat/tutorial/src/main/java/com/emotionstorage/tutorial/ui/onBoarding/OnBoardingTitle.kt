@@ -33,9 +33,10 @@ private const val ON_BOARDING_STEP_COUNT = 4
 @Composable
 fun OnBoardingTitle(
     title: String,
-    currentStep: Int,
     modifier: Modifier = Modifier,
     titleHighlights: List<String> = emptyList(),
+    showSteps: Boolean = true,
+    currentStep: Int = 0,
     totalStep: Int = ON_BOARDING_STEP_COUNT,
 ) {
     Box(
@@ -51,10 +52,12 @@ fun OnBoardingTitle(
             ),
             modifier = Modifier.align(Alignment.TopStart)
         )
-        OnBoardingStep(
-            currentStep = currentStep, totalStep = totalStep,
-            modifier = Modifier.align(Alignment.TopEnd)
-        )
+        if(showSteps) {
+            OnBoardingStep(
+                currentStep = currentStep, totalStep = totalStep,
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+        }
     }
 }
 
