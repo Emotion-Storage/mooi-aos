@@ -33,6 +33,17 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun loginWithIdToken(
+        provider: User.AuthProvider,
+        idToken: String
+    ): DataResource<String> {
+        try {
+            return authRemoteDataSource.login(provider, idToken)
+        } catch (e: Exception) {
+            return DataResource.Error(e)
+        }
+    }
+
     override suspend fun signup(
         provider: User.AuthProvider,
         signupForm: SignupForm
