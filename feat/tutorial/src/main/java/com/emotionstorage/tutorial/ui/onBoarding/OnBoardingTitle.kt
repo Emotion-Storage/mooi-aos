@@ -1,5 +1,6 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
+import android.text.Layout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,15 +33,14 @@ private const val ON_BOARDING_STEP_COUNT = 4
 @Composable
 fun OnBoardingTitle(
     title: String,
-    currentStep: Int,
     modifier: Modifier = Modifier,
     titleHighlights: List<String> = emptyList(),
+    showSteps: Boolean = true,
+    currentStep: Int = 0,
     totalStep: Int = ON_BOARDING_STEP_COUNT,
 ) {
-    Row(
+    Box(
         modifier = modifier,
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.Top
     ) {
         Text(
             style = MooiTheme.typography.head1,
@@ -49,9 +49,15 @@ fun OnBoardingTitle(
                 title,
                 titleHighlights,
                 SpanStyle(color = MooiTheme.colorScheme.primary)
-            )
+            ),
+            modifier = Modifier.align(Alignment.TopStart)
         )
-        OnBoardingStep(currentStep = currentStep, totalStep = totalStep)
+        if(showSteps) {
+            OnBoardingStep(
+                currentStep = currentStep, totalStep = totalStep,
+                modifier = Modifier.align(Alignment.TopEnd)
+            )
+        }
     }
 }
 

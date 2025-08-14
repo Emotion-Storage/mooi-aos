@@ -15,11 +15,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.presentation.NicknameViewModel
+import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.InputNicknameEvent
-import com.emotionstorage.tutorial.presentation.NicknameViewModel.State.InputState
+import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
+import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
@@ -33,12 +33,14 @@ import com.emotionstorage.ui.component.TopAppBar
 fun NicknameScreen(
     modifier: Modifier = Modifier,
     viewModel: NicknameViewModel = hiltViewModel(),
+    onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
 ) {
     StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
         event = viewModel.event,
+        onNicknameInputComplete = onNicknameInputComplete,
         navToGenderBirth = navToGenderBirth
     )
 }
@@ -48,6 +50,7 @@ private fun StatelessNicknameScreen(
     modifier: Modifier = Modifier,
     state: NicknameViewModel.State,
     event: InputNicknameEvent,
+    onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
 ) {
     Scaffold(
@@ -59,7 +62,7 @@ private fun StatelessNicknameScreen(
         }
     ) { padding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize()
                 .padding(padding)
@@ -101,7 +104,10 @@ private fun StatelessNicknameScreen(
 //                    .padding(bottom = 39.dp),
                 label = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
-                onClick = navToGenderBirth
+                onClick = {
+                    onNicknameInputComplete(state.nickname)
+                    navToGenderBirth()
+                }
             )
         }
     }

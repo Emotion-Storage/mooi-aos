@@ -45,9 +45,10 @@ class LoginViewModel @Inject constructor(
     override suspend fun onLoginButtonClick(
         provider: User.AuthProvider
     ) {
+        Log.d("LoginViewModel", "onLoginButtonClick called with provider: $provider")
+        _loginState.update { LoginState.Loading }
+
         viewModelScope.launch {
-            Log.d("LoginViewModel", "onLoginButtonClick called with provider: $provider")
-            _loginState.update { LoginState.Loading }
             if (login(provider)) {
                 _loginState.update { LoginState.Success }
             } else {
