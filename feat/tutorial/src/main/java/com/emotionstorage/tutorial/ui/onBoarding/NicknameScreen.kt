@@ -35,13 +35,15 @@ fun NicknameScreen(
     viewModel: NicknameViewModel = hiltViewModel(),
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
         event = viewModel.event,
         onNicknameInputComplete = onNicknameInputComplete,
-        navToGenderBirth = navToGenderBirth
+        navToGenderBirth = navToGenderBirth,
+        navToBack = navToBack
     )
 }
 
@@ -52,13 +54,14 @@ private fun StatelessNicknameScreen(
     event: InputNicknameEvent,
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackButton = true)
+            TopAppBar(showBackButton = true, onBackClick = navToBack)
         }
     ) { padding ->
         Column(

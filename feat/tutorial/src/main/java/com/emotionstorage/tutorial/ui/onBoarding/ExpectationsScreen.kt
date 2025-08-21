@@ -49,6 +49,7 @@ fun ExpectationsScreen(
     viewModel: ExpectationsViewModel = hiltViewModel(),
     onExpectationsSelectComplete: (expectations: List<String>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -57,7 +58,8 @@ fun ExpectationsScreen(
         event = viewModel.event,
         modifier = modifier,
         onExpectationsSelectComplete = onExpectationsSelectComplete,
-        navToAgreeTerms = navToAgreeTerms
+        navToAgreeTerms = navToAgreeTerms,
+        navToBack = navToBack
     )
 }
 
@@ -68,12 +70,13 @@ private fun StatelessExpectationsScreen(
     modifier: Modifier = Modifier,
     onExpectationsSelectComplete: (expectations: List<String>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
-        topBar = { TopAppBar(showBackButton = true) }
+        topBar = { TopAppBar(showBackButton = true, onBackClick = navToBack) }
     ) { padding ->
         Box(
             modifier = Modifier

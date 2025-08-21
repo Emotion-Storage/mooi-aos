@@ -51,6 +51,7 @@ fun AgreeTermsScreen(
     onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Boolean = { false },
     navToSignupComplete: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
 
     val state = viewModel.state.collectAsState().value
@@ -61,7 +62,8 @@ fun AgreeTermsScreen(
         modifier = modifier,
         onAgreeTermsInputComplete = onAgreeTermsInputComplete,
         onSignup = onSignup,
-        navToSignupComplete = navToSignupComplete
+        navToSignupComplete = navToSignupComplete,
+        navToBack = navToBack
     )
 }
 
@@ -74,6 +76,7 @@ private fun StatelessAgreeTermsScreen(
     onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Boolean = { false },
     navToSignupComplete: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -82,7 +85,7 @@ private fun StatelessAgreeTermsScreen(
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackButton = true)
+            TopAppBar(showBackButton = true, onBackClick = navToBack)
         }
     ) { padding ->
         Column(

@@ -29,7 +29,8 @@ fun SignupCompleteScreen(
     modifier: Modifier = Modifier,
     onLogin: suspend () -> Boolean,
     navToMain: () -> Unit = {},
-    navToLogin: () -> Unit = {}
+    navToLogin: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -38,7 +39,7 @@ fun SignupCompleteScreen(
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar()
+            TopAppBar(onBackClick = navToBack)
         }
     ) { padding ->
         Column(

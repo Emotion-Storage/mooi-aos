@@ -2,6 +2,7 @@ package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
@@ -18,8 +19,9 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun TopAppBar(
+    modifier: Modifier = Modifier,
     showBackButton: Boolean = false,
-    modifier: Modifier = Modifier
+    onBackClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
@@ -35,7 +37,8 @@ fun TopAppBar(
                 modifier = Modifier
                     .width(11.dp)
                     .height(24.dp)
-                    .align(Alignment.BottomStart),
+                    .align(Alignment.BottomStart)
+                    .clickable { onBackClick() },
                 contentDescription = "back"
             )
         }
