@@ -8,6 +8,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 private val LocalMooiColorScheme = staticCompositionLocalOf {
     MooiColorScheme()
 }
+private val LocalMooiBrushScheme = staticCompositionLocalOf {
+    MooiBrushScheme()
+}
 private val LocalMooiTypography = staticCompositionLocalOf {
     MooiTypography()
 }
@@ -30,6 +33,10 @@ object MooiTheme {
     val colorScheme: MooiColorScheme
         @Composable
         get() = LocalMooiColorScheme.current
+
+    val brushScheme: MooiBrushScheme
+        @Composable
+        get() = LocalMooiBrushScheme.current
 
     val typography: MooiTypography
         @Composable
