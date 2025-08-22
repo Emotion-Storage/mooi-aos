@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 
 
-val pretendard  = FontFamily(
+val pretendard = FontFamily(
     Font(R.font.pretendard_black, weight = FontWeight.Black),
     Font(R.font.pretendard_bold, weight = FontWeight.Bold),
     Font(R.font.pretendard_extrabold, weight = FontWeight.ExtraBold),
@@ -60,7 +60,25 @@ data class MooiTypography(
     val body3: TextStyle = TextStyle(
         fontFamily = pretendard,
         fontWeight = FontWeight.Medium,
+        fontSize = 15.sp,
+        letterSpacing = (-0.02).em,
+    ),
+    val body4: TextStyle = TextStyle(
+        fontFamily = pretendard,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        letterSpacing = (-0.02).em,
+    ),
+    val body5: TextStyle = TextStyle(
+        fontFamily = pretendard,
+        fontWeight = FontWeight.Normal,
         fontSize = 13.sp,
+        letterSpacing = (-0.02).em,
+    ),
+    val body6: TextStyle = TextStyle(
+        fontFamily = pretendard,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
         letterSpacing = (-0.02).em,
     ),
     val button: TextStyle = TextStyle(

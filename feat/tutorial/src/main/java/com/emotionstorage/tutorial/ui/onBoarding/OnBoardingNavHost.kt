@@ -1,6 +1,7 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,6 +18,7 @@ import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
+import com.emotionstorage.ui.theme.MooiTheme
 
 /**
  * On boarding destinations
@@ -75,7 +77,9 @@ private fun StatelessOnBoardingNavHost(
     NavHost(
         navController,
         startDestination = OnBoardingRoute.NICKNAME.route,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .background(MooiTheme.colorScheme.background)
     ) {
         OnBoardingRoute.entries.forEach { destination ->
             composable(destination.route) {
@@ -84,6 +88,9 @@ private fun StatelessOnBoardingNavHost(
                         onNicknameInputComplete = event::onNicknameInputComplete,
                         navToGenderBirth = {
                             navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
+                        },
+                        navToBack = {
+                            navController.popBackStack()
                         }
                     )
 
@@ -92,6 +99,9 @@ private fun StatelessOnBoardingNavHost(
                         onGenderBirthInputComplete = event::onGenderBirthInputComplete,
                         navToExpectations = {
                             navController.navigate(OnBoardingRoute.EXPECTATIONS.route)
+                        },
+                        navToBack = {
+                            navController.popBackStack()
                         }
                     )
 
@@ -99,6 +109,9 @@ private fun StatelessOnBoardingNavHost(
                         onExpectationsSelectComplete = event::onExpectationsSelectComplete,
                         navToAgreeTerms = {
                             navController.navigate(OnBoardingRoute.AGREE_TERMS.route)
+                        },
+                        navToBack = {
+                            navController.popBackStack()
                         }
                     )
 
@@ -107,14 +120,21 @@ private fun StatelessOnBoardingNavHost(
                         onSignup = event::onSignup,
                         navToSignupComplete = {
                             // todo: 회원가입 완료 화면에서 뒤로가기 시, 로그인 화면으로 이동하도록 백스택 비우기
+                            navController.popBackStack(OnBoardingRoute.NICKNAME.route, true)
                             navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route)
+                        },
+                        navToBack = {
+                            navController.popBackStack()
                         }
                     )
 
                     OnBoardingRoute.SIGNUP_COMPLETE -> SignupCompleteScreen(
                         onLogin = event::onLogin,
                         navToMain = navToMain,
-                        navToLogin = navToLogin
+                        navToLogin = navToLogin,
+                        navToBack = {
+                            navController.popBackStack()
+                        }
                     )
                 }
             }

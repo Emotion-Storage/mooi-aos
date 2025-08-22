@@ -2,6 +2,7 @@ plugins {
     id("com.emotionstorage.convention.android.application")
     id("com.emotionstorage.convention.android.application.compose")
     id("com.emotionstorage.convention.android.application.hilt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -10,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.emotionstorage.emotionstorage"
         versionCode = 1
-        versionName = "1.0"
+        versionName = "v0.0.0-beta"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,4 +40,5 @@ dependencies {
     implementation(projects.feat.weeklyReport)
     implementation(projects.feat.my)
     implementation(projects.feat.alarm)
+    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
 }

@@ -49,6 +49,7 @@ fun GenderBirthScreen(
     nickname: String = "",
     onGenderBirthInputComplete: (gender: GENDER, birth: LocalDate) -> Unit = { _, _ -> },
     navToExpectations: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -58,7 +59,8 @@ fun GenderBirthScreen(
         modifier = modifier,
         nickname = nickname,
         onGenderBirthInputComplete = onGenderBirthInputComplete,
-        navToExpectations = navToExpectations
+        navToExpectations = navToExpectations,
+        navToBack = navToBack
     )
 }
 
@@ -70,12 +72,13 @@ private fun StatelessGenderBirthScreen(
     nickname: String = "",
     onGenderBirthInputComplete: (gender: GENDER, birth: LocalDate) -> Unit = { _, _ -> },
     navToExpectations: () -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
-        topBar = { TopAppBar(showBackButton = true) }
+        topBar = { TopAppBar(showBackButton = true, onBackClick = navToBack) }
     ) { padding ->
         Column(
             modifier = Modifier
