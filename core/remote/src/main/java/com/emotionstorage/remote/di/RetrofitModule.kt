@@ -1,6 +1,7 @@
 package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.SessionLocalDataSource
+import com.emotionstorage.remote.BuildConfig
 import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -18,8 +19,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    // todo: change mooi backend base url
-    private const val BASE_URL = "https://~~~~/api/v1/"
+    private const val BASE_URL = BuildConfig.MOOI_DEV_SERVER_URL
 
     @Singleton
     @Provides
