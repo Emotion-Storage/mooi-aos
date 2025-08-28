@@ -82,7 +82,6 @@ private fun StatelessAppNavHost(
         composable<AppDestination.Splash>{backstackEntry ->
             SplashScreen(
                 navToLogin = navToLogin,
-                navToOnBoarding =navToOnBoarding,
                 navToHome = navToHome
             )
         }
