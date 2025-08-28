@@ -16,6 +16,7 @@ class JavaKotlinLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("java-library")
                 apply("org.jetbrains.kotlin.jvm")
+                apply("org.jetbrains.kotlin.plugin.serialization")
 
                 extensions.getByType<JavaPluginExtension>().apply {
                     sourceCompatibility = JavaVersion.VERSION_17
