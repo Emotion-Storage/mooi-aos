@@ -25,12 +25,16 @@ interface LoginEvent {
 class LoginViewModel @Inject constructor(
     private val login: LoginUseCase
 ) : ViewModel(), LoginEvent {
+    private val _provider = MutableStateFlow<User.AuthProvider?>(null)
+    private val _idToken = MutableStateFlow<String?>(null)
     private val _loginState = MutableStateFlow(LoginState.Idle)
 
     val state = combine(
-        _loginState
-    ) { (loginState) ->
-        State(loginState)
+        _provider,
+        _idToken,
+        _loginState,
+    ) { provider, idToken, loginState ->
+        State(provider, idToken, loginState)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -46,24 +50,30 @@ class LoginViewModel @Inject constructor(
         provider: User.AuthProvider
     ) {
         Log.d("LoginViewModel", "onLoginButtonClick called with provider: $provider")
+        _provider.update { provider }
         _loginState.update { LoginState.Loading }
 
         viewModelScope.launch {
             if (login(provider)) {
                 _loginState.update { LoginState.Success }
             } else {
-                _loginState.update { LoginState.Error }
+                _loginState.update { LoginState.Fail }
+                // todo: get id token as return value when failed
             }
+            // todo: handle error
         }
     }
 
     data class State(
+        val provider: User.AuthProvider? = null,
+        val idToken: String? = null,
         val loginState: LoginState = LoginState.Idle
     ) {
         enum class LoginState {
             Idle,
             Loading,
             Success,
+            Fail,
             Error
         }
     }

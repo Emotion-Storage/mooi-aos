@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.presentation.SplashViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -20,7 +21,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun SplashScreen(
     modifier: Modifier = Modifier,
     splashViewModel: SplashViewModel = hiltViewModel(),
-    navToTutorial: () -> Unit = {},
+    navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = {_, _ ->},
     navToLogin: () -> Unit = {},
     navToHome: () -> Unit = {},
 ) {
