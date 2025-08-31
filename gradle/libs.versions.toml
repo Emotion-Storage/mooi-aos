@@ -109,6 +109,7 @@ retrofit = [
     "okhttp3-urlconnection",
     "okhttp3-logging-interceptor",
     "squareup-retrofit",
+    "kotlinx-serialization-json",
     "kotlinx-serialization-converter"
 ]
 compose-debug = [

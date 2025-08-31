@@ -11,6 +11,10 @@ class RetrofitConventionPlugin : Plugin<Project> {
         println("*** RetrofitConventionPlugin invoked ***")
 
         with(target) {
+            with(pluginManager) {
+                apply("org.jetbrains.kotlin.plugin.serialization")
+            }
+
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
                 add("implementation", libs.findBundle("retrofit").get())
