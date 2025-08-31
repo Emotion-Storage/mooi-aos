@@ -8,7 +8,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.google.devtools.ksp) apply false
     alias(libs.plugins.google.dagger.hilt.android) apply false
-    id("com.google.gms.google-services") version "4.4.3" apply false
+    alias(libs.plugins.google.services) apply false
 
     /**
      * # module dependency graph generator
