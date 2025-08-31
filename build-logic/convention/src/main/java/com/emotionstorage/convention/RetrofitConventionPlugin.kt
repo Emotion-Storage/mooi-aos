@@ -11,11 +11,9 @@ class RetrofitConventionPlugin : Plugin<Project> {
         println("*** RetrofitConventionPlugin invoked ***")
 
         with(target) {
-            with(pluginManager) {
-                val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-                dependencies {
-                    add("implementation", libs.findBundle("retrofit").get())
-                }
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            dependencies {
+                add("implementation", libs.findBundle("retrofit").get())
             }
         }
     }
