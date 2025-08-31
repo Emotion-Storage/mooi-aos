@@ -14,6 +14,7 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.tutorial.ui.onBoarding.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.splash.SplashScreen
+import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.serialization.Serializable
 
@@ -25,6 +26,9 @@ import kotlinx.serialization.Serializable
 internal sealed class AppDestination {
     @Serializable
     object Splash: AppDestination()
+
+    @Serializable
+    object Tutorial: AppDestination()
 
     @Serializable
     object Login: AppDestination()
@@ -42,6 +46,9 @@ fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
 ) {
+    val navToTutorial = {
+        navController.navigate(AppDestination.Tutorial)
+    }
     val navToLogin = {
         navController.navigate(AppDestination.Login)
     }
@@ -62,8 +69,14 @@ fun AppNavHost(
     ) {
         composable<AppDestination.Splash>{backstackEntry ->
             SplashScreen(
-                navToLogin = navToLogin,
+                navToTutorial = navToTutorial,
                 navToHome = navToHome
+            )
+        }
+
+        composable<AppDestination.Tutorial>{backstackEntry ->
+            TutorialScreen(
+                navToLogin = navToLogin,
             )
         }
 
