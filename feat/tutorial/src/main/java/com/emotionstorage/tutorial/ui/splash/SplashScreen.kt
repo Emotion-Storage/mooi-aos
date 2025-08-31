@@ -1,8 +1,11 @@
 package com.emotionstorage.tutorial.ui.splash
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -49,6 +52,7 @@ private fun StatelessSplashScreen(
             SplashViewModel.State.AutoLoginState.Loading -> {
                 // do nothing
             }
+
             SplashViewModel.State.AutoLoginState.Success -> {
                 navToHome()
             }
@@ -61,16 +65,22 @@ private fun StatelessSplashScreen(
 
     Scaffold(
         modifier = modifier
-            .background(MooiTheme.colorScheme.background)
             .fillMaxSize()
+            .background(MooiTheme.colorScheme.background)
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
-            // todo: change to app logo
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background)
+                .padding(padding),
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Box(
                 modifier = Modifier
                     .size(148.dp)
+                    .offset(y = 214.dp)
                     .background(Color.Black)
-                    .align(Alignment.Center)
             )
         }
     }
