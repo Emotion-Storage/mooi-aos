@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import androidx.navigation.toRoute
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
@@ -25,38 +27,38 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal sealed class AppDestination {
     @Serializable
-    object Splash: AppDestination()
+    object Splash : AppDestination()
 
     @Serializable
-    object Tutorial: AppDestination()
+    object Tutorial : AppDestination()
 
     @Serializable
-    object Login: AppDestination()
+    object Login : AppDestination()
 
     @Serializable
-    data class OnBoarding(val provider: String, val idToken: String): AppDestination()
+    data class OnBoarding(val provider: String, val idToken: String) : AppDestination()
 
     @Serializable
-    object Home: AppDestination()
+    object Home : AppDestination()
 }
 
+// clear stack, including splash
+internal fun NavOptionsBuilder.clearStack(){
+    popUpTo(AppDestination.Splash) {
+        inclusive = true
+    }
+}
 
 @Composable
-fun AppNavHost(
+internal fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
 ) {
-    val navToTutorial = {
-        navController.navigate(AppDestination.Tutorial)
-    }
-    val navToLogin = {
-        navController.navigate(AppDestination.Login)
-    }
-    val navToOnBoarding = { provider: AuthProvider, idToken: String ->
-        navController.navigate(AppDestination.OnBoarding(provider.toString(), idToken))
-    }
     val navToHome = {
-        navController.navigate(AppDestination.Home)
+        navController.navigate(AppDestination.Home) {
+            // always clear back stack when navigating to home
+            clearStack()
+        }
     }
 
 
@@ -67,37 +69,47 @@ fun AppNavHost(
             .fillMaxSize()
             .background(MooiTheme.colorScheme.background)
     ) {
-        composable<AppDestination.Splash>{backstackEntry ->
+        composable<AppDestination.Splash> { backstackEntry ->
             SplashScreen(
-                navToTutorial = navToTutorial,
+                navToTutorial = {
+                    navController.navigate(AppDestination.Tutorial) {
+                        clearStack()
+                    }
+                },
                 navToHome = navToHome
             )
         }
 
-        composable<AppDestination.Tutorial>{backstackEntry ->
+        composable<AppDestination.Tutorial> { backstackEntry ->
             TutorialScreen(
-                navToLogin = navToLogin,
+                navToLogin = {
+                    navController.navigate(AppDestination.Login)
+                }
             )
         }
 
-        composable<AppDestination.Login>{backstackEntry ->
+        composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
                 navToHome = navToHome,
-                navToOnBoarding = navToOnBoarding
+                navToOnBoarding = { provider, idToken ->
+                    navController.navigate(AppDestination.OnBoarding(provider.toString(), idToken))
+                }
             )
         }
 
-        composable<AppDestination.OnBoarding>{backstackEntry ->
+        composable<AppDestination.OnBoarding> { backstackEntry ->
             val arguments = backstackEntry.toRoute<AppDestination.OnBoarding>()
             OnBoardingNavHost(
-                navToLogin = navToLogin,
+                navToLogin = {
+                    navController.navigate(AppDestination.Login)
+                },
                 navToHome = navToHome,
                 idToken = arguments.idToken,
                 provider = AuthProvider.valueOf(arguments.provider)
             )
         }
 
-        composable<AppDestination.Home>{backstackEntry ->
+        composable<AppDestination.Home> { backstackEntry ->
             HomeScreen()
         }
     }
