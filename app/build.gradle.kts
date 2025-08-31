@@ -2,7 +2,6 @@ plugins {
     id("com.emotionstorage.convention.android.application")
     id("com.emotionstorage.convention.android.application.compose")
     id("com.emotionstorage.convention.android.application.hilt")
-    id("com.google.gms.google-services")
 }
 
 android {

@@ -21,7 +21,6 @@ class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
                 buildFeatures {
                     compose = true
                 }
-
             }
 
             val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")

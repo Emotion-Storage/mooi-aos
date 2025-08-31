@@ -9,7 +9,6 @@ import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.gradle.api.plugins.JavaPluginExtension
-import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 
 class KotlinLibraryConventionPlugin : Plugin<Project> {
@@ -20,6 +19,7 @@ class KotlinLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("java-library")
                 apply("org.jetbrains.kotlin.jvm")
+                apply("org.jetbrains.kotlin.plugin.serialization")
             }
 
             extensions.getByType<JavaPluginExtension>().apply {
