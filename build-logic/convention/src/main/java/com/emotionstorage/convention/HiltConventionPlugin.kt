@@ -13,12 +13,12 @@ class HiltConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.google.devtools.ksp")
+            }
 
-                val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-                dependencies {
-                    add("implementation", libs.findBundle("hilt-core").get())
-                    add("ksp", libs.findLibrary("google-dagger-hilt-compiler").get())
-                }
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            dependencies {
+                add("implementation", libs.findBundle("hilt-core").get())
+                add("ksp", libs.findLibrary("google-dagger-hilt-compiler").get())
             }
         }
     }

@@ -28,7 +28,7 @@ import kotlinx.coroutines.launch
 fun SignupCompleteScreen(
     modifier: Modifier = Modifier,
     onLogin: suspend () -> Boolean,
-    navToMain: () -> Unit = {},
+    navToHome: () -> Unit = {},
     navToLogin: () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
@@ -69,7 +69,7 @@ fun SignupCompleteScreen(
                 onClick = {
                     coroutineScope.launch {
                         if(onLogin()){
-                            navToMain()
+                            navToHome()
                         }else{
                             navToLogin()
                         }
@@ -86,7 +86,7 @@ private fun SignupCompleteScreenPreview(){
     MooiTheme{
         SignupCompleteScreen(
             onLogin = { true },
-            navToMain = {}
+            navToHome = {}
         )
     }
 }

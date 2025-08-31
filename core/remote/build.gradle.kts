@@ -1,3 +1,9 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
+fun getApiKey(propertyKey: String): String {
+    return  System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+}
+
 plugins {
     id("com.emotionstorage.convention.android.library")
     id("com.emotionstorage.convention.android.library.hilt")
@@ -10,6 +16,12 @@ android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField(
+            "String",
+            "MOOI_DEV_SERVER_URL",
+            getApiKey("MOOI_DEV_SERVER_URL")
+        )
     }
 
     buildTypes {
@@ -20,6 +32,10 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 }
 

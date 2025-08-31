@@ -15,17 +15,12 @@ class AndroidLibraryRoomConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("com.google.devtools.ksp")
+            }
 
-                extensions.findByType<LibraryExtension>()?.let {
-                    val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
-                    it.apply {
-                        dependencies {
-                            add("ksp", libs.findLibrary("androidx-room-compiler").get())
-                            add("implementation", libs.findBundle("room").get())
-                        }
-                    }
-                }
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            dependencies {
+                add("ksp", libs.findLibrary("androidx-room-compiler").get())
+                add("implementation", libs.findBundle("room").get())
             }
         }
     }
