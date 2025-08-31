@@ -1,15 +1,12 @@
 package com.emotionstorage.emotionstorage.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.emotionstorage.auth.ui.LoginScreen
@@ -25,40 +22,24 @@ import kotlinx.serialization.Serializable
  * App destinations
  */
 @Serializable
-internal sealed interface AppDestination {
+internal sealed class AppDestination {
     @Serializable
-    object Splash: AppDestination
+    object Splash: AppDestination()
 
     @Serializable
-    object Login: AppDestination
+    object Login: AppDestination()
 
     @Serializable
-    data class OnBoarding(val provider: String, val idToken: String): AppDestination
+    data class OnBoarding(val provider: String, val idToken: String): AppDestination()
 
     @Serializable
-    object Home: AppDestination
+    object Home: AppDestination()
 }
 
 
 @Composable
 fun AppNavHost(
-    modifier: Modifier = Modifier,
-) {
-    val navController = rememberNavController()
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    Log.d("app nav controller", "currentRoute: $currentRoute")
-
-    StatelessAppNavHost(
-        navController = navController,
-        modifier = modifier,
-    )
-}
-
-@Composable
-private fun StatelessAppNavHost(
-    navController: NavHostController,
+    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
 ) {
     val navToLogin = {
