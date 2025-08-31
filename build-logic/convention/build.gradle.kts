@@ -60,9 +60,9 @@ gradlePlugin {
         /**
          * java kotlin library plugins
          */
-        create("javaKotlinLibrary"){
+        create("kotlinLibrary"){
             id = "com.emotionstorage.convention.kotlin.library"
-            implementationClass = "com.emotionstorage.convention.JavaKotlinLibraryConventionPlugin"
+            implementationClass = "com.emotionstorage.convention.KotlinLibraryConventionPlugin"
         }
         create("hilt"){
             id = "com.emotionstorage.convention.kotlin.library.hilt"

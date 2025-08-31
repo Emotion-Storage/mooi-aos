@@ -7,8 +7,9 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
     alias(libs.plugins.google.devtools.ksp) apply false
     alias(libs.plugins.google.dagger.hilt.android) apply false
-    id("com.google.gms.google-services") version "4.4.3" apply false
+    alias(libs.plugins.google.services) apply false
 
+    alias(libs.plugins.kotlin.serialization)
     /**
      * # module dependency graph generator
      * - Graphviz installation needed

@@ -9,6 +9,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -35,9 +36,11 @@ enum class OnBoardingRoute(
 
 @Composable
 fun OnBoardingNavHost(
+    provider: AuthProvider,
+    idToken: String,
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToMain: () -> Unit = {},
+    navToHome: () -> Unit = {},
     navToLogin: () -> Unit = {}
 ) {
     val navController = rememberNavController()
@@ -48,12 +51,16 @@ fun OnBoardingNavHost(
 
     val signupForm = sharedViewModel.signupForm.collectAsState()
 
+    LaunchedEffect(provider, idToken) {
+        sharedViewModel.onProviderIdTokenReceived(provider, idToken)
+    }
+
     StatelessOnBoardingNavHost(
         navController = navController,
         signupForm = signupForm.value,
         event = sharedViewModel,
         modifier = modifier,
-        navToMain = navToMain,
+        navToHome = navToHome,
         navToLogin = navToLogin
     )
 }
@@ -64,16 +71,9 @@ private fun StatelessOnBoardingNavHost(
     signupForm: SignupForm,
     event: OnBoardingEvent,
     modifier: Modifier = Modifier,
-    navToMain: () -> Unit = {},
+    navToHome: () -> Unit = {},
     navToLogin: () -> Unit = {}
 ) {
-    // todo receive provider & id token from nav
-    val provider = AuthProvider.GOOGLE
-    val idToken = ""
-    LaunchedEffect(provider, idToken) {
-        event.onProviderIdTokenReceived(provider, idToken)
-    }
-
     NavHost(
         navController,
         startDestination = OnBoardingRoute.NICKNAME.route,
@@ -130,7 +130,7 @@ private fun StatelessOnBoardingNavHost(
 
                     OnBoardingRoute.SIGNUP_COMPLETE -> SignupCompleteScreen(
                         onLogin = event::onLogin,
-                        navToMain = navToMain,
+                        navToHome = navToHome,
                         navToLogin = navToLogin,
                         navToBack = {
                             navController.popBackStack()

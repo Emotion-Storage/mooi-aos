@@ -40,7 +40,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     loginViewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
-    navToOnBoarding: () -> Unit = {},
+    navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     val state = loginViewModel.state.collectAsState()
 
@@ -59,7 +59,7 @@ private fun StatelessLoginScreen(
     state: State,
     modifier: Modifier = Modifier,
     navToHome: () -> Unit = {},
-    navToOnBoarding: () -> Unit = {},
+    navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     when (state.loginState) {
         State.LoginState.Idle -> {
@@ -74,8 +74,12 @@ private fun StatelessLoginScreen(
             navToHome()
         }
 
+        State.LoginState.Fail -> {
+            navToOnBoarding(state.provider!!, state.idToken!!)
+        }
+
         State.LoginState.Error -> {
-            navToOnBoarding()
+            // todo: add error ui on LoginState.Error
         }
     }
 
