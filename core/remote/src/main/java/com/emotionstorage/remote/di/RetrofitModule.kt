@@ -20,6 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
     private const val BASE_URL = BuildConfig.MOOI_DEV_SERVER_URL
+    private const val TIMEOUT = 20L
 
     @Singleton
     @Provides
@@ -31,15 +32,17 @@ object RetrofitModule {
         .baseUrl(BASE_URL)
         .addConverterFactory(
             Json {
-                ignoreUnknownKeys
+                ignoreUnknownKeys = true // Common configuration
+                isLenient = true
+                prettyPrint = true // For debugging, optional
             }.asConverterFactory("application/json".toMediaType()),
         )
         .client(
             OkHttpClient
                 .Builder()
-                .connectTimeout(20, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(requestHeaderInterceptor)
                 .build()
