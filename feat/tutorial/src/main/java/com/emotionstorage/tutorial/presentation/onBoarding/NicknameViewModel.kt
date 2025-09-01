@@ -3,7 +3,7 @@ package com.emotionstorage.tutorial.presentation.onBoarding
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.common.DataResource
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.tutorial.domain.NicknameState
 import com.emotionstorage.tutorial.domain.ValidateNicknameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -58,7 +58,7 @@ class NicknameViewModel @Inject constructor(
     private fun validateNickname(nickname: String) {
         val result = validateNicknameUseCase(nickname)
 
-        if (result is DataResource.Success) {
+        if (result is DataState.Success) {
             _nicknameInputState.update {
                 when (result.data) {
                     NicknameState.INVALID_EMPTY -> State.InputState.EMPTY

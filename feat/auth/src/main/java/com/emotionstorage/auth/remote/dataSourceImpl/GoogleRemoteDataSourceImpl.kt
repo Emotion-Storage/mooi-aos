@@ -2,14 +2,13 @@ package com.emotionstorage.auth.remote.dataSourceImpl
 
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
 import com.emotionstorage.auth.data.dataSource.GoogleRemoteDataSource
-import com.emotionstorage.common.DataResource
+import com.emotionstorage.domain.common.DataState
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
@@ -28,46 +27,42 @@ class GoogleRemoteDataSourceImpl @Inject constructor(
         CredentialManager.create(context)
     }
 
-    override suspend fun getIdToken(): DataResource<String> {
+    override suspend fun getIdToken(): String {
         val deferredResult = CoroutineScope(Dispatchers.Default).async {
             try {
+                // credential request for google login
+                val credentialRequest = GetCredentialRequest.Builder().addCredentialOption(
+                    GetSignInWithGoogleOption
+                        .Builder(
+                            serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID
+                        ).build()
+                ).build()
+
+                // get credential result
                 val credentialResult: GetCredentialResponse = credentialManager.getCredential(
-                    request = GetCredentialRequest.Builder().addCredentialOption(
-                        GetSignInWithGoogleOption
-                            .Builder(
-                                serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID
-                            ).build()
-                    ).build(),
+                    request = credentialRequest,
                     context = context,
                 )
 
+                // parse credential result
                 credentialResult.credential.apply {
                     if (this is CustomCredential && this.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
                         try {
                             val googleIdTokenCredential = GoogleIdTokenCredential
                                 .createFrom(this.data)
+                            return@async googleIdTokenCredential.idToken
 
-                            Log.d(
-                                "GoogleRemoteDataSourceImpl",
-                                "getIdToken: ${googleIdTokenCredential.idToken}"
-                            )
-                            return@async DataResource.Success(googleIdTokenCredential.idToken)
                         } catch (e: GoogleIdTokenParsingException) {
-                            return@async DataResource.Error(e)
+                            throw Exception("Invalid Google ID token", e)
                         }
                     } else {
-                        Log.e(
-                            "GoogleRemoteDataSourceImpl",
-                            "getIdToken: Unexpected type of credential"
-                        )
-                        return@async DataResource.Error(Exception("Unexpected type of credential"))
+                        throw Exception("Unexpected type of credential")
                     }
                 }
             } catch (e: Exception) {
-                Log.e("GoogleRemoteDataSourceImpl", "credential response error: $e")
-                return@async DataResource.Error(e)
+                throw Exception("Google credential failed", e)
             }
         }
-        return deferredResult.await() as DataResource<String>
+        return deferredResult.await() as String
     }
 }

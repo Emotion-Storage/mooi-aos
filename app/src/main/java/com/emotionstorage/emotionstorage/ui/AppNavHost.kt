@@ -16,6 +16,7 @@ import com.emotionstorage.tutorial.ui.onBoarding.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.splash.SplashScreen
 import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.navigateWithClearStack
 import kotlinx.serialization.Serializable
 
 
@@ -38,17 +39,6 @@ internal sealed class AppDestination {
 
     @Serializable
     object Home : AppDestination()
-}
-
-// navigate to destination with clear stack
-internal fun <T : Any> NavHostController.navigateWithClearStack(destRoute: T) {
-    val currentRoute = currentBackStackEntry?.destination?.route
-
-    this.navigate(destRoute) {
-        popUpTo(currentRoute ?: destRoute.toString()) {
-            inclusive = true
-        }
-    }
 }
 
 @Composable
@@ -98,9 +88,6 @@ internal fun AppNavHost(
             OnBoardingNavHost(
                 idToken = arguments.idToken,
                 provider = AuthProvider.valueOf(arguments.provider),
-                navToLogin = {
-                    navController.navigateWithClearStack(AppDestination.Login)
-                },
                 navToHome =  {
                     navController.navigateWithClearStack(AppDestination.Home)
                 },

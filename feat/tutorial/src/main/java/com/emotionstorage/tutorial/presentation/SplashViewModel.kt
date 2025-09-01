@@ -3,7 +3,7 @@ package com.emotionstorage.tutorial.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.usecase.AutomaticLoginUseCase
-import com.emotionstorage.common.DataResource
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.tutorial.presentation.SplashViewModel.State.AutoLoginState
 import com.emotionstorage.tutorial.presentation.SplashViewModel.State.SplashState
 import com.orhanobut.logger.Logger
@@ -64,10 +64,10 @@ class SplashViewModel @Inject constructor(
             }
 
             automaticLogin().collectLatest { result ->
-                Logger.d("SplashViewModel handleAutoLogin, result: ${result.toString()}")
+                Logger.d("SplashViewModel handleAutoLogin, result: $result")
 
                 when (result) {
-                    is DataResource.Loading -> {
+                    is DataState.Loading -> {
                         if (result.isLoading) {
                             _autoLoginState.update {
                                 AutoLoginState.Loading
@@ -75,23 +75,16 @@ class SplashViewModel @Inject constructor(
                         }
                     }
 
-                    is DataResource.Success -> {
-                        if (result.data) {
-                            _autoLoginState.update {
-                                AutoLoginState.Success
-                            }
-                        } else {
-                            Logger.w("Auto login failed")
-                            _autoLoginState.update {
-                                AutoLoginState.Fail()
-                            }
+                    is DataState.Success -> {
+                        _autoLoginState.update {
+                            AutoLoginState.Success
                         }
                     }
 
-                    is DataResource.Error -> {
+                    is DataState.Error -> {
                         Logger.e("Auto login error, ${result.throwable.toString()}")
                         _autoLoginState.update {
-                            AutoLoginState.Fail(true, result.throwable)
+                            AutoLoginState.Failed(result.throwable)
                         }
                     }
 
@@ -112,7 +105,7 @@ class SplashViewModel @Inject constructor(
         sealed class AutoLoginState {
             object Loading : AutoLoginState()
             object Success : AutoLoginState()
-            data class Fail(val isError: Boolean = false, val throwable: Throwable? = null) :
+            data class Failed(val throwable: Throwable) :
                 AutoLoginState()
         }
     }

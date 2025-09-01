@@ -2,6 +2,7 @@ package com.emotionstorage.remote.response
 
 import com.emotionstorage.common.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
+import retrofit2.HttpException
 import java.time.LocalDateTime
 
 @Serializable

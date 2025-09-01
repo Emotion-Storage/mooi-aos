@@ -57,7 +57,7 @@ private fun StatelessSplashScreen(
                 navToHome()
             }
 
-            is SplashViewModel.State.AutoLoginState.Fail -> {
+            is SplashViewModel.State.AutoLoginState.Failed -> {
                 navToTutorial()
             }
         }

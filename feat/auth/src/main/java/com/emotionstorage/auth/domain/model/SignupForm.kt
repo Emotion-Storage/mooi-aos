@@ -1,9 +1,11 @@
 package com.emotionstorage.auth.domain.model
 
+import com.emotionstorage.domain.model.User.AuthProvider
 import java.time.LocalDate
 
 // Data input from on user boarding precess
 data class SignupForm (
+    val provider: AuthProvider? = null,
     val idToken: String? = null,
     val nickname: String? = null,
     val gender: GENDER? = null,
@@ -14,6 +16,6 @@ data class SignupForm (
     val isMarketingAgreed: Boolean? = null,
 ){
     enum class GENDER(val value: String){
-        MALE("male"), FEMALE("female")
+        MALE("MALE"), FEMALE("FEMALE")
     }
 }

@@ -5,7 +5,6 @@ import com.emotionstorage.auth.data.model.SignupFormEntity
 import com.emotionstorage.auth.remote.api.AuthApiService
 import com.emotionstorage.auth.remote.modelMapper.SignupFormMapper
 import com.emotionstorage.auth.remote.request.LoginRequestBody
-import com.emotionstorage.common.DataResource
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.remote.response.ResponseStatus
 import javax.inject.Inject
@@ -17,8 +16,9 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun login(
         provider: User.AuthProvider,
         idToken: String
-    ): DataResource<String> {
+    ): String {
         try {
+            // call login api
             val response = when (provider) {
                 User.AuthProvider.KAKAO -> authApiService.postKakaoLogin(
                     LoginRequestBody(idToken)
@@ -29,21 +29,21 @@ class AuthRemoteDataSourceImpl @Inject constructor(
                 )
             }
 
-            return if (response.status == ResponseStatus.Created.code) {
+            // return access token if success
+            if (response.status == ResponseStatus.Created.code) {
                 response.data?.accessToken?.run {
-                    DataResource.success(this)
-                } ?: DataResource.error(Exception("No access token received"))
-            } else DataResource.error(Exception(response.message))
-
+                    return this
+                } ?: throw Exception("No access token received")
+            } else throw Exception(response.code + "" + response.message)
         } catch (e: Exception) {
-            return DataResource.Error(e)
+            throw Exception("Login api failed", e)
         }
     }
 
     override suspend fun signup(
         provider: User.AuthProvider,
         signupFormEntity: SignupFormEntity
-    ): DataResource<Boolean> {
+    ): Boolean {
         try {
             val response = when (provider) {
                 User.AuthProvider.KAKAO -> authApiService.postKakaoSignup(
@@ -55,16 +55,21 @@ class AuthRemoteDataSourceImpl @Inject constructor(
                 )
             }
 
-            return if (response.status == ResponseStatus.Created.code) DataResource.success(true)
-            else DataResource.error(Exception(response.message))
+            if (response.status == ResponseStatus.Created.code) return true
+            else throw Exception(response.code + "" + response.message)
         } catch (e: Exception) {
-            return DataResource.error(e)
+            throw Exception("Signup api failed", e)
         }
     }
 
     override suspend fun checkSession(): Boolean {
-        val response = authApiService.postSession()
-        return response.status == ResponseStatus.OK.code
+        try {
+            val response = authApiService.postSession()
+            if (response.status == ResponseStatus.OK.code) return true
+            else throw Exception(response.code + "" + response.message)
+        } catch (e: Exception) {
+            throw Exception("Check session api failed", e)
+        }
     }
 
     override suspend fun logout(): Boolean {
