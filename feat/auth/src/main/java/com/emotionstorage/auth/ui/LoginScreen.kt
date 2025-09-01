@@ -39,14 +39,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    val state = loginViewModel.state.collectAsState()
+    val state = viewModel.state.collectAsState()
 
     StatelessLoginScreen(
-        event = loginViewModel.event,
+        event = viewModel.event,
         state = state.value,
         modifier = modifier,
         navToHome = navToHome,
@@ -65,11 +65,13 @@ private fun StatelessLoginScreen(
     LaunchedEffect(state.loginState, state.idToken, state.provider) {
         if (state.loginState == State.LoginState.SUCCESS) {
             navToHome()
-        } else if (state.loginState == State.LoginState.SIGN_UP && state.provider != null && state.idToken != null) {
+        }
+        if (state.loginState == State.LoginState.SIGN_UP && state.provider != null && state.idToken != null) {
             navToOnBoarding(
                 state.provider!!,
                 state.idToken!!
             )
+            event.clearState()
         }
     }
 
@@ -159,6 +161,9 @@ private fun LoginScreenPreview() {
         StatelessLoginScreen(
             event = object : LoginEvent {
                 override suspend fun onLoginButtonClick(provider: AuthProvider) {
+                    // do nothing
+                }
+                override fun clearState() {
                     // do nothing
                 }
             },

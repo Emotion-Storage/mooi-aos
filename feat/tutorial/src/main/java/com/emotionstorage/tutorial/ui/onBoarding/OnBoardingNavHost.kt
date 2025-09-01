@@ -1,6 +1,5 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
