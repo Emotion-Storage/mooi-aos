@@ -18,20 +18,21 @@ internal fun Project.configureKotlinAndroid(commonExtension: CommonExtension<*, 
             minSdk = ApplicationConfig.minSdk
         }
         compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_17
-            targetCompatibility = JavaVersion.VERSION_17
+            sourceCompatibility = ApplicationConfig.javaVersion
+            targetCompatibility = ApplicationConfig.javaVersion
         }
     }
 
     tasks.withType<KotlinCompile>().configureEach {
         @Suppress("DEPRECATION")
-        kotlinOptions.jvmTarget = JavaVersion.VERSION_17.toString()
+        kotlinOptions.jvmTarget = ApplicationConfig.javaVersion.toString()
     }
 
     val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
     dependencies {
         add("implementation", libs.findBundle("core").get())
         add("implementation", libs.findLibrary("kotlinx.serialization.json").get())
+        add("implementation", libs.findLibrary("android.logger").get())
 
         add("testImplementation", libs.findBundle("test").get())
         add("androidTestImplementation", libs.findBundle("android.test").get())
