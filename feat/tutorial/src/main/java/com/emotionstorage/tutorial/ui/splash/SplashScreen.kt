@@ -49,15 +49,15 @@ private fun StatelessSplashScreen(
         if (state.splashState != SplashViewModel.State.SplashState.Done) return@LaunchedEffect
 
         when (state.autoLoginState) {
-            SplashViewModel.State.AutoLoginState.Loading -> {
+            is SplashViewModel.State.AutoLoginState.Loading -> {
                 // do nothing
             }
 
-            SplashViewModel.State.AutoLoginState.Success -> {
+            is SplashViewModel.State.AutoLoginState.Success -> {
                 navToHome()
             }
 
-            SplashViewModel.State.AutoLoginState.Fail -> {
+            is SplashViewModel.State.AutoLoginState.Fail -> {
                 navToTutorial()
             }
         }

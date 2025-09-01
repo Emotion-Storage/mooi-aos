@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.usecase.AutomaticLoginUseCase
 import com.emotionstorage.auth.presentation.LoginViewModel.State
+import com.emotionstorage.common.DataResource
 import com.emotionstorage.tutorial.presentation.SplashViewModel.State.AutoLoginState
 import com.emotionstorage.tutorial.presentation.SplashViewModel.State.SplashState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -52,13 +54,34 @@ class SplashViewModel @Inject constructor(
             _autoLoginState.update {
                 AutoLoginState.Loading
             }
-            if (automaticLogin()) {
-                _autoLoginState.update {
-                    AutoLoginState.Success
-                }
-            } else {
-                _autoLoginState.update {
-                    AutoLoginState.Fail
+            automaticLogin().collectLatest { result ->
+                when (result) {
+                    is DataResource.Loading -> {
+                        if (result.isLoading) {
+                            _autoLoginState.update {
+                                AutoLoginState.Loading
+                            }
+                        }
+                    }
+
+                    is DataResource.Success -> {
+                        if (result.data) {
+                            _autoLoginState.update {
+                                AutoLoginState.Success
+                            }
+                        } else {
+                            _autoLoginState.update {
+                                AutoLoginState.Fail()
+                            }
+                        }
+                    }
+
+                    is DataResource.Error -> {
+                        _autoLoginState.update {
+                            AutoLoginState.Fail(true, result.throwable)
+                        }
+                    }
+
                 }
             }
         }
@@ -68,15 +91,16 @@ class SplashViewModel @Inject constructor(
         val splashState: SplashState = SplashState.Loading,
         val autoLoginState: AutoLoginState = AutoLoginState.Loading
     ) {
-        sealed interface SplashState {
-            object Loading : SplashState
-            object Done : SplashState
+        sealed class SplashState {
+            object Loading : SplashState()
+            object Done : SplashState()
         }
 
-        sealed interface AutoLoginState {
-            object Loading : AutoLoginState
-            object Success : AutoLoginState
-            object Fail : AutoLoginState
+        sealed class AutoLoginState {
+            object Loading : AutoLoginState()
+            object Success : AutoLoginState()
+            data class Fail(val isError: Boolean = false, val throwable: Throwable? = null) :
+                AutoLoginState()
         }
     }
 }
