@@ -11,13 +11,8 @@ import retrofit2.http.DELETE
 import retrofit2.http.POST
 
 interface AuthApiService {
-    @POST("/api/v1/users/login/kakao")
+    @POST("/api/v1/users/login/google")
     suspend fun postGoogleLogin(
-        @Body loginRequestBody: LoginRequestBody
-    ): ResponseDto<LoginResponseData>
-
-    @POST("/api/v1/users/login/kakao")
-    suspend fun postKakaoLogin(
         @Body loginRequestBody: LoginRequestBody
     ): ResponseDto<LoginResponseData>
 
@@ -25,6 +20,12 @@ interface AuthApiService {
     suspend fun postGoogleSignup(
         @Body signupRequestBody: SignupRequestBody
     ): ResponseDto<SignupResponseData>
+
+
+    @POST("/api/v1/users/login/kakao")
+    suspend fun postKakaoLogin(
+        @Body loginRequestBody: LoginRequestBody
+    ): ResponseDto<LoginResponseData>
 
     @POST("/api/v1/users/signup/kakao")
     suspend fun postKakaoSignup(
