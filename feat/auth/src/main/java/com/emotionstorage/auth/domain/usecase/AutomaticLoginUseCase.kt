@@ -19,27 +19,22 @@ class AutomaticLoginUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository
 
-){
-    suspend operator fun invoke(): Flow<DataResource<Boolean>> = flow{
+) {
+    suspend operator fun invoke(): Flow<DataResource<Boolean>> = flow {
         emit(DataResource.loading(true))
+
         try {
             val result = authRepository.checkSession()
-            // delete session & user info if auto login failed
-            if (!result) {
+            if (result) {
+                emit(DataResource.success(true))
+            } else {
                 sessionRepository.deleteSession()
                 userRepository.deleteUser()
+                emit(DataResource.error(Throwable("Session is expired")))
             }
-            // emit result
-            emit(DataResource.success(result))
-
-            /**
-            // test use case
-            delay(2000)
-            emit(DataResource.success(false))
-            **/
-        }catch (e: Exception){
+        } catch (e: Exception) {
             emit(DataResource.error(e))
-        }finally{
+        } finally {
             emit(DataResource.loading(false))
 
         }

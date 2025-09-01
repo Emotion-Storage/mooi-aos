@@ -6,6 +6,8 @@ import com.emotionstorage.domain.model.Session
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
@@ -18,21 +20,24 @@ class LoginUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(provider: User.AuthProvider): Boolean {
-        val result = authRepository.login(provider)
-        when(result){
-            is DataResource.Success -> {
-                sessionRepository.saveSession(
-                    Session(accessToken = result.data)
-                )
-                return true
+    operator fun invoke(provider: User.AuthProvider): Flow<DataResource<Boolean>> = flow {
+        emit(DataResource.loading(true))
+
+        try {
+            val result = authRepository.login(provider)
+            if (result is DataResource.Success) {
+                sessionRepository.saveSession(Session(result.data))
+                emit(DataResource.success(true))
             }
-            is DataResource.Error -> {
-                sessionRepository.deleteSession()
-                userRepository.deleteUser()
-                return false
+            if (result is DataResource.Error) {
+                throw result.throwable
             }
-            else -> return false
+        } catch (e: Exception) {
+            sessionRepository.deleteSession()
+            userRepository.deleteUser()
+            emit(DataResource.error(e))
+        } finally {
+            emit(DataResource.loading(false))
         }
     }
 }
