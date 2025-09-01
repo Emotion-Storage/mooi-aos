@@ -56,7 +56,6 @@ internal fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
 ) {
-
     NavHost(
         navController,
         startDestination = AppDestination.Splash,

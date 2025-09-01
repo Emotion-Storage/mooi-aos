@@ -1,13 +1,12 @@
 package com.emotionstorage.tutorial.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.usecase.AutomaticLoginUseCase
-import com.emotionstorage.auth.presentation.LoginViewModel.State
 import com.emotionstorage.common.DataResource
 import com.emotionstorage.tutorial.presentation.SplashViewModel.State.AutoLoginState
 import com.emotionstorage.tutorial.presentation.SplashViewModel.State.SplashState
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,8 +37,15 @@ class SplashViewModel @Inject constructor(
     )
 
     init {
-        Log.d("SplashViewModel", "SplashViewModel initialized")
+        Logger.v("SplashViewModel init")
 
+        handleSplashState()
+        handleAutoLogin()
+    }
+
+    private fun handleSplashState() {
+        // set splash state as loading for 2s
+        // to insure splash screen is shown for at least 2s
         viewModelScope.launch {
             _splashState.update {
                 SplashState.Loading
@@ -49,12 +55,17 @@ class SplashViewModel @Inject constructor(
                 SplashState.Done
             }
         }
+    }
 
+    private fun handleAutoLogin() {
         viewModelScope.launch {
             _autoLoginState.update {
                 AutoLoginState.Loading
             }
+
             automaticLogin().collectLatest { result ->
+                Logger.d("SplashViewModel handleAutoLogin, result: ${result.toString()}")
+
                 when (result) {
                     is DataResource.Loading -> {
                         if (result.isLoading) {
@@ -70,6 +81,7 @@ class SplashViewModel @Inject constructor(
                                 AutoLoginState.Success
                             }
                         } else {
+                            Logger.w("Auto login failed")
                             _autoLoginState.update {
                                 AutoLoginState.Fail()
                             }
@@ -77,6 +89,7 @@ class SplashViewModel @Inject constructor(
                     }
 
                     is DataResource.Error -> {
+                        Logger.e("Auto login error, ${result.throwable.toString()}")
                         _autoLoginState.update {
                             AutoLoginState.Fail(true, result.throwable)
                         }

@@ -4,7 +4,6 @@ import com.emotionstorage.auth.domain.repository.AuthRepository
 import com.emotionstorage.common.DataResource
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -38,7 +37,6 @@ class AutomaticLoginUseCase @Inject constructor(
             delay(2000)
             emit(DataResource.success(false))
             **/
-
         }catch (e: Exception){
             emit(DataResource.error(e))
         }finally{

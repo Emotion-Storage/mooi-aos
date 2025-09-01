@@ -14,6 +14,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
         setContent {
             MooiTheme {
