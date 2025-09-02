@@ -1,6 +1,5 @@
 package com.emotionstorage.emotionstorage.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -10,13 +9,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +28,7 @@ import androidx.navigation.NavHostController
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.emotionstorage.R
 
-enum class BottomNavDestination(
+private enum class BottomNavDestination(
     val route: String,
     val icon: Int,
     val label: String
@@ -41,41 +38,45 @@ enum class BottomNavDestination(
     MY(AppDestination.My::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
 }
 
+private val BottomNavDestinationRoutes = BottomNavDestination.values().map { it.route }
+
 @Composable
 fun AppBottomNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     currentDestination: NavDestination? = null,
 ) {
-    BottomAppBar(
-        modifier = modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
-        containerColor = MooiTheme.colorScheme.bottomBarBackground,
-        contentColor = Color.White,
-        contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+    if(currentDestination?.route in BottomNavDestinationRoutes) {
+        BottomAppBar(
+            modifier = modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
+            containerColor = MooiTheme.colorScheme.bottomBarBackground,
+            contentColor = Color.White,
+            contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp)
         ) {
-            BottomNavDestination.values().forEach {
-                BottomNavBarItem(
-                    iconId = it.icon,
-                    label = it.label,
-                    isSelected = (currentDestination?.route == it.route),
-                    onClick = {
-                        navController.navigate(it.route!!) {
-                            popUpTo(currentDestination.toString()) {
-                                inclusive = true
-                                saveState = true
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                BottomNavDestination.values().forEach {
+                    BottomNavBarItem(
+                        iconId = it.icon,
+                        label = it.label,
+                        isSelected = (currentDestination?.route == it.route),
+                        onClick = {
+                            navController.navigate(it.route!!) {
+                                popUpTo(currentDestination.toString()) {
+                                    inclusive = true
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
                             }
-                            launchSingleTop = true
-                            restoreState = true
                         }
-                    }
-                )
+                    )
+                }
             }
         }
     }

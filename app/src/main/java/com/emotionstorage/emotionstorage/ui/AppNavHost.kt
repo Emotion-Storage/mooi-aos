@@ -64,13 +64,10 @@ internal fun AppNavHost(
     Scaffold(
         modifier,
         bottomBar = {
-            if (BottomNavDestination.values().map { it.route }
-                    .contains(currentDestination?.route)) {
-                AppBottomNavBar(
-                    navController = navController,
-                    currentDestination = currentDestination
-                )
-            }
+            AppBottomNavBar(
+                navController = navController,
+                currentDestination = currentDestination
+            )
         }) { innerPadding ->
         NavHost(
             navController,
