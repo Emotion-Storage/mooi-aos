@@ -2,21 +2,17 @@ package com.emotionstorage.tutorial.presentation.onBoarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.emotionstorage.auth.domain.model.Expectation
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
-import com.emotionstorage.auth.domain.usecase.LoginUseCase
 import com.emotionstorage.auth.domain.usecase.LoginWithIdTokenUseCase
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
-import com.emotionstorage.auth.presentation.LoginViewModel.State
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -28,7 +24,7 @@ interface OnBoardingEvent {
     fun onProviderIdTokenReceived(provider: AuthProvider, idToken: String)
     fun onNicknameInputComplete(nickname: String)
     fun onGenderBirthInputComplete(gender: GENDER, birth: LocalDate)
-    fun onExpectationsSelectComplete(expectations: List<String>)
+    fun onExpectationsSelectComplete(expectations: List<Expectation>)
     fun onAgreeTermsInputComplete(
         isTermAgreed: Boolean,
         isPrivacyAgreed: Boolean,
@@ -77,7 +73,7 @@ class OnBoardingViewModel @Inject constructor(
         _signupForm.update { it.copy(gender = gender, birthday = birth) }
     }
 
-    override fun onExpectationsSelectComplete(expectations: List<String>) {
+    override fun onExpectationsSelectComplete(expectations: List<Expectation>) {
         _signupForm.update { it.copy(expectations = expectations) }
     }
 

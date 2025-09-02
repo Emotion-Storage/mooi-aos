@@ -9,7 +9,7 @@ internal object SignupFormMapper {
         nickname = signupForm.nickname ?: throw IllegalStateException("nickname is null"),
         gender = signupForm.gender?.value ?: throw IllegalStateException("gender is null"),
         birthday = signupForm.birthday ?: throw IllegalStateException("birthday is null"),
-        expectations = signupForm.expectations
+        expectations = signupForm.expectations?.map { it.content }
             ?: throw IllegalStateException("expectations is null"),
         isTermAgreed = signupForm.isTermAgreed
             ?: throw IllegalStateException("isTermAgreed is null"),
