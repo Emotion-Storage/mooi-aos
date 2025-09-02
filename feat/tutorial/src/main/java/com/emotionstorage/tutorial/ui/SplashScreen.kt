@@ -34,8 +34,8 @@ fun SplashScreen(
 
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
-                is SplashSideEffect.NavigateToTutorial -> navToTutorial()
-                is SplashSideEffect.NavigateToHome -> navToHome()
+                is SplashSideEffect.AutoLoginFailed -> navToTutorial()
+                is SplashSideEffect.AutoLoginSuccess -> navToHome()
             }
         }
     }

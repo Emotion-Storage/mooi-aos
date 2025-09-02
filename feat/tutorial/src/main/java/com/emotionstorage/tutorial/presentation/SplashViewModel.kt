@@ -18,8 +18,8 @@ sealed class SplashAction {
 }
 
 sealed class SplashSideEffect {
-    object NavigateToTutorial : SplashSideEffect()
-    object NavigateToHome : SplashSideEffect()
+    object AutoLoginSuccess : SplashSideEffect()
+    object AutoLoginFailed : SplashSideEffect()
 }
 
 @HiltViewModel
@@ -48,12 +48,12 @@ class SplashViewModel @Inject constructor(
 
                 is DataState.Success -> {
                     Logger.i("Auto login success")
-                    postSideEffect(SplashSideEffect.NavigateToHome)
+                    postSideEffect(SplashSideEffect.AutoLoginSuccess)
                 }
 
                 is DataState.Error -> {
                     Logger.e("Auto login error, ${result.throwable.toString()}")
-                    postSideEffect(SplashSideEffect.NavigateToTutorial)
+                    postSideEffect(SplashSideEffect.AutoLoginFailed)
                 }
 
             }

@@ -9,165 +9,190 @@ import com.emotionstorage.auth.domain.usecase.LoginWithIdTokenUseCase
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
+import org.orbitmvi.orbit.viewmodel.container
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.orbitmvi.orbit.ContainerHost
 import java.time.LocalDate
 import javax.inject.Inject
 
-interface OnBoardingEvent {
-    fun onProviderIdTokenReceived(provider: AuthProvider, idToken: String)
-    fun onNicknameInputComplete(nickname: String)
-    fun onGenderBirthInputComplete(gender: GENDER, birth: LocalDate)
-    fun onExpectationsSelectComplete(expectations: List<Expectation>)
-    fun onAgreeTermsInputComplete(
-        isTermAgreed: Boolean,
-        isPrivacyAgreed: Boolean,
-        isMarketingAgreed: Boolean
-    )
+data class OnBoardingState(
+    val signupForm: SignupForm = SignupForm()
+)
 
-    suspend fun onSignup()
-    suspend fun onLogin()
+sealed class OnBoardingAction() {
+    data class Initiate(val provider: AuthProvider, val idToken: String) : OnBoardingAction()
+
+    data class InputNickname(val nickname: String) : OnBoardingAction()
+    data class InputGenderAndBirth(val gender: GENDER, val birth: LocalDate) : OnBoardingAction()
+    data class InputExpectations(val expectations: List<Expectation>) : OnBoardingAction()
+    data class InputAgreedTerms(
+        val isTermAgreed: Boolean,
+        val isPrivacyAgreed: Boolean,
+        val isMarketingAgreed: Boolean
+    ) : OnBoardingAction()
+
+    object Signup : OnBoardingAction()
+    object Login : OnBoardingAction()
 }
 
-/**
- * Shared viewmodel
- * - used to share SignupForm between onboarding screens
- */
+sealed class OnBoardingSideEffect {
+    object SignupSuccess : OnBoardingSideEffect()
+    object SignupFailed : OnBoardingSideEffect()
+
+    object LoginSuccess : OnBoardingSideEffect()
+    object LoginFailed : OnBoardingSideEffect()
+}
+
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val signup: SignupUseCase,
     private val loginWithIdToken: LoginWithIdTokenUseCase
-) : ViewModel(), OnBoardingEvent {
-    private val _signupForm = MutableStateFlow(SignupForm())
-    private val _signupState = MutableStateFlow(State.AuthState.IDLE)
-    private val _loginState = MutableStateFlow(State.AuthState.IDLE)
+) : ViewModel(), ContainerHost<OnBoardingState, OnBoardingSideEffect> {
+    override val container = container<OnBoardingState, OnBoardingSideEffect>(OnBoardingState())
 
-    val state = combine(
-        _signupForm,
-        _signupState,
-        _loginState
-    ) { signupForm, signupState, loginState ->
-        State(signupForm, signupState, loginState)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = State()
-    )
-    val event: OnBoardingEvent = this
+    fun onAction(action: OnBoardingAction) {
+        when (action) {
+            is OnBoardingAction.Initiate -> {
+                handleInitiate(action.provider, action.idToken)
+            }
 
-    override fun onProviderIdTokenReceived(provider: AuthProvider, idToken: String) {
-        _signupForm.update { it.copy(provider = provider, idToken = idToken) }
+            is OnBoardingAction.InputNickname -> {
+                handleInputNickname(action.nickname)
+            }
+
+            is OnBoardingAction.InputGenderAndBirth -> {
+                handleInputGenderAndBirth(action.gender, action.birth)
+            }
+
+            is OnBoardingAction.InputExpectations -> {
+                handleInputExpectations(action.expectations)
+            }
+
+            is OnBoardingAction.InputAgreedTerms -> {
+                handleInputAgreedTerms(
+                    action.isTermAgreed,
+                    action.isPrivacyAgreed,
+                    action.isMarketingAgreed
+                )
+            }
+
+            is OnBoardingAction.Signup -> {
+                handleSignup()
+            }
+
+            is OnBoardingAction.Login -> {
+                handleLogin()
+            }
+
+        }
     }
 
-    override fun onNicknameInputComplete(nickname: String) {
-        _signupForm.update { it.copy(nickname = nickname) }
+    fun handleInitiate(provider: AuthProvider, idToken: String) = intent {
+        reduce {
+            state.copy(signupForm = state.signupForm.copy(provider = provider, idToken = idToken))
+        }
     }
 
-    override fun onGenderBirthInputComplete(gender: GENDER, birth: LocalDate) {
-        _signupForm.update { it.copy(gender = gender, birthday = birth) }
+    fun handleInputNickname(nickname: String) = intent {
+        reduce {
+            state.copy(signupForm = state.signupForm.copy(nickname = nickname))
+        }
     }
 
-    override fun onExpectationsSelectComplete(expectations: List<Expectation>) {
-        _signupForm.update { it.copy(expectations = expectations) }
+    fun handleInputGenderAndBirth(gender: GENDER, birth: LocalDate) = intent {
+        reduce {
+            state.copy(signupForm = state.signupForm.copy(gender = gender, birthday = birth))
+        }
     }
 
-    override fun onAgreeTermsInputComplete(
+    fun handleInputExpectations(expectations: List<Expectation>) = intent {
+        reduce {
+            state.copy(signupForm = state.signupForm.copy(expectations = expectations))
+        }
+    }
+
+    fun handleInputAgreedTerms(
         isTermAgreed: Boolean,
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean
-    ) {
-        _signupForm.update {
-            it.copy(
-                isTermAgreed = isTermAgreed,
-                isPrivacyAgreed = isPrivacyAgreed,
-                isMarketingAgreed = isMarketingAgreed
+    ) = intent {
+        reduce {
+            state.copy(
+                signupForm = state.signupForm.copy(
+                    isTermAgreed = isTermAgreed,
+                    isPrivacyAgreed = isPrivacyAgreed,
+                    isMarketingAgreed = isMarketingAgreed
+                )
             )
         }
     }
 
-    override suspend fun onSignup() {
-        if (_signupForm.value.provider == null) {
+    fun handleSignup() = intent {
+        if (state.signupForm.provider == null) {
             Logger.e("provider is null")
-            _signupState.update { State.AuthState.ERROR }
-            return
+            postSideEffect(OnBoardingSideEffect.SignupFailed)
+            return@intent
         }
-        if (_signupForm.value.idToken == null) {
+        if (state.signupForm.idToken == null) {
             Logger.e("idToken is null")
-            _signupState.update { State.AuthState.ERROR }
-            return
+            postSideEffect(OnBoardingSideEffect.SignupFailed)
+            return@intent
         }
 
-        viewModelScope.launch {
-            signup(_signupForm.value).collect { result ->
-                when (result) {
-                    is DataState.Loading -> {
-                        _signupState.update { if (result.isLoading) State.AuthState.LOADING else State.AuthState.IDLE }
-                    }
+        signup(state.signupForm).collect { result ->
+            when (result) {
+                is DataState.Loading -> {
+                    // do nothing
+                }
 
-                    is DataState.Success -> {
-                        Logger.i(result.toString())
-                        _signupState.update { State.AuthState.SUCCESS }
-                    }
+                is DataState.Success -> {
+                    Logger.i(result.toString())
+                    postSideEffect(OnBoardingSideEffect.SignupSuccess)
+                }
 
-                    is DataState.Error -> {
-                        Logger.e(result.toString())
-                        _signupState.update { State.AuthState.ERROR }
-                    }
+                is DataState.Error -> {
+                    Logger.e(result.toString())
+                    postSideEffect(OnBoardingSideEffect.SignupFailed)
                 }
             }
         }
     }
 
-    override suspend fun onLogin() {
-        if (_signupForm.value.provider == null) {
+    fun handleLogin() = intent {
+        if (state.signupForm.provider == null) {
             Logger.e("provider is null")
-            _loginState.update { State.AuthState.ERROR }
-            return
+            postSideEffect(OnBoardingSideEffect.LoginFailed)
+            return@intent
         }
-        if (_signupForm.value.idToken == null) {
+        if (state.signupForm.idToken == null) {
             Logger.e("idToken is null")
-            _loginState.update { State.AuthState.ERROR }
-            return
+            postSideEffect(OnBoardingSideEffect.LoginFailed)
+            return@intent
         }
 
         viewModelScope.launch {
-            loginWithIdToken(_signupForm.value.provider!!, _signupForm.value.idToken!!).collect { result ->
+            loginWithIdToken(
+                state.signupForm.provider!!,
+                state.signupForm.idToken!!
+            ).collect { result ->
                 when (result) {
                     is DataState.Loading -> {
-                        _loginState.update { if (result.isLoading) State.AuthState.LOADING else State.AuthState.IDLE }
+                        // do nothing
                     }
 
                     is DataState.Success -> {
                         Logger.i(result.toString())
-                        _loginState.update { State.AuthState.SUCCESS }
+                        postSideEffect(OnBoardingSideEffect.LoginSuccess)
                     }
 
                     is DataState.Error -> {
                         Logger.e(result.toString())
-                        _loginState.update { State.AuthState.ERROR }
+                        postSideEffect(OnBoardingSideEffect.LoginFailed)
                     }
                 }
             }
-
-        }
-    }
-
-    data class State(
-        val signupForm: SignupForm = SignupForm(),
-        val signupState: AuthState = AuthState.IDLE,
-        val loginState: AuthState = AuthState.IDLE
-    ) {
-        enum class AuthState {
-            IDLE,
-            LOADING,
-            SUCCESS,
-            ERROR
         }
     }
 }

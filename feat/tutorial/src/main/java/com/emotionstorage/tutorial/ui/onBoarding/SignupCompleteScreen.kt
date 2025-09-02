@@ -9,14 +9,12 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.OnBoardingViewModel.State.AuthState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -29,17 +27,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignupCompleteScreen(
     modifier: Modifier = Modifier,
-    onLogin: suspend () -> Unit,
-    loginState: AuthState = AuthState.IDLE,
-    navToHome: () -> Unit = {},
+    onLogin: suspend () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(loginState) {
-        if(loginState == AuthState.SUCCESS){
-            navToHome()
-        }
-    }
 
     Scaffold(
         modifier = modifier
@@ -87,9 +77,6 @@ fun SignupCompleteScreen(
 @Composable
 private fun SignupCompleteScreenPreview(){
     MooiTheme{
-        SignupCompleteScreen(
-            onLogin = { true },
-            navToHome = {}
-        )
+        SignupCompleteScreen()
     }
 }
