@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.emotionstorage.ai_chat.ui.ChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
@@ -51,6 +52,8 @@ internal sealed class AppDestination {
     @Serializable
     object My : AppDestination()
 
+    @Serializable
+    data class AI_CHAT(val roomId: String) : AppDestination()
 }
 
 @Composable
@@ -116,13 +119,22 @@ internal fun AppNavHost(
             }
 
             composable<AppDestination.Home> {
-                HomeScreen()
+                HomeScreen(
+                    navToChat = { roomId ->
+                        navController.navigate(AppDestination.AI_CHAT(roomId))
+                    }
+                )
             }
             composable<AppDestination.TIME_CAPSULE_CALENDAR> {
                 TimeCapsuleCalendarScreen()
             }
             composable<AppDestination.My> {
                 MyScreen()
+            }
+
+            composable<AppDestination.AI_CHAT> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT>()
+                ChatScreen(roomId = arguments.roomId)
             }
         }
     }
