@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -38,8 +37,7 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.component.CheckboxIcon
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel.State.AuthState
+import com.emotionstorage.tutorial.presentation.OnBoardingViewModel.State.AuthState
 import kotlinx.coroutines.launch
 
 /**

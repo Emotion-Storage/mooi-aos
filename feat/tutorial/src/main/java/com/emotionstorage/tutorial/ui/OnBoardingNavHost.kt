@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.onBoarding
+package com.emotionstorage.tutorial.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,8 +13,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.emotionstorage.domain.model.User.AuthProvider
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingEvent
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
+import com.emotionstorage.tutorial.presentation.OnBoardingEvent
+import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
+import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
+import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
+import com.emotionstorage.tutorial.ui.onBoarding.GenderBirthScreen
+import com.emotionstorage.tutorial.ui.onBoarding.NicknameScreen
+import com.emotionstorage.tutorial.ui.onBoarding.SignupCompleteScreen
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.navigateWithClearStack
 

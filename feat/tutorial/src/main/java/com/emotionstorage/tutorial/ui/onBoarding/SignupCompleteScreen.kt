@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel.State.AuthState
+import com.emotionstorage.tutorial.presentation.OnBoardingViewModel.State.AuthState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme

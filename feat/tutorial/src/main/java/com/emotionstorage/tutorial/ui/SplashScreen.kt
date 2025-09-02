@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.splash
+package com.emotionstorage.tutorial.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.presentation.onBoarding
+package com.emotionstorage.tutorial.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
