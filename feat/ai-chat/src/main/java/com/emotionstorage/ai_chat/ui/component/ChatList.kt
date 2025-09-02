@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui
+package com.emotionstorage.ai_chat.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,12 +34,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
-fun ChatList(
+fun ChatMessageList(
     modifier: Modifier = Modifier,
     chatMessages: List<ChatMessage> = listOf(),
 ) {
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
@@ -50,7 +51,7 @@ fun ChatList(
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }
-            ChatItem(
+            ChatMessageItem(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 chatMessage = item,
                 showProfile = (index == 0 || item.source != chatMessages[index - 1].source || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate())
@@ -93,7 +94,7 @@ private fun DateDivider(
 }
 
 @Composable
-private fun ChatItem(
+private fun ChatMessageItem(
     chatMessage: ChatMessage,
     modifier: Modifier = Modifier,
     showProfile: Boolean = false
@@ -137,7 +138,7 @@ private fun ChatItem(
 
 @Preview
 @Composable
-private fun ChatListPreview() {
+private fun ChatMessageListPreview() {
     val chatMessages = List(6, init = { it }).map { it ->
         ChatMessage(
             roomId = "",
@@ -161,14 +162,14 @@ private fun ChatListPreview() {
     ) + List(6, init = { it }).map { it ->
         ChatMessage(
             roomId = "",
-            source = if (it % 3 == 0) ChatMessage.MessageSource.SERVER else ChatMessage.MessageSource.CLIENT,
+            source = if (it % 3 == 0) MessageSource.SERVER else MessageSource.CLIENT,
             content = "안녕하세요",
             timestamp = LocalDateTime.of(2025, 9, 4, 17, it, 1, 1)
         )
     }
 
     MooiTheme {
-        ChatList(
+        ChatMessageList(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(MooiTheme.colorScheme.background),
