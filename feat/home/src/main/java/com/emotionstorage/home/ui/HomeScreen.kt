@@ -10,7 +10,8 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun HomeScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navToChat: (roomId: String) -> Unit = {}
 ) {
     Column(
         modifier = modifier,
@@ -18,6 +19,12 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("로그인 성공 - 홈 진입")
+        Button(onClick = {
+            // todo: get room id from server
+            navToChat("roomId")
+        }) {
+            Text("대화 시작하기")
+        }
         Button(onClick = { /*TODO: 로그아웃*/ }) {
             Text("로그아웃")
         }
