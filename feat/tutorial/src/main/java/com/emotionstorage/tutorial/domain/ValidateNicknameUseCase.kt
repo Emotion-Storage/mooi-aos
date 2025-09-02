@@ -1,6 +1,6 @@
 package com.emotionstorage.tutorial.domain
 
-import com.emotionstorage.common.DataResource
+import com.emotionstorage.domain.common.DataState
 import javax.inject.Inject
 
 enum class NicknameState(val message: String) {
@@ -21,13 +21,13 @@ enum class NicknameState(val message: String) {
  * - 금칙어 입력 시(이 부분은 추후 정리 필요!!!)
  */
 class ValidateNicknameUseCase @Inject constructor() {
-    operator fun invoke(nickname: String): DataResource<NicknameState> {
+    operator fun invoke(nickname: String): DataState<NicknameState> {
         if (nickname.isNullOrEmpty())
-            return DataResource.Success(NicknameState.INVALID_EMPTY)
+            return DataState.Success(NicknameState.INVALID_EMPTY)
         if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$")))
-            return DataResource.Success(NicknameState.INVALID_CHAR)
+            return DataState.Success(NicknameState.INVALID_CHAR)
         if (nickname.length < 2)
-            return DataResource.Success(NicknameState.INVALID_LENGTH)
-        return DataResource.Success(NicknameState.VALID)
+            return DataState.Success(NicknameState.INVALID_LENGTH)
+        return DataState.Success(NicknameState.VALID)
     }
 }

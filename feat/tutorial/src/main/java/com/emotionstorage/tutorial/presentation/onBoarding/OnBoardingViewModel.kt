@@ -5,13 +5,20 @@ import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
 import com.emotionstorage.auth.domain.usecase.LoginUseCase
+import com.emotionstorage.auth.domain.usecase.LoginWithIdTokenUseCase
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
+import com.emotionstorage.auth.presentation.LoginViewModel.State
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -28,8 +35,8 @@ interface OnBoardingEvent {
         isMarketingAgreed: Boolean
     )
 
-    suspend fun onSignup(): Boolean
-    suspend fun onLogin(): Boolean
+    suspend fun onSignup()
+    suspend fun onLogin()
 }
 
 /**
@@ -39,16 +46,27 @@ interface OnBoardingEvent {
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val signup: SignupUseCase,
-    private val login: LoginUseCase
+    private val loginWithIdToken: LoginWithIdTokenUseCase
 ) : ViewModel(), OnBoardingEvent {
-    private var _provider: AuthProvider? = null
-
     private val _signupForm = MutableStateFlow(SignupForm())
-    val signupForm: StateFlow<SignupForm> = _signupForm.asStateFlow()
+    private val _signupState = MutableStateFlow(State.AuthState.IDLE)
+    private val _loginState = MutableStateFlow(State.AuthState.IDLE)
+
+    val state = combine(
+        _signupForm,
+        _signupState,
+        _loginState
+    ) { signupForm, signupState, loginState ->
+        State(signupForm, signupState, loginState)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = State()
+    )
+    val event: OnBoardingEvent = this
 
     override fun onProviderIdTokenReceived(provider: AuthProvider, idToken: String) {
-        _provider = provider
-        _signupForm.update { it.copy(idToken = idToken) }
+        _signupForm.update { it.copy(provider = provider, idToken = idToken) }
     }
 
     override fun onNicknameInputComplete(nickname: String) {
@@ -77,30 +95,83 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
-    override suspend fun onSignup(): Boolean {
-        val deferredResult = viewModelScope.async {
-            try {
-                if (_provider == null) throw Exception("Provider is null")
-                return@async signup(provider = _provider!!, signupForm = _signupForm.value)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return@async false
+    override suspend fun onSignup() {
+        if (_signupForm.value.provider == null) {
+            Logger.e("provider is null")
+            _signupState.update { State.AuthState.ERROR }
+            return
+        }
+        if (_signupForm.value.idToken == null) {
+            Logger.e("idToken is null")
+            _signupState.update { State.AuthState.ERROR }
+            return
+        }
+
+        viewModelScope.launch {
+            signup(_signupForm.value).collect { result ->
+                when (result) {
+                    is DataState.Loading -> {
+                        _signupState.update { if (result.isLoading) State.AuthState.LOADING else State.AuthState.IDLE }
+                    }
+
+                    is DataState.Success -> {
+                        Logger.i(result.toString())
+                        _signupState.update { State.AuthState.SUCCESS }
+                    }
+
+                    is DataState.Error -> {
+                        Logger.e(result.toString())
+                        _signupState.update { State.AuthState.ERROR }
+                    }
+                }
             }
         }
-        return deferredResult.await()
     }
 
-
-    override suspend fun onLogin(): Boolean {
-        val deferredResult = viewModelScope.async {
-            try {
-                if (_provider == null) throw Exception("Provider is null")
-                return@async login(provider = _provider!!)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return@async false
-            }
+    override suspend fun onLogin() {
+        if (_signupForm.value.provider == null) {
+            Logger.e("provider is null")
+            _loginState.update { State.AuthState.ERROR }
+            return
         }
-        return deferredResult.await()
+        if (_signupForm.value.idToken == null) {
+            Logger.e("idToken is null")
+            _loginState.update { State.AuthState.ERROR }
+            return
+        }
+
+        viewModelScope.launch {
+            loginWithIdToken(_signupForm.value.provider!!, _signupForm.value.idToken!!).collect { result ->
+                when (result) {
+                    is DataState.Loading -> {
+                        _loginState.update { if (result.isLoading) State.AuthState.LOADING else State.AuthState.IDLE }
+                    }
+
+                    is DataState.Success -> {
+                        Logger.i(result.toString())
+                        _loginState.update { State.AuthState.SUCCESS }
+                    }
+
+                    is DataState.Error -> {
+                        Logger.e(result.toString())
+                        _loginState.update { State.AuthState.ERROR }
+                    }
+                }
+            }
+
+        }
+    }
+
+    data class State(
+        val signupForm: SignupForm = SignupForm(),
+        val signupState: AuthState = AuthState.IDLE,
+        val loginState: AuthState = AuthState.IDLE
+    ) {
+        enum class AuthState {
+            IDLE,
+            LOADING,
+            SUCCESS,
+            ERROR
+        }
     }
 }

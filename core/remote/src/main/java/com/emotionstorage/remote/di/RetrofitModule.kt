@@ -22,6 +22,12 @@ object RetrofitModule {
     private const val BASE_URL = BuildConfig.MOOI_DEV_SERVER_URL
     private const val TIMEOUT = 20L
 
+    private val json = Json {
+        ignoreUnknownKeys = true // Common configuration
+        isLenient = true
+        prettyPrint = true // For debugging, optional
+    }
+
     @Singleton
     @Provides
     fun provideRetrofit(
@@ -30,13 +36,7 @@ object RetrofitModule {
     ) = Retrofit
         .Builder()
         .baseUrl(BASE_URL)
-        .addConverterFactory(
-            Json {
-                ignoreUnknownKeys = true // Common configuration
-                isLenient = true
-                prettyPrint = true // For debugging, optional
-            }.asConverterFactory("application/json".toMediaType()),
-        )
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .client(
             OkHttpClient
                 .Builder()

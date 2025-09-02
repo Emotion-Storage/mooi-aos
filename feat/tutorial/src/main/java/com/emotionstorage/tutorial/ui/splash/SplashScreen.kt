@@ -25,7 +25,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun SplashScreen(
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel(),
-    navToLogin: () -> Unit = {},
+    navToTutorial: () -> Unit = {},
     navToHome: () -> Unit = {},
 ) {
 
@@ -33,7 +33,7 @@ fun SplashScreen(
     StatelessSplashScreen(
         state = state.value,
         modifier = modifier,
-        navToLogin = navToLogin,
+        navToTutorial = navToTutorial,
         navToHome = navToHome,
     )
 }
@@ -42,23 +42,23 @@ fun SplashScreen(
 private fun StatelessSplashScreen(
     state: SplashViewModel.State,
     modifier: Modifier = Modifier,
-    navToLogin: () -> Unit = {},
+    navToTutorial: () -> Unit = {},
     navToHome: () -> Unit = {},
 ) {
     LaunchedEffect(state) {
         if (state.splashState != SplashViewModel.State.SplashState.Done) return@LaunchedEffect
 
         when (state.autoLoginState) {
-            SplashViewModel.State.AutoLoginState.Loading -> {
+            is SplashViewModel.State.AutoLoginState.Loading -> {
                 // do nothing
             }
 
-            SplashViewModel.State.AutoLoginState.Success -> {
+            is SplashViewModel.State.AutoLoginState.Success -> {
                 navToHome()
             }
 
-            SplashViewModel.State.AutoLoginState.Fail -> {
-                navToLogin()
+            is SplashViewModel.State.AutoLoginState.Failed -> {
+                navToTutorial()
             }
         }
     }

@@ -6,8 +6,10 @@ import com.emotionstorage.auth.data.dataSource.KakaoRemoteDataSource
 import com.emotionstorage.auth.data.modelMapper.SignupFormMapper
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.repository.AuthRepository
-import com.emotionstorage.common.DataResource
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -16,32 +18,71 @@ class AuthRepositoryImpl @Inject constructor(
     private val googleRemoteDataSource: GoogleRemoteDataSource
 ) : AuthRepository {
 
-    override suspend fun login(provider: User.AuthProvider): DataResource<String> {
+    override suspend fun login(provider: User.AuthProvider): Flow<DataState<String>> = flow {
+        emit(DataState.Loading(true))
+
         try {
-            val result = when (provider) {
+            // get id token from providers
+            val idToken = when (provider) {
                 User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                 User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
             }
 
-            return when (result) {
-                is DataResource.Success -> authRemoteDataSource.login(provider, result.data)
-                is DataResource.Error -> result
-                is DataResource.Loading -> result
+            // login with id token
+            try {
+                val accessToken = authRemoteDataSource.login(provider, idToken)
+                emit(DataState.Success(accessToken))
+            } catch (e: Exception) {
+                emit(DataState.Error(throwable = e, data = idToken))
             }
         } catch (e: Exception) {
-            return DataResource.Error(e)
+            emit(DataState.Error(e))
+        } finally {
+            emit(DataState.Loading(false))
+        }
+    }
+
+    override suspend fun loginWithIdToken(
+        provider: User.AuthProvider,
+        idToken: String
+    ): Flow<DataState<String>> = flow {
+        emit(DataState.Loading(true))
+        try {
+            val accessToken = authRemoteDataSource.login(provider, idToken)
+            emit(DataState.Success(accessToken))
+        } catch (e: Exception) {
+            emit(DataState.Error(throwable = e))
+        } finally {
+            emit(DataState.Loading(false))
         }
     }
 
     override suspend fun signup(
-        provider: User.AuthProvider,
         signupForm: SignupForm
-    ): Boolean {
-        return authRemoteDataSource.signup(provider, SignupFormMapper.toData(signupForm))
+    ): Flow<DataState<Boolean>> = flow {
+        emit(DataState.Loading(true))
+        try {
+            if (signupForm.provider == null) throw Exception("provider is null")
+            if (signupForm.idToken == null) throw Exception("idToken is null")
+
+            authRemoteDataSource.signup(signupForm.provider, SignupFormMapper.toData(signupForm))
+            emit(DataState.Success(true))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        } finally {
+            emit(DataState.Loading(false))
+        }
     }
 
-    override suspend fun checkSession(): Boolean {
-        return authRemoteDataSource.checkSession()
+    override suspend fun checkSession(): Flow<DataState<Boolean>> = flow {
+        emit(DataState.Loading(true))
+        try {
+            emit(DataState.Success(authRemoteDataSource.checkSession()))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        } finally {
+            emit(DataState.Loading(false))
+        }
     }
 
     override suspend fun logout(): Boolean {

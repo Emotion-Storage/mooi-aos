@@ -1,11 +1,11 @@
 package com.emotionstorage.auth.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.usecase.LoginUseCase
-import com.emotionstorage.auth.presentation.LoginViewModel.State.LoginState
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -19,6 +19,7 @@ interface LoginEvent {
     suspend fun onLoginButtonClick(
         provider: User.AuthProvider
     )
+    fun clearState()
 }
 
 @HiltViewModel
@@ -27,14 +28,14 @@ class LoginViewModel @Inject constructor(
 ) : ViewModel(), LoginEvent {
     private val _provider = MutableStateFlow<User.AuthProvider?>(null)
     private val _idToken = MutableStateFlow<String?>(null)
-    private val _loginState = MutableStateFlow(LoginState.Idle)
+    private val _loginState = MutableStateFlow<State.LoginState>(State.LoginState.IDLE)
 
     val state = combine(
         _provider,
         _idToken,
-        _loginState,
-    ) { provider, idToken, loginState ->
-        State(provider, idToken, loginState)
+        _loginState
+    ) { provider, idToken,  loginState ->
+        State(provider, idToken,  loginState)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -43,38 +44,58 @@ class LoginViewModel @Inject constructor(
     val event: LoginEvent = this@LoginViewModel
 
     init {
-        Log.d("LoginViewModel", "LoginViewModel initialized")
+        Logger.v("LoginViewModel init")
     }
 
     override suspend fun onLoginButtonClick(
         provider: User.AuthProvider
     ) {
-        Log.d("LoginViewModel", "onLoginButtonClick called with provider: $provider")
+        Logger.v("onLoginButtonClick, provider: $provider")
         _provider.update { provider }
-        _loginState.update { LoginState.Loading }
 
         viewModelScope.launch {
-            if (login(provider)) {
-                _loginState.update { LoginState.Success }
-            } else {
-                _loginState.update { LoginState.Fail }
-                // todo: get id token as return value when failed
+            login(provider).collect { result ->
+                when (result) {
+                    is DataState.Loading -> {
+                        if(result.isLoading) _loginState.update { State.LoginState.IDLE }
+                    }
+
+
+                    is DataState.Success -> {
+                        Logger.i("Login success, $result")
+                        _loginState.update { State.LoginState.SUCCESS }
+                    }
+
+                    is DataState.Error -> {
+                        Logger.e("Login error, $result")
+                        if (result.data != null) {
+                            _idToken.update { result.data as String }
+                            _loginState.update { State.LoginState.SIGN_UP }
+                        } else {
+                            _loginState.update { State.LoginState.ERROR }
+                        }
+                    }
+                }
             }
-            // todo: handle error
         }
+    }
+
+    override fun clearState() {
+        _provider.update { null }
+        _idToken.update { null }
+        _loginState.update { State.LoginState.IDLE }
     }
 
     data class State(
         val provider: User.AuthProvider? = null,
         val idToken: String? = null,
-        val loginState: LoginState = LoginState.Idle
+        val loginState: LoginState = LoginState.IDLE
     ) {
         enum class LoginState {
-            Idle,
-            Loading,
-            Success,
-            Fail,
-            Error
+            IDLE,
+            SUCCESS,
+            SIGN_UP,
+            ERROR
         }
     }
 }

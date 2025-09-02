@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel.State.AuthState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -27,19 +29,24 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignupCompleteScreen(
     modifier: Modifier = Modifier,
-    onLogin: suspend () -> Boolean,
+    onLogin: suspend () -> Unit,
+    loginState: AuthState = AuthState.IDLE,
     navToHome: () -> Unit = {},
-    navToLogin: () -> Unit = {},
-    navToBack: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(loginState) {
+        if(loginState == AuthState.SUCCESS){
+            navToHome()
+        }
+    }
 
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(onBackClick = navToBack)
+            TopAppBar()
         }
     ) { padding ->
         Column(
@@ -68,11 +75,7 @@ fun SignupCompleteScreen(
                 label = "메인화면으로 이동",
                 onClick = {
                     coroutineScope.launch {
-                        if(onLogin()){
-                            navToHome()
-                        }else{
-                            navToLogin()
-                        }
+                        onLogin()
                     }
                 }
             )

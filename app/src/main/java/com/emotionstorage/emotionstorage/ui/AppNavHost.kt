@@ -14,7 +14,9 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.tutorial.ui.onBoarding.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.splash.SplashScreen
+import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.navigateWithClearStack
 import kotlinx.serialization.Serializable
 
 
@@ -24,35 +26,26 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal sealed class AppDestination {
     @Serializable
-    object Splash: AppDestination()
+    object Splash : AppDestination()
 
     @Serializable
-    object Login: AppDestination()
+    object Tutorial : AppDestination()
 
     @Serializable
-    data class OnBoarding(val provider: String, val idToken: String): AppDestination()
+    object Login : AppDestination()
 
     @Serializable
-    object Home: AppDestination()
+    data class OnBoarding(val provider: String, val idToken: String) : AppDestination()
+
+    @Serializable
+    object Home : AppDestination()
 }
 
-
 @Composable
-fun AppNavHost(
+internal fun AppNavHost(
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
 ) {
-    val navToLogin = {
-        navController.navigate(AppDestination.Login)
-    }
-    val navToOnBoarding = { provider: AuthProvider, idToken: String ->
-        navController.navigate(AppDestination.OnBoarding(provider.toString(), idToken))
-    }
-    val navToHome = {
-        navController.navigate(AppDestination.Home)
-    }
-
-
     NavHost(
         navController,
         startDestination = AppDestination.Splash,
@@ -60,31 +53,48 @@ fun AppNavHost(
             .fillMaxSize()
             .background(MooiTheme.colorScheme.background)
     ) {
-        composable<AppDestination.Splash>{backstackEntry ->
+        composable<AppDestination.Splash> { backstackEntry ->
             SplashScreen(
-                navToLogin = navToLogin,
-                navToHome = navToHome
+                navToTutorial = {
+                    navController.navigateWithClearStack(AppDestination.Tutorial)
+                },
+                navToHome = {
+                    navController.navigateWithClearStack(AppDestination.Home)
+                }
             )
         }
 
-        composable<AppDestination.Login>{backstackEntry ->
+        composable<AppDestination.Tutorial> { backstackEntry ->
+            TutorialScreen(
+                navToLogin = {
+                    navController.navigateWithClearStack(AppDestination.Login)
+                }
+            )
+        }
+
+        composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
-                navToHome = navToHome,
-                navToOnBoarding = navToOnBoarding
+                navToHome =  {
+                    navController.navigateWithClearStack(AppDestination.Home)
+                },
+                navToOnBoarding = { provider, idToken ->
+                    navController.navigate(AppDestination.OnBoarding(provider.toString(), idToken))
+                }
             )
         }
 
-        composable<AppDestination.OnBoarding>{backstackEntry ->
+        composable<AppDestination.OnBoarding> { backstackEntry ->
             val arguments = backstackEntry.toRoute<AppDestination.OnBoarding>()
             OnBoardingNavHost(
-                navToLogin = navToLogin,
-                navToHome = navToHome,
                 idToken = arguments.idToken,
-                provider = AuthProvider.valueOf(arguments.provider)
+                provider = AuthProvider.valueOf(arguments.provider),
+                navToHome =  {
+                    navController.navigateWithClearStack(AppDestination.Home)
+                },
             )
         }
 
-        composable<AppDestination.Home>{backstackEntry ->
+        composable<AppDestination.Home> { backstackEntry ->
             HomeScreen()
         }
     }

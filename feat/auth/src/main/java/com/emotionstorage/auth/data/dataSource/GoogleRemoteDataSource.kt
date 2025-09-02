@@ -1,7 +1,7 @@
 package com.emotionstorage.auth.data.dataSource
 
-import com.emotionstorage.common.DataResource
+import com.emotionstorage.domain.common.DataState
 
 interface GoogleRemoteDataSource {
-    suspend fun getIdToken(): DataResource<String>
+    suspend fun getIdToken(): String
 }

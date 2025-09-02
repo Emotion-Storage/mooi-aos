@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,14 +39,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    val state = loginViewModel.state.collectAsState()
+    val state = viewModel.state.collectAsState()
 
     StatelessLoginScreen(
-        event = loginViewModel.event,
+        event = viewModel.event,
         state = state.value,
         modifier = modifier,
         navToHome = navToHome,
@@ -61,25 +62,16 @@ private fun StatelessLoginScreen(
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    when (state.loginState) {
-        State.LoginState.Idle -> {
-            // do nothing
-        }
-
-        State.LoginState.Loading -> {
-            // todo: add loading ui on LoginState.Loading
-        }
-
-        State.LoginState.Success -> {
+    LaunchedEffect(state.loginState, state.idToken, state.provider) {
+        if (state.loginState == State.LoginState.SUCCESS) {
             navToHome()
         }
-
-        State.LoginState.Fail -> {
-            navToOnBoarding(state.provider!!, state.idToken!!)
-        }
-
-        State.LoginState.Error -> {
-            // todo: add error ui on LoginState.Error
+        if (state.loginState == State.LoginState.SIGN_UP && state.provider != null && state.idToken != null) {
+            navToOnBoarding(
+                state.provider!!,
+                state.idToken!!
+            )
+            event.clearState()
         }
     }
 
@@ -123,7 +115,6 @@ private fun StatelessLoginScreen(
                 )
             }
 
-            // todo: replace with app icon
             Box(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -170,6 +161,9 @@ private fun LoginScreenPreview() {
         StatelessLoginScreen(
             event = object : LoginEvent {
                 override suspend fun onLoginButtonClick(provider: AuthProvider) {
+                    // do nothing
+                }
+                override fun clearState() {
                     // do nothing
                 }
             },
