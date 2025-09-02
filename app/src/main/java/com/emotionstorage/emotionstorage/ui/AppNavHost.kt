@@ -134,7 +134,12 @@ internal fun AppNavHost(
 
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT>()
-                ChatScreen(roomId = arguments.roomId)
+                ChatScreen(
+                    roomId = arguments.roomId,
+                    navToBack = {
+                        navController.popBackStack()
+                    }
+                )
             }
         }
     }

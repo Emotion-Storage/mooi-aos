@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.emotionstorage.ui.theme.MooiTheme
+import com.orhanobut.logger.Logger
 
 @Composable
 fun Modal(
@@ -65,6 +66,7 @@ fun Modal(
             ModalButton(
                 label = confirmLabel,
                 onClick = {
+                    Logger.v("confirm button clicked")
                     onConfirm()
                     onDismissRequest()
                 }
@@ -73,6 +75,7 @@ fun Modal(
             ModalButton(
                 label = dismissLabel,
                 onClick = {
+                    Logger.v("dismiss button clicked")
                     onDismiss()
                     onDismissRequest()
                 },
