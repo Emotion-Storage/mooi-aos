@@ -43,7 +43,7 @@ fun OnBoardingNavHost(
     idToken: String,
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToMain: () -> Unit = {},
+    navToHome: () -> Unit = {},
 ) {
     val navController = rememberNavController()
     val state = sharedViewModel.container.stateFlow.collectAsState()
@@ -63,7 +63,7 @@ fun OnBoardingNavHost(
                 }
 
                 is OnBoardingSideEffect.LoginSuccess -> {
-                    navToMain()
+                    navToHome()
                 }
 
                 is OnBoardingSideEffect.LoginFailed -> {
