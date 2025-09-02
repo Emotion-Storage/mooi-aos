@@ -11,7 +11,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
-import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
 import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
@@ -38,7 +37,16 @@ internal sealed class AppDestination {
     data class OnBoarding(val provider: String, val idToken: String) : AppDestination()
 
     @Serializable
-    object Home : AppDestination()
+    sealed class Main : AppDestination() {
+        @Serializable
+        object Home : Main()
+
+        @Serializable
+        object TIME_CAPSULE_CALENDAR : Main()
+
+        @Serializable
+        object My : Main()
+    }
 }
 
 @Composable
@@ -58,8 +66,8 @@ internal fun AppNavHost(
                 navToTutorial = {
                     navController.navigateWithClearStack(AppDestination.Tutorial)
                 },
-                navToHome = {
-                    navController.navigateWithClearStack(AppDestination.Home)
+                navToMain = {
+                    navController.navigateWithClearStack(AppDestination.Main)
                 }
             )
         }
@@ -74,8 +82,8 @@ internal fun AppNavHost(
 
         composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
-                navToHome =  {
-                    navController.navigateWithClearStack(AppDestination.Home)
+                navToMain = {
+                    navController.navigateWithClearStack(AppDestination.Main)
                 },
                 navToOnBoarding = { provider, idToken ->
                     navController.navigate(AppDestination.OnBoarding(provider.toString(), idToken))
@@ -88,14 +96,14 @@ internal fun AppNavHost(
             OnBoardingNavHost(
                 idToken = arguments.idToken,
                 provider = AuthProvider.valueOf(arguments.provider),
-                navToHome =  {
-                    navController.navigateWithClearStack(AppDestination.Home)
+                navToMain = {
+                    navController.navigateWithClearStack(AppDestination.Main)
                 },
             )
         }
 
-        composable<AppDestination.Home> { backstackEntry ->
-            HomeScreen()
+        composable<AppDestination.Main> { backstackEntry ->
+            MainNavHost()
         }
     }
 }

@@ -37,14 +37,14 @@ import com.emotionstorage.ui.theme.pretendard
 fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
-    navToHome: () -> Unit = {},
+    navToMain: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
                 is LoginSideEffect.LoginSuccess -> {
-                    navToHome()
+                    navToMain()
                 }
 
                 is LoginSideEffect.LoginFailed -> {

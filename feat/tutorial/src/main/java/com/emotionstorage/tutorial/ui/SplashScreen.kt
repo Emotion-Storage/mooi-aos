@@ -27,7 +27,7 @@ fun SplashScreen(
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel(),
     navToTutorial: () -> Unit = {},
-    navToHome: () -> Unit = {},
+    navToMain: () -> Unit = {},
 ) {
     LaunchedEffect(Unit) {
         viewModel.onAction(SplashAction.Initiate)
@@ -35,7 +35,7 @@ fun SplashScreen(
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
                 is SplashSideEffect.AutoLoginFailed -> navToTutorial()
-                is SplashSideEffect.AutoLoginSuccess -> navToHome()
+                is SplashSideEffect.AutoLoginSuccess -> navToMain()
             }
         }
     }

@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -44,7 +43,7 @@ fun OnBoardingNavHost(
     idToken: String,
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToHome: () -> Unit = {},
+    navToMain: () -> Unit = {},
 ) {
     val navController = rememberNavController()
     val state = sharedViewModel.container.stateFlow.collectAsState()
@@ -64,7 +63,7 @@ fun OnBoardingNavHost(
                 }
 
                 is OnBoardingSideEffect.LoginSuccess -> {
-                    navToHome()
+                    navToMain()
                 }
 
                 is OnBoardingSideEffect.LoginFailed -> {
