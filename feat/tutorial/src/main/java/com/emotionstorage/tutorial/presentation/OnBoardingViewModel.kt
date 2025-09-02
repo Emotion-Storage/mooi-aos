@@ -89,31 +89,31 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
-    fun handleInitiate(provider: AuthProvider, idToken: String) = intent {
+    private fun handleInitiate(provider: AuthProvider, idToken: String) = intent {
         reduce {
             state.copy(signupForm = state.signupForm.copy(provider = provider, idToken = idToken))
         }
     }
 
-    fun handleInputNickname(nickname: String) = intent {
+    private fun handleInputNickname(nickname: String) = intent {
         reduce {
             state.copy(signupForm = state.signupForm.copy(nickname = nickname))
         }
     }
 
-    fun handleInputGenderAndBirth(gender: GENDER, birth: LocalDate) = intent {
+    private fun handleInputGenderAndBirth(gender: GENDER, birth: LocalDate) = intent {
         reduce {
             state.copy(signupForm = state.signupForm.copy(gender = gender, birthday = birth))
         }
     }
 
-    fun handleInputExpectations(expectations: List<Expectation>) = intent {
+    private fun handleInputExpectations(expectations: List<Expectation>) = intent {
         reduce {
             state.copy(signupForm = state.signupForm.copy(expectations = expectations))
         }
     }
 
-    fun handleInputAgreedTerms(
+    private fun handleInputAgreedTerms(
         isTermAgreed: Boolean,
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean
@@ -129,7 +129,7 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
-    fun handleSignup() = intent {
+    private fun handleSignup() = intent {
         if (state.signupForm.provider == null) {
             Logger.e("provider is null")
             postSideEffect(OnBoardingSideEffect.SignupFailed)
@@ -160,7 +160,7 @@ class OnBoardingViewModel @Inject constructor(
         }
     }
 
-    fun handleLogin() = intent {
+    private fun handleLogin() = intent {
         if (state.signupForm.provider == null) {
             Logger.e("provider is null")
             postSideEffect(OnBoardingSideEffect.LoginFailed)
