@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,8 +36,6 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.component.CheckboxIcon
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel.State.AuthState
 import kotlinx.coroutines.launch
 
 /**
@@ -51,10 +47,8 @@ import kotlinx.coroutines.launch
 fun AgreeTermsScreen(
     modifier: Modifier = Modifier,
     viewModel: AgreeTermsViewModel = hiltViewModel(),
-    onSignup: suspend () -> Unit = {},
-    signupState: AuthState = AuthState.IDLE,
     onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
-    navToSignupComplete: () -> Unit = {},
+    onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
 
@@ -65,9 +59,7 @@ fun AgreeTermsScreen(
         event = viewModel.event,
         modifier = modifier,
         onSignup = onSignup,
-        signupState = signupState,
         onAgreeTermsInputComplete = onAgreeTermsInputComplete,
-        navToSignupComplete = navToSignupComplete,
         navToBack = navToBack
     )
 }
@@ -80,17 +72,9 @@ private fun StatelessAgreeTermsScreen(
     modifier: Modifier = Modifier,
     onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Unit = {},
-    signupState: AuthState = AuthState.IDLE,
-    navToSignupComplete: () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
-
-    LaunchedEffect(signupState) {
-        if(signupState == AuthState.SUCCESS) {
-            navToSignupComplete()
-        }
-    }
 
     Scaffold(
         modifier = modifier
@@ -117,7 +101,6 @@ private fun StatelessAgreeTermsScreen(
                 )
             )
 
-            // todo: add agree terms column
             Column(
                 modifier = Modifier
                     .weight(1f)

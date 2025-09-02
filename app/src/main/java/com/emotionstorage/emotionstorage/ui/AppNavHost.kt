@@ -12,8 +12,8 @@ import androidx.navigation.toRoute
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
-import com.emotionstorage.tutorial.ui.onBoarding.OnBoardingNavHost
-import com.emotionstorage.tutorial.ui.splash.SplashScreen
+import com.emotionstorage.tutorial.ui.OnBoardingNavHost
+import com.emotionstorage.tutorial.ui.SplashScreen
 import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.navigateWithClearStack

@@ -25,6 +25,7 @@ retrofit = "2.11.0"
 serialization = "1.7.3"
 serializationConverter = "1.0.0"
 logger = "2.2.0"
+orbitMvi = "10.0.0"
 
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
@@ -68,6 +69,9 @@ squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", versi
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "serializationConverter" }
 android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
+orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
+orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
+
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -89,6 +93,10 @@ compose = [
     "androidx-navigation-compose",
     #    "coil-compose",
     #    "coil-network-ktor"
+]
+orbit-mvi = [
+    "orbit-viewmodel",
+    "orbit-compose"
 ]
 hilt-android = [
     "hilt-navigation-compose",
