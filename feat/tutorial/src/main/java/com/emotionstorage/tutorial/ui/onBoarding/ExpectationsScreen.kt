@@ -30,11 +30,11 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.auth.domain.model.Expectation
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel.State
-import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel.State.Expectation
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -47,7 +47,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun ExpectationsScreen(
     modifier: Modifier = Modifier,
     viewModel: ExpectationsViewModel = hiltViewModel(),
-    onExpectationsSelectComplete: (expectations: List<String>) -> Unit = {},
+    onExpectationsSelectComplete: (expectations: List<Expectation>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
@@ -68,7 +68,7 @@ private fun StatelessExpectationsScreen(
     state: State,
     event: ExpectationsEvent,
     modifier: Modifier = Modifier,
-    onExpectationsSelectComplete: (expectations: List<String>) -> Unit = {},
+    onExpectationsSelectComplete: (expectations: List<Expectation>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
@@ -127,7 +127,7 @@ private fun StatelessExpectationsScreen(
                             ExpectationItem(
                                 index = index,
                                 expectation = expectation,
-                                isSelected = expectation.isSelected,
+                                isSelected = state.selectedExpectations.contains(expectation),
                                 onClick = { event.onToggleExpectation(index) }
                             )
                         }
@@ -143,7 +143,7 @@ private fun StatelessExpectationsScreen(
                 label = "다음으로",
                 enabled = state.isNextButtonEnabled,
                 onClick = {
-                    onExpectationsSelectComplete(state.expectations.map { it.content })
+                    onExpectationsSelectComplete(state.selectedExpectations)
                     navToAgreeTerms()
                 }
             )
@@ -184,13 +184,13 @@ private fun ExpectationItem(
                     .width(21.dp)
                     .height(20.dp),
                 painter = painterResource(
-                    when (index) {
-                        0 -> R.drawable.expectation_0
-                        1 -> R.drawable.expectation_1
-                        2 -> R.drawable.expectation_2
-                        3 -> R.drawable.expectation_3
-                        4 -> R.drawable.expectation_4
-                        else -> R.drawable.expectation_5
+                    when (expectation) {
+                        Expectation.EMOTION -> R.drawable.expectation_0
+                        Expectation.STRESS -> R.drawable.expectation_1
+                        Expectation.REGRET -> R.drawable.expectation_2
+                        Expectation.MEMORY -> R.drawable.expectation_3
+                        Expectation.PATTERN -> R.drawable.expectation_4
+                        Expectation.RECORD -> R.drawable.expectation_5
                     }
                 ),
                 contentDescription = null
@@ -220,14 +220,7 @@ private fun ExpectationItem(
 private fun ExpectationsScreenPreview() {
     MooiTheme {
         StatelessExpectationsScreen(
-            state = State(
-                expectations = listOf(
-                    Expectation(content = "내 감정을 정리하고 싶어요", isSelected = false),
-                    Expectation(content = "스트레스를 관리하고 싶어요", isSelected = false),
-                    Expectation(content = "후회나 힘든 감정을 털어내고 싶어요", isSelected = false),
-                    Expectation(content = "좋은 기억을 오래 간직하고 싶어요", isSelected = false),
-                )
-            ),
+            state = State(),
             event = object : ExpectationsEvent {
                 override fun onToggleExpectation(index: Int) {}
             },

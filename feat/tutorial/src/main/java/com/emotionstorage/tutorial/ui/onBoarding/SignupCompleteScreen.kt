@@ -27,10 +27,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SignupCompleteScreen(
     modifier: Modifier = Modifier,
-    onLogin: suspend () -> Boolean,
-    navToHome: () -> Unit = {},
-    navToLogin: () -> Unit = {},
-    navToBack: () -> Unit = {}
+    onLogin: suspend () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -39,7 +36,7 @@ fun SignupCompleteScreen(
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(onBackClick = navToBack)
+            TopAppBar()
         }
     ) { padding ->
         Column(
@@ -68,11 +65,7 @@ fun SignupCompleteScreen(
                 label = "메인화면으로 이동",
                 onClick = {
                     coroutineScope.launch {
-                        if(onLogin()){
-                            navToHome()
-                        }else{
-                            navToLogin()
-                        }
+                        onLogin()
                     }
                 }
             )
@@ -84,9 +77,6 @@ fun SignupCompleteScreen(
 @Composable
 private fun SignupCompleteScreenPreview(){
     MooiTheme{
-        SignupCompleteScreen(
-            onLogin = { true },
-            navToHome = {}
-        )
+        SignupCompleteScreen()
     }
 }

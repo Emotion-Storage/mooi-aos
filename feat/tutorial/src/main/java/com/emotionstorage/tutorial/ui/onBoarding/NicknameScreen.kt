@@ -9,7 +9,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -21,6 +25,7 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
 import com.emotionstorage.ui.component.TopAppBar
@@ -56,12 +61,19 @@ private fun StatelessNicknameScreen(
     navToGenderBirth: () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
+    val (isExitModelOpen, setIsExitModelOpen) = remember { mutableStateOf(false) }
+    OnBoardingExitModel(
+        isModelOpen = isExitModelOpen,
+        setIsModelOpen = setIsExitModelOpen,
+        onConfirm = { navToBack() },
+    )
+
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackButton = true, onBackClick = navToBack)
+            TopAppBar(showBackButton = true, onBackClick = { setIsExitModelOpen(true) })
         }
     ) { padding ->
         Column(
@@ -113,6 +125,24 @@ private fun StatelessNicknameScreen(
                 }
             )
         }
+    }
+}
+
+@Composable
+private fun OnBoardingExitModel(
+    isModelOpen: Boolean = false,
+    setIsModelOpen: (Boolean) -> Unit = {},
+    onConfirm: () -> Unit = {}
+) {
+    if (isModelOpen) {
+        Modal(
+            subTitle = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
+            title = "그래도 메인 화면으로\n돌아갈까요?",
+            confirmLabel = "회원가입을 계속 할게요.",
+            dismissLabel = "메인 화면으로 나갈래요. ",
+            onDismissRequest = { setIsModelOpen(false) },
+            onConfirm = onConfirm,
+        )
     }
 }
 

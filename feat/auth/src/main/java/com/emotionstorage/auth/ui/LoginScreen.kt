@@ -12,8 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,65 +25,50 @@ import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.auth.presentation.LoginViewModel
-import com.emotionstorage.auth.presentation.LoginViewModel.State
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.auth.R
-import com.emotionstorage.auth.presentation.LoginEvent
+import com.emotionstorage.auth.presentation.LoginAction
+import com.emotionstorage.auth.presentation.LoginSideEffect
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.theme.pretendard
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    loginViewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    val state = loginViewModel.state.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { effect ->
+            when (effect) {
+                is LoginSideEffect.LoginSuccess -> {
+                    navToHome()
+                }
+
+                is LoginSideEffect.LoginFailed -> {
+                    navToOnBoarding(effect.provider, effect.idToken)
+                }
+
+                is LoginSideEffect.LoginFailedWithException -> {
+                    // do nothing
+                }
+            }
+        }
+    }
 
     StatelessLoginScreen(
-        event = loginViewModel.event,
-        state = state.value,
         modifier = modifier,
-        navToHome = navToHome,
-        navToOnBoarding = navToOnBoarding,
+        onAction = viewModel::onAction,
     )
 }
 
 @Composable
 private fun StatelessLoginScreen(
-    event: LoginEvent,
-    state: State,
     modifier: Modifier = Modifier,
-    navToHome: () -> Unit = {},
-    navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
+    onAction: (LoginAction) -> Unit = {},
 ) {
-    when (state.loginState) {
-        State.LoginState.Idle -> {
-            // do nothing
-        }
-
-        State.LoginState.Loading -> {
-            // todo: add loading ui on LoginState.Loading
-        }
-
-        State.LoginState.Success -> {
-            navToHome()
-        }
-
-        State.LoginState.Fail -> {
-            navToOnBoarding(state.provider!!, state.idToken!!)
-        }
-
-        State.LoginState.Error -> {
-            // todo: add error ui on LoginState.Error
-        }
-    }
-
-    val coroutineScope = rememberCoroutineScope()
-
     Scaffold(
         modifier
             .background(MooiTheme.colorScheme.background)
@@ -123,7 +107,6 @@ private fun StatelessLoginScreen(
                 )
             }
 
-            // todo: replace with app icon
             Box(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -143,20 +126,12 @@ private fun StatelessLoginScreen(
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
                     onClick = {
-                        coroutineScope.launch {
-                            event.onLoginButtonClick(
-                                provider = AuthProvider.KAKAO
-                            )
-                        }
+                        onAction(LoginAction.Login(AuthProvider.KAKAO))
                     })
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
-                        coroutineScope.launch {
-                            event.onLoginButtonClick(
-                                provider = AuthProvider.GOOGLE
-                            )
-                        }
+                        onAction(LoginAction.Login(AuthProvider.GOOGLE))
                     })
             }
         }
@@ -167,13 +142,6 @@ private fun StatelessLoginScreen(
 @Composable
 private fun LoginScreenPreview() {
     MooiTheme {
-        StatelessLoginScreen(
-            event = object : LoginEvent {
-                override suspend fun onLoginButtonClick(provider: AuthProvider) {
-                    // do nothing
-                }
-            },
-            state = State()
-        )
+        StatelessLoginScreen()
     }
 }

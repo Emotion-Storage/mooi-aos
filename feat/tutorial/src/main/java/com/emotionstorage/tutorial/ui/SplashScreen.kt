@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.splash
+package com.emotionstorage.tutorial.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -11,13 +11,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.tutorial.presentation.SplashAction
+import com.emotionstorage.tutorial.presentation.SplashSideEffect
 import com.emotionstorage.tutorial.presentation.SplashViewModel
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -25,44 +26,27 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun SplashScreen(
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel(),
-    navToLogin: () -> Unit = {},
+    navToTutorial: () -> Unit = {},
     navToHome: () -> Unit = {},
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.onAction(SplashAction.Initiate)
 
-    val state = viewModel.state.collectAsState()
-    StatelessSplashScreen(
-        state = state.value,
-        modifier = modifier,
-        navToLogin = navToLogin,
-        navToHome = navToHome,
-    )
-}
-
-@Composable
-private fun StatelessSplashScreen(
-    state: SplashViewModel.State,
-    modifier: Modifier = Modifier,
-    navToLogin: () -> Unit = {},
-    navToHome: () -> Unit = {},
-) {
-    LaunchedEffect(state) {
-        if (state.splashState != SplashViewModel.State.SplashState.Done) return@LaunchedEffect
-
-        when (state.autoLoginState) {
-            SplashViewModel.State.AutoLoginState.Loading -> {
-                // do nothing
-            }
-
-            SplashViewModel.State.AutoLoginState.Success -> {
-                navToHome()
-            }
-
-            SplashViewModel.State.AutoLoginState.Fail -> {
-                navToLogin()
+        viewModel.container.sideEffectFlow.collect { effect ->
+            when (effect) {
+                is SplashSideEffect.AutoLoginFailed -> navToTutorial()
+                is SplashSideEffect.AutoLoginSuccess -> navToHome()
             }
         }
     }
 
+    StatelessSplashScreen(modifier = modifier)
+}
+
+@Composable
+private fun StatelessSplashScreen(
+    modifier: Modifier = Modifier,
+) {
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -91,8 +75,6 @@ private fun StatelessSplashScreen(
 @Composable
 private fun SplashScreenPreview() {
     MooiTheme {
-        StatelessSplashScreen(
-            state = SplashViewModel.State(),
-        )
+        StatelessSplashScreen(modifier = Modifier.fillMaxSize())
     }
 }

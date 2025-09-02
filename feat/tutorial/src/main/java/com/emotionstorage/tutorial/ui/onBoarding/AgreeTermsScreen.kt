@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -49,8 +48,7 @@ fun AgreeTermsScreen(
     modifier: Modifier = Modifier,
     viewModel: AgreeTermsViewModel = hiltViewModel(),
     onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
-    onSignup: suspend () -> Boolean = { false },
-    navToSignupComplete: () -> Unit = {},
+    onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
 
@@ -60,9 +58,8 @@ fun AgreeTermsScreen(
         state = state,
         event = viewModel.event,
         modifier = modifier,
-        onAgreeTermsInputComplete = onAgreeTermsInputComplete,
         onSignup = onSignup,
-        navToSignupComplete = navToSignupComplete,
+        onAgreeTermsInputComplete = onAgreeTermsInputComplete,
         navToBack = navToBack
     )
 }
@@ -74,8 +71,7 @@ private fun StatelessAgreeTermsScreen(
     event: AgreeTermsEvent,
     modifier: Modifier = Modifier,
     onAgreeTermsInputComplete: (isTermAgreed: Boolean, isPrivacyAgreed: Boolean, isMarketingAgreed: Boolean) -> Unit = { _, _, _ -> },
-    onSignup: suspend () -> Boolean = { false },
-    navToSignupComplete: () -> Unit = {},
+    onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -105,7 +101,6 @@ private fun StatelessAgreeTermsScreen(
                 )
             )
 
-            // todo: add agree terms column
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -204,12 +199,7 @@ private fun StatelessAgreeTermsScreen(
                             state.isPrivacyAgree,
                             state.isMarketingAgree
                         )
-
-                        if (onSignup()) {
-                            navToSignupComplete()
-                        } else {
-                            // todo: add signup fail ui
-                        }
+                        onSignup()
                     }
                 }
             )

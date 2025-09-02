@@ -1,6 +1,5 @@
-package com.emotionstorage.tutorial.ui.onBoarding
+package com.emotionstorage.tutorial.ui
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -9,17 +8,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.domain.model.User.AuthProvider
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingEvent
-import com.emotionstorage.tutorial.presentation.onBoarding.OnBoardingViewModel
+import com.emotionstorage.tutorial.presentation.OnBoardingAction
+import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
+import com.emotionstorage.tutorial.presentation.OnBoardingState
+import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
+import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
+import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
+import com.emotionstorage.tutorial.ui.onBoarding.GenderBirthScreen
+import com.emotionstorage.tutorial.ui.onBoarding.NicknameScreen
+import com.emotionstorage.tutorial.ui.onBoarding.SignupCompleteScreen
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.navigateWithClearStack
 
 /**
  * On boarding destinations
@@ -41,38 +45,50 @@ fun OnBoardingNavHost(
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
-    navToLogin: () -> Unit = {}
 ) {
     val navController = rememberNavController()
-
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = navBackStackEntry?.destination?.route
-    Log.d("on boarding nav controller", "currentRoute: $currentRoute")
-
-    val signupForm = sharedViewModel.signupForm.collectAsState()
+    val state = sharedViewModel.container.stateFlow.collectAsState()
 
     LaunchedEffect(provider, idToken) {
-        sharedViewModel.onProviderIdTokenReceived(provider, idToken)
+        sharedViewModel.onAction(OnBoardingAction.Initiate(provider, idToken))
     }
+    LaunchedEffect(Unit) {
+        sharedViewModel.container.sideEffectFlow.collect { effect ->
+            when (effect) {
+                is OnBoardingSideEffect.SignupSuccess -> {
+                    navController.navigateWithClearStack(OnBoardingRoute.SIGNUP_COMPLETE.route)
+                }
+
+                is OnBoardingSideEffect.SignupFailed -> {
+                    // todo: handle signup failure
+                }
+
+                is OnBoardingSideEffect.LoginSuccess -> {
+                    navToHome()
+                }
+
+                is OnBoardingSideEffect.LoginFailed -> {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
 
     StatelessOnBoardingNavHost(
         navController = navController,
-        signupForm = signupForm.value,
-        event = sharedViewModel,
+        state = state.value,
+        onAction = sharedViewModel::onAction,
         modifier = modifier,
-        navToHome = navToHome,
-        navToLogin = navToLogin
     )
 }
 
 @Composable
 private fun StatelessOnBoardingNavHost(
     navController: NavHostController,
-    signupForm: SignupForm,
-    event: OnBoardingEvent,
+    state: OnBoardingState,
+    onAction: (OnBoardingAction) -> Unit,
     modifier: Modifier = Modifier,
-    navToHome: () -> Unit = {},
-    navToLogin: () -> Unit = {}
 ) {
     NavHost(
         navController,
@@ -85,7 +101,9 @@ private fun StatelessOnBoardingNavHost(
             composable(destination.route) {
                 when (destination) {
                     OnBoardingRoute.NICKNAME -> NicknameScreen(
-                        onNicknameInputComplete = event::onNicknameInputComplete,
+                        onNicknameInputComplete = { nickname ->
+                            onAction(OnBoardingAction.InputNickname(nickname))
+                        },
                         navToGenderBirth = {
                             navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
                         },
@@ -95,8 +113,10 @@ private fun StatelessOnBoardingNavHost(
                     )
 
                     OnBoardingRoute.GENDER_BIRTH -> GenderBirthScreen(
-                        nickname = signupForm.nickname ?: "",
-                        onGenderBirthInputComplete = event::onGenderBirthInputComplete,
+                        nickname = state.signupForm.nickname ?: "",
+                        onGenderBirthInputComplete ={gender, birth ->
+                            onAction(OnBoardingAction.InputGenderAndBirth(gender, birth))
+                        },
                         navToExpectations = {
                             navController.navigate(OnBoardingRoute.EXPECTATIONS.route)
                         },
@@ -106,7 +126,9 @@ private fun StatelessOnBoardingNavHost(
                     )
 
                     OnBoardingRoute.EXPECTATIONS -> ExpectationsScreen(
-                        onExpectationsSelectComplete = event::onExpectationsSelectComplete,
+                        onExpectationsSelectComplete ={ expectations ->
+                            onAction(OnBoardingAction.InputExpectations(expectations))
+                        },
                         navToAgreeTerms = {
                             navController.navigate(OnBoardingRoute.AGREE_TERMS.route)
                         },
@@ -116,12 +138,11 @@ private fun StatelessOnBoardingNavHost(
                     )
 
                     OnBoardingRoute.AGREE_TERMS -> AgreeTermsScreen(
-                        onAgreeTermsInputComplete = event::onAgreeTermsInputComplete,
-                        onSignup = event::onSignup,
-                        navToSignupComplete = {
-                            // todo: 회원가입 완료 화면에서 뒤로가기 시, 로그인 화면으로 이동하도록 백스택 비우기
-                            navController.popBackStack(OnBoardingRoute.NICKNAME.route, true)
-                            navController.navigate(OnBoardingRoute.SIGNUP_COMPLETE.route)
+                        onAgreeTermsInputComplete = {isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
+                            onAction(OnBoardingAction.InputAgreedTerms(isTermAgreed, isPrivacyAgreed, isMarketingAgreed))
+                        },
+                        onSignup = {
+                            onAction(OnBoardingAction.Signup)
                         },
                         navToBack = {
                             navController.popBackStack()
@@ -129,12 +150,9 @@ private fun StatelessOnBoardingNavHost(
                     )
 
                     OnBoardingRoute.SIGNUP_COMPLETE -> SignupCompleteScreen(
-                        onLogin = event::onLogin,
-                        navToHome = navToHome,
-                        navToLogin = navToLogin,
-                        navToBack = {
-                            navController.popBackStack()
-                        }
+                        onLogin = {
+                            onAction(OnBoardingAction.Login)
+                        },
                     )
                 }
             }

@@ -21,8 +21,9 @@ import androidx.compose.ui.unit.dp
 data class MooiBrushScheme(
     val mainButtonBackground: Brush = Brush.linearGradient(
         listOf(
-            Color(0x80849BEA),
-            Color(0x14849BEA)
+            Color(0xFFAFCBFA),
+            Color(0xFF9BB4F2),
+            Color(0xFF859CEA)
         ),
     ),
     val subButtonBackground: Brush = Brush.verticalGradient(listOf(Color.Black, Color.Yellow)),
