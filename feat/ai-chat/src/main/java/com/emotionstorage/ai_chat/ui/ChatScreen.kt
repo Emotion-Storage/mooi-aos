@@ -7,10 +7,17 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.ai_chat.presentation.ChatAction
+import com.emotionstorage.ai_chat.presentation.ChatSideEffect
+import com.emotionstorage.ai_chat.presentation.ChatState
+import com.emotionstorage.ai_chat.presentation.ChatViewModel
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ui.component.Modal
@@ -21,9 +28,43 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun ChatScreen(
     roomId: String,
     modifier: Modifier = Modifier,
+    viewModel: ChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {}
 ) {
+    val state = viewModel.container.stateFlow.collectAsState()
+    LaunchedEffect(roomId) {
+        viewModel.onAction(ChatAction.InitiateAndStartChat(roomId))
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is ChatSideEffect.CreateTimeCapsuleSuccess -> {
+                    navToTimeCapsuleDetail(sideEffect.capsuleId)
+                }
+                is ChatSideEffect.CanCreateTimesCapsule -> {
+                    // todo: show bottom sheet
+                }
+            }
+        }
+    }
+
+    StatelessChatScreen(
+        modifier = modifier,
+        state = state.value,
+        onAction = viewModel::onAction,
+        navToBack = navToBack
+    )
+}
+
+@Composable
+private fun StatelessChatScreen(
+    modifier: Modifier = Modifier,
+    state: ChatState = ChatState(),
+    onAction: (action: ChatAction) -> Unit = {},
+    navToBack: () -> Unit = {},
+){
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     ChatExitModel(
         isModelOpen = isExitModalOpen,
@@ -52,11 +93,12 @@ fun ChatScreen(
         ) {
             ChatMessageList(
                 modifier = Modifier.weight(1f),
+                chatMessages = state.messages
             )
             ChatMessageInputBox(
                 modifier = Modifier.fillMaxWidth(),
                 onSendMessage = {
-                    // todo: handle send message
+                    onAction(ChatAction.SendMessage(it))
                 }
             )
         }
@@ -79,7 +121,6 @@ private fun ChatExitModel(
         )
     }
 }
-
 
 @Preview
 @Composable
