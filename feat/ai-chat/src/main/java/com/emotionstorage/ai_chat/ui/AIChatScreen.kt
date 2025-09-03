@@ -1,5 +1,6 @@
 package com.emotionstorage.ai_chat.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.ai_chat.presentation.AIChatAction
@@ -37,9 +39,15 @@ fun AIChatScreen(
         viewModel.onAction(AIChatAction.ConnectChatRoom(roomId))
     }
 
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
+                is AIChatSideEffect.ToastMessage -> {
+                    // toast message for debugging
+                    Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                }
+
                 is AIChatSideEffect.CreateTimeCapsuleSuccess -> {
                     navToTimeCapsuleDetail(sideEffect.capsuleId)
                 }
@@ -98,7 +106,7 @@ private fun StatelessAIChatScreen(
             ChatMessageInputBox(
                 modifier = Modifier.fillMaxWidth(),
                 onSendMessage = {
-                    onAction(AIChatAction.SendMessage(it))
+                    onAction(AIChatAction.SendChatMessage(it))
                 }
             )
         }
