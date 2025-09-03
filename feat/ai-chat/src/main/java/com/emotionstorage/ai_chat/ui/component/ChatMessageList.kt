@@ -26,8 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.ai_chat.domain.ChatMessage
-import com.emotionstorage.ai_chat.domain.ChatMessage.MessageSource
+import com.emotionstorage.ai_chat.domain.model.ChatMessage
+import com.emotionstorage.ai_chat.domain.model.ChatMessage.MessageSource
 import com.emotionstorage.common.getKorDayOfWeek
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate

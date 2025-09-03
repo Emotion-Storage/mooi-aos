@@ -14,10 +14,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.ai_chat.presentation.ChatAction
-import com.emotionstorage.ai_chat.presentation.ChatSideEffect
-import com.emotionstorage.ai_chat.presentation.ChatState
-import com.emotionstorage.ai_chat.presentation.ChatViewModel
+import com.emotionstorage.ai_chat.presentation.AIChatAction
+import com.emotionstorage.ai_chat.presentation.AIChatSideEffect
+import com.emotionstorage.ai_chat.presentation.AIChatState
+import com.emotionstorage.ai_chat.presentation.AIChatViewModel
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ui.component.Modal
@@ -25,32 +25,32 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun ChatScreen(
+fun AIChatScreen(
     roomId: String,
     modifier: Modifier = Modifier,
-    viewModel: ChatViewModel = hiltViewModel(),
+    viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {}
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(roomId) {
-        viewModel.onAction(ChatAction.InitiateAndStartChat(roomId))
+        viewModel.onAction(AIChatAction.ConnectChatRoom(roomId))
     }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                is ChatSideEffect.CreateTimeCapsuleSuccess -> {
+                is AIChatSideEffect.CreateTimeCapsuleSuccess -> {
                     navToTimeCapsuleDetail(sideEffect.capsuleId)
                 }
-                is ChatSideEffect.CanCreateTimesCapsule -> {
+                is AIChatSideEffect.CanCreateTimesCapsule -> {
                     // todo: show bottom sheet
                 }
             }
         }
     }
 
-    StatelessChatScreen(
+    StatelessAIChatScreen(
         modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
@@ -59,14 +59,14 @@ fun ChatScreen(
 }
 
 @Composable
-private fun StatelessChatScreen(
+private fun StatelessAIChatScreen(
     modifier: Modifier = Modifier,
-    state: ChatState = ChatState(),
-    onAction: (action: ChatAction) -> Unit = {},
+    state: AIChatState = AIChatState(),
+    onAction: (action: AIChatAction) -> Unit = {},
     navToBack: () -> Unit = {},
 ){
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
-    ChatExitModel(
+    AIChatExitModel(
         isModelOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
         onExit = navToBack
@@ -98,7 +98,7 @@ private fun StatelessChatScreen(
             ChatMessageInputBox(
                 modifier = Modifier.fillMaxWidth(),
                 onSendMessage = {
-                    onAction(ChatAction.SendMessage(it))
+                    onAction(AIChatAction.SendMessage(it))
                 }
             )
         }
@@ -106,7 +106,7 @@ private fun StatelessChatScreen(
 }
 
 @Composable
-private fun ChatExitModel(
+private fun AIChatExitModel(
     isModelOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onExit: () -> Unit = {},
@@ -125,5 +125,5 @@ private fun ChatExitModel(
 @Preview
 @Composable
 private fun ChatScreenPreview() {
-    ChatScreen("roomId")
+    AIChatScreen("roomId")
 }

@@ -12,7 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.emotionstorage.ai_chat.ui.ChatScreen
+import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
@@ -134,7 +134,7 @@ internal fun AppNavHost(
 
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT>()
-                ChatScreen(
+                AIChatScreen(
                     roomId = arguments.roomId,
                     navToBack = {
                         navController.popBackStack()
