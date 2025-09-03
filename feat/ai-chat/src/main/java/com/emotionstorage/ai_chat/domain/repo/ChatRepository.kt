@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.domain.repository
+package com.emotionstorage.ai_chat.domain.repo
 
 import com.emotionstorage.ai_chat.domain.model.ChatMessage
 import com.emotionstorage.domain.common.DataState

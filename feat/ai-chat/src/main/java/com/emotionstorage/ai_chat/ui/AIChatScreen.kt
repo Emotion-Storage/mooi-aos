@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -103,6 +105,16 @@ private fun StatelessAIChatScreen(
                 modifier = Modifier.weight(1f),
                 chatMessages = state.messages
             )
+            Button(onClick = {
+                onAction(AIChatAction.ConnectChatRoom("test-roomId"))
+            }) {
+                Text(text = "채팅방 연결")
+            }
+            Button(onClick = {
+                onAction(AIChatAction.ExitChatRoom)
+            }) {
+                Text(text = "채팅방 연결 끊기")
+            }
             ChatMessageInputBox(
                 modifier = Modifier.fillMaxWidth(),
                 onSendMessage = {
