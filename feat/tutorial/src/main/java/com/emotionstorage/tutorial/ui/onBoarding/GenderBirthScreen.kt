@@ -36,6 +36,7 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 
 /**
@@ -185,24 +186,7 @@ private fun GenderInput(
                     modifier = Modifier
                         .height(50.dp)
                         .width(94.94.dp)
-                        .run {
-                            if (isSelected) {
-                                this
-                                    .background(
-                                        MooiTheme.brushScheme.subButtonBackground,
-                                        RoundedCornerShape(10.dp)
-                                    )
-                                    .border(
-                                        1.dp, MooiTheme.brushScheme.subButtonBorder,
-                                        RoundedCornerShape(10.dp)
-                                    )
-                            } else {
-                                this.background(
-                                    Color.Black,
-                                    RoundedCornerShape(10.dp)
-                                )
-                            }
-                        }
+                        .subBackground(isSelected, defaultBackground = Color.Black)
                         .clickable {
                             if (isSelected) onGenderSelect(null) else onGenderSelect(it)
                         }

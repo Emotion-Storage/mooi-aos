@@ -39,6 +39,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.subBackground
 
 /**
  * On boarding step 3
@@ -162,24 +163,7 @@ private fun ExpectationItem(
         modifier = modifier
             .fillMaxWidth()
             .height(72.dp)
-            .run {
-                if (isSelected) {
-                    this
-                        .background(
-                            MooiTheme.brushScheme.subButtonBackground,
-                            RoundedCornerShape(10.dp)
-                        )
-                        .border(
-                            1.dp, MooiTheme.brushScheme.subButtonBorder,
-                            RoundedCornerShape(10.dp)
-                        )
-                } else {
-                    this.background(
-                        Color.Black,
-                        RoundedCornerShape(10.dp)
-                    )
-                }
-            }
+            .subBackground(isSelected, defaultBackground = Color.Black)
             .clickable(
                 onClick = onClick
             )

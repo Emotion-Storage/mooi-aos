@@ -20,10 +20,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.mainBackground
 
 enum class CtaButtonType {
     FILLED,
-    TONAL
+    TONAL,
 }
 
 @Composable
@@ -42,8 +43,7 @@ fun CtaButton(
                 .width(330.dp)
                 .height(65.dp)
                 .align(Alignment.Center)
-                .clip(RoundedCornerShape(radius.dp))
-                .background(MooiTheme.brushScheme.mainButtonBackground),
+                .mainBackground(enabled, RoundedCornerShape(radius.dp)),
             shape = RoundedCornerShape(radius.dp),
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
             colors = ButtonDefaults.buttonColors(

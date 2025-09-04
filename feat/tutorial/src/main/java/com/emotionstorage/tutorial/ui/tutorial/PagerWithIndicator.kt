@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.mainBackground
 import kotlinx.coroutines.launch
 
 /**
@@ -134,17 +135,7 @@ private fun PagerIndicatorDot(
         modifier = modifier
             .height(10.dp)
             .width(animatedWidth)
-            .background(
-                if (isSelected) Color.Transparent else MooiTheme.colorScheme.gray50,
-                RoundedCornerShape(50.dp)
-            )
-            .run {
-                if (isSelected) this.background(
-                    MooiTheme.brushScheme.mainButtonBackground,
-                    RoundedCornerShape(50.dp)
-                )
-                else this
-            }
+            .mainBackground(isSelected, RoundedCornerShape(50.dp), MooiTheme.colorScheme.gray50)
             .clickable(onClick = onClick),
     )
 }

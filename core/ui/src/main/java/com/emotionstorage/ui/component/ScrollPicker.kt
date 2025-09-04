@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.util.subBackground
 
 @Composable
 fun ScrollPicker(
@@ -59,24 +60,7 @@ fun ScrollPicker(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .run {
-                    if (selectedValue != null) {
-                        this
-                            .background(
-                                MooiTheme.brushScheme.subButtonBackground,
-                                RoundedCornerShape(10.dp)
-                            )
-                            .border(
-                                1.dp, MooiTheme.brushScheme.subButtonBorder,
-                                RoundedCornerShape(10.dp)
-                            )
-                    } else {
-                        this.background(
-                            Color.Black,
-                            RoundedCornerShape(10.dp)
-                        )
-                    }
-                }
+                .subBackground(selectedValue != null, defaultBackground = Color.Black)
                 .clickable(enabled = enabled) {
                     // toggle scroll picker open/close
                     setScrollPickerOpen(!isScrollPickerOpen)
