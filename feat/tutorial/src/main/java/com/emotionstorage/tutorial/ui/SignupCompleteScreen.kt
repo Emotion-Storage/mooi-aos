@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.onBoarding
+package com.emotionstorage.tutorial.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -9,12 +9,19 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.presentation.SignupCompleteAction
+import com.emotionstorage.tutorial.presentation.SignupCompleteSideEffect
+import com.emotionstorage.tutorial.presentation.SignupCompleteViewModel
+import com.emotionstorage.tutorial.ui.onBoarding.OnBoardingTitle
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -26,11 +33,39 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun SignupCompleteScreen(
+    provider: AuthProvider,
+    idToken: String,
     modifier: Modifier = Modifier,
-    onLogin: suspend () -> Unit = {},
+    viewModel: SignupCompleteViewModel = hiltViewModel(),
+    navToHome: () -> Unit = {},
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {effect ->
+            when (effect) {
+                SignupCompleteSideEffect.LoginSuccess -> {
+                    navToHome()
+                }
 
+                SignupCompleteSideEffect.LoginFailed -> {
+                    // todo: handle login failure
+                }
+            }
+        }
+    }
+
+    StatelessSignupCompleteScreen(
+        modifier = modifier,
+        onLogin = {
+            viewModel.onAction(SignupCompleteAction.Login(provider, idToken))
+        }
+    )
+}
+
+@Composable
+private fun StatelessSignupCompleteScreen(
+    modifier: Modifier = Modifier,
+    onLogin: () -> Unit = {},
+) {
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
@@ -56,18 +91,14 @@ fun SignupCompleteScreen(
                     ','
                 )
             )
-            
+
             // todo: 버튼 위 말풍선 추가하기
             CtaButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 39.dp),
                 label = "메인화면으로 이동",
-                onClick = {
-                    coroutineScope.launch {
-                        onLogin()
-                    }
-                }
+                onClick = onLogin
             )
         }
     }
@@ -75,8 +106,8 @@ fun SignupCompleteScreen(
 
 @PreviewScreenSizes
 @Composable
-private fun SignupCompleteScreenPreview(){
-    MooiTheme{
-        SignupCompleteScreen()
+private fun SignupCompleteScreenPreview() {
+    MooiTheme {
+        StatelessSignupCompleteScreen()
     }
 }
