@@ -1,6 +1,8 @@
 package com.emotionstorage.tutorial.ui.tutorial
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,13 +14,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -116,51 +123,67 @@ private fun PagerIndicatorDot(
     isSelected: Boolean = false,
     onClick: () -> Unit = {},
 ) {
-    // todo: animate color change
-    // todo: 너비 애니메이션 실행될 때, 테두리 radius 설정 해제되는 문제 해결
+    val animatedWidth by animateDpAsState(
+        targetValue = if (isSelected) 31.dp else 10.dp,
+        animationSpec = tween(durationMillis = 500), label = "widthAnimation"
+    )
+
     Box(
         modifier = modifier
-            .animateContentSize()
             .height(10.dp)
-            .width(if (isSelected) 31.dp else 10.dp)
-            .clip(RoundedCornerShape(50.dp))
-            .background(if (isSelected) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.gray50)
+            .width(animatedWidth)
+            .background(
+                if (isSelected) Color.Transparent else MooiTheme.colorScheme.gray50,
+                RoundedCornerShape(50.dp)
+            )
+            .run {
+                if (isSelected) this.background(
+                    MooiTheme.brushScheme.mainButtonBackground,
+                    RoundedCornerShape(50.dp)
+                )
+                else this
+            }
             .clickable(onClick = onClick),
     )
 }
 
-//@Preview
-//@Composable
-//private fun PagerIndicatorDotPreview() {
-//    val isDotSelected = remember { mutableStateOf(false) }
-//
-//    EmotionStorageTheme {
-//        PagerIndicatorDot(
-//            isSelected = isDotSelected.value,
-//            onClick = {
-//                isDotSelected.value = !isDotSelected.value
-//            }
-//        )
-//    }
-//}
-
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun PagerWithIndicatorPreview() {
+private fun PagerIndicatorDotPreview() {
+    val (selectedDot, setSelectedDot) = remember { mutableStateOf(0) }
+
     MooiTheme {
-        PagerWithIndicator(
-            modifier = Modifier.fillMaxSize(),
-            pageCount = 3,
-            pageContent =
-                { page ->
-                    Text(
-                        modifier = Modifier
-                            .background(MooiTheme.colorScheme.background)
-                            .fillMaxSize(),
-                        color = Color.White,
-                        text = "Page $page"
-                    )
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .background(MooiTheme.colorScheme.background),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            PagerIndicatorDot(
+                isSelected = selectedDot == 0,
+                onClick = {
+                    setSelectedDot(0)
                 }
-        )
+            )
+            PagerIndicatorDot(
+                isSelected = selectedDot == 1,
+                onClick = {
+                    setSelectedDot(1)
+                }
+            )
+            PagerIndicatorDot(
+                isSelected = selectedDot == 2,
+                onClick = {
+                    setSelectedDot(2)
+                }
+            )
+            PagerIndicatorDot(
+                isSelected = selectedDot == 3,
+                onClick = {
+                    setSelectedDot(3)
+                }
+            )
+        }
     }
 }
