@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
@@ -94,6 +95,7 @@ fun PagerWithIndicator(
                             }),
                     color = MooiTheme.colorScheme.gray600,
                     text = stringResource(R.string.pager_btn_skip),
+                    style = MooiTheme.typography.body3.copy(fontSize = 14.sp, lineHeight = 22.sp)
                 )
             }
         }
