@@ -64,8 +64,8 @@ private fun StatelessNicknameScreen(
     val (isExitModelOpen, setIsExitModelOpen) = remember { mutableStateOf(false) }
     OnBoardingExitModel(
         isModelOpen = isExitModelOpen,
-        setIsModelOpen = setIsExitModelOpen,
-        onConfirm = { navToBack() },
+        onDismissRequest = { setIsExitModelOpen(false) },
+        onExit = navToBack
     )
 
     Scaffold(
@@ -131,17 +131,18 @@ private fun StatelessNicknameScreen(
 @Composable
 private fun OnBoardingExitModel(
     isModelOpen: Boolean = false,
-    setIsModelOpen: (Boolean) -> Unit = {},
-    onConfirm: () -> Unit = {}
+    onDismissRequest: () -> Unit = {},
+    onExit: () -> Unit = {},
 ) {
+    // todo: fix not navigating back on modal dismiss
     if (isModelOpen) {
         Modal(
             subTitle = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
             title = "그래도 메인 화면으로\n돌아갈까요?",
             confirmLabel = "회원가입을 계속 할게요.",
             dismissLabel = "메인 화면으로 나갈래요. ",
-            onDismissRequest = { setIsModelOpen(false) },
-            onConfirm = onConfirm,
+            onDismissRequest = onDismissRequest,
+            onDismiss = onExit,
         )
     }
 }
