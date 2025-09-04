@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,11 +59,24 @@ fun ScrollPicker(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(
-                    // todo: add gradient bg & border when selected value exists
-                    if (selectedValue != null) Color.Gray else Color.Black
-                )
+                .run {
+                    if (selectedValue != null) {
+                        this
+                            .background(
+                                MooiTheme.brushScheme.subButtonBackground,
+                                RoundedCornerShape(10.dp)
+                            )
+                            .border(
+                                1.dp, MooiTheme.brushScheme.subButtonBorder,
+                                RoundedCornerShape(10.dp)
+                            )
+                    } else {
+                        this.background(
+                            Color.Black,
+                            RoundedCornerShape(10.dp)
+                        )
+                    }
+                }
                 .clickable(enabled = enabled) {
                     // toggle scroll picker open/close
                     setScrollPickerOpen(!isScrollPickerOpen)
@@ -100,8 +114,7 @@ fun ScrollPicker(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = 144.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.Black)
+                    .background(Color.Black, RoundedCornerShape(10.dp))
                     .padding(14.dp)
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
