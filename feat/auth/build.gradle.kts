@@ -1,7 +1,9 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 fun getApiKey(propertyKey: String): String {
-    return  System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
+        propertyKey
+    )
 }
 
 plugins {
@@ -22,6 +24,11 @@ android {
             "String",
             "GOOGLE_SERVER_CLIENT_ID",
             getApiKey("GOOGLE_SERVER_CLIENT_ID")
+        )
+        buildConfigField(
+            "String",
+            "KAKAO_NATIVE_APP_KEY",
+            getApiKey("KAKAO_NATIVE_APP_KEY")
         )
     }
 
@@ -49,4 +56,5 @@ dependencies {
     implementation(projects.core.local)
 
     implementation(libs.bundles.credentials)
+    implementation(libs.kakao.sdk.user)
 }
