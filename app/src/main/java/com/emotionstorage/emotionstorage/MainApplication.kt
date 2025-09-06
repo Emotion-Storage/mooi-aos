@@ -2,6 +2,7 @@ package com.emotionstorage.emotionstorage
 
 import android.app.Application
 import com.emotionstorage.auth.BuildConfig
+import com.emotionstorage.auth.ui.util.KakaoSDKUtil
 import dagger.hilt.android.HiltAndroidApp
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
@@ -11,6 +12,7 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
+        initKakaoSDK()
     }
 
     private fun initLogger() {
@@ -19,5 +21,9 @@ class MainApplication : Application() {
                 return BuildConfig.DEBUG
             }
         })
+    }
+
+    private fun initKakaoSDK(){
+        KakaoSDKUtil.initApp(this@MainApplication)
     }
 }
