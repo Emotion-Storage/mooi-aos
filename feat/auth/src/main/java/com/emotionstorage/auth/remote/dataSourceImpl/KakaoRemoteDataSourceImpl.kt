@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -24,41 +25,15 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getIdToken(): String {
         var idTokenFlow: Flow<String?> = flow {
-            val loginCallback: (OAuthToken?, Throwable?, errorCallback: () -> Unit) -> Unit =
-                { token, error, errorCallback ->
-                    CoroutineScope(Dispatchers.IO).launch(CoroutineName("Kakao Login")) {
-                        if (error != null) {
-                            Logger.e("kakao login error ", error)
-                            if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
-                                emit(null)
-                            }
-                            errorCallback()
-                        } else if (token != null) {
-                            Logger.i("kakao login success ${token.accessToken}")
-                            emit(token.idToken)
-                        }
-                    }
-                }
-
-            val loginWithAccountCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-                CoroutineScope(Dispatchers.IO).launch(CoroutineName("Kakao Account Login")) {
-                    if (error != null) {
-                        Logger.e("kakao login with account error", error)
-                        emit(null)
-                    } else if (token != null) {
-                        Logger.i("kakao login with account success")
-                        emit(token.idToken)
-                    }
-                }
-            }
-
             if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
                 UserApiClient.instance.loginWithKakaoTalk(context) { token, error ->
                     loginCallback(token, error) {
                         // login with account when login fail
                         UserApiClient.instance.loginWithKakaoAccount(
                             context,
-                            callback = loginWithAccountCallback
+                            callback = { token, error ->
+                                loginWithAccountCallback(token, error)
+                            }
                         )
                     }
                 }
@@ -66,7 +41,9 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
                 // login with account when login unavailable
                 UserApiClient.instance.loginWithKakaoAccount(
                     context,
-                    callback = loginWithAccountCallback
+                    callback = { token, error ->
+                        loginWithAccountCallback(token, error)
+                    }
                 )
             }
         }
@@ -75,5 +52,39 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
             return@async idTokenFlow.first() ?: throw Exception("kakao login fail, no id token")
         }.await()
         return idToken
+    }
+
+    private fun FlowCollector<String?>.loginCallback(
+        token: OAuthToken?,
+        error: Throwable?,
+        errorCallback: () -> Unit
+    ) {
+        CoroutineScope(Dispatchers.IO).launch(CoroutineName("Kakao Login")) {
+            if (error != null) {
+                Logger.e("kakao login error ", error)
+                if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
+                    emit(null)
+                }
+                errorCallback()
+            } else if (token != null) {
+                Logger.i("kakao login success ${token.accessToken}")
+                emit(token.idToken)
+            }
+        }
+    }
+
+    private fun FlowCollector<String?>.loginWithAccountCallback(
+        token: OAuthToken?,
+        error: Throwable?
+    ) {
+        CoroutineScope(Dispatchers.IO).launch(CoroutineName("Kakao Account Login")) {
+            if (error != null) {
+                Logger.e("kakao login with account error", error)
+                emit(null)
+            } else if (token != null) {
+                Logger.i("kakao login with account success")
+                emit(token.idToken)
+            }
+        }
     }
 }
