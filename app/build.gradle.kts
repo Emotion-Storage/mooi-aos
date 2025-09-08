@@ -1,3 +1,11 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
+fun getLocalProperty(propertyKey: String): String {
+    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
+        propertyKey
+    )
+}
+
 plugins {
     id("com.emotionstorage.convention.android.application")
     id("com.emotionstorage.convention.android.application.compose")
@@ -13,6 +21,8 @@ android {
         versionName = "v0.0.0-beta"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders += mapOf("KAKAO_NATIVE_APP_KEY" to getLocalProperty("KAKAO_NATIVE_APP_KEY"))
     }
 
     buildTypes {

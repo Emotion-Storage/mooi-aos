@@ -1,6 +1,6 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-fun getApiKey(propertyKey: String): String {
+fun getLocalProperty(propertyKey: String): String {
     return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
         propertyKey
     )
@@ -23,12 +23,12 @@ android {
         buildConfigField(
             "String",
             "GOOGLE_SERVER_CLIENT_ID",
-            getApiKey("GOOGLE_SERVER_CLIENT_ID")
+            getLocalProperty("GOOGLE_SERVER_CLIENT_ID")
         )
         buildConfigField(
             "String",
             "KAKAO_NATIVE_APP_KEY",
-            getApiKey("KAKAO_NATIVE_APP_KEY")
+            getLocalProperty("KAKAO_NATIVE_APP_KEY")
         )
     }
 

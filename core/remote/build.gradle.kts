@@ -1,6 +1,6 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-fun getApiKey(propertyKey: String): String {
+fun getLocalProperty(propertyKey: String): String {
     return  System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
@@ -20,7 +20,7 @@ android {
         buildConfigField(
             "String",
             "MOOI_DEV_SERVER_URL",
-            getApiKey("MOOI_DEV_SERVER_URL")
+            getLocalProperty("MOOI_DEV_SERVER_URL")
         )
     }
 
