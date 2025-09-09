@@ -14,7 +14,7 @@ data class TimeCapsule(
     val logs: List<OpenLog> = emptyList(),
     val createdAt: LocalDateTime, // 생성 시각
     val arriveAt: LocalDateTime? = null, // 도착 시각
-    val favoriteAt: LocalDateTime, // 즐겨찾기 설정 시각
+    val favoriteAt: LocalDateTime? = null, // 즐겨찾기 설정 시각
     val updatedAt: LocalDateTime,
 ) {
     enum class STATUS {
