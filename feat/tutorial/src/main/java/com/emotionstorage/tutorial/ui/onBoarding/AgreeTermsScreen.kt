@@ -33,7 +33,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
-import com.emotionstorage.ui.component.CheckboxIcon
+import com.emotionstorage.ui.component.ToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import kotlinx.coroutines.launch
@@ -114,7 +114,7 @@ private fun StatelessAgreeTermsScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(11.dp)
                     ) {
-                        CheckboxIcon(
+                        ToggleButton(
                             isSelected = state.isAllAgree,
                             onSelect = event::onToggleAllAgree
                         )
@@ -216,7 +216,7 @@ private fun TermItem(
     onShowTermDetail: (() -> Unit)? = null
 ) {
     Row(modifier = modifier) {
-        CheckboxIcon(
+        ToggleButton(
             isSelected = isSelected,
             onSelect = onSelect
         )
