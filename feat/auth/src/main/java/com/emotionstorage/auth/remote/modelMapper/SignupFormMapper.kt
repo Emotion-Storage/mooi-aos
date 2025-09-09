@@ -11,7 +11,7 @@ internal object SignupFormMapper {
         gender = signupFormEntity.gender,
         birthday = signupFormEntity.birthday.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
         expectations = signupFormEntity.expectations,
-        isTermAgreed = signupFormEntity.isTermAgreed,
+        isTermsAgreed = signupFormEntity.isTermAgreed,
         isPrivacyAgreed = signupFormEntity.isPrivacyAgreed,
         isMarketingAgreed = signupFormEntity.isMarketingAgreed
     )

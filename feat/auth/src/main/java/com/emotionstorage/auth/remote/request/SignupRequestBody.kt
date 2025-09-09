@@ -9,7 +9,7 @@ data class SignupRequestBody (
     val gender: String,
     val birthday: String,
     val expectations: List<String>,
-    val isTermAgreed: Boolean,
+    val isTermsAgreed: Boolean,
     val isPrivacyAgreed: Boolean,
     val isMarketingAgreed: Boolean,
 )
