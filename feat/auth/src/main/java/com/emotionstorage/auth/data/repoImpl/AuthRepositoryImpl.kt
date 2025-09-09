@@ -8,6 +8,7 @@ import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.repository.AuthRepository
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
+import com.orhanobut.logger.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class AuthRepositoryImpl @Inject constructor(
                 User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                 User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
             }
+            Logger.d("provider: $provider, idToken: $idToken")
 
             // login with id token
             try {
