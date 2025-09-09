@@ -17,7 +17,9 @@ import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyScreen
+import com.emotionstorage.time_capsule.ui.ArrivedScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
+import com.emotionstorage.time_capsule.ui.FavoritesScreen
 import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
@@ -57,6 +59,12 @@ internal sealed class AppDestination {
     data class AI_CHAT(val roomId: String) : AppDestination()
 
     @Serializable
+    object ARRIVED_TIME_CAPSULES : AppDestination()
+
+    @Serializable
+    object FAVORITE_TIME_CAPSULES : AppDestination()
+
+    @Serializable
     data class TIME_CAPSULE_DETAIL(val id: String) : AppDestination()
 }
 
@@ -69,11 +77,9 @@ internal fun AppNavHost(
     val currentDestination = navBackStackEntry.value?.destination
 
     Scaffold(
-        modifier,
-        bottomBar = {
+        modifier, bottomBar = {
             AppBottomNavBar(
-                navController = navController,
-                currentDestination = currentDestination
+                navController = navController, currentDestination = currentDestination
             )
         }) { innerPadding ->
         NavHost(
@@ -126,8 +132,7 @@ internal fun AppNavHost(
                 HomeScreen(
                     navToChat = { roomId ->
                         navController.navigate(AppDestination.AI_CHAT(roomId))
-                    }
-                )
+                    })
             }
             composable<AppDestination.TIME_CAPSULE_CALENDAR> {
                 CalendarScreen()
@@ -139,16 +144,30 @@ internal fun AppNavHost(
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT>()
                 AIChatScreen(
-                    roomId = arguments.roomId,
+                    roomId = arguments.roomId, navToBack = {
+                        navController.popBackStack()
+                    })
+            }
+
+            composable<AppDestination.ARRIVED_TIME_CAPSULES> {
+                ArrivedScreen(
                     navToBack = {
                         navController.popBackStack()
-                    }
-                )
+                    })
+            }
+
+            composable<AppDestination.FAVORITE_TIME_CAPSULES> {
+                FavoritesScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    })
             }
 
             composable<AppDestination.TIME_CAPSULE_DETAIL> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.TIME_CAPSULE_DETAIL>()
-                TimeCapsuleDetailScreen(id = arguments.id)
+                TimeCapsuleDetailScreen(id = arguments.id, navToBack = {
+                    navController.popBackStack()
+                })
             }
         }
     }
