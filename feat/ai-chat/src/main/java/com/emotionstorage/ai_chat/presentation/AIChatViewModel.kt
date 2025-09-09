@@ -90,7 +90,7 @@ class AIChatViewModel @Inject constructor(
                 }
 
                 is DataState.Error -> {
-                    Logger.e("chat room connection failed", result.throwable)
+                    Logger.e("chat room connection failed, ${result.throwable}")
                     postSideEffect(AIChatSideEffect.ToastMessage("채팅방 연결 실패"))
                 }
 
@@ -142,7 +142,7 @@ class AIChatViewModel @Inject constructor(
                 }
 
                 is DataState.Error -> {
-                    Logger.e("chat message sending failed", result.throwable)
+                    Logger.e("chat message sending failed, ${result.throwable}")
                     postSideEffect(AIChatSideEffect.ToastMessage("메세지 전송 실패"))
 
                     reduce {
@@ -171,7 +171,7 @@ class AIChatViewModel @Inject constructor(
                 }
 
                 is DataState.Error -> {
-                    Logger.e("chat room disconnection failed", result.throwable)
+                    Logger.e("chat room disconnection failed, ${result.throwable}")
                     postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 실패"))
                 }
 

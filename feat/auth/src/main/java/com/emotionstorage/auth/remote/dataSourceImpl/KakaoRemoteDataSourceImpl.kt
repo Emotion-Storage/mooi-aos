@@ -39,6 +39,7 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
                 }
             } else {
                 // login with account when login unavailable
+                Logger.d("try login with account...")
                 UserApiClient.instance.loginWithKakaoAccount(
                     context,
                     callback = { token, error ->
@@ -48,7 +49,7 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
             }
         }
 
-        val idToken = CoroutineScope(Dispatchers.IO).async(CoroutineName("Kakao Login")) {
+        val idToken = CoroutineScope(Dispatchers.IO).async(CoroutineName("Kakao Id Token")) {
             return@async idTokenFlow.first() ?: throw Exception("kakao login fail, no id token")
         }.await()
         return idToken
@@ -61,9 +62,10 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
     ) {
         CoroutineScope(Dispatchers.IO).launch(CoroutineName("Kakao Login")) {
             if (error != null) {
-                Logger.e("kakao login error ", error)
+                Logger.e("kakao login error, ${error.toString()}")
                 if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                     emit(null)
+                    return@launch
                 }
                 errorCallback()
             } else if (token != null) {
@@ -79,7 +81,7 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
     ) {
         CoroutineScope(Dispatchers.IO).launch(CoroutineName("Kakao Account Login")) {
             if (error != null) {
-                Logger.e("kakao login with account error", error)
+                Logger.e("kakao login with account error, ${error.toString()}")
                 emit(null)
             } else if (token != null) {
                 Logger.i("kakao login with account success")
