@@ -18,6 +18,7 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyScreen
 import com.emotionstorage.time_capsule.ui.TimeCapsuleCalendarScreen
+import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
 import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
@@ -54,6 +55,9 @@ internal sealed class AppDestination {
 
     @Serializable
     data class AI_CHAT(val roomId: String) : AppDestination()
+
+    @Serializable
+    data class TIME_CAPSULE_DETAIL(val id: String) : AppDestination()
 }
 
 @Composable
@@ -140,6 +144,11 @@ internal fun AppNavHost(
                         navController.popBackStack()
                     }
                 )
+            }
+
+            composable<AppDestination.TIME_CAPSULE_DETAIL> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.TIME_CAPSULE_DETAIL>()
+                TimeCapsuleDetailScreen(id = arguments.id)
             }
         }
     }
