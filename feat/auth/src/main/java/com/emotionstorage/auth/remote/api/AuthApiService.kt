@@ -33,7 +33,7 @@ interface AuthApiService {
     ): ResponseDto<SignupResponseData>
 
     @AuthRequest
-    @POST("/users/session")
+    @POST("/auth/session")
     suspend fun postSession(): ResponseDto<Unit>
 
     @AuthRequest
