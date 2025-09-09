@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.util.subBackground
 
 @Composable
 fun ScrollPicker(
@@ -58,11 +60,7 @@ fun ScrollPicker(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(
-                    // todo: add gradient bg & border when selected value exists
-                    if (selectedValue != null) Color.Gray else Color.Black
-                )
+                .subBackground(selectedValue != null, defaultBackground = Color.Black)
                 .clickable(enabled = enabled) {
                     // toggle scroll picker open/close
                     setScrollPickerOpen(!isScrollPickerOpen)
@@ -100,8 +98,7 @@ fun ScrollPicker(
                 modifier = Modifier
                     .fillMaxWidth()
                     .heightIn(max = 144.dp)
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(Color.Black)
+                    .background(Color.Black, RoundedCornerShape(10.dp))
                     .padding(14.dp)
                     .verticalScroll(scrollState),
                 verticalArrangement = Arrangement.spacedBy(8.dp)

@@ -1,7 +1,9 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-fun getApiKey(propertyKey: String): String {
-    return  System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+fun getLocalProperty(propertyKey: String): String {
+    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
+        propertyKey
+    )
 }
 
 plugins {
@@ -21,7 +23,7 @@ android {
         buildConfigField(
             "String",
             "GOOGLE_SERVER_CLIENT_ID",
-            getApiKey("GOOGLE_SERVER_CLIENT_ID")
+            getLocalProperty("GOOGLE_SERVER_CLIENT_ID")
         )
     }
 
@@ -49,4 +51,5 @@ dependencies {
     implementation(projects.core.local)
 
     implementation(libs.bundles.credentials)
+    implementation(libs.kakao.sdk.user)
 }

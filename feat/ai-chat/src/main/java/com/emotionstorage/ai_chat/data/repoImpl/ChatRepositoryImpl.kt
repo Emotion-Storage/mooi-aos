@@ -30,22 +30,34 @@ class ChatRepositoryImpl @Inject constructor() : ChatRepository {
     override fun observeChatMessages(roomId: String): Flow<ChatMessage> = flow {
         // TODO("Not yet implemented")
 
-        var i = 0
         while (true) {
-            delay(2000)
+            delay(5000)
             emit(
                 ChatMessage(
                     roomId = roomId,
                     source = ChatMessage.MessageSource.SERVER,
-                    content = "test_message_$i"
+                    content = "test_message"
                 )
             )
-            ++i
+            delay(500)
+            emit(
+                ChatMessage(
+                    roomId = roomId,
+                    source = ChatMessage.MessageSource.SERVER,
+                    content = "test_message"
+                )
+            )
+            delay(500)
+            emit(
+                ChatMessage(
+                    roomId = roomId,
+                    source = ChatMessage.MessageSource.SERVER,
+                    content = "test_message"
+                )
+            )
         }
     }
 
-    val messageErrorRate = 3
-    var messageCount = 0
     override suspend fun sendChatMessage(
         roomId: String,
         chatMessage: ChatMessage
@@ -53,12 +65,7 @@ class ChatRepositoryImpl @Inject constructor() : ChatRepository {
         // TODO("Not yet implemented")
         emit(DataState.Loading(isLoading = true))
         delay(3000)
-        if(messageCount % messageErrorRate == 0) {
-            emit(DataState.Error(Throwable("error")))
-        }else {
-            emit(DataState.Success(true))
-        }
-        ++messageCount
+        emit(DataState.Success(true))
         delay(1000)
         emit(DataState.Loading(isLoading = true))
     }

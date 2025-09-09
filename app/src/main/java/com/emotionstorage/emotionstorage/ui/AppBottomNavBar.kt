@@ -67,7 +67,7 @@ fun AppBottomNavBar(
                         isSelected = (currentDestination?.route == it.route),
                         onClick = {
                             navController.navigate(it.route!!) {
-                                popUpTo(currentDestination.toString()) {
+                                popUpTo(currentDestination?.route.toString()) {
                                     inclusive = true
                                     saveState = true
                                 }

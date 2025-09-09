@@ -12,6 +12,7 @@ jobs:
     env:
       GOOGLE_SERVER_CLIENT_ID: ${{ secrets.GOOGLE_SERVER_CLIENT_ID }}
       MOOI_DEV_SERVER_URL: ${{ secrets.MOOI_DEV_SERVER_URL }}
+      KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
     steps:
       - uses: actions/checkout@v4

@@ -1,6 +1,7 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,6 +36,7 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 
 /**
@@ -179,24 +181,20 @@ private fun GenderInput(
         )
         Row(modifier = Modifier, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
             GENDER.entries.forEach {
+                val isSelected = it == selectedGender
                 Box(
                     modifier = Modifier
                         .height(50.dp)
                         .width(94.94.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(
-                            // todo: add gradient bg & border when selected value exists
-                            if (selectedGender == it) Color.Gray else Color.Black
-                        )
+                        .subBackground(isSelected, defaultBackground = Color.Black)
                         .clickable {
-                            if (selectedGender == it) onGenderSelect(null) else
-                                onGenderSelect(it)
+                            if (isSelected) onGenderSelect(null) else onGenderSelect(it)
                         }
                         .padding(14.dp)
                 ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
-                        color = Color.White,
+                        color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
                         text = when (it) {
                             GENDER.MALE -> "남자"
                             GENDER.FEMALE -> "여자"

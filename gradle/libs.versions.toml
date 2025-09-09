@@ -26,6 +26,7 @@ serialization = "1.7.3"
 serializationConverter = "1.0.0"
 logger = "2.2.0"
 orbitMvi = "10.0.0"
+kakao = "2.21.4"
 
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
@@ -71,6 +72,7 @@ kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "
 android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
 orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
 orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
+kakao-sdk-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }

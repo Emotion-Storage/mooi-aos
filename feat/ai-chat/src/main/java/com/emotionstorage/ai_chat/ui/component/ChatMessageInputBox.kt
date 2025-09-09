@@ -48,8 +48,8 @@ fun ChatMessageInputBox(
             onClick = {
                 onSendMessage(message)
                 setMessage("")
-                keyboardController?.hide()
-                focusManager.clearFocus()
+//                keyboardController?.hide()
+//                focusManager.clearFocus()
             }
         ) {
             Text("전송")

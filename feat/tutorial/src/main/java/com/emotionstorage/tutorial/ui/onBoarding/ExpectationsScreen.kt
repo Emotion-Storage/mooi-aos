@@ -2,6 +2,7 @@ package com.emotionstorage.tutorial.ui.onBoarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.subBackground
 
 /**
  * On boarding step 3
@@ -125,7 +127,6 @@ private fun StatelessExpectationsScreen(
                     ) {
                         state.expectations.forEachIndexed { index, expectation ->
                             ExpectationItem(
-                                index = index,
                                 expectation = expectation,
                                 isSelected = state.selectedExpectations.contains(expectation),
                                 onClick = { event.onToggleExpectation(index) }
@@ -153,7 +154,6 @@ private fun StatelessExpectationsScreen(
 
 @Composable
 private fun ExpectationItem(
-    index: Int,
     expectation: Expectation,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
@@ -163,11 +163,7 @@ private fun ExpectationItem(
         modifier = modifier
             .fillMaxWidth()
             .height(72.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(
-                // todo: add gradient bg & border if is selected
-                if (isSelected) Color.Gray else Color.Black
-            )
+            .subBackground(isSelected, defaultBackground = Color.Black)
             .clickable(
                 onClick = onClick
             )
