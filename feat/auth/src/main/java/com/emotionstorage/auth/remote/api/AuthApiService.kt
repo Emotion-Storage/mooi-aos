@@ -10,6 +10,7 @@ import com.emotionstorage.remote.interceptor.AuthRequest
 import com.emotionstorage.remote.response.ResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface AuthApiService {
@@ -35,7 +36,7 @@ interface AuthApiService {
     ): ResponseDto<SignupResponseData>
 
     @AuthRequest
-    @POST("/auth/session")
+    @GET("/auth/session")
     suspend fun postSession(): ResponseDto<Unit>
 
     @AuthRequest
