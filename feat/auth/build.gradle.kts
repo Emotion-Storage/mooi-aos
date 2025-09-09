@@ -25,11 +25,6 @@ android {
             "GOOGLE_SERVER_CLIENT_ID",
             getLocalProperty("GOOGLE_SERVER_CLIENT_ID")
         )
-        buildConfigField(
-            "String",
-            "KAKAO_NATIVE_APP_KEY",
-            getLocalProperty("KAKAO_NATIVE_APP_KEY")
-        )
     }
 
     buildTypes {
