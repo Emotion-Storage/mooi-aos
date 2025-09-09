@@ -36,9 +36,10 @@ fun TopAppBar(
 ) {
     Box(
         modifier = modifier
+            .background(MooiTheme.colorScheme.background)
             .background(Color(0x800E0C12))
             .fillMaxWidth()
-            .height(91.dp)
+            .height(62.dp)
             .padding(horizontal = 16.dp)
     ) {
         if (showBackButton) {
@@ -72,7 +73,7 @@ private fun TopAppBarPreview() {
     MooiTheme {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             TopAppBar(showBackButton = true)
-            TopAppBar(showBackButton = true, title = "Title", rightComponent = {
+            TopAppBar(showBackButton = true, title = "타임캡슐 상세", rightComponent = {
                 RoundedToggleButton()
             })
         }
