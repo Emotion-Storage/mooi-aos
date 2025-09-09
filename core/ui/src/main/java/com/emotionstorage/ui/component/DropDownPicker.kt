@@ -77,6 +77,7 @@ fun DropDownPicker(
             )
         }
 
+        // todo: set drop down menu width same as parent
         DropdownMenu(
             expanded = isScrollPickerOpen,
             onDismissRequest = { setScrollPickerOpen(false) },

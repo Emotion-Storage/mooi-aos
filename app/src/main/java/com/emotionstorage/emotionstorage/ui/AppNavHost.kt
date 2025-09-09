@@ -135,7 +135,15 @@ internal fun AppNavHost(
                     })
             }
             composable<AppDestination.TIME_CAPSULE_CALENDAR> {
-                CalendarScreen()
+                CalendarScreen(
+                    navToArrived = {
+                        navController.navigate(AppDestination.ARRIVED_TIME_CAPSULES)
+                    },
+                    navToFavorites = {
+                        navController.navigate(AppDestination.FAVORITE_TIME_CAPSULES)
+
+                    }
+                )
             }
             composable<AppDestination.My> {
                 MyScreen()

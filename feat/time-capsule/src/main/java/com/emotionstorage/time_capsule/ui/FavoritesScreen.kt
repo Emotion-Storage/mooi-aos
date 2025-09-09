@@ -38,9 +38,21 @@ import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.DropDownPicker
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+
+private val DUMMY_FAVORITES = (1..15).toList().map { it ->
+    FavoriteTimeCapsule(
+        id = it.toString(),
+        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+        emotions = listOf("서운함", "화남", "피곤함"),
+        isFavorite = true,
+        isFavoriteAt = LocalDateTime.of(2025, 7, it, 9, 28),
+        createdAt = LocalDateTime.of(2025, 6, it, 9, 28)
+    )
+}
 
 @Composable
 fun FavoritesScreen(
@@ -49,6 +61,7 @@ fun FavoritesScreen(
     navToBack: () -> Unit = {}
 ) {
     StatelessFavoriteScreen(
+        favoriteTimeCapsules = DUMMY_FAVORITES,
         modifier = modifier,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack
@@ -102,7 +115,20 @@ private fun StatelessFavoriteScreen(
                 )
             }
 
-            // todo: add sort drop down
+            Box(modifier = Modifier.fillMaxWidth()) {
+                DropDownPicker(
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .width(102.dp)
+                        .padding(top = 7.dp, bottom = 22.dp),
+                    selectedValue = "최신 날짜순",
+                    options = listOf("최신 날짜순", "즐겨찾기순"),
+                    onSelect = {
+                        // todo: change list sort order
+                    }
+                )
+            }
+
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -240,20 +266,9 @@ private fun EmotionTag(
 @Preview
 @Composable
 private fun FavoriteScreenPreview() {
-    val favorites = (1..15).toList().map { it ->
-        FavoriteTimeCapsule(
-            id = it.toString(),
-            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-            emotions = listOf("서운함", "화남", "피곤함"),
-            isFavorite = true,
-            isFavoriteAt = LocalDateTime.of(2025, 7, it, 9, 28),
-            createdAt = LocalDateTime.of(2025, 6, it, 9, 28)
-        )
-    }
-
     MooiTheme {
         StatelessFavoriteScreen(
-            favoriteTimeCapsules = favorites
+            favoriteTimeCapsules = DUMMY_FAVORITES
         )
     }
 }
