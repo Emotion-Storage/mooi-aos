@@ -9,6 +9,7 @@ import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
 import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.remote.response.ResponseStatus
+import com.orhanobut.logger.Logger
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl @Inject constructor(
@@ -32,12 +33,14 @@ class AuthRemoteDataSourceImpl @Inject constructor(
             }
 
             // return access token if success
+            Logger.d("login response: $response")
             if (response.status == ResponseStatus.Created.code) {
                 response.data?.accessToken?.run {
                     return this
                 } ?: throw Exception("No access token received")
             } else throw Exception(response.code + "" + response.message)
         } catch (e: Exception) {
+            Logger.e("Login fail, $e")
             throw Exception("Login api failed", e)
         }
     }

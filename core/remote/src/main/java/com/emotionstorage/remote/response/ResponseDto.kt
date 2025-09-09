@@ -2,15 +2,14 @@ package com.emotionstorage.remote.response
 
 import com.emotionstorage.common.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
-import retrofit2.HttpException
 import java.time.LocalDateTime
 
 @Serializable
 data class ResponseDto<T>(
     val status: Int,
-    val code: String,
-    val message: String?,
-    val data: T?,
+    val code: String? = null,
+    val message: String? = null,
+    val data: T? = null,
     @Serializable(with = LocalDateTimeSerializer::class)
-    val timestamp: LocalDateTime
+    val timestamp: LocalDateTime? = null
 )
