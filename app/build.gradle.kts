@@ -22,8 +22,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders += mapOf("KAKAO_NATIVE_APP_KEY" to getLocalProperty("KAKAO_NATIVE_APP_KEY"))
-
+        manifestPlaceholders += mapOf(
+            "KAKAO_NATIVE_APP_KEY" to getLocalProperty("KAKAO_NATIVE_APP_KEY").replace(
+                "\"",
+                ""
+            )
+        )
         buildConfigField(
             "String",
             "KAKAO_NATIVE_APP_KEY",
@@ -60,6 +64,5 @@ dependencies {
     implementation(projects.feat.my)
     implementation(projects.feat.alarm)
     implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
-
     implementation(libs.kakao.sdk.user)
 }
