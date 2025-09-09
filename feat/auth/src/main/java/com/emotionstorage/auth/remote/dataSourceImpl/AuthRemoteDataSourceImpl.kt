@@ -3,8 +3,10 @@ package com.emotionstorage.auth.remote.dataSourceImpl
 import com.emotionstorage.auth.data.dataSource.AuthRemoteDataSource
 import com.emotionstorage.auth.data.model.SignupFormEntity
 import com.emotionstorage.auth.remote.api.AuthApiService
-import com.emotionstorage.auth.remote.modelMapper.SignupFormMapper
-import com.emotionstorage.auth.remote.request.LoginRequestBody
+import com.emotionstorage.auth.remote.modelMapper.GoogleSignupFormMapper
+import com.emotionstorage.auth.remote.modelMapper.KakaoSignupFormMapper
+import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
+import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.remote.response.ResponseStatus
 import javax.inject.Inject
@@ -21,11 +23,11 @@ class AuthRemoteDataSourceImpl @Inject constructor(
             // call login api
             val response = when (provider) {
                 User.AuthProvider.KAKAO -> authApiService.postKakaoLogin(
-                    LoginRequestBody(idToken)
+                    KakaoLoginRequestBody(idToken)
                 )
 
                 User.AuthProvider.GOOGLE -> authApiService.postGoogleLogin(
-                    LoginRequestBody(idToken)
+                    GoogleLoginRequestBody(idToken)
                 )
             }
 
@@ -47,11 +49,11 @@ class AuthRemoteDataSourceImpl @Inject constructor(
         try {
             val response = when (provider) {
                 User.AuthProvider.KAKAO -> authApiService.postKakaoSignup(
-                    SignupFormMapper.toRemote(signupFormEntity)
+                    KakaoSignupFormMapper.toRemote(signupFormEntity)
                 )
 
                 User.AuthProvider.GOOGLE -> authApiService.postGoogleSignup(
-                    SignupFormMapper.toRemote(signupFormEntity)
+                    GoogleSignupFormMapper.toRemote(signupFormEntity)
                 )
             }
 
