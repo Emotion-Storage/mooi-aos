@@ -158,6 +158,9 @@ internal fun AppNavHost(
 
             composable<AppDestination.FAVORITE_TIME_CAPSULES> {
                 FavoritesScreen(
+                    navToTimeCapsuleDetail = { id ->
+                        navController.navigate(AppDestination.TIME_CAPSULE_DETAIL(id))
+                    },
                     navToBack = {
                         navController.popBackStack()
                     })
