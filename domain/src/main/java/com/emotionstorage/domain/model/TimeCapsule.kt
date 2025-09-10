@@ -26,7 +26,8 @@ data class TimeCapsule(
 
     data class Emotion(
         val label: String,
-        val percentage: Float,
+        val icon: Int, // todo: 감정 고정된 목록으로 관리할 것인지 BE/AI와 논의 <- 이모지 매핑 로직 고민
+        val percentage: Float? = null,
     )
 
     data class OpenLog(

@@ -43,7 +43,7 @@ fun RoundedToggleButton(
             )
     ) {
         Image(
-            modifier = Modifier.align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center).width(15.dp).height(16.dp),
             painter = painterResource(
                 if (isSelected) R.drawable.favorite_filled else R.drawable.favorite
             ),

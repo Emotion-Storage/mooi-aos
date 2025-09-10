@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -30,15 +29,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.model.FavoriteTimeCapsule
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
+import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -47,7 +49,18 @@ private val DUMMY_FAVORITES = (1..15).toList().map { it ->
     FavoriteTimeCapsule(
         id = it.toString(),
         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-        emotions = listOf("서운함", "화남", "피곤함"),
+        emotions = listOf(
+            Emotion(
+                label = "서운함",
+                icon = 0,
+            ), Emotion(
+                label = "화남",
+                icon = 1,
+            ), Emotion(
+                label = "피곤함",
+                icon = 2,
+            )
+        ),
         isFavorite = true,
         isFavoriteAt = LocalDateTime.of(2025, 7, it, 9, 28),
         createdAt = LocalDateTime.of(2025, 6, it, 9, 28)
@@ -98,13 +111,13 @@ private fun StatelessFavoriteScreen(
                     .fillMaxWidth()
                     .padding(top = 13.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.Top
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.favorite_filled),
                     modifier = Modifier
                         .width(11.dp)
-                        .height(12.dp)
-                        .offset(y = 2.dp),
+                        .height(12.dp),
                     contentDescription = "open",
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500)
                 )
@@ -166,8 +179,10 @@ private fun FavoriteItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
+            // todo: change date format
             Text(
                 text = item.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
+                style = MooiTheme.typography.body3.copy(fontWeight = FontWeight.Light),
                 color = MooiTheme.colorScheme.gray300
             )
             RoundedToggleButton(
@@ -221,7 +236,7 @@ private fun FavoriteItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     for (emotion in item.emotions) {
-                        EmotionTag(label = emotion)
+                        EmotionTag(emotion = emotion)
                     }
                 }
                 Text(
@@ -238,7 +253,7 @@ private fun FavoriteItem(
 @Composable
 private fun EmotionTag(
     modifier: Modifier = Modifier,
-    label: String
+    emotion: Emotion
 ) {
     Row(
         modifier = modifier
@@ -248,14 +263,22 @@ private fun EmotionTag(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // todo: add emoji icon
-        Box(
-            modifier = Modifier
-                .size(16.dp)
-                .background(Color.Gray, CircleShape)
-        )
+        if (emotion.getIconResId() == null) {
+            Box(
+                modifier = Modifier
+                    .size(16.dp)
+                    .background(Color.Gray, CircleShape)
+            )
+        } else {
+            Image(
+                painter = painterResource(id = emotion.getIconResId()!!),
+                modifier = Modifier.size(16.dp),
+                contentDescription = emotion.label
+            )
+        }
+
         Text(
-            text = label,
+            text = emotion.label,
             style = MooiTheme.typography.body4,
             color = MooiTheme.colorScheme.primary
         )

@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,6 +38,7 @@ import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -45,9 +48,9 @@ private val DUMMY_TIME_CAPSULE = TimeCapsule(
     title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
     summary = "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어. 그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. 나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
     emotions = listOf(
-        TimeCapsule.Emotion("서운함", 30.0f),
-        TimeCapsule.Emotion("고마움", 30.0f),
-        TimeCapsule.Emotion("안정감", 80.0f)
+        TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
+        TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
+        TimeCapsule.Emotion("안정감", icon = 4, 80.0f)
     ),
     comments = listOf(
         "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
@@ -192,7 +195,8 @@ private fun DecorativeDots(modifier: Modifier = Modifier) {
 
 @Composable
 private fun Emotions(
-    modifier: Modifier = Modifier, emotions: List<TimeCapsule.Emotion> = emptyList()
+    modifier: Modifier = Modifier,
+    emotions: List<TimeCapsule.Emotion> = emptyList()
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -221,21 +225,27 @@ private fun Emotions(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp)
                     ) {
-                        // todo: add emotion emoji
-                        Box(
-                            modifier = Modifier
-                                .size(22.dp)
-                                .background(Color.Gray, CircleShape)
-                        )
+                        if (emotion.getIconResId() == null) {
+                            Box(
+                                modifier = Modifier
+                                    .size(22.dp)
+                                    .background(Color.Gray, CircleShape)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(id = emotion.getIconResId()!!),
+                                modifier = Modifier.size(22.dp),
+                                contentDescription = emotion.label
+                            )
+                        }
                         Text(
-                            modifier = Modifier.padding(start = 8.dp),
                             text = emotion.label,
                             style = MooiTheme.typography.body4.copy(fontSize = 15.sp),
                             color = MooiTheme.colorScheme.primary,
                         )
                     }
                     Text(
-                        text = "${emotion.percentage.toInt()}%",
+                        text = "${emotion.percentage?.toInt() ?: "??"}%",
                         style = MooiTheme.typography.head3,
                         color = Color.White,
                     )
