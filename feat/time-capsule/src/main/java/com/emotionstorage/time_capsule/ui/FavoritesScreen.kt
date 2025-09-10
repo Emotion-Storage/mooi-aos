@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
+import com.emotionstorage.time_capsule.ui.component.EmotionTag
 import com.emotionstorage.time_capsule.ui.model.FavoriteTimeCapsule
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
@@ -247,41 +248,6 @@ private fun FavoriteItem(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun EmotionTag(
-    modifier: Modifier = Modifier,
-    emotion: Emotion
-) {
-    Row(
-        modifier = modifier
-            .height(24.dp)
-            .background(Color(0xFFAECBFA).copy(alpha = 0.2f), RoundedCornerShape(20.dp))
-            .padding(horizontal = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        if (emotion.getIconResId() == null) {
-            Box(
-                modifier = Modifier
-                    .size(16.dp)
-                    .background(Color.Gray, CircleShape)
-            )
-        } else {
-            Image(
-                painter = painterResource(id = emotion.getIconResId()!!),
-                modifier = Modifier.size(16.dp),
-                contentDescription = emotion.label
-            )
-        }
-
-        Text(
-            text = emotion.label,
-            style = MooiTheme.typography.body4,
-            color = MooiTheme.colorScheme.primary
-        )
     }
 }
 
