@@ -12,13 +12,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 
+enum class ToggleButtonType {
+    CHECKBOX,
+}
+
 @Composable
-fun CheckboxIcon(
+fun ToggleButton(
     modifier: Modifier = Modifier.size(18.dp),
     enabled: Boolean = true,
     isSelected: Boolean = false,
     onSelect: () -> Unit = {},
-    contentDescription: String? = null
+    contentDescription: String? = null,
+    type: ToggleButtonType = ToggleButtonType.CHECKBOX
 ) {
     Image(
         modifier = modifier.clickable(
@@ -32,11 +37,12 @@ fun CheckboxIcon(
     )
 }
 
+
 @Preview
 @Composable
-private fun CheckboxIconPreview() {
+private fun ToggleButtonPreview() {
     val (isSelected, setIsSelected) = remember { mutableStateOf(false) }
-    CheckboxIcon(
+    ToggleButton(
         isSelected = isSelected,
         onSelect = { setIsSelected(!isSelected) }
     )

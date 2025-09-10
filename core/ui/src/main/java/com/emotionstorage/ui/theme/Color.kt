@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.Color
 @Immutable
 data class MooiColorScheme(
     val primary: Color = Color(0xFFAFCBFA),
-    val secondary: Color = Color(0xFFF5CFE1),
+    val secondary: Color = Color(0xFF859CEA),
     val tertiary: Color = Color(0xFF859CEA),
     val background: Color = Color(0xFF1E1C24),
     val bottomBarBackground: Color = Color(0xFF100E14),
