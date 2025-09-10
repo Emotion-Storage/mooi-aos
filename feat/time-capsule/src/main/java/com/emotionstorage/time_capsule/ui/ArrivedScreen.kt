@@ -24,7 +24,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -91,15 +90,6 @@ private fun StatelessArrivedScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    val dateToArrivedTimeCapsules =
-        remember<List<Pair<LocalDate, List<ArrivedTimeCapsule>>>>(arrivedTimeCapsules) {
-            val dates =
-                arrivedTimeCapsules.map { it.arriveAt.toLocalDate() }.distinct().sortedDescending()
-            dates.map {
-                it to arrivedTimeCapsules.filter { item -> item.arriveAt.toLocalDate() == it }
-            }
-        }
-
     Scaffold(
         modifier = modifier
             .fillMaxSize()
@@ -142,34 +132,30 @@ private fun StatelessArrivedScreen(
                     .fillMaxWidth()
                     .scrollable(scrollState, orientation = Orientation.Vertical),
             ) {
-                dateToArrivedTimeCapsules.forEachIndexed { index, (date, capsules) ->
-                    item(key = date) {
+
+                // caveat!! arrived time capsules must be sorted in descending order by arriveAt
+                arrivedTimeCapsules.forEachIndexed { index, item ->
+                    item(key = item.id) {
                         Column {
                             // year & month
-                            if (index == 0 || dateToArrivedTimeCapsules[index].first.month != dateToArrivedTimeCapsules[index - 1].first.month) {
+                            if (index == 0 || arrivedTimeCapsules[index - 1].arriveAt.toLocalDate().month != item.arriveAt.toLocalDate().month) {
                                 Text(
                                     modifier = Modifier.padding(bottom = 14.dp),
-                                    text = "${date.year}년 ${date.monthValue}월",
+                                    text = "${item.arriveAt.year}년 ${item.arriveAt.monthValue}월",
                                     style = MooiTheme.typography.body2,
                                     color = Color.White
                                 )
                             }
 
-                            // arrived items
-                            Column(
+                            ArrivedTimeCapsule(
                                 modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                capsules.forEachIndexed { itemIndex, item ->
-                                    ArrivedTimeCapsule(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        item = item,
-                                        showDate = itemIndex == 0,
-                                        isLastOfDate = itemIndex == capsules.lastIndex,
-                                        isFirstOfMonth = index == 0 || item.arriveAt.toLocalDate().month != dateToArrivedTimeCapsules[index - 1].first.month,
-                                        isLastOfMonth = itemIndex == dateToArrivedTimeCapsules.size - 1 || item.arriveAt.toLocalDate().month != dateToArrivedTimeCapsules[index + 1].first.month,
-                                        onClick = { navToTimeCapsuleDetail(item.id) })
-                                }
-                            }
+                                item = item,
+                                showDate = index == 0 || arrivedTimeCapsules[index - 1].arriveAt.toLocalDate() != item.arriveAt.toLocalDate(),
+                                isLastOfDate = index == arrivedTimeCapsules.lastIndex || item.arriveAt.toLocalDate() != arrivedTimeCapsules[index + 1].arriveAt.toLocalDate(),
+                                isFirstDayOfMonth = index == 0 || arrivedTimeCapsules[index - 1].arriveAt.monthValue != item.arriveAt.monthValue,
+                                isLastDayOfMonth = !arrivedTimeCapsules.any { it -> it.arriveAt.monthValue == item.arriveAt.monthValue && it.arriveAt < item.arriveAt },
+                                onClick = { navToTimeCapsuleDetail(item.id) }
+                            )
                         }
                     }
                 }
@@ -185,8 +171,8 @@ private fun ArrivedTimeCapsule(
     modifier: Modifier = Modifier,
     showDate: Boolean = false,
     isLastOfDate: Boolean = false,
-    isFirstOfMonth: Boolean = false,
-    isLastOfMonth: Boolean = false,
+    isFirstDayOfMonth: Boolean = false,
+    isLastDayOfMonth: Boolean = false,
     onClick: () -> Unit = {}
 ) {
     Row(
@@ -199,8 +185,8 @@ private fun ArrivedTimeCapsule(
             modifier = Modifier.fillMaxHeight(),
             date = item.arriveAt.toLocalDate(),
             showDate = showDate,
-            isFirstOfMonth = isFirstOfMonth,
-            isLastOfMonth = isLastOfMonth
+            isFirstDayOfMonth = isFirstDayOfMonth,
+            isLastDayOfMonth = isLastDayOfMonth
         )
 
 
@@ -213,14 +199,14 @@ private fun ArrivedTimeCapsule(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(32.dp),
+                    .height(33.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // todo: change date format
                 Text(
                     text = item.arriveAt.format(DateTimeFormatter.ofPattern("hh:mm")),
-                    style = MooiTheme.typography.body3.copy(fontWeight = FontWeight.Light),
+                    style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.Light),
                     color = MooiTheme.colorScheme.gray300
                 )
 
@@ -287,21 +273,31 @@ private fun ArrivedTimeCapsuleDateLine(
     date: LocalDate,
     modifier: Modifier = Modifier,
     showDate: Boolean = false,
-    isFirstOfMonth: Boolean = false,
-    isLastOfMonth: Boolean = false
+    isFirstDayOfMonth: Boolean = false,
+    isLastDayOfMonth: Boolean = false
 ) {
+    // hide date & decorative line
+    if (!showDate && isLastDayOfMonth) {
+        Box(
+            modifier = modifier
+                .fillMaxHeight()
+                .width(49.dp)
+        )
+        return
+    }
+
     Column(
         modifier = modifier
             .fillMaxHeight()
             .width(49.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Bottom
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // decorative line start
-        if (isFirstOfMonth) {
+        if (isFirstDayOfMonth) {
             Column(
                 modifier = Modifier
-                    .height(32.dp)
+                    .height(33.dp)
+                    .padding(top = 12.dp)
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Bottom
@@ -315,7 +311,7 @@ private fun ArrivedTimeCapsuleDateLine(
                     modifier = Modifier
                         .width(1.5.dp)
                         .height(17.dp)
-                        .padding(top=5.dp)
+                        .padding(top = 5.dp)
                         .background(MooiTheme.colorScheme.gray800)
                 )
             }
@@ -323,7 +319,7 @@ private fun ArrivedTimeCapsuleDateLine(
             Box(
                 modifier = Modifier
                     .width(1.5.dp)
-                    .height(32.dp)
+                    .height(33.dp)
                     .background(MooiTheme.colorScheme.gray800)
             )
         }
@@ -369,7 +365,7 @@ private fun ArrivedTimeCapsuleDateLine(
         }
 
         // decorative line end
-        if (!isLastOfMonth) {
+        if (!isLastDayOfMonth) {
             Box(
                 modifier = Modifier
                     .width(1.5.dp)
