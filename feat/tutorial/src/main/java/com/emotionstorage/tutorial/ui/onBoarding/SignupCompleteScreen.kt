@@ -1,5 +1,6 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
+import SpeechBubble
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -56,27 +58,36 @@ fun SignupCompleteScreen(
                     ','
                 )
             )
-            
-            // todo: 버튼 위 말풍선 추가하기
-            CtaButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 39.dp),
-                label = "메인화면으로 이동",
-                onClick = {
-                    coroutineScope.launch {
-                        onLogin()
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SpeechBubble(
+                    text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                )
+
+                CtaButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 39.dp),
+                    label = "메인화면으로 이동",
+                    onClick = {
+                        coroutineScope.launch {
+                            onLogin()
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
 
 @PreviewScreenSizes
 @Composable
-private fun SignupCompleteScreenPreview(){
-    MooiTheme{
+private fun SignupCompleteScreenPreview() {
+    MooiTheme {
         SignupCompleteScreen()
     }
 }
