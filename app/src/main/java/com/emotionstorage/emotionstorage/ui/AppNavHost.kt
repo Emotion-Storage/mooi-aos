@@ -159,6 +159,9 @@ internal fun AppNavHost(
 
             composable<AppDestination.ARRIVED_TIME_CAPSULES> {
                 ArrivedScreen(
+                    navToTimeCapsuleDetail = { id ->
+                        navController.navigate(AppDestination.TIME_CAPSULE_DETAIL(id))
+                    },
                     navToBack = {
                         navController.popBackStack()
                     })
