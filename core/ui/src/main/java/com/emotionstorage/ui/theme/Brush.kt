@@ -12,40 +12,44 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.ui.util.LinearGradient
 
-// todo: adjust gradient offsets
 @Immutable
 data class MooiBrushScheme(
-    val mainButtonBackground: Brush = Brush.linearGradient(
-        listOf(
+    val mainButtonBackground: Brush = LinearGradient(
+        colors = listOf(
             Color(0xFFAFCBFA),
             Color(0xFF9BB4F2),
             Color(0xFF859CEA)
         ),
+        stops = listOf(0.0f, 0.4f, 1.0f),
+        angleInDegrees = -75f,
     ),
-    val subButtonBackground: Brush = Brush.verticalGradient(
-        listOf(
+    val subButtonBackground: Brush = LinearGradient(
+        colors = listOf(
             Color(0x1A849BEA),
             Color(0x0D849BEA),
-        )
+        ),
+        angleInDegrees = -9f,
     ),
-    val subButtonBorder: Brush = Brush.horizontalGradient(
-        listOf(
+    val subButtonBorder: Brush = LinearGradient(
+        colors = listOf(
             Color(0x66AECBFA),
             Color(0x08AECBFA),
-        )
+        ),
+        angleInDegrees = -42f,
     ),
-    val commentBackground: Brush = Brush.verticalGradient(
-        listOf(
+    val commentBackground: Brush = LinearGradient(
+        colors = listOf(
             Color(0x80849BEA),
             Color(0x14849BEA)
-        )
-    ),
+        ),
+        angleInDegrees = -42f,
+    )
 )
 
 
@@ -91,6 +95,11 @@ private fun BrushPreview() {
                     .fillMaxWidth()
                     .height(200.dp)
                     .background(MooiTheme.brushScheme.commentBackground, RoundedCornerShape(10.dp))
+                    .border(
+                        width = 1.dp,
+                        brush = MooiTheme.brushScheme.subButtonBorder,
+                        shape = RoundedCornerShape(10.dp)
+                    )
             )
         }
     }

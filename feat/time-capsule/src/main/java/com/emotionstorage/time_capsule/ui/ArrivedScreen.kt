@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.common.getKorDayOfWeek
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.component.EmotionTag
@@ -203,9 +204,8 @@ private fun ArrivedTimeCapsule(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // todo: change date format
                 Text(
-                    text = item.arriveAt.format(DateTimeFormatter.ofPattern("hh:mm")),
+                    text = item.arriveAt.formatToKorTime(),
                     style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.Light),
                     color = MooiTheme.colorScheme.gray300
                 )
