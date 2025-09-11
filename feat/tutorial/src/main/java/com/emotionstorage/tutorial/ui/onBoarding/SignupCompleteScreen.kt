@@ -1,5 +1,6 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
+import SpeechBubble
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,10 +9,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.R
@@ -35,9 +43,6 @@ fun SignupCompleteScreen(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
-        topBar = {
-            TopAppBar()
-        }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -48,35 +53,52 @@ fun SignupCompleteScreen(
                 .imePadding(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            OnBoardingTitle(
-                modifier = Modifier.fillMaxWidth(),
-                showSteps = false,
-                title = stringResource(R.string.on_boarding_signup_complete_title),
-                titleHighlights = stringResource(R.string.on_boarding_signup_complete_title_highlights).split(
-                    ','
-                )
-            )
-            
-            // todo: 버튼 위 말풍선 추가하기
-            CtaButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 39.dp),
-                label = "메인화면으로 이동",
-                onClick = {
-                    coroutineScope.launch {
-                        onLogin()
+            Text(
+                modifier = Modifier.padding(top = 62.dp),
+                text = buildAnnotatedString {
+                    append("가입을 환영해요.\n이제 ")
+                    withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                        append("당신의 이야기")
                     }
-                }
+                    append("를\n")
+                    withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                        append("우리만의 공간")
+                    }
+                    append("에 담아보세요.")
+                },
+                style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
+                color = Color.White
             )
+
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                SpeechBubble(
+                    text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                )
+
+                CtaButton(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 39.dp),
+                    label = "메인화면으로 이동",
+                    onClick = {
+                        coroutineScope.launch {
+                            onLogin()
+                        }
+                    }
+                )
+            }
         }
     }
 }
 
 @PreviewScreenSizes
 @Composable
-private fun SignupCompleteScreenPreview(){
-    MooiTheme{
+private fun SignupCompleteScreenPreview() {
+    MooiTheme {
         SignupCompleteScreen()
     }
 }

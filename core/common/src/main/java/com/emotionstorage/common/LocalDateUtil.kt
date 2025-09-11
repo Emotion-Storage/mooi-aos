@@ -2,6 +2,7 @@ package com.emotionstorage.common
 
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 fun LocalDate.getKorDayOfWeek(): String {
     return when (this.getDayOfWeek()) {
@@ -14,3 +15,4 @@ fun LocalDate.getKorDayOfWeek(): String {
         DayOfWeek.SUNDAY -> "일요일"
     }
 }
+

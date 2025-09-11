@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.component.EmotionTag
 import com.emotionstorage.time_capsule.ui.model.FavoriteTimeCapsule
@@ -41,9 +42,7 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
-import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 
 private val DUMMY_FAVORITES = (1..15).toList().map { it ->
@@ -63,8 +62,8 @@ private val DUMMY_FAVORITES = (1..15).toList().map { it ->
             )
         ),
         isFavorite = true,
-        isFavoriteAt = LocalDateTime.of(2025, 7, it, 9, 28),
-        createdAt = LocalDateTime.of(2025, 6, it, 9, 28)
+        isFavoriteAt = LocalDateTime.now(),
+        createdAt = LocalDateTime.now()
     )
 }
 
@@ -180,9 +179,8 @@ private fun FavoriteItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            // todo: change date format
             Text(
-                text = item.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
+                text = item.createdAt.formatToKorDateTime(),
                 style = MooiTheme.typography.body3.copy(fontWeight = FontWeight.Light),
                 color = MooiTheme.colorScheme.gray300
             )

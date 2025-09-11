@@ -69,7 +69,7 @@ class AuthRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun checkSession(): Boolean {
         try {
-            val response = authApiService.postSession()
+            val response = authApiService.getAuthSession()
             if (response.status == ResponseStatus.OK.code) return true
             else throw Exception(response.code + "" + response.message)
         } catch (e: Exception) {

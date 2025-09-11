@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
-    private const val BASE_URL = BuildConfig.MOOI_DEV_SERVER_URL
+    private const val BASE_URL = "http://${BuildConfig.MOOI_DEV_SERVER_URL}"
     private const val TIMEOUT = 20L
 
     private val json = Json {
