@@ -37,7 +37,7 @@ interface AuthApiService {
 
     @AuthRequest
     @GET("/auth/session")
-    suspend fun postSession(): ResponseDto<Unit>
+    suspend fun getAuthSession(): ResponseDto<Unit>
 
     @AuthRequest
     @POST("auth/logout")
