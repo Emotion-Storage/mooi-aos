@@ -8,6 +8,7 @@ import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
@@ -51,7 +52,13 @@ class ChatRepositoryImpl @Inject constructor(
     }
 
     override suspend fun observeChatMessages(roomId: String): Flow<ChatMessage> {
-        return chatWSDataSource.observeChatMessages(roomId)
+        return chatWSDataSource.observeChatMessages(roomId).map {
+            ChatMessage(
+                roomId = roomId,
+                source = ChatMessage.MessageSource.SERVER,
+                content = it
+            )
+        }
     }
 
     override suspend fun sendChatMessage(
