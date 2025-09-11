@@ -2,13 +2,31 @@ package com.emotionstorage.ai_chat.data.repoImpl
 
 import com.emotionstorage.ai_chat.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.domain.repo.ChatRepository
+import com.emotionstorage.ai_chat.remote.api.ChatApiService
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class ChatRepositoryImpl @Inject constructor() : ChatRepository {
+// todo: refactor to use remote data source interface instead of api service
+class ChatRepositoryImpl @Inject constructor(
+    private val chatApiService: ChatApiService
+) : ChatRepository {
+    override suspend fun getChatRoomId(): Flow<DataState<String>> = flow {
+        emit(DataState.Loading(isLoading = true))
+        try {
+            val response = chatApiService.postEmotionConversationStart()
+            response.data?.roomId?.run {
+                emit(DataState.Success(this))
+            } ?: throw Throwable("getChatRoomId() failed, no room id received!")
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        } finally {
+            emit(DataState.Loading(isLoading = false))
+        }
+    }
+
     override suspend fun connectChatRoom(roomId: String): Flow<DataState<Boolean>> = flow {
         // TODO("Not yet implemented")
         emit(DataState.Loading(isLoading = true))
