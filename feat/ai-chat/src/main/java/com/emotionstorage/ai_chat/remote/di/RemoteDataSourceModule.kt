@@ -1,7 +1,9 @@
 package com.emotionstorage.ai_chat.remote.di
 
 import com.emotionstorage.ai_chat.data.dataSource.ChatRemoteDataSource
+import com.emotionstorage.ai_chat.data.dataSource.ChatWSDataSource
 import com.emotionstorage.ai_chat.remote.dataSource.ChatRemoteDataSourceImpl
+import com.emotionstorage.ai_chat.remote.dataSource.ChatWSDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -16,4 +18,11 @@ abstract class RemoteDataSourceModule {
     abstract fun bindChatRemoteDataSource(
         impl: ChatRemoteDataSourceImpl
     ): ChatRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindChatWSDataSource(
+        impl: ChatWSDataSourceImpl
+    ): ChatWSDataSource
+
 }

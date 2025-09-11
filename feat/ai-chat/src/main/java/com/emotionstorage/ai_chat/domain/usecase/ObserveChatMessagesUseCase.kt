@@ -8,6 +8,6 @@ import javax.inject.Inject
 class ObserveChatMessagesUseCase @Inject constructor(
     private val chatRepository: ChatRepository
 ) {
-    operator fun invoke(roomId: String): Flow<ChatMessage> =
+    suspend operator fun invoke(roomId: String): Flow<ChatMessage> =
         chatRepository.observeChatMessages(roomId)
 }

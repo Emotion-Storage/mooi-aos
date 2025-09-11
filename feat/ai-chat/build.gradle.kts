@@ -29,4 +29,6 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.ui)
     implementation(projects.core.remote)
+
+    implementation(libs.bundles.krossbow)
 }
