@@ -181,7 +181,7 @@ private fun DateItem(
                     modifier = Modifier
                         .size(30.dp)
                         .background(
-                            if (isFilled) MooiTheme.colorScheme.primary else Color.Transparent,
+                            if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                             shape = CircleShape
                         )
                         .border(
