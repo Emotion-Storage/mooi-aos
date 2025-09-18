@@ -2,7 +2,6 @@ package com.emotionstorage.common
 
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 fun LocalDate.getKorDayOfWeek(): String {
     return when (this.getDayOfWeek()) {
@@ -16,3 +15,24 @@ fun LocalDate.getKorDayOfWeek(): String {
     }
 }
 
+fun LocalDate.getWeekDatesOfTargetMonth(): List<LocalDate> {
+    val datesOfCalendar = mutableListOf<LocalDate>()
+
+    var targetDate = this.withDayOfMonth(1)
+    for (limit in 0..6) { // limit to prevent infinite loop
+        val weekDates = targetDate.getWeekDatesOfTargetDate()
+        if (weekDates.all { it.month != this.month }) return datesOfCalendar
+        else datesOfCalendar.addAll(weekDates)
+        targetDate = targetDate.plusDays(7)
+    }
+    return datesOfCalendar
+}
+
+fun LocalDate.getWeekDatesOfTargetDate(): List<LocalDate> {
+    // get week of target date
+    val dayOfWeek = this.dayOfWeek
+    val sunday = this.minusDays(dayOfWeek.value % 7L)
+
+    // return list of dates of week, from sunday to saturday
+    return (0L..6L).map { sunday.plusDays(it) }
+}

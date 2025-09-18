@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.common.getWeekDatesOfTargetMonth
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
@@ -45,32 +46,10 @@ private val DUMMY_TIME_CAPSULE_DATES = (1..31).toList().filter {
     LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
 }
 
-private fun getWeekDatesSundayToSaturday(targetDate: LocalDate): List<LocalDate> {
-    // targetDate가 속한 주의 일요일 찾기
-    val dayOfWeek = targetDate.dayOfWeek
-    val sunday = targetDate.minusDays(dayOfWeek.value % 7L)
-
-    // 일요일부터 토요일까지 7일간 리스트 생성
-    return (0L..6L).map { sunday.plusDays(it) }
-}
-
-private fun getDatesOfCalendar(calendarDate: LocalDate): List<LocalDate> {
-    val datesOfCalendar = mutableListOf<LocalDate>()
-
-    var targetDate = calendarDate
-    for (limit in 0..6) { // limit to prevent infinite loop
-        val weekDates = getWeekDatesSundayToSaturday(targetDate)
-        if (weekDates.all { it.month != calendarDate.month }) return datesOfCalendar
-        else datesOfCalendar.addAll(weekDates)
-        targetDate = targetDate.plusDays(7)
-    }
-    return datesOfCalendar
-}
-
 @Composable
 fun TimeCapsuleCalendar(
     modifier: Modifier = Modifier,
-    calendarDate: LocalDate = LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1),
+    calendarDate: LocalDate = LocalDate.now().withDayOfMonth(1),
     onCalendarDateSelect: (calendarDate: LocalDate) -> Unit = {},
     timeCapsuleDates: List<LocalDate> = emptyList(),
     onDateSelect: (LocalDate) -> Unit = {},
@@ -145,7 +124,7 @@ fun TimeCapsuleCalendar(
         // calendar dates
         LazyVerticalGrid(columns = GridCells.Fixed(7), modifier = Modifier.fillMaxWidth()) {
             items(
-                items = getDatesOfCalendar(calendarDate),
+                items = calendarDate.getWeekDatesOfTargetMonth(),
                 key = { it.toString() }) { date ->
                 DateItem(
                     modifier = Modifier.padding(bottom = 12.dp),
