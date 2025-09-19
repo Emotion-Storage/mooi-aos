@@ -19,6 +19,7 @@ class KotlinLibraryConventionPlugin : Plugin<Project> {
                 apply("java-library")
                 apply("org.jetbrains.kotlin.jvm")
                 apply("org.jetbrains.kotlin.plugin.serialization")
+                apply("org.jlleitschuh.gradle.ktlint")
             }
 
             extensions.getByType<JavaPluginExtension>().apply {
