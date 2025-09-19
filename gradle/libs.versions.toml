@@ -28,11 +28,12 @@ serializationConverter = "1.0.0"
 logger = "2.2.0"
 orbitMvi = "10.0.0"
 kakao = "2.21.4"
+kotlinxCoroutines = "1.10.2"
 
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
 googleServices = "4.4.3"
-ktlint="10.2.1"
+ktlint = "10.2.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -79,7 +80,7 @@ android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logg
 orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
 orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
 kakao-sdk-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
-
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
