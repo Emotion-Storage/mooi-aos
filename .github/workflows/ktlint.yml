@@ -13,6 +13,6 @@ jobs:
       - name: ktlint
         uses: ScaCap/action-ktlint@master
         with:
-          github_token: ${{ secrets.GITHUB_REVIEW_DOG_TOKEN }}
+          github_token: ${{ secrets.REVIEWDOG_GITHUB_TOKEN }}
           level: warning
           reporter: github-pr-review
