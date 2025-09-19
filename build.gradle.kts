@@ -10,14 +10,6 @@ plugins {
     alias(libs.plugins.google.services) apply false
 
     alias(libs.plugins.kotlin.serialization)
-    /**
-     * # module dependency graph generator
-     * - Graphviz installation needed
-     *   https://graphviz.org/download/
-     * - command to generate project dependency graph:
-     *  ./gradlew generateDependencyGraph
-     *  ./gradlew generateProjectDependencyGraph
-     * - results saved in ./build/reports/projects-dependency-graph
-     */
     alias(libs.plugins.vanniktech.dependency.graph.generator)
+    alias(libs.plugins.ktlint)
 }
