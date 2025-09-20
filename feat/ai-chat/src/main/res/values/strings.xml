@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ai_chat_desc0">감정을 수집하고 있어요.\n게이지가 모두 차면,\n이 감정을 타임캡슐로 남길 수 있어요.</string>
+    <string name="ai_chat_desc1">여기서 이야기를 시작해요.\n짧은 말 한마디도 괜찮으니,\n편하게 적어보세요!</string>
+    <string name="ai_chat_desc2">대화를 충분히 나누지 않으면\n타임캡슐을 만들 수 없어요.\n사용한 티켓은 되돌릴 수 없으니,\n나가기는 신중히!</string>
+</resources>
