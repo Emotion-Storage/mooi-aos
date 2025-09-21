@@ -3,6 +3,7 @@ package com.emotionstorage.home.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.useCase.GetUserNicknameUseCase
 import com.emotionstorage.home.domain.usecase.GetHomeUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -11,14 +12,17 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class HomeState(
+    val nickname: String = "",
     val keyCount: Int = 0,
+    val ticketCount: Int = 0,
     val newNotificationArrived: Boolean = false,
     val newTimeCapsuleArrived: Boolean = false,
     val newReportArrived: Boolean = false,
 )
 
 sealed class HomeAction {
-    object Init : HomeAction()
+    object InitNickName : HomeAction()
+    object UpdateState : HomeAction()
     object EnterChat : HomeAction()
 }
 
@@ -28,6 +32,7 @@ sealed class HomeSideEffect {
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val getUserNickname: GetUserNicknameUseCase,
     private val getHome: GetHomeUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase
 ) : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
@@ -35,8 +40,12 @@ class HomeViewModel @Inject constructor(
 
     fun onAction(action: HomeAction) {
         when (action) {
-            is HomeAction.Init -> {
-                handleInit()
+            is HomeAction.InitNickName -> {
+                handleInitNickname()
+            }
+
+            is HomeAction.UpdateState -> {
+                handleUpdateState()
             }
 
             is HomeAction.EnterChat -> {
@@ -45,12 +54,23 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handleInit() = intent {
+    private fun handleInitNickname() = intent {
+        getUserNickname().collectLatest {
+            if (it is DataState.Success) {
+                reduce {
+                    state.copy(nickname = it.data)
+                }
+            }
+        }
+    }
+
+    private fun handleUpdateState() = intent {
         getHome().collectLatest {
             if (it is DataState.Success) {
                 reduce {
                     state.copy(
                         keyCount = it.data.keyCount,
+                        ticketCount = it.data.ticketCount,
                         newNotificationArrived = it.data.hasNewNotification,
                         newTimeCapsuleArrived = it.data.hasNewTimeCapsule,
                         newReportArrived = it.data.hasNewReport
