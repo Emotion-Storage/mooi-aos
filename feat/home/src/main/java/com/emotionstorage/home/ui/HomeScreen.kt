@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
@@ -26,9 +27,13 @@ fun HomeScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
-    LaunchedEffect(Unit) {
-        // init screen on launched effect
+    LifecycleResumeEffect(Unit) {
+        // init screen on resume
         viewModel.onAction(HomeAction.Init)
+
+        onPauseOrDispose {
+            // do nothing
+        }
     }
 
     LaunchedEffect(Unit) {
