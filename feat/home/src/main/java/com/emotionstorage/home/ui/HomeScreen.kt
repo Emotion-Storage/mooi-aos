@@ -27,6 +27,11 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
 
     LaunchedEffect(Unit) {
+        // init screen on launched effect
+        viewModel.onAction(HomeAction.Init)
+    }
+
+    LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is HomeSideEffect.EnterCharRoomSuccess -> {
