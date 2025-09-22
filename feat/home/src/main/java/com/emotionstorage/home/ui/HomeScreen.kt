@@ -21,9 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -102,7 +105,13 @@ private fun StatelessHomeScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "${state.nickname}님,\n오늘의 기분은 어떤가요?",
+                    text = buildAnnotatedString {
+                        append("${state.nickname}님,\n")
+                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            append("오늘의 기분")
+                        }
+                        append("은 어떤가요?")
+                    },
                     style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
                     textAlign = TextAlign.Center,
                     color = Color.White
