@@ -26,6 +26,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 
@@ -68,7 +69,8 @@ private fun StatelessCalendarScreen(
         ) {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(bottom = 24.dp),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
@@ -87,10 +89,9 @@ private fun StatelessCalendarScreen(
                 )
             }
 
-            Text(
-                text = "타임캡슐 캘린더 화면"
+            TimeCapsuleCalendar(
+                modifier = Modifier.fillMaxWidth()
             )
-
         }
     }
 }
