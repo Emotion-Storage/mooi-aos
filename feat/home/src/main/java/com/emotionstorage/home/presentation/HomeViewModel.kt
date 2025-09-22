@@ -57,6 +57,7 @@ class HomeViewModel @Inject constructor(
 
     private fun handleInitNickname() = intent {
         getUserNickname().collectLatest {
+            Logger.d("HomeViewModel: handleInitNickname: ${it}")
             if (it is DataState.Success) {
                 reduce {
                     state.copy(nickname = it.data)
@@ -67,8 +68,8 @@ class HomeViewModel @Inject constructor(
 
     private fun handleUpdateState() = intent {
         getHome().collectLatest {
+            Logger.d("HomeViewModel: handleUpdateState: ${it}")
             if (it is DataState.Success) {
-                Logger.d("HomeViewModel: handleUpdateState: ${it.data}")
                 reduce {
                     state.copy(
                         keyCount = it.data.keyCount,
@@ -84,6 +85,7 @@ class HomeViewModel @Inject constructor(
 
     private fun handleEnterChat() = intent {
         getChatRoomId().collectLatest {
+            Logger.d("HomeViewModel: handleEnterChat: ${it}")
             if (it is DataState.Success) {
                 postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it.data))
             }
