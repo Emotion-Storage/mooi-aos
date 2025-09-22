@@ -41,6 +41,7 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import com.emotionstorage.ui.util.mainBackground
+import com.orhanobut.logger.Logger
 
 @Composable
 fun HomeScreen(
@@ -51,11 +52,13 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
 
     LaunchedEffect(Unit) {
+        Logger.d("HomeScreen: Launch triggered")
         // init nickname on launch
         viewModel.onAction(HomeAction.InitNickName)
     }
 
     LifecycleResumeEffect(Unit) {
+        Logger.d("HomeScreen: onResume triggered")
         // update screen state on resume
         viewModel.onAction(HomeAction.UpdateState)
         onPauseOrDispose {
