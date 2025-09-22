@@ -1,5 +1,6 @@
 package com.emotionstorage.home.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,6 +19,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,6 +34,7 @@ import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import com.emotionstorage.ui.util.mainBackground
@@ -117,27 +121,56 @@ private fun StatelessHomeScreen(
                     color = MooiTheme.colorScheme.gray500
                 )
 
-                StartChatUI(
-                    modifier = Modifier.padding(top = 22.dp),
-                    ticketCount = state.ticketCount,
-                    onChatStart = {
-                        onAction(HomeAction.EnterChat)
-                    })
+
+                Column(
+                    modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    StartChatButton(
+                        modifier = Modifier.padding(top = 22.dp),
+                        canStartChat = state.ticketCount > 0,
+                        onChatStart = {
+                            onAction(HomeAction.EnterChat)
+                        })
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.size(18.dp),
+                            painter = painterResource(id = R.drawable.ticket),
+                            contentDescription = "ticket",
+                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondary)
+                        )
+                        Text(
+                            text = "감정 대화 티켓",
+                            style = MooiTheme.typography.body3,
+                            color = MooiTheme.colorScheme.secondary
+                        )
+
+                        Text(
+                            text = "${state.ticketCount}/10",
+                            style = MooiTheme.typography.body3,
+                            color = MooiTheme.colorScheme.secondary
+                        )
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun StartChatUI(
+private fun StartChatButton(
     modifier: Modifier = Modifier,
-    ticketCount: Int = 10,
+    canStartChat: Boolean = true,
     onChatStart: () -> Unit = {}
 ) {
-    Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-//        if (ticketCount > 0) {
+    if (canStartChat) {
+        // todo: change to use CtaButton component?
         Row(
-            modifier = Modifier
+            modifier = modifier
                 .mainBackground(isActivated = true)
                 .clickable {
                     onChatStart()
@@ -145,11 +178,25 @@ private fun StartChatUI(
                 .padding(vertical = 15.dp, horizontal = 37.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text("대화 시작하기", color = Color.White)
-
-            Text("-1")
+            Text(
+                modifier = Modifier.padding(end = 7.dp),
+                text = "대화 시작하기",
+                style = MooiTheme.typography.button,
+                color = Color.White
+            )
+            Image(
+                modifier = Modifier.size(18.dp),
+                painter = painterResource(id = R.drawable.ticket),
+                contentDescription = "ticket",
+                colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f))
+            )
+            Text(
+                text = "-1",
+                style = MooiTheme.typography.button,
+                color = Color.White.copy(alpha = 0.7f)
+            )
         }
-//        } else {
+    } else {
         Column(
             modifier = Modifier
                 .size(197.dp, 65.dp)
@@ -159,21 +206,38 @@ private fun StartChatUI(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("대화 시작하기")
-            Text("대화 티켓 부족")
-        }
-//        }
-
-
-        Row() {
-            Text("감정 대화 티켓 ${ticketCount}/10", color = MooiTheme.colorScheme.secondary)
+            Text(
+                text = "대화 시작하기",
+                style = MooiTheme.typography.button,
+                color = MooiTheme.colorScheme.gray500
+            )
+            Text(
+                text = "(대화 티켓 부족)",
+                style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+                color = MooiTheme.colorScheme.gray500
+            )
         }
     }
 }
 
 @Preview
 @Composable
-fun HomeScreenPreview() {
+private fun StartChatUIPreview() {
+    MooiTheme {
+        Column(
+            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            StartChatButton()
+            StartChatButton(canStartChat = false)
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun HomeScreenPreview() {
     MooiTheme {
         StatelessHomeScreen(
             state = HomeState(
