@@ -47,7 +47,8 @@ import com.orhanobut.logger.Logger
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
-    navToChat: (roomId: String) -> Unit = {}
+    navToChat: (roomId: String) -> Unit = {},
+    navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -80,6 +81,7 @@ fun HomeScreen(
         modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
+        navToArrivedTimeCapsules = navToArrivedTimeCapsules
     )
 }
 
@@ -88,6 +90,7 @@ private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
     state: HomeState = HomeState(),
     onAction: (HomeAction) -> Unit = {},
+    navToArrivedTimeCapsules: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier
@@ -119,20 +122,27 @@ private fun StatelessHomeScreen(
                         contentDescription = "key",
                         colorFilter = ColorFilter.tint(Color(0xFF979797))
                     )
+                    // todo: navigate to alarm screen
                     Image(
                         modifier = Modifier.size(30.dp),
                         painter = painterResource(id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm),
                         contentDescription = "alarm",
                     )
                 }
-                if(state.newTimeCapsuleArrived) {
+                if (state.newTimeCapsuleArrived) {
                     Image(
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+                                navToArrivedTimeCapsules()
+                            },
                         painter = painterResource(id = R.drawable.time_capsule_new),
                         contentDescription = "new time capsule arrived",
                     )
                 }
-                if(state.newReportArrived) {
+                if (state.newReportArrived) {
+                    // todo: navigate to daily report detail screen
+                    // todo: get most recently arrived daily report id
                     Image(
                         modifier = Modifier.size(30.dp),
                         painter = painterResource(id = R.drawable.daily_report_new),
@@ -141,7 +151,7 @@ private fun StatelessHomeScreen(
                 }
             }
 
-            // hoe content
+            // home content
             Column(
                 modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,

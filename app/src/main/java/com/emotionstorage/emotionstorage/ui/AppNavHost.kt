@@ -132,7 +132,11 @@ internal fun AppNavHost(
                 HomeScreen(
                     navToChat = { roomId ->
                         navController.navigate(AppDestination.AI_CHAT(roomId))
-                    })
+                    },
+                    navToArrivedTimeCapsules = {
+                        navController.navigate(AppDestination.ARRIVED_TIME_CAPSULES)
+                    }
+                )
             }
             composable<AppDestination.TIME_CAPSULE_CALENDAR> {
                 CalendarScreen(
