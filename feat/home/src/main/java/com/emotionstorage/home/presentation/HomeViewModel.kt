@@ -5,6 +5,7 @@ import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.GetUserNicknameUseCase
 import com.emotionstorage.home.domain.usecase.GetHomeUseCase
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import org.orbitmvi.orbit.ContainerHost
@@ -67,6 +68,7 @@ class HomeViewModel @Inject constructor(
     private fun handleUpdateState() = intent {
         getHome().collectLatest {
             if (it is DataState.Success) {
+                Logger.d("HomeViewModel: handleUpdateState: ${it.data}")
                 reduce {
                     state.copy(
                         keyCount = it.data.keyCount,

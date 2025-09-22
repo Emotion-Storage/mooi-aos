@@ -98,10 +98,50 @@ private fun StatelessHomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background)
+                .padding(horizontal = 16.dp)
                 .padding(innerPadding)
         ) {
-            // todo: add icons
+            // icons
+            Column(
+                modifier = Modifier.align(Alignment.TopEnd),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    // todo: add key cont ui to icon
+                    Image(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(id = R.drawable.key),
+                        contentDescription = "key",
+                        colorFilter = ColorFilter.tint(Color(0xFF979797))
+                    )
+                    Image(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm),
+                        contentDescription = "alarm",
+                    )
+                }
+                if(state.newTimeCapsuleArrived) {
+                    Image(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(id = R.drawable.time_capsule_new),
+                        contentDescription = "new time capsule arrived",
+                    )
+                }
+                if(state.newReportArrived) {
+                    Image(
+                        modifier = Modifier.size(30.dp),
+                        painter = painterResource(id = R.drawable.daily_report_new),
+                        contentDescription = "new daily report arrived",
+                    )
+                }
+            }
 
+            // hoe content
             Column(
                 modifier = Modifier.align(Alignment.Center),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -253,7 +293,12 @@ private fun HomeScreenPreview() {
     MooiTheme {
         StatelessHomeScreen(
             state = HomeState(
-                nickname = "찡찡이"
+                nickname = "찡찡이",
+                keyCount = 3,
+                ticketCount = 5,
+                newNotificationArrived = true,
+                newTimeCapsuleArrived = true,
+                newReportArrived = true
             )
         )
     }
