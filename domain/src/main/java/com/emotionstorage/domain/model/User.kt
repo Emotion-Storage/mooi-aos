@@ -8,7 +8,7 @@ data class User(
     val socialId: String,
 
     val email: String,
-    val name: String,
+    val nickname: String,
     val profileImageUrl: String? = null,
 
     val createdAt: LocalDateTime,
