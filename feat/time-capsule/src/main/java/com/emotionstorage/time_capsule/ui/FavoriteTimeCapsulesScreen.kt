@@ -181,9 +181,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     options = FavoriteTimeCapsulesState.SortOrder.entries.map { it.label },
                     onSelect = { label ->
                         onAction(
-                            FavoriteTimeCapsulesAction.SetSortOrder(
-                                FavoriteTimeCapsulesState.SortOrder.valueOf(label)
-                            )
+                            FavoriteTimeCapsulesAction.SetSortOrder(label)
                         )
                     }
                 )

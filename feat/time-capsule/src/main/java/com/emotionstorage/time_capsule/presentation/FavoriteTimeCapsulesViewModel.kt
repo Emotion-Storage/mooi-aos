@@ -3,6 +3,7 @@ package com.emotionstorage.time_capsule.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState.SortOrder
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,15 +18,20 @@ data class FavoriteTimeCapsulesState(
 ) {
     enum class SortOrder(val label: String) {
         SORT_BY_NEWEST("최신 날짜순"),
-        SORT_BY_FAVORITE("즐겨찾기순")
+        SORT_BY_FAVORITE("즐겨찾기순");
+
+        companion object {
+            fun getByLabel(label: String): SortOrder {
+                return values().find { it.label == label }
+                    ?: throw IllegalArgumentException("Invalid sort order label: $label")
+            }
+        }
     }
 }
 
 sealed class FavoriteTimeCapsulesAction {
     object PullToRefresh : FavoriteTimeCapsulesAction()
-    data class SetSortOrder(val sortOrder: FavoriteTimeCapsulesState.SortOrder) :
-        FavoriteTimeCapsulesAction()
-
+    data class SetSortOrder(val sortOrderLabel: String) : FavoriteTimeCapsulesAction()
     data class ToggleFavorite(val id: String) : FavoriteTimeCapsulesAction()
 }
 
@@ -55,7 +61,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
             }
 
             is FavoriteTimeCapsulesAction.SetSortOrder -> {
-                handleSetSortOrder(action.sortOrder)
+                handleSetSortOrder(action.sortOrderLabel)
             }
 
             is FavoriteTimeCapsulesAction.ToggleFavorite -> {
@@ -89,8 +95,8 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
             )
         }.sortedByDescending {
             when (state.sortOrder) {
-                FavoriteTimeCapsulesState.SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
-                FavoriteTimeCapsulesState.SortOrder.SORT_BY_NEWEST -> it.createdAt
+                SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
+                SortOrder.SORT_BY_NEWEST -> it.createdAt
             }
         }
 
@@ -100,38 +106,47 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
     }
 
-    private fun handleSetSortOrder(sortOrder: FavoriteTimeCapsulesState.SortOrder) = intent {
-        // todo: call use case
+    private fun handleSetSortOrder(sortOrderLabel: String) = intent {
+        try {
+            val sortOrder = SortOrder.getByLabel(sortOrderLabel)
 
-        val timeCapsules = (1..15).toList().map { it ->
-            TimeCapsuleState(
-                id = it.toString(),
-                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                emotions = listOf(
-                    Emotion(
-                        label = "서운함",
-                        icon = 0,
-                    ), Emotion(
-                        label = "화남",
-                        icon = 1,
-                    ), Emotion(
-                        label = "피곤함",
-                        icon = 2,
-                    )
-                ),
-                isFavorite = true,
-                isFavoriteAt = LocalDateTime.now(),
-                createdAt = LocalDateTime.now()
-            )
-        }.sortedByDescending {
-            when (sortOrder) {
-                FavoriteTimeCapsulesState.SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
-                FavoriteTimeCapsulesState.SortOrder.SORT_BY_NEWEST -> it.createdAt
+            // todo: call use case
+            val timeCapsules = (1..15).toList().map { it ->
+                TimeCapsuleState(
+                    id = it.toString(),
+                    title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                    emotions = listOf(
+                        Emotion(
+                            label = "서운함",
+                            icon = 0,
+                        ), Emotion(
+                            label = "화남",
+                            icon = 1,
+                        ), Emotion(
+                            label = "피곤함",
+                            icon = 2,
+                        )
+                    ),
+                    isFavorite = true,
+                    isFavoriteAt = LocalDateTime.now(),
+                    createdAt = LocalDateTime.now()
+                )
+            }.sortedByDescending {
+                when (sortOrder) {
+                    SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
+                    SortOrder.SORT_BY_NEWEST -> it.createdAt
+                }
             }
-        }
 
-        reduce {
-            state.copy(sortOrder = sortOrder, timeCapsules = timeCapsules)
+            reduce {
+                state.copy(sortOrder = sortOrder, timeCapsules = timeCapsules)
+            }
+        } catch (e: IllegalArgumentException) {
+            Logger.e("Invalid sort order label: ${sortOrderLabel}")
+            return@intent
+        } catch (e: Exception) {
+            Logger.e(e.toString())
+            return@intent
         }
     }
 
