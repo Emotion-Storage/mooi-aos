@@ -38,6 +38,8 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.IconWithCountType
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import com.emotionstorage.ui.util.mainBackground
@@ -115,12 +117,11 @@ private fun StatelessHomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(15.dp)
                 ) {
-                    // todo: add key cont ui to icon
-                    Image(
+                    // todo: navigate to key detail screen
+                    IconWithCount(
                         modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.key),
-                        contentDescription = "key",
-                        colorFilter = ColorFilter.tint(Color(0xFF979797))
+                        type = IconWithCountType.KEY,
+                        count = if(state.keyCount > 999) "999+" else state.keyCount.toString()
                     )
                     // todo: navigate to alarm screen
                     Image(
