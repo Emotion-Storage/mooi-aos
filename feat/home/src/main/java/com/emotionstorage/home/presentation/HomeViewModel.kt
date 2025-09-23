@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handleInitNickname() = intent {
-        getUserNickname().collectLatest {
+        getUserNickname().collect {
             when(it){
                 is DataState.Success -> {
                     Logger.d("HomeViewModel: handleInitNickname: ${it}")
@@ -75,7 +75,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handleUpdateState() = intent {
-        getHome().collectLatest {
+        getHome().collect {
             when (it) {
                 is DataState.Success -> {
                     Logger.d("HomeViewModel: handleUpdateState: ${it}")
@@ -102,7 +102,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun handleEnterChat() = intent {
-        getChatRoomId().collectLatest {
+        getChatRoomId().collect {
             Logger.d("HomeViewModel: handleEnterChat: ${it}")
             if (it is DataState.Success) {
                 postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it.data))
