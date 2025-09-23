@@ -20,11 +20,9 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUser(): Flow<DataState<User>> = flow {
         emit(DataState.Loading(isLoading = true))
         try {
-            val user = (userLocalDataSource.getUser() ?: {
-                // todo: get user from remote if null
-                // userRemoteDataSource.getUser()
-                null
-            }) as UserEntity?
+            val user = userLocalDataSource.getUser()
+            // TODO: get user from remote if null
+            // ?: userRemoteDataSource.getUser()
 
             if(user != null){
                 emit(DataState.Success(UserMapper.toDomain(user!!)))
