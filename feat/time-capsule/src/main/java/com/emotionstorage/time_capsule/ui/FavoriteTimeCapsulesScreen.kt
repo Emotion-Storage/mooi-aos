@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule.ui
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -21,9 +22,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,6 +44,11 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
+import com.emotionstorage.ui.component.Toast
+import com.emotionstorage.ui.component.ToastState
+import com.orhanobut.logger.Logger
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 
@@ -72,24 +82,47 @@ fun FavoriteTimeCapsulesScreen(
     navToBack: () -> Unit = {}
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-
     LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect {
-            when (it) {
+        // initial load, triggered on launch
+        viewModel.onAction(FavoriteTimeCapsulesAction.PullToRefresh)
+    }
+
+    val (showToast, setShowToast) = remember { mutableStateOf(false) }
+    val (toastState, setToastState) = remember { mutableStateOf(ToastState()) }
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            Logger.d("sideEffect: $sideEffect")
+            when (sideEffect) {
                 is FavoriteTimeCapsulesSideEffect.ShowToast -> {
-                    // todo: show toast
+                    setToastState(
+                        ToastState(
+                            message = sideEffect.message,
+                            showCheckIcon = sideEffect.showCheckIcon
+                        )
+                    )
+                    setShowToast(true)
+                    // show toast for 3ms
+                    coroutineScope.launch {
+                        delay(3000)
+                        setShowToast(false)
+                    }
                 }
             }
         }
     }
 
-    StatelessFavoriteTimeCapsulesScreen(
-        modifier = modifier,
-        state = state.value,
-        onAction = viewModel::onAction,
-        navToTimeCapsuleDetail = navToTimeCapsuleDetail,
-        navToBack = navToBack
-    )
+    Box(modifier = modifier.fillMaxSize()) {
+        Toast(showToast = showToast, state = toastState)
+
+        StatelessFavoriteTimeCapsulesScreen(
+            modifier = Modifier.fillMaxSize(),
+            state = state.value,
+            onAction = viewModel::onAction,
+            navToTimeCapsuleDetail = navToTimeCapsuleDetail,
+            navToBack = navToBack
+        )
+    }
 }
 
 @Composable
