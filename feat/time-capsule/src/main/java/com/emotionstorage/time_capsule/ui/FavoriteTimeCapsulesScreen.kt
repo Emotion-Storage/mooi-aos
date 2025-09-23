@@ -19,13 +19,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
 import com.emotionstorage.ui.component.TopAppBar
@@ -60,12 +67,26 @@ private val DUMMY_TIME_CAPSULES = (1..15).toList().map { it ->
 @Composable
 fun FavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
+    viewModel: FavoriteTimeCapsulesViewModel = hiltViewModel(),
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
+    val state = viewModel.container.stateFlow.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is FavoriteTimeCapsulesSideEffect.ShowToast -> {
+                    // todo: show toast
+                }
+            }
+        }
+    }
+
     StatelessFavoriteTimeCapsulesScreen(
-        timeCapsules = DUMMY_TIME_CAPSULES,
         modifier = modifier,
+        state = state.value,
+        onAction = viewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack
     )
@@ -74,7 +95,8 @@ fun FavoriteTimeCapsulesScreen(
 @Composable
 private fun StatelessFavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
-    timeCapsules: List<TimeCapsuleState> = emptyList(),
+    state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
+    onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
@@ -124,10 +146,14 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         .align(Alignment.CenterEnd)
                         .width(102.dp)
                         .padding(top = 7.dp, bottom = 22.dp),
-                    selectedValue = "최신 날짜순",
-                    options = listOf("최신 날짜순", "즐겨찾기순"),
-                    onSelect = {
-                        // todo: change list sort order
+                    selectedValue = state.sortOrder.label,
+                    options = FavoriteTimeCapsulesState.SortOrder.entries.map { it.label },
+                    onSelect = { label ->
+                        onAction(
+                            FavoriteTimeCapsulesAction.SetSortOrder(
+                                FavoriteTimeCapsulesState.SortOrder.valueOf(label)
+                            )
+                        )
                     }
                 )
             }
@@ -137,13 +163,18 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     .fillMaxWidth()
                     .scrollable(scrollState, orientation = Orientation.Vertical)
             ) {
-                items(items = timeCapsules, key = { it.id }) {
+                items(items = state.timeCapsules, key = { it.id }) {
                     TimeCapsuleItem(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 17.dp),
                         timeCapsule = it,
-                        onClick = { navToTimeCapsuleDetail(it.id) }
+                        onClick = { navToTimeCapsuleDetail(it.id) },
+                        onFavoriteClick = {
+                            onAction(
+                                FavoriteTimeCapsulesAction.ToggleFavorite(it.id)
+                            )
+                        }
                     )
                 }
             }
@@ -157,7 +188,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
 private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessFavoriteTimeCapsulesScreen(
-            timeCapsules = DUMMY_TIME_CAPSULES
+            state = FavoriteTimeCapsulesState(timeCapsules = DUMMY_TIME_CAPSULES)
         )
     }
 }
