@@ -57,10 +57,18 @@ class HomeViewModel @Inject constructor(
 
     private fun handleInitNickname() = intent {
         getUserNickname().collectLatest {
-            Logger.d("HomeViewModel: handleInitNickname: ${it}")
-            if (it is DataState.Success) {
-                reduce {
-                    state.copy(nickname = it.data)
+            when(it){
+                is DataState.Success -> {
+                    Logger.d("HomeViewModel: handleInitNickname: ${it}")
+                    reduce {
+                        state.copy(nickname = it.data)
+                    }
+                }
+                is DataState.Error -> {
+                    Logger.e("HomeViewModel: handleInitNickname error: ${it}")
+                }
+                is DataState.Loading -> {
+                    // do nothing
                 }
             }
         }
@@ -68,16 +76,26 @@ class HomeViewModel @Inject constructor(
 
     private fun handleUpdateState() = intent {
         getHome().collectLatest {
-            Logger.d("HomeViewModel: handleUpdateState: ${it}")
-            if (it is DataState.Success) {
-                reduce {
-                    state.copy(
-                        keyCount = it.data.keyCount,
-                        ticketCount = it.data.ticketCount,
-                        newNotificationArrived = it.data.hasNewNotification,
-                        newTimeCapsuleArrived = it.data.hasNewTimeCapsule,
-                        newReportArrived = it.data.hasNewReport
-                    )
+            when (it) {
+                is DataState.Success -> {
+                    Logger.d("HomeViewModel: handleUpdateState: ${it}")
+                    reduce {
+                        state.copy(
+                            keyCount = it.data.keyCount,
+                            ticketCount = it.data.ticketCount,
+                            newNotificationArrived = it.data.hasNewNotification,
+                            newTimeCapsuleArrived = it.data.hasNewTimeCapsule,
+                            newReportArrived = it.data.hasNewReport
+                        )
+                    }
+                }
+
+                is DataState.Error -> {
+                    Logger.e("HomeViewModel: handleUpdateState error: ${it}")
+                }
+
+                is DataState.Loading -> {
+                    // do nothing
                 }
             }
         }
