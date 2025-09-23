@@ -24,6 +24,7 @@ import com.emotionstorage.ai_chat.presentation.AIChatState
 import com.emotionstorage.ai_chat.presentation.AIChatViewModel
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
+import com.emotionstorage.ai_chat.ui.component.DescriptionOverlayScreen
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -53,6 +54,7 @@ fun AIChatScreen(
                 is AIChatSideEffect.CreateTimeCapsuleSuccess -> {
                     navToTimeCapsuleDetail(sideEffect.capsuleId)
                 }
+
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
                     // todo: show bottom sheet
                 }
@@ -66,6 +68,8 @@ fun AIChatScreen(
         onAction = viewModel::onAction,
         navToBack = navToBack
     )
+
+    DescriptionOverlayScreen()
 }
 
 @Composable
@@ -74,7 +78,7 @@ private fun StatelessAIChatScreen(
     state: AIChatState = AIChatState(),
     onAction: (action: AIChatAction) -> Unit = {},
     navToBack: () -> Unit = {},
-){
+) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     AIChatExitModel(
         isModelOpen = isExitModalOpen,
@@ -145,5 +149,7 @@ private fun AIChatExitModel(
 @Preview
 @Composable
 private fun ChatScreenPreview() {
-    AIChatScreen("roomId")
+    MooiTheme {
+        StatelessAIChatScreen()
+    }
 }
