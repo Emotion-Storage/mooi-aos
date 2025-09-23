@@ -1,5 +1,11 @@
 package com.emotionstorage.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,8 +18,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private val TOAST_ZINDEX = 10f
 
@@ -40,13 +54,23 @@ fun BoxScope.Toast(
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp
 
-    if (showToast) {
+    AnimatedVisibility(
+        modifier = Modifier.zIndex(TOAST_ZINDEX),
+        visible = showToast,
+        enter = slideInVertically(
+            initialOffsetY = { it -> it - 100 },
+            animationSpec = tween(durationMillis = 1000)
+        ) + fadeIn(initialAlpha = 0.3f),
+        exit = slideOutVertically(
+            targetOffsetY = { it -> it - 100 },
+            animationSpec = tween(durationMillis = 1000)
+        ) + fadeOut()
+    ) {
         Box(
             modifier = modifier
                 .fillMaxWidth()
                 .align(Alignment.TopCenter)
                 .offset(y = (screenHeight * 0.8).dp)
-                .zIndex(TOAST_ZINDEX)
         ) {
             Row(
                 modifier = Modifier
@@ -79,21 +103,37 @@ fun BoxScope.Toast(
 @Preview
 @Composable
 private fun CustomToastPreview() {
-    MooiTheme {
-        Column(
-            modifier = Modifier.fillMaxSize().background(MooiTheme.colorScheme.background),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Box (modifier = Modifier.fillMaxSize()){
-                Toast(
-                    showToast = true,
-                    state = ToastState(message = "즐겨찾기가 해제되었습니다.", showCheckIcon = true)
-                )
-//                Toast(
-//                    showToast = true,
-//                    state = ToastState(message = "내 마음 서랍이 꽉 찼어요. \uD83D\uDE22\n즐겨찾기 중 일부를 해제해주세요.")
-//                )
+    val coroutineScope = rememberCoroutineScope()
+    val (showToast, setShowToast) = remember { mutableStateOf(false) }
+
+    LaunchedEffect(showToast) {
+        if (showToast) {
+            coroutineScope.launch {
+                delay(2000)
+                setShowToast(false)
             }
         }
+    }
+
+    MooiTheme {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
+        ) {
+            Toast(
+                showToast = showToast,
+                state = ToastState(message = "즐겨찾기가 해제되었습니다.", showCheckIcon = true)
+                // state = ToastState(message = "내 마음 서랍이 꽉 찼어요. \uD83D\uDE22\n즐겨찾기 중 일부를 해제해주세요.")
+            )
+
+            Button(
+                modifier = Modifier.align(Alignment.Center),
+                onClick = { setShowToast(true) },
+            ) {
+                Text("Show Toast for 3ms")
+            }
+        }
+
     }
 }
