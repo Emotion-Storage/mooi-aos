@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule.ui
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
@@ -18,24 +17,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
-import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
@@ -44,10 +43,9 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
+import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import com.emotionstorage.ui.component.ToastState
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
@@ -87,47 +85,37 @@ fun FavoriteTimeCapsulesScreen(
         viewModel.onAction(FavoriteTimeCapsulesAction.PullToRefresh)
     }
 
-    val (showToast, setShowToast) = remember { mutableStateOf(false) }
-    val (toastState, setToastState) = remember { mutableStateOf(ToastState()) }
+    val snackState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
-            Logger.d("sideEffect: $sideEffect")
             when (sideEffect) {
-                is FavoriteTimeCapsulesSideEffect.ShowToast -> {
-                    setToastState(
-                        ToastState(
-                            message = sideEffect.message,
-                            showCheckIcon = sideEffect.showCheckIcon
-                        )
-                    )
-                    setShowToast(true)
-                    // show toast for 3ms
+                is ShowToast -> {
                     coroutineScope.launch {
-                        delay(3000)
-                        setShowToast(false)
+                        // dismiss current snackbar if exists
+                        snackState.currentSnackbarData?.dismiss()
+                        // show new snackbar
+                        snackState.showSnackbar(sideEffect.toast.message)
                     }
                 }
             }
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        Toast(showToast = showToast, state = toastState)
-
-        StatelessFavoriteTimeCapsulesScreen(
-            modifier = Modifier.fillMaxSize(),
-            state = state.value,
-            onAction = viewModel::onAction,
-            navToTimeCapsuleDetail = navToTimeCapsuleDetail,
-            navToBack = navToBack
-        )
-    }
+    StatelessFavoriteTimeCapsulesScreen(
+        modifier = modifier.fillMaxSize(),
+        snackState = snackState,
+        state = state.value,
+        onAction = viewModel::onAction,
+        navToTimeCapsuleDetail = navToTimeCapsuleDetail,
+        navToBack = navToBack
+    )
 }
 
 @Composable
 private fun StatelessFavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = SnackbarHostState(),
     state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
     onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
@@ -141,7 +129,17 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackState) { snackbarData ->
+                if (snackbarData.visuals.message == ShowToast.FavoriteToast.FAVORITE_FULL.message) {
+                    Toast(message = snackbarData.visuals.message)
+                } else {
+                    SuccessToast(message = snackbarData.visuals.message)
+                }
+            }
         }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier

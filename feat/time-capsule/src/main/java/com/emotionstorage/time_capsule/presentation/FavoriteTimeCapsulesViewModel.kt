@@ -2,6 +2,7 @@ package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,8 +30,13 @@ sealed class FavoriteTimeCapsulesAction {
 }
 
 sealed class FavoriteTimeCapsulesSideEffect {
-    data class ShowToast(val message: String, val showCheckIcon: Boolean = false) :
-        FavoriteTimeCapsulesSideEffect()
+    data class ShowToast(val toast: FavoriteToast) : FavoriteTimeCapsulesSideEffect() {
+        enum class FavoriteToast(val message: String) {
+            FAVORITE_ADDED("즐겨찾기가 설정되었습니다."),
+            FAVORITE_REMOVED("즐겨찾기가 해제되었습니다."),
+            FAVORITE_FULL("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요.")
+        }
+    }
 }
 
 @HiltViewModel
@@ -137,12 +143,8 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
         }
 
         // todo: call use case
-
         postSideEffect(
-            FavoriteTimeCapsulesSideEffect.ShowToast(
-                message = if (isFavorite) "즐겨찾기가 해제되었습니다." else "즐겨찾기에 추가되었습니다.",
-                showCheckIcon = true
-            )
+            FavoriteTimeCapsulesSideEffect.ShowToast(if (isFavorite) ShowToast.FavoriteToast.FAVORITE_REMOVED else ShowToast.FavoriteToast.FAVORITE_ADDED)
         )
         reduce {
             state.copy(
