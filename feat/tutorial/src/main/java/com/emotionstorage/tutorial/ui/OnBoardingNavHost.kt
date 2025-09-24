@@ -91,7 +91,7 @@ private fun StatelessOnBoardingNavHost(
         OnBoardingRoute.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    OnBoardingRoute.NICKNAME ->
+                    OnBoardingRoute.NICKNAME -> {
                         NicknameScreen(
                             onNicknameInputComplete = { nickname ->
                                 onAction(OnBoardingAction.InputNickname(nickname))
@@ -104,8 +104,9 @@ private fun StatelessOnBoardingNavHost(
                                 navToBack()
                             },
                         )
+                    }
 
-                    OnBoardingRoute.GENDER_BIRTH ->
+                    OnBoardingRoute.GENDER_BIRTH -> {
                         GenderBirthScreen(
                             nickname = state.signupForm.nickname ?: "",
                             onGenderBirthInputComplete = { gender, birth ->
@@ -118,8 +119,9 @@ private fun StatelessOnBoardingNavHost(
                                 navController.popBackStack()
                             },
                         )
+                    }
 
-                    OnBoardingRoute.EXPECTATIONS ->
+                    OnBoardingRoute.EXPECTATIONS -> {
                         ExpectationsScreen(
                             onExpectationsSelectComplete = { expectations ->
                                 onAction(OnBoardingAction.InputExpectations(expectations))
@@ -131,12 +133,17 @@ private fun StatelessOnBoardingNavHost(
                                 navController.popBackStack()
                             },
                         )
+                    }
 
-                    OnBoardingRoute.AGREE_TERMS ->
+                    OnBoardingRoute.AGREE_TERMS -> {
                         AgreeTermsScreen(
                             onAgreeTermsInputComplete = { isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
                                 onAction(
-                                    OnBoardingAction.InputAgreedTerms(isTermAgreed, isPrivacyAgreed, isMarketingAgreed),
+                                    OnBoardingAction.InputAgreedTerms(
+                                        isTermAgreed,
+                                        isPrivacyAgreed,
+                                        isMarketingAgreed,
+                                    ),
                                 )
                             },
                             onSignup = {
@@ -146,6 +153,7 @@ private fun StatelessOnBoardingNavHost(
                                 navController.popBackStack()
                             },
                         )
+                    }
                 }
             }
         }

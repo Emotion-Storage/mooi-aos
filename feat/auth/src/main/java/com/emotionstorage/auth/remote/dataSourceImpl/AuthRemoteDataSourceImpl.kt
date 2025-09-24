@@ -25,15 +25,17 @@ class AuthRemoteDataSourceImpl
                 // call login api
                 val response =
                     when (provider) {
-                        User.AuthProvider.KAKAO ->
+                        User.AuthProvider.KAKAO -> {
                             authApiService.postKakaoLogin(
                                 KakaoLoginRequestBody(idToken),
                             )
+                        }
 
-                        User.AuthProvider.GOOGLE ->
+                        User.AuthProvider.GOOGLE -> {
                             authApiService.postGoogleLogin(
                                 GoogleLoginRequestBody(idToken),
                             )
+                        }
                     }
 
                 // return access token if success
@@ -58,15 +60,17 @@ class AuthRemoteDataSourceImpl
             try {
                 val response =
                     when (provider) {
-                        User.AuthProvider.KAKAO ->
+                        User.AuthProvider.KAKAO -> {
                             authApiService.postKakaoSignup(
                                 KakaoSignupFormMapper.toRemote(signupFormEntity),
                             )
+                        }
 
-                        User.AuthProvider.GOOGLE ->
+                        User.AuthProvider.GOOGLE -> {
                             authApiService.postGoogleSignup(
                                 GoogleSignupFormMapper.toRemote(signupFormEntity),
                             )
+                        }
                     }
 
                 if (response.status == ResponseStatus.Created.code) {

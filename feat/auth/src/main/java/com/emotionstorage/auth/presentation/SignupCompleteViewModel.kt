@@ -47,7 +47,10 @@ class SignupCompleteViewModel
         ) = intent {
             loginWithIdToken(provider, idToken).collect { result ->
                 when (result) {
-                    is DataState.Loading -> Unit
+                    is DataState.Loading -> {
+                        // do nothing
+                    }
+
                     is DataState.Success -> {
                         Logger.i("LoginWithIdToken success")
                         postSideEffect(SignupCompleteSideEffect.LoginSuccess)

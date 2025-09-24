@@ -48,7 +48,7 @@ fun TutorialScreen(
             pageContent =
                 { page ->
                     when (page) {
-                        0 ->
+                        0 -> {
                             TutorialPage(
                                 description = stringResource(R.string.tutorial_p0_desc),
                                 title = stringResource(R.string.tutorial_p0_title),
@@ -57,8 +57,9 @@ fun TutorialScreen(
                                         ',',
                                     ),
                             )
+                        }
 
-                        1 ->
+                        1 -> {
                             TutorialPage(
                                 description = stringResource(R.string.tutorial_p1_desc),
                                 title = stringResource(R.string.tutorial_p1_title),
@@ -67,8 +68,9 @@ fun TutorialScreen(
                                         ',',
                                     ),
                             )
+                        }
 
-                        2 ->
+                        2 -> {
                             TutorialPage(
                                 description = stringResource(R.string.tutorial_p2_desc),
                                 title = stringResource(R.string.tutorial_p2_title),
@@ -77,8 +79,9 @@ fun TutorialScreen(
                                         ',',
                                     ),
                             )
+                        }
 
-                        3 ->
+                        3 -> {
                             TutorialPage(
                                 description = stringResource(R.string.tutorial_p3_desc),
                                 title = stringResource(R.string.tutorial_p3_title),
@@ -94,6 +97,7 @@ fun TutorialScreen(
                                     )
                                 },
                             )
+                        }
                     }
                 },
         )
