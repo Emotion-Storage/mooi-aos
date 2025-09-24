@@ -16,7 +16,7 @@ import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
-import com.emotionstorage.my.ui.MyScreen
+import com.emotionstorage.my.ui.MyPageScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -53,7 +53,7 @@ internal sealed class AppDestination {
     object TIME_CAPSULE_CALENDAR : AppDestination()
 
     @Serializable
-    object My : AppDestination()
+    object MyPage : AppDestination()
 
     @Serializable
     data class AI_CHAT(val roomId: String) : AppDestination()
@@ -149,8 +149,8 @@ internal fun AppNavHost(
                     }
                 )
             }
-            composable<AppDestination.My> {
-                MyScreen()
+            composable<AppDestination.MyPage> {
+                MyPageScreen()
             }
 
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->

@@ -35,7 +35,7 @@ private enum class BottomNavDestination(
 ) {
     HOME(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
     CALENDAR(AppDestination.TIME_CAPSULE_CALENDAR::class.qualifiedName!!, R.drawable.ic_calendar, "감정 보관함"),
-    MY(AppDestination.My::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
+    MY(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
 }
 
 private val BottomNavDestinationRoutes = BottomNavDestination.values().map { it.route }
