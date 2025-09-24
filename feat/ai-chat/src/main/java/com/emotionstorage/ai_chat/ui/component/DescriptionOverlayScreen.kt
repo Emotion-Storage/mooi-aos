@@ -121,62 +121,14 @@ fun DescriptionOverlayScreen(
         // 각 말풍선
         tutorialSteps[currentStep].speechBubbleComponent
 
-        Column(
+        DescriptionCoachScreen(
             modifier = Modifier
                 .align(Alignment.Center)
                 .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            checked = isCheckboxChecked,
         ) {
-            Icon(
-                modifier = Modifier.size(36.dp),
-                painter = painterResource(com.emotionstorage.ui.R.drawable.touch),
-                contentDescription = "터치하세요",
-                tint = Color.White,
-            )
-
-            Spacer(modifier = Modifier.padding(top = 8.dp))
-
-            // fix : 폰트 조정되면 core.type에 넣기
-            Text(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
-                text = "아무 곳이나 탭하세요.",
-                color = MooiTheme.colorScheme.gray500,
-                style = MooiTheme.typography.body2
-            )
-
-            Row(
-                modifier = Modifier
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) {
-                        isCheckboxChecked = !isCheckboxChecked
-                    },
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Checkbox(
-                    checked = isCheckboxChecked,
-                    onCheckedChange = {
-                        isCheckboxChecked = it
-                    },
-                    modifier = Modifier.padding(end = 0.dp),
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = MooiTheme.colorScheme.primary,
-                        uncheckedColor = Color.Gray,
-                        checkmarkColor = Color.Black
-                    )
-                )
-
-                // fix : 폰트 조정되면 core.type에 넣기
-                Text(
-                    text = "다시 보지 않기",
-                    color = MooiTheme.colorScheme.gray700,
-                    style = MooiTheme.typography.body4
-                )
-            }
+            isCheckboxChecked = it
         }
-
     }
 }
 
