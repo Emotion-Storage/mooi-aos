@@ -38,22 +38,16 @@ class SignupCompleteViewModel @Inject constructor(
     }
 
     private fun handleLoginWithIdToken(provider: User.AuthProvider, idToken: String) = intent {
-        viewModelScope.launch {
-            loginWithIdToken(provider, idToken).collect { result ->
-                when (result) {
-                    is DataState.Loading -> {
-                        // do nothing
-                    }
-
-                    is DataState.Success -> {
-                        Logger.i(result.toString())
-                        postSideEffect(SignupCompleteSideEffect.LoginSuccess)
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e(result.toString())
-                        postSideEffect(SignupCompleteSideEffect.LoginFailed)
-                    }
+        loginWithIdToken(provider, idToken).collect { result ->
+            when (result) {
+                is DataState.Loading -> Unit
+                is DataState.Success -> {
+                    Logger.i("LoginWithIdToken success")
+                    postSideEffect(SignupCompleteSideEffect.LoginSuccess)
+                }
+                is DataState.Error -> {
+                    Logger.e("LoginWithIdToken failed: ${result.throwable?.message}")
+                    postSideEffect(SignupCompleteSideEffect.LoginFailed)
                 }
             }
         }
