@@ -57,9 +57,7 @@ class AIChatViewModel
         private val disconnectChatRoom: DisconnectChatRoomUseCase,
         private val sendChatMessage: SendChatMessageUseCase,
         private val observeChatMessages: ObserveChatMessagesUseCase,
-    ) :
-    ViewModel(),
-        ContainerHost<AIChatState, AIChatSideEffect> {
+    ) : ViewModel(), ContainerHost<AIChatState, AIChatSideEffect> {
         private var chatMessageObserverJob: Job? = null
 
         override val container = container<AIChatState, AIChatSideEffect>(AIChatState())
