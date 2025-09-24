@@ -65,7 +65,7 @@ jobs:
 
       - name: Run KtLint check and save report
         run: |
-          ./gradlew ktlintCheck --continue -p 'project' --report-json=build/ktlint.json
+          ./gradlew ktlintCheck --continue --report-json=app/build/ktlint.json
         continue-on-error: true # Allow the workflow to continue even if linting fails
 
       - name: Set up reviewdog
