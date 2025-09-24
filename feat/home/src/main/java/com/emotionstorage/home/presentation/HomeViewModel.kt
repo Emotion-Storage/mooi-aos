@@ -29,7 +29,9 @@ sealed class HomeAction {
 }
 
 sealed class HomeSideEffect {
-    data class EnterCharRoomSuccess(val roomId: String) : HomeSideEffect()
+    data class EnterCharRoomSuccess(
+        val roomId: String,
+    ) : HomeSideEffect()
 }
 
 @HiltViewModel
@@ -68,9 +70,11 @@ class HomeViewModel
                                 state.copy(nickname = it.data)
                             }
                         }
+
                         is DataState.Error -> {
                             Logger.e("HomeViewModel: handleInitNickname error: $it")
                         }
+
                         is DataState.Loading -> {
                             // do nothing
                         }

@@ -24,7 +24,9 @@ sealed class MyPageAction {
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
-    data class ShowToast(val message: String) : MyPageSideEffect()
+    data class ShowToast(
+        val message: String,
+    ) : MyPageSideEffect()
 }
 
 @HiltViewModel

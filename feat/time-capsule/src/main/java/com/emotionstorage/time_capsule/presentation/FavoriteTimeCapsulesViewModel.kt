@@ -18,14 +18,12 @@ data class FavoriteTimeCapsulesState(
 ) {
     enum class SortOrder(val label: String) {
         SORT_BY_NEWEST("최신 날짜순"),
-        SORT_BY_FAVORITE("즐겨찾기순"),
-        ;
+        SORT_BY_FAVORITE("즐겨찾기순"), ;
 
         companion object {
-            fun getByLabel(label: String): SortOrder {
-                return values().find { it.label == label }
+            fun getByLabel(label: String): SortOrder =
+                SortOrder.entries.find { it.label == label }
                     ?: throw IllegalArgumentException("Invalid sort order label: $label")
-            }
         }
     }
 }
@@ -33,14 +31,22 @@ data class FavoriteTimeCapsulesState(
 sealed class FavoriteTimeCapsulesAction {
     object PullToRefresh : FavoriteTimeCapsulesAction()
 
-    data class SetSortOrder(val sortOrderLabel: String) : FavoriteTimeCapsulesAction()
+    data class SetSortOrder(
+        val sortOrderLabel: String,
+    ) : FavoriteTimeCapsulesAction()
 
-    data class ToggleFavorite(val id: String) : FavoriteTimeCapsulesAction()
+    data class ToggleFavorite(
+        val id: String,
+    ) : FavoriteTimeCapsulesAction()
 }
 
 sealed class FavoriteTimeCapsulesSideEffect {
-    data class ShowToast(val toast: FavoriteToast) : FavoriteTimeCapsulesSideEffect() {
-        enum class FavoriteToast(val message: String) {
+    data class ShowToast(
+        val toast: FavoriteToast,
+    ) : FavoriteTimeCapsulesSideEffect() {
+        enum class FavoriteToast(
+            val message: String,
+        ) {
             FAVORITE_ADDED("즐겨찾기가 설정되었습니다."),
             FAVORITE_REMOVED("즐겨찾기가 해제되었습니다."),
             FAVORITE_FULL("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요."),

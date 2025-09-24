@@ -34,7 +34,7 @@ private enum class BottomNavDestination(
     val label: String
 ) {
     HOME(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
-    CALENDAR(AppDestination.TIME_CAPSULE_CALENDAR::class.qualifiedName!!, R.drawable.ic_calendar, "감정 보관함"),
+    CALENDAR(AppDestination.TimeCapsuleCalendar::class.qualifiedName!!, R.drawable.ic_calendar, "감정 보관함"),
     MY(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
 }
 
@@ -46,7 +46,7 @@ fun AppBottomNavBar(
     modifier: Modifier = Modifier,
     currentDestination: NavDestination? = null,
 ) {
-    if(currentDestination?.route in BottomNavDestinationRoutes) {
+    if (currentDestination?.route in BottomNavDestinationRoutes) {
         BottomAppBar(
             modifier = modifier
                 .fillMaxWidth()
@@ -94,7 +94,8 @@ private fun BottomNavBarItem(
         modifier = modifier.clickable(
             onClick = onClick,
             indication = null,
-            interactionSource = remember { MutableInteractionSource() }),
+            interactionSource = remember { MutableInteractionSource() }
+        ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

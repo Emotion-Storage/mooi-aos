@@ -49,9 +49,9 @@ fun PagerWithIndicator(
     pageContent: @Composable (ColumnScope.(page: Int) -> Unit),
 ) {
     val pagerState =
-        rememberPagerState(pageCount = {
-            pageCount
-        })
+        rememberPagerState(
+            pageCount = { pageCount },
+        )
     val coroutineScope = rememberCoroutineScope()
 
     Column(

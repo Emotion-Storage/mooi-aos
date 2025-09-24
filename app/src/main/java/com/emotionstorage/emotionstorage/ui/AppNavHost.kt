@@ -47,38 +47,38 @@ internal sealed class AppDestination {
     @Serializable
     data class OnBoarding(
         val provider: String,
-        val idToken: String
+        val idToken: String,
     ) : AppDestination()
 
     @Serializable
     data class SignupComplete(
         val provider: String,
-        val idToken: String
+        val idToken: String,
     ) : AppDestination()
 
     @Serializable
     object Home : AppDestination()
 
     @Serializable
-    object TIME_CAPSULE_CALENDAR : AppDestination()
+    object TimeCapsuleCalendar : AppDestination()
 
     @Serializable
     object MyPage : AppDestination()
 
     @Serializable
-    data class AI_CHAT(
-        val roomId: String
+    data class AIChat(
+        val roomId: String,
     ) : AppDestination()
 
     @Serializable
-    object ARRIVED_TIME_CAPSULES : AppDestination()
+    object ArrivedTimeCapsules : AppDestination()
 
     @Serializable
-    object FAVORITE_TIME_CAPSULES : AppDestination()
+    object FavoriteTimeCapsules : AppDestination()
 
     @Serializable
-    data class TIME_CAPSULE_DETAIL(
-        val id: String
+    data class TimeCapsuleDetail(
+        val id: String,
     ) : AppDestination()
 }
 
@@ -96,7 +96,8 @@ internal fun AppNavHost(
             AppBottomNavBar(
                 navController = navController, currentDestination = currentDestination
             )
-        }) { innerPadding ->
+        }
+    ) { innerPadding ->
         NavHost(
             navController,
             startDestination = AppDestination.Splash,
@@ -112,14 +113,16 @@ internal fun AppNavHost(
                     },
                     navToHome = {
                         navController.navigateWithClearStack(AppDestination.Home)
-                    })
+                    }
+                )
             }
 
             composable<AppDestination.Tutorial> { backstackEntry ->
                 TutorialScreen(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
-                    })
+                    }
+                )
             }
 
             composable<AppDestination.Login> { backstackEntry ->
@@ -134,7 +137,8 @@ internal fun AppNavHost(
                                 idToken
                             )
                         )
-                    })
+                    }
+                )
             }
 
             composable<AppDestination.OnBoarding> { backstackEntry ->
@@ -175,21 +179,20 @@ internal fun AppNavHost(
             composable<AppDestination.Home> {
                 HomeScreen(
                     navToChat = { roomId ->
-                        navController.navigate(AppDestination.AI_CHAT(roomId))
+                        navController.navigate(AppDestination.AIChat(roomId))
                     },
                     navToArrivedTimeCapsules = {
-                        navController.navigate(AppDestination.ARRIVED_TIME_CAPSULES)
+                        navController.navigate(AppDestination.ArrivedTimeCapsules)
                     }
                 )
             }
-            composable<AppDestination.TIME_CAPSULE_CALENDAR> {
+            composable<AppDestination.TimeCapsuleCalendar> {
                 CalendarScreen(
                     navToArrived = {
-                        navController.navigate(AppDestination.ARRIVED_TIME_CAPSULES)
+                        navController.navigate(AppDestination.ArrivedTimeCapsules)
                     },
                     navToFavorites = {
-                        navController.navigate(AppDestination.FAVORITE_TIME_CAPSULES)
-
+                        navController.navigate(AppDestination.FavoriteTimeCapsules)
                     }
                 )
             }
@@ -201,42 +204,46 @@ internal fun AppNavHost(
                 )
             }
 
-            composable<AppDestination.AI_CHAT> { navBackStackEntry ->
-                val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT>()
+            composable<AppDestination.AIChat> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.AIChat>()
                 AIChatScreen(
                     roomId = arguments.roomId,
                     navToBack = {
                         navController.popBackStack()
-                    })
+                    }
+                )
             }
 
-            composable<AppDestination.ARRIVED_TIME_CAPSULES> {
+            composable<AppDestination.ArrivedTimeCapsules> {
                 ArrivedTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TIME_CAPSULE_DETAIL(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
                     },
                     navToBack = {
                         navController.popBackStack()
-                    })
+                    }
+                )
             }
 
-            composable<AppDestination.FAVORITE_TIME_CAPSULES> {
+            composable<AppDestination.FavoriteTimeCapsules> {
                 FavoriteTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TIME_CAPSULE_DETAIL(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
                     },
                     navToBack = {
                         navController.popBackStack()
-                    })
+                    }
+                )
             }
 
-            composable<AppDestination.TIME_CAPSULE_DETAIL> { navBackStackEntry ->
-                val arguments = navBackStackEntry.toRoute<AppDestination.TIME_CAPSULE_DETAIL>()
+            composable<AppDestination.TimeCapsuleDetail> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.TimeCapsuleDetail>()
                 TimeCapsuleDetailScreen(
                     id = arguments.id,
                     navToBack = {
                         navController.popBackStack()
-                    })
+                    }
+                )
             }
         }
     }

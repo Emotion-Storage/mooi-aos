@@ -12,8 +12,10 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 sealed class SignupCompleteAction {
-    data class LoginWithIdToken(val provider: User.AuthProvider, val idToken: String) :
-        SignupCompleteAction()
+    data class LoginWithIdToken(
+        val provider: User.AuthProvider,
+        val idToken: String,
+    ) : SignupCompleteAction()
 }
 
 sealed class SignupCompleteSideEffect {
@@ -49,6 +51,7 @@ class SignupCompleteViewModel
                         Logger.i("LoginWithIdToken success")
                         postSideEffect(SignupCompleteSideEffect.LoginSuccess)
                     }
+
                     is DataState.Error -> {
                         Logger.e("LoginWithIdToken failed: ${result.throwable?.message}")
                         postSideEffect(SignupCompleteSideEffect.LoginFailed)

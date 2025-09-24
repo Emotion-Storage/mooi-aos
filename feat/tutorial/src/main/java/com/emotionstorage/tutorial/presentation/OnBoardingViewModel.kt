@@ -19,13 +19,23 @@ data class OnBoardingState(
 )
 
 sealed class OnBoardingAction() {
-    data class Initiate(val provider: AuthProvider, val idToken: String) : OnBoardingAction()
+    data class Initiate(
+        val provider: AuthProvider,
+        val idToken: String,
+    ) : OnBoardingAction()
 
-    data class InputNickname(val nickname: String) : OnBoardingAction()
+    data class InputNickname(
+        val nickname: String,
+    ) : OnBoardingAction()
 
-    data class InputGenderAndBirth(val gender: GENDER, val birth: LocalDate) : OnBoardingAction()
+    data class InputGenderAndBirth(
+        val gender: GENDER,
+        val birth: LocalDate,
+    ) : OnBoardingAction()
 
-    data class InputExpectations(val expectations: List<Expectation>) : OnBoardingAction()
+    data class InputExpectations(
+        val expectations: List<Expectation>,
+    ) : OnBoardingAction()
 
     data class InputAgreedTerms(
         val isTermAgreed: Boolean,
@@ -37,7 +47,10 @@ sealed class OnBoardingAction() {
 }
 
 sealed class OnBoardingSideEffect {
-    data class SignupSuccess(val provider: AuthProvider, val idToken: String) :
+    data class SignupSuccess(
+        val provider: AuthProvider,
+        val idToken: String,
+    ) :
         OnBoardingSideEffect()
 
     object SignupFailed : OnBoardingSideEffect()

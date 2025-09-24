@@ -11,13 +11,18 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 sealed class LoginAction {
-    data class Login(val provider: User.AuthProvider) : LoginAction()
+    data class Login(
+        val provider: User.AuthProvider,
+    ) : LoginAction()
 }
 
 sealed class LoginSideEffect {
     object LoginSuccess : LoginSideEffect()
 
-    data class LoginFailed(val provider: User.AuthProvider, val idToken: String) : LoginSideEffect()
+    data class LoginFailed(
+        val provider: User.AuthProvider,
+        val idToken: String,
+    ) : LoginSideEffect()
 
     object LoginFailedWithException : LoginSideEffect()
 }

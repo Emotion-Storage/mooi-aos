@@ -24,9 +24,13 @@ data class AIChatState(
 )
 
 sealed class AIChatAction {
-    data class ConnectChatRoom(val roomId: String) : AIChatAction()
+    data class ConnectChatRoom(
+        val roomId: String,
+    ) : AIChatAction()
 
-    data class SendChatMessage(val message: String) : AIChatAction()
+    data class SendChatMessage(
+        val message: String,
+    ) : AIChatAction()
 
     object ExitChatRoom : AIChatAction()
 
@@ -34,11 +38,15 @@ sealed class AIChatAction {
 }
 
 sealed class AIChatSideEffect {
-    data class ToastMessage(val message: String) : AIChatSideEffect()
+    data class ToastMessage(
+        val message: String,
+    ) : AIChatSideEffect()
 
     object CanCreateTimesCapsule : AIChatSideEffect()
 
-    data class CreateTimeCapsuleSuccess(val capsuleId: String) : AIChatSideEffect()
+    data class CreateTimeCapsuleSuccess(
+        val capsuleId: String,
+    ) : AIChatSideEffect()
 }
 
 @HiltViewModel

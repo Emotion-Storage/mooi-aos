@@ -152,14 +152,18 @@ private fun StatelessAIChatScreen(
                 modifier = Modifier.weight(1f),
                 chatMessages = state.messages,
             )
-            Button(onClick = {
-                onAction(AIChatAction.ConnectChatRoom("test-roomId"))
-            }) {
+            Button(
+                onClick = {
+                    onAction(AIChatAction.ConnectChatRoom("test-roomId"))
+                },
+            ) {
                 Text(text = "채팅방 연결")
             }
-            Button(onClick = {
-                onAction(AIChatAction.ExitChatRoom)
-            }) {
+            Button(
+                onClick = {
+                    onAction(AIChatAction.ExitChatRoom)
+                },
+            ) {
                 Text(text = "채팅방 연결 끊기")
             }
             ChatMessageInputBox(

@@ -73,9 +73,13 @@ private fun TopAppBarPreview() {
     MooiTheme {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             TopAppBar(showBackButton = true)
-            TopAppBar(showBackButton = true, title = "타임캡슐 상세", rightComponent = {
-                RoundedToggleButton()
-            })
+            TopAppBar(
+                showBackButton = true,
+                title = "타임캡슐 상세",
+                rightComponent = {
+                    RoundedToggleButton()
+                },
+            )
         }
     }
 }
