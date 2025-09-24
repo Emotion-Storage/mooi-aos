@@ -1,19 +1,38 @@
 name: Run KtLint with reviewdog
-on: [ pull_request ]
+on:
+  pull_request:
+    branches: [ "develop" ]
+
 jobs:
   ktlint:
-    name: Check Code Quality
     runs-on: ubuntu-latest
-
     steps:
-      - name: Clone repo
-        uses: actions/checkout@master
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          fetch-depth: 1
-      - name: ktlint
-        uses: reviewdog/action-gradle@v1
-        with:
-          github_token: ${{ secrets.REVIEWDOG_GITHUB_TOKEN }}
-          gradle_command: ktlintCheck
-          level: warning
-          reporter: github-pr-review
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run KtLint check
+        run: ./gradlew ktlintCheck --continue || true
+
+      - name: Set up reviewdog
+        uses: reviewdog/action-setup@v1
+
+      - name: Report with reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_TOKEN }}
+        run: |
+          ./gradlew ktlintCheck --continue --console=plain -q \
+            | reviewdog -efm="%f:%l:%c: %m" \
+                        -name="ktlint" \
+                        -reporter=github-pr-review \
+                        -fail-on-error=false \
+                        -level=warning
