@@ -1,5 +1,5 @@
 name: Run KtLint with reviewdog
-on: [pull_request]
+on: [ pull_request ]
 jobs:
   ktlint:
     name: Check Code Quality
@@ -11,8 +11,9 @@ jobs:
         with:
           fetch-depth: 1
       - name: ktlint
-        uses: ScaCap/action-ktlint@master
+        uses: reviewdog/action-gradle@v1
         with:
           github_token: ${{ secrets.REVIEWDOG_GITHUB_TOKEN }}
+          gradle_command: ktlintCheck
           level: warning
           reporter: github-pr-review
