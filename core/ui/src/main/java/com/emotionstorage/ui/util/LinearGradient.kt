@@ -87,25 +87,25 @@ class LinearGradient(
         return start to end
     }
 
-//    override fun equals(other: Any?): Boolean {
-//        if (this === other) return true
-//        if (other !is LinearGradient) return false
-//
-//        if (colors != other.colors) return false
-//        if (stops != other.stops) return false
-//        if (normalizedAngle != other.normalizedAngle) return false
-//        if (tileMode != other.tileMode) return false
-//
-//        return true
-//    }
-//
-//    override fun hashCode(): Int {
-//        var result = colors.hashCode()
-//        result = 31 * result + (stops?.hashCode() ?: 0)
-//        result = 31 * result + normalizedAngle.hashCode()
-//        result = 31 * result + tileMode.hashCode()
-//        return result
-//    }
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is LinearGradient) return false
+
+        if (colors != other.colors) return false
+        if (stops != other.stops) return false
+        if (normalizedAngle != other.normalizedAngle) return false
+        if (tileMode != other.tileMode) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = colors.hashCode()
+        result = 31 * result + (stops?.hashCode() ?: 0)
+        result = 31 * result + normalizedAngle.hashCode()
+        result = 31 * result + tileMode.hashCode()
+        return result
+    }
 
     override fun toString(): String {
         return "LinearGradient(colors=$colors, " +

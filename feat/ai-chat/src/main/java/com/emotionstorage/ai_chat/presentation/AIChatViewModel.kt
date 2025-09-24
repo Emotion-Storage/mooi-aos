@@ -79,7 +79,7 @@ class AIChatViewModel @Inject constructor(
         chatMessageObserverJob?.cancel()
 
         // connect chat room
-        connectChatRoom(roomId).collectLatest { result ->
+        connectChatRoom(roomId).collect { result ->
             when (result) {
                 is DataState.Success -> {
                     Logger.i("chat room connected")
@@ -135,7 +135,7 @@ class AIChatViewModel @Inject constructor(
                 source = ChatMessage.MessageSource.CLIENT,
                 content = message
             )
-        ).collectLatest { result ->
+        ).collect { result ->
             when (result) {
                 is DataState.Success -> {
                     Logger.i("chat message sent")
@@ -163,7 +163,7 @@ class AIChatViewModel @Inject constructor(
         // cancel current message observer job
         chatMessageObserverJob?.cancel()
 
-        disconnectChatRoom(state.roomId).collectLatest { result ->
+        disconnectChatRoom(state.roomId).collect { result ->
             when (result) {
                 is DataState.Success -> {
                     Logger.i("chat room disconnected")

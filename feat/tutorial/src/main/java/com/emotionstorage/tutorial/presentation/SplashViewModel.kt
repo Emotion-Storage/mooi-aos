@@ -38,7 +38,7 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun handleAutoLogin() = intent {
-        automaticLogin().collectLatest { result ->
+        automaticLogin().collect { result ->
             Logger.d("SplashViewModel handleAutoLogin, result: $result")
 
             when (result) {

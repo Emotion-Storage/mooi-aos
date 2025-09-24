@@ -17,9 +17,9 @@ import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyScreen
-import com.emotionstorage.time_capsule.ui.ArrivedScreen
+import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
-import com.emotionstorage.time_capsule.ui.FavoritesScreen
+import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
 import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
@@ -132,7 +132,11 @@ internal fun AppNavHost(
                 HomeScreen(
                     navToChat = { roomId ->
                         navController.navigate(AppDestination.AI_CHAT(roomId))
-                    })
+                    },
+                    navToArrivedTimeCapsules = {
+                        navController.navigate(AppDestination.ARRIVED_TIME_CAPSULES)
+                    }
+                )
             }
             composable<AppDestination.TIME_CAPSULE_CALENDAR> {
                 CalendarScreen(
@@ -158,7 +162,7 @@ internal fun AppNavHost(
             }
 
             composable<AppDestination.ARRIVED_TIME_CAPSULES> {
-                ArrivedScreen(
+                ArrivedTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
                         navController.navigate(AppDestination.TIME_CAPSULE_DETAIL(id))
                     },
@@ -168,7 +172,7 @@ internal fun AppNavHost(
             }
 
             composable<AppDestination.FAVORITE_TIME_CAPSULES> {
-                FavoritesScreen(
+                FavoriteTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
                         navController.navigate(AppDestination.TIME_CAPSULE_DETAIL(id))
                     },

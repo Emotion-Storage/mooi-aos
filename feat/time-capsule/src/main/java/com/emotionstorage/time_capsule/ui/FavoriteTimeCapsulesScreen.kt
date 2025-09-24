@@ -2,8 +2,6 @@ package com.emotionstorage.time_capsule.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,39 +12,46 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.emotionstorage.common.formatToKorDateTime
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.time_capsule.ui.component.EmotionTag
-import com.emotionstorage.time_capsule.ui.model.FavoriteTimeCapsule
-import com.emotionstorage.ui.component.RoundedToggleButton
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
+import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
+import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
+import com.emotionstorage.ui.component.SuccessToast
+import com.emotionstorage.ui.component.Toast
+import com.orhanobut.logger.Logger
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 
-private val DUMMY_FAVORITES = (1..15).toList().map { it ->
-    FavoriteTimeCapsule(
+private val DUMMY_TIME_CAPSULES = (1..15).toList().map { it ->
+    TimeCapsuleState(
         id = it.toString(),
         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
         emotions = listOf(
@@ -68,23 +73,51 @@ private val DUMMY_FAVORITES = (1..15).toList().map { it ->
 }
 
 @Composable
-fun FavoritesScreen(
+fun FavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
+    viewModel: FavoriteTimeCapsulesViewModel = hiltViewModel(),
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
-    StatelessFavoriteScreen(
-        favoriteTimeCapsules = DUMMY_FAVORITES,
-        modifier = modifier,
+    val state = viewModel.container.stateFlow.collectAsState()
+    LaunchedEffect(Unit) {
+        // initial load, triggered on launch
+        viewModel.onAction(FavoriteTimeCapsulesAction.PullToRefresh)
+    }
+
+    val snackState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is ShowToast -> {
+                    coroutineScope.launch {
+                        // dismiss current snackbar if exists
+                        snackState.currentSnackbarData?.dismiss()
+                        // show new snackbar
+                        snackState.showSnackbar(sideEffect.toast.message)
+                    }
+                }
+            }
+        }
+    }
+
+    StatelessFavoriteTimeCapsulesScreen(
+        modifier = modifier.fillMaxSize(),
+        snackState = snackState,
+        state = state.value,
+        onAction = viewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack
     )
 }
 
 @Composable
-private fun StatelessFavoriteScreen(
+private fun StatelessFavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
-    favoriteTimeCapsules: List<FavoriteTimeCapsule> = emptyList(),
+    snackState: SnackbarHostState = SnackbarHostState(),
+    state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
+    onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
@@ -96,7 +129,17 @@ private fun StatelessFavoriteScreen(
             .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackState) { snackbarData ->
+                if (snackbarData.visuals.message == ShowToast.FavoriteToast.FAVORITE_FULL.message) {
+                    Toast(message = snackbarData.visuals.message)
+                } else {
+                    SuccessToast(message = snackbarData.visuals.message)
+                }
+            }
         }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -134,10 +177,12 @@ private fun StatelessFavoriteScreen(
                         .align(Alignment.CenterEnd)
                         .width(102.dp)
                         .padding(top = 7.dp, bottom = 22.dp),
-                    selectedValue = "최신 날짜순",
-                    options = listOf("최신 날짜순", "즐겨찾기순"),
-                    onSelect = {
-                        // todo: change list sort order
+                    selectedValue = state.sortOrder.label,
+                    options = FavoriteTimeCapsulesState.SortOrder.entries.map { it.label },
+                    onSelect = { label ->
+                        onAction(
+                            FavoriteTimeCapsulesAction.SetSortOrder(label)
+                        )
                     }
                 )
             }
@@ -147,103 +192,20 @@ private fun StatelessFavoriteScreen(
                     .fillMaxWidth()
                     .scrollable(scrollState, orientation = Orientation.Vertical)
             ) {
-                items(items = favoriteTimeCapsules, key = { it.id }) {
-                    FavoriteItem(
+                items(items = state.timeCapsules, key = { it.id }) {
+                    TimeCapsuleItem(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 17.dp),
-                        item = it,
-                        onClick = { navToTimeCapsuleDetail(it.id) }
+                        timeCapsule = it,
+                        onClick = { navToTimeCapsuleDetail(it.id) },
+                        onFavoriteClick = {
+                            onAction(
+                                FavoriteTimeCapsulesAction.ToggleFavorite(it.id)
+                            )
+                        }
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun FavoriteItem(
-    modifier: Modifier = Modifier,
-    item: FavoriteTimeCapsule,
-    onFavoriteClick: () -> Unit = {},
-    onClick: () -> Unit = {}
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = item.createdAt.formatToKorDateTime(),
-                style = MooiTheme.typography.body3.copy(fontWeight = FontWeight.Light),
-                color = MooiTheme.colorScheme.gray300
-            )
-            RoundedToggleButton(
-                isSelected = item.isFavorite,
-                onSelect = onFavoriteClick
-            )
-        }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(92.dp)
-                .background(
-                    Color(0x1A849BEA), RoundedCornerShape(15.dp)
-                )
-                .padding(vertical = 18.dp, horizontal = 15.dp)
-                .clickable(onClick = onClick),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(11.dp)
-        ) {
-            // unlocked icon
-            Column(
-                modifier = Modifier
-                    .size(54.dp)
-                    .border(1.dp, Color(0xAECBFA).copy(alpha = 0.2f), CircleShape),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.lock_open),
-                    modifier = Modifier
-                        .width(11.dp)
-                        .height(14.dp),
-                    contentDescription = "open"
-                )
-                Text(
-                    modifier = Modifier.padding(top = 3.dp),
-                    text = "열림",
-                    style = MooiTheme.typography.body3.copy(fontSize = 11.sp, lineHeight = 24.sp),
-                    color = MooiTheme.colorScheme.secondary
-                )
-            }
-
-            // time capsule content
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    for (emotion in item.emotions) {
-                        EmotionTag(emotion = emotion)
-                    }
-                }
-                Text(
-                    text = item.title,
-                    style = MooiTheme.typography.body4,
-                    color = MooiTheme.colorScheme.primary,
-                    maxLines = 1
-                )
             }
         }
     }
@@ -252,10 +214,10 @@ private fun FavoriteItem(
 
 @Preview
 @Composable
-private fun FavoriteScreenPreview() {
+private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
-        StatelessFavoriteScreen(
-            favoriteTimeCapsules = DUMMY_FAVORITES
+        StatelessFavoriteTimeCapsulesScreen(
+            state = FavoriteTimeCapsulesState(timeCapsules = DUMMY_TIME_CAPSULES)
         )
     }
 }
