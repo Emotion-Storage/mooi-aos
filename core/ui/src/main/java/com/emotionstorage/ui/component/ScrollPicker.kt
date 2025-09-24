@@ -63,8 +63,7 @@ fun ScrollPicker(
                     .clickable(enabled = enabled) {
                         // toggle scroll picker open/close
                         setScrollPickerOpen(!isScrollPickerOpen)
-                    }
-                    .padding(14.dp),
+                    }.padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

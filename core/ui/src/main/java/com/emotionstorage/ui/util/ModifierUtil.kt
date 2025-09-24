@@ -15,8 +15,8 @@ fun Modifier.mainBackground(
     isActivated: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
     defaultBackground: Color = Color.Transparent,
-): Modifier {
-    return if (isActivated) {
+): Modifier =
+    if (isActivated) {
         this.background(
             MooiTheme.brushScheme.mainButtonBackground,
             shape,
@@ -24,21 +24,19 @@ fun Modifier.mainBackground(
     } else {
         this.background(defaultBackground, shape)
     }
-}
 
 @Composable
 fun Modifier.subBackground(
     isActivated: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
     defaultBackground: Color = Color.Transparent,
-): Modifier {
-    return if (isActivated) {
+): Modifier =
+    if (isActivated) {
         this
             .background(
                 MooiTheme.brushScheme.subButtonBackground,
                 shape,
-            )
-            .border(
+            ).border(
                 1.dp,
                 MooiTheme.brushScheme.subButtonBorder,
                 shape,
@@ -46,4 +44,3 @@ fun Modifier.subBackground(
     } else {
         this.background(defaultBackground, shape)
     }
-}

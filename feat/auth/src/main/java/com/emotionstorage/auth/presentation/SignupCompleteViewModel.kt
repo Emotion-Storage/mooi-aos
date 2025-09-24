@@ -29,7 +29,8 @@ class SignupCompleteViewModel
     @Inject
     constructor(
         private val loginWithIdToken: LoginWithIdTokenUseCase,
-    ) : ViewModel(), ContainerHost<Unit, SignupCompleteSideEffect> {
+    ) : ViewModel(),
+        ContainerHost<Unit, SignupCompleteSideEffect> {
         override val container: Container<Unit, SignupCompleteSideEffect> = container(Unit)
 
         fun onAction(action: SignupCompleteAction) {

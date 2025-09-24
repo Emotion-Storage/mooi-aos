@@ -34,12 +34,14 @@ class GoogleRemoteDataSourceImpl
                     try {
                         // credential request for google login
                         val credentialRequest =
-                            GetCredentialRequest.Builder().addCredentialOption(
-                                GetSignInWithGoogleOption
-                                    .Builder(
-                                        serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID,
-                                    ).build(),
-                            ).build()
+                            GetCredentialRequest
+                                .Builder()
+                                .addCredentialOption(
+                                    GetSignInWithGoogleOption
+                                        .Builder(
+                                            serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID,
+                                        ).build(),
+                                ).build()
 
                         // get credential result
                         val credentialResult: GetCredentialResponse =

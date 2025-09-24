@@ -4,8 +4,8 @@ import com.emotionstorage.data.model.UserEntity
 import com.emotionstorage.local.model.UserLocal
 
 internal object UserMapper {
-    fun toLocal(entity: UserEntity): UserLocal {
-        return UserLocal(
+    fun toLocal(entity: UserEntity): UserLocal =
+        UserLocal(
             id = entity.id,
             socialType = entity.socialType.name,
             socialId = entity.socialId,
@@ -15,10 +15,9 @@ internal object UserMapper {
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
         )
-    }
 
-    fun toEntity(local: UserLocal): UserEntity {
-        return UserEntity(
+    fun toEntity(local: UserLocal): UserEntity =
+        UserEntity(
             id = local.id,
             socialType =
                 when (local.socialType) {
@@ -33,5 +32,4 @@ internal object UserMapper {
             createdAt = local.createdAt,
             updatedAt = local.updatedAt,
         )
-    }
 }

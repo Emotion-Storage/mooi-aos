@@ -24,9 +24,9 @@ interface AgreeTermsEvent {
 }
 
 @HiltViewModel
-class AgreeTermsViewModel
-    @Inject
-    constructor() : ViewModel(), AgreeTermsEvent {
+class AgreeTermsViewModel @Inject constructor() :
+    ViewModel(),
+    AgreeTermsEvent {
         private val pIsAllAgree = MutableStateFlow(false)
         private val pIsTermAgree = MutableStateFlow(false)
         private val pIsPrivacyAgree = MutableStateFlow(false)

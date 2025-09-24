@@ -30,8 +30,7 @@ fun Toast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(horizontal = 20.dp, vertical = 13.dp),
+                ).padding(horizontal = 20.dp, vertical = 13.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -55,8 +54,7 @@ fun SuccessToast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(horizontal = 20.dp, vertical = 13.dp),
+                ).padding(horizontal = 20.dp, vertical = 13.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {

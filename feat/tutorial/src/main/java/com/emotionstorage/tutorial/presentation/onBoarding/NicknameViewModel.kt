@@ -24,7 +24,8 @@ class NicknameViewModel
     @Inject
     constructor(
         private val validateNicknameUseCase: ValidateNicknameUseCase,
-    ) : ViewModel(), InputNicknameEvent {
+    ) : ViewModel(),
+        InputNicknameEvent {
         private val pNickname = MutableStateFlow("")
         private val pNicknameInputState = MutableStateFlow(State.InputState.EMPTY)
         private val pNicknameHelperMessage = MutableStateFlow<String?>(null)

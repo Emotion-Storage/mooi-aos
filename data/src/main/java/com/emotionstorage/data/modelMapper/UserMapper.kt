@@ -4,8 +4,8 @@ import com.emotionstorage.data.model.UserEntity
 import com.emotionstorage.domain.model.User
 
 internal object UserMapper {
-    fun toDomain(entity: UserEntity): User {
-        return User(
+    fun toDomain(entity: UserEntity): User =
+        User(
             id = entity.id,
             socialType =
                 when (entity.socialType) {
@@ -19,10 +19,9 @@ internal object UserMapper {
             createdAt = entity.createdAt,
             updatedAt = entity.updatedAt,
         )
-    }
 
-    fun toData(domain: User): UserEntity {
-        return UserEntity(
+    fun toData(domain: User): UserEntity =
+        UserEntity(
             id = domain.id,
             socialType =
                 when (domain.socialType) {
@@ -36,5 +35,4 @@ internal object UserMapper {
             createdAt = domain.createdAt,
             updatedAt = domain.updatedAt,
         )
-    }
 }

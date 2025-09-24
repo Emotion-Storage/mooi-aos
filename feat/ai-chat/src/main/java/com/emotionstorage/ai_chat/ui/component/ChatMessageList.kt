@@ -137,8 +137,7 @@ private fun ChatMessageItem(
                         } else {
                             MooiTheme.colorScheme.gray500
                         },
-                    )
-                    .padding(8.dp),
+                    ).padding(8.dp),
         ) {
             Text(
                 text = chatMessage.content,

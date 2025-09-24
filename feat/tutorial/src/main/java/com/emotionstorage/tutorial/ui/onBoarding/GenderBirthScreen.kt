@@ -198,8 +198,7 @@ private fun GenderInput(
                             .subBackground(isSelected, defaultBackground = Color.Black)
                             .clickable {
                                 if (isSelected) onGenderSelect(null) else onGenderSelect(it)
-                            }
-                            .padding(14.dp),
+                            }.padding(14.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),

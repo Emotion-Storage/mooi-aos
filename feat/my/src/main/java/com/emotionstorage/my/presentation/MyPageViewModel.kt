@@ -34,7 +34,8 @@ class MyPageViewModel
     @Inject
     constructor(
 //    private val logout: LogoutUseCase
-    ) : ViewModel(), ContainerHost<MyPageState, MyPageSideEffect> {
+    ) : ViewModel(),
+        ContainerHost<MyPageState, MyPageSideEffect> {
         override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
 
         fun onAction(action: MyPageAction) {

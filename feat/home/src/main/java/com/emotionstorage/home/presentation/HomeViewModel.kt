@@ -41,7 +41,8 @@ class HomeViewModel
         private val getUserNickname: GetUserNicknameUseCase,
         private val getHome: GetHomeUseCase,
         private val getChatRoomId: GetChatRoomIdUseCase,
-    ) : ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
+    ) : ViewModel(),
+        ContainerHost<HomeState, HomeSideEffect> {
         override val container = container<HomeState, HomeSideEffect>(HomeState())
 
         fun onAction(action: HomeAction) {

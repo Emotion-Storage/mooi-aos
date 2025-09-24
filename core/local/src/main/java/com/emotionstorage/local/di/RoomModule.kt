@@ -18,13 +18,14 @@ internal object RoomModule {
     @Singleton
     fun provideAppDatabase(
         @ApplicationContext context: Context,
-    ): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            AppDatabaseConstant.NAME,
-        ).fallbackToDestructiveMigration(false).build()
-    }
+    ): AppDatabase =
+        Room
+            .databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                AppDatabaseConstant.NAME,
+            ).fallbackToDestructiveMigration(false)
+            .build()
 
     @Provides
     @Singleton

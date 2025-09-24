@@ -247,8 +247,7 @@ private fun StartChatButton(
                     .mainBackground(isActivated = true)
                     .clickable {
                         onChatStart()
-                    }
-                    .padding(vertical = 15.dp, horizontal = 37.dp),
+                    }.padding(vertical = 15.dp, horizontal = 37.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(

@@ -40,11 +40,13 @@ import java.time.LocalDate
 private val MIN_CALENDAR_DATE = LocalDate.of(2023, 1, 1)
 
 private val DUMMY_TIME_CAPSULE_DATES =
-    (1..31).toList().filter {
-        it % 3 == 0
-    }.map {
-        LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
-    }
+    (1..31)
+        .toList()
+        .filter {
+            it % 3 == 0
+        }.map {
+            LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
+        }
 
 @Composable
 fun TimeCapsuleCalendar(
@@ -171,8 +173,7 @@ private fun DateItem(
                         .background(
                             if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
                             shape = RoundedCornerShape(20.dp),
-                        )
-                        .clickable { onClick(date) },
+                        ).clickable { onClick(date) },
                 verticalArrangement =
                     Arrangement.spacedBy(
                         9.dp,
@@ -192,8 +193,7 @@ private fun DateItem(
                             .background(
                                 if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                                 shape = CircleShape,
-                            )
-                            .border(
+                            ).border(
                                 width = 1.5.dp,
                                 color =
                                     if (isFilled) {

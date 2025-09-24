@@ -14,9 +14,7 @@ class UserRepositoryImpl
     constructor(
         private val userLocalDataSource: UserLocalDataSource,
     ) : UserRepository {
-        override suspend fun saveUser(user: User): Boolean {
-            return userLocalDataSource.saveUser(UserMapper.toData(user))
-        }
+        override suspend fun saveUser(user: User): Boolean = userLocalDataSource.saveUser(UserMapper.toData(user))
 
         override suspend fun getUser(): Flow<DataState<User>> =
             flow {

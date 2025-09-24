@@ -11,31 +11,28 @@ class SessionLocalDataSourceImpl
     constructor(
         private val sessionDao: SessionDao,
     ) : SessionLocalDataSource {
-        override suspend fun saveSession(session: SessionEntity): Boolean {
-            return try {
+        override suspend fun saveSession(session: SessionEntity): Boolean =
+            try {
                 sessionDao.insertSession(SessionMapper.toLocal(session))
                 true
             } catch (e: Exception) {
                 false
             }
-        }
 
-        override suspend fun getSession(): SessionEntity? {
-            return try {
+        override suspend fun getSession(): SessionEntity? =
+            try {
                 sessionDao.getSession()?.let {
                     SessionMapper.toEntity(it)
                 }
             } catch (e: Exception) {
                 null
             }
-        }
 
-        override suspend fun deleteSession(): Boolean {
-            return try {
+        override suspend fun deleteSession(): Boolean =
+            try {
                 sessionDao.deleteSession()
                 true
             } catch (e: Exception) {
                 false
             }
-        }
     }

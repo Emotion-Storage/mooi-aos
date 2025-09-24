@@ -47,8 +47,7 @@ object RetrofitModule {
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(requestHeaderInterceptor)
                 .build(),
-        )
-        .build()
+        ).build()
 
     @Singleton
     @Provides

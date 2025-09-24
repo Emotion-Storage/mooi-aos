@@ -9,8 +9,8 @@ fun buildHighlightAnnotatedString(
     fullString: String,
     highlightWords: List<String>,
     highlightStyle: SpanStyle,
-): AnnotatedString {
-    return buildAnnotatedString {
+): AnnotatedString =
+    buildAnnotatedString {
         var currentIndex = 0
 
         val regex = highlightWords.joinToString(separator = "|") { Regex.escape(it) }.toRegex()
@@ -31,4 +31,3 @@ fun buildHighlightAnnotatedString(
             append(fullString.substring(currentIndex))
         }
     }
-}

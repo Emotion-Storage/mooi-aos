@@ -18,7 +18,7 @@ data class OnBoardingState(
     val signupForm: SignupForm = SignupForm(),
 )
 
-sealed class OnBoardingAction() {
+sealed class OnBoardingAction {
     data class Initiate(
         val provider: AuthProvider,
         val idToken: String,
@@ -50,8 +50,7 @@ sealed class OnBoardingSideEffect {
     data class SignupSuccess(
         val provider: AuthProvider,
         val idToken: String,
-    ) :
-        OnBoardingSideEffect()
+    ) : OnBoardingSideEffect()
 
     object SignupFailed : OnBoardingSideEffect()
 }
@@ -61,7 +60,8 @@ class OnBoardingViewModel
     @Inject
     constructor(
         private val signup: SignupUseCase,
-    ) : ViewModel(), ContainerHost<OnBoardingState, OnBoardingSideEffect> {
+    ) : ViewModel(),
+        ContainerHost<OnBoardingState, OnBoardingSideEffect> {
         override val container = container<OnBoardingState, OnBoardingSideEffect>(OnBoardingState())
 
         fun onAction(action: OnBoardingAction) {

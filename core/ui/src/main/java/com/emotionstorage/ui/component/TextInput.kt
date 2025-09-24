@@ -28,11 +28,17 @@ import com.emotionstorage.ui.theme.MooiTheme
 sealed class TextInputState(
     val message: String? = null,
 ) {
-    class Empty(infoMessage: String? = null) : TextInputState(message = infoMessage)
+    class Empty(
+        infoMessage: String? = null,
+    ) : TextInputState(message = infoMessage)
 
-    class Error(errorMessage: String? = null) : TextInputState(message = errorMessage)
+    class Error(
+        errorMessage: String? = null,
+    ) : TextInputState(message = errorMessage)
 
-    class Success(successMessage: String? = null) : TextInputState(message = successMessage)
+    class Success(
+        successMessage: String? = null,
+    ) : TextInputState(message = successMessage)
 }
 
 @Composable

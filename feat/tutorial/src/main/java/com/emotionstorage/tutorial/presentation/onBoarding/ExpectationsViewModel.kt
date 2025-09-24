@@ -18,7 +18,9 @@ interface ExpectationsEvent {
 @HiltViewModel
 class ExpectationsViewModel
     @Inject
-    constructor() : ViewModel(), ExpectationsEvent {
+    constructor() :
+    ViewModel(),
+        ExpectationsEvent {
         private val pSelectedExpectations = MutableStateFlow(emptyList<Expectation>())
 
         val state =

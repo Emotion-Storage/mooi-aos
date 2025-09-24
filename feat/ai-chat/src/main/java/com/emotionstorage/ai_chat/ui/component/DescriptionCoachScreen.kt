@@ -36,7 +36,15 @@ fun DescriptionCoachScreen(
     ) {
         Icon(
             modifier = Modifier.size(36.dp),
-            painter = painterResource(com.emotionstorage.ui.R.drawable.touch),
+            painter =
+                painterResource(
+                    com
+                        .emotionstorage
+                        .ui
+                        .R
+                        .drawable
+                        .touch,
+                ),
             contentDescription = "터치하세요",
             tint = Color.White,
         )

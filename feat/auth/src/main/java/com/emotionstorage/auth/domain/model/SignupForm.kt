@@ -3,7 +3,9 @@ package com.emotionstorage.auth.domain.model
 import com.emotionstorage.domain.model.User.AuthProvider
 import java.time.LocalDate
 
-enum class Expectation(val content: String) {
+enum class Expectation(
+    val content: String,
+) {
     EMOTION("내 감정을 정리하고 싶어요"),
     STRESS("스트레스를 관리하고 싶어요"),
     REGRET("후회나 힘든 감정을 털어내고 싶어요"),
@@ -24,7 +26,9 @@ data class SignupForm(
     val isPrivacyAgreed: Boolean? = null,
     val isMarketingAgreed: Boolean? = null,
 ) {
-    enum class GENDER(val value: String) {
+    enum class GENDER(
+        val value: String,
+    ) {
         MALE("MALE"),
         FEMALE("FEMALE"),
     }

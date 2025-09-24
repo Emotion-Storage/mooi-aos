@@ -107,10 +107,9 @@ class LinearGradient(
         return result
     }
 
-    override fun toString(): String {
-        return "LinearGradient(colors=$colors, " +
+    override fun toString(): String =
+        "LinearGradient(colors=$colors, " +
             "stops=$stops, " +
             "angle=$normalizedAngle, " +
             "tileMode=$tileMode)"
-    }
 }

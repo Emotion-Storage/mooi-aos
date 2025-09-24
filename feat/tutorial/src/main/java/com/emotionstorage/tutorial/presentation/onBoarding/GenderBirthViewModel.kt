@@ -30,7 +30,9 @@ interface GenderBirthEvent {
 @HiltViewModel
 class GenderBirthViewModel
     @Inject
-    constructor() : ViewModel(), GenderBirthEvent {
+    constructor() :
+    ViewModel(),
+        GenderBirthEvent {
         private val pGender = MutableStateFlow<GENDER?>(null)
         private val pBirthYear = MutableStateFlow<String?>(null)
         private val pBirthMonth = MutableStateFlow<String?>(null)

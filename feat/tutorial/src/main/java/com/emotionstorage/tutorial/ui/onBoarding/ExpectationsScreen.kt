@@ -171,8 +171,7 @@ private fun ExpectationItem(
                 .subBackground(isSelected, defaultBackground = Color.Black)
                 .clickable(
                     onClick = onClick,
-                )
-                .padding(20.dp),
+                ).padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

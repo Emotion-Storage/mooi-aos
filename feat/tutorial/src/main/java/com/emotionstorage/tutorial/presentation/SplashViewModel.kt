@@ -27,7 +27,8 @@ class SplashViewModel
     @Inject
     constructor(
         private val automaticLogin: AutomaticLoginUseCase,
-    ) : ViewModel(), ContainerHost<Unit, SplashSideEffect> {
+    ) : ViewModel(),
+        ContainerHost<Unit, SplashSideEffect> {
         override val container = container<Unit, SplashSideEffect>(Unit)
 
         suspend fun onAction(action: SplashAction) {

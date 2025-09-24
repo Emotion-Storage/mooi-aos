@@ -32,7 +32,8 @@ class LoginViewModel
     @Inject
     constructor(
         private val login: LoginUseCase,
-    ) : ViewModel(), ContainerHost<Unit, LoginSideEffect> {
+    ) : ViewModel(),
+        ContainerHost<Unit, LoginSideEffect> {
         override val container = container<Unit, LoginSideEffect>(Unit)
 
         fun onAction(action: LoginAction) {
