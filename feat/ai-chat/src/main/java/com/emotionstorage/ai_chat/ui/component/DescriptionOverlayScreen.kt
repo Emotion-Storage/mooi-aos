@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ai_chat.R
 import com.emotionstorage.ui.component.SpeechBubbleTopCenter
@@ -110,46 +109,28 @@ private fun BoxScope.PositionedBubble(
     type: HighlightType,
     area: Rect,
 ) {
-    val d = LocalDensity.current
-    var bubbleSize by remember { mutableStateOf(IntSize.Zero) }
-
-    val m12 = with(d) { 12.dp.toPx() }
-    val m8 = with(d) { 8.dp.toPx() }
-
-    val offset: IntOffset = when (type) {
-        HighlightType.PROGRESS_BAR -> IntOffset(
-            x = (area.center.x - bubbleSize.width / 2f).roundToInt(),
-            y = (area.bottom + m12).roundToInt()
-        )
-
-        HighlightType.INPUT_BOX -> IntOffset(
-            x = (area.center.x - bubbleSize.width / 2f).roundToInt(),
-            y = (area.top - bubbleSize.height - m12).roundToInt()
-        )
-
-        HighlightType.TOPBAR -> IntOffset(
-            x = (area.left + m8).roundToInt(),
-            y = (area.bottom + m8).roundToInt()
-        )
-    }
+    val density = LocalDensity.current
+    val gap = with(density) { 22.dp.toPx() }
 
     when (type) {
         HighlightType.PROGRESS_BAR -> {
-            val y = with(d) { area.bottom.toDp() + 12.dp }
+            val y = (area.bottom + gap).roundToInt()
             SpeechBubbleTopCenter(
                 text = stringResource(R.string.ai_chat_desc0),
                 modifier = Modifier
                     .align(Alignment.TopCenter)
                     .size(265.dp, 101.dp)
-                    .offset(y = y)
+                    .offset { IntOffset(0, y) }
             )
         }
 
         HighlightType.INPUT_BOX -> {
-            val bubbleW = with(d) { 265.dp.roundToPx() }
-            val bubbleH = with(d) { 84.dp.roundToPx() }
-            val x = (area.center.x - bubbleW / 2f).roundToInt()
-            val y = (area.top - bubbleH - with(d) { 12.dp.toPx() }).roundToInt()
+            val bw = with(density) { 265.dp.roundToPx() }
+            val bh = with(density) {  84.dp.roundToPx() }
+
+            val x = (area.center.x - bw / 2f).roundToInt()
+            val y = (area.top - bh - gap).roundToInt()
+
             SpeechBubble(
                 text = stringResource(R.string.ai_chat_desc1),
                 modifier = Modifier
@@ -159,8 +140,8 @@ private fun BoxScope.PositionedBubble(
         }
 
         HighlightType.TOPBAR -> {
-            val x = with(d) { area.left.toDp() + 8.dp }
-            val y = with(d) { area.bottom.toDp() + 8.dp }
+            val x = with(density) { area.left.toDp() + 8.dp }
+            val y = with(density) { area.bottom.toDp() + 8.dp }
             SpeechBubbleTopLeft(
                 text = stringResource(R.string.ai_chat_desc2),
                 modifier = Modifier
