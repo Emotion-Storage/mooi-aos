@@ -1,18 +1,14 @@
 package com.emotionstorage.tutorial.presentation
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.auth.domain.model.Expectation
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
-import com.emotionstorage.auth.domain.usecase.LoginWithIdTokenUseCase
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
 import org.orbitmvi.orbit.viewmodel.container
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import java.time.LocalDate
 import javax.inject.Inject
@@ -34,21 +30,18 @@ sealed class OnBoardingAction() {
     ) : OnBoardingAction()
 
     object Signup : OnBoardingAction()
-    object Login : OnBoardingAction()
 }
 
 sealed class OnBoardingSideEffect {
-    object SignupSuccess : OnBoardingSideEffect()
-    object SignupFailed : OnBoardingSideEffect()
+    data class SignupSuccess(val provider: AuthProvider, val idToken: String) :
+        OnBoardingSideEffect()
 
-    object LoginSuccess : OnBoardingSideEffect()
-    object LoginFailed : OnBoardingSideEffect()
+    object SignupFailed : OnBoardingSideEffect()
 }
 
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
     private val signup: SignupUseCase,
-    private val loginWithIdToken: LoginWithIdTokenUseCase
 ) : ViewModel(), ContainerHost<OnBoardingState, OnBoardingSideEffect> {
     override val container = container<OnBoardingState, OnBoardingSideEffect>(OnBoardingState())
 
@@ -81,11 +74,6 @@ class OnBoardingViewModel @Inject constructor(
             is OnBoardingAction.Signup -> {
                 handleSignup()
             }
-
-            is OnBoardingAction.Login -> {
-                handleLogin()
-            }
-
         }
     }
 
@@ -141,58 +129,30 @@ class OnBoardingViewModel @Inject constructor(
             return@intent
         }
 
-        signup(state.signupForm).collect { result ->
-            when (result) {
-                is DataState.Loading -> {
-                    // do nothing
-                }
-
-                is DataState.Success -> {
-                    Logger.i(result.toString())
-                    postSideEffect(OnBoardingSideEffect.SignupSuccess)
-                }
-
-                is DataState.Error -> {
-                    Logger.e(result.toString())
-                    postSideEffect(OnBoardingSideEffect.SignupFailed)
-                }
-            }
-        }
-    }
-
-    private fun handleLogin() = intent {
-        if (state.signupForm.provider == null) {
-            Logger.e("provider is null")
-            postSideEffect(OnBoardingSideEffect.LoginFailed)
-            return@intent
-        }
-        if (state.signupForm.idToken == null) {
-            Logger.e("idToken is null")
-            postSideEffect(OnBoardingSideEffect.LoginFailed)
-            return@intent
-        }
-
-        viewModelScope.launch {
-            loginWithIdToken(
+        // todo: delete this after signup test
+        postSideEffect(
+            OnBoardingSideEffect.SignupSuccess(
                 state.signupForm.provider!!,
                 state.signupForm.idToken!!
-            ).collect { result ->
-                when (result) {
-                    is DataState.Loading -> {
-                        // do nothing
-                    }
-
-                    is DataState.Success -> {
-                        Logger.i(result.toString())
-                        postSideEffect(OnBoardingSideEffect.LoginSuccess)
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e(result.toString())
-                        postSideEffect(OnBoardingSideEffect.LoginFailed)
-                    }
-                }
-            }
-        }
+            )
+        )
+//        signup(state.signupForm).collect { result ->
+//            when (result) {
+//                is DataState.Loading -> {
+//                    // do nothing
+//                }
+//
+//                is DataState.Success -> {
+//                    Logger.i(result.toString())
+//                    postSideEffect(OnBoardingSideEffect.SignupSuccess)
+//                }
+//
+//                is DataState.Error -> {
+//                    Logger.e(result.toString())
+//                    postSideEffect(OnBoardingSideEffect.SignupFailed)
+//                }
+//            }
+//        }
     }
+
 }

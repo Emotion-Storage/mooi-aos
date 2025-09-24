@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
+import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyPageScreen
@@ -45,6 +46,9 @@ internal sealed class AppDestination {
 
     @Serializable
     data class OnBoarding(val provider: String, val idToken: String) : AppDestination()
+
+    @Serializable
+    data class SignupComplete(val provider: String, val idToken: String) : AppDestination()
 
     @Serializable
     object Home : AppDestination()
@@ -122,9 +126,28 @@ internal fun AppNavHost(
                 OnBoardingNavHost(
                     idToken = arguments.idToken,
                     provider = AuthProvider.valueOf(arguments.provider),
+                    navToSignupComplete = { provider, idToken ->
+                        navController.clearBackStack<AppDestination.OnBoarding>()
+                        navController.navigate(
+                            AppDestination.SignupComplete(
+                                provider.toString(), idToken
+                            )
+                        )
+                    }
+                )
+            }
+
+            composable<AppDestination.SignupComplete> { backstackEntry ->
+                val arguments = backstackEntry.toRoute<AppDestination.SignupComplete>()
+                SignupCompleteScreen(
+                    provider = AuthProvider.valueOf(arguments.provider),
+                    idToken = arguments.idToken,
                     navToHome = {
                         navController.navigateWithClearStack(AppDestination.Home)
                     },
+                    navToLogin = {
+                        navController.navigateWithClearStack(AppDestination.Login)
+                    }
                 )
             }
 
