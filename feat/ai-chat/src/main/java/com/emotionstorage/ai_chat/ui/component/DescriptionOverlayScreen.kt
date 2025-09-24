@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -20,10 +21,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ai_chat.R
 import com.emotionstorage.ui.component.SpeechBubbleTopCenter
@@ -41,6 +45,7 @@ fun DescriptionOverlayScreen(
     progressBarBounds: Rect = Rect.Zero,
     inputBoxBounds: Rect = Rect.Zero,
     topbarBounds: Rect = Rect.Zero,
+    onCheckboxChecked: (Boolean) -> Unit = {},
     onComplete: () -> Unit = {},
 ) {
     if (!isVisible) return
@@ -68,24 +73,22 @@ fun DescriptionOverlayScreen(
             }
     ) {
 
-        // 1) 어둡게 + 현재 타깃만 둥글게 뚫기
-        Canvas(Modifier.fillMaxSize()) {
+        Canvas(
+            Modifier
+                .fillMaxSize()
+                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+        ) {
+            // 뒷 배경 어둡게
             drawRect(Color.Black.copy(alpha = 0.70f), size = size)
 
             if (area != Rect.Zero) {
-                val pad = 6.dp.toPx()
-                val r = Rect(
-                    area.left - pad,
-                    area.top - pad,
-                    area.right + pad,
-                    area.bottom + pad
-                )
                 drawRoundRect(
                     color = Color.Transparent,
-                    topLeft = r.topLeft,
-                    size = r.size,
+                    topLeft = area.topLeft,
+                    size = area.size,
                     blendMode = BlendMode.Clear
                 )
+
             }
         }
 
@@ -109,6 +112,32 @@ private fun BoxScope.PositionedBubble(
     area: Rect,
 ) {
     val d = LocalDensity.current
+    var bubbleSize by remember { mutableStateOf(IntSize.Zero) }
+
+    // px 단위로 margin 계산
+    val m12 = with(d) { 12.dp.toPx() }
+    val m8 = with(d) { 8.dp.toPx() }
+
+    // 단계별 오프셋 계산 (px)
+    val offset: IntOffset = when (type) {
+        // 1) 진행바: 중앙 하단 (x = centerX - w/2, y = bottom + 12)
+        HighlightType.PROGRESS_BAR -> IntOffset(
+            x = (area.center.x - bubbleSize.width / 2f).roundToInt(),
+            y = (area.bottom + m12).roundToInt()
+        )
+
+        // 2) 입력창: 바로 위 중앙 (x = centerX - w/2, y = top - h - 12)
+        HighlightType.INPUT_BOX -> IntOffset(
+            x = (area.center.x - bubbleSize.width / 2f).roundToInt(),
+            y = (area.top - bubbleSize.height - m12).roundToInt()
+        )
+
+        // 3) 탑바(뒤로가기): 바 아래 좌측 (x = left + 8dp, y = bottom + 8dp)
+        HighlightType.TOPBAR -> IntOffset(
+            x = (area.left + m8).roundToInt(),
+            y = (area.bottom + m8).roundToInt()
+        )
+    }
 
     when (type) {
         // 1) 진행바: 중앙 하단 (위꼭지)
@@ -118,10 +147,11 @@ private fun BoxScope.PositionedBubble(
                 text = stringResource(R.string.ai_chat_desc0),
                 modifier = Modifier
                     .align(Alignment.TopCenter)
+                    .size(265.dp, 101.dp)
                     .offset(y = y)
             )
         }
-        // 2) 입력창: 바로 위 중앙 (아래꼭지)
+
         HighlightType.INPUT_BOX -> {
             val bubbleW = with(d) { 265.dp.roundToPx() }
             val bubbleH = with(d) { 84.dp.roundToPx() }
@@ -129,16 +159,20 @@ private fun BoxScope.PositionedBubble(
             val y = (area.top - bubbleH - with(d) { 12.dp.toPx() }).roundToInt()
             SpeechBubble(
                 text = stringResource(R.string.ai_chat_desc1),
-                modifier = Modifier.offset { IntOffset(x, y) }
+                modifier = Modifier
+                    .size(265.dp, 84.dp)
+                    .offset { IntOffset(x, y) }
             )
         }
-        // 3) 상단바(뒤로가기 영역): 바 바로 아래 좌측 (좌상단꼬리)
+        // TopAppbar
         HighlightType.TOPBAR -> {
             val x = with(d) { area.left.toDp() + 8.dp }
             val y = with(d) { area.bottom.toDp() + 8.dp }
             SpeechBubbleTopLeft(
                 text = stringResource(R.string.ai_chat_desc2),
-                modifier = Modifier.offset(x = x, y = y)
+                modifier = Modifier
+                    .size(222.dp, 122.dp)
+                    .offset(x = x, y = y)
             )
         }
     }

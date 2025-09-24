@@ -2,8 +2,8 @@ package com.emotionstorage.ai_chat.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -20,7 +20,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -79,30 +79,28 @@ fun AIChatScreen(
     var showCoach by rememberSaveable { mutableStateOf(showAgain) }
 
     StatelessAIChatScreen(
-        modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
         onProgressRect = { progressRect = it },
         onInputBoxRect = { inputRect = it },
-        onTopbarRect = { topbarRect = it }
+        onTopbarRect = { topbarRect = it },
+        showCoach = showCoach,
+        progressBarBounds = progressRect,
+        inputBoxBounds = inputRect,
+        topbarBounds = topbarRect,
+        onCoachComplete = { showCoach = false }
     )
-
-    if (showCoach) {
-        DescriptionOverlayScreen(
-            progressBarBounds = progressRect,
-            inputBoxBounds = inputRect,
-            topbarBounds = topbarRect,
-            onComplete = { showCoach = false }
-        )
-
-    }
 }
 
 @Composable
 private fun StatelessAIChatScreen(
-    modifier: Modifier = Modifier,
     state: AIChatState = AIChatState(),
+    showCoach: Boolean = true,
+    progressBarBounds: Rect = Rect.Zero,
+    inputBoxBounds: Rect = Rect.Zero,
+    topbarBounds: Rect = Rect.Zero,
+    onCoachComplete: () -> Unit = {},
     onAction: (action: AIChatAction) -> Unit = {},
     navToBack: () -> Unit = {},
     onProgressRect: (Rect) -> Unit = {},
@@ -117,22 +115,7 @@ private fun StatelessAIChatScreen(
     )
 
     Scaffold(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background),
-        topBar = {
-            Box(
-                modifier = Modifier.onGloballyPositioned {
-                    onTopbarRect(it.boundsInRoot())
-                }
-            ) {
-                TopAppBar(
-                    showBackButton = true,
-                    onBackClick = {
-                        setExitModalOpen(true)
-                    })
-            }
-        }
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -142,12 +125,21 @@ private fun StatelessAIChatScreen(
                 .imePadding()
         ) {
 
+            TopAppBar(
+                modifier = Modifier.onGloballyPositioned {
+                    onTopbarRect(it.boundsInParent())
+                },
+                showBackButton = true,
+                onBackClick = {
+                    setExitModalOpen(true)
+                })
+
             ChatProgressBar(
                 progress = state.chatProgress,
                 modifier = Modifier
                     .fillMaxWidth()
                     .onGloballyPositioned {
-                        onTopbarRect(it.boundsInRoot())
+                        onProgressRect(it.boundsInParent())
                     }
             )
 
@@ -169,13 +161,22 @@ private fun StatelessAIChatScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .onGloballyPositioned {
-                        onInputBoxRect(it.boundsInRoot())
+                        onInputBoxRect(it.boundsInParent())
                     },
                 onSendMessage = {
                     onAction(AIChatAction.SendChatMessage(it))
                 }
             )
         }
+    }
+
+    if (showCoach) {
+        DescriptionOverlayScreen(
+            progressBarBounds = progressBarBounds,
+            inputBoxBounds = inputBoxBounds,
+            topbarBounds = topbarBounds,
+            onComplete = onCoachComplete
+        )
     }
 }
 
