@@ -38,7 +38,5 @@ class UserRepositoryImpl
                 }
             }
 
-        override suspend fun deleteUser(): Boolean {
-            return userLocalDataSource.deleteUser()
-        }
+        override suspend fun deleteUser(): Boolean = userLocalDataSource.deleteUser()
     }

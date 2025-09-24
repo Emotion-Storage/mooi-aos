@@ -50,7 +50,10 @@ class GoogleRemoteDataSourceImpl
 
                         // parse credential result
                         credentialResult.credential.apply {
-                            if (this is CustomCredential && this.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                            if (
+                                this is CustomCredential &&
+                                this.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+                            ) {
                                 try {
                                     val googleIdTokenCredential =
                                         GoogleIdTokenCredential

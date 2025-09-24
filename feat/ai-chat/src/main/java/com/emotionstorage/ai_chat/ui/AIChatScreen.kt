@@ -43,7 +43,7 @@ fun AIChatScreen(
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {}
+    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(roomId) {
@@ -89,7 +89,7 @@ fun AIChatScreen(
         progressBarBounds = progressRect,
         inputBoxBounds = inputRect,
         topbarBounds = topbarRect,
-        onCoachComplete = { showCoach = false }
+        onCoachComplete = { showCoach = false },
     )
 }
 
@@ -111,42 +111,46 @@ private fun StatelessAIChatScreen(
     AIChatExitModel(
         isModelOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
-        onExit = navToBack
+        onExit = navToBack,
     )
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .imePadding()
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .imePadding(),
         ) {
             // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
-                modifier = Modifier.onGloballyPositioned {
-                    onTopbarRect(it.boundsInParent())
-                },
+                modifier =
+                    Modifier.onGloballyPositioned {
+                        onTopbarRect(it.boundsInParent())
+                    },
                 showBackButton = true,
                 onBackClick = {
                     setExitModalOpen(true)
-                })
+                },
+            )
 
             ChatProgressBar(
                 progress = state.chatProgress,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // ProgressBar 위치 추적
-                    .onGloballyPositioned {
-                        onProgressRect(it.boundsInParent())
-                    }
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        // ProgressBar 위치 추적
+                        .onGloballyPositioned {
+                            onProgressRect(it.boundsInParent())
+                        },
             )
 
             ChatMessageList(
                 modifier = Modifier.weight(1f),
-                chatMessages = state.messages
+                chatMessages = state.messages,
             )
             Button(onClick = {
                 onAction(AIChatAction.ConnectChatRoom("test-roomId"))
@@ -159,14 +163,15 @@ private fun StatelessAIChatScreen(
                 Text(text = "채팅방 연결 끊기")
             }
             ChatMessageInputBox(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned {
-                        onInputBoxRect(it.boundsInParent())
-                    },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned {
+                            onInputBoxRect(it.boundsInParent())
+                        },
                 onSendMessage = {
                     onAction(AIChatAction.SendChatMessage(it))
-                }
+                },
             )
         }
     }
@@ -176,7 +181,7 @@ private fun StatelessAIChatScreen(
             progressBarBounds = progressBarBounds,
             inputBoxBounds = inputBoxBounds,
             topbarBounds = topbarBounds,
-            onComplete = onCoachComplete
+            onComplete = onCoachComplete,
         )
     }
 }

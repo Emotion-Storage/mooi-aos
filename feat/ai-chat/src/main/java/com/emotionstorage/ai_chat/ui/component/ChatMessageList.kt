@@ -54,7 +54,11 @@ fun ChatMessageList(
             ChatMessageItem(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 chatMessage = item,
-                showProfile = (index == 0 || item.source != chatMessages[index - 1].source || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()),
+                showProfile = (
+                    index == 0 ||
+                        item.source != chatMessages[index - 1].source ||
+                        chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()
+                ),
             )
         }
     }

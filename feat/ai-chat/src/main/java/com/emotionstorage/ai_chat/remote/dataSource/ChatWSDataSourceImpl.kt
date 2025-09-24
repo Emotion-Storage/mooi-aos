@@ -29,7 +29,8 @@ class ChatWSDataSourceImpl
             StompClient(
                 webSocketClient =
                     OkHttpWebSocketClient(
-                        OkHttpClient.Builder()
+                        OkHttpClient
+                            .Builder()
                             .pingInterval(Duration.ofSeconds(10))
                             .build(),
                     ),

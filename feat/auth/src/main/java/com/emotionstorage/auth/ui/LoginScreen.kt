@@ -73,7 +73,8 @@ fun LoginScreen(
 private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
     onAction: (LoginAction) -> Unit = {},
-    navToHome: () -> Unit = {}, // todo: delete after testing
+    // todo: delete after testing
+    navToHome: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
