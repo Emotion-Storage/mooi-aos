@@ -29,63 +29,73 @@ private const val TUTORIAL_PAGE_COUNT = 4
 @Composable
 fun TutorialScreen(
     modifier: Modifier = Modifier,
-    navToLogin: () -> Unit = {}
+    navToLogin: () -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier
-            .background(MooiTheme.colorScheme.background)
-            .fillMaxSize()
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .fillMaxSize(),
     ) { innerPadding ->
         PagerWithIndicator(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(top = 78.dp, bottom = 41.dp),
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .padding(top = 78.dp, bottom = 41.dp),
             pageCount = TUTORIAL_PAGE_COUNT,
             pageContent =
-            { page ->
-                when (page) {
-                    0 -> TutorialPage(
-                        description = stringResource(R.string.tutorial_p0_desc),
-                        title = stringResource(R.string.tutorial_p0_title),
-                        titleHighlights = stringResource(R.string.tutorial_p0_title_highlights).split(
-                            ','
-                        )
-                    )
-
-                    1 -> TutorialPage(
-                        description = stringResource(R.string.tutorial_p1_desc),
-                        title = stringResource(R.string.tutorial_p1_title),
-                        titleHighlights = stringResource(R.string.tutorial_p1_title_highlights).split(
-                            ','
-                        )
-                    )
-
-                    2 -> TutorialPage(
-                        description = stringResource(R.string.tutorial_p2_desc),
-                        title = stringResource(R.string.tutorial_p2_title),
-                        titleHighlights = stringResource(R.string.tutorial_p2_title_highlights).split(
-                            ','
-                        )
-                    )
-
-                    3 -> TutorialPage(
-                        description = stringResource(R.string.tutorial_p3_desc),
-                        title = stringResource(R.string.tutorial_p3_title),
-                        titleHighlights = stringResource(R.string.tutorial_p3_title_highlights).split(
-                            ','
-                        ),
-                        content = {
-                            CtaButton(
-                                label = stringResource(R.string.tutorial_btn_start),
-                                onClick = navToLogin,
-                                modifier = Modifier.align(Alignment.BottomCenter)
+                { page ->
+                    when (page) {
+                        0 ->
+                            TutorialPage(
+                                description = stringResource(R.string.tutorial_p0_desc),
+                                title = stringResource(R.string.tutorial_p0_title),
+                                titleHighlights =
+                                    stringResource(R.string.tutorial_p0_title_highlights).split(
+                                        ',',
+                                    ),
                             )
-                        }
-                    )
-                }
-            }
+
+                        1 ->
+                            TutorialPage(
+                                description = stringResource(R.string.tutorial_p1_desc),
+                                title = stringResource(R.string.tutorial_p1_title),
+                                titleHighlights =
+                                    stringResource(R.string.tutorial_p1_title_highlights).split(
+                                        ',',
+                                    ),
+                            )
+
+                        2 ->
+                            TutorialPage(
+                                description = stringResource(R.string.tutorial_p2_desc),
+                                title = stringResource(R.string.tutorial_p2_title),
+                                titleHighlights =
+                                    stringResource(R.string.tutorial_p2_title_highlights).split(
+                                        ',',
+                                    ),
+                            )
+
+                        3 ->
+                            TutorialPage(
+                                description = stringResource(R.string.tutorial_p3_desc),
+                                title = stringResource(R.string.tutorial_p3_title),
+                                titleHighlights =
+                                    stringResource(R.string.tutorial_p3_title_highlights).split(
+                                        ',',
+                                    ),
+                                content = {
+                                    CtaButton(
+                                        label = stringResource(R.string.tutorial_btn_start),
+                                        onClick = navToLogin,
+                                        modifier = Modifier.align(Alignment.BottomCenter),
+                                    )
+                                },
+                            )
+                    }
+                },
         )
     }
 }
@@ -103,32 +113,34 @@ private fun ColumnScope.TutorialPage(
     title: String,
     titleHighlights: List<String> = emptyList(),
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit = {}
+    content: @Composable BoxScope.() -> Unit = {},
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
+        modifier =
+            modifier
+                .fillMaxSize(),
     ) {
         Column(
             modifier = Modifier.align(Alignment.TopCenter),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
                 modifier = Modifier.height(37.dp),
                 style = MooiTheme.typography.body1,
                 color = MooiTheme.colorScheme.gray500,
-                text = description
+                text = description,
             )
             Text(
                 modifier = Modifier.height(121.dp),
                 textAlign = TextAlign.Center,
                 style = MooiTheme.typography.head1,
                 color = Color.White,
-                text = buildHighlightAnnotatedString(
-                    fullString = title,
-                    highlightWords = titleHighlights,
-                    highlightStyle = SpanStyle(color = MooiTheme.colorScheme.primary)
-                )
+                text =
+                    buildHighlightAnnotatedString(
+                        fullString = title,
+                        highlightWords = titleHighlights,
+                        highlightStyle = SpanStyle(color = MooiTheme.colorScheme.primary),
+                    ),
             )
         }
         content()

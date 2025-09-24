@@ -28,25 +28,27 @@ fun TopAppBar(
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {},
     title: String? = null,
-    rightComponent: (@Composable () -> Unit)? = null
+    rightComponent: (@Composable () -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .background(MooiTheme.colorScheme.background)
-            .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
-            .fillMaxWidth()
-            .height(62.dp)
-            .padding(horizontal = 16.dp)
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
+                .fillMaxWidth()
+                .height(62.dp)
+                .padding(horizontal = 16.dp),
     ) {
         if (showBackButton) {
             Image(
                 painter = painterResource(id = R.drawable.arrow_back),
-                modifier = Modifier
-                    .width(11.dp)
-                    .height(24.dp)
-                    .align(Alignment.CenterStart)
-                    .clickable { onBackClick() },
-                contentDescription = "back"
+                modifier =
+                    Modifier
+                        .width(11.dp)
+                        .height(24.dp)
+                        .align(Alignment.CenterStart)
+                        .clickable { onBackClick() },
+                contentDescription = "back",
             )
         }
         if (title != null) {
@@ -54,7 +56,7 @@ fun TopAppBar(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
                 style = MooiTheme.typography.body2,
-                color = Color.White
+                color = Color.White,
             )
         }
         if (rightComponent != null) {

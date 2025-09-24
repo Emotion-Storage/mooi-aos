@@ -44,7 +44,7 @@ fun ScrollPicker(
     modifier: Modifier = Modifier,
     placeholder: String? = null,
     enabled: Boolean = true,
-    onValueChange: (String) -> Unit = {}
+    onValueChange: (String) -> Unit = {},
 ) {
     val (isScrollPickerOpen, setScrollPickerOpen) = remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -52,72 +52,79 @@ fun ScrollPicker(
 
     Column(
         modifier = modifier.background(Color.Transparent),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .subBackground(selectedValue != null, defaultBackground = Color.Black)
-                .clickable(enabled = enabled) {
-                    // toggle scroll picker open/close
-                    setScrollPickerOpen(!isScrollPickerOpen)
-                }
-                .padding(14.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .subBackground(selectedValue != null, defaultBackground = Color.Black)
+                    .clickable(enabled = enabled) {
+                        // toggle scroll picker open/close
+                        setScrollPickerOpen(!isScrollPickerOpen)
+                    }
+                    .padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
                 color = if (selectedValue != null) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.gray600,
-                text = selectedValue ?: placeholder ?: ""
+                text = selectedValue ?: placeholder ?: "",
             )
             Image(
-                painter = if (isScrollPickerOpen) {
-                    painterResource(id = R.drawable.toggle_up)
-                } else {
-                    painterResource(
-                        id = R.drawable.toggle_down
-                    )
-                },
-                contentDescription = null
+                painter =
+                    if (isScrollPickerOpen) {
+                        painterResource(id = R.drawable.toggle_up)
+                    } else {
+                        painterResource(
+                            id = R.drawable.toggle_down,
+                        )
+                    },
+                contentDescription = null,
             )
         }
 
         AnimatedVisibility(
             visible = isScrollPickerOpen,
-            enter = slideInVertically {
-                with(density) { -40.dp.roundToPx() }
-            } + expandVertically(
-                expandFrom = Alignment.Top
-            ) + fadeIn(
-                initialAlpha = 0.3f
-            ),
-            exit = slideOutVertically() + shrinkVertically() + fadeOut()
+            enter =
+                slideInVertically {
+                    with(density) { -40.dp.roundToPx() }
+                } +
+                    expandVertically(
+                        expandFrom = Alignment.Top,
+                    ) +
+                    fadeIn(
+                        initialAlpha = 0.3f,
+                    ),
+            exit = slideOutVertically() + shrinkVertically() + fadeOut(),
         ) {
             // todo: add vertical scroll bar
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 144.dp)
-                    .background(Color.Black, RoundedCornerShape(10.dp))
-                    .padding(14.dp)
-                    .verticalScroll(scrollState),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .heightIn(max = 144.dp)
+                        .background(Color.Black, RoundedCornerShape(10.dp))
+                        .padding(14.dp)
+                        .verticalScroll(scrollState),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 range.forEach {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
                         color = Color.White,
                         text = it,
-                        modifier = Modifier
-                            .height(24.dp)
-                            .clickable(
-                                onClick = {
-                                    onValueChange(it)
-                                    setScrollPickerOpen(false)
-                                }
-                            )
+                        modifier =
+                            Modifier
+                                .height(24.dp)
+                                .clickable(
+                                    onClick = {
+                                        onValueChange(it)
+                                        setScrollPickerOpen(false)
+                                    },
+                                ),
                     )
                 }
             }
@@ -136,7 +143,7 @@ private fun ScrollPickerPreview() {
             placeholder = "월",
             onValueChange = setPickerValue,
             range = (1..12).toList().map { it.toString() },
-            modifier = Modifier.width(78.dp)
+            modifier = Modifier.width(78.dp),
         )
     }
 }

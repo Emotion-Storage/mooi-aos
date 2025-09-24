@@ -8,10 +8,10 @@ data class ChatMessage(
     val roomId: String,
     val source: MessageSource,
     val content: String,
-    val timestamp: LocalDateTime = LocalDateTime.now()
+    val timestamp: LocalDateTime = LocalDateTime.now(),
 ) {
     enum class MessageSource {
         CLIENT,
-        SERVER
+        SERVER,
     }
 }

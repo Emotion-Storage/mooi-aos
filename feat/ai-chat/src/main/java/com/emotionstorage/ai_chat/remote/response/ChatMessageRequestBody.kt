@@ -11,5 +11,5 @@ data class ChatMessageRequestBody(
     val content: String,
     val messageType: String = "user_message",
     @Serializable(with = LocalDateTimeSerializer::class)
-    val timeStamp: LocalDateTime = LocalDateTime.now()
+    val timeStamp: LocalDateTime = LocalDateTime.now(),
 )

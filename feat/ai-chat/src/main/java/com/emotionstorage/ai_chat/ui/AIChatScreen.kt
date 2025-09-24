@@ -34,7 +34,7 @@ fun AIChatScreen(
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {}
+    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(roomId) {
@@ -64,7 +64,7 @@ fun AIChatScreen(
         modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -73,38 +73,40 @@ private fun StatelessAIChatScreen(
     modifier: Modifier = Modifier,
     state: AIChatState = AIChatState(),
     onAction: (action: AIChatAction) -> Unit = {},
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     AIChatExitModel(
         isModelOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
-        onExit = navToBack
+        onExit = navToBack,
     )
 
     Scaffold(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
                 showBackButton = true,
                 onBackClick = {
                     setExitModalOpen(true)
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .imePadding()
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .imePadding(),
         ) {
             ChatMessageList(
                 modifier = Modifier.weight(1f),
-                chatMessages = state.messages
+                chatMessages = state.messages,
             )
             Button(onClick = {
                 onAction(AIChatAction.ConnectChatRoom("test-roomId"))
@@ -120,7 +122,7 @@ private fun StatelessAIChatScreen(
                 modifier = Modifier.fillMaxWidth(),
                 onSendMessage = {
                     onAction(AIChatAction.SendChatMessage(it))
-                }
+                },
             )
         }
     }
@@ -130,7 +132,7 @@ private fun StatelessAIChatScreen(
 private fun AIChatExitModel(
     isModelOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {}
+    onExit: () -> Unit = {},
 ) {
     if (isModelOpen) {
         Modal(
@@ -138,7 +140,7 @@ private fun AIChatExitModel(
             confirmLabel = "대화 계속하기",
             dismissLabel = "그만하기",
             onDismissRequest = onDismissRequest,
-            onDismiss = onExit
+            onDismiss = onExit,
         )
     }
 }

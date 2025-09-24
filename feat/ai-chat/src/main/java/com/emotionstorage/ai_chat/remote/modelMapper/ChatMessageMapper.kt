@@ -8,6 +8,6 @@ object ChatMessageMapper {
         ChatMessageRequestBody(
             messageId = chatMessage.id,
             roomId = chatMessage.roomId,
-            content = chatMessage.content
+            content = chatMessage.content,
         )
 }

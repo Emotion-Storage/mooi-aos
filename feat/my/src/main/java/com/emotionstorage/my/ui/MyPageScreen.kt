@@ -32,7 +32,7 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
-    navToWithdraw: () -> Unit = {}
+    navToWithdraw: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -62,7 +62,7 @@ fun MyPageScreen(
         modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
-        navToWithdraw = navToWithdraw
+        navToWithdraw = navToWithdraw,
     )
 }
 
@@ -71,48 +71,50 @@ private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     state: MyPageState = MyPageState(),
     onAction: (MyPageAction) -> Unit = {},
-    navToWithdraw: () -> Unit = {}
+    navToWithdraw: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
 
     Scaffold(
         modifier
             .fillMaxSize()
-            .background(MooiTheme.colorScheme.background)
+            .background(MooiTheme.colorScheme.background),
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(text = "${state.nickname}님", color = Color.White)
             Text(text = "MOOI와 함께한 지 +${state.signupDday}일", color = Color.White)
             Text(text = "보유 열쇠 ${state.keyCount}개", color = Color.White)
             Text(text = "버전 정보 ${state.versionName}", color = Color.White)
             Text(
-                modifier = Modifier.clickable {
-                    // Copy reply email to clipboard
-                    clipboardManager.setText(AnnotatedString(state.replyEmail))
-                },
+                modifier =
+                    Modifier.clickable {
+                        // Copy reply email to clipboard
+                        clipboardManager.setText(AnnotatedString(state.replyEmail))
+                    },
                 text = "MOOI에게 의견 보내기\n${state.replyEmail}",
-                color = Color.White
+                color = Color.White,
             )
 
             Button(
                 onClick = {
                     // todo: add confirm modal
                     onAction(MyPageAction.Logout)
-                }
+                },
             ) {
                 Text("로그아웃")
             }
             Button(
                 onClick = {
                     navToWithdraw()
-                }
+                },
             ) {
                 Text("탈퇴하기")
             }

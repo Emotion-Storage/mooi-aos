@@ -12,20 +12,21 @@ object AppDatabaseConstant {
     const val NAME = "mooi-room-database"
     const val VERSION = 2
 
-    object TABLE_NAME {
-        const val user = "user"
-        const val session = "session"
+    object TableName {
+        const val USER_TABLE = "user"
+        const val SESSION_TABLE = "session"
     }
 }
 
 @Database(
     entities = [UserLocal::class, SessionLocal::class],
-    version = AppDatabaseConstant.VERSION
+    version = AppDatabaseConstant.VERSION,
 )
 @TypeConverters(
-    DtoConverter::class
+    DtoConverter::class,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
+
     abstract fun sessionDao(): SessionDao
 }

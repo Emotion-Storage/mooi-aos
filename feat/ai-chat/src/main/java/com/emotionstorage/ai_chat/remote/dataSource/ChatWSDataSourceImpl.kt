@@ -21,60 +21,66 @@ import javax.inject.Inject
 
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
-class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
-    private val json = Json { ignoreUnknownKeys = true }
-    private val client = StompClient(
-        webSocketClient = OkHttpWebSocketClient(
-            OkHttpClient.Builder()
-                .pingInterval(Duration.ofSeconds(10))
-                .build()
-        )
-    )
-
-    private lateinit var session: StompSession
-
-    override suspend fun connectChatRoom(): Boolean {
-        try {
-            session = client.connect(WS_URL)
-            return true
-        } catch (e: Exception) {
-            throw Throwable("connectChatRoom() failed", e)
-        }
-    }
-
-    override suspend fun disconnectChatRoom(): Boolean {
-        try {
-            session.disconnect()
-            return true
-        } catch (e: Exception) {
-            throw Throwable("disconnectChatRoom() failed", e)
-        }
-    }
-
-    override suspend fun observeChatMessages(roomId: String): Flow<String> {
-        return session.subscribeText("/sub/chatroom/$roomId").map {
-            Logger.d("observeChatMessages() it: $it")
-            it
-        }
-    }
-
-    override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
-        try {
-            val messageJson = json.encodeToString(
-                ChatMessageRequestBody.serializer(),
-                ChatMessageMapper.toRemote(chatMessage)
+class ChatWSDataSourceImpl
+    @Inject
+    constructor() : ChatWSDataSource {
+        private val json = Json { ignoreUnknownKeys = true }
+        private val client =
+            StompClient(
+                webSocketClient =
+                    OkHttpWebSocketClient(
+                        OkHttpClient.Builder()
+                            .pingInterval(Duration.ofSeconds(10))
+                            .build(),
+                    ),
             )
-            Logger.d("sendChatMessage() messageJson: $messageJson")
 
-            session.send(
-                headers = StompSendHeaders(
-                    destination = "/pub/v1/test"
-                ),
-                body = FrameBody.Text(messageJson)
-            )
-            return true
-        } catch (e: Exception) {
-            throw Throwable("sendChatMessage() failed", e)
+        private lateinit var session: StompSession
+
+        override suspend fun connectChatRoom(): Boolean {
+            try {
+                session = client.connect(WS_URL)
+                return true
+            } catch (e: Exception) {
+                throw Throwable("connectChatRoom() failed", e)
+            }
+        }
+
+        override suspend fun disconnectChatRoom(): Boolean {
+            try {
+                session.disconnect()
+                return true
+            } catch (e: Exception) {
+                throw Throwable("disconnectChatRoom() failed", e)
+            }
+        }
+
+        override suspend fun observeChatMessages(roomId: String): Flow<String> {
+            return session.subscribeText("/sub/chatroom/$roomId").map {
+                Logger.d("observeChatMessages() it: $it")
+                it
+            }
+        }
+
+        override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
+            try {
+                val messageJson =
+                    json.encodeToString(
+                        ChatMessageRequestBody.serializer(),
+                        ChatMessageMapper.toRemote(chatMessage),
+                    )
+                Logger.d("sendChatMessage() messageJson: $messageJson")
+
+                session.send(
+                    headers =
+                        StompSendHeaders(
+                            destination = "/pub/v1/test",
+                        ),
+                    body = FrameBody.Text(messageJson),
+                )
+                return true
+            } catch (e: Exception) {
+                throw Throwable("sendChatMessage() failed", e)
+            }
         }
     }
-}

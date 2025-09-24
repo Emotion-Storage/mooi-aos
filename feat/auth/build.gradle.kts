@@ -2,7 +2,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 fun getLocalProperty(propertyKey: String): String {
     return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
-        propertyKey
+        propertyKey,
     )
 }
 
@@ -23,7 +23,7 @@ android {
         buildConfigField(
             "String",
             "GOOGLE_SERVER_CLIENT_ID",
-            getLocalProperty("GOOGLE_SERVER_CLIENT_ID")
+            getLocalProperty("GOOGLE_SERVER_CLIENT_ID"),
         )
     }
 
@@ -32,7 +32,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

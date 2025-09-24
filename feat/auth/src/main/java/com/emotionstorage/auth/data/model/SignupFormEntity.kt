@@ -10,5 +10,5 @@ data class SignupFormEntity(
     val expectations: List<String>,
     val isTermAgreed: Boolean,
     val isPrivacyAgreed: Boolean,
-    val isMarketingAgreed: Boolean
+    val isMarketingAgreed: Boolean,
 )

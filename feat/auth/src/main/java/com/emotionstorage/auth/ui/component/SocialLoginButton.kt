@@ -29,51 +29,56 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun SocialLoginButton(
     provider: AuthProvider,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
-        modifier = modifier
-            .width(328.dp)
-            .height(64.dp),
+        modifier =
+            modifier
+                .width(328.dp)
+                .height(64.dp),
         shape = RoundedCornerShape(15.dp),
         elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = when (provider) {
-                AuthProvider.KAKAO -> Color(0xFFFEE502)
-                AuthProvider.GOOGLE -> Color.White
-            },
-            contentColor = Color(0xFF1A1802)
-        ),
-        contentPadding = PaddingValues(0.dp)
+        colors =
+            ButtonDefaults.buttonColors(
+                containerColor =
+                    when (provider) {
+                        AuthProvider.KAKAO -> Color(0xFFFEE502)
+                        AuthProvider.GOOGLE -> Color.White
+                    },
+                contentColor = Color(0xFF1A1802),
+            ),
+        contentPadding = PaddingValues(0.dp),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .height(21.dp)
-                    .padding(start = 24.dp),
-                painter = painterResource(
-                    when (provider) {
-                        AuthProvider.KAKAO -> R.drawable.kakao_logo
-                        AuthProvider.GOOGLE -> R.drawable.google_logo
-                    }
-                ),
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterStart)
+                        .height(21.dp)
+                        .padding(start = 24.dp),
+                painter =
+                    painterResource(
+                        when (provider) {
+                            AuthProvider.KAKAO -> R.drawable.kakao_logo
+                            AuthProvider.GOOGLE -> R.drawable.google_logo
+                        },
+                    ),
                 contentDescription =
-                when (provider) {
-                    AuthProvider.KAKAO -> stringResource(R.string.login_btn_kako)
-                    AuthProvider.GOOGLE -> stringResource(R.string.login_btn_google)
-                }
+                    when (provider) {
+                        AuthProvider.KAKAO -> stringResource(R.string.login_btn_kako)
+                        AuthProvider.GOOGLE -> stringResource(R.string.login_btn_google)
+                    },
             )
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 style = MooiTheme.typography.button,
                 text =
-                if (provider == AuthProvider.KAKAO) {
-                    stringResource(R.string.login_btn_kako)
-                } else {
-                    stringResource(R.string.login_btn_google)
-                }
+                    if (provider == AuthProvider.KAKAO) {
+                        stringResource(R.string.login_btn_kako)
+                    } else {
+                        stringResource(R.string.login_btn_google)
+                    },
             )
         }
     }
@@ -85,7 +90,7 @@ private fun SocialLoginButtonPreview() {
     MooiTheme {
         Column(
             modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             SocialLoginButton(provider = AuthProvider.KAKAO, onClick = {})
             SocialLoginButton(provider = AuthProvider.GOOGLE, onClick = {})

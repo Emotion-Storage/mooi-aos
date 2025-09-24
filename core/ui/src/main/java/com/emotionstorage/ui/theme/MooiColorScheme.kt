@@ -20,5 +20,5 @@ data class MooiColorScheme(
     val gray300: Color = Color(0xFFDADADA),
     val gray200: Color = Color(0xFFEAEAEA),
     val gray100: Color = Color(0xFFF3F3F3),
-    val gray50: Color = Color(0xFFF9F9F9)
+    val gray50: Color = Color(0xFFF9F9F9),
 )

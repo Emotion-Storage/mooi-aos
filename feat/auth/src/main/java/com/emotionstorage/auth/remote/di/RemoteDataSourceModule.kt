@@ -17,19 +17,15 @@ import javax.inject.Singleton
 abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
-    abstract fun bindAuthRemoteDataSource(
-        authRemoteDataSourceImpl: AuthRemoteDataSourceImpl
-    ): AuthRemoteDataSource
+    abstract fun bindAuthRemoteDataSource(authRemoteDataSourceImpl: AuthRemoteDataSourceImpl): AuthRemoteDataSource
 
     @Binds
     @Singleton
-    abstract fun bindKakaoRemoteDataSource(
-        kakaoRemoteDataSourceImpl: KakaoRemoteDataSourceImpl
-    ): KakaoRemoteDataSource
+    abstract fun bindKakaoRemoteDataSource(kakaoRemoteDataSourceImpl: KakaoRemoteDataSourceImpl): KakaoRemoteDataSource
 
     @Binds
     @Singleton
     abstract fun bindGoogleRemoteDataSource(
-        googleRemoteDataSourceImpl: GoogleRemoteDataSourceImpl
+        googleRemoteDataSourceImpl: GoogleRemoteDataSourceImpl,
     ): GoogleRemoteDataSource
 }

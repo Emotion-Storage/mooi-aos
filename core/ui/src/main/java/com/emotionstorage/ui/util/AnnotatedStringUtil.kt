@@ -8,7 +8,7 @@ import androidx.compose.ui.text.withStyle
 fun buildHighlightAnnotatedString(
     fullString: String,
     highlightWords: List<String>,
-    highlightStyle: SpanStyle
+    highlightStyle: SpanStyle,
 ): AnnotatedString {
     return buildAnnotatedString {
         var currentIndex = 0

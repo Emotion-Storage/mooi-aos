@@ -20,7 +20,7 @@ android {
         buildConfigField(
             "String",
             "MOOI_DEV_SERVER_URL",
-            getLocalProperty("MOOI_DEV_SERVER_URL")
+            getLocalProperty("MOOI_DEV_SERVER_URL"),
         )
     }
 
@@ -29,7 +29,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

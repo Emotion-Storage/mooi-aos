@@ -19,48 +19,54 @@ import kotlinx.coroutines.async
 import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-class GoogleRemoteDataSourceImpl @Inject constructor(
-    @ApplicationContext private val context: Context
-) : GoogleRemoteDataSource {
-    private val credentialManager: CredentialManager by lazy {
-        CredentialManager.create(context)
-    }
+class GoogleRemoteDataSourceImpl
+    @Inject
+    constructor(
+        @ApplicationContext private val context: Context,
+    ) : GoogleRemoteDataSource {
+        private val credentialManager: CredentialManager by lazy {
+            CredentialManager.create(context)
+        }
 
-    override suspend fun getIdToken(): String {
-        val deferredResult = CoroutineScope(Dispatchers.Default).async {
-            try {
-                // credential request for google login
-                val credentialRequest = GetCredentialRequest.Builder().addCredentialOption(
-                    GetSignInWithGoogleOption
-                        .Builder(
-                            serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID
-                        ).build()
-                ).build()
+        override suspend fun getIdToken(): String {
+            val deferredResult =
+                CoroutineScope(Dispatchers.Default).async {
+                    try {
+                        // credential request for google login
+                        val credentialRequest =
+                            GetCredentialRequest.Builder().addCredentialOption(
+                                GetSignInWithGoogleOption
+                                    .Builder(
+                                        serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID,
+                                    ).build(),
+                            ).build()
 
-                // get credential result
-                val credentialResult: GetCredentialResponse = credentialManager.getCredential(
-                    request = credentialRequest,
-                    context = context
-                )
+                        // get credential result
+                        val credentialResult: GetCredentialResponse =
+                            credentialManager.getCredential(
+                                request = credentialRequest,
+                                context = context,
+                            )
 
-                // parse credential result
-                credentialResult.credential.apply {
-                    if (this is CustomCredential && this.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
-                        try {
-                            val googleIdTokenCredential = GoogleIdTokenCredential
-                                .createFrom(this.data)
-                            return@async googleIdTokenCredential.idToken
-                        } catch (e: GoogleIdTokenParsingException) {
-                            throw Exception("Invalid Google ID token", e)
+                        // parse credential result
+                        credentialResult.credential.apply {
+                            if (this is CustomCredential && this.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+                                try {
+                                    val googleIdTokenCredential =
+                                        GoogleIdTokenCredential
+                                            .createFrom(this.data)
+                                    return@async googleIdTokenCredential.idToken
+                                } catch (e: GoogleIdTokenParsingException) {
+                                    throw Exception("Invalid Google ID token", e)
+                                }
+                            } else {
+                                throw Exception("Unexpected type of credential")
+                            }
                         }
-                    } else {
-                        throw Exception("Unexpected type of credential")
+                    } catch (e: Exception) {
+                        throw Exception("Google credential failed", e)
                     }
                 }
-            } catch (e: Exception) {
-                throw Exception("Google credential failed", e)
-            }
+            return deferredResult.await() as String
         }
-        return deferredResult.await() as String
     }
-}

@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class StartEmotionConversationResponse(
-    val roomId: String
+    val roomId: String,
 )

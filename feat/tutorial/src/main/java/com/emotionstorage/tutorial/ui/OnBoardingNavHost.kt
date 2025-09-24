@@ -26,12 +26,12 @@ import com.emotionstorage.ui.theme.MooiTheme
  * On boarding destinations
  */
 enum class OnBoardingRoute(
-    val route: String
+    val route: String,
 ) {
     NICKNAME("on_boarding/nickname"),
     GENDER_BIRTH("on_boarding/gender_birth"),
     EXPECTATIONS("on_boarding/expectations"),
-    AGREE_TERMS("on_boarding/agree_terms")
+    AGREE_TERMS("on_boarding/agree_terms"),
 }
 
 @Composable
@@ -41,7 +41,7 @@ fun OnBoardingNavHost(
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
     navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     val navController = rememberNavController()
     val state = sharedViewModel.container.stateFlow.collectAsState()
@@ -68,7 +68,7 @@ fun OnBoardingNavHost(
         navController = navController,
         state = state.value,
         onAction = sharedViewModel::onAction,
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -78,67 +78,74 @@ private fun StatelessOnBoardingNavHost(
     modifier: Modifier = Modifier,
     state: OnBoardingState = OnBoardingState(),
     onAction: (OnBoardingAction) -> Unit = {},
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     NavHost(
         navController,
         startDestination = OnBoardingRoute.NICKNAME.route,
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
     ) {
         OnBoardingRoute.entries.forEach { destination ->
             composable(destination.route) {
                 when (destination) {
-                    OnBoardingRoute.NICKNAME -> NicknameScreen(
-                        onNicknameInputComplete = { nickname ->
-                            onAction(OnBoardingAction.InputNickname(nickname))
-                        },
-                        navToGenderBirth = {
-                            navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
-                        },
-                        navToBack = {
-                            // call navToBack() instead of navController.popBackStack(), to exit from on boarding nav controller
-                            navToBack()
-                        }
-                    )
+                    OnBoardingRoute.NICKNAME ->
+                        NicknameScreen(
+                            onNicknameInputComplete = { nickname ->
+                                onAction(OnBoardingAction.InputNickname(nickname))
+                            },
+                            navToGenderBirth = {
+                                navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
+                            },
+                            navToBack = {
+                                // call navToBack() instead of navController.popBackStack(), to exit from on boarding nav controller
+                                navToBack()
+                            },
+                        )
 
-                    OnBoardingRoute.GENDER_BIRTH -> GenderBirthScreen(
-                        nickname = state.signupForm.nickname ?: "",
-                        onGenderBirthInputComplete = { gender, birth ->
-                            onAction(OnBoardingAction.InputGenderAndBirth(gender, birth))
-                        },
-                        navToExpectations = {
-                            navController.navigate(OnBoardingRoute.EXPECTATIONS.route)
-                        },
-                        navToBack = {
-                            navController.popBackStack()
-                        }
-                    )
+                    OnBoardingRoute.GENDER_BIRTH ->
+                        GenderBirthScreen(
+                            nickname = state.signupForm.nickname ?: "",
+                            onGenderBirthInputComplete = { gender, birth ->
+                                onAction(OnBoardingAction.InputGenderAndBirth(gender, birth))
+                            },
+                            navToExpectations = {
+                                navController.navigate(OnBoardingRoute.EXPECTATIONS.route)
+                            },
+                            navToBack = {
+                                navController.popBackStack()
+                            },
+                        )
 
-                    OnBoardingRoute.EXPECTATIONS -> ExpectationsScreen(
-                        onExpectationsSelectComplete = { expectations ->
-                            onAction(OnBoardingAction.InputExpectations(expectations))
-                        },
-                        navToAgreeTerms = {
-                            navController.navigate(OnBoardingRoute.AGREE_TERMS.route)
-                        },
-                        navToBack = {
-                            navController.popBackStack()
-                        }
-                    )
+                    OnBoardingRoute.EXPECTATIONS ->
+                        ExpectationsScreen(
+                            onExpectationsSelectComplete = { expectations ->
+                                onAction(OnBoardingAction.InputExpectations(expectations))
+                            },
+                            navToAgreeTerms = {
+                                navController.navigate(OnBoardingRoute.AGREE_TERMS.route)
+                            },
+                            navToBack = {
+                                navController.popBackStack()
+                            },
+                        )
 
-                    OnBoardingRoute.AGREE_TERMS -> AgreeTermsScreen(
-                        onAgreeTermsInputComplete = { isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
-                            onAction(OnBoardingAction.InputAgreedTerms(isTermAgreed, isPrivacyAgreed, isMarketingAgreed))
-                        },
-                        onSignup = {
-                            onAction(OnBoardingAction.Signup)
-                        },
-                        navToBack = {
-                            navController.popBackStack()
-                        }
-                    )
+                    OnBoardingRoute.AGREE_TERMS ->
+                        AgreeTermsScreen(
+                            onAgreeTermsInputComplete = { isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
+                                onAction(
+                                    OnBoardingAction.InputAgreedTerms(isTermAgreed, isPrivacyAgreed, isMarketingAgreed),
+                                )
+                            },
+                            onSignup = {
+                                onAction(OnBoardingAction.Signup)
+                            },
+                            navToBack = {
+                                navController.popBackStack()
+                            },
+                        )
                 }
             }
         }

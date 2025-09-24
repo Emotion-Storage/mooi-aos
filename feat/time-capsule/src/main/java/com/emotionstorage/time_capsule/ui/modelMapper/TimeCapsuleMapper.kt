@@ -10,7 +10,7 @@ object TimeCapsuleMapper {
             emotions = domain.emotions,
             isFavorite = domain.isFavorite,
             isFavoriteAt = domain.isFavoriteAt,
-            createdAt = domain.createdAt
+            createdAt = domain.createdAt,
         )
     }
 }

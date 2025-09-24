@@ -14,12 +14,12 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun Modifier.mainBackground(
     isActivated: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
-    defaultBackground: Color = Color.Transparent
+    defaultBackground: Color = Color.Transparent,
 ): Modifier {
     return if (isActivated) {
         this.background(
             MooiTheme.brushScheme.mainButtonBackground,
-            shape
+            shape,
         )
     } else {
         this.background(defaultBackground, shape)
@@ -30,18 +30,18 @@ fun Modifier.mainBackground(
 fun Modifier.subBackground(
     isActivated: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
-    defaultBackground: Color = Color.Transparent
+    defaultBackground: Color = Color.Transparent,
 ): Modifier {
     return if (isActivated) {
         this
             .background(
                 MooiTheme.brushScheme.subButtonBackground,
-                shape
+                shape,
             )
             .border(
                 1.dp,
                 MooiTheme.brushScheme.subButtonBorder,
-                shape
+                shape,
             )
     } else {
         this.background(defaultBackground, shape)

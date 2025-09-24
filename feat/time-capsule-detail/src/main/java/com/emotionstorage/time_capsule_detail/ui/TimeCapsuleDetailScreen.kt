@@ -42,37 +42,45 @@ import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-private val DUMMY_TIME_CAPSULE = TimeCapsule(
-    id = "id",
-    status = TimeCapsule.STATUS.TEMPORARY,
-    title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-    summary = "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어. 그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. 나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
-    emotions = listOf(
-        TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
-        TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
-        TimeCapsule.Emotion("안정감", icon = 4, 80.0f)
-    ),
-    comments = listOf(
-        "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
-        "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
-        "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요."
-    ),
-    note = "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
-    logs = emptyList(),
-    createdAt = LocalDateTime.now(),
-    updatedAt = LocalDateTime.now()
-)
+private val DUMMY_TIME_CAPSULE =
+    TimeCapsule(
+        id = "id",
+        status = TimeCapsule.STATUS.TEMPORARY,
+        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+        summary =
+            "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
+                "그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. " +
+                "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
+        emotions =
+            listOf(
+                TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
+                TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
+                TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
+            ),
+        comments =
+            listOf(
+                "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
+                "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
+                "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요.",
+            ),
+        note =
+            "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
+                "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
+        logs = emptyList(),
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now(),
+    )
 
 @Composable
 fun TimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     StatelessTimeCapsuleDetailScreen(
         timeCapsule = DUMMY_TIME_CAPSULE,
         modifier = modifier,
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -80,14 +88,15 @@ fun TimeCapsuleDetailScreen(
 private fun StatelessTimeCapsuleDetailScreen(
     timeCapsule: TimeCapsule,
     modifier: Modifier = Modifier,
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
                 title = timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
@@ -98,19 +107,20 @@ private fun StatelessTimeCapsuleDetailScreen(
                         isSelected = timeCapsule.isFavorite,
                         onSelect = {
                             // todo: toggle favorite
-                        }
+                        },
                     )
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .padding(start = 16.dp, end = 16.dp)
-                .verticalScroll(scrollState)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .padding(start = 16.dp, end = 16.dp)
+                    .verticalScroll(scrollState),
         ) {
             // 대화 요약
             Text(
@@ -118,17 +128,18 @@ private fun StatelessTimeCapsuleDetailScreen(
                 text = timeCapsule.title,
                 style = MooiTheme.typography.body1,
                 textAlign = TextAlign.Center,
-                color = Color.White
+                color = Color.White,
             )
             Box(
-                modifier = Modifier
-                    .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
-                    .padding(18.dp)
+                modifier =
+                    Modifier
+                        .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
+                        .padding(18.dp),
             ) {
                 Text(
                     text = timeCapsule.summary,
                     style = MooiTheme.typography.body4.copy(lineHeight = 24.sp),
-                    color = Color.White
+                    color = Color.White,
                 )
             }
 
@@ -136,24 +147,26 @@ private fun StatelessTimeCapsuleDetailScreen(
 
             // 감정 분석
             Text(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 27.dp),
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 27.dp),
                 text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
                 style = MooiTheme.typography.body1,
                 textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.primary
+                color = MooiTheme.colorScheme.primary,
             )
 
             Emotions(
-                modifier = Modifier
-                    .padding(bottom = 27.dp),
-                emotions = timeCapsule.emotions
+                modifier =
+                    Modifier
+                        .padding(bottom = 27.dp),
+                emotions = timeCapsule.emotions,
             )
 
             Comments(
                 modifier = Modifier.padding(bottom = 53.dp),
-                comments = timeCapsule.comments
+                comments = timeCapsule.comments,
             )
 
             // 마음 노트
@@ -161,18 +174,18 @@ private fun StatelessTimeCapsuleDetailScreen(
                 modifier = Modifier.padding(bottom = 5.dp),
                 text = "내 마음 노트",
                 style = MooiTheme.typography.body1,
-                color = Color.White
+                color = Color.White,
             )
             Text(
                 modifier = Modifier.padding(bottom = 17.dp),
                 text = "타임캡슐에 직접 남기고 싶은 말이 있다면 적어주세요.",
                 style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Light),
                 textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.gray300
+                color = MooiTheme.colorScheme.gray300,
             )
             MindNote(
                 modifier = Modifier.padding(bottom = 500.dp),
-                note = timeCapsule.note ?: ""
+                note = timeCapsule.note ?: "",
             )
         }
     }
@@ -183,22 +196,23 @@ private fun DecorativeDots(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         for (alpha in listOf(0.1f, 0.3f, 0.7f)) {
             Box(
-                modifier = Modifier
-                    .size(8.dp)
-                    .background(
-                        Brush.horizontalGradient(
-                            listOf(
-                                MooiTheme.colorScheme.primary.copy(alpha = alpha),
-                                Color(0xFF9AB4F2).copy(alpha = alpha),
-                                MooiTheme.colorScheme.tertiary.copy(alpha = alpha)
-                            )
+                modifier =
+                    Modifier
+                        .size(8.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    MooiTheme.colorScheme.primary.copy(alpha = alpha),
+                                    Color(0xFF9AB4F2).copy(alpha = alpha),
+                                    MooiTheme.colorScheme.tertiary.copy(alpha = alpha),
+                                ),
+                            ),
+                            CircleShape,
                         ),
-                        CircleShape
-                    )
             )
         }
     }
@@ -207,59 +221,61 @@ private fun DecorativeDots(modifier: Modifier = Modifier) {
 @Composable
 private fun Emotions(
     modifier: Modifier = Modifier,
-    emotions: List<TimeCapsule.Emotion> = emptyList()
+    emotions: List<TimeCapsule.Emotion> = emptyList(),
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(11.dp)
+        horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
         for (emotion in emotions) {
             Box(
-                modifier = Modifier
-                    .height(92.dp)
-                    .weight(1f)
-                    .background(
-                        Brush.horizontalGradient(
-                            listOf(
-                                Color(0x80849BEA).copy(alpha = 0.1f),
-                                Color(0x14849BEA).copy(alpha = 0.016f)
-                            )
+                modifier =
+                    Modifier
+                        .height(92.dp)
+                        .weight(1f)
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    Color(0x80849BEA).copy(alpha = 0.1f),
+                                    Color(0x14849BEA).copy(alpha = 0.016f),
+                                ),
+                            ),
+                            RoundedCornerShape(10.dp),
                         ),
-                        RoundedCornerShape(10.dp)
-                    )
             ) {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(5.dp)
+                    verticalArrangement = Arrangement.spacedBy(5.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp)
+                        horizontalArrangement = Arrangement.spacedBy(5.dp),
                     ) {
                         if (emotion.getIconResId() == null) {
                             Box(
-                                modifier = Modifier
-                                    .size(22.dp)
-                                    .background(Color.Gray, CircleShape)
+                                modifier =
+                                    Modifier
+                                        .size(22.dp)
+                                        .background(Color.Gray, CircleShape),
                             )
                         } else {
                             Image(
                                 painter = painterResource(id = emotion.getIconResId()!!),
                                 modifier = Modifier.size(22.dp),
-                                contentDescription = emotion.label
+                                contentDescription = emotion.label,
                             )
                         }
                         Text(
                             text = emotion.label,
                             style = MooiTheme.typography.body4.copy(fontSize = 15.sp),
-                            color = MooiTheme.colorScheme.primary
+                            color = MooiTheme.colorScheme.primary,
                         )
                     }
                     Text(
                         text = "${emotion.percentage?.toInt() ?: "??"}%",
                         style = MooiTheme.typography.head3,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
             }
@@ -270,31 +286,33 @@ private fun Emotions(
 @Composable
 private fun Comments(
     modifier: Modifier = Modifier,
-    comments: List<String> = emptyList()
+    comments: List<String> = emptyList(),
 ) {
     Column(
-        modifier = modifier
-            .background(Color(0x0AAECBFA), RoundedCornerShape(15.dp))
-            .border(1.dp, Color(0x33849BEA), RoundedCornerShape(15.dp))
-            .padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+        modifier =
+            modifier
+                .background(Color(0x0AAECBFA), RoundedCornerShape(15.dp))
+                .border(1.dp, Color(0x33849BEA), RoundedCornerShape(15.dp))
+                .padding(18.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         for (comment in comments) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(11.dp)
+                horizontalArrangement = Arrangement.spacedBy(11.dp),
             ) {
                 Box(
-                    modifier = Modifier
-                        .size(5.dp)
-                        .background(Color.White, CircleShape)
-                        .offset(y = 8.dp)
+                    modifier =
+                        Modifier
+                            .size(5.dp)
+                            .background(Color.White, CircleShape)
+                            .offset(y = 8.dp),
                 )
                 Text(
                     text = comment,
                     style = MooiTheme.typography.body4,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
@@ -305,23 +323,24 @@ private fun Comments(
 private fun MindNote(
     modifier: Modifier = Modifier,
     note: String = "",
-    onSaveNote: (note: String) -> Unit = {}
+    onSaveNote: (note: String) -> Unit = {},
 ) {
     val (noteInput, setNoteInput) = remember { mutableStateOf(note) }
 
     Column(
         modifier = modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.spacedBy(13.dp)
+        verticalArrangement = Arrangement.spacedBy(13.dp),
     ) {
         TextBoxInput(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
             value = noteInput,
             onValueChange = setNoteInput,
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
-            maxCharCount = 1000
+            maxCharCount = 1000,
         )
 
         Box(
@@ -329,14 +348,14 @@ private fun MindNote(
                 .size(140.dp, 46.dp)
                 .background(MooiTheme.colorScheme.bottomBarBackground, RoundedCornerShape(10.dp))
                 .clickable(
-                    onClick = { onSaveNote(noteInput) }
-                )
+                    onClick = { onSaveNote(noteInput) },
+                ),
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = "변경사항 저장하기",
                 style = MooiTheme.typography.body4,
-                color = Color.White
+                color = Color.White,
             )
         }
     }
@@ -348,7 +367,7 @@ private fun MindNote(
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
-            timeCapsule = DUMMY_TIME_CAPSULE
+            timeCapsule = DUMMY_TIME_CAPSULE,
         )
     }
 }

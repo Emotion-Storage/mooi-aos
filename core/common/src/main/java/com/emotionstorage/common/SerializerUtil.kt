@@ -21,7 +21,7 @@ object LocalDateSerializer : KSerializer<LocalDate> {
 
     override fun serialize(
         encoder: Encoder,
-        value: LocalDate
+        value: LocalDate,
     ) {
         encoder.encodeString(value.format(formatter)) // Serialize to "yyyy-MM-dd"
     }
@@ -37,7 +37,7 @@ object LocalDateTimeSerializer : KSerializer<LocalDateTime> {
 
     override fun serialize(
         encoder: Encoder,
-        value: LocalDateTime
+        value: LocalDateTime,
     ) {
         encoder.encodeString(value.toString())
     }

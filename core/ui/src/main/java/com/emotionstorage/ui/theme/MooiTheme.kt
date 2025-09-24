@@ -5,26 +5,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 
-private val LocalMooiColorScheme = staticCompositionLocalOf {
-    MooiColorScheme()
-}
-private val LocalMooiBrushScheme = staticCompositionLocalOf {
-    MooiBrushScheme()
-}
-private val LocalMooiTypography = staticCompositionLocalOf {
-    MooiTypography()
-}
+private val LocalMooiColorScheme =
+    staticCompositionLocalOf {
+        MooiColorScheme()
+    }
+private val LocalMooiBrushScheme =
+    staticCompositionLocalOf {
+        MooiBrushScheme()
+    }
+private val LocalMooiTypography =
+    staticCompositionLocalOf {
+        MooiTypography()
+    }
 
 @Composable
 fun MooiTheme(
 //    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalMooiTypography provides MooiTypography()
+        LocalMooiTypography provides MooiTypography(),
     ) {
         MaterialTheme(
-            content = content
+            content = content,
         )
     }
 }

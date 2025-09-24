@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 
 enum class ToggleButtonType {
-    CHECKBOX
+    CHECKBOX,
 }
 
 @Composable
@@ -23,17 +23,19 @@ fun ToggleButton(
     isSelected: Boolean = false,
     onSelect: () -> Unit = {},
     contentDescription: String? = null,
-    type: ToggleButtonType = ToggleButtonType.CHECKBOX
+    type: ToggleButtonType = ToggleButtonType.CHECKBOX,
 ) {
     Image(
-        modifier = modifier.clickable(
-            enabled = enabled,
-            onClick = onSelect
-        ),
-        painter = painterResource(
-            if (isSelected) R.drawable.checkbox_on else R.drawable.checkbox_off
-        ),
-        contentDescription = contentDescription
+        modifier =
+            modifier.clickable(
+                enabled = enabled,
+                onClick = onSelect,
+            ),
+        painter =
+            painterResource(
+                if (isSelected) R.drawable.checkbox_on else R.drawable.checkbox_off,
+            ),
+        contentDescription = contentDescription,
     )
 }
 
@@ -43,6 +45,6 @@ private fun ToggleButtonPreview() {
     val (isSelected, setIsSelected) = remember { mutableStateOf(false) }
     ToggleButton(
         isSelected = isSelected,
-        onSelect = { setIsSelected(!isSelected) }
+        onSelect = { setIsSelected(!isSelected) },
     )
 }

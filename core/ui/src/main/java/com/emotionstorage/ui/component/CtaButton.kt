@@ -22,7 +22,7 @@ import com.emotionstorage.ui.util.mainBackground
 
 enum class CtaButtonType {
     FILLED,
-    TONAL
+    TONAL,
 }
 
 @Composable
@@ -33,35 +33,39 @@ fun CtaButton(
     onClick: () -> Unit = {},
     type: CtaButtonType = CtaButtonType.FILLED,
     radius: Int = 15,
-    textStyle: TextStyle = MooiTheme.typography.button
+    textStyle: TextStyle = MooiTheme.typography.button,
 ) {
     Box(modifier = modifier) {
         Button(
-            modifier = Modifier
-                .width(330.dp)
-                .height(65.dp)
-                .align(Alignment.Center)
-                .mainBackground(enabled, RoundedCornerShape(radius.dp)),
+            modifier =
+                Modifier
+                    .width(330.dp)
+                    .height(65.dp)
+                    .align(Alignment.Center)
+                    .mainBackground(enabled, RoundedCornerShape(radius.dp)),
             shape = RoundedCornerShape(radius.dp),
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = when (type) {
-                    CtaButtonType.FILLED -> Color.Transparent
-                    CtaButtonType.TONAL -> MooiTheme.colorScheme.gray700
-                },
-                contentColor = when (type) {
-                    CtaButtonType.FILLED -> Color.White
-                    CtaButtonType.TONAL -> MooiTheme.colorScheme.gray500
-                },
-                disabledContainerColor = MooiTheme.colorScheme.gray500,
-                disabledContentColor = Color.White
-            ),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor =
+                        when (type) {
+                            CtaButtonType.FILLED -> Color.Transparent
+                            CtaButtonType.TONAL -> MooiTheme.colorScheme.gray700
+                        },
+                    contentColor =
+                        when (type) {
+                            CtaButtonType.FILLED -> Color.White
+                            CtaButtonType.TONAL -> MooiTheme.colorScheme.gray500
+                        },
+                    disabledContainerColor = MooiTheme.colorScheme.gray500,
+                    disabledContentColor = Color.White,
+                ),
             enabled = enabled,
-            onClick = onClick
+            onClick = onClick,
         ) {
             Text(
                 style = textStyle,
-                text = label
+                text = label,
             )
         }
     }
@@ -73,18 +77,18 @@ private fun CtaButtonPreview() {
     MooiTheme {
         Column(
             modifier = Modifier.padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             CtaButton(
-                label = "확인"
+                label = "확인",
             )
             CtaButton(
                 label = "확인",
-                type = CtaButtonType.TONAL
+                type = CtaButtonType.TONAL,
             )
             CtaButton(
                 label = "확인",
-                enabled = false
+                enabled = false,
             )
         }
     }

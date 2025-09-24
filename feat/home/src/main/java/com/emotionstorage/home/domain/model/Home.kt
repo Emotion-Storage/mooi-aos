@@ -5,5 +5,5 @@ data class Home(
     val keyCount: Int,
     val hasNewNotification: Boolean,
     val hasNewTimeCapsule: Boolean,
-    val hasNewReport: Boolean
+    val hasNewReport: Boolean,
 )

@@ -38,45 +38,48 @@ fun DropDownPicker(
     modifier: Modifier = Modifier,
     options: List<String> = emptyList(),
     onSelect: (String) -> Unit = {},
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
     val (isScrollPickerOpen, setScrollPickerOpen) = remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier.background(Color.Transparent),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
+        verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(40.dp)
-                .background(Color.Black, RoundedCornerShape(10.dp))
-                .padding(horizontal = 12.dp)
-                .clickable(enabled = enabled) {
-                    // toggle scroll picker open/close
-                    setScrollPickerOpen(!isScrollPickerOpen)
-                },
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(40.dp)
+                    .background(Color.Black, RoundedCornerShape(10.dp))
+                    .padding(horizontal = 12.dp)
+                    .clickable(enabled = enabled) {
+                        // toggle scroll picker open/close
+                        setScrollPickerOpen(!isScrollPickerOpen)
+                    },
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
                 color = MooiTheme.colorScheme.gray300,
-                text = selectedValue
+                text = selectedValue,
             )
             Image(
-                modifier = Modifier
-                    .width(10.dp)
-                    .height(9.dp),
-                painter = if (isScrollPickerOpen) {
-                    painterResource(id = R.drawable.toggle_up)
-                } else {
-                    painterResource(
-                        id = R.drawable.toggle_down
-                    )
-                },
+                modifier =
+                    Modifier
+                        .width(10.dp)
+                        .height(9.dp),
+                painter =
+                    if (isScrollPickerOpen) {
+                        painterResource(id = R.drawable.toggle_up)
+                    } else {
+                        painterResource(
+                            id = R.drawable.toggle_down,
+                        )
+                    },
                 colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray300),
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
@@ -85,43 +88,46 @@ fun DropDownPicker(
             expanded = isScrollPickerOpen,
             onDismissRequest = { setScrollPickerOpen(false) },
             shape = RoundedCornerShape(10.dp),
-            containerColor = Color.Black
+            containerColor = Color.Black,
         ) {
             options.forEachIndexed { index, it ->
                 DropdownMenuItem(
                     contentPadding = PaddingValues(horizontal = 12.dp),
                     text = {
                         Text(
-                            style = MooiTheme.typography.body3.copy(
-                                fontSize = 14.sp,
-                                lineHeight = 24.sp
-                            ),
+                            style =
+                                MooiTheme.typography.body3.copy(
+                                    fontSize = 14.sp,
+                                    lineHeight = 24.sp,
+                                ),
                             color = Color.White,
                             text = it,
-                            modifier = Modifier
-                                .clickable(
-                                    onClick = {
-                                        onSelect(it)
-                                        setScrollPickerOpen(false)
-                                    }
-                                )
+                            modifier =
+                                Modifier
+                                    .clickable(
+                                        onClick = {
+                                            onSelect(it)
+                                            setScrollPickerOpen(false)
+                                        },
+                                    ),
                         )
                     },
                     onClick = {
                         onSelect(it)
                         setScrollPickerOpen(false)
-                    }
+                    },
                 )
                 if (index != options.lastIndex) {
                     Spacer(
-                        modifier = Modifier
-                            .height(1.5.dp)
-                            .fillMaxWidth()
-                            .padding(horizontal = 10.dp)
-                            .background(
-                                MooiTheme.colorScheme.gray900,
-                                RoundedCornerShape(10.dp)
-                            )
+                        modifier =
+                            Modifier
+                                .height(1.5.dp)
+                                .fillMaxWidth()
+                                .padding(horizontal = 10.dp)
+                                .background(
+                                    MooiTheme.colorScheme.gray900,
+                                    RoundedCornerShape(10.dp),
+                                ),
                     )
                 }
             }
@@ -141,14 +147,15 @@ private fun DropDownPickerPreview() {
                 modifier = Modifier.width(102.dp),
                 selectedValue = pickerValue,
                 onSelect = setPickerValue,
-                options = options
+                options = options,
             )
 
             // picker should open above this box
             Box(
-                modifier = Modifier
-                    .size(102.dp, 100.dp)
-                    .background(Color.Gray)
+                modifier =
+                    Modifier
+                        .size(102.dp, 100.dp)
+                        .background(Color.Gray),
             )
         }
     }

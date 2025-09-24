@@ -5,10 +5,12 @@ import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetChatRoomIdUseCase @Inject constructor(
-    private val chatRepository: ChatRepository
-) {
-    suspend operator fun invoke(): Flow<DataState<String>> {
-        return chatRepository.getChatRoomId()
+class GetChatRoomIdUseCase
+    @Inject
+    constructor(
+        private val chatRepository: ChatRepository,
+    ) {
+        suspend operator fun invoke(): Flow<DataState<String>> {
+            return chatRepository.getChatRoomId()
+        }
     }
-}

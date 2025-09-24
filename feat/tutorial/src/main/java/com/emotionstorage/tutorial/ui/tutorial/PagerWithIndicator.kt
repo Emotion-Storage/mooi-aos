@@ -46,55 +46,59 @@ import kotlinx.coroutines.launch
 fun PagerWithIndicator(
     pageCount: Int,
     modifier: Modifier = Modifier,
-    pageContent: @Composable (ColumnScope.(page: Int) -> Unit)
+    pageContent: @Composable (ColumnScope.(page: Int) -> Unit),
 ) {
-    val pagerState = rememberPagerState(pageCount = {
-        pageCount
-    })
+    val pagerState =
+        rememberPagerState(pageCount = {
+            pageCount
+        })
     val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
             pageContent(page)
         }
 
         Box(
-            modifier = Modifier
-                .background(Color.Transparent)
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(top = 30.dp)
+            modifier =
+                Modifier
+                    .background(Color.Transparent)
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(top = 30.dp),
         ) {
             PagerIndicator(
-                modifier = Modifier
-                    .align(Alignment.Center),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center),
                 pageCount = pageCount,
                 currentPage = pagerState.currentPage,
                 onPageSelected = {
                     coroutineScope.launch {
                         pagerState.scrollToPage(it)
                     }
-                }
+                },
             )
 
             if (pagerState.currentPage != pageCount - 1) {
                 Text(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 16.dp)
-                        .clickable(
-                            onClick = {
-                                coroutineScope.launch {
-                                    pagerState.scrollToPage(pageCount - 1)
-                                }
-                            }
-                        ),
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 16.dp)
+                            .clickable(
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.scrollToPage(pageCount - 1)
+                                    }
+                                },
+                            ),
                     color = MooiTheme.colorScheme.gray600,
                     text = stringResource(R.string.pager_btn_skip),
-                    style = MooiTheme.typography.body3.copy(fontSize = 14.sp, lineHeight = 22.sp)
+                    style = MooiTheme.typography.body3.copy(fontSize = 14.sp, lineHeight = 22.sp),
                 )
             }
         }
@@ -106,13 +110,13 @@ private fun PagerIndicator(
     modifier: Modifier = Modifier,
     pageCount: Int,
     currentPage: Int = 0,
-    onPageSelected: (Int) -> Unit = {}
+    onPageSelected: (Int) -> Unit = {},
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         for (i in 0 until pageCount) {
             PagerIndicatorDot(
                 isSelected = currentPage == i,
-                onClick = { onPageSelected(i) }
+                onClick = { onPageSelected(i) },
             )
         }
     }
@@ -122,20 +126,21 @@ private fun PagerIndicator(
 private fun PagerIndicatorDot(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     val animatedWidth by animateDpAsState(
         targetValue = if (isSelected) 31.dp else 10.dp,
         animationSpec = tween(durationMillis = 500),
-        label = "widthAnimation"
+        label = "widthAnimation",
     )
 
     Box(
-        modifier = modifier
-            .height(10.dp)
-            .width(animatedWidth)
-            .mainBackground(isSelected, RoundedCornerShape(50.dp), MooiTheme.colorScheme.gray50)
-            .clickable(onClick = onClick)
+        modifier =
+            modifier
+                .height(10.dp)
+                .width(animatedWidth)
+                .mainBackground(isSelected, RoundedCornerShape(50.dp), MooiTheme.colorScheme.gray50)
+                .clickable(onClick = onClick),
     )
 }
 
@@ -146,35 +151,36 @@ private fun PagerIndicatorDotPreview() {
 
     MooiTheme {
         Row(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(MooiTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .background(MooiTheme.colorScheme.background),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             PagerIndicatorDot(
                 isSelected = selectedDot == 0,
                 onClick = {
                     setSelectedDot(0)
-                }
+                },
             )
             PagerIndicatorDot(
                 isSelected = selectedDot == 1,
                 onClick = {
                     setSelectedDot(1)
-                }
+                },
             )
             PagerIndicatorDot(
                 isSelected = selectedDot == 2,
                 onClick = {
                     setSelectedDot(2)
-                }
+                },
             )
             PagerIndicatorDot(
                 isSelected = selectedDot == 3,
                 onClick = {
                     setSelectedDot(3)
-                }
+                },
             )
         }
     }

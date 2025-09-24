@@ -9,5 +9,5 @@ data class TimeCapsuleState(
     val emotions: List<Emotion> = emptyList(),
     val isFavorite: Boolean,
     val isFavoriteAt: LocalDateTime? = null,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
 )

@@ -1,8 +1,7 @@
 package com.emotionstorage.ai_chat
 
-import org.junit.Test
-
 import junit.framework.TestCase.assertEquals
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).

@@ -6,8 +6,10 @@ import com.emotionstorage.home.domain.repo.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class GetHomeUseCase @Inject constructor(
-    private val homeRepository: HomeRepository
-) {
-    suspend operator fun invoke(): Flow<DataState<Home>> = homeRepository.getHome()
-}
+class GetHomeUseCase
+    @Inject
+    constructor(
+        private val homeRepository: HomeRepository,
+    ) {
+        suspend operator fun invoke(): Flow<DataState<Home>> = homeRepository.getHome()
+    }

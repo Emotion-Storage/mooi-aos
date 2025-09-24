@@ -11,5 +11,5 @@ data class GoogleSignupRequestBody(
     val expectations: List<String>,
     val isTermsAgreed: Boolean,
     val isPrivacyAgreed: Boolean,
-    val isMarketingAgreed: Boolean
+    val isMarketingAgreed: Boolean,
 )

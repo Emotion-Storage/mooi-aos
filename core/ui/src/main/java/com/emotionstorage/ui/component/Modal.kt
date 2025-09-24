@@ -32,16 +32,17 @@ fun Modal(
     onDismissRequest: () -> Unit,
     subTitle: String? = null,
     onConfirm: () -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .background(MooiTheme.colorScheme.background)
-                .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
+            modifier =
+                Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (!subTitle.isNullOrEmpty()) {
                 Text(
@@ -49,18 +50,19 @@ fun Modal(
                     text = subTitle,
                     style = MooiTheme.typography.body2,
                     color = MooiTheme.colorScheme.gray500,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
             Text(
                 modifier = Modifier.padding(bottom = 19.dp),
                 text = title,
-                style = MooiTheme.typography.head2.copy(
-                    fontSize = 22.sp,
-                    lineHeight = 30.sp
-                ),
+                style =
+                    MooiTheme.typography.head2.copy(
+                        fontSize = 22.sp,
+                        lineHeight = 30.sp,
+                    ),
                 color = Color.White,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             ModalButton(
                 label = confirmLabel,
@@ -68,7 +70,7 @@ fun Modal(
                     Logger.v("confirm button clicked")
                     onConfirm()
                     onDismissRequest()
-                }
+                },
             )
             Spacer(modifier = Modifier.height(12.dp))
             ModalButton(
@@ -78,7 +80,7 @@ fun Modal(
                     onDismiss()
                     onDismissRequest()
                 },
-                type = CtaButtonType.TONAL
+                type = CtaButtonType.TONAL,
             )
         }
     }
@@ -89,7 +91,7 @@ private fun ModalButton(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    type: CtaButtonType = CtaButtonType.FILLED
+    type: CtaButtonType = CtaButtonType.FILLED,
 ) {
     CtaButton(
         modifier = modifier.height(50.dp),
@@ -97,7 +99,7 @@ private fun ModalButton(
         onClick = onClick,
         type = type,
         radius = 10,
-        textStyle = MooiTheme.typography.body2.copy(fontWeight = FontWeight.Normal)
+        textStyle = MooiTheme.typography.body2.copy(fontWeight = FontWeight.Normal),
     )
 }
 
@@ -112,6 +114,6 @@ private fun ModalPreview() {
         dismissLabel = "메인 화면으로 나갈래요. ",
         onDismissRequest = { },
         onConfirm = { },
-        onDismiss = { }
+        onDismiss = { },
     )
 }

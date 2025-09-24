@@ -12,5 +12,5 @@ data class HomeResponseData(
     val hasNewTimeCapsule: Boolean,
     val timeCapsuleCount: Int,
     val hasNewReport: Boolean,
-    val reportCount: Int
+    val reportCount: Int,
 )

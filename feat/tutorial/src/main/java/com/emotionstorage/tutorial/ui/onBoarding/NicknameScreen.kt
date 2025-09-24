@@ -38,7 +38,7 @@ fun NicknameScreen(
     viewModel: NicknameViewModel = hiltViewModel(),
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     StatelessNicknameScreen(
         modifier = modifier,
@@ -46,7 +46,7 @@ fun NicknameScreen(
         event = viewModel.event,
         onNicknameInputComplete = onNicknameInputComplete,
         navToGenderBirth = navToGenderBirth,
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -57,44 +57,48 @@ private fun StatelessNicknameScreen(
     event: InputNicknameEvent,
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     val (isExitModelOpen, setIsExitModelOpen) = remember { mutableStateOf(false) }
     OnBoardingExitModel(
         isModelOpen = isExitModelOpen,
         onDismissRequest = { setIsExitModelOpen(false) },
-        onExit = navToBack
+        onExit = navToBack,
     )
 
     Scaffold(
-        modifier = modifier
-            .background(MooiTheme.colorScheme.background)
-            .fillMaxSize(),
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .fillMaxSize(),
         topBar = {
             TopAppBar(showBackground = false, showBackButton = true, onBackClick = { setIsExitModelOpen(true) })
-        }
+        },
     ) { padding ->
         Column(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp)
-                .imePadding()
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+                    .imePadding(),
         ) {
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
                 currentStep = 0,
                 title = stringResource(R.string.on_boarding_nickname_title),
-                titleHighlights = stringResource(R.string.on_boarding_nickname_title_highlights).split(
-                    ','
-                )
+                titleHighlights =
+                    stringResource(R.string.on_boarding_nickname_title_highlights).split(
+                        ',',
+                    ),
             )
 
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(vertical = 30.dp)
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(vertical = 30.dp),
             ) {
                 TextInput(
                     label = "이름",
@@ -102,25 +106,27 @@ private fun StatelessNicknameScreen(
                     onValueChange = event::onNicknameChange,
                     showCharCount = true,
                     maxCharCount = 8,
-                    state = when (state.nicknameInputState) {
-                        InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
-                        InputState.INVALID -> TextInputState.Error(errorMessage = state.nicknameHelperMessage)
-                        InputState.VALID -> TextInputState.Success(successMessage = state.nicknameHelperMessage)
-                    } as TextInputState
+                    state =
+                        when (state.nicknameInputState) {
+                            InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
+                            InputState.INVALID -> TextInputState.Error(errorMessage = state.nicknameHelperMessage)
+                            InputState.VALID -> TextInputState.Success(successMessage = state.nicknameHelperMessage)
+                        } as TextInputState,
                 )
             }
 
             // todo: add bottom padding when keyboard is hidden
             CtaButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
-//                    .padding(bottom = 39.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                //                    .padding(bottom = 39.dp),
                 label = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
                 onClick = {
                     onNicknameInputComplete(state.nickname)
                     navToGenderBirth()
-                }
+                },
             )
         }
     }
@@ -130,7 +136,7 @@ private fun StatelessNicknameScreen(
 private fun OnBoardingExitModel(
     isModelOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {}
+    onExit: () -> Unit = {},
 ) {
     // todo: fix not navigating back on modal dismiss
     if (isModelOpen) {
@@ -140,7 +146,7 @@ private fun OnBoardingExitModel(
             confirmLabel = "회원가입을 계속 할게요.",
             dismissLabel = "메인 화면으로 나갈래요. ",
             onDismissRequest = onDismissRequest,
-            onDismiss = onExit
+            onDismiss = onExit,
         )
     }
 }
@@ -151,9 +157,10 @@ private fun NicknameScreenPreview() {
     MooiTheme {
         StatelessNicknameScreen(
             state = NicknameViewModel.State(),
-            event = object : InputNicknameEvent {
-                override fun onNicknameChange(nickname: String) {}
-            }
+            event =
+                object : InputNicknameEvent {
+                    override fun onNicknameChange(nickname: String) {}
+                },
         )
     }
 }

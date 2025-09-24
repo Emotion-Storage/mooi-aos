@@ -8,7 +8,9 @@ package com.emotionstorage.domain.common
  */
 sealed class DataState<out T> {
     class Success<T>(val data: T) : DataState<T>()
+
     class Loading<T>(val isLoading: Boolean, val data: T? = null) : DataState<T>()
+
     class Error(val throwable: Throwable, val data: Any? = null) : DataState<Nothing>()
 
     override fun toString(): String {

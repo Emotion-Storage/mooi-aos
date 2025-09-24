@@ -10,17 +10,19 @@ import javax.inject.Inject
  *  - logout success: delete session info, delete user info, return true
  *  - logout fail: return false
  */
-class LogoutUseCase @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val sessionRepository: SessionRepository
-) {
-    suspend operator fun invoke(): Boolean {
-        val result = authRepository.logout()
-        if (result) {
-            sessionRepository.deleteSession()
-            userRepository.deleteUser()
+class LogoutUseCase
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val userRepository: UserRepository,
+        private val sessionRepository: SessionRepository,
+    ) {
+        suspend operator fun invoke(): Boolean {
+            val result = authRepository.logout()
+            if (result) {
+                sessionRepository.deleteSession()
+                userRepository.deleteUser()
+            }
+            return result
         }
-        return result
     }
-}

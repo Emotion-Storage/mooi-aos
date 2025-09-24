@@ -7,7 +7,7 @@ enum class NicknameState(val message: String) {
     INVALID_EMPTY("2~8자리의 한글 또는 영문을 사용해주세요"),
     INVALID_CHAR("이름은 한글 또는 영문만 사용해주세요"),
     INVALID_LENGTH("이름은 최소 2글자 이상이어야 합니다"),
-    VALID("사용 가능한 이름입니다.")
+    VALID("사용 가능한 이름입니다."),
 }
 
 /**
@@ -20,17 +20,19 @@ enum class NicknameState(val message: String) {
  * - 한글, 영문 외 다른 문자 사용
  * - 금칙어 입력 시(이 부분은 추후 정리 필요!!!)
  */
-class ValidateNicknameUseCase @Inject constructor() {
-    operator fun invoke(nickname: String): DataState<NicknameState> {
-        if (nickname.isNullOrEmpty()) {
-            return DataState.Success(NicknameState.INVALID_EMPTY)
+class ValidateNicknameUseCase
+    @Inject
+    constructor() {
+        operator fun invoke(nickname: String): DataState<NicknameState> {
+            if (nickname.isNullOrEmpty()) {
+                return DataState.Success(NicknameState.INVALID_EMPTY)
+            }
+            if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$"))) {
+                return DataState.Success(NicknameState.INVALID_CHAR)
+            }
+            if (nickname.length < 2) {
+                return DataState.Success(NicknameState.INVALID_LENGTH)
+            }
+            return DataState.Success(NicknameState.VALID)
         }
-        if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$"))) {
-            return DataState.Success(NicknameState.INVALID_CHAR)
-        }
-        if (nickname.length < 2) {
-            return DataState.Success(NicknameState.INVALID_LENGTH)
-        }
-        return DataState.Success(NicknameState.VALID)
     }
-}

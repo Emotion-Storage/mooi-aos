@@ -22,17 +22,18 @@ object RetrofitModule {
     private const val BASE_URL = "http://${BuildConfig.MOOI_DEV_SERVER_URL}"
     private const val TIMEOUT = 20L
 
-    private val json = Json {
-        ignoreUnknownKeys = true // Common configuration
-        isLenient = true
-        prettyPrint = true // For debugging, optional
-    }
+    private val json =
+        Json {
+            ignoreUnknownKeys = true // Common configuration
+            isLenient = true
+            prettyPrint = true // For debugging, optional
+        }
 
     @Singleton
     @Provides
     fun provideRetrofit(
         loggingInterceptor: HttpLoggingInterceptor,
-        requestHeaderInterceptor: RequestHeaderInterceptor
+        requestHeaderInterceptor: RequestHeaderInterceptor,
     ) = Retrofit
         .Builder()
         .baseUrl(BASE_URL)
@@ -45,15 +46,16 @@ object RetrofitModule {
                 .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(requestHeaderInterceptor)
-                .build()
+                .build(),
         )
         .build()
 
     @Singleton
     @Provides
-    fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
-        level = HttpLoggingInterceptor.Level.BODY
-    }
+    fun provideLoggingInterceptor() =
+        HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
 
     @Singleton
     @Provides

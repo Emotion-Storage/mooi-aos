@@ -42,15 +42,15 @@ class LinearGradient(
     private val stops: List<Float>? = null,
     private val tileMode: TileMode = TileMode.Clamp,
     angleInDegrees: Float = 0f,
-    useAsCssAngle: Boolean = false
+    useAsCssAngle: Boolean = false,
 ) : ShaderBrush() {
-
     // handle edge cases like: -1235, ...
-    private val normalizedAngle: Float = if (useAsCssAngle) {
-        ((90 - angleInDegrees) % 360 + 360) % 360
-    } else {
-        (angleInDegrees % 360 + 360) % 360
-    }
+    private val normalizedAngle: Float =
+        if (useAsCssAngle) {
+            ((90 - angleInDegrees) % 360 + 360) % 360
+        } else {
+            (angleInDegrees % 360 + 360) % 360
+        }
     private val angleInRadians: Float = Math.toRadians(normalizedAngle.toDouble()).toFloat()
 
     override fun createShader(size: Size): Shader {
@@ -61,7 +61,7 @@ class LinearGradient(
             colorStops = stops,
             from = from,
             to = to,
-            tileMode = tileMode
+            tileMode = tileMode,
         )
     }
 

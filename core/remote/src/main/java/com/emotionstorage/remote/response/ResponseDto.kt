@@ -11,5 +11,5 @@ data class ResponseDto<T>(
     val message: String? = null,
     val data: T? = null,
     @Serializable(with = LocalDateTimeSerializer::class)
-    val timestamp: LocalDateTime? = null
+    val timestamp: LocalDateTime? = null,
 )

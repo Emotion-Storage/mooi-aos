@@ -42,7 +42,7 @@ fun LoginScreen(
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
-    navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> }
+    navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { effect ->
@@ -65,7 +65,7 @@ fun LoginScreen(
     StatelessLoginScreen(
         modifier = modifier,
         onAction = viewModel::onAction,
-        navToHome = navToHome
+        navToHome = navToHome,
     )
 }
 
@@ -73,65 +73,69 @@ fun LoginScreen(
 private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
     onAction: (LoginAction) -> Unit = {},
-    navToHome: () -> Unit = {} // todo: delete after testing
+    navToHome: () -> Unit = {}, // todo: delete after testing
 ) {
     val scrollState = rememberScrollState()
 
     Scaffold(
         modifier
             .background(MooiTheme.colorScheme.background)
-            .fillMaxSize()
+            .fillMaxSize(),
     ) { padding ->
         Column(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
-                .padding(padding)
-                .verticalScroll(scrollState),
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(padding)
+                    .verticalScroll(scrollState),
             verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Column(
-                modifier = Modifier
-                    .padding(top = 67.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .padding(top = 67.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     modifier = Modifier.height(37.dp),
                     style = MooiTheme.typography.body1,
                     color = MooiTheme.colorScheme.primary,
-                    text = stringResource(id = R.string.login_title)
+                    text = stringResource(id = R.string.login_title),
                 )
                 Text(
                     modifier = Modifier.height(56.dp),
                     color = Color.White,
-                    style = TextStyle(
-                        fontFamily = pretendard,
-                        fontWeight = FontWeight.Medium,
-                        fontSize = 40.sp,
-                        letterSpacing = (-0.02).em,
-                        lineHeight = (40 * 1.4).sp
-
-                    ),
-                    text = stringResource(id = R.string.login_app_name)
+                    style =
+                        TextStyle(
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 40.sp,
+                            letterSpacing = (-0.02).em,
+                            lineHeight = (40 * 1.4).sp,
+                        ),
+                    text = stringResource(id = R.string.login_app_name),
                 )
             }
 
             Spacer(modifier = Modifier.height(10.dp))
             Box(
-                modifier = Modifier
-                    .background(Color.Black)
-                    .width(148.dp)
-                    .height(148.dp)
+                modifier =
+                    Modifier
+                        .background(Color.Black)
+                        .width(148.dp)
+                        .height(148.dp),
             )
             Spacer(modifier = Modifier.height(20.dp))
 
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 36.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 36.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Button(onClick = navToHome) {
                     Text("홈 화면 이동")
@@ -140,13 +144,13 @@ private fun StatelessLoginScreen(
                     provider = AuthProvider.KAKAO,
                     onClick = {
                         onAction(LoginAction.Login(AuthProvider.KAKAO))
-                    }
+                    },
                 )
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
                         onAction(LoginAction.Login(AuthProvider.GOOGLE))
-                    }
+                    },
                 )
             }
         }

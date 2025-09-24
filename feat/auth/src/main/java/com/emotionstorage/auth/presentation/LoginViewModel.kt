@@ -16,47 +16,52 @@ sealed class LoginAction {
 
 sealed class LoginSideEffect {
     object LoginSuccess : LoginSideEffect()
+
     data class LoginFailed(val provider: User.AuthProvider, val idToken: String) : LoginSideEffect()
+
     object LoginFailedWithException : LoginSideEffect()
 }
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val login: LoginUseCase
-) : ViewModel(), ContainerHost<Unit, LoginSideEffect> {
-    override val container = container<Unit, LoginSideEffect>(Unit)
+class LoginViewModel
+    @Inject
+    constructor(
+        private val login: LoginUseCase,
+    ) : ViewModel(), ContainerHost<Unit, LoginSideEffect> {
+        override val container = container<Unit, LoginSideEffect>(Unit)
 
-    fun onAction(action: LoginAction) {
-        when (action) {
-            is LoginAction.Login -> {
-                handleLogin(action.provider)
+        fun onAction(action: LoginAction) {
+            when (action) {
+                is LoginAction.Login -> {
+                    handleLogin(action.provider)
+                }
             }
         }
-    }
 
-    private fun handleLogin(provider: User.AuthProvider) = intent {
-        Logger.v("onLoginButtonClick, provider: $provider")
+        private fun handleLogin(provider: User.AuthProvider) =
+            intent {
+                Logger.v("onLoginButtonClick, provider: $provider")
 
-        login(provider).collect { result ->
-            when (result) {
-                is DataState.Loading -> {
-                    // do nothing
-                }
+                login(provider).collect { result ->
+                    when (result) {
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
 
-                is DataState.Success -> {
-                    Logger.i("Login success, $result")
-                    postSideEffect(LoginSideEffect.LoginSuccess)
-                }
+                        is DataState.Success -> {
+                            Logger.i("Login success, $result")
+                            postSideEffect(LoginSideEffect.LoginSuccess)
+                        }
 
-                is DataState.Error -> {
-                    Logger.e("Login error, $result")
-                    if (result.data != null) {
-                        postSideEffect(LoginSideEffect.LoginFailed(provider, result.data!!.toString()))
-                    } else {
-                        postSideEffect(LoginSideEffect.LoginFailedWithException)
+                        is DataState.Error -> {
+                            Logger.e("Login error, $result")
+                            if (result.data != null) {
+                                postSideEffect(LoginSideEffect.LoginFailed(provider, result.data!!.toString()))
+                            } else {
+                                postSideEffect(LoginSideEffect.LoginFailedWithException)
+                            }
+                        }
                     }
                 }
             }
-        }
     }
-}

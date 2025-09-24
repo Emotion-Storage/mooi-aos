@@ -48,7 +48,7 @@ fun ExpectationsScreen(
     viewModel: ExpectationsViewModel = hiltViewModel(),
     onExpectationsSelectComplete: (expectations: List<Expectation>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -58,7 +58,7 @@ fun ExpectationsScreen(
         modifier = modifier,
         onExpectationsSelectComplete = onExpectationsSelectComplete,
         navToAgreeTerms = navToAgreeTerms,
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -69,64 +69,70 @@ private fun StatelessExpectationsScreen(
     modifier: Modifier = Modifier,
     onExpectationsSelectComplete: (expectations: List<Expectation>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier
-            .background(MooiTheme.colorScheme.background)
-            .fillMaxSize(),
-        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) }
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .fillMaxSize(),
+        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) },
     ) { padding ->
         Box(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp)
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .align(Alignment.TopCenter)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .align(Alignment.TopCenter),
             ) {
                 OnBoardingTitle(
                     modifier = Modifier.fillMaxWidth(),
                     currentStep = 2,
                     title = stringResource(R.string.on_boarding_expectations_title),
-                    titleHighlights = stringResource(R.string.on_boarding_expectations_title_highlights).split(
-                        ','
-                    )
+                    titleHighlights =
+                        stringResource(R.string.on_boarding_expectations_title_highlights).split(
+                            ',',
+                        ),
                 )
 
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(top = 30.dp)
-                        .verticalScroll(rememberScrollState())
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(top = 30.dp)
+                            .verticalScroll(rememberScrollState()),
                 ) {
                     Text(
                         modifier = Modifier.height(24.dp),
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = "감정 기록 목적"
+                        text = "감정 기록 목적",
                     )
                     Text(
-                        style = MooiTheme.typography.body3.copy(
-                            fontSize = 15.sp,
-                            fontWeight = FontWeight.Light
-                        ),
+                        style =
+                            MooiTheme.typography.body3.copy(
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Light,
+                            ),
                         color = MooiTheme.colorScheme.primary,
-                        text = "* 여러 개를 선택할 수도 있어요"
+                        text = "* 여러 개를 선택할 수도 있어요",
                     )
                     Column(
                         modifier = modifier.padding(top = 20.dp, bottom = 120.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         state.expectations.forEachIndexed { index, expectation ->
                             ExpectationItem(
                                 expectation = expectation,
                                 isSelected = state.selectedExpectations.contains(expectation),
-                                onClick = { event.onToggleExpectation(index) }
+                                onClick = { event.onToggleExpectation(index) },
                             )
                         }
                     }
@@ -134,16 +140,17 @@ private fun StatelessExpectationsScreen(
             }
 
             CtaButton(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 39.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 39.dp),
                 label = "다음으로",
                 enabled = state.isNextButtonEnabled,
                 onClick = {
                     onExpectationsSelectComplete(state.selectedExpectations)
                     navToAgreeTerms()
-                }
+                },
             )
         }
     }
@@ -154,55 +161,59 @@ private fun ExpectationItem(
     expectation: Expectation,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .subBackground(isSelected, defaultBackground = Color.Black)
-            .clickable(
-                onClick = onClick
-            )
-            .padding(20.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .height(72.dp)
+                .subBackground(isSelected, defaultBackground = Color.Black)
+                .clickable(
+                    onClick = onClick,
+                )
+                .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Image(
-                modifier = Modifier
-                    .width(21.dp)
-                    .height(20.dp),
-                painter = painterResource(
-                    when (expectation) {
-                        Expectation.EMOTION -> R.drawable.expectation_0
-                        Expectation.STRESS -> R.drawable.expectation_1
-                        Expectation.REGRET -> R.drawable.expectation_2
-                        Expectation.MEMORY -> R.drawable.expectation_3
-                        Expectation.PATTERN -> R.drawable.expectation_4
-                        Expectation.RECORD -> R.drawable.expectation_5
-                    }
-                ),
-                contentDescription = null
+                modifier =
+                    Modifier
+                        .width(21.dp)
+                        .height(20.dp),
+                painter =
+                    painterResource(
+                        when (expectation) {
+                            Expectation.EMOTION -> R.drawable.expectation_0
+                            Expectation.STRESS -> R.drawable.expectation_1
+                            Expectation.REGRET -> R.drawable.expectation_2
+                            Expectation.MEMORY -> R.drawable.expectation_3
+                            Expectation.PATTERN -> R.drawable.expectation_4
+                            Expectation.RECORD -> R.drawable.expectation_5
+                        },
+                    ),
+                contentDescription = null,
             )
 
             Text(
                 style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                 color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
-                text = expectation.content
+                text = expectation.content,
             )
         }
 
         if (isSelected) {
             Image(
-                modifier = Modifier
-                    .width(20.dp)
-                    .height(20.dp),
+                modifier =
+                    Modifier
+                        .width(20.dp)
+                        .height(20.dp),
                 painter = painterResource(R.drawable.success_fill),
-                contentDescription = null
+                contentDescription = null,
             )
         }
     }
@@ -214,9 +225,10 @@ private fun ExpectationsScreenPreview() {
     MooiTheme {
         StatelessExpectationsScreen(
             state = State(),
-            event = object : ExpectationsEvent {
-                override fun onToggleExpectation(index: Int) {}
-            }
+            event =
+                object : ExpectationsEvent {
+                    override fun onToggleExpectation(index: Int) {}
+                },
         )
     }
 }

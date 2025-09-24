@@ -25,34 +25,36 @@ import com.emotionstorage.ui.util.getIconResId
 @Composable
 fun EmotionTag(
     modifier: Modifier = Modifier,
-    emotion: Emotion
+    emotion: Emotion,
 ) {
     Row(
-        modifier = modifier
-            .height(24.dp)
-            .background(Color(0xFFAECBFA).copy(alpha = 0.2f), RoundedCornerShape(20.dp))
-            .padding(horizontal = 8.dp),
+        modifier =
+            modifier
+                .height(24.dp)
+                .background(Color(0xFFAECBFA).copy(alpha = 0.2f), RoundedCornerShape(20.dp))
+                .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         if (emotion.getIconResId() == null) {
             Box(
-                modifier = Modifier
-                    .size(16.dp)
-                    .background(Color.Gray, CircleShape)
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .background(Color.Gray, CircleShape),
             )
         } else {
             Image(
                 painter = painterResource(id = emotion.getIconResId()!!),
                 modifier = Modifier.size(16.dp),
-                contentDescription = emotion.label
+                contentDescription = emotion.label,
             )
         }
 
         Text(
             text = emotion.label,
             style = MooiTheme.typography.body4,
-            color = MooiTheme.colorScheme.primary
+            color = MooiTheme.colorScheme.primary,
         )
     }
 }
@@ -60,26 +62,27 @@ fun EmotionTag(
 @Preview
 @Composable
 private fun EmotionTagPreview() {
-    val emotions = listOf(
-        Emotion(
-            label = "서운함",
-            icon = 0
-        ),
-        Emotion(
-            label = "화남",
-            icon = 1
-        ),
-        Emotion(
-            label = "피곤함",
-            icon = 2
+    val emotions =
+        listOf(
+            Emotion(
+                label = "서운함",
+                icon = 0,
+            ),
+            Emotion(
+                label = "화남",
+                icon = 1,
+            ),
+            Emotion(
+                label = "피곤함",
+                icon = 2,
+            ),
         )
-    )
 
     MooiTheme {
         Row(
             modifier = Modifier.background(MooiTheme.colorScheme.background).padding(6.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             for (emotion in emotions) {
                 EmotionTag(emotion = emotion)

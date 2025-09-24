@@ -22,7 +22,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun ChatMessageInputBox(
     modifier: Modifier = Modifier,
-    onSendMessage: (String) -> Unit = {}
+    onSendMessage: (String) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -35,14 +35,14 @@ fun ChatMessageInputBox(
             .background(MooiTheme.colorScheme.background)
             .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         TextInput(
             modifier = Modifier.weight(1f),
             value = message,
             onValueChange = setMessage,
             placeHolder = "메시지를 입력하세요",
-            showCharCount = false
+            showCharCount = false,
         )
         Button(
             onClick = {
@@ -50,7 +50,7 @@ fun ChatMessageInputBox(
                 setMessage("")
 //                keyboardController?.hide()
 //                focusManager.clearFocus()
-            }
+            },
         ) {
             Text("전송")
         }

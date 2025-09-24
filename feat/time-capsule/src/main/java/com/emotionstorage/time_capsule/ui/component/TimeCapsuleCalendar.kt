@@ -39,11 +39,12 @@ import java.time.LocalDate
 
 private val MIN_CALENDAR_DATE = LocalDate.of(2023, 1, 1)
 
-private val DUMMY_TIME_CAPSULE_DATES = (1..31).toList().filter {
-    it % 3 == 0
-}.map {
-    LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
-}
+private val DUMMY_TIME_CAPSULE_DATES =
+    (1..31).toList().filter {
+        it % 3 == 0
+    }.map {
+        LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
+    }
 
 @Composable
 fun TimeCapsuleCalendar(
@@ -51,30 +52,33 @@ fun TimeCapsuleCalendar(
     calendarDate: LocalDate = LocalDate.now().withDayOfMonth(1),
     onCalendarDateSelect: (calendarDate: LocalDate) -> Unit = {},
     timeCapsuleDates: List<LocalDate> = emptyList(),
-    onDateSelect: (LocalDate) -> Unit = {}
+    onDateSelect: (LocalDate) -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.background),
     ) {
         // year & month selection
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 17.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 17.dp),
         ) {
             if (MIN_CALENDAR_DATE < calendarDate) {
                 Image(
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(14.dp)
-                        .clickable {
-                            onCalendarDateSelect(calendarDate.minusMonths(1))
-                        },
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterStart)
+                            .size(14.dp)
+                            .clickable {
+                                onCalendarDateSelect(calendarDate.minusMonths(1))
+                            },
                     painter = painterResource(id = R.drawable.arrow_back),
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                    contentDescription = ""
+                    contentDescription = "",
                 )
             }
 
@@ -83,39 +87,42 @@ fun TimeCapsuleCalendar(
                 text = "${calendarDate.year}년 ${calendarDate.monthValue}월",
                 style = MooiTheme.typography.button,
                 color = Color.White,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
             if (calendarDate < LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)) {
                 Image(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(14.dp)
-                        .rotate(180f)
-                        .clickable {
-                            onCalendarDateSelect(calendarDate.plusMonths(1))
-                        },
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .size(14.dp)
+                            .rotate(180f)
+                            .clickable {
+                                onCalendarDateSelect(calendarDate.plusMonths(1))
+                            },
                     painter = painterResource(id = R.drawable.arrow_back),
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                    contentDescription = ""
+                    contentDescription = "",
                 )
             }
         }
 
         // days of week
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
         ) {
             listOf("일", "월", "화", "수", "목", "금", "토").forEach { label ->
                 Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(24.dp),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(24.dp),
                     text = label,
                     style = MooiTheme.typography.body5,
                     color = Color.White,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -124,7 +131,7 @@ fun TimeCapsuleCalendar(
         LazyVerticalGrid(columns = GridCells.Fixed(7), modifier = Modifier.fillMaxWidth()) {
             items(
                 items = calendarDate.getWeekDatesOfTargetMonth(),
-                key = { it.toString() }
+                key = { it.toString() },
             ) { date ->
                 DateItem(
                     modifier = Modifier.padding(bottom = 12.dp),
@@ -132,7 +139,7 @@ fun TimeCapsuleCalendar(
                     onClick = onDateSelect,
                     isShown = date.year == calendarDate.year && date.month == calendarDate.month,
                     isFilled = date in timeCapsuleDates,
-                    isToday = date == LocalDate.now()
+                    isToday = date == LocalDate.now(),
                 )
             }
         }
@@ -146,54 +153,58 @@ private fun DateItem(
     date: LocalDate = LocalDate.now(),
     onClick: (date: LocalDate) -> Unit = {},
     isFilled: Boolean = false,
-    isToday: Boolean = false
+    isToday: Boolean = false,
 ) {
     Box(modifier = modifier) {
         if (!isShown) {
             Spacer(
                 Modifier
                     .width(37.dp)
-                    .height(63.dp)
+                    .height(63.dp),
             )
         } else {
             Column(
-                modifier = Modifier
-                    .width(37.dp)
-                    .height(63.dp)
-                    .background(
-                        if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
-                        shape = RoundedCornerShape(20.dp)
-                    )
-                    .clickable { onClick(date) },
-                verticalArrangement = Arrangement.spacedBy(
-                    9.dp,
-                    alignment = Alignment.CenterVertically
-                ),
-                horizontalAlignment = Alignment.CenterHorizontally
+                modifier =
+                    Modifier
+                        .width(37.dp)
+                        .height(63.dp)
+                        .background(
+                            if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
+                            shape = RoundedCornerShape(20.dp),
+                        )
+                        .clickable { onClick(date) },
+                verticalArrangement =
+                    Arrangement.spacedBy(
+                        9.dp,
+                        alignment = Alignment.CenterVertically,
+                    ),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = date.dayOfMonth.toString(),
                     style = MooiTheme.typography.body5,
-                    color = Color.White
+                    color = Color.White,
                 )
                 Box(
-                    modifier = Modifier
-                        .size(30.dp)
-                        .background(
-                            if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
-                            shape = CircleShape
-                        )
-                        .border(
-                            width = 1.5.dp,
-                            color = if (isFilled) {
-                                Color.Transparent
-                            } else {
-                                Color(0xFFAECBFA).copy(
-                                    alpha = 0.2f
-                                )
-                            },
-                            shape = CircleShape
-                        )
+                    modifier =
+                        Modifier
+                            .size(30.dp)
+                            .background(
+                                if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
+                                shape = CircleShape,
+                            )
+                            .border(
+                                width = 1.5.dp,
+                                color =
+                                    if (isFilled) {
+                                        Color.Transparent
+                                    } else {
+                                        Color(0xFFAECBFA).copy(
+                                            alpha = 0.2f,
+                                        )
+                                    },
+                                shape = CircleShape,
+                            ),
                 )
             }
         }
@@ -203,14 +214,15 @@ private fun DateItem(
 @Preview
 @Composable
 fun TimeCapsuleCalendarPreview() {
-    val (calendarDate, setCalendarDate) = remember {
-        mutableStateOf(LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1))
-    }
+    val (calendarDate, setCalendarDate) =
+        remember {
+            mutableStateOf(LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1))
+        }
     MooiTheme {
         TimeCapsuleCalendar(
             calendarDate = calendarDate,
             onCalendarDateSelect = setCalendarDate,
-            timeCapsuleDates = DUMMY_TIME_CAPSULE_DATES
+            timeCapsuleDates = DUMMY_TIME_CAPSULE_DATES,
         )
     }
 }

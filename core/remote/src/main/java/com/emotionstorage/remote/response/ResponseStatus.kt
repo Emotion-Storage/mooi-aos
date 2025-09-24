@@ -69,5 +69,5 @@ enum class ResponseStatus(val code: Int) {
     NotExtended(510),
     NetworkAuthenticationRequired(511),
 
-    Unknown(0)
+    Unknown(0),
 }
