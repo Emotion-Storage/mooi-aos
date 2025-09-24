@@ -80,16 +80,35 @@ fun DescriptionOverlayScreen(
             // 뒷 배경 어둡게
             drawRect(Color.Black.copy(alpha = 0.70f), size = size)
 
-            if (area != Rect.Zero) {
-                drawRoundRect(
-                    color = Color.Transparent,
-                    topLeft = area.topLeft,
-                    size = area.size,
-                    blendMode = BlendMode.Clear
-                )
+            when (type) {
+                HighlightType.PROGRESS_BAR, HighlightType.INPUT_BOX -> {
+                    if (area != Rect.Zero) {
+                        drawRoundRect(
+                            color = Color.Transparent,
+                            topLeft = area.topLeft,
+                            size = area.size,
+                            blendMode = BlendMode.Clear
+                        )
+                    }
+                }
 
+                HighlightType.TOPBAR -> {
+                    if (area != Rect.Zero) {
+                        val backButtonRadius = with(density) { 22.dp.toPx() }
+                        val backButtonCenterX = area.left + with(density) { 22.dp.toPx() }
+                        val backButtonCenterY = area.center.y
+
+                        drawCircle(
+                            color = Color.Transparent,
+                            radius = backButtonRadius,
+                            center = androidx.compose.ui.geometry.Offset(backButtonCenterX, backButtonCenterY),
+                            blendMode = BlendMode.Clear
+                        )
+                    }
+                }
             }
         }
+
 
         PositionedBubble(type = type, area = area)
 
@@ -126,7 +145,7 @@ private fun BoxScope.PositionedBubble(
 
         HighlightType.INPUT_BOX -> {
             val bw = with(density) { 265.dp.roundToPx() }
-            val bh = with(density) {  84.dp.roundToPx() }
+            val bh = with(density) { 84.dp.roundToPx() }
 
             val x = (area.center.x - bw / 2f).roundToInt()
             val y = (area.top - bh - gap).roundToInt()
