@@ -74,14 +74,15 @@ internal sealed class AppDestination {
 
 @Composable
 internal fun AppNavHost(
-    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
 
     Scaffold(
-        modifier, bottomBar = {
+        modifier = modifier.fillMaxSize(),
+        bottomBar = {
             AppBottomNavBar(
                 navController = navController, currentDestination = currentDestination
             )
@@ -127,12 +128,15 @@ internal fun AppNavHost(
                     idToken = arguments.idToken,
                     provider = AuthProvider.valueOf(arguments.provider),
                     navToSignupComplete = { provider, idToken ->
-                        navController.clearBackStack<AppDestination.OnBoarding>()
+                        navController.popBackStack()
                         navController.navigate(
                             AppDestination.SignupComplete(
                                 provider.toString(), idToken
                             )
                         )
+                    },
+                    navToBack ={
+                        navController.popBackStack()
                     }
                 )
             }

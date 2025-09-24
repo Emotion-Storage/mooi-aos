@@ -42,6 +42,7 @@ fun OnBoardingNavHost(
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
     navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = {_, _ -> },
+    navToBack: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     val state = sharedViewModel.container.stateFlow.collectAsState()
@@ -65,19 +66,21 @@ fun OnBoardingNavHost(
 
 
     StatelessOnBoardingNavHost(
+        modifier = modifier,
         navController = navController,
         state = state.value,
         onAction = sharedViewModel::onAction,
-        modifier = modifier,
+        navToBack = navToBack
     )
 }
 
 @Composable
 private fun StatelessOnBoardingNavHost(
     navController: NavHostController,
-    state: OnBoardingState,
-    onAction: (OnBoardingAction) -> Unit,
     modifier: Modifier = Modifier,
+    state: OnBoardingState = OnBoardingState(),
+    onAction: (OnBoardingAction) -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     NavHost(
         navController,
@@ -97,7 +100,8 @@ private fun StatelessOnBoardingNavHost(
                             navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
                         },
                         navToBack = {
-                            navController.popBackStack()
+                            // call navToBack() instead of navController.popBackStack(), to exit from on boarding nav controller
+                            navToBack()
                         }
                     )
 
