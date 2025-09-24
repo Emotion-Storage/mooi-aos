@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class SessionLocalDataSourceImpl @Inject constructor(
     private val sessionDao: SessionDao
-): SessionLocalDataSource{
+) : SessionLocalDataSource {
     override suspend fun saveSession(session: SessionEntity): Boolean {
         return try {
             sessionDao.insertSession(SessionMapper.toLocal(session))
@@ -36,5 +36,4 @@ class SessionLocalDataSourceImpl @Inject constructor(
             false
         }
     }
-
 }

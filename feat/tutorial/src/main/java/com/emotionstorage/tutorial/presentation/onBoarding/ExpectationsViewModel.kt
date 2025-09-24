@@ -6,12 +6,10 @@ import com.emotionstorage.auth.domain.model.Expectation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
-
-
 
 interface ExpectationsEvent {
     fun onToggleExpectation(index: Int)
@@ -33,11 +31,11 @@ class ExpectationsViewModel @Inject constructor() : ViewModel(), ExpectationsEve
     override fun onToggleExpectation(index: Int) {
         val expectation = state.value.expectations[index]
 
-        if(_selectedExpectations.value.contains(expectation)) {
+        if (_selectedExpectations.value.contains(expectation)) {
             _selectedExpectations.update { expectations ->
                 expectations.filter { it != expectation }
             }
-        }else{
+        } else {
             _selectedExpectations.update { expectations ->
                 expectations + expectation
             }
@@ -46,11 +44,10 @@ class ExpectationsViewModel @Inject constructor() : ViewModel(), ExpectationsEve
 
     data class State(
         val expectations: List<Expectation> = Expectation.values().toList(),
-        val selectedExpectations: List<Expectation> = emptyList(),
+        val selectedExpectations: List<Expectation> = emptyList()
 
-        ) {
+    ) {
         val isNextButtonEnabled: Boolean
             get() = selectedExpectations.isNotEmpty()
     }
 }
-

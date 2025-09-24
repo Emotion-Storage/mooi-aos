@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,10 +34,10 @@ fun OnBoardingTitle(
     titleHighlights: List<String> = emptyList(),
     showSteps: Boolean = true,
     currentStep: Int = 0,
-    totalStep: Int = ON_BOARDING_STEP_COUNT,
+    totalStep: Int = ON_BOARDING_STEP_COUNT
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier
     ) {
         Text(
             style = MooiTheme.typography.head1,
@@ -50,9 +49,10 @@ fun OnBoardingTitle(
             ),
             modifier = Modifier.align(Alignment.TopStart)
         )
-        if(showSteps) {
+        if (showSteps) {
             OnBoardingStep(
-                currentStep = currentStep, totalStep = totalStep,
+                currentStep = currentStep,
+                totalStep = totalStep,
                 modifier = Modifier.align(Alignment.TopEnd)
             )
         }
@@ -63,7 +63,7 @@ fun OnBoardingTitle(
 private fun OnBoardingStep(
     modifier: Modifier = Modifier,
     currentStep: Int = 0,
-    totalStep: Int = ON_BOARDING_STEP_COUNT,
+    totalStep: Int = ON_BOARDING_STEP_COUNT
 ) {
     Row(
         modifier = modifier,
@@ -83,7 +83,7 @@ private fun OnBoardingStep(
 private fun RowScope.OnBoardingStepItem(
     isCurrentStep: Boolean = false,
     isLastStep: Boolean = false,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier) {
         Row(
@@ -97,24 +97,27 @@ private fun RowScope.OnBoardingStepItem(
                     .background(if (isCurrentStep) MooiTheme.colorScheme.tertiary else MooiTheme.colorScheme.gray600)
 
             )
-            if (!isLastStep) Box(
+            if (!isLastStep) {
+                Box(
+                    modifier = Modifier
+                        .height(2.dp)
+                        .width(12.dp)
+                        .background(MooiTheme.colorScheme.gray600)
+                )
+            }
+        }
+        if (isCurrentStep) {
+            Box(
                 modifier = Modifier
-                    .height(2.dp)
-                    .width(12.dp)
-                    .background(MooiTheme.colorScheme.gray600)
+                    .zIndex(-1f)
+                    .offset(-5.dp)
+                    .size(20.dp)
+                    .clip(shape = RoundedCornerShape(50))
+                    .background(MooiTheme.colorScheme.tertiary.copy(alpha = 0.4f))
+                    .align(Alignment.CenterStart)
             )
         }
-        if (isCurrentStep) Box(
-            modifier = Modifier
-                .zIndex(-1f)
-                .offset(-5.dp)
-                .size(20.dp)
-                .clip(shape = RoundedCornerShape(50))
-                .background(MooiTheme.colorScheme.tertiary.copy(alpha = 0.4f))
-                .align(Alignment.CenterStart)
-        )
     }
-
 }
 
 @Preview(showBackground = true)

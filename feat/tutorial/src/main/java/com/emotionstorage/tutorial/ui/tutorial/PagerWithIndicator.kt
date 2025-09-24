@@ -1,6 +1,5 @@
 package com.emotionstorage.tutorial.ui.tutorial
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -28,7 +26,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,7 +55,7 @@ fun PagerWithIndicator(
 
     Column(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
             pageContent(page)
@@ -93,7 +90,8 @@ fun PagerWithIndicator(
                                 coroutineScope.launch {
                                     pagerState.scrollToPage(pageCount - 1)
                                 }
-                            }),
+                            }
+                        ),
                     color = MooiTheme.colorScheme.gray600,
                     text = stringResource(R.string.pager_btn_skip),
                     style = MooiTheme.typography.body3.copy(fontSize = 14.sp, lineHeight = 22.sp)
@@ -108,7 +106,7 @@ private fun PagerIndicator(
     modifier: Modifier = Modifier,
     pageCount: Int,
     currentPage: Int = 0,
-    onPageSelected: (Int) -> Unit = {},
+    onPageSelected: (Int) -> Unit = {}
 ) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         for (i in 0 until pageCount) {
@@ -124,11 +122,12 @@ private fun PagerIndicator(
 private fun PagerIndicatorDot(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     val animatedWidth by animateDpAsState(
         targetValue = if (isSelected) 31.dp else 10.dp,
-        animationSpec = tween(durationMillis = 500), label = "widthAnimation"
+        animationSpec = tween(durationMillis = 500),
+        label = "widthAnimation"
     )
 
     Box(
@@ -136,7 +135,7 @@ private fun PagerIndicatorDot(
             .height(10.dp)
             .width(animatedWidth)
             .mainBackground(isSelected, RoundedCornerShape(50.dp), MooiTheme.colorScheme.gray50)
-            .clickable(onClick = onClick),
+            .clickable(onClick = onClick)
     )
 }
 

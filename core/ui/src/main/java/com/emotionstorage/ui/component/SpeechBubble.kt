@@ -1,5 +1,4 @@
-import android.content.Context
-import android.util.TypedValue
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -21,11 +20,10 @@ import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.dpToPixel
 
-
 @Composable
 fun SpeechBubble(
     text: String,
-    modifier: Modifier = Modifier.size(265.dp, 84.dp),
+    modifier: Modifier = Modifier.size(265.dp, 84.dp)
 ) {
     val context = LocalContext.current
 
@@ -86,7 +84,7 @@ private fun SpeechBubblePreview() {
                 .background(MooiTheme.colorScheme.background)
         ) {
             SpeechBubble(
-                text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요."
             )
         }
     }

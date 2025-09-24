@@ -32,7 +32,7 @@ fun Modal(
     onDismissRequest: () -> Unit,
     subTitle: String? = null,
     onConfirm: () -> Unit = {},
-    onDismiss: () -> Unit = {},
+    onDismiss: () -> Unit = {}
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
@@ -41,16 +41,15 @@ fun Modal(
                 .background(MooiTheme.colorScheme.background)
                 .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             if (!subTitle.isNullOrEmpty()) {
                 Text(
                     modifier = Modifier.padding(bottom = 5.dp),
                     text = subTitle,
                     style = MooiTheme.typography.body2,
                     color = MooiTheme.colorScheme.gray500,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
             }
             Text(
@@ -58,10 +57,10 @@ fun Modal(
                 text = title,
                 style = MooiTheme.typography.head2.copy(
                     fontSize = 22.sp,
-                    lineHeight = 30.sp,
+                    lineHeight = 30.sp
                 ),
                 color = Color.White,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
             ModalButton(
                 label = confirmLabel,
@@ -90,7 +89,7 @@ private fun ModalButton(
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    type: CtaButtonType = CtaButtonType.FILLED,
+    type: CtaButtonType = CtaButtonType.FILLED
 ) {
     CtaButton(
         modifier = modifier.height(50.dp),
@@ -101,7 +100,6 @@ private fun ModalButton(
         textStyle = MooiTheme.typography.body2.copy(fontWeight = FontWeight.Normal)
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -114,7 +112,6 @@ private fun ModalPreview() {
         dismissLabel = "메인 화면으로 나갈래요. ",
         onDismissRequest = { },
         onConfirm = { },
-        onDismiss = { },
+        onDismiss = { }
     )
-
 }

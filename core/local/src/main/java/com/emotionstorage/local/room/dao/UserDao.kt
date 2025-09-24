@@ -7,7 +7,6 @@ import androidx.room.Query
 import com.emotionstorage.local.model.USER_PRIMARY_KEY
 import com.emotionstorage.local.model.UserLocal
 
-
 @Dao
 interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -19,5 +18,3 @@ interface UserDao {
     @Query("DELETE FROM user WHERE pk = $USER_PRIMARY_KEY")
     suspend fun deleteUser()
 }
-
-

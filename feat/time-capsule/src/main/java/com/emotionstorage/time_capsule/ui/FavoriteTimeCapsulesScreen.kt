@@ -39,16 +39,14 @@ import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
-import com.emotionstorage.ui.component.TopAppBar
-import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import com.orhanobut.logger.Logger
+import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-
 
 private val DUMMY_TIME_CAPSULES = (1..15).toList().map { it ->
     TimeCapsuleState(
@@ -57,13 +55,15 @@ private val DUMMY_TIME_CAPSULES = (1..15).toList().map { it ->
         emotions = listOf(
             Emotion(
                 label = "서운함",
-                icon = 0,
-            ), Emotion(
+                icon = 0
+            ),
+            Emotion(
                 label = "화남",
-                icon = 1,
-            ), Emotion(
+                icon = 1
+            ),
+            Emotion(
                 label = "피곤함",
-                icon = 2,
+                icon = 2
             )
         ),
         isFavorite = true,
@@ -210,7 +210,6 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         }
     }
 }
-
 
 @Preview
 @Composable

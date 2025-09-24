@@ -6,10 +6,9 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.viewmodel.container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
-
 
 sealed class LoginAction {
     data class Login(val provider: User.AuthProvider) : LoginAction()
@@ -20,7 +19,6 @@ sealed class LoginSideEffect {
     data class LoginFailed(val provider: User.AuthProvider, val idToken: String) : LoginSideEffect()
     object LoginFailedWithException : LoginSideEffect()
 }
-
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(

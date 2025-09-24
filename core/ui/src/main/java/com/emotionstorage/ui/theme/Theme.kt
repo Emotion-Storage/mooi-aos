@@ -21,7 +21,7 @@ fun MooiTheme(
     content: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalMooiTypography provides MooiTypography(),
+        LocalMooiTypography provides MooiTypography()
     ) {
         MaterialTheme(
             content = content

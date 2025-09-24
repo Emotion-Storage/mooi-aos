@@ -1,8 +1,8 @@
 package com.emotionstorage.auth.remote.api
 
 import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
-import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
 import com.emotionstorage.auth.remote.request.GoogleSignupRequestBody
+import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
 import com.emotionstorage.auth.remote.request.KakaoSignupRequestBody
 import com.emotionstorage.auth.remote.response.LoginResponseData
 import com.emotionstorage.auth.remote.response.SignupResponseData
@@ -23,7 +23,6 @@ interface AuthApiService {
     suspend fun postGoogleSignup(
         @Body signupRequestBody: GoogleSignupRequestBody
     ): ResponseDto<SignupResponseData>
-
 
     @POST("/api/v1/users/login/kakao")
     suspend fun postKakaoLogin(

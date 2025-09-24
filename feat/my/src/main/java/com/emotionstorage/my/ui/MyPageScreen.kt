@@ -32,7 +32,7 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
-    navToWithdraw: () -> Unit = {},
+    navToWithdraw: () -> Unit = {}
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -71,7 +71,7 @@ private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     state: MyPageState = MyPageState(),
     onAction: (MyPageAction) -> Unit = {},
-    navToWithdraw: () -> Unit = {},
+    navToWithdraw: () -> Unit = {}
 ) {
     val clipboardManager = LocalClipboardManager.current
 
@@ -116,7 +116,6 @@ private fun StatelessMyPageScreen(
             ) {
                 Text("탈퇴하기")
             }
-
         }
     }
 }

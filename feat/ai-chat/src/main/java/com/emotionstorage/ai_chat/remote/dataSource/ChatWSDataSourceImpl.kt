@@ -28,7 +28,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
             OkHttpClient.Builder()
                 .pingInterval(Duration.ofSeconds(10))
                 .build()
-        ),
+        )
     )
 
     private lateinit var session: StompSession
@@ -52,7 +52,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
     }
 
     override suspend fun observeChatMessages(roomId: String): Flow<String> {
-        return session.subscribeText("/sub/chatroom/${roomId}").map {
+        return session.subscribeText("/sub/chatroom/$roomId").map {
             Logger.d("observeChatMessages() it: $it")
             it
         }
@@ -70,7 +70,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
                 headers = StompSendHeaders(
                     destination = "/pub/v1/test"
                 ),
-                body = FrameBody.Text(messageJson),
+                body = FrameBody.Text(messageJson)
             )
             return true
         } catch (e: Exception) {

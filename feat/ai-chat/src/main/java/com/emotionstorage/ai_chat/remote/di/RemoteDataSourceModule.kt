@@ -24,5 +24,4 @@ abstract class RemoteDataSourceModule {
     abstract fun bindChatWSDataSource(
         impl: ChatWSDataSourceImpl
     ): ChatWSDataSource
-
 }

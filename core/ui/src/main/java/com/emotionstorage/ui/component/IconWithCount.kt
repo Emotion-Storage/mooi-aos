@@ -35,7 +35,7 @@ fun IconWithCount(
     type: IconWithCountType,
     modifier: Modifier = Modifier,
     count: String = "0",
-    onClick: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null
 ) {
     Box(
         modifier = modifier
@@ -43,7 +43,8 @@ fun IconWithCount(
                 enabled = onClick != null,
                 onClick = {
                     onClick?.invoke()
-                })
+                }
+            )
     ) {
         when (type) {
             IconWithCountType.KEY -> {
@@ -52,7 +53,7 @@ fun IconWithCount(
                         .align(Alignment.TopStart)
                         .size(22.dp),
                     painter = painterResource(id = R.drawable.key),
-                    contentDescription = "key icon",
+                    contentDescription = "key icon"
                 )
             }
         }
@@ -75,7 +76,7 @@ fun IconWithCount(
                     letterSpacing = (-0.02).em,
                     color = Color.White
                 ),
-                maxLines = 1,
+                maxLines = 1
             )
         }
     }

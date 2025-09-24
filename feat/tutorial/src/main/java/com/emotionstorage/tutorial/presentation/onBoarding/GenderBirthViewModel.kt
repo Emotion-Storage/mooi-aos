@@ -2,8 +2,8 @@ package com.emotionstorage.tutorial.presentation.onBoarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.PickerState
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
+import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.PickerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -70,8 +70,11 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
                 year to month
             }.collect { (year, month) ->
                 _birthDayRange.update {
-                    if (year == null || month == null) 1..31
-                    else 1..LocalDate.of(year.toInt(), month.toInt(), 1).lengthOfMonth()
+                    if (year == null || month == null) {
+                        1..31
+                    } else {
+                        1..LocalDate.of(year.toInt(), month.toInt(), 1).lengthOfMonth()
+                    }
                 }
             }
         }
@@ -96,7 +99,6 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
         _birthDay.update { day }
     }
 
-
     data class State(
         val gender: GENDER? = null,
         val yearPickerState: PickerState = PickerState(
@@ -110,7 +112,7 @@ class GenderBirthViewModel @Inject constructor() : ViewModel(), GenderBirthEvent
         val dayPickerState: PickerState = PickerState(
             range = (1..31).toList().map { it.toString().format("%2d") },
             enabled = true
-        ),
+        )
     ) {
         val isNextButtonEnabled: Boolean
             get() = gender != null && yearPickerState.selectedValue != null && monthPickerState.selectedValue != null && dayPickerState.selectedValue != null

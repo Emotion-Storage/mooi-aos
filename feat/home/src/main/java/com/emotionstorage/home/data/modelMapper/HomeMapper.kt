@@ -9,6 +9,6 @@ object HomeMapper {
         keyCount = entity.keyCount,
         hasNewNotification = entity.hasNewNotification,
         hasNewTimeCapsule = entity.hasNewTimeCapsule,
-        hasNewReport = entity.hasNewReport,
+        hasNewReport = entity.hasNewReport
     )
 }

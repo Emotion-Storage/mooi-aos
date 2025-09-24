@@ -50,7 +50,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     navToChat: (roomId: String) -> Unit = {},
-    navToArrivedTimeCapsules: () -> Unit = {},
+    navToArrivedTimeCapsules: () -> Unit = {}
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -121,13 +121,13 @@ private fun StatelessHomeScreen(
                     IconWithCount(
                         modifier = Modifier.size(30.dp),
                         type = IconWithCountType.KEY,
-                        count = if(state.keyCount > 999) "999+" else state.keyCount.toString()
+                        count = if (state.keyCount > 999) "999+" else state.keyCount.toString()
                     )
                     // todo: navigate to alarm screen
                     Image(
                         modifier = Modifier.size(30.dp),
                         painter = painterResource(id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm),
-                        contentDescription = "alarm",
+                        contentDescription = "alarm"
                     )
                 }
                 if (state.newTimeCapsuleArrived) {
@@ -138,7 +138,7 @@ private fun StatelessHomeScreen(
                                 navToArrivedTimeCapsules()
                             },
                         painter = painterResource(id = R.drawable.time_capsule_new),
-                        contentDescription = "new time capsule arrived",
+                        contentDescription = "new time capsule arrived"
                     )
                 }
                 if (state.newReportArrived) {
@@ -147,7 +147,7 @@ private fun StatelessHomeScreen(
                     Image(
                         modifier = Modifier.size(30.dp),
                         painter = painterResource(id = R.drawable.daily_report_new),
-                        contentDescription = "new daily report arrived",
+                        contentDescription = "new daily report arrived"
                     )
                 }
             }
@@ -178,15 +178,15 @@ private fun StatelessHomeScreen(
                         fontWeight = FontWeight.Light,
                         fontSize = 17.sp,
                         lineHeight = 24.sp,
-                        letterSpacing = (-0.02).em,
+                        letterSpacing = (-0.02).em
                     ),
                     textAlign = TextAlign.Center,
                     color = MooiTheme.colorScheme.gray500
                 )
 
-
                 Column(
-                    modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = modifier,
+                    horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     StartChatButton(
@@ -194,7 +194,8 @@ private fun StatelessHomeScreen(
                         canStartChat = state.ticketCount > 0,
                         onChatStart = {
                             onAction(HomeAction.EnterChat)
-                        })
+                        }
+                    )
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -264,7 +265,8 @@ private fun StartChatButton(
             modifier = Modifier
                 .size(197.dp, 65.dp)
                 .background(
-                    MooiTheme.colorScheme.gray700, RoundedCornerShape(10.dp)
+                    MooiTheme.colorScheme.gray700,
+                    RoundedCornerShape(10.dp)
                 ),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -296,7 +298,6 @@ private fun StartChatUIPreview() {
         }
     }
 }
-
 
 @Preview
 @Composable

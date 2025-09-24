@@ -38,8 +38,9 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
                     } else {
                         Logger.d("KakaoTalk login failed, fallback to account login")
                         UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
-                            if (error != null) handleError(error)
-                            else if (token != null) handleToken(token)
+                            if (error != null) {
+                                handleError(error)
+                            } else if (token != null) handleToken(token)
                         }
                     }
                 } else if (token != null) {
@@ -49,8 +50,9 @@ class KakaoRemoteDataSourceImpl @Inject constructor(
         } else {
             Logger.d("KakaoTalk not available, trying Kakao account login")
             UserApiClient.instance.loginWithKakaoAccount(context) { token, error ->
-                if (error != null) handleError(error)
-                else if (token != null) handleToken(token)
+                if (error != null) {
+                    handleError(error)
+                } else if (token != null) handleToken(token)
             }
         }
     }

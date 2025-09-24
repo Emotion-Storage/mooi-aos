@@ -11,7 +11,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.presentation.OnBoardingAction
 import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
@@ -32,7 +31,7 @@ enum class OnBoardingRoute(
     NICKNAME("on_boarding/nickname"),
     GENDER_BIRTH("on_boarding/gender_birth"),
     EXPECTATIONS("on_boarding/expectations"),
-    AGREE_TERMS("on_boarding/agree_terms"),
+    AGREE_TERMS("on_boarding/agree_terms")
 }
 
 @Composable
@@ -41,7 +40,7 @@ fun OnBoardingNavHost(
     idToken: String,
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = {_, _ -> },
+    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
     navToBack: () -> Unit = {}
 ) {
     val navController = rememberNavController()
@@ -63,7 +62,6 @@ fun OnBoardingNavHost(
             }
         }
     }
-
 
     StatelessOnBoardingNavHost(
         modifier = modifier,
@@ -107,7 +105,7 @@ private fun StatelessOnBoardingNavHost(
 
                     OnBoardingRoute.GENDER_BIRTH -> GenderBirthScreen(
                         nickname = state.signupForm.nickname ?: "",
-                        onGenderBirthInputComplete ={gender, birth ->
+                        onGenderBirthInputComplete = { gender, birth ->
                             onAction(OnBoardingAction.InputGenderAndBirth(gender, birth))
                         },
                         navToExpectations = {
@@ -119,7 +117,7 @@ private fun StatelessOnBoardingNavHost(
                     )
 
                     OnBoardingRoute.EXPECTATIONS -> ExpectationsScreen(
-                        onExpectationsSelectComplete ={ expectations ->
+                        onExpectationsSelectComplete = { expectations ->
                             onAction(OnBoardingAction.InputExpectations(expectations))
                         },
                         navToAgreeTerms = {
@@ -131,7 +129,7 @@ private fun StatelessOnBoardingNavHost(
                     )
 
                     OnBoardingRoute.AGREE_TERMS -> AgreeTermsScreen(
-                        onAgreeTermsInputComplete = {isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
+                        onAgreeTermsInputComplete = { isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
                             onAction(OnBoardingAction.InputAgreedTerms(isTermAgreed, isPrivacyAgreed, isMarketingAgreed))
                         },
                         onSignup = {

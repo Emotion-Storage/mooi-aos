@@ -15,9 +15,9 @@ class LogoutUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val sessionRepository: SessionRepository
 ) {
-    suspend operator fun invoke(): Boolean{
+    suspend operator fun invoke(): Boolean {
         val result = authRepository.logout()
-        if(result){
+        if (result) {
             sessionRepository.deleteSession()
             userRepository.deleteUser()
         }

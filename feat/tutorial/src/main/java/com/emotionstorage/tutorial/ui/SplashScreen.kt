@@ -27,7 +27,7 @@ fun SplashScreen(
     modifier: Modifier = Modifier,
     viewModel: SplashViewModel = hiltViewModel(),
     navToTutorial: () -> Unit = {},
-    navToHome: () -> Unit = {},
+    navToHome: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
         viewModel.onAction(SplashAction.Initiate)
@@ -45,7 +45,7 @@ fun SplashScreen(
 
 @Composable
 private fun StatelessSplashScreen(
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Scaffold(
         modifier = modifier
@@ -69,7 +69,6 @@ private fun StatelessSplashScreen(
         }
     }
 }
-
 
 @Preview
 @Composable

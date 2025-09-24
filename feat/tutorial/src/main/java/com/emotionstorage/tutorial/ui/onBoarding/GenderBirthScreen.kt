@@ -1,7 +1,6 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,14 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -28,14 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
+import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.ScrollPicker
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.tutorial.R
-import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 
@@ -88,7 +85,7 @@ private fun StatelessGenderBirthScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp)
-                .imePadding(),
+                .imePadding()
         ) {
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -127,7 +124,7 @@ private fun StatelessGenderBirthScreen(
                     selectedDay = state.dayPickerState.selectedValue,
                     onDaySelect = event::onDayPickerSelect,
                     dayRange = state.dayPickerState.range,
-                    dayEnabled = state.dayPickerState.enabled,
+                    dayEnabled = state.dayPickerState.enabled
                 )
             }
 
@@ -144,7 +141,9 @@ private fun StatelessGenderBirthScreen(
                         (state.yearPickerState.selectedValue == null) ||
                         (state.monthPickerState.selectedValue == null) ||
                         (state.dayPickerState.selectedValue == null)
-                    ) return@CtaButton
+                    ) {
+                        return@CtaButton
+                    }
 
                     onGenderBirthInputComplete(
                         state.gender!!,
@@ -165,7 +164,7 @@ private fun StatelessGenderBirthScreen(
 private fun GenderInput(
     modifier: Modifier = Modifier,
     selectedGender: GENDER? = null,
-    onGenderSelect: (GENDER?) -> Unit = {},
+    onGenderSelect: (GENDER?) -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -225,7 +224,7 @@ private fun BirthInput(
     selectedDay: String? = null,
     onDaySelect: (String) -> Unit = {},
     dayRange: List<String> = emptyList(),
-    dayEnabled: Boolean = true,
+    dayEnabled: Boolean = true
 ) {
     Column(
         modifier = modifier
@@ -288,8 +287,7 @@ private fun GenderBirthScreenPreview() {
                 override fun onDayPickerSelect(day: String) {}
             },
             state = State(),
-            nickname = "찡찡이",
+            nickname = "찡찡이"
         )
     }
 }
-

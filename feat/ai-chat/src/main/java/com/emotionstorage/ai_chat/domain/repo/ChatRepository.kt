@@ -9,5 +9,5 @@ interface ChatRepository {
     suspend fun connectChatRoom(roomId: String): Flow<DataState<Boolean>>
     suspend fun disconnectChatRoom(roomId: String): Flow<DataState<Boolean>>
     suspend fun observeChatMessages(roomId: String): Flow<ChatMessage>
-    suspend fun sendChatMessage(roomId: String, chatMessage: ChatMessage):  Flow<DataState<Boolean>>
+    suspend fun sendChatMessage(roomId: String, chatMessage: ChatMessage): Flow<DataState<Boolean>>
 }

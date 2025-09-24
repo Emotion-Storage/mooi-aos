@@ -100,7 +100,7 @@ private fun StatelessCalendarScreen(
 private fun CalendarTopBar(
     calendarMonth: Int,
     keyCount: Int,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier
 ) {
     Row(
         modifier = Modifier
@@ -113,7 +113,7 @@ private fun CalendarTopBar(
             text = buildAnnotatedString {
                 withStyle(
                     SpanStyle(
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primary
                     )
                 ) {
                     append("${calendarMonth}월")

@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetHomeUseCase @Inject constructor(
-    private val homeRepository: HomeRepository,
+    private val homeRepository: HomeRepository
 ) {
     suspend operator fun invoke(): Flow<DataState<Home>> = homeRepository.getHome()
 }

@@ -24,7 +24,6 @@ fun Modifier.mainBackground(
     } else {
         this.background(defaultBackground, shape)
     }
-
 }
 
 @Composable
@@ -40,7 +39,8 @@ fun Modifier.subBackground(
                 shape
             )
             .border(
-                1.dp, MooiTheme.brushScheme.subButtonBorder,
+                1.dp,
+                MooiTheme.brushScheme.subButtonBorder,
                 shape
             )
     } else {

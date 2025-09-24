@@ -1,6 +1,5 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,26 +8,25 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
-import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
+import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
 import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.theme.MooiTheme
 
 /**
  * On boarding step 1
@@ -82,7 +80,7 @@ private fun StatelessNicknameScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp)
-                .imePadding(),
+                .imePadding()
         ) {
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -132,7 +130,7 @@ private fun StatelessNicknameScreen(
 private fun OnBoardingExitModel(
     isModelOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {},
+    onExit: () -> Unit = {}
 ) {
     // todo: fix not navigating back on modal dismiss
     if (isModelOpen) {
@@ -142,11 +140,10 @@ private fun OnBoardingExitModel(
             confirmLabel = "회원가입을 계속 할게요.",
             dismissLabel = "메인 화면으로 나갈래요. ",
             onDismissRequest = onDismissRequest,
-            onDismiss = onExit,
+            onDismiss = onExit
         )
     }
 }
-
 
 @PreviewScreenSizes
 @Composable

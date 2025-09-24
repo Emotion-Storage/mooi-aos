@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetChatRoomIdUseCase @Inject constructor(
     private val chatRepository: ChatRepository
 ) {
-    suspend operator fun invoke(): Flow<DataState<String>>{
+    suspend operator fun invoke(): Flow<DataState<String>> {
         return chatRepository.getChatRoomId()
     }
 }

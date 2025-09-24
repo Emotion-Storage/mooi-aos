@@ -2,7 +2,7 @@ package com.emotionstorage.data.model
 
 import java.time.LocalDateTime
 
-data class UserEntity (
+data class UserEntity(
     val id: String,
     val socialType: AuthProvider,
     val socialId: String,
@@ -12,9 +12,9 @@ data class UserEntity (
     val profileImageUrl: String? = null,
 
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime,
-){
-    enum class AuthProvider{
+    val updatedAt: LocalDateTime
+) {
+    enum class AuthProvider {
         GOOGLE, KAKAO
     }
 }

@@ -28,14 +28,14 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
 import com.emotionstorage.ui.component.CtaButton
-import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.component.ToggleButton
+import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.tutorial.R
 import kotlinx.coroutines.launch
 
 /**
@@ -51,7 +51,6 @@ fun AgreeTermsScreen(
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {}
 ) {
-
     val state = viewModel.state.collectAsState().value
 
     StatelessAgreeTermsScreen(
@@ -63,7 +62,6 @@ fun AgreeTermsScreen(
         navToBack = navToBack
     )
 }
-
 
 @Composable
 private fun StatelessAgreeTermsScreen(
@@ -90,7 +88,7 @@ private fun StatelessAgreeTermsScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .padding(horizontal = 16.dp)
-                .imePadding(),
+                .imePadding()
         ) {
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -159,7 +157,7 @@ private fun StatelessAgreeTermsScreen(
                     TermItem(
                         term = "[필수] 만 14세 이상입니다",
                         isSelected = state.isAgeAgree,
-                        onSelect = event::onToggleAgeAgree,
+                        onSelect = event::onToggleAgeAgree
                     )
                 }
 
@@ -172,7 +170,7 @@ private fun StatelessAgreeTermsScreen(
                             fontWeight = FontWeight.Light
                         ),
                         color = MooiTheme.colorScheme.primary,
-                        text = "* 필수 약관에 동의하셔야만 서비스를 이용하실 수 있어요.",
+                        text = "* 필수 약관에 동의하셔야만 서비스를 이용하실 수 있어요."
                     )
                     Text(
                         style = MooiTheme.typography.body3.copy(
@@ -180,7 +178,7 @@ private fun StatelessAgreeTermsScreen(
                             fontWeight = FontWeight.Light
                         ),
                         color = MooiTheme.colorScheme.primary,
-                        text = "* 선택 약관은 원하실 경우에만 동의하셔도 괜찮아요.",
+                        text = "* 선택 약관은 원하실 경우에만 동의하셔도 괜찮아요."
                     )
                 }
             }

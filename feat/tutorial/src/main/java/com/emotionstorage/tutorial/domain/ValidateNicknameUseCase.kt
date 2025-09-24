@@ -22,12 +22,15 @@ enum class NicknameState(val message: String) {
  */
 class ValidateNicknameUseCase @Inject constructor() {
     operator fun invoke(nickname: String): DataState<NicknameState> {
-        if (nickname.isNullOrEmpty())
+        if (nickname.isNullOrEmpty()) {
             return DataState.Success(NicknameState.INVALID_EMPTY)
-        if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$")))
+        }
+        if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$"))) {
             return DataState.Success(NicknameState.INVALID_CHAR)
-        if (nickname.length < 2)
+        }
+        if (nickname.length < 2) {
             return DataState.Success(NicknameState.INVALID_LENGTH)
+        }
         return DataState.Success(NicknameState.VALID)
     }
 }

@@ -18,4 +18,3 @@ interface SessionDao {
     @Query("DELETE FROM session WHERE pk = $SESSION_PRIMARY_KEY")
     suspend fun deleteSession()
 }
-

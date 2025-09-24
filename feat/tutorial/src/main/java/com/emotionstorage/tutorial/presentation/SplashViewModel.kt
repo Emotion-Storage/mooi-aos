@@ -3,12 +3,11 @@ package com.emotionstorage.tutorial.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.auth.domain.usecase.AutomaticLoginUseCase
 import com.emotionstorage.domain.common.DataState
-import org.orbitmvi.orbit.viewmodel.container
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.collectLatest
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 private const val SPLASH_DURATION = 2000L
@@ -52,10 +51,9 @@ class SplashViewModel @Inject constructor(
                 }
 
                 is DataState.Error -> {
-                    Logger.e("Auto login error, ${result.throwable.toString()}")
+                    Logger.e("Auto login error, ${result.throwable}")
                     postSideEffect(SplashSideEffect.AutoLoginFailed)
                 }
-
             }
         }
     }

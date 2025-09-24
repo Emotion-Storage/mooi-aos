@@ -15,7 +15,7 @@ annotation class AuthRequest
 class RequestHeaderInterceptor
 @Inject
 constructor(
-    private val sessionLocalDataSource: SessionLocalDataSource,
+    private val sessionLocalDataSource: SessionLocalDataSource
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {

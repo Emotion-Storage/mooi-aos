@@ -9,7 +9,5 @@ interface ChatApiService {
 
     @AuthRequest
     @POST("/api/v1/home/emotion-conversation/test")
-    suspend fun postEmotionConversationStart(
-    ): ResponseDto<StartEmotionConversationResponse>
-
+    suspend fun postEmotionConversationStart(): ResponseDto<StartEmotionConversationResponse>
 }

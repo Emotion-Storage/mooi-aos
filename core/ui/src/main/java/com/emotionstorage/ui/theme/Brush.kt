@@ -27,31 +27,30 @@ data class MooiBrushScheme(
             Color(0xFF859CEA)
         ),
         stops = listOf(0.0f, 0.4f, 1.0f),
-        angleInDegrees = -75f,
+        angleInDegrees = -75f
     ),
     val subButtonBackground: Brush = LinearGradient(
         colors = listOf(
             Color(0x1A849BEA),
-            Color(0x0D849BEA),
+            Color(0x0D849BEA)
         ),
-        angleInDegrees = -9f,
+        angleInDegrees = -9f
     ),
     val subButtonBorder: Brush = LinearGradient(
         colors = listOf(
             Color(0x66AECBFA),
-            Color(0x08AECBFA),
+            Color(0x08AECBFA)
         ),
-        angleInDegrees = -42f,
+        angleInDegrees = -42f
     ),
     val commentBackground: Brush = LinearGradient(
         colors = listOf(
             Color(0x80849BEA),
             Color(0x14849BEA)
         ),
-        angleInDegrees = -42f,
+        angleInDegrees = -42f
     )
 )
-
 
 @Preview(showBackground = true)
 @Composable

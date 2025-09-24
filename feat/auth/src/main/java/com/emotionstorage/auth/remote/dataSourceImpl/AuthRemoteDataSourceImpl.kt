@@ -38,7 +38,9 @@ class AuthRemoteDataSourceImpl @Inject constructor(
                 response.data?.accessToken?.run {
                     return this
                 } ?: throw Exception("No access token received")
-            } else throw Exception(response.code + "" + response.message)
+            } else {
+                throw Exception(response.code + "" + response.message)
+            }
         } catch (e: Exception) {
             Logger.e("Login fail, $e")
             throw Exception("Login api failed", e)
@@ -60,8 +62,11 @@ class AuthRemoteDataSourceImpl @Inject constructor(
                 )
             }
 
-            if (response.status == ResponseStatus.Created.code) return true
-            else throw Exception(response.code + "" + response.message)
+            if (response.status == ResponseStatus.Created.code) {
+                return true
+            } else {
+                throw Exception(response.code + "" + response.message)
+            }
         } catch (e: Exception) {
             throw Exception("Signup api failed", e)
         }
@@ -70,8 +75,11 @@ class AuthRemoteDataSourceImpl @Inject constructor(
     override suspend fun checkSession(): Boolean {
         try {
             val response = authApiService.getAuthSession()
-            if (response.status == ResponseStatus.OK.code) return true
-            else throw Exception(response.code + "" + response.message)
+            if (response.status == ResponseStatus.OK.code) {
+                return true
+            } else {
+                throw Exception(response.code + "" + response.message)
+            }
         } catch (e: Exception) {
             throw Exception("Check session api failed", e)
         }

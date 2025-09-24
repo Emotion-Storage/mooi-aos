@@ -36,18 +36,18 @@ import java.time.LocalDateTime
 @Composable
 fun ChatMessageList(
     modifier: Modifier = Modifier,
-    chatMessages: List<ChatMessage> = listOf(),
+    chatMessages: List<ChatMessage> = listOf()
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
                 DateDivider(
                     date = item.timestamp.toLocalDate(),
-                    modifier = Modifier.padding(vertical = if(index != 0) 16.dp else 0.dp)
+                    modifier = Modifier.padding(vertical = if (index != 0) 16.dp else 0.dp)
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }
@@ -58,7 +58,6 @@ fun ChatMessageList(
             )
         }
     }
-
 }
 
 @Composable
@@ -122,8 +121,11 @@ private fun ChatMessageItem(
                 .clip(RoundedCornerShape(10.dp))
                 .widthIn(max = (screenWidth * 0.8).dp)
                 .background(
-                    if (chatMessage.source == MessageSource.CLIENT) MooiTheme.colorScheme.primary
-                    else MooiTheme.colorScheme.gray500
+                    if (chatMessage.source == MessageSource.CLIENT) {
+                        MooiTheme.colorScheme.primary
+                    } else {
+                        MooiTheme.colorScheme.gray500
+                    }
                 )
                 .padding(8.dp)
         ) {
@@ -134,7 +136,6 @@ private fun ChatMessageItem(
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -158,7 +159,7 @@ private fun ChatMessageListPreview() {
             source = MessageSource.CLIENT,
             content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
             timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1)
-        ),
+        )
     ) + List(6, init = { it }).map { it ->
         ChatMessage(
             roomId = "",

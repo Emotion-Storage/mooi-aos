@@ -9,6 +9,6 @@ object HomeMapper {
         keyCount = remote.keyCount,
         hasNewNotification = remote.hasNewNotification,
         hasNewTimeCapsule = remote.hasNewTimeCapsule,
-        hasNewReport = remote.hasNewReport,
+        hasNewReport = remote.hasNewReport
     )
 }

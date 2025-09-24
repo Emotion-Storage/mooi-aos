@@ -22,12 +22,9 @@ data class SignupForm(
     val expectations: List<Expectation>? = null,
     val isTermAgreed: Boolean? = null,
     val isPrivacyAgreed: Boolean? = null,
-    val isMarketingAgreed: Boolean? = null,
+    val isMarketingAgreed: Boolean? = null
 ) {
     enum class GENDER(val value: String) {
         MALE("MALE"), FEMALE("FEMALE")
     }
 }
-
-
-

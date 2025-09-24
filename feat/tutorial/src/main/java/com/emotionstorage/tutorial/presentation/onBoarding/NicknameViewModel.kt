@@ -84,4 +84,3 @@ class NicknameViewModel @Inject constructor(
         }
     }
 }
-

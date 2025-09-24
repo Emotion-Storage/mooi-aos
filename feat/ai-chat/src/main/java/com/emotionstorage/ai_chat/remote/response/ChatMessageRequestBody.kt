@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class ChatMessageRequestBody (
+data class ChatMessageRequestBody(
     val messageId: String,
     val roomId: String,
     val content: String,

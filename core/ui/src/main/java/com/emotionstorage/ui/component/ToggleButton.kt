@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 
 enum class ToggleButtonType {
-    CHECKBOX,
+    CHECKBOX
 }
 
 @Composable
@@ -36,7 +36,6 @@ fun ToggleButton(
         contentDescription = contentDescription
     )
 }
-
 
 @Preview
 @Composable

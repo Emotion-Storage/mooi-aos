@@ -12,8 +12,8 @@ data class User(
     val profileImageUrl: String? = null,
 
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime,
-){
+    val updatedAt: LocalDateTime
+) {
     enum class AuthProvider {
         GOOGLE, KAKAO
     }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -52,12 +51,12 @@ fun TimeCapsuleCalendar(
     calendarDate: LocalDate = LocalDate.now().withDayOfMonth(1),
     onCalendarDateSelect: (calendarDate: LocalDate) -> Unit = {},
     timeCapsuleDates: List<LocalDate> = emptyList(),
-    onDateSelect: (LocalDate) -> Unit = {},
+    onDateSelect: (LocalDate) -> Unit = {}
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background),
+            .background(MooiTheme.colorScheme.background)
     ) {
         // year & month selection
         Box(
@@ -84,7 +83,7 @@ fun TimeCapsuleCalendar(
                 text = "${calendarDate.year}년 ${calendarDate.monthValue}월",
                 style = MooiTheme.typography.button,
                 color = Color.White,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
             if (calendarDate < LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)) {
                 Image(
@@ -116,7 +115,7 @@ fun TimeCapsuleCalendar(
                     text = label,
                     style = MooiTheme.typography.body5,
                     color = Color.White,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
             }
         }
@@ -125,7 +124,8 @@ fun TimeCapsuleCalendar(
         LazyVerticalGrid(columns = GridCells.Fixed(7), modifier = Modifier.fillMaxWidth()) {
             items(
                 items = calendarDate.getWeekDatesOfTargetMonth(),
-                key = { it.toString() }) { date ->
+                key = { it.toString() }
+            ) { date ->
                 DateItem(
                     modifier = Modifier.padding(bottom = 12.dp),
                     date = date,
@@ -139,7 +139,6 @@ fun TimeCapsuleCalendar(
     }
 }
 
-
 @Composable
 private fun DateItem(
     modifier: Modifier = Modifier,
@@ -147,7 +146,7 @@ private fun DateItem(
     date: LocalDate = LocalDate.now(),
     onClick: (date: LocalDate) -> Unit = {},
     isFilled: Boolean = false,
-    isToday: Boolean = false,
+    isToday: Boolean = false
 ) {
     Box(modifier = modifier) {
         if (!isShown) {
@@ -175,7 +174,7 @@ private fun DateItem(
                 Text(
                     text = date.dayOfMonth.toString(),
                     style = MooiTheme.typography.body5,
-                    color = Color.White,
+                    color = Color.White
                 )
                 Box(
                     modifier = Modifier
@@ -186,9 +185,13 @@ private fun DateItem(
                         )
                         .border(
                             width = 1.5.dp,
-                            color = if (isFilled) Color.Transparent else Color(0xFFAECBFA).copy(
-                                alpha = 0.2f
-                            ),
+                            color = if (isFilled) {
+                                Color.Transparent
+                            } else {
+                                Color(0xFFAECBFA).copy(
+                                    alpha = 0.2f
+                                )
+                            },
                             shape = CircleShape
                         )
                 )

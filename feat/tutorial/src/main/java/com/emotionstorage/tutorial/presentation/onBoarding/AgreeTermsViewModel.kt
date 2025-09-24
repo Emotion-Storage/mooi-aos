@@ -19,7 +19,6 @@ interface AgreeTermsEvent {
     fun onToggleAgeAgree()
 }
 
-
 @HiltViewModel
 class AgreeTermsViewModel @Inject constructor() : ViewModel(), AgreeTermsEvent {
     private val _isAllAgree = MutableStateFlow(false)
@@ -104,7 +103,7 @@ class AgreeTermsViewModel @Inject constructor() : ViewModel(), AgreeTermsEvent {
         val isTermAgree: Boolean = false,
         val isPrivacyAgree: Boolean = false,
         val isMarketingAgree: Boolean = false,
-        val isAgeAgree: Boolean = false,
+        val isAgeAgree: Boolean = false
     ) {
         val isSignupCompleteButtonEnabled: Boolean
             get() = isTermAgree && isPrivacyAgree && isAgeAgree

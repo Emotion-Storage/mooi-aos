@@ -32,19 +32,21 @@ import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 
-private val DUMMY_TIME_CAPSULE =  TimeCapsuleState(
+private val DUMMY_TIME_CAPSULE = TimeCapsuleState(
     id = "",
     title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
     emotions = listOf(
         Emotion(
             label = "서운함",
-            icon = 0,
-        ), Emotion(
+            icon = 0
+        ),
+        Emotion(
             label = "화남",
-            icon = 1,
-        ), Emotion(
+            icon = 1
+        ),
+        Emotion(
             label = "피곤함",
-            icon = 2,
+            icon = 2
         )
     ),
     isFavorite = true,
@@ -86,7 +88,8 @@ fun TimeCapsuleItem(
                 .fillMaxWidth()
                 .height(92.dp)
                 .background(
-                    Color(0x1A849BEA), RoundedCornerShape(15.dp)
+                    Color(0x1A849BEA),
+                    RoundedCornerShape(15.dp)
                 )
                 .padding(vertical = 18.dp, horizontal = 15.dp)
                 .clickable(onClick = onClick),
@@ -142,10 +145,10 @@ fun TimeCapsuleItem(
 
 @Preview
 @Composable
-private fun TimeCapsuleItemPreview(){
+private fun TimeCapsuleItemPreview() {
     MooiTheme {
         TimeCapsuleItem(
-            timeCapsule = DUMMY_TIME_CAPSULE,
+            timeCapsule = DUMMY_TIME_CAPSULE
         )
     }
 }

@@ -4,7 +4,6 @@ import com.emotionstorage.home.data.dataSource.HomeRemoteDataSource
 import com.emotionstorage.home.data.model.HomeEntity
 import com.emotionstorage.home.remote.api.HomeApiService
 import com.emotionstorage.home.remote.modelMapper.HomeMapper
-import com.orhanobut.logger.Logger
 import javax.inject.Inject
 
 class HomeRemoteDataSourceImpl @Inject constructor(
@@ -13,9 +12,11 @@ class HomeRemoteDataSourceImpl @Inject constructor(
     override suspend fun getHome(): HomeEntity {
         try {
             val homeResponse = homeApi.getHome()
-            if (homeResponse.data != null)
+            if (homeResponse.data != null) {
                 return HomeMapper.toData(homeResponse.data!!)
-            else throw Throwable("Response data is null!, ${homeResponse}")
+            } else {
+                throw Throwable("Response data is null!, $homeResponse")
+            }
         } catch (e: Exception) {
             throw e
         }

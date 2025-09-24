@@ -7,21 +7,20 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
+import com.emotionstorage.auth.BuildConfig
 import com.emotionstorage.auth.data.dataSource.GoogleRemoteDataSource
-import com.emotionstorage.domain.common.DataState
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
-import com.emotionstorage.auth.BuildConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import javax.inject.Inject
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 class GoogleRemoteDataSourceImpl @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext private val context: Context
 ) : GoogleRemoteDataSource {
     private val credentialManager: CredentialManager by lazy {
         CredentialManager.create(context)
@@ -41,7 +40,7 @@ class GoogleRemoteDataSourceImpl @Inject constructor(
                 // get credential result
                 val credentialResult: GetCredentialResponse = credentialManager.getCredential(
                     request = credentialRequest,
-                    context = context,
+                    context = context
                 )
 
                 // parse credential result
@@ -51,7 +50,6 @@ class GoogleRemoteDataSourceImpl @Inject constructor(
                             val googleIdTokenCredential = GoogleIdTokenCredential
                                 .createFrom(this.data)
                             return@async googleIdTokenCredential.idToken
-
                         } catch (e: GoogleIdTokenParsingException) {
                             throw Exception("Invalid Google ID token", e)
                         }

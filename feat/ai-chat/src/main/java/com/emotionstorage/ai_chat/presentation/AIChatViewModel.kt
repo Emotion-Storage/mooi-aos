@@ -11,7 +11,6 @@ import com.emotionstorage.domain.common.DataState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -21,7 +20,7 @@ data class AIChatState(
     val roomId: String = "",
 
     val messages: List<ChatMessage> = emptyList(),
-    val canCreateTimesCapsule: Boolean = false,
+    val canCreateTimesCapsule: Boolean = false
 )
 
 sealed class AIChatAction {
@@ -44,7 +43,7 @@ class AIChatViewModel @Inject constructor(
     private val connectChatRoom: ConnectChatRoomUseCase,
     private val disconnectChatRoom: DisconnectChatRoomUseCase,
     private val sendChatMessage: SendChatMessageUseCase,
-    private val observeChatMessages: ObserveChatMessagesUseCase,
+    private val observeChatMessages: ObserveChatMessagesUseCase
 ) : ViewModel(), ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
 
@@ -130,7 +129,8 @@ class AIChatViewModel @Inject constructor(
         }
 
         sendChatMessage(
-            state.roomId, ChatMessage(
+            state.roomId,
+            ChatMessage(
                 roomId = state.roomId,
                 source = ChatMessage.MessageSource.CLIENT,
                 content = message

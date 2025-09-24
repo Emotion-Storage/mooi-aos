@@ -17,7 +17,7 @@ data class HomeState(
     val ticketCount: Int = 0,
     val newNotificationArrived: Boolean = false,
     val newTimeCapsuleArrived: Boolean = false,
-    val newReportArrived: Boolean = false,
+    val newReportArrived: Boolean = false
 )
 
 sealed class HomeAction {
@@ -56,15 +56,15 @@ class HomeViewModel @Inject constructor(
 
     private fun handleInitNickname() = intent {
         getUserNickname().collect {
-            when(it){
+            when (it) {
                 is DataState.Success -> {
-                    Logger.d("HomeViewModel: handleInitNickname: ${it}")
+                    Logger.d("HomeViewModel: handleInitNickname: $it")
                     reduce {
                         state.copy(nickname = it.data)
                     }
                 }
                 is DataState.Error -> {
-                    Logger.e("HomeViewModel: handleInitNickname error: ${it}")
+                    Logger.e("HomeViewModel: handleInitNickname error: $it")
                 }
                 is DataState.Loading -> {
                     // do nothing
@@ -77,7 +77,7 @@ class HomeViewModel @Inject constructor(
         getHome().collect {
             when (it) {
                 is DataState.Success -> {
-                    Logger.d("HomeViewModel: handleUpdateState: ${it}")
+                    Logger.d("HomeViewModel: handleUpdateState: $it")
                     reduce {
                         state.copy(
                             keyCount = it.data.keyCount,
@@ -90,7 +90,7 @@ class HomeViewModel @Inject constructor(
                 }
 
                 is DataState.Error -> {
-                    Logger.e("HomeViewModel: handleUpdateState error: ${it}")
+                    Logger.e("HomeViewModel: handleUpdateState error: $it")
                 }
 
                 is DataState.Loading -> {
@@ -102,7 +102,7 @@ class HomeViewModel @Inject constructor(
 
     private fun handleEnterChat() = intent {
         getChatRoomId().collect {
-            Logger.d("HomeViewModel: handleEnterChat: ${it}")
+            Logger.d("HomeViewModel: handleEnterChat: $it")
             if (it is DataState.Success) {
                 postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it.data))
             }

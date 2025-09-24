@@ -80,13 +80,15 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 emotions = listOf(
                     Emotion(
                         label = "서운함",
-                        icon = 0,
-                    ), Emotion(
+                        icon = 0
+                    ),
+                    Emotion(
                         label = "화남",
-                        icon = 1,
-                    ), Emotion(
+                        icon = 1
+                    ),
+                    Emotion(
                         label = "피곤함",
-                        icon = 2,
+                        icon = 2
                     )
                 ),
                 isFavorite = true,
@@ -103,7 +105,6 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
         reduce {
             state.copy(timeCapsules = timeCapsules)
         }
-
     }
 
     private fun handleSetSortOrder(sortOrderLabel: String) = intent {
@@ -118,13 +119,15 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                     emotions = listOf(
                         Emotion(
                             label = "서운함",
-                            icon = 0,
-                        ), Emotion(
+                            icon = 0
+                        ),
+                        Emotion(
                             label = "화남",
-                            icon = 1,
-                        ), Emotion(
+                            icon = 1
+                        ),
+                        Emotion(
                             label = "피곤함",
-                            icon = 2,
+                            icon = 2
                         )
                     ),
                     isFavorite = true,
@@ -142,7 +145,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 state.copy(sortOrder = sortOrder, timeCapsules = timeCapsules)
             }
         } catch (e: IllegalArgumentException) {
-            Logger.e("Invalid sort order label: ${sortOrderLabel}")
+            Logger.e("Invalid sort order label: $sortOrderLabel")
             return@intent
         } catch (e: Exception) {
             Logger.e(e.toString())
@@ -153,7 +156,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
     private fun handleToggleFavorite(id: String) = intent {
         val isFavorite = state.timeCapsules.find { it.id == id }?.isFavorite
         if (isFavorite == null) {
-            Logger.e("Cannot find time capsule of id ${id}")
+            Logger.e("Cannot find time capsule of id $id")
             return@intent
         }
 

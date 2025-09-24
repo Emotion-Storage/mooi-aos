@@ -73,8 +73,8 @@ private fun StatelessAIChatScreen(
     modifier: Modifier = Modifier,
     state: AIChatState = AIChatState(),
     onAction: (action: AIChatAction) -> Unit = {},
-    navToBack: () -> Unit = {},
-){
+    navToBack: () -> Unit = {}
+) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     AIChatExitModel(
         isModelOpen = isExitModalOpen,
@@ -91,7 +91,8 @@ private fun StatelessAIChatScreen(
                 showBackButton = true,
                 onBackClick = {
                     setExitModalOpen(true)
-                })
+                }
+            )
         }
     ) { innerPadding ->
         Column(
@@ -129,7 +130,7 @@ private fun StatelessAIChatScreen(
 private fun AIChatExitModel(
     isModelOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {},
+    onExit: () -> Unit = {}
 ) {
     if (isModelOpen) {
         Modal(
@@ -137,7 +138,7 @@ private fun AIChatExitModel(
             confirmLabel = "대화 계속하기",
             dismissLabel = "그만하기",
             onDismissRequest = onDismissRequest,
-            onDismiss = onExit,
+            onDismiss = onExit
         )
     }
 }

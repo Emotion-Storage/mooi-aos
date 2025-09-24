@@ -3,8 +3,8 @@ package com.emotionstorage.ui.util
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.ui.R
 
-fun TimeCapsule.Emotion.getIconResId(): Int?{
-    return when(this.icon){
+fun TimeCapsule.Emotion.getIconResId(): Int? {
+    return when (this.icon) {
         0 -> R.drawable.emotion_0
         1 -> R.drawable.emotion_1
         2 -> R.drawable.emotion_2

@@ -1,7 +1,6 @@
 package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.UserLocalDataSource
-import com.emotionstorage.data.model.UserEntity
 import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
@@ -24,9 +23,9 @@ class UserRepositoryImpl @Inject constructor(
             // TODO: get user from remote if null
             // ?: userRemoteDataSource.getUser()
 
-            if(user != null){
+            if (user != null) {
                 emit(DataState.Success(UserMapper.toDomain(user!!)))
-            }else{
+            } else {
                 emit(DataState.Error(Exception("User not found")))
             }
         } catch (e: Exception) {

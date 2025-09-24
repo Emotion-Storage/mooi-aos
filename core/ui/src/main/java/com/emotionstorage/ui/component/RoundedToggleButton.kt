@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.util.subBackground
 
-
 enum class RoundedToggleButtonType {
     FAVORITE
 }

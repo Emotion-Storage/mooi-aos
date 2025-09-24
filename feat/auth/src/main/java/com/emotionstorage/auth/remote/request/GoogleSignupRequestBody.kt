@@ -3,7 +3,7 @@ package com.emotionstorage.auth.remote.request
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GoogleSignupRequestBody (
+data class GoogleSignupRequestBody(
     val idToken: String,
     val nickname: String,
     val gender: String,
@@ -11,5 +11,5 @@ data class GoogleSignupRequestBody (
     val expectations: List<String>,
     val isTermsAgreed: Boolean,
     val isPrivacyAgreed: Boolean,
-    val isMarketingAgreed: Boolean,
+    val isMarketingAgreed: Boolean
 )

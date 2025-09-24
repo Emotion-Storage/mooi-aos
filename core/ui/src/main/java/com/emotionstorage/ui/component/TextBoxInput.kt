@@ -26,7 +26,7 @@ fun TextBoxInput(
     modifier: Modifier = Modifier,
     showCharCount: Boolean = true,
     maxCharCount: Int = 0,
-    placeHolder: String = "",
+    placeHolder: String = ""
 ) {
     BasicTextField(
         modifier = modifier
@@ -39,7 +39,7 @@ fun TextBoxInput(
             color = Color.White
         ),
         value = value,
-        onValueChange = onValueChange,
+        onValueChange = onValueChange
     ) {
         Column(
             verticalArrangement = Arrangement.spacedBy(9.dp)
@@ -72,7 +72,7 @@ fun TextBoxInput(
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
                         color = MooiTheme.colorScheme.gray300,
-                        text = "/${maxCharCount}"
+                        text = "/$maxCharCount"
                     )
                 }
             }

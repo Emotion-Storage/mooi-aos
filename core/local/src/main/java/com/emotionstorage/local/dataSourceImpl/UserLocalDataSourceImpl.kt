@@ -8,31 +8,31 @@ import javax.inject.Inject
 
 class UserLocalDataSourceImpl @Inject constructor(
     private val userDao: UserDao
-): UserLocalDataSource {
+) : UserLocalDataSource {
     override suspend fun saveUser(user: UserEntity): Boolean {
-        try{
+        try {
             userDao.insertUser(UserMapper.toLocal(user))
             return true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return false
         }
     }
 
     override suspend fun getUser(): UserEntity? {
-        return try{
-            userDao.getUser()?.run{
+        return try {
+            userDao.getUser()?.run {
                 UserMapper.toEntity(this)
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
     }
 
     override suspend fun deleteUser(): Boolean {
-        try{
+        try {
             userDao.deleteUser()
             return true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return false
         }
     }

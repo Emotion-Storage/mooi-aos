@@ -39,13 +39,15 @@ private val DUMMY_TIME_CAPSULES = (1..15).toList().map { it ->
         emotions = listOf(
             Emotion(
                 label = "서운함",
-                icon = 0,
-            ), Emotion(
+                icon = 0
+            ),
+            Emotion(
                 label = "화남",
-                icon = 1,
-            ), Emotion(
+                icon = 1
+            ),
+            Emotion(
                 label = "피곤함",
-                icon = 2,
+                icon = 2
             )
         ),
         isFavorite = true,
@@ -80,9 +82,11 @@ private fun StatelessArrivedTimeCapsulesScreen(
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .background(MooiTheme.colorScheme.background), topBar = {
+            .background(MooiTheme.colorScheme.background),
+        topBar = {
             TopAppBar(title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
-        }) { innerPadding ->
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -131,7 +135,6 @@ private fun StatelessArrivedTimeCapsulesScreen(
         }
     }
 }
-
 
 @Preview
 @Composable

@@ -42,7 +42,7 @@ fun ChatMessageInputBox(
             value = message,
             onValueChange = setMessage,
             placeHolder = "메시지를 입력하세요",
-            showCharCount = false,
+            showCharCount = false
         )
         Button(
             onClick = {

@@ -1,9 +1,8 @@
 package com.emotionstorage.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,7 +13,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +22,7 @@ import com.emotionstorage.ui.util.mainBackground
 
 enum class CtaButtonType {
     FILLED,
-    TONAL,
+    TONAL
 }
 
 @Composable
@@ -35,7 +33,7 @@ fun CtaButton(
     onClick: () -> Unit = {},
     type: CtaButtonType = CtaButtonType.FILLED,
     radius: Int = 15,
-    textStyle: TextStyle = MooiTheme.typography.button,
+    textStyle: TextStyle = MooiTheme.typography.button
 ) {
     Box(modifier = modifier) {
         Button(
@@ -51,7 +49,7 @@ fun CtaButton(
                     CtaButtonType.FILLED -> Color.Transparent
                     CtaButtonType.TONAL -> MooiTheme.colorScheme.gray700
                 },
-                contentColor =  when (type) {
+                contentColor = when (type) {
                     CtaButtonType.FILLED -> Color.White
                     CtaButtonType.TONAL -> MooiTheme.colorScheme.gray500
                 },
@@ -59,7 +57,7 @@ fun CtaButton(
                 disabledContentColor = Color.White
             ),
             enabled = enabled,
-            onClick = onClick,
+            onClick = onClick
         ) {
             Text(
                 style = textStyle,
@@ -74,10 +72,11 @@ fun CtaButton(
 private fun CtaButtonPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier = Modifier.padding(20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             CtaButton(
-                label = "확인",
+                label = "확인"
             )
             CtaButton(
                 label = "확인",

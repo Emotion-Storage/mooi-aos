@@ -12,5 +12,5 @@ const val SESSION_PRIMARY_KEY = 0
 data class SessionLocal(
     @PrimaryKey
     val pk: Int = SESSION_PRIMARY_KEY,
-    val accessToken: String,
+    val accessToken: String
 )

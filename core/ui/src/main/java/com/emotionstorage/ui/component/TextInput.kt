@@ -2,7 +2,6 @@ package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,20 +13,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.theme.MooiTheme
 
 sealed class TextInputState(
     val message: String? = null
@@ -74,7 +70,7 @@ fun TextInput(
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = "/${maxCharCount}"
+                        text = "/$maxCharCount"
                     )
                 }
             }
@@ -87,7 +83,7 @@ fun TextInput(
             textStyle = MooiTheme.typography.body3.copy(fontSize = 15.sp, color = Color.White),
             value = value,
             onValueChange = onValueChange,
-            maxLines = 1,
+            maxLines = 1
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -118,12 +114,11 @@ fun TextInput(
             }
         }
 
-
         TextInputMessage(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 12.dp),
-            state = state,
+            state = state
         )
     }
 }
@@ -163,7 +158,6 @@ private fun TextInputMessage(
         )
     }
 }
-
 
 @Preview
 @Composable

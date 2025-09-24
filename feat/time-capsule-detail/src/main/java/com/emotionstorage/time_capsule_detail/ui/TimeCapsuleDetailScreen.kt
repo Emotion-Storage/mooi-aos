@@ -65,34 +65,45 @@ private val DUMMY_TIME_CAPSULE = TimeCapsule(
 
 @Composable
 fun TimeCapsuleDetailScreen(
-    id: String, modifier: Modifier = Modifier, navToBack: () -> Unit = {}
+    id: String,
+    modifier: Modifier = Modifier,
+    navToBack: () -> Unit = {}
 ) {
     StatelessTimeCapsuleDetailScreen(
-        timeCapsule = DUMMY_TIME_CAPSULE, modifier = modifier, navToBack = navToBack
+        timeCapsule = DUMMY_TIME_CAPSULE,
+        modifier = modifier,
+        navToBack = navToBack
     )
 }
 
 @Composable
 private fun StatelessTimeCapsuleDetailScreen(
-    timeCapsule: TimeCapsule, modifier: Modifier = Modifier, navToBack: () -> Unit = {}
+    timeCapsule: TimeCapsule,
+    modifier: Modifier = Modifier,
+    navToBack: () -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .background(MooiTheme.colorScheme.background), topBar = {
+            .background(MooiTheme.colorScheme.background),
+        topBar = {
             TopAppBar(
                 title = timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
                 showBackButton = true,
                 onBackClick = navToBack,
                 rightComponent = {
                     RoundedToggleButton(
-                        isSelected = timeCapsule.isFavorite, onSelect = {
+                        isSelected = timeCapsule.isFavorite,
+                        onSelect = {
                             // todo: toggle favorite
-                        })
-                })
-        }) { innerPadding ->
+                        }
+                    )
+                }
+            )
+        }
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -107,7 +118,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 text = timeCapsule.title,
                 style = MooiTheme.typography.body1,
                 textAlign = TextAlign.Center,
-                color = Color.White,
+                color = Color.White
             )
             Box(
                 modifier = Modifier
@@ -117,7 +128,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 Text(
                     text = timeCapsule.summary,
                     style = MooiTheme.typography.body4.copy(lineHeight = 24.sp),
-                    color = Color.White,
+                    color = Color.White
                 )
             }
 
@@ -131,7 +142,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
                 style = MooiTheme.typography.body1,
                 textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.primary,
+                color = MooiTheme.colorScheme.primary
             )
 
             Emotions(
@@ -150,18 +161,18 @@ private fun StatelessTimeCapsuleDetailScreen(
                 modifier = Modifier.padding(bottom = 5.dp),
                 text = "내 마음 노트",
                 style = MooiTheme.typography.body1,
-                color = Color.White,
+                color = Color.White
             )
             Text(
                 modifier = Modifier.padding(bottom = 17.dp),
                 text = "타임캡슐에 직접 남기고 싶은 말이 있다면 적어주세요.",
                 style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Light),
                 textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.gray300,
+                color = MooiTheme.colorScheme.gray300
             )
             MindNote(
                 modifier = Modifier.padding(bottom = 500.dp),
-                note = timeCapsule.note ?: "",
+                note = timeCapsule.note ?: ""
             )
         }
     }
@@ -183,13 +194,13 @@ private fun DecorativeDots(modifier: Modifier = Modifier) {
                             listOf(
                                 MooiTheme.colorScheme.primary.copy(alpha = alpha),
                                 Color(0xFF9AB4F2).copy(alpha = alpha),
-                                MooiTheme.colorScheme.tertiary.copy(alpha = alpha),
+                                MooiTheme.colorScheme.tertiary.copy(alpha = alpha)
                             )
-                        ), CircleShape
+                        ),
+                        CircleShape
                     )
             )
         }
-
     }
 }
 
@@ -211,9 +222,10 @@ private fun Emotions(
                         Brush.horizontalGradient(
                             listOf(
                                 Color(0x80849BEA).copy(alpha = 0.1f),
-                                Color(0x14849BEA).copy(alpha = 0.016f),
+                                Color(0x14849BEA).copy(alpha = 0.016f)
                             )
-                        ), RoundedCornerShape(10.dp)
+                        ),
+                        RoundedCornerShape(10.dp)
                     )
             ) {
                 Column(
@@ -241,13 +253,13 @@ private fun Emotions(
                         Text(
                             text = emotion.label,
                             style = MooiTheme.typography.body4.copy(fontSize = 15.sp),
-                            color = MooiTheme.colorScheme.primary,
+                            color = MooiTheme.colorScheme.primary
                         )
                     }
                     Text(
                         text = "${emotion.percentage?.toInt() ?: "??"}%",
                         style = MooiTheme.typography.head3,
-                        color = Color.White,
+                        color = Color.White
                     )
                 }
             }
@@ -282,7 +294,7 @@ private fun Comments(
                 Text(
                     text = comment,
                     style = MooiTheme.typography.body4,
-                    color = Color.White,
+                    color = Color.White
                 )
             }
         }
@@ -318,7 +330,8 @@ private fun MindNote(
                 .background(MooiTheme.colorScheme.bottomBarBackground, RoundedCornerShape(10.dp))
                 .clickable(
                     onClick = { onSaveNote(noteInput) }
-                )) {
+                )
+        ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = "변경사항 저장하기",
@@ -329,13 +342,13 @@ private fun MindNote(
     }
 }
 
-//@PreviewScreenSizes
+// @PreviewScreenSizes
 @Preview
 @Composable
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
-            timeCapsule = DUMMY_TIME_CAPSULE,
+            timeCapsule = DUMMY_TIME_CAPSULE
         )
     }
 }

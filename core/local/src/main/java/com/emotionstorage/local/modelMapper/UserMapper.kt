@@ -13,7 +13,7 @@ internal object UserMapper {
             name = entity.name,
             profileImageUrl = entity.profileImageUrl,
             createdAt = entity.createdAt,
-            updatedAt = entity.updatedAt,
+            updatedAt = entity.updatedAt
         )
     }
 
@@ -30,7 +30,7 @@ internal object UserMapper {
             name = local.name,
             profileImageUrl = local.profileImageUrl,
             createdAt = local.createdAt,
-            updatedAt = local.updatedAt,
+            updatedAt = local.updatedAt
         )
     }
 }

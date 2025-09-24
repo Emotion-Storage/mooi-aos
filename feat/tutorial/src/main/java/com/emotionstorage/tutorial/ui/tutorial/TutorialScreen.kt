@@ -29,7 +29,7 @@ private const val TUTORIAL_PAGE_COUNT = 4
 @Composable
 fun TutorialScreen(
     modifier: Modifier = Modifier,
-    navToLogin: () -> Unit = {},
+    navToLogin: () -> Unit = {}
 ) {
     Scaffold(
         modifier = modifier
@@ -44,48 +44,48 @@ fun TutorialScreen(
                 .padding(top = 78.dp, bottom = 41.dp),
             pageCount = TUTORIAL_PAGE_COUNT,
             pageContent =
-                { page ->
-                    when (page) {
-                        0 -> TutorialPage(
-                            description = stringResource(R.string.tutorial_p0_desc),
-                            title = stringResource(R.string.tutorial_p0_title),
-                            titleHighlights = stringResource(R.string.tutorial_p0_title_highlights).split(
-                                ','
-                            ),
+            { page ->
+                when (page) {
+                    0 -> TutorialPage(
+                        description = stringResource(R.string.tutorial_p0_desc),
+                        title = stringResource(R.string.tutorial_p0_title),
+                        titleHighlights = stringResource(R.string.tutorial_p0_title_highlights).split(
+                            ','
                         )
+                    )
 
-                        1 ->  TutorialPage(
-                            description = stringResource(R.string.tutorial_p1_desc),
-                            title = stringResource(R.string.tutorial_p1_title),
-                            titleHighlights = stringResource(R.string.tutorial_p1_title_highlights).split(
-                                ','
-                            ),
+                    1 -> TutorialPage(
+                        description = stringResource(R.string.tutorial_p1_desc),
+                        title = stringResource(R.string.tutorial_p1_title),
+                        titleHighlights = stringResource(R.string.tutorial_p1_title_highlights).split(
+                            ','
                         )
+                    )
 
-                        2 ->  TutorialPage(
-                            description = stringResource(R.string.tutorial_p2_desc),
-                            title = stringResource(R.string.tutorial_p2_title),
-                            titleHighlights = stringResource(R.string.tutorial_p2_title_highlights).split(
-                                ','
-                            ),
+                    2 -> TutorialPage(
+                        description = stringResource(R.string.tutorial_p2_desc),
+                        title = stringResource(R.string.tutorial_p2_title),
+                        titleHighlights = stringResource(R.string.tutorial_p2_title_highlights).split(
+                            ','
                         )
+                    )
 
-                        3 ->  TutorialPage(
-                            description = stringResource(R.string.tutorial_p3_desc),
-                            title = stringResource(R.string.tutorial_p3_title),
-                            titleHighlights = stringResource(R.string.tutorial_p3_title_highlights).split(
-                                ','
-                            ),
-                            content = {
-                                CtaButton(
-                                    label = stringResource(R.string.tutorial_btn_start),
-                                    onClick = navToLogin,
-                                    modifier = Modifier.align(Alignment.BottomCenter)
-                                )
-                            }
-                        )
-                    }
+                    3 -> TutorialPage(
+                        description = stringResource(R.string.tutorial_p3_desc),
+                        title = stringResource(R.string.tutorial_p3_title),
+                        titleHighlights = stringResource(R.string.tutorial_p3_title_highlights).split(
+                            ','
+                        ),
+                        content = {
+                            CtaButton(
+                                label = stringResource(R.string.tutorial_btn_start),
+                                onClick = navToLogin,
+                                modifier = Modifier.align(Alignment.BottomCenter)
+                            )
+                        }
+                    )
                 }
+            }
         )
     }
 }
@@ -103,7 +103,7 @@ private fun ColumnScope.TutorialPage(
     title: String,
     titleHighlights: List<String> = emptyList(),
     modifier: Modifier = Modifier,
-    content: @Composable BoxScope.() -> Unit = {},
+    content: @Composable BoxScope.() -> Unit = {}
 ) {
     Box(
         modifier = modifier
@@ -134,7 +134,6 @@ private fun ColumnScope.TutorialPage(
         content()
     }
 }
-
 
 @PreviewScreenSizes
 @Composable

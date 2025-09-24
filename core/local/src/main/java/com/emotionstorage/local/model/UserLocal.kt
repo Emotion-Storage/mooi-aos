@@ -23,5 +23,5 @@ data class UserLocal(
     val profileImageUrl: String? = null,
 
     val createdAt: LocalDateTime,
-    val updatedAt: LocalDateTime,
+    val updatedAt: LocalDateTime
 )

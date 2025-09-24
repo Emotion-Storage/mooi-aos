@@ -7,10 +7,10 @@ import com.emotionstorage.auth.domain.model.SignupForm.GENDER
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
-import org.orbitmvi.orbit.viewmodel.container
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ sealed class OnBoardingSideEffect {
 
 @HiltViewModel
 class OnBoardingViewModel @Inject constructor(
-    private val signup: SignupUseCase,
+    private val signup: SignupUseCase
 ) : ViewModel(), ContainerHost<OnBoardingState, OnBoardingSideEffect> {
     override val container = container<OnBoardingState, OnBoardingSideEffect>(OnBoardingState())
 
@@ -153,5 +153,4 @@ class OnBoardingViewModel @Inject constructor(
             }
         }
     }
-
 }

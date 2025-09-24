@@ -2,19 +2,17 @@ package com.emotionstorage.tutorial.ui.onBoarding
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -22,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -105,13 +102,13 @@ private fun StatelessExpectationsScreen(
                     modifier = Modifier
                         .weight(1f)
                         .padding(top = 30.dp)
-                        .verticalScroll(rememberScrollState()),
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Text(
                         modifier = Modifier.height(24.dp),
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = "감정 기록 목적",
+                        text = "감정 기록 목적"
                     )
                     Text(
                         style = MooiTheme.typography.body3.copy(
@@ -119,7 +116,7 @@ private fun StatelessExpectationsScreen(
                             fontWeight = FontWeight.Light
                         ),
                         color = MooiTheme.colorScheme.primary,
-                        text = "* 여러 개를 선택할 수도 있어요",
+                        text = "* 여러 개를 선택할 수도 있어요"
                     )
                     Column(
                         modifier = modifier.padding(top = 20.dp, bottom = 120.dp),
@@ -157,7 +154,7 @@ private fun ExpectationItem(
     expectation: Expectation,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {},
+    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -195,7 +192,7 @@ private fun ExpectationItem(
             Text(
                 style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                 color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
-                text = expectation.content,
+                text = expectation.content
             )
         }
 
@@ -219,7 +216,7 @@ private fun ExpectationsScreenPreview() {
             state = State(),
             event = object : ExpectationsEvent {
                 override fun onToggleExpectation(index: Int) {}
-            },
+            }
         )
     }
 }

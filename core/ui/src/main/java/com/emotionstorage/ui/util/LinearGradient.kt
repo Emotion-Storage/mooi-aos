@@ -69,8 +69,8 @@ class LinearGradient(
         val diagonal = sqrt(size.width.pow(2) + size.height.pow(2))
         val angleBetweenDiagonalAndWidth = acos(size.width / diagonal)
         val angleBetweenDiagonalAndGradientLine =
-            if ((normalizedAngle > 90 && normalizedAngle < 180)
-                || (normalizedAngle > 270 && normalizedAngle < 360)
+            if ((normalizedAngle > 90 && normalizedAngle < 180) ||
+                (normalizedAngle > 270 && normalizedAngle < 360)
             ) {
                 PI.toFloat() - angleInRadians - angleBetweenDiagonalAndWidth
             } else {
@@ -109,8 +109,8 @@ class LinearGradient(
 
     override fun toString(): String {
         return "LinearGradient(colors=$colors, " +
-                "stops=$stops, " +
-                "angle=$normalizedAngle, " +
-                "tileMode=$tileMode)"
+            "stops=$stops, " +
+            "angle=$normalizedAngle, " +
+            "tileMode=$tileMode)"
     }
 }

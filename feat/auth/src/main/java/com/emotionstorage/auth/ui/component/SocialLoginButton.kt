@@ -21,9 +21,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.auth.R
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.auth.R
 
 @Composable
 fun SocialLoginButton(
@@ -60,17 +60,20 @@ fun SocialLoginButton(
                     }
                 ),
                 contentDescription =
-                    when (provider) {
-                        AuthProvider.KAKAO -> stringResource(R.string.login_btn_kako)
-                        AuthProvider.GOOGLE -> stringResource(R.string.login_btn_google)
-                    }
+                when (provider) {
+                    AuthProvider.KAKAO -> stringResource(R.string.login_btn_kako)
+                    AuthProvider.GOOGLE -> stringResource(R.string.login_btn_google)
+                }
             )
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 style = MooiTheme.typography.button,
                 text =
-                    if (provider == AuthProvider.KAKAO) stringResource(R.string.login_btn_kako)
-                    else stringResource(R.string.login_btn_google)
+                if (provider == AuthProvider.KAKAO) {
+                    stringResource(R.string.login_btn_kako)
+                } else {
+                    stringResource(R.string.login_btn_google)
+                }
             )
         }
     }
