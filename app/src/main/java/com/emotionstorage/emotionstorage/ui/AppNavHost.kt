@@ -150,7 +150,8 @@ internal fun AppNavHost(
                         navController.navigateWithClearStack(AppDestination.Home)
                     },
                     navToLogin = {
-                        navController.navigateWithClearStack(AppDestination.Login)
+                        // pop back to nav to login, as signup complete screen is always on top of login
+                        navController.popBackStack()
                     }
                 )
             }
