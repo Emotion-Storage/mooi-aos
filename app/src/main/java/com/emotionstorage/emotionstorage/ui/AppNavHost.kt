@@ -45,10 +45,16 @@ internal sealed class AppDestination {
     object Login : AppDestination()
 
     @Serializable
-    data class OnBoarding(val provider: String, val idToken: String) : AppDestination()
+    data class OnBoarding(
+        val provider: String,
+        val idToken: String
+    ) : AppDestination()
 
     @Serializable
-    data class SignupComplete(val provider: String, val idToken: String) : AppDestination()
+    data class SignupComplete(
+        val provider: String,
+        val idToken: String
+    ) : AppDestination()
 
     @Serializable
     object Home : AppDestination()
@@ -60,7 +66,9 @@ internal sealed class AppDestination {
     object MyPage : AppDestination()
 
     @Serializable
-    data class AI_CHAT(val roomId: String) : AppDestination()
+    data class AI_CHAT(
+        val roomId: String
+    ) : AppDestination()
 
     @Serializable
     object ARRIVED_TIME_CAPSULES : AppDestination()
@@ -69,7 +77,9 @@ internal sealed class AppDestination {
     object FAVORITE_TIME_CAPSULES : AppDestination()
 
     @Serializable
-    data class TIME_CAPSULE_DETAIL(val id: String) : AppDestination()
+    data class TIME_CAPSULE_DETAIL(
+        val id: String
+    ) : AppDestination()
 }
 
 @Composable
@@ -96,11 +106,13 @@ internal fun AppNavHost(
                 .padding(innerPadding)
         ) {
             composable<AppDestination.Splash> { backstackEntry ->
-                SplashScreen(navToTutorial = {
-                    navController.navigateWithClearStack(AppDestination.Tutorial)
-                }, navToHome = {
-                    navController.navigateWithClearStack(AppDestination.Home)
-                })
+                SplashScreen(
+                    navToTutorial = {
+                        navController.navigateWithClearStack(AppDestination.Tutorial)
+                    },
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    })
             }
 
             composable<AppDestination.Tutorial> { backstackEntry ->
@@ -111,15 +123,18 @@ internal fun AppNavHost(
             }
 
             composable<AppDestination.Login> { backstackEntry ->
-                LoginScreen(navToHome = {
-                    navController.navigateWithClearStack(AppDestination.Home)
-                }, navToOnBoarding = { provider, idToken ->
-                    navController.navigate(
-                        AppDestination.OnBoarding(
-                            provider.toString(), idToken
+                LoginScreen(
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    },
+                    navToOnBoarding = { provider, idToken ->
+                        navController.navigate(
+                            AppDestination.OnBoarding(
+                                provider.toString(),
+                                idToken
+                            )
                         )
-                    )
-                })
+                    })
             }
 
             composable<AppDestination.OnBoarding> { backstackEntry ->
@@ -131,11 +146,12 @@ internal fun AppNavHost(
                         navController.popBackStack()
                         navController.navigate(
                             AppDestination.SignupComplete(
-                                provider.toString(), idToken
+                                provider.toString(),
+                                idToken
                             )
                         )
                     },
-                    navToBack ={
+                    navToBack = {
                         navController.popBackStack()
                     }
                 )
@@ -188,7 +204,8 @@ internal fun AppNavHost(
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT>()
                 AIChatScreen(
-                    roomId = arguments.roomId, navToBack = {
+                    roomId = arguments.roomId,
+                    navToBack = {
                         navController.popBackStack()
                     })
             }
@@ -215,9 +232,11 @@ internal fun AppNavHost(
 
             composable<AppDestination.TIME_CAPSULE_DETAIL> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.TIME_CAPSULE_DETAIL>()
-                TimeCapsuleDetailScreen(id = arguments.id, navToBack = {
-                    navController.popBackStack()
-                })
+                TimeCapsuleDetailScreen(
+                    id = arguments.id,
+                    navToBack = {
+                        navController.popBackStack()
+                    })
             }
         }
     }
