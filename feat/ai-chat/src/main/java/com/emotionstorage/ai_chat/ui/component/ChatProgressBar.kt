@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
@@ -31,8 +30,8 @@ fun ChatProgressBar(
 
     Box(
         modifier = modifier
-            .height(4.dp)
-            .background(Color.Black.copy(alpha = 0.7f))
+            .height(5.dp)
+            .background(MooiTheme.colorScheme.gray800)
     ) {
         Box(
             modifier = Modifier
@@ -43,13 +42,12 @@ fun ChatProgressBar(
                 )
         )
     }
-
 }
 
 @Preview
 @Composable
 fun ChatProgressBarPreview() {
     MooiTheme {
-        ChatProgressBar(progress = 0.05f)
+        ChatProgressBar(progress = 0.3f)
     }
 }

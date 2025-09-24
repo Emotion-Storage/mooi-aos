@@ -19,9 +19,9 @@ import javax.inject.Inject
 
 data class AIChatState(
     val roomId: String = "",
-
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
+    val chatProgress: Float = 0f,
 )
 
 sealed class AIChatAction {
@@ -157,6 +157,7 @@ class AIChatViewModel @Inject constructor(
                 }
             }
         }
+        // updateChatProgress()
     }
 
     private fun handleExitChatRoom() = intent {
@@ -194,4 +195,15 @@ class AIChatViewModel @Inject constructor(
         // todo: get time capsule id from server
         postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess("123"))
     }
+
+    // TODO : 메세지 진행률 업데이트 관련 로직
+    private fun updateChatProgress() = intent {
+
+        reduce {
+            state.copy(
+
+            )
+        }
+    }
+
 }
