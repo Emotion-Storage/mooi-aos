@@ -43,6 +43,7 @@ jobs:
       MOOI_REPLY_EMAIL: ${{ secrets.MOOI_REPLY_EMAIL }}
       GOOGLE_SERVER_CLIENT_ID: ${{ secrets.GOOGLE_SERVER_CLIENT_ID }}
       KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+      REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.REVIEWDOG_GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v4
@@ -71,10 +72,8 @@ jobs:
         uses: reviewdog/action-setup@v1
 
       - name: Report with reviewdog
-        env:
-          github_token: ${{ secrets.REVIEWDOG_GITHUB_TOKEN }}
         run: |
-          cat 'project/build/ktlint.json' | jq '. | to_entries | .[] | .value[]' \
+          cat 'app/build/ktlint.json' | jq '. | to_entries | .[] | .value[]' \
           | reviewdog -f=json -efm="%f:%l:%c: %m" \
                       -name="ktlint" \
                       -reporter=github-pr-review \
