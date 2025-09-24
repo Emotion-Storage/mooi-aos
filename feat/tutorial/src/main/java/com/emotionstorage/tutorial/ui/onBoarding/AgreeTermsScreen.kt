@@ -81,7 +81,7 @@ private fun StatelessAgreeTermsScreen(
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackButton = true, onBackClick = navToBack)
+            TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack)
         }
     ) { padding ->
         Column(

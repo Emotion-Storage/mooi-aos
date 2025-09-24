@@ -80,7 +80,7 @@ private fun StatelessGenderBirthScreen(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
-        topBar = { TopAppBar(showBackButton = true, onBackClick = navToBack) }
+        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) }
     ) { padding ->
         Column(
             modifier = Modifier

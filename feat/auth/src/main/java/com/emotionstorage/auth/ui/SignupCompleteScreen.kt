@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.onBoarding
+package com.emotionstorage.auth.ui
 
 import SpeechBubble
 import androidx.compose.foundation.background
@@ -11,34 +11,59 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.tutorial.R
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.auth.presentation.SignupCompleteAction
+import com.emotionstorage.auth.presentation.SignupCompleteSideEffect
+import com.emotionstorage.auth.presentation.SignupCompleteViewModel
+import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.CtaButton
-import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
-import kotlinx.coroutines.launch
 
-/**
- * On boarding step 5
- * - login & navigate to main
- */
+
 @Composable
 fun SignupCompleteScreen(
+    provider: AuthProvider,
+    idToken: String,
     modifier: Modifier = Modifier,
-    onLogin: suspend () -> Unit = {},
+    viewModel: SignupCompleteViewModel = hiltViewModel(),
+    navToHome: () -> Unit = {},
+    navToLogin: () -> Unit = {},
 ) {
-    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when(sideEffect){
+                is SignupCompleteSideEffect.LoginSuccess -> {
+                    navToHome()
+                }
+                is SignupCompleteSideEffect.LoginFailed -> {
+                    navToLogin()
+                }
+            }
+        }
+    }
 
+    StatelessSignupCompleteScreen(
+        modifier = modifier,
+        onLogin = { viewModel.onAction(SignupCompleteAction.LoginWithIdToken(provider, idToken)) }
+    )
+}
+
+@Composable
+private fun StatelessSignupCompleteScreen(
+    modifier: Modifier = Modifier,
+    onLogin: () -> Unit = {},
+) {
     Scaffold(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
@@ -85,9 +110,7 @@ fun SignupCompleteScreen(
                         .padding(bottom = 39.dp),
                     label = "메인화면으로 이동",
                     onClick = {
-                        coroutineScope.launch {
-                            onLogin()
-                        }
+                        onLogin()
                     }
                 )
             }
@@ -99,6 +122,6 @@ fun SignupCompleteScreen(
 @Composable
 private fun SignupCompleteScreenPreview() {
     MooiTheme {
-        SignupCompleteScreen()
+        StatelessSignupCompleteScreen()
     }
 }

@@ -73,7 +73,7 @@ private fun StatelessNicknameScreen(
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackButton = true, onBackClick = { setIsExitModelOpen(true) })
+            TopAppBar(showBackground = false, showBackButton = true, onBackClick = { setIsExitModelOpen(true) })
         }
     ) { padding ->
         Column(

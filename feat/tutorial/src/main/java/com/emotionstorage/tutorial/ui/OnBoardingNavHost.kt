@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.tutorial.presentation.OnBoardingAction
 import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
@@ -20,9 +21,7 @@ import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.GenderBirthScreen
 import com.emotionstorage.tutorial.ui.onBoarding.NicknameScreen
-import com.emotionstorage.tutorial.ui.onBoarding.SignupCompleteScreen
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.navigateWithClearStack
 
 /**
  * On boarding destinations
@@ -34,7 +33,6 @@ enum class OnBoardingRoute(
     GENDER_BIRTH("on_boarding/gender_birth"),
     EXPECTATIONS("on_boarding/expectations"),
     AGREE_TERMS("on_boarding/agree_terms"),
-    SIGNUP_COMPLETE("on_boarding/signup_complete"),
 }
 
 @Composable
@@ -43,7 +41,8 @@ fun OnBoardingNavHost(
     idToken: String,
     modifier: Modifier = Modifier,
     sharedViewModel: OnBoardingViewModel = hiltViewModel(),
-    navToHome: () -> Unit = {},
+    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = {_, _ -> },
+    navToBack: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     val state = sharedViewModel.container.stateFlow.collectAsState()
@@ -52,22 +51,14 @@ fun OnBoardingNavHost(
         sharedViewModel.onAction(OnBoardingAction.Initiate(provider, idToken))
     }
     LaunchedEffect(Unit) {
-        sharedViewModel.container.sideEffectFlow.collect { effect ->
-            when (effect) {
+        sharedViewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
                 is OnBoardingSideEffect.SignupSuccess -> {
-                    navController.navigateWithClearStack(OnBoardingRoute.SIGNUP_COMPLETE.route)
+                    navToSignupComplete(sideEffect.provider, sideEffect.idToken)
                 }
 
                 is OnBoardingSideEffect.SignupFailed -> {
                     // todo: handle signup failure
-                }
-
-                is OnBoardingSideEffect.LoginSuccess -> {
-                    navToHome()
-                }
-
-                is OnBoardingSideEffect.LoginFailed -> {
-                    navController.popBackStack()
                 }
             }
         }
@@ -75,19 +66,21 @@ fun OnBoardingNavHost(
 
 
     StatelessOnBoardingNavHost(
+        modifier = modifier,
         navController = navController,
         state = state.value,
         onAction = sharedViewModel::onAction,
-        modifier = modifier,
+        navToBack = navToBack
     )
 }
 
 @Composable
 private fun StatelessOnBoardingNavHost(
     navController: NavHostController,
-    state: OnBoardingState,
-    onAction: (OnBoardingAction) -> Unit,
     modifier: Modifier = Modifier,
+    state: OnBoardingState = OnBoardingState(),
+    onAction: (OnBoardingAction) -> Unit = {},
+    navToBack: () -> Unit = {}
 ) {
     NavHost(
         navController,
@@ -107,7 +100,8 @@ private fun StatelessOnBoardingNavHost(
                             navController.navigate(OnBoardingRoute.GENDER_BIRTH.route)
                         },
                         navToBack = {
-                            navController.popBackStack()
+                            // call navToBack() instead of navController.popBackStack(), to exit from on boarding nav controller
+                            navToBack()
                         }
                     )
 
@@ -146,12 +140,6 @@ private fun StatelessOnBoardingNavHost(
                         navToBack = {
                             navController.popBackStack()
                         }
-                    )
-
-                    OnBoardingRoute.SIGNUP_COMPLETE -> SignupCompleteScreen(
-                        onLogin = {
-                            onAction(OnBoardingAction.Login)
-                        },
                     )
                 }
             }

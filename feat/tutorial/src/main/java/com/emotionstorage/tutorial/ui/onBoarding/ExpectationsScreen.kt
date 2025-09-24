@@ -78,7 +78,7 @@ private fun StatelessExpectationsScreen(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
             .fillMaxSize(),
-        topBar = { TopAppBar(showBackButton = true, onBackClick = navToBack) }
+        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) }
     ) { padding ->
         Box(
             modifier = Modifier

@@ -14,9 +14,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
+import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
-import com.emotionstorage.my.ui.MyScreen
+import com.emotionstorage.my.ui.MyPageScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -47,13 +48,16 @@ internal sealed class AppDestination {
     data class OnBoarding(val provider: String, val idToken: String) : AppDestination()
 
     @Serializable
+    data class SignupComplete(val provider: String, val idToken: String) : AppDestination()
+
+    @Serializable
     object Home : AppDestination()
 
     @Serializable
     object TIME_CAPSULE_CALENDAR : AppDestination()
 
     @Serializable
-    object My : AppDestination()
+    object MyPage : AppDestination()
 
     @Serializable
     data class AI_CHAT(val roomId: String) : AppDestination()
@@ -70,14 +74,15 @@ internal sealed class AppDestination {
 
 @Composable
 internal fun AppNavHost(
-    navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier,
+    navController: NavHostController = rememberNavController(),
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
 
     Scaffold(
-        modifier, bottomBar = {
+        modifier = modifier.fillMaxSize(),
+        bottomBar = {
             AppBottomNavBar(
                 navController = navController, currentDestination = currentDestination
             )
@@ -122,9 +127,32 @@ internal fun AppNavHost(
                 OnBoardingNavHost(
                     idToken = arguments.idToken,
                     provider = AuthProvider.valueOf(arguments.provider),
+                    navToSignupComplete = { provider, idToken ->
+                        navController.popBackStack()
+                        navController.navigate(
+                            AppDestination.SignupComplete(
+                                provider.toString(), idToken
+                            )
+                        )
+                    },
+                    navToBack ={
+                        navController.popBackStack()
+                    }
+                )
+            }
+
+            composable<AppDestination.SignupComplete> { backstackEntry ->
+                val arguments = backstackEntry.toRoute<AppDestination.SignupComplete>()
+                SignupCompleteScreen(
+                    provider = AuthProvider.valueOf(arguments.provider),
+                    idToken = arguments.idToken,
                     navToHome = {
                         navController.navigateWithClearStack(AppDestination.Home)
                     },
+                    navToLogin = {
+                        // pop back to nav to login, as signup complete screen is always on top of login
+                        navController.popBackStack()
+                    }
                 )
             }
 
@@ -149,8 +177,12 @@ internal fun AppNavHost(
                     }
                 )
             }
-            composable<AppDestination.My> {
-                MyScreen()
+            composable<AppDestination.MyPage> {
+                MyPageScreen(
+                    navToLogin = {
+                        navController.navigateWithClearStack(AppDestination.Login)
+                    }
+                )
             }
 
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->

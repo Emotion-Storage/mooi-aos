@@ -14,8 +14,9 @@ jobs:
     name: Building and distributing app
     runs-on: ubuntu-latest
     env:
-      GOOGLE_SERVER_CLIENT_ID: ${{ secrets.GOOGLE_SERVER_CLIENT_ID }}
       MOOI_DEV_SERVER_URL: ${{ secrets.MOOI_DEV_SERVER_URL }}
+      MOOI_REPLY_EMAIL: ${{ secrets.MOOI_REPLY_EMAIL }}
+      GOOGLE_SERVER_CLIENT_ID: ${{ secrets.GOOGLE_SERVER_CLIENT_ID }}
       KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
 
     steps:

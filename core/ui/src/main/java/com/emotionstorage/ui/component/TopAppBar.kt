@@ -7,14 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +24,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun TopAppBar(
     modifier: Modifier = Modifier,
+    showBackground: Boolean = true,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {},
     title: String? = null,
@@ -37,7 +33,7 @@ fun TopAppBar(
     Box(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
-            .background(Color(0x800E0C12))
+            .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
             .fillMaxWidth()
             .height(62.dp)
             .padding(horizontal = 16.dp)

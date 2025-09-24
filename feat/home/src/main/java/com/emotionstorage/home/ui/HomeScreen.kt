@@ -57,13 +57,13 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         Logger.d("HomeScreen: Launch triggered")
         // init nickname on launch
-        viewModel.onAction(HomeAction.InitNickName)
+        viewModel.onAction(HomeAction.InitNickname)
     }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("HomeScreen: onResume triggered")
         // update screen state on resume
-        viewModel.onAction(HomeAction.UpdateState)
+        viewModel.onAction(HomeAction.Initiate)
         onPauseOrDispose {
             // do nothing
         }

@@ -7,7 +7,6 @@ import com.emotionstorage.domain.useCase.GetUserNicknameUseCase
 import com.emotionstorage.home.domain.usecase.GetHomeUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
@@ -22,8 +21,8 @@ data class HomeState(
 )
 
 sealed class HomeAction {
-    object InitNickName : HomeAction()
-    object UpdateState : HomeAction()
+    object InitNickname : HomeAction()
+    object Initiate : HomeAction()
     object EnterChat : HomeAction()
 }
 
@@ -41,12 +40,12 @@ class HomeViewModel @Inject constructor(
 
     fun onAction(action: HomeAction) {
         when (action) {
-            is HomeAction.InitNickName -> {
+            is HomeAction.InitNickname -> {
                 handleInitNickname()
             }
 
-            is HomeAction.UpdateState -> {
-                handleUpdateState()
+            is HomeAction.Initiate -> {
+                handleInitiate()
             }
 
             is HomeAction.EnterChat -> {
@@ -74,7 +73,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun handleUpdateState() = intent {
+    private fun handleInitiate() = intent {
         getHome().collect {
             when (it) {
                 is DataState.Success -> {
