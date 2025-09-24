@@ -5,6 +5,7 @@ import com.emotionstorage.auth.domain.model.Expectation
 import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.auth.domain.model.SignupForm.GENDER
 import com.emotionstorage.auth.domain.usecase.SignupUseCase
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
 import org.orbitmvi.orbit.viewmodel.container
 import com.orhanobut.logger.Logger
@@ -129,30 +130,28 @@ class OnBoardingViewModel @Inject constructor(
             return@intent
         }
 
-        // todo: delete this after signup test
-        postSideEffect(
-            OnBoardingSideEffect.SignupSuccess(
-                state.signupForm.provider!!,
-                state.signupForm.idToken!!
-            )
-        )
-//        signup(state.signupForm).collect { result ->
-//            when (result) {
-//                is DataState.Loading -> {
-//                    // do nothing
-//                }
-//
-//                is DataState.Success -> {
-//                    Logger.i(result.toString())
-//                    postSideEffect(OnBoardingSideEffect.SignupSuccess)
-//                }
-//
-//                is DataState.Error -> {
-//                    Logger.e(result.toString())
-//                    postSideEffect(OnBoardingSideEffect.SignupFailed)
-//                }
-//            }
-//        }
+        signup(state.signupForm).collect { result ->
+            when (result) {
+                is DataState.Loading -> {
+                    // do nothing
+                }
+
+                is DataState.Success -> {
+                    Logger.i(result.toString())
+                    postSideEffect(
+                        OnBoardingSideEffect.SignupSuccess(
+                            state.signupForm.provider!!,
+                            state.signupForm.idToken!!
+                        )
+                    )
+                }
+
+                is DataState.Error -> {
+                    Logger.e(result.toString())
+                    postSideEffect(OnBoardingSideEffect.SignupFailed)
+                }
+            }
+        }
     }
 
 }
