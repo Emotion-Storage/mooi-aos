@@ -92,7 +92,6 @@ fun DescriptionOverlayScreen(
             }
         }
 
-        // 2) 말풍선: 각 타깃 Rect 기준으로 위치 계산
         PositionedBubble(type = type, area = area)
 
         DescriptionCoachScreen(
@@ -114,25 +113,20 @@ private fun BoxScope.PositionedBubble(
     val d = LocalDensity.current
     var bubbleSize by remember { mutableStateOf(IntSize.Zero) }
 
-    // px 단위로 margin 계산
     val m12 = with(d) { 12.dp.toPx() }
     val m8 = with(d) { 8.dp.toPx() }
 
-    // 단계별 오프셋 계산 (px)
     val offset: IntOffset = when (type) {
-        // 1) 진행바: 중앙 하단 (x = centerX - w/2, y = bottom + 12)
         HighlightType.PROGRESS_BAR -> IntOffset(
             x = (area.center.x - bubbleSize.width / 2f).roundToInt(),
             y = (area.bottom + m12).roundToInt()
         )
 
-        // 2) 입력창: 바로 위 중앙 (x = centerX - w/2, y = top - h - 12)
         HighlightType.INPUT_BOX -> IntOffset(
             x = (area.center.x - bubbleSize.width / 2f).roundToInt(),
             y = (area.top - bubbleSize.height - m12).roundToInt()
         )
 
-        // 3) 탑바(뒤로가기): 바 아래 좌측 (x = left + 8dp, y = bottom + 8dp)
         HighlightType.TOPBAR -> IntOffset(
             x = (area.left + m8).roundToInt(),
             y = (area.bottom + m8).roundToInt()
@@ -140,7 +134,6 @@ private fun BoxScope.PositionedBubble(
     }
 
     when (type) {
-        // 1) 진행바: 중앙 하단 (위꼭지)
         HighlightType.PROGRESS_BAR -> {
             val y = with(d) { area.bottom.toDp() + 12.dp }
             SpeechBubbleTopCenter(
@@ -164,7 +157,7 @@ private fun BoxScope.PositionedBubble(
                     .offset { IntOffset(x, y) }
             )
         }
-        // TopAppbar
+
         HighlightType.TOPBAR -> {
             val x = with(d) { area.left.toDp() + 8.dp }
             val y = with(d) { area.bottom.toDp() + 8.dp }

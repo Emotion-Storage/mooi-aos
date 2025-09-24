@@ -124,7 +124,7 @@ private fun StatelessAIChatScreen(
                 .padding(innerPadding)
                 .imePadding()
         ) {
-
+            // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
                 modifier = Modifier.onGloballyPositioned {
                     onTopbarRect(it.boundsInParent())
@@ -138,6 +138,7 @@ private fun StatelessAIChatScreen(
                 progress = state.chatProgress,
                 modifier = Modifier
                     .fillMaxWidth()
+                    // ProgressBar 위치 추적
                     .onGloballyPositioned {
                         onProgressRect(it.boundsInParent())
                     }
