@@ -1,6 +1,7 @@
 package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import org.orbitmvi.orbit.viewmodel.container
@@ -10,6 +11,7 @@ data class MyPageState(
     val nickname: String = "",
     val signupDday: Int = 0, // MOOI와 함께한 지 n일
     val keyCount: Int = 0,
+    val replyEmail: String = BuildConfig.MOOI_REPLY_EMAIL,
     val versionName: String = "0.0.0",
 )
 

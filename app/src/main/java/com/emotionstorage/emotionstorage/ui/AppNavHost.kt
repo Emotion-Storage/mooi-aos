@@ -150,7 +150,11 @@ internal fun AppNavHost(
                 )
             }
             composable<AppDestination.MyPage> {
-                MyPageScreen()
+                MyPageScreen(
+                    navToLogin = {
+                        navController.navigateWithClearStack(AppDestination.Login)
+                    }
+                )
             }
 
             composable<AppDestination.AI_CHAT> { navBackStackEntry ->
