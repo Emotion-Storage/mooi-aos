@@ -1,0 +1,92 @@
+# Root file for EditorConfig
+root = true
+
+# ==============================================================================
+# Global Settings
+# ==============================================================================
+
+[*]
+# Unix-style line endings
+end_of_line = lf
+# Ensure file ends with a newline
+insert_final_newline = true
+# Use spaces instead of tabs
+indent_style = space
+# Standard indentation is 4 spaces (for XML, etc.)
+indent_size = 4
+# Character set
+charset = utf-8
+# Trim trailing whitespace on save
+trim_trailing_whitespace = true
+
+
+# ==============================================================================
+# Kotlin Specific Settings
+# ==============================================================================
+
+[*.kt]
+# Kotlin standard indentation is 4 spaces
+indent_size = 4
+# Disable the default max line length check (handled by KtLint)
+max_line_length = off
+
+# --- KtLint Rules Configuration ---
+
+# KtLint standard ruleset prefix is 'ktlint_standard_'
+
+# Enforce 4-space indentation for all Kotlin code
+ktlint_standard_indent = 4
+
+# Maximum line length (e.g., 100 or 120, 120 is common for Kotlin)
+ktlint_standard_max-line-length = 120
+
+# Enforce a blank line between declarations (class, function, property)
+ktlint_standard_blank-line-between-declarations = enabled
+
+# Disallow wildcard imports (e.g., import java.util.*)
+ktlint_standard_no-wildcard-imports = enabled
+
+# Enforce function and class names to be on separate lines from their opening brace
+ktlint_standard_brace-on-separate-line = disabled
+
+# Allow underscores in package names (often needed for multi-module projects, e.g., 'core_data')
+ktlint_standard_package-name-underscore = disabled
+
+# --- Function Naming for Composable (Crucial for Compose Projects) ---
+
+# Disable the standard rule that forces function names to start with a lowercase letter
+ktlint_standard_function-naming = disabled
+
+# If you use the 'ktlint-compose-rules' plugin, enable its naming rule:
+# This rule correctly enforces PascalCase for @Composable and camelCase for regular functions.
+# ktlint_compose_composable-naming = enabled
+
+# ==============================================================================
+# XML Specific Settings (Android Layouts)
+# ==============================================================================
+
+[*.xml]
+# XML indentation is often 4 spaces
+indent_size = 4
+# Ensure attributes are indented correctly
+# Setting this to 2 spaces is common for XML attributes
+android_xml_indent_size = 2
+
+
+# ==============================================================================
+# Gradle Build Scripts (Kotlin DSL)
+# ==============================================================================
+
+[*.gradle.kts]
+# Gradle Kotlin DSL uses 4-space indentation
+indent_size = 4
+# Ensure indentation style matches Kotlin
+ktlint_standard_indent = 4
+
+# ==============================================================================
+# Properties Files (e.g., gradle.properties)
+# ==============================================================================
+
+[*.properties]
+# Properties files typically use 4 spaces or no spaces for indentation
+indent_size = 4
