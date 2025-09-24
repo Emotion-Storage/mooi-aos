@@ -6,17 +6,9 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,14 +20,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ai_chat.R
 import com.emotionstorage.ui.component.SpeechBubbleTopCenter
 import com.emotionstorage.ui.component.SpeechBubbleTopLeft
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlin.math.roundToInt
+
+
+enum class HighlightType { PROGRESS_BAR, INPUT_BOX, TOPBAR }
+
 
 @Composable
 fun DescriptionOverlayScreen(
@@ -49,40 +47,15 @@ fun DescriptionOverlayScreen(
 
     var currentStep by remember { mutableIntStateOf(0) }
     var isCheckboxChecked by remember { mutableStateOf(false) }
-    // Constant 처리 고민해보기
-    val totalSteps = 3
 
-    val tutorialSteps = listOf(
-        DescriptionStep(
-            highlightAreas = listOf(progressBarBounds),
-            highlightType = HighlightType.PROGRESS_BAR,
-            speechBubbleComponent = {
-                SpeechBubbleTopCenter(
-                    text = stringResource(R.string.ai_chat_desc0)
-                )
-            }
-        ),
-
-        DescriptionStep(
-            highlightAreas = listOf(inputBoxBounds),
-            highlightType = HighlightType.INPUT_BOX,
-            speechBubbleComponent = {
-                SpeechBubble(
-                    text = stringResource(R.string.ai_chat_desc1)
-                )
-            }
-        ),
-
-        DescriptionStep(
-            highlightAreas = listOf(topbarBounds),
-            highlightType = HighlightType.TOPBAR,
-            speechBubbleComponent = {
-                SpeechBubbleTopLeft(
-                    text = stringResource(R.string.ai_chat_desc2)
-                )
-            }
-        ),
+    val steps = listOf(
+        HighlightType.PROGRESS_BAR to progressBarBounds,
+        HighlightType.INPUT_BOX to inputBoxBounds,
+        HighlightType.TOPBAR to topbarBounds,
     )
+
+    val (type, area) = steps[currentStep]
+
 
     Box(
         modifier = Modifier
@@ -91,35 +64,33 @@ fun DescriptionOverlayScreen(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
             ) {
-                if (currentStep < totalSteps - 1) {
-                    currentStep++
-                } else {
-                    onComplete()
-                }
+                if (currentStep < steps.lastIndex) currentStep++ else onComplete()
             }
     ) {
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            drawRect(
-                color = Color.Black.copy(alpha = 0.7f),
-                size = size
-            )
 
-            tutorialSteps[currentStep].highlightAreas.forEach { area ->
-                if (area != Rect.Zero) {
-                    drawRect(
-                        color = Color.Transparent,
-                        topLeft = area.topLeft,
-                        size = area.size,
-                        blendMode = BlendMode.Clear
-                    )
-                }
+        // 1) 어둡게 + 현재 타깃만 둥글게 뚫기
+        Canvas(Modifier.fillMaxSize()) {
+            drawRect(Color.Black.copy(alpha = 0.70f), size = size)
+
+            if (area != Rect.Zero) {
+                val pad = 6.dp.toPx()
+                val r = Rect(
+                    area.left - pad,
+                    area.top - pad,
+                    area.right + pad,
+                    area.bottom + pad
+                )
+                drawRoundRect(
+                    color = Color.Transparent,
+                    topLeft = r.topLeft,
+                    size = r.size,
+                    blendMode = BlendMode.Clear
+                )
             }
         }
 
-        // 각 말풍선
-        tutorialSteps[currentStep].speechBubbleComponent
+        // 2) 말풍선: 각 타깃 Rect 기준으로 위치 계산
+        PositionedBubble(type = type, area = area)
 
         DescriptionCoachScreen(
             modifier = Modifier
@@ -132,17 +103,47 @@ fun DescriptionOverlayScreen(
     }
 }
 
-data class DescriptionStep(
-    val highlightAreas: List<Rect>,
-    val highlightType: HighlightType,
-    val speechBubbleComponent: @Composable BoxScope.() -> Unit
-)
+@Composable
+private fun BoxScope.PositionedBubble(
+    type: HighlightType,
+    area: Rect,
+) {
+    val d = LocalDensity.current
 
-enum class HighlightType {
-    PROGRESS_BAR,
-    INPUT_BOX,
-    TOPBAR
+    when (type) {
+        // 1) 진행바: 중앙 하단 (위꼭지)
+        HighlightType.PROGRESS_BAR -> {
+            val y = with(d) { area.bottom.toDp() + 12.dp }
+            SpeechBubbleTopCenter(
+                text = stringResource(R.string.ai_chat_desc0),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .offset(y = y)
+            )
+        }
+        // 2) 입력창: 바로 위 중앙 (아래꼭지)
+        HighlightType.INPUT_BOX -> {
+            val bubbleW = with(d) { 265.dp.roundToPx() }
+            val bubbleH = with(d) { 84.dp.roundToPx() }
+            val x = (area.center.x - bubbleW / 2f).roundToInt()
+            val y = (area.top - bubbleH - with(d) { 12.dp.toPx() }).roundToInt()
+            SpeechBubble(
+                text = stringResource(R.string.ai_chat_desc1),
+                modifier = Modifier.offset { IntOffset(x, y) }
+            )
+        }
+        // 3) 상단바(뒤로가기 영역): 바 바로 아래 좌측 (좌상단꼬리)
+        HighlightType.TOPBAR -> {
+            val x = with(d) { area.left.toDp() + 8.dp }
+            val y = with(d) { area.bottom.toDp() + 8.dp }
+            SpeechBubbleTopLeft(
+                text = stringResource(R.string.ai_chat_desc2),
+                modifier = Modifier.offset(x = x, y = y)
+            )
+        }
+    }
 }
+
 
 @Preview
 @Composable
