@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -15,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.emotionstorage.ai_chat.presentation.AIChatIntroPrefsViewModel
+import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
@@ -211,7 +213,16 @@ internal fun AppNavHost(
 
             composable<AppDestination.AI_CHAT_DESC> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT_DESC>()
-                // TODO : DESC 전용 화면 구현 필요
+                AIChatDescriptionScreen(
+                    roomId = arguments.roomId,
+                    onCheckboxChanged = { checked ->
+                        prefsViewModel.setIntroSeen(checked)
+                    },
+                    onStartChat = { roomId ->
+                        navController.navigateWithClearStack(AppDestination.AI_CHAT(roomId))
+                    },
+
+                )
             }
 
             composable<AppDestination.ARRIVED_TIME_CAPSULES> {

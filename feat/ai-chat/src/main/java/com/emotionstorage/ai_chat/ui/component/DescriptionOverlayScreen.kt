@@ -101,7 +101,10 @@ fun DescriptionOverlayScreen(
                         drawCircle(
                             color = Color.Transparent,
                             radius = backButtonRadius,
-                            center = androidx.compose.ui.geometry.Offset(backButtonCenterX, backButtonCenterY),
+                            center = androidx.compose.ui.geometry.Offset(
+                                backButtonCenterX,
+                                backButtonCenterY
+                            ),
                             blendMode = BlendMode.Clear
                         )
                     }
@@ -119,6 +122,7 @@ fun DescriptionOverlayScreen(
             checked = isCheckboxChecked,
         ) {
             isCheckboxChecked = it
+            onCheckboxChecked(it)
         }
     }
 }
