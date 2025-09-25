@@ -5,13 +5,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.emotionstorage.ai_chat.presentation.AIChatIntroPrefsViewModel
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
@@ -63,6 +66,9 @@ internal sealed class AppDestination {
     data class AI_CHAT(val roomId: String) : AppDestination()
 
     @Serializable
+    data class AI_CHAT_DESC(val roomId: String) : AppDestination()
+
+    @Serializable
     object ARRIVED_TIME_CAPSULES : AppDestination()
 
     @Serializable
@@ -79,6 +85,9 @@ internal fun AppNavHost(
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
+
+    val prefsViewModel: AIChatIntroPrefsViewModel = hiltViewModel()
+    val introSeen = prefsViewModel.introSeen.collectAsState()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -135,7 +144,7 @@ internal fun AppNavHost(
                             )
                         )
                     },
-                    navToBack ={
+                    navToBack = {
                         navController.popBackStack()
                     }
                 )
@@ -159,7 +168,14 @@ internal fun AppNavHost(
             composable<AppDestination.Home> {
                 HomeScreen(
                     navToChat = { roomId ->
-                        navController.navigate(AppDestination.AI_CHAT(roomId))
+                        // DataStore 의 값에 따라 분기 처리
+                        val seen = introSeen.value
+                        if (seen) {
+                            navController.navigate(AppDestination.AI_CHAT(roomId))
+                        } else {
+                            navController.navigate(AppDestination.AI_CHAT_DESC(roomId))
+                        }
+
                     },
                     navToArrivedTimeCapsules = {
                         navController.navigate(AppDestination.ARRIVED_TIME_CAPSULES)
@@ -191,6 +207,11 @@ internal fun AppNavHost(
                     roomId = arguments.roomId, navToBack = {
                         navController.popBackStack()
                     })
+            }
+
+            composable<AppDestination.AI_CHAT_DESC> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT_DESC>()
+                // TODO : DESC 전용 화면 구현 필요
             }
 
             composable<AppDestination.ARRIVED_TIME_CAPSULES> {
