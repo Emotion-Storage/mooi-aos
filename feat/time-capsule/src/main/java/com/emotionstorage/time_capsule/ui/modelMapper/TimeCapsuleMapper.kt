@@ -14,8 +14,9 @@ object TimeCapsuleMapper {
             isFavorite = domain.isFavorite,
             isFavoriteAt = domain.favoriteAt,
             createdAt = domain.createdAt,
-            openDday = domain.arriveAt?.run {
-                this.dayOfYear - LocalDateTime.now().dayOfYear
-            }
+            openDday =
+                domain.arriveAt?.run {
+                    this.dayOfYear - LocalDateTime.now().dayOfYear
+                },
         )
 }

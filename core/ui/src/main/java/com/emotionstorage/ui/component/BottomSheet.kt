@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomSheet(
@@ -61,8 +60,9 @@ fun BottomSheet(
         contentColor = Color.White,
     ) {
         Column(
-            modifier = Modifier
-                .padding(top = 23.dp, bottom = 59.dp, start = 15.dp, end = 15.dp),
+            modifier =
+                Modifier
+                    .padding(top = 23.dp, bottom = 59.dp, start = 15.dp, end = 15.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -80,10 +80,11 @@ fun BottomSheet(
                 Text(
                     modifier = Modifier.padding(bottom = 19.dp),
                     text = title,
-                    style = MooiTheme.typography.head2.copy(
-                        fontSize = 22.sp,
-                        lineHeight = 30.sp,
-                    ),
+                    style =
+                        MooiTheme.typography.head2.copy(
+                            fontSize = 22.sp,
+                            lineHeight = 30.sp,
+                        ),
                     color = Color.White,
                     textAlign = TextAlign.Center,
                 )
@@ -111,7 +112,7 @@ fun BottomSheet(
                             } else {
                                 onConfirm?.invoke()
                             }
-                        }
+                        },
                     )
                 }
                 if (dismissLabel != null) {
@@ -129,7 +130,7 @@ fun BottomSheet(
                                 onDismiss?.invoke()
                             }
                         },
-                        type = CtaButtonType.TONAL
+                        type = CtaButtonType.TONAL,
                     )
                 }
             }
@@ -145,21 +146,23 @@ private fun BottomSheetPreview() {
 
     MooiTheme {
         Scaffold(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
         ) { innerPadding ->
             Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(innerPadding),
             ) {
                 Button(
                     modifier = Modifier.align(Alignment.TopCenter),
                     onClick = {
                         setShowBottomSheet(true)
-                    }
+                    },
                 ) {
                     Text(text = "show bottom sheet")
                 }
@@ -179,7 +182,7 @@ private fun BottomSheetPreview() {
                     dismissLabel = "아니요, 더 이야기할래요.",
                     onDismiss = {
                         setShowBottomSheet(false)
-                    }
+                    },
                 )
             }
         }

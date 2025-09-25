@@ -19,9 +19,8 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.util.subBackground
 
-
 enum class RoundedToggleButtonType {
-    FAVORITE
+    FAVORITE,
 }
 
 @Composable
@@ -31,27 +30,30 @@ fun RoundedToggleButton(
     isSelected: Boolean = false,
     onSelect: () -> Unit = {},
     contentDescription: String? = null,
-    type: RoundedToggleButtonType = RoundedToggleButtonType.FAVORITE
+    type: RoundedToggleButtonType = RoundedToggleButtonType.FAVORITE,
 ) {
     Box(
-        modifier = modifier
-            .subBackground(true, CircleShape)
-            .padding(3.dp)
-            .clickable(
-                enabled = enabled,
-                onClick = onSelect
-            )
+        modifier =
+            modifier
+                .subBackground(true, CircleShape)
+                .padding(3.dp)
+                .clickable(
+                    enabled = enabled,
+                    onClick = onSelect,
+                ),
     ) {
         if (type == RoundedToggleButtonType.FAVORITE) {
             Image(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .width(15.dp)
-                    .height(16.dp),
-                painter = painterResource(
-                    if (isSelected) R.drawable.favorite_filled else R.drawable.favorite
-                ),
-                contentDescription = contentDescription
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .width(15.dp)
+                        .height(16.dp),
+                painter =
+                    painterResource(
+                        if (isSelected) R.drawable.favorite_filled else R.drawable.favorite,
+                    ),
+                contentDescription = contentDescription,
             )
         }
     }
@@ -64,6 +66,6 @@ private fun RoundedToggleButtonPreview() {
 
     RoundedToggleButton(
         isSelected = isSelected,
-        onSelect = { setIsSelected(!isSelected) }
+        onSelect = { setIsSelected(!isSelected) },
     )
 }

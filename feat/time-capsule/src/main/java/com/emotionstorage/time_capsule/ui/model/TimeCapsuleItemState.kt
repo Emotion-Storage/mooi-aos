@@ -4,7 +4,7 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import java.time.LocalDateTime
 
-data class TimeCapsuleItemState (
+data class TimeCapsuleItemState(
     val id: String,
     val status: TimeCapsule.STATUS,
     val title: String,

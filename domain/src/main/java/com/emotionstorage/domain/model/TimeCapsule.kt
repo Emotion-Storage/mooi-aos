@@ -12,26 +12,39 @@ data class TimeCapsule(
     val comments: List<String> = emptyList(),
     val note: String? = null,
     val logs: List<OpenLog> = emptyList(),
-    val createdAt: LocalDateTime, // 생성 시각
-    val arriveAt: LocalDateTime? = null, // 도착 시각
-    val favoriteAt: LocalDateTime? = null, // 즐겨찾기 설정 시각
+    // 생성 시각
+    val createdAt: LocalDateTime,
+    // 도착 시각
+    val arriveAt: LocalDateTime? = null,
+    // 즐겨찾기 설정 시각
+    val favoriteAt: LocalDateTime? = null,
     val updatedAt: LocalDateTime? = null,
 ) {
     enum class STATUS {
-        TEMPORARY, // 임시저장 (열람일 지정 X)
-        LOCKED, // 잠김 (열람일 이전)
-        ARRIVED, // 도착 (열람일 이후, 열람 전)
-        OPENED, // 열림 (열람일 이후, 열람 완료)
+        // 임시저장 (열람일 지정 X)
+        TEMPORARY,
+
+        // 잠김 (열람일 이전)
+        LOCKED,
+
+        // 도착 (열람일 이후, 열람 전)
+        ARRIVED,
+
+        // 열림 (열람일 이후, 열람 완료)
+        OPENED,
     }
 
     data class Emotion(
         val label: String,
-        val icon: Int, // todo: 감정 고정된 목록으로 관리할 것인지 BE/AI와 논의 <- 이모지 매핑 로직 고민
+        // todo: text로 이모지 관리하기
+        val icon: Int,
         val percentage: Float? = null,
     )
 
     data class OpenLog(
-        val openedAt: LocalDateTime, // 열람 시각
-        val isFirst: Boolean, // 최초 열람 여부
+        // 열람 시각
+        val openedAt: LocalDateTime,
+        // 최초 열람 여부
+        val isFirst: Boolean,
     )
 }

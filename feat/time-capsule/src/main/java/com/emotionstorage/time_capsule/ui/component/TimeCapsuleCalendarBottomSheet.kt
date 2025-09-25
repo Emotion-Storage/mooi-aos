@@ -58,12 +58,13 @@ fun TimeCapsuleCalendarBottomSheet(
         sheetState = sheetState,
         dragHandle = {
             Box(
-                modifier = Modifier
-                    .size(35.dp, 3.dp)
-                    .background(
-                        MooiTheme.colorScheme.gray500,
-                        RoundedCornerShape(100)
-                    )
+                modifier =
+                    Modifier
+                        .size(35.dp, 3.dp)
+                        .background(
+                            MooiTheme.colorScheme.gray500,
+                            RoundedCornerShape(100),
+                        ),
             )
         },
         // todo: add new badge
@@ -71,29 +72,31 @@ fun TimeCapsuleCalendarBottomSheet(
         onConfirm = navToDailyReport,
         hideOnConfirm = false,
         dismissLabel = if (navToDailyReport == null) "일일리포트 확인하기" else null,
-        hideOnDismiss = false
+        hideOnDismiss = false,
     ) {
         Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 17.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 17.dp),
             text = date.toKorDate(),
-            textAlign = TextAlign.Start
+            textAlign = TextAlign.Start,
         )
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent)
-                .heightIn(max = (screenHeight / 2).dp)
-                .padding(bottom = 50.dp)
-                .verticalScroll(scrollState),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent)
+                    .heightIn(max = (screenHeight / 2).dp)
+                    .padding(bottom = 50.dp)
+                    .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
             timeCapsules.forEach {
                 TimeCapsuleItem(
                     modifier = Modifier.fillMaxWidth(),
                     timeCapsule = it,
-                    onClick = { navToTimeCapsuleDetail(it.id) }
+                    onClick = { navToTimeCapsuleDetail(it.id) },
                 )
             }
         }
@@ -104,47 +107,53 @@ fun TimeCapsuleCalendarBottomSheet(
 @Preview
 @Composable
 private fun TimeCapsuleCalendarBottomSheetPreview() {
-    val timeCapsules = (0..3).map { i ->
-        TimeCapsuleItemState(
-            id = i.toString(),
-            status = STATUS.entries.get(i),
-            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-            emotions = listOf(
-                Emotion(
-                    label = "서운함",
-                    icon = 0,
-                ), Emotion(
-                    label = "화남",
-                    icon = 1,
-                ), Emotion(
-                    label = "피곤함",
-                    icon = 2,
-                )
-            ),
-            isFavorite = false,
-            isFavoriteAt = null,
-            createdAt = LocalDateTime.now(),
-            openDday = -99
-        )
-    }
+    val timeCapsules =
+        (0..3).map { i ->
+            TimeCapsuleItemState(
+                id = i.toString(),
+                status = STATUS.entries.get(i),
+                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                emotions =
+                    listOf(
+                        Emotion(
+                            label = "서운함",
+                            icon = 0,
+                        ),
+                        Emotion(
+                            label = "화남",
+                            icon = 1,
+                        ),
+                        Emotion(
+                            label = "피곤함",
+                            icon = 2,
+                        ),
+                    ),
+                isFavorite = false,
+                isFavoriteAt = null,
+                createdAt = LocalDateTime.now(),
+                openDday = -99,
+            )
+        }
 
     MooiTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
         ) {
             TimeCapsuleCalendarBottomSheet(
                 // open sheet state for preview
-                sheetState = rememberStandardBottomSheetState(
-                    initialValue = SheetValue.Expanded
-                ),
+                sheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.Expanded,
+                    ),
                 date = LocalDate.now(),
                 onDismissRequest = {},
                 timeCapsules = timeCapsules,
                 navToTimeCapsuleDetail = {},
                 navToDailyReport = {},
-                isNewDailyReport = true
+                isNewDailyReport = true,
             )
         }
     }
