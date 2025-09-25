@@ -26,6 +26,7 @@ data class CalendarState(
 
 sealed class CalendarAction {
     object Initiate : CalendarAction()
+
     data class SelectCalendarYearMonth(
         val yearMonth: LocalDate,
     ) : CalendarAction()
@@ -57,7 +58,8 @@ class CalendarViewModel @Inject constructor(
 //    private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
 //    private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase,
-) : ViewModel(), ContainerHost<CalendarState, CalendarSideEffect> {
+) : ViewModel(),
+    ContainerHost<CalendarState, CalendarSideEffect> {
     override val container: Container<CalendarState, CalendarSideEffect> =
         container(CalendarState())
 
@@ -81,15 +83,16 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun handleInitiate() = intent {
-        // todo: init key count
-        reduce { state.copy(keyCount = 5) }
+    private fun handleInitiate() =
+        intent {
+            // todo: init key count
+            reduce { state.copy(keyCount = 5) }
 
-        // init calendar
-        handleSelectCalendarYearMonth(state.calendarYearMonth)
+            // init calendar
+            handleSelectCalendarYearMonth(state.calendarYearMonth)
 
-        // todo: init madeTimeCapsuleToday
-    }
+            // todo: init madeTimeCapsuleToday
+        }
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =
         intent {
@@ -105,7 +108,7 @@ class CalendarViewModel @Inject constructor(
                     }
 
                     is DataState.Error -> {
-                        Logger.e("getTimeCapsuleDates error, ${result}")
+                        Logger.e("getTimeCapsuleDates error, $result")
                         reduce {
                             state.copy(
                                 calendarYearMonth = yearMonth.withDayOfMonth(1),
@@ -118,10 +121,8 @@ class CalendarViewModel @Inject constructor(
                         // do nothing
                     }
                 }
-
             }
         }
-
 
     private fun handleSelectCalendarDate(date: LocalDate) =
         intent {
@@ -130,51 +131,53 @@ class CalendarViewModel @Inject constructor(
             postSideEffect(
                 CalendarSideEffect.ShowBottomSheet(
                     date = date,
-                    timeCapsules = (0..3).map { i ->
-                        TimeCapsuleItemState(
-                            id = i.toString(),
-                            status = STATUS.entries.get(i),
-                            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                            emotions =
-                                listOf(
-                                    Emotion(
-                                        label = "서운함",
-                                        icon = 0,
+                    timeCapsules =
+                        (0..3).map { i ->
+                            TimeCapsuleItemState(
+                                id = i.toString(),
+                                status = STATUS.entries.get(i),
+                                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                emotions =
+                                    listOf(
+                                        Emotion(
+                                            label = "서운함",
+                                            icon = 0,
+                                        ),
+                                        Emotion(
+                                            label = "화남",
+                                            icon = 1,
+                                        ),
+                                        Emotion(
+                                            label = "피곤함",
+                                            icon = 2,
+                                        ),
                                     ),
-                                    Emotion(
-                                        label = "화남",
-                                        icon = 1,
-                                    ),
-                                    Emotion(
-                                        label = "피곤함",
-                                        icon = 2,
-                                    ),
-                                ),
-                            isFavorite = false,
-                            isFavoriteAt = null,
-                            createdAt = LocalDateTime.now(),
-                            openDday = -99,
-                        )
-                    },
+                                isFavorite = false,
+                                isFavoriteAt = null,
+                                createdAt = LocalDateTime.now(),
+                                openDday = -99,
+                            )
+                        },
                     dailyReportId = null,
-                    isNewDailyReport = false
-                )
+                    isNewDailyReport = false,
+                ),
             )
         }
 
-    private fun handleEnterChat() = intent {
-        getChatRoomId().collect {result ->
-            when(result){
-                is DataState.Success -> {
-                    postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(result.data))
-                }
-                is DataState.Error -> {
-                    Logger.e("CalendarViewModel: handleEnterChat error: $result")
-                }
-                is DataState.Loading -> {
-                    // do nothing
+    private fun handleEnterChat() =
+        intent {
+            getChatRoomId().collect { result ->
+                when (result) {
+                    is DataState.Success -> {
+                        postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(result.data))
+                    }
+                    is DataState.Error -> {
+                        Logger.e("CalendarViewModel: handleEnterChat error: $result")
+                    }
+                    is DataState.Loading -> {
+                        // do nothing
+                    }
                 }
             }
         }
-    }
 }

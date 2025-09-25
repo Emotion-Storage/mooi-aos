@@ -99,7 +99,6 @@ fun CalendarScreen(
         }
     }
 
-
     StatelessCalendarScreen(
         modifier = modifier,
         bottomSheetState = bottomSheetState.value,
@@ -186,10 +185,9 @@ private fun StatelessCalendarScreen(
                     timeCapsuleDates = state.timeCapsuleDates,
                     onDateSelect = {
                         onAction(CalendarAction.SelectCalendarDate(it))
-                    }
+                    },
                 )
             }
-
 
             CalendarTodayActionButton(
                 modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp),
@@ -202,9 +200,8 @@ private fun StatelessCalendarScreen(
                 },
                 onChatAction = {
                     onAction(CalendarAction.EnterChat)
-                }
+                },
             )
-
 
             // calendar date bottom sheet
             // todo: fix bottom sheet closing after navigation!!
@@ -214,9 +211,10 @@ private fun StatelessCalendarScreen(
                     onDismissRequest = onDismissBottomSheet,
                     timeCapsules = bottomSheetState.timeCapsules,
                     navToTimeCapsuleDetail = navToTimeCapsuleDetail,
-                    navToDailyReport = bottomSheetState.dailyReportId?.run {
-                        { navToDailyReportDetail(this) }
-                    },
+                    navToDailyReport =
+                        bottomSheetState.dailyReportId?.run {
+                            { navToDailyReportDetail(this) }
+                        },
                     isNewDailyReport = bottomSheetState.isNewDailyReport,
                 )
             }
@@ -314,29 +312,32 @@ private fun CalendarTodayActionButton(
     onChatAction: () -> Unit = {},
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Transparent)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color.Transparent),
     ) {
         Row(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .mainBackground(true, RoundedCornerShape(500.dp))
-                .clickable {
-                    if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                }
-                .height(44.dp)
-                .padding(horizontal = 25.dp),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .mainBackground(true, RoundedCornerShape(500.dp))
+                    .clickable {
+                        if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
+                    }.height(44.dp)
+                    .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
             Text(
                 text = if (madeTimeCapsuleToday) "오늘 내 감정 보기" else "오늘 감정 기록하러가기",
                 style = MooiTheme.typography.body3.copy(lineHeight = 24.sp, color = Color.White),
             )
             Image(
-                modifier = Modifier
-                    .size(8.dp, 14.dp)
-                    .rotate(180f),
+                modifier =
+                    Modifier
+                        .size(8.dp, 14.dp)
+                        .rotate(180f),
                 painter = painterResource(R.drawable.arrow_back),
                 contentDescription = null,
             )

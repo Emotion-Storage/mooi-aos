@@ -2,7 +2,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 fun getLocalProperty(propertyKey: String): String {
     return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
-        propertyKey
+        propertyKey,
     )
 }
 
@@ -22,16 +22,18 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        manifestPlaceholders += mapOf(
-            "KAKAO_NATIVE_APP_KEY" to getLocalProperty("KAKAO_NATIVE_APP_KEY").replace(
-                "\"",
-                ""
+        manifestPlaceholders +=
+            mapOf(
+                "KAKAO_NATIVE_APP_KEY" to
+                    getLocalProperty("KAKAO_NATIVE_APP_KEY").replace(
+                        "\"",
+                        "",
+                    ),
             )
-        )
         buildConfigField(
             "String",
             "KAKAO_NATIVE_APP_KEY",
-            getLocalProperty("KAKAO_NATIVE_APP_KEY")
+            getLocalProperty("KAKAO_NATIVE_APP_KEY"),
         )
     }
 
@@ -40,7 +42,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

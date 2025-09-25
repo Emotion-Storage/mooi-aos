@@ -47,7 +47,6 @@ fun IconWithCount(
                     },
                 ),
     ) {
-
         Image(
             modifier =
                 Modifier
@@ -56,7 +55,6 @@ fun IconWithCount(
             painter = painterResource(id = iconId),
             contentDescription = null,
         )
-
 
         Box(
             modifier =

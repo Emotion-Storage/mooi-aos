@@ -29,7 +29,6 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.navigateWithClearStack
 import kotlinx.serialization.Serializable
 
-
 /**
  * App destinations
  */
@@ -97,15 +96,16 @@ internal fun AppNavHost(
                 navController = navController,
                 currentDestination = currentDestination,
             )
-        }
+        },
     ) { innerPadding ->
         NavHost(
             navController,
             startDestination = AppDestination.Splash,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
         ) {
             composable<AppDestination.Splash> { backstackEntry ->
                 SplashScreen(
@@ -122,7 +122,7 @@ internal fun AppNavHost(
                 TutorialScreen(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
-                    }
+                    },
                 )
             }
 
@@ -136,7 +136,7 @@ internal fun AppNavHost(
                             AppDestination.OnBoarding(
                                 provider.toString(),
                                 idToken,
-                            )
+                            ),
                         )
                     },
                 )
@@ -153,7 +153,7 @@ internal fun AppNavHost(
                             AppDestination.SignupComplete(
                                 provider.toString(),
                                 idToken,
-                            )
+                            ),
                         )
                     },
                     navToBack = {
@@ -173,7 +173,7 @@ internal fun AppNavHost(
                     navToLogin = {
                         // pop back to nav to login, as signup complete screen is always on top of login
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
 
@@ -184,7 +184,7 @@ internal fun AppNavHost(
                     },
                     navToArrivedTimeCapsules = {
                         navController.navigate(AppDestination.ArrivedTimeCapsules)
-                    }
+                    },
                 )
             }
             composable<AppDestination.TimeCapsuleCalendar> {
@@ -215,7 +215,7 @@ internal fun AppNavHost(
                 MyPageScreen(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
-                    }
+                    },
                 )
             }
 

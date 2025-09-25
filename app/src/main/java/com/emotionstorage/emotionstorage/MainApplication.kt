@@ -16,11 +16,13 @@ class MainApplication : Application() {
     }
 
     private fun initLogger() {
-        Logger.addLogAdapter(object : AndroidLogAdapter() {
-            override fun isLoggable(priority: Int, tag: String?): Boolean {
-                return BuildConfig.DEBUG
-            }
-        },
+        Logger.addLogAdapter(
+            object : AndroidLogAdapter() {
+                override fun isLoggable(
+                    priority: Int,
+                    tag: String?,
+                ): Boolean = BuildConfig.DEBUG
+            },
         )
     }
 
@@ -29,7 +31,7 @@ class MainApplication : Application() {
             KakaoSdk.init(this@MainApplication, BuildConfig.KAKAO_NATIVE_APP_KEY)
             Logger.i("kakao sdk init success")
         } catch (e: Exception) {
-            Logger.e("kakao sdk init fail, ${e}")
+            Logger.e("kakao sdk init fail, $e")
         }
 
         // get kakao sdk key hash
