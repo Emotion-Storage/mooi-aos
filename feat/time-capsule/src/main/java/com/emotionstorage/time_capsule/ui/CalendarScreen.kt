@@ -40,6 +40,8 @@ import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
+import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
@@ -61,6 +63,7 @@ fun CalendarScreen(
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
+    navToKey: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -102,6 +105,7 @@ fun CalendarScreen(
         navToFavorites = navToFavorites,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToDailyReportDetail = navToDailyReportDetail,
+        navToKey = navToKey,
     )
 }
 
@@ -117,6 +121,7 @@ private fun StatelessCalendarScreen(
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
+    navToKey: () -> Unit = {},
 ) {
     Scaffold(
         modifier
@@ -125,8 +130,10 @@ private fun StatelessCalendarScreen(
             .padding(horizontal = 16.dp),
         topBar = {
             CalendarTopBar(
+                modifier = Modifier.fillMaxWidth(),
                 calendarMonth = state.calendarYearMonth.monthValue,
                 keyCount = state.keyCount,
+                navToKey = navToKey,
             )
         },
     ) { innerPadding ->
@@ -196,10 +203,11 @@ private fun CalendarTopBar(
     calendarMonth: Int,
     keyCount: Int,
     modifier: Modifier = Modifier,
+    navToKey: () -> Unit = {},
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .height(91.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -221,7 +229,12 @@ private fun CalendarTopBar(
             color = Color.White,
         )
 
-        // todo: add key icon
+        IconWithCount(
+            modifier = Modifier.size(32.dp),
+            iconId = R.drawable.key,
+            count = keyCount,
+            onClick = navToKey,
+        )
     }
 }
 
