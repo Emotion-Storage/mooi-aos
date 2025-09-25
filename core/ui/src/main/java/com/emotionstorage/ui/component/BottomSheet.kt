@@ -50,6 +50,8 @@ fun BottomSheet(
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
+    val scope = rememberCoroutineScope()
+
     ModalBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
@@ -101,8 +103,11 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         label = confirmLabel,
                         onClick = {
-                            Logger.v("confirm button clicked")
-                            onConfirm?.invoke()
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onConfirm?.invoke()
+                                }
+                            }
                             onDismissRequest()
                         }
                     )
@@ -112,8 +117,11 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         label = dismissLabel,
                         onClick = {
-                            Logger.v("dismiss button clicked")
-                            onDismiss?.invoke()
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onDismiss?.invoke()
+                                }
+                            }
                             onDismissRequest()
                         },
                         type = CtaButtonType.TONAL
@@ -128,8 +136,6 @@ fun BottomSheet(
 @Preview
 @Composable
 private fun BottomSheetPreview() {
-    val scope = rememberCoroutineScope()
-    val sheetState = rememberModalBottomSheetState()
     val (showBottomSheet, setShowBottomSheet) = remember { mutableStateOf(false) }
 
     MooiTheme {
@@ -158,25 +164,16 @@ private fun BottomSheetPreview() {
                     onDismissRequest = {
                         setShowBottomSheet(false)
                     },
-                    sheetState = sheetState,
                     dragHandle = null,
                     title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
                     subTitle = "감정을 충분히 이야기했어요.",
                     confirmLabel = "네, 종료할래요.",
                     onConfirm = {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                setShowBottomSheet(false)
-                            }
-                        }
+                        setShowBottomSheet(false)
                     },
                     dismissLabel = "아니요, 더 이야기할래요.",
                     onDismiss = {
-                        scope.launch { sheetState.hide() }.invokeOnCompletion {
-                            if (!sheetState.isVisible) {
-                                setShowBottomSheet(false)
-                            }
-                        }
+                        setShowBottomSheet(false)
                     }
                 )
             }
