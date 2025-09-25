@@ -15,7 +15,7 @@ data class TimeCapsule(
     val createdAt: LocalDateTime, // 생성 시각
     val arriveAt: LocalDateTime? = null, // 도착 시각
     val favoriteAt: LocalDateTime? = null, // 즐겨찾기 설정 시각
-    val updatedAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
 ) {
     enum class STATUS {
         TEMPORARY, // 임시저장 (열람일 지정 X)
