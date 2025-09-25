@@ -154,7 +154,7 @@ fun TimeCapsuleItem(
 
 @Preview
 @Composable
-private fun TimeCapsuleItemPreview()  {
+private fun TimeCapsuleItemPreview() {
     MooiTheme {
         TimeCapsuleItem(
             timeCapsule = DUMMY_TIME_CAPSULE,

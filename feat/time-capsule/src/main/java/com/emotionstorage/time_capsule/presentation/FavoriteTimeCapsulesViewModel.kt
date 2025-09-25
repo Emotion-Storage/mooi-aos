@@ -192,7 +192,11 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
             // todo: call use case
             postSideEffect(
                 ShowToast(
-                    if (isFavorite) ShowToast.FavoriteToast.FAVORITE_REMOVED else ShowToast.FavoriteToast.FAVORITE_ADDED,
+                    if (isFavorite) {
+                        ShowToast.FavoriteToast.FAVORITE_REMOVED
+                    } else {
+                        ShowToast.FavoriteToast.FAVORITE_ADDED
+                    },
                 ),
             )
             reduce {
