@@ -144,50 +144,55 @@ private fun StatelessCalendarScreen(
             )
         },
     ) { innerPadding ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding),
         ) {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            Column(
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                CalendarNavButton(
-                    modifier = Modifier.weight(1f),
-                    label = "도착한 타임캡슐",
-                    showNewBadge = true,
-                    onClick = navToArrived,
-                )
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    CalendarNavButton(
+                        modifier = Modifier.weight(1f),
+                        label = "도착한 타임캡슐",
+                        showNewBadge = true,
+                        onClick = navToArrived,
+                    )
 
-                CalendarNavButton(
-                    modifier = Modifier.weight(1f),
-                    label = "내 마음 서랍",
-                    showNewBadge = false,
-                    onClick = navToFavorites,
+                    CalendarNavButton(
+                        modifier = Modifier.weight(1f),
+                        label = "내 마음 서랍",
+                        showNewBadge = false,
+                        onClick = navToFavorites,
+                    )
+                }
+
+                TimeCapsuleCalendar(
+                    modifier = Modifier.fillMaxWidth(),
+                    calendarYearMonth = state.calendarYearMonth,
+                    onCalendarYearMonthSelect = {
+                        onAction(CalendarAction.SelectCalendarYearMonth(it))
+                    },
+                    timeCapsuleDates = state.timeCapsuleDates,
+                    onDateSelect = {
+                        onAction(CalendarAction.SelectCalendarDate(it))
+                    }
                 )
             }
 
-            TimeCapsuleCalendar(
-                modifier = Modifier.fillMaxWidth(),
-                calendarYearMonth = state.calendarYearMonth,
-                onCalendarYearMonthSelect = {
-                    onAction(CalendarAction.SelectCalendarYearMonth(it))
-                },
-                timeCapsuleDates = state.timeCapsuleDates,
-                onDateSelect = {
-                    onAction(CalendarAction.SelectCalendarDate(it))
-                }
-            )
 
             CalendarTodayActionButton(
-                modifier = Modifier.padding(top = 30.dp),
+                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp),
                 madeTimeCapsuleToday = state.madeTimeCapsuleToday,
                 onTodayAction = {
                     // change calendar year & month to today
@@ -199,6 +204,7 @@ private fun StatelessCalendarScreen(
                     onAction(CalendarAction.EnterChat)
                 }
             )
+
 
             // calendar date bottom sheet
             if (bottomSheetState.showBottomSheet && bottomSheetState.date != null) {
@@ -327,7 +333,9 @@ private fun CalendarTodayActionButton(
                 style = MooiTheme.typography.body3.copy(lineHeight = 24.sp, color = Color.White),
             )
             Image(
-                modifier = Modifier.size(8.dp, 14.dp).rotate(180f),
+                modifier = Modifier
+                    .size(8.dp, 14.dp)
+                    .rotate(180f),
                 painter = painterResource(R.drawable.arrow_back),
                 contentDescription = null,
             )
