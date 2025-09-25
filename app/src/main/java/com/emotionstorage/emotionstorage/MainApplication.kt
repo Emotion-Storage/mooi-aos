@@ -20,7 +20,7 @@ class MainApplication : Application() {
             override fun isLoggable(priority: Int, tag: String?): Boolean {
                 return BuildConfig.DEBUG
             }
-        }
+        },
         )
     }
 

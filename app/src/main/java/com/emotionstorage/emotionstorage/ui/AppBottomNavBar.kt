@@ -94,7 +94,7 @@ private fun BottomNavBarItem(
         modifier = modifier.clickable(
             onClick = onClick,
             indication = null,
-            interactionSource = remember { MutableInteractionSource() }
+            interactionSource = remember { MutableInteractionSource() },
         ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
