@@ -9,6 +9,7 @@ data class MooiColorScheme(
     val secondary: Color = Color(0xFF859CEA),
     val tertiary: Color = Color(0xFF859CEA),
     val background: Color = Color(0xFF1E1C24),
+    val blueGrayBackground: Color = Color(0xFF282937),
     val bottomBarBackground: Color = Color(0xFF100E14),
     val errorRed: Color = Color(0xFFF36969),
     val gray900: Color = Color(0xFF1E1E1E),
