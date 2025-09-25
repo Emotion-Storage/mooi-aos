@@ -94,7 +94,8 @@ internal fun AppNavHost(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
             AppBottomNavBar(
-                navController = navController, currentDestination = currentDestination,
+                navController = navController,
+                currentDestination = currentDestination,
             )
         }
     ) { innerPadding ->
