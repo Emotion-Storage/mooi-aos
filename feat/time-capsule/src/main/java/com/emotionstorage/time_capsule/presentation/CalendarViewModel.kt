@@ -24,8 +24,9 @@ sealed class CalendarAction {
 sealed class CalendarSideEffect {
     data class ShowBottomSheet(
         val date: LocalDate,
-        val timeCapsuleItems: List<TimeCapsuleItemState>,
-        val dailyReportId: String?
+        val timeCapsules: List<TimeCapsuleItemState>,
+        val dailyReportId: String?,
+        val isNewDailyReport: Boolean,
     ) : CalendarSideEffect()
 }
 
@@ -78,8 +79,9 @@ class CalendarViewModel @Inject constructor(
             postSideEffect(
                 CalendarSideEffect.ShowBottomSheet(
                     date = date,
-                    timeCapsuleItems = emptyList(),
-                    dailyReportId = null
+                    timeCapsules = emptyList(),
+                    dailyReportId = null,
+                    isNewDailyReport = false
                 )
             )
         }
