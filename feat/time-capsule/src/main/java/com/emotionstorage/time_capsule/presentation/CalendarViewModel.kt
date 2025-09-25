@@ -22,7 +22,7 @@ data class CalendarState(
 )
 
 sealed class CalendarAction {
-    object InitKeyCount : CalendarAction()
+    object Initiate : CalendarAction()
     data class SelectCalendarYearMonth(val yearMonth: LocalDate) : CalendarAction()
     data class SelectCalendarDate(val date: LocalDate) : CalendarAction()
 }
@@ -52,8 +52,8 @@ class CalendarViewModel @Inject constructor(
 
     fun onAction(action: CalendarAction) {
         when (action) {
-            is CalendarAction.InitKeyCount -> {
-                handleInitKeyCount()
+            is CalendarAction.Initiate -> {
+                handleInitiate()
             }
 
             is CalendarAction.SelectCalendarYearMonth -> {
@@ -66,9 +66,12 @@ class CalendarViewModel @Inject constructor(
         }
     }
 
-    private fun handleInitKeyCount() = intent {
+    private fun handleInitiate() = intent {
         // todo: get key count
         reduce { state.copy(keyCount = 5) }
+
+        // init calendar
+        handleSelectCalendarYearMonth(state.calendarYearMonth)
     }
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =

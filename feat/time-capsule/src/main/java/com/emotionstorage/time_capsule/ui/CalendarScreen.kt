@@ -42,7 +42,6 @@ import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomShe
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
-import com.orhanobut.logger.Logger
 import java.time.LocalDate
 
 // state for calendar screen bottom sheet
@@ -66,11 +65,8 @@ fun CalendarScreen(
     val state = viewModel.container.stateFlow.collectAsState()
 
     LifecycleResumeEffect(Unit) {
-        // update key count on resume
-        viewModel.onAction(CalendarAction.InitKeyCount)
-        onPauseOrDispose {
-            // do nothing
-        }
+        viewModel.onAction(CalendarAction.Initiate)
+        onPauseOrDispose { }
     }
 
     var bottomSheetState = remember { mutableStateOf(CalendarBottomSheetState()) }
