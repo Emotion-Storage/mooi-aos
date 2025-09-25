@@ -57,6 +57,11 @@ gradlePlugin {
             implementationClass = "com.emotionstorage.convention.AndroidLibraryRoomConventionPlugin"
         }
 
+        create("androidLibraryDatastore") {
+            id = "com.emotionstorage.convention.android.library.datastore"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryDatastoreConventionPlugin"
+        }
+
         /**
          * java kotlin library plugins
          */
