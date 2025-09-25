@@ -68,17 +68,15 @@ fun CalendarScreen(
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
-    navToAIChat: (roomId: Int) -> Unit = {},
+    navToAIChat: (roomId: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-
     LifecycleResumeEffect(Unit) {
         viewModel.onAction(CalendarAction.Initiate)
         onPauseOrDispose { }
     }
 
     var bottomSheetState = remember { mutableStateOf(CalendarBottomSheetState()) }
-
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -92,6 +90,10 @@ fun CalendarScreen(
                             dailyReportId = sideEffect.dailyReportId,
                             isNewDailyReport = sideEffect.isNewDailyReport,
                         )
+                }
+
+                is CalendarSideEffect.EnterCharRoomSuccess -> {
+                    navToAIChat(sideEffect.roomId)
                 }
             }
         }
@@ -111,7 +113,6 @@ fun CalendarScreen(
         navToFavorites = navToFavorites,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToDailyReportDetail = navToDailyReportDetail,
-        navToAIChat = navToAIChat
     )
 }
 
@@ -128,7 +129,6 @@ private fun StatelessCalendarScreen(
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
-    navToAIChat: (roomId: Int) -> Unit = {},
 ) {
     Scaffold(
         modifier
@@ -196,7 +196,7 @@ private fun StatelessCalendarScreen(
                     onAction(CalendarAction.SelectCalendarDate(LocalDate.now()))
                 },
                 onChatAction = {
-                    // todo: get room id & post side effect to trigger navigation
+                    onAction(CalendarAction.EnterChat)
                 }
             )
 

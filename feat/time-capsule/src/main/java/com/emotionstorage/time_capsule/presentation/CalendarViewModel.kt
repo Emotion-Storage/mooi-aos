@@ -1,6 +1,7 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.model.TimeCapsule.STATUS
@@ -25,8 +26,15 @@ data class CalendarState(
 
 sealed class CalendarAction {
     object Initiate : CalendarAction()
-    data class SelectCalendarYearMonth(val yearMonth: LocalDate) : CalendarAction()
-    data class SelectCalendarDate(val date: LocalDate) : CalendarAction()
+    data class SelectCalendarYearMonth(
+        val yearMonth: LocalDate,
+    ) : CalendarAction()
+
+    data class SelectCalendarDate(
+        val date: LocalDate,
+    ) : CalendarAction()
+
+    object EnterChat : CalendarAction()
 }
 
 sealed class CalendarSideEffect {
@@ -36,18 +44,19 @@ sealed class CalendarSideEffect {
         val dailyReportId: String?,
         val isNewDailyReport: Boolean,
     ) : CalendarSideEffect()
+
+    data class EnterCharRoomSuccess(
+        val roomId: String,
+    ) : CalendarSideEffect()
 }
 
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
-    // 열쇠 조회
 //    private val getKeyCount: GetKeyCountUseCase,
-    // 타임 캡슐 존재 날짜 목록 조회
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
-    // 특정 날짜 타임 캡슐 목록 조회
 //    private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
-    // 특정 날짜 일일 리포트 ID 조회
 //    private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
+    private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(), ContainerHost<CalendarState, CalendarSideEffect> {
     override val container: Container<CalendarState, CalendarSideEffect> =
         container(CalendarState())
@@ -65,6 +74,10 @@ class CalendarViewModel @Inject constructor(
             is CalendarAction.SelectCalendarDate -> {
                 handleSelectCalendarDate(action.date)
             }
+
+            is CalendarAction.EnterChat -> {
+                handleEnterChat()
+            }
         }
     }
 
@@ -80,8 +93,8 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =
         intent {
-            getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue).collect {result ->
-                when(result){
+            getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue).collect { result ->
+                when (result) {
                     is DataState.Success -> {
                         reduce {
                             state.copy(
@@ -90,6 +103,7 @@ class CalendarViewModel @Inject constructor(
                             )
                         }
                     }
+
                     is DataState.Error -> {
                         Logger.e("getTimeCapsuleDates error, ${result}")
                         reduce {
@@ -99,6 +113,7 @@ class CalendarViewModel @Inject constructor(
                             )
                         }
                     }
+
                     is DataState.Loading -> {
                         // do nothing
                     }
@@ -146,4 +161,20 @@ class CalendarViewModel @Inject constructor(
                 )
             )
         }
+
+    private fun handleEnterChat() = intent {
+        getChatRoomId().collect {result ->
+            when(result){
+                is DataState.Success -> {
+                    postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(result.data))
+                }
+                is DataState.Error -> {
+                    Logger.e("CalendarViewModel: handleEnterChat error: $result")
+                }
+                is DataState.Loading -> {
+                    // do nothing
+                }
+            }
+        }
+    }
 }
