@@ -189,12 +189,26 @@ internal fun AppNavHost(
             }
             composable<AppDestination.TimeCapsuleCalendar> {
                 CalendarScreen(
+                    navToKey = {
+                        // todo: add key detail screen
+                        // navController.navigate(AppDestination.Key)
+                    },
                     navToArrived = {
                         navController.navigate(AppDestination.ArrivedTimeCapsules)
                     },
                     navToFavorites = {
                         navController.navigate(AppDestination.FavoriteTimeCapsules)
-                    }
+                    },
+                    navToTimeCapsuleDetail = { id ->
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                    },
+                    navToDailyReportDetail = { id ->
+                        // todo: add daily report detail screen
+                        // navController.navigate(AppDestination.DailyReportDetail(id))
+                    },
+                    navToAIChat = { roomId ->
+                        navController.navigate(AppDestination.AIChat(roomId))
+                    },
                 )
             }
             composable<AppDestination.MyPage> {
