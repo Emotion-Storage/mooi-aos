@@ -55,6 +55,7 @@ private val DUMMY_TIME_CAPSULE =  TimeCapsuleItemState(
     openDday = -99,
 )
 
+// todo: add ui per status
 @Composable
 fun TimeCapsuleItem(
     modifier: Modifier = Modifier,
@@ -65,7 +66,7 @@ fun TimeCapsuleItem(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background),
+            .background(Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(

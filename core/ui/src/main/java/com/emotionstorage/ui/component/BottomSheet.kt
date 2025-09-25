@@ -15,10 +15,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,7 +29,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
-import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 
 
@@ -45,8 +42,10 @@ fun BottomSheet(
     subTitle: String? = null,
     confirmLabel: String? = null,
     onConfirm: (() -> Unit)? = null,
+    hideOnConfirm: Boolean = true,
     dismissLabel: String? = null,
     onDismiss: (() -> Unit)? = null,
+    hideOnDismiss: Boolean = true,
     dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
@@ -103,12 +102,15 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         label = confirmLabel,
                         onClick = {
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onConfirm?.invoke()
+                            if (hideOnConfirm) {
+                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        onConfirm?.invoke()
+                                    }
                                 }
+                            } else {
+                                onConfirm?.invoke()
                             }
-                            onDismissRequest()
                         }
                     )
                 }
@@ -117,12 +119,15 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         label = dismissLabel,
                         onClick = {
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onDismiss?.invoke()
+                            if (hideOnDismiss) {
+                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        onDismiss?.invoke()
+                                    }
                                 }
+                            } else {
+                                onDismiss?.invoke()
                             }
-                            onDismissRequest()
                         },
                         type = CtaButtonType.TONAL
                     )
