@@ -19,6 +19,8 @@ data class CalendarState(
     val keyCount: Int = 5,
     val calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
     val timeCapsuleDates: List<LocalDate> = emptyList(),
+    // 오늘 감정 기록 여부
+    val madeTimeCapsuleToday: Boolean = false,
 )
 
 sealed class CalendarAction {
@@ -67,11 +69,13 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun handleInitiate() = intent {
-        // todo: get key count
+        // todo: init key count
         reduce { state.copy(keyCount = 5) }
 
         // init calendar
         handleSelectCalendarYearMonth(state.calendarYearMonth)
+
+        // todo: init madeTimeCapsuleToday
     }
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =

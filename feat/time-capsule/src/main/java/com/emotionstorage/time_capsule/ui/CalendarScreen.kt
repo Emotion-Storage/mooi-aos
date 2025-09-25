@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,7 +25,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -43,6 +46,7 @@ import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 
@@ -59,11 +63,12 @@ data class CalendarBottomSheetState(
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
+    navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
-    navToKey: () -> Unit = {},
+    navToAIChat: (roomId: Int) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -101,11 +106,12 @@ fun CalendarScreen(
         },
         state = state.value,
         viewModel::onAction,
+        navToKey = navToKey,
         navToArrived = navToArrived,
         navToFavorites = navToFavorites,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToDailyReportDetail = navToDailyReportDetail,
-        navToKey = navToKey,
+        navToAIChat = navToAIChat
     )
 }
 
@@ -117,11 +123,12 @@ private fun StatelessCalendarScreen(
     onDismissBottomSheet: () -> Unit = {},
     state: CalendarState = CalendarState(),
     onAction: (CalendarAction) -> Unit = {},
+    navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
-    navToKey: () -> Unit = {},
+    navToAIChat: (roomId: Int) -> Unit = {},
 ) {
     Scaffold(
         modifier
@@ -179,7 +186,19 @@ private fun StatelessCalendarScreen(
                 }
             )
 
-            // todo: add button
+            CalendarTodayActionButton(
+                modifier = Modifier.padding(top = 30.dp),
+                madeTimeCapsuleToday = state.madeTimeCapsuleToday,
+                onTodayAction = {
+                    // change calendar year & month to today
+                    onAction(CalendarAction.SelectCalendarYearMonth(LocalDate.now().withDayOfMonth(1)))
+                    // open today's bottom sheet
+                    onAction(CalendarAction.SelectCalendarDate(LocalDate.now()))
+                },
+                onChatAction = {
+                    // todo: get room id & post side effect to trigger navigation
+                }
+            )
 
             // calendar date bottom sheet
             if (bottomSheetState.showBottomSheet && bottomSheetState.date != null) {
@@ -277,6 +296,42 @@ private fun CalendarNavButton(
             style = MooiTheme.typography.body4,
             color = Color.White,
         )
+    }
+}
+
+@Composable
+private fun CalendarTodayActionButton(
+    modifier: Modifier = Modifier,
+    madeTimeCapsuleToday: Boolean = false,
+    onTodayAction: () -> Unit = {},
+    onChatAction: () -> Unit = {},
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+    ) {
+        Row(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .mainBackground(true, RoundedCornerShape(500.dp))
+                .clickable {
+                    if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
+                }
+                .height(44.dp)
+                .padding(horizontal = 25.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            Text(
+                text = if (madeTimeCapsuleToday) "오늘 내 감정 보기" else "오늘 감정 기록하러가기",
+                style = MooiTheme.typography.body3.copy(lineHeight = 24.sp, color = Color.White),
+            )
+            Image(
+                modifier = Modifier.size(8.dp, 14.dp).rotate(180f),
+                painter = painterResource(R.drawable.arrow_back),
+                contentDescription = null,
+            )
+        }
     }
 }
 
