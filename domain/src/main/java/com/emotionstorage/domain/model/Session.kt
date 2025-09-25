@@ -1,5 +1,5 @@
 package com.emotionstorage.domain.model
 
-data class Session (
+data class Session(
     val accessToken: String,
 )

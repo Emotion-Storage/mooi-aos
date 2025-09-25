@@ -9,13 +9,19 @@ interface AuthRemoteDataSource {
      * Login with id token
      * @return access token
      */
-    suspend fun login(provider: User.AuthProvider, idToken: String): String
+    suspend fun login(
+        provider: User.AuthProvider,
+        idToken: String,
+    ): String
 
     /**
      * Signup with id token
      * @return success
      */
-    suspend fun signup(provider: User.AuthProvider, signupFormEntity: SignupFormEntity): Boolean
+    suspend fun signup(
+        provider: User.AuthProvider,
+        signupFormEntity: SignupFormEntity,
+    ): Boolean
 
     /**
      * Check session
@@ -24,5 +30,6 @@ interface AuthRemoteDataSource {
     suspend fun checkSession(): Boolean
 
     suspend fun logout(): Boolean
+
     suspend fun deleteAccount(): Boolean
 }

@@ -17,29 +17,33 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun ChatProgressBar(
     progress: Float,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val animatedProgress = animateFloatAsState(
-        targetValue = progress,
-        animationSpec = tween(
-            durationMillis = 500,
-            easing = EaseOut,
-        ),
-        label = "chat_progress"
-    )
+    val animatedProgress =
+        animateFloatAsState(
+            targetValue = progress,
+            animationSpec =
+                tween(
+                    durationMillis = 500,
+                    easing = EaseOut,
+                ),
+            label = "chat_progress",
+        )
 
     Box(
-        modifier = modifier
-            .height(5.dp)
-            .background(MooiTheme.colorScheme.gray800)
+        modifier =
+            modifier
+                .height(5.dp)
+                .background(MooiTheme.colorScheme.gray800),
     ) {
         Box(
-            modifier = Modifier
-                .fillMaxWidth(animatedProgress.value)
-                .fillMaxHeight()
-                .background(
-                    MooiTheme.colorScheme.secondary
-                )
+            modifier =
+                Modifier
+                    .fillMaxWidth(animatedProgress.value)
+                    .fillMaxHeight()
+                    .background(
+                        MooiTheme.colorScheme.secondary,
+                    ),
         )
     }
 }

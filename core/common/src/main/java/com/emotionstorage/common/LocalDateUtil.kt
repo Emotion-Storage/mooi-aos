@@ -25,8 +25,11 @@ fun LocalDate.getWeekDatesOfTargetMonth(): List<LocalDate> {
     var targetDate = this.withDayOfMonth(1)
     for (limit in 0..6) { // limit to prevent infinite loop
         val weekDates = targetDate.getWeekDatesOfTargetDate()
-        if (weekDates.all { it.month != this.month }) return datesOfCalendar
-        else datesOfCalendar.addAll(weekDates)
+        if (weekDates.all { it.month != this.month }) {
+            return datesOfCalendar
+        } else {
+            datesOfCalendar.addAll(weekDates)
+        }
         targetDate = targetDate.plusDays(7)
     }
     return datesOfCalendar

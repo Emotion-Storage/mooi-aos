@@ -34,9 +34,7 @@ import com.emotionstorage.ui.component.SpeechBubbleTopLeft
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlin.math.roundToInt
 
-
 enum class HighlightType { PROGRESS_BAR, INPUT_BOX, TOPBAR }
-
 
 @Composable
 fun DescriptionOverlayScreen(
@@ -52,30 +50,30 @@ fun DescriptionOverlayScreen(
     var currentStep by remember { mutableIntStateOf(0) }
     var isCheckboxChecked by remember { mutableStateOf(false) }
 
-    val steps = listOf(
-        HighlightType.PROGRESS_BAR to progressBarBounds,
-        HighlightType.INPUT_BOX to inputBoxBounds,
-        HighlightType.TOPBAR to topbarBounds,
-    )
+    val steps =
+        listOf(
+            HighlightType.PROGRESS_BAR to progressBarBounds,
+            HighlightType.INPUT_BOX to inputBoxBounds,
+            HighlightType.TOPBAR to topbarBounds,
+        )
 
     val (type, area) = steps[currentStep]
 
-
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
-                if (currentStep < steps.lastIndex) currentStep++ else onComplete()
-            }
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                ) {
+                    if (currentStep < steps.lastIndex) currentStep++ else onComplete()
+                },
     ) {
-
         Canvas(
             Modifier
                 .fillMaxSize()
-                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+                .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen),
         ) {
             // 뒷 배경 어둡게
             drawRect(Color.Black.copy(alpha = 0.70f), size = size)
@@ -87,7 +85,7 @@ fun DescriptionOverlayScreen(
                             color = Color.Transparent,
                             topLeft = area.topLeft,
                             size = area.size,
-                            blendMode = BlendMode.Clear
+                            blendMode = BlendMode.Clear,
                         )
                     }
                 }
@@ -101,21 +99,26 @@ fun DescriptionOverlayScreen(
                         drawCircle(
                             color = Color.Transparent,
                             radius = backButtonRadius,
-                            center = androidx.compose.ui.geometry.Offset(backButtonCenterX, backButtonCenterY),
-                            blendMode = BlendMode.Clear
+                            center =
+                                androidx
+                                    .compose
+                                    .ui
+                                    .geometry
+                                    .Offset(backButtonCenterX, backButtonCenterY),
+                            blendMode = BlendMode.Clear,
                         )
                     }
                 }
             }
         }
 
-
         PositionedBubble(type = type, area = area)
 
         DescriptionCoachScreen(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(),
             checked = isCheckboxChecked,
         ) {
             isCheckboxChecked = it
@@ -136,10 +139,11 @@ private fun BoxScope.PositionedBubble(
             val y = (area.bottom + gap).roundToInt()
             SpeechBubbleTopCenter(
                 text = stringResource(R.string.ai_chat_desc0),
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .size(265.dp, 101.dp)
-                    .offset { IntOffset(0, y) }
+                modifier =
+                    Modifier
+                        .align(Alignment.TopCenter)
+                        .size(265.dp, 101.dp)
+                        .offset { IntOffset(0, y) },
             )
         }
 
@@ -152,9 +156,10 @@ private fun BoxScope.PositionedBubble(
 
             SpeechBubble(
                 text = stringResource(R.string.ai_chat_desc1),
-                modifier = Modifier
-                    .size(265.dp, 84.dp)
-                    .offset { IntOffset(x, y) }
+                modifier =
+                    Modifier
+                        .size(265.dp, 84.dp)
+                        .offset { IntOffset(x, y) },
             )
         }
 
@@ -163,14 +168,14 @@ private fun BoxScope.PositionedBubble(
             val y = with(density) { area.bottom.toDp() + 8.dp }
             SpeechBubbleTopLeft(
                 text = stringResource(R.string.ai_chat_desc2),
-                modifier = Modifier
-                    .size(222.dp, 122.dp)
-                    .offset(x = x, y = y)
+                modifier =
+                    Modifier
+                        .size(222.dp, 122.dp)
+                        .offset(x = x, y = y),
             )
         }
     }
 }
-
 
 @Preview
 @Composable
