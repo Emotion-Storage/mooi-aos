@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,28 +27,55 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.time_capsule.presentation.CalendarAction
+import com.emotionstorage.time_capsule.presentation.CalendarState
+import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
+import com.orhanobut.logger.Logger
 
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
+    viewModel: CalendarViewModel = hiltViewModel(),
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
+    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToDailyReportDetail: (id: String) -> Unit = {},
 ) {
+    val state = viewModel.container.stateFlow.collectAsState()
+
+    LifecycleResumeEffect(Unit) {
+        // update key count on resume
+        viewModel.onAction(CalendarAction.InitKeyCount)
+        onPauseOrDispose {
+            // do nothing
+        }
+    }
+
     StatelessCalendarScreen(
-        modifier,
-        navToArrived,
-        navToFavorites,
+        modifier = modifier,
+        state = state.value,
+        viewModel::onAction,
+        navToArrived = navToArrived,
+        navToFavorites = navToFavorites,
+        navToTimeCapsuleDetail = navToTimeCapsuleDetail,
+        navToDailyReportDetail = navToDailyReportDetail,
     )
 }
 
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
+    state: CalendarState = CalendarState(),
+    onAction: (CalendarAction) -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
+    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToDailyReportDetail: (id: String) -> Unit = {},
 ) {
     Scaffold(
         modifier
@@ -56,8 +84,8 @@ private fun StatelessCalendarScreen(
             .padding(horizontal = 16.dp),
         topBar = {
             CalendarTopBar(
-                calendarMonth = 7,
-                keyCount = 1,
+                calendarMonth = state.calendarYearMonth.monthValue,
+                keyCount = state.keyCount,
             )
         },
     ) { innerPadding ->
@@ -93,6 +121,14 @@ private fun StatelessCalendarScreen(
 
             TimeCapsuleCalendar(
                 modifier = Modifier.fillMaxWidth(),
+                calendarYearMonth = state.calendarYearMonth,
+                onCalendarYearMonthSelect = {
+                    onAction(CalendarAction.SelectCalendarYearMonth(it))
+                },
+                timeCapsuleDates = state.timeCapsuleDates,
+                onDateSelect = {
+                    onAction(CalendarAction.SelectCalendarDate(it))
+                }
             )
         }
     }
