@@ -3,6 +3,10 @@ package com.emotionstorage.common
 import java.time.DayOfWeek
 import java.time.LocalDate
 
+fun LocalDate.toKorDate(): String {
+    return "${this.year}년 ${this.monthValue}월 ${this.dayOfMonth}일 ${this.getKorDayOfWeek()}"
+}
+
 fun LocalDate.getKorDayOfWeek(): String {
     return when (this.getDayOfWeek()) {
         DayOfWeek.MONDAY -> "월요일"
