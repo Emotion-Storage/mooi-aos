@@ -98,7 +98,7 @@ private fun ModalButton(
         onClick = onClick,
         type = type,
         radius = 10,
-        textStyle = MooiTheme.typography.body2.copy(fontWeight = FontWeight.Normal)
+        textStyle = MooiTheme.typography.body2
     )
 }
 
