@@ -1,8 +1,9 @@
 package com.emotionstorage.time_capsule.ui.modelMapper
 
+import com.emotionstorage.common.getDaysBetween
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 object TimeCapsuleMapper {
     fun toUi(domain: TimeCapsule): TimeCapsuleItemState =
@@ -16,7 +17,7 @@ object TimeCapsuleMapper {
             createdAt = domain.createdAt,
             openDday =
                 domain.arriveAt?.run {
-                    this.dayOfYear - LocalDateTime.now().dayOfYear
+                    LocalDate.now().getDaysBetween(this.toLocalDate())
                 },
         )
 }
