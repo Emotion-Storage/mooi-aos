@@ -134,7 +134,6 @@ private fun OnBoardingExitModel(
     onDismissRequest: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
-    // todo: fix not navigating back on modal dismiss
     if (isModelOpen) {
         Modal(
             subTitle = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
