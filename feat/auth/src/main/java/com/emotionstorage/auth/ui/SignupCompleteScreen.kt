@@ -12,7 +12,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,7 +29,6 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 
-
 @Composable
 fun SignupCompleteScreen(
     provider: AuthProvider,
@@ -42,7 +40,7 @@ fun SignupCompleteScreen(
 ) {
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
-            when(sideEffect){
+            when (sideEffect) {
                 is SignupCompleteSideEffect.LoginSuccess -> {
                     navToHome()
                 }
@@ -55,7 +53,7 @@ fun SignupCompleteScreen(
 
     StatelessSignupCompleteScreen(
         modifier = modifier,
-        onLogin = { viewModel.onAction(SignupCompleteAction.LoginWithIdToken(provider, idToken)) }
+        onLogin = { viewModel.onAction(SignupCompleteAction.LoginWithIdToken(provider, idToken)) },
     )
 }
 
@@ -65,53 +63,57 @@ private fun StatelessSignupCompleteScreen(
     onLogin: () -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier
-            .background(MooiTheme.colorScheme.background)
-            .fillMaxSize(),
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .fillMaxSize(),
     ) { padding ->
         Column(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
-                .padding(padding)
-                .padding(horizontal = 16.dp)
-                .imePadding(),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(padding)
+                    .padding(horizontal = 16.dp)
+                    .imePadding(),
+            verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 modifier = Modifier.padding(top = 62.dp),
-                text = buildAnnotatedString {
-                    append("가입을 환영해요.\n이제 ")
-                    withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                        append("당신의 이야기")
-                    }
-                    append("를\n")
-                    withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                        append("우리만의 공간")
-                    }
-                    append("에 담아보세요.")
-                },
+                text =
+                    buildAnnotatedString {
+                        append("가입을 환영해요.\n이제 ")
+                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            append("당신의 이야기")
+                        }
+                        append("를\n")
+                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            append("우리만의 공간")
+                        }
+                        append("에 담아보세요.")
+                    },
                 style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
-                color = Color.White
+                color = Color.White,
             )
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 SpeechBubble(
                     text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
                 )
 
                 CtaButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 39.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 39.dp),
                     label = "메인화면으로 이동",
                     onClick = {
                         onLogin()
-                    }
+                    },
                 )
             }
         }

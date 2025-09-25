@@ -13,100 +13,106 @@ import javax.inject.Inject
 
 interface AgreeTermsEvent {
     fun onToggleAllAgree()
+
     fun onToggleTermAgree()
+
     fun onTogglePrivacyAgree()
+
     fun onToggleMarketingAgree()
+
     fun onToggleAgeAgree()
 }
 
-
 @HiltViewModel
-class AgreeTermsViewModel @Inject constructor() : ViewModel(), AgreeTermsEvent {
-    private val _isAllAgree = MutableStateFlow(false)
-    private val _isTermAgree = MutableStateFlow(false)
-    private val _isPrivacyAgree = MutableStateFlow(false)
-    private val _isMarketingAgree = MutableStateFlow(false)
-    private val _isAgeAgree = MutableStateFlow(false)
+class AgreeTermsViewModel @Inject constructor() :
+    ViewModel(),
+    AgreeTermsEvent {
+        private val pIsAllAgree = MutableStateFlow(false)
+        private val pIsTermAgree = MutableStateFlow(false)
+        private val pIsPrivacyAgree = MutableStateFlow(false)
+        private val pIsMarketingAgree = MutableStateFlow(false)
+        private val pIsAgeAgree = MutableStateFlow(false)
 
-    val state = combine(
-        _isAllAgree,
-        _isTermAgree,
-        _isPrivacyAgree,
-        _isMarketingAgree,
-        _isAgeAgree
-    ) { isAllAgree, isTermAgree, isPrivacyAgree, isMarketingAgree, isAgeAgree ->
-        State(
-            isAllAgree = isAllAgree,
-            isTermAgree = isTermAgree,
-            isPrivacyAgree = isPrivacyAgree,
-            isMarketingAgree = isMarketingAgree,
-            isAgeAgree = isAgeAgree
-        )
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = State()
-    )
-    val event: AgreeTermsEvent = this@AgreeTermsViewModel
-
-    init {
-        viewModelScope.launch {
-            _isAllAgree.collect { isAllAgree ->
-                if (isAllAgree) {
-                    _isTermAgree.update { true }
-                    _isPrivacyAgree.update { true }
-                    _isMarketingAgree.update { true }
-                    _isAgeAgree.update { true }
-                }
-            }
-        }
-
-        viewModelScope.launch {
+        val state =
             combine(
-                _isTermAgree,
-                _isPrivacyAgree,
-                _isMarketingAgree,
-                _isAgeAgree
-            ) { isTermAgree, isPrivacyAgree, isMarketingAgree, isAgeAgree ->
-                isTermAgree && isPrivacyAgree && isMarketingAgree && isAgeAgree
-            }.collect { isAllAgreed ->
-                if (isAllAgreed) {
-                    _isAllAgree.update { true }
-                } else {
-                    _isAllAgree.update { false }
+                pIsAllAgree,
+                pIsTermAgree,
+                pIsPrivacyAgree,
+                pIsMarketingAgree,
+                pIsAgeAgree,
+            ) { isAllAgree, isTermAgree, isPrivacyAgree, isMarketingAgree, isAgeAgree ->
+                State(
+                    isAllAgree = isAllAgree,
+                    isTermAgree = isTermAgree,
+                    isPrivacyAgree = isPrivacyAgree,
+                    isMarketingAgree = isMarketingAgree,
+                    isAgeAgree = isAgeAgree,
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = State(),
+            )
+        val event: AgreeTermsEvent = this@AgreeTermsViewModel
+
+        init {
+            viewModelScope.launch {
+                pIsAllAgree.collect { isAllAgree ->
+                    if (isAllAgree) {
+                        pIsTermAgree.update { true }
+                        pIsPrivacyAgree.update { true }
+                        pIsMarketingAgree.update { true }
+                        pIsAgeAgree.update { true }
+                    }
+                }
+            }
+
+            viewModelScope.launch {
+                combine(
+                    pIsTermAgree,
+                    pIsPrivacyAgree,
+                    pIsMarketingAgree,
+                    pIsAgeAgree,
+                ) { isTermAgree, isPrivacyAgree, isMarketingAgree, isAgeAgree ->
+                    isTermAgree && isPrivacyAgree && isMarketingAgree && isAgeAgree
+                }.collect { isAllAgreed ->
+                    if (isAllAgreed) {
+                        pIsAllAgree.update { true }
+                    } else {
+                        pIsAllAgree.update { false }
+                    }
                 }
             }
         }
-    }
 
-    override fun onToggleAllAgree() {
-        _isAllAgree.update { !it }
-    }
+        override fun onToggleAllAgree() {
+            pIsAllAgree.update { !it }
+        }
 
-    override fun onToggleTermAgree() {
-        _isTermAgree.update { !it }
-    }
+        override fun onToggleTermAgree() {
+            pIsTermAgree.update { !it }
+        }
 
-    override fun onTogglePrivacyAgree() {
-        _isPrivacyAgree.update { !it }
-    }
+        override fun onTogglePrivacyAgree() {
+            pIsPrivacyAgree.update { !it }
+        }
 
-    override fun onToggleMarketingAgree() {
-        _isMarketingAgree.update { !it }
-    }
+        override fun onToggleMarketingAgree() {
+            pIsMarketingAgree.update { !it }
+        }
 
-    override fun onToggleAgeAgree() {
-        _isAgeAgree.update { !it }
-    }
+        override fun onToggleAgeAgree() {
+            pIsAgeAgree.update { !it }
+        }
 
-    data class State(
-        val isAllAgree: Boolean = false,
-        val isTermAgree: Boolean = false,
-        val isPrivacyAgree: Boolean = false,
-        val isMarketingAgree: Boolean = false,
-        val isAgeAgree: Boolean = false,
-    ) {
-        val isSignupCompleteButtonEnabled: Boolean
-            get() = isTermAgree && isPrivacyAgree && isAgeAgree
+        data class State(
+            val isAllAgree: Boolean = false,
+            val isTermAgree: Boolean = false,
+            val isPrivacyAgree: Boolean = false,
+            val isMarketingAgree: Boolean = false,
+            val isAgeAgree: Boolean = false,
+        ) {
+            val isSignupCompleteButtonEnabled: Boolean
+                get() = isTermAgree && isPrivacyAgree && isAgeAgree
+        }
     }
-}

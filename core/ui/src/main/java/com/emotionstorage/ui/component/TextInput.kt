@@ -2,7 +2,6 @@ package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,27 +13,32 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.theme.MooiTheme
 
 sealed class TextInputState(
-    val message: String? = null
+    val message: String? = null,
 ) {
-    class Empty(infoMessage: String? = null) : TextInputState(message = infoMessage)
-    class Error(errorMessage: String? = null) : TextInputState(message = errorMessage)
-    class Success(successMessage: String? = null) : TextInputState(message = successMessage)
+    class Empty(
+        infoMessage: String? = null,
+    ) : TextInputState(message = infoMessage)
+
+    class Error(
+        errorMessage: String? = null,
+    ) : TextInputState(message = errorMessage)
+
+    class Success(
+        successMessage: String? = null,
+    ) : TextInputState(message = successMessage)
 }
 
 @Composable
@@ -46,44 +50,47 @@ fun TextInput(
     maxCharCount: Int = 0,
     placeHolder: String = "",
     state: TextInputState = TextInputState.Empty(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.background(MooiTheme.colorScheme.background)) {
         Box(modifier = Modifier.fillMaxWidth()) {
             if (!label.isNullOrEmpty()) {
                 Text(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .padding(bottom = 18.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .padding(bottom = 18.dp),
                     style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                     color = Color.White,
-                    text = label
+                    text = label,
                 )
             }
             if (showCharCount) {
                 Row(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(bottom = 18.dp)
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopEnd)
+                            .padding(bottom = 18.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = MooiTheme.colorScheme.primary,
-                        text = "${value.length}"
+                        text = "${value.length}",
                     )
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = Color.White,
-                        text = "/${maxCharCount}"
+                        text = "/$maxCharCount",
                     )
                 }
             }
         }
 
         BasicTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 0.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 0.dp),
             textStyle = MooiTheme.typography.body3.copy(fontSize = 15.sp, color = Color.White),
             value = value,
             onValueChange = onValueChange,
@@ -91,38 +98,39 @@ fun TextInput(
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(9.dp)
+                verticalArrangement = Arrangement.spacedBy(9.dp),
             ) {
                 if (value.isEmpty()) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = MooiTheme.colorScheme.gray500,
-                        text = placeHolder
+                        text = placeHolder,
                     )
                 } else {
                     it()
                 }
 
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(
-                            when (state) {
-                                is TextInputState.Empty -> MooiTheme.colorScheme.gray600
-                                is TextInputState.Error -> MooiTheme.colorScheme.errorRed
-                                is TextInputState.Success -> MooiTheme.colorScheme.primary
-                            }
-                        )
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(
+                                when (state) {
+                                    is TextInputState.Empty -> MooiTheme.colorScheme.gray600
+                                    is TextInputState.Error -> MooiTheme.colorScheme.errorRed
+                                    is TextInputState.Success -> MooiTheme.colorScheme.primary
+                                },
+                            ),
                 )
             }
         }
 
-
         TextInputMessage(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 12.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 12.dp),
             state = state,
         )
     }
@@ -131,39 +139,45 @@ fun TextInput(
 @Composable
 private fun TextInputMessage(
     state: TextInputState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     if (state.message.isNullOrEmpty()) return
 
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(7.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
-            painter = painterResource(
-                when (state) {
-                    is TextInputState.Empty -> R.drawable.caution
-                    is TextInputState.Error -> R.drawable.caution
-                    is TextInputState.Success -> R.drawable.success
-                }
-            ),
+            painter =
+                painterResource(
+                    when (state) {
+                        is TextInputState.Empty -> R.drawable.caution
+                        is TextInputState.Error -> R.drawable.caution
+                        is TextInputState.Success -> R.drawable.success
+                    },
+                ),
             modifier = Modifier.size(18.dp),
-            colorFilter = when (state) {
-                is TextInputState.Empty -> null
-                is TextInputState.Error -> ColorFilter.tint(MooiTheme.colorScheme.errorRed)
-                is TextInputState.Success -> null
-            },
-            contentDescription = null
+            colorFilter =
+                when (state) {
+                    is TextInputState.Empty -> null
+                    is TextInputState.Error -> ColorFilter.tint(MooiTheme.colorScheme.errorRed)
+                    is TextInputState.Success -> null
+                },
+            contentDescription = null,
         )
         Text(
             style = MooiTheme.typography.body3,
-            color = if (state is TextInputState.Error) MooiTheme.colorScheme.errorRed else MooiTheme.colorScheme.primary,
-            text = state.message
+            color =
+                if (state is TextInputState.Error) {
+                    MooiTheme.colorScheme.errorRed
+                } else {
+                    MooiTheme.colorScheme.primary
+                },
+            text = state.message,
         )
     }
 }
-
 
 @Preview
 @Composable
@@ -176,7 +190,7 @@ private fun TextInputPreview() {
             placeHolder = "최소 2글자 이상의 이름을 적어주세요",
             showCharCount = true,
             maxCharCount = 8,
-            state = TextInputState.Empty("2~8자리의 한글 또는 영문을 사용해주세요")
+            state = TextInputState.Empty("2~8자리의 한글 또는 영문을 사용해주세요"),
         )
         TextInput(
             label = "이름",
@@ -184,7 +198,7 @@ private fun TextInputPreview() {
             onValueChange = {},
             showCharCount = true,
             maxCharCount = 8,
-            state = TextInputState.Error("이름은 최소 2글자 이상이어야 합니다")
+            state = TextInputState.Error("이름은 최소 2글자 이상이어야 합니다"),
         )
         TextInput(
             label = "이름",
@@ -192,7 +206,7 @@ private fun TextInputPreview() {
             onValueChange = {},
             showCharCount = true,
             maxCharCount = 8,
-            state = TextInputState.Success("사용 가능한 이름입니다.")
+            state = TextInputState.Success("사용 가능한 이름입니다."),
         )
     }
 }

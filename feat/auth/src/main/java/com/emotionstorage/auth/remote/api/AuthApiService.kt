@@ -1,8 +1,8 @@
 package com.emotionstorage.auth.remote.api
 
 import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
-import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
 import com.emotionstorage.auth.remote.request.GoogleSignupRequestBody
+import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
 import com.emotionstorage.auth.remote.request.KakaoSignupRequestBody
 import com.emotionstorage.auth.remote.response.LoginResponseData
 import com.emotionstorage.auth.remote.response.SignupResponseData
@@ -16,23 +16,22 @@ import retrofit2.http.POST
 interface AuthApiService {
     @POST("/api/v1/users/login/google")
     suspend fun postGoogleLogin(
-        @Body loginRequestBody: GoogleLoginRequestBody
+        @Body loginRequestBody: GoogleLoginRequestBody,
     ): ResponseDto<LoginResponseData>
 
     @POST("/api/v1/users/signup/google")
     suspend fun postGoogleSignup(
-        @Body signupRequestBody: GoogleSignupRequestBody
+        @Body signupRequestBody: GoogleSignupRequestBody,
     ): ResponseDto<SignupResponseData>
-
 
     @POST("/api/v1/users/login/kakao")
     suspend fun postKakaoLogin(
-        @Body loginRequestBody: KakaoLoginRequestBody
+        @Body loginRequestBody: KakaoLoginRequestBody,
     ): ResponseDto<LoginResponseData>
 
     @POST("/api/v1/users/signup/kakao")
     suspend fun postKakaoSignup(
-        @Body signupRequestBody: KakaoSignupRequestBody
+        @Body signupRequestBody: KakaoSignupRequestBody,
     ): ResponseDto<SignupResponseData>
 
     @AuthRequest

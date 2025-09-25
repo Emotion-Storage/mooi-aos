@@ -29,13 +29,22 @@ fun DescriptionCoachScreen(
     onCheckChanged: (Boolean) -> Unit,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier =
+            modifier
+                .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
             modifier = Modifier.size(36.dp),
-            painter = painterResource(com.emotionstorage.ui.R.drawable.touch),
+            painter =
+                painterResource(
+                    com
+                        .emotionstorage
+                        .ui
+                        .R
+                        .drawable
+                        .touch,
+                ),
             contentDescription = "터치하세요",
             tint = Color.White,
         )
@@ -44,39 +53,42 @@ fun DescriptionCoachScreen(
 
         // fix : 폰트 조정되면 core.type에 넣기
         Text(
-            modifier = Modifier
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .padding(horizontal = 16.dp),
             text = "아무 곳이나 탭하세요.",
             color = MooiTheme.colorScheme.gray500,
-            style = MooiTheme.typography.body2
+            style = MooiTheme.typography.body2,
         )
 
         Row(
-            modifier = Modifier
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null
-                ) {
-                    onCheckChanged(!checked)
-                },
-            verticalAlignment = Alignment.CenterVertically
+            modifier =
+                Modifier
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                    ) {
+                        onCheckChanged(!checked)
+                    },
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
                 checked = checked,
                 onCheckedChange = onCheckChanged,
                 modifier = Modifier.padding(end = 0.dp),
-                colors = CheckboxDefaults.colors(
-                    checkedColor = MooiTheme.colorScheme.primary,
-                    uncheckedColor = Color.Gray,
-                    checkmarkColor = Color.Black
-                )
+                colors =
+                    CheckboxDefaults.colors(
+                        checkedColor = MooiTheme.colorScheme.primary,
+                        uncheckedColor = Color.Gray,
+                        checkmarkColor = Color.Black,
+                    ),
             )
 
             // fix : 폰트 조정되면 core.type에 넣기
             Text(
                 text = "다시 보지 않기",
                 color = MooiTheme.colorScheme.gray700,
-                style = MooiTheme.typography.body4
+                style = MooiTheme.typography.body4,
             )
         }
     }
@@ -88,7 +100,7 @@ fun DescriptionCoachScreenPreview() {
     MooiTheme {
         DescriptionCoachScreen(
             checked = false,
-            onCheckChanged = {}
+            onCheckChanged = {},
         )
     }
 }

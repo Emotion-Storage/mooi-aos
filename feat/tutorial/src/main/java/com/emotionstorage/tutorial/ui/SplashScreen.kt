@@ -44,32 +44,32 @@ fun SplashScreen(
 }
 
 @Composable
-private fun StatelessSplashScreen(
-    modifier: Modifier = Modifier,
-) {
+private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
     ) { padding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(padding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(padding),
             verticalArrangement = Arrangement.Top,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
-                modifier = Modifier
-                    .size(148.dp)
-                    .offset(y = 214.dp)
-                    .background(Color.Black)
+                modifier =
+                    Modifier
+                        .size(148.dp)
+                        .offset(y = 214.dp)
+                        .background(Color.Black),
             )
         }
     }
 }
-
 
 @Preview
 @Composable

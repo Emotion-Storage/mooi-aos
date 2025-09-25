@@ -32,98 +32,106 @@ import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 
-private val DUMMY_TIME_CAPSULE =  TimeCapsuleState(
-    id = "",
-    title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-    emotions = listOf(
-        Emotion(
-            label = "서운함",
-            icon = 0,
-        ), Emotion(
-            label = "화남",
-            icon = 1,
-        ), Emotion(
-            label = "피곤함",
-            icon = 2,
-        )
-    ),
-    isFavorite = true,
-    isFavoriteAt = LocalDateTime.now(),
-    createdAt = LocalDateTime.now()
-)
+private val DUMMY_TIME_CAPSULE =
+    TimeCapsuleState(
+        id = "",
+        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+        emotions =
+            listOf(
+                Emotion(
+                    label = "서운함",
+                    icon = 0,
+                ),
+                Emotion(
+                    label = "화남",
+                    icon = 1,
+                ),
+                Emotion(
+                    label = "피곤함",
+                    icon = 2,
+                ),
+            ),
+        isFavorite = true,
+        isFavoriteAt = LocalDateTime.now(),
+        createdAt = LocalDateTime.now(),
+    )
 
 @Composable
 fun TimeCapsuleItem(
     modifier: Modifier = Modifier,
     timeCapsule: TimeCapsuleState,
     onFavoriteClick: () -> Unit = {},
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.background),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
                 text = timeCapsule.createdAt.formatToKorDateTime(),
                 style = MooiTheme.typography.body3.copy(fontWeight = FontWeight.Light),
-                color = MooiTheme.colorScheme.gray300
+                color = MooiTheme.colorScheme.gray300,
             )
             RoundedToggleButton(
                 isSelected = timeCapsule.isFavorite,
-                onSelect = onFavoriteClick
+                onSelect = onFavoriteClick,
             )
         }
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(92.dp)
-                .background(
-                    Color(0x1A849BEA), RoundedCornerShape(15.dp)
-                )
-                .padding(vertical = 18.dp, horizontal = 15.dp)
-                .clickable(onClick = onClick),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(92.dp)
+                    .background(
+                        Color(0x1A849BEA),
+                        RoundedCornerShape(15.dp),
+                    ).padding(vertical = 18.dp, horizontal = 15.dp)
+                    .clickable(onClick = onClick),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(11.dp)
+            horizontalArrangement = Arrangement.spacedBy(11.dp),
         ) {
             // unlocked icon
             Column(
-                modifier = Modifier
-                    .size(54.dp)
-                    .border(1.dp, Color(0xAECBFA).copy(alpha = 0.2f), CircleShape),
+                modifier =
+                    Modifier
+                        .size(54.dp)
+                        .border(1.dp, Color(0xAECBFA).copy(alpha = 0.2f), CircleShape),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.lock_open),
-                    modifier = Modifier
-                        .width(11.dp)
-                        .height(14.dp),
-                    contentDescription = "open"
+                    modifier =
+                        Modifier
+                            .width(11.dp)
+                            .height(14.dp),
+                    contentDescription = "open",
                 )
                 Text(
                     modifier = Modifier.padding(top = 3.dp),
                     text = "열림",
                     style = MooiTheme.typography.body3.copy(fontSize = 11.sp, lineHeight = 24.sp),
-                    color = MooiTheme.colorScheme.secondary
+                    color = MooiTheme.colorScheme.secondary,
                 )
             }
 
             // time capsule content
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(5.dp)
+                verticalArrangement = Arrangement.spacedBy(5.dp),
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     for (emotion in timeCapsule.emotions) {
                         EmotionTag(emotion = emotion)
@@ -133,7 +141,7 @@ fun TimeCapsuleItem(
                     text = timeCapsule.title,
                     style = MooiTheme.typography.body4,
                     color = MooiTheme.colorScheme.primary,
-                    maxLines = 1
+                    maxLines = 1,
                 )
             }
         }
@@ -142,7 +150,7 @@ fun TimeCapsuleItem(
 
 @Preview
 @Composable
-private fun TimeCapsuleItemPreview(){
+private fun TimeCapsuleItemPreview() {
     MooiTheme {
         TimeCapsuleItem(
             timeCapsule = DUMMY_TIME_CAPSULE,

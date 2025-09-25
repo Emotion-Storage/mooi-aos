@@ -13,6 +13,5 @@ import javax.inject.Singleton
 object ApiServiceModule {
     @Singleton
     @Provides
-    fun provideChatApiService(retrofit: Retrofit): ChatApiService =
-        retrofit.create(ChatApiService::class.java)
+    fun provideChatApiService(retrofit: Retrofit): ChatApiService = retrofit.create(ChatApiService::class.java)
 }

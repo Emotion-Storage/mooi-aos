@@ -36,14 +36,14 @@ fun Modal(
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
-            modifier = Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .background(MooiTheme.colorScheme.background)
-                .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
+            modifier =
+                Modifier
+                    .clip(RoundedCornerShape(15.dp))
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-
             if (!subTitle.isNullOrEmpty()) {
                 Text(
                     modifier = Modifier.padding(bottom = 5.dp),
@@ -56,10 +56,11 @@ fun Modal(
             Text(
                 modifier = Modifier.padding(bottom = 19.dp),
                 text = title,
-                style = MooiTheme.typography.head2.copy(
-                    fontSize = 22.sp,
-                    lineHeight = 30.sp,
-                ),
+                style =
+                    MooiTheme.typography.head2.copy(
+                        fontSize = 22.sp,
+                        lineHeight = 30.sp,
+                    ),
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )
@@ -69,7 +70,7 @@ fun Modal(
                     Logger.v("confirm button clicked")
                     onConfirm()
                     onDismissRequest()
-                }
+                },
             )
             Spacer(modifier = Modifier.height(12.dp))
             ModalButton(
@@ -79,7 +80,7 @@ fun Modal(
                     onDismiss()
                     onDismissRequest()
                 },
-                type = CtaButtonType.TONAL
+                type = CtaButtonType.TONAL,
             )
         }
     }
@@ -98,10 +99,9 @@ private fun ModalButton(
         onClick = onClick,
         type = type,
         radius = 10,
-        textStyle = MooiTheme.typography.body2.copy(fontWeight = FontWeight.Normal)
+        textStyle = MooiTheme.typography.body2.copy(fontWeight = FontWeight.Normal),
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -116,5 +116,4 @@ private fun ModalPreview() {
         onConfirm = { },
         onDismiss = { },
     )
-
 }

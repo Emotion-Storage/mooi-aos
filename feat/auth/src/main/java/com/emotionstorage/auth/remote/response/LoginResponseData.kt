@@ -3,6 +3,6 @@ package com.emotionstorage.auth.remote.response
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginResponseData (
+data class LoginResponseData(
     val accessToken: String,
 )

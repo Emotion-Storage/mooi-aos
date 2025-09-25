@@ -2,7 +2,7 @@ package com.emotionstorage.auth.data.model
 
 import java.time.LocalDate
 
-data class SignupFormEntity (
+data class SignupFormEntity(
     val idToken: String,
     val nickname: String,
     val gender: String,

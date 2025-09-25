@@ -3,7 +3,9 @@ package com.emotionstorage.remote.response
 import kotlinx.serialization.Serializable
 
 @Serializable
-enum class ResponseStatus(val code: Int) {
+enum class ResponseStatus(
+    val code: Int,
+) {
     Continue(100),
     SwitchingProtocols(101),
     Processing(102),
@@ -69,5 +71,5 @@ enum class ResponseStatus(val code: Int) {
     NotExtended(510),
     NetworkAuthenticationRequired(511),
 
-    Unknown(0)
+    Unknown(0),
 }

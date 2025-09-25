@@ -42,15 +42,15 @@ class LinearGradient(
     private val stops: List<Float>? = null,
     private val tileMode: TileMode = TileMode.Clamp,
     angleInDegrees: Float = 0f,
-    useAsCssAngle: Boolean = false
+    useAsCssAngle: Boolean = false,
 ) : ShaderBrush() {
-
     // handle edge cases like: -1235, ...
-    private val normalizedAngle: Float = if (useAsCssAngle) {
-        ((90 - angleInDegrees) % 360 + 360) % 360
-    } else {
-        (angleInDegrees % 360 + 360) % 360
-    }
+    private val normalizedAngle: Float =
+        if (useAsCssAngle) {
+            ((90 - angleInDegrees) % 360 + 360) % 360
+        } else {
+            (angleInDegrees % 360 + 360) % 360
+        }
     private val angleInRadians: Float = Math.toRadians(normalizedAngle.toDouble()).toFloat()
 
     override fun createShader(size: Size): Shader {
@@ -61,7 +61,7 @@ class LinearGradient(
             colorStops = stops,
             from = from,
             to = to,
-            tileMode = tileMode
+            tileMode = tileMode,
         )
     }
 
@@ -69,8 +69,8 @@ class LinearGradient(
         val diagonal = sqrt(size.width.pow(2) + size.height.pow(2))
         val angleBetweenDiagonalAndWidth = acos(size.width / diagonal)
         val angleBetweenDiagonalAndGradientLine =
-            if ((normalizedAngle > 90 && normalizedAngle < 180)
-                || (normalizedAngle > 270 && normalizedAngle < 360)
+            if ((normalizedAngle > 90 && normalizedAngle < 180) ||
+                (normalizedAngle > 270 && normalizedAngle < 360)
             ) {
                 PI.toFloat() - angleInRadians - angleBetweenDiagonalAndWidth
             } else {
@@ -107,10 +107,9 @@ class LinearGradient(
         return result
     }
 
-    override fun toString(): String {
-        return "LinearGradient(colors=$colors, " +
-                "stops=$stops, " +
-                "angle=$normalizedAngle, " +
-                "tileMode=$tileMode)"
-    }
+    override fun toString(): String =
+        "LinearGradient(colors=$colors, " +
+            "stops=$stops, " +
+            "angle=$normalizedAngle, " +
+            "tileMode=$tileMode)"
 }

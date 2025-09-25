@@ -15,14 +15,9 @@ import javax.inject.Singleton
 abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
-    abstract fun bindChatRemoteDataSource(
-        impl: ChatRemoteDataSourceImpl
-    ): ChatRemoteDataSource
+    abstract fun bindChatRemoteDataSource(impl: ChatRemoteDataSourceImpl): ChatRemoteDataSource
 
     @Binds
     @Singleton
-    abstract fun bindChatWSDataSource(
-        impl: ChatWSDataSourceImpl
-    ): ChatWSDataSource
-
+    abstract fun bindChatWSDataSource(impl: ChatWSDataSourceImpl): ChatWSDataSource
 }
