@@ -8,7 +8,7 @@ import com.emotionstorage.local.room.AppDatabaseConstant
 // set primary key to fixed value, 0
 const val SESSION_PRIMARY_KEY = 0
 
-@Entity(tableName = AppDatabaseConstant.TABLE_NAME.session)
+@Entity(tableName = AppDatabaseConstant.TableName.SESSION_TABLE)
 data class SessionLocal(
     @PrimaryKey
     val pk: Int = SESSION_PRIMARY_KEY,

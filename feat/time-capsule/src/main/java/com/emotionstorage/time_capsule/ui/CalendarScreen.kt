@@ -34,12 +34,12 @@ import com.emotionstorage.ui.util.subBackground
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     navToArrived: () -> Unit = {},
-    navToFavorites: () -> Unit = {}
+    navToFavorites: () -> Unit = {},
 ) {
     StatelessCalendarScreen(
         modifier,
         navToArrived,
-        navToFavorites
+        navToFavorites,
     )
 }
 
@@ -47,7 +47,7 @@ fun CalendarScreen(
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
     navToArrived: () -> Unit = {},
-    navToFavorites: () -> Unit = {}
+    navToFavorites: () -> Unit = {},
 ) {
     Scaffold(
         modifier
@@ -57,40 +57,42 @@ private fun StatelessCalendarScreen(
         topBar = {
             CalendarTopBar(
                 calendarMonth = 7,
-                keyCount = 1
+                keyCount = 1,
             )
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
         ) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
                 verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 CalendarNavButton(
                     modifier = Modifier.weight(1f),
                     label = "도착한 타임캡슐",
                     showNewBadge = true,
-                    onClick = navToArrived
+                    onClick = navToArrived,
                 )
 
                 CalendarNavButton(
                     modifier = Modifier.weight(1f),
                     label = "내 마음 서랍",
                     showNewBadge = false,
-                    onClick = navToFavorites
+                    onClick = navToFavorites,
                 )
             }
 
             TimeCapsuleCalendar(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             )
         }
     }
@@ -103,25 +105,27 @@ private fun CalendarTopBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(91.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(91.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = buildAnnotatedString {
-                withStyle(
-                    SpanStyle(
-                        color = MooiTheme.colorScheme.primary,
-                    )
-                ) {
-                    append("${calendarMonth}월")
-                }
-                append("의 내 감정")
-            },
+            text =
+                buildAnnotatedString {
+                    withStyle(
+                        SpanStyle(
+                            color = MooiTheme.colorScheme.primary,
+                        ),
+                    ) {
+                        append("${calendarMonth}월")
+                    }
+                    append("의 내 감정")
+                },
             style = MooiTheme.typography.head3,
-            color = Color.White
+            color = Color.White,
         )
 
         // todo: add key icon
@@ -133,29 +137,31 @@ private fun CalendarNavButton(
     modifier: Modifier = Modifier,
     label: String,
     onClick: () -> Unit = {},
-    showNewBadge: Boolean = false
+    showNewBadge: Boolean = false,
 ) {
     Box(
-        modifier = modifier
-            .height(53.dp)
-            .subBackground(true, RoundedCornerShape(10.dp))
-            .clickable {
-                onClick()
-            }
+        modifier =
+            modifier
+                .height(53.dp)
+                .subBackground(true, RoundedCornerShape(10.dp))
+                .clickable {
+                    onClick()
+                },
     ) {
         if (showNewBadge) {
             Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(20.dp)
-                    .offset(x = 7.dp, y = -7.dp)
-                    .background(MooiTheme.colorScheme.secondary, CircleShape)
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .size(20.dp)
+                        .offset(x = 7.dp, y = -7.dp)
+                        .background(MooiTheme.colorScheme.secondary, CircleShape),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = "N",
                     style = MooiTheme.typography.button.copy(fontSize = 10.sp),
-                    color = Color.White
+                    color = Color.White,
                 )
             }
         }
@@ -163,7 +169,7 @@ private fun CalendarNavButton(
             modifier = Modifier.align(Alignment.Center),
             text = label,
             style = MooiTheme.typography.body4,
-            color = Color.White
+            color = Color.White,
         )
     }
 }

@@ -1,7 +1,7 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 fun getLocalProperty(propertyKey: String): String {
-    return  System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
+    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 }
 
 plugins {
@@ -20,7 +20,7 @@ android {
         buildConfigField(
             "String",
             "MOOI_REPLY_EMAIL",
-            getLocalProperty("MOOI_REPLY_EMAIL")
+            getLocalProperty("MOOI_REPLY_EMAIL"),
         )
     }
 
@@ -29,7 +29,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

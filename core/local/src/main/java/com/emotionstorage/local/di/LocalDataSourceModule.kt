@@ -17,14 +17,12 @@ import javax.inject.Singleton
 abstract class LocalDataSourceModule {
     @Binds
     @Singleton
-    abstract fun bindUserLocalDataSource(
-        userLocalDataSourceImpl: UserLocalDataSourceImpl
-    ): UserLocalDataSource
+    abstract fun bindUserLocalDataSource(userLocalDataSourceImpl: UserLocalDataSourceImpl): UserLocalDataSource
 
     @Binds
     @Singleton
     abstract fun bindSessionLocalDataSource(
-        sessionLocalDataSourceImpl: SessionLocalDataSourceImpl
+        sessionLocalDataSourceImpl: SessionLocalDataSourceImpl,
     ): SessionLocalDataSource
 
     @Binds

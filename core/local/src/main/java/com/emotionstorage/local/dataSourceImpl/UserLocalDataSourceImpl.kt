@@ -7,32 +7,32 @@ import com.emotionstorage.local.room.dao.UserDao
 import javax.inject.Inject
 
 class UserLocalDataSourceImpl @Inject constructor(
-    private val userDao: UserDao
-): UserLocalDataSource {
+    private val userDao: UserDao,
+) : UserLocalDataSource {
     override suspend fun saveUser(user: UserEntity): Boolean {
-        try{
+        try {
             userDao.insertUser(UserMapper.toLocal(user))
             return true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return false
         }
     }
 
     override suspend fun getUser(): UserEntity? {
-        return try{
-            userDao.getUser()?.run{
+        try {
+            return userDao.getUser()?.run {
                 UserMapper.toEntity(this)
             }
-        }catch (e: Exception){
-            null
+        } catch (e: Exception) {
+            throw e
         }
     }
 
     override suspend fun deleteUser(): Boolean {
-        try{
+        try {
             userDao.deleteUser()
             return true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             return false
         }
     }

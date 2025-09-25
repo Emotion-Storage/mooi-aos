@@ -36,7 +36,7 @@ fun AIChatScreen(
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {}
+    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(roomId) {
@@ -81,25 +81,27 @@ private fun StatelessAIChatScreen(
     AIChatExitModel(
         isModelOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
-        onExit = navToBack
+        onExit = navToBack,
     )
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .imePadding()
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .imePadding(),
         ) {
             // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
                 showBackButton = true,
                 onBackClick = {
                     setExitModalOpen(true)
-                })
+                },
+            )
 
             ChatProgressBar(
                 progress = state.chatProgress,
@@ -109,16 +111,20 @@ private fun StatelessAIChatScreen(
 
             ChatMessageList(
                 modifier = Modifier.weight(1f),
-                chatMessages = state.messages
+                chatMessages = state.messages,
             )
-            Button(onClick = {
-                onAction(AIChatAction.ConnectChatRoom("test-roomId"))
-            }) {
+            Button(
+                onClick = {
+                    onAction(AIChatAction.ConnectChatRoom("test-roomId"))
+                },
+            ) {
                 Text(text = "채팅방 연결")
             }
-            Button(onClick = {
-                onAction(AIChatAction.ExitChatRoom)
-            }) {
+            Button(
+                onClick = {
+                    onAction(AIChatAction.ExitChatRoom)
+                },
+            ) {
                 Text(text = "채팅방 연결 끊기")
             }
             ChatMessageInputBox(
@@ -126,7 +132,7 @@ private fun StatelessAIChatScreen(
                     .fillMaxWidth(),
                 onSendMessage = {
                     onAction(AIChatAction.SendChatMessage(it))
-                }
+                },
             )
         }
     }

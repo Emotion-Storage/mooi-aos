@@ -23,13 +23,16 @@ private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
 class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
     private val json = Json { ignoreUnknownKeys = true }
-    private val client = StompClient(
-        webSocketClient = OkHttpWebSocketClient(
-            OkHttpClient.Builder()
-                .pingInterval(Duration.ofSeconds(10))
-                .build()
-        ),
-    )
+    private val client =
+        StompClient(
+            webSocketClient =
+                OkHttpWebSocketClient(
+                    OkHttpClient
+                        .Builder()
+                        .pingInterval(Duration.ofSeconds(10))
+                        .build(),
+                ),
+        )
 
     private lateinit var session: StompSession
 
@@ -51,25 +54,26 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
         }
     }
 
-    override suspend fun observeChatMessages(roomId: String): Flow<String> {
-        return session.subscribeText("/sub/chatroom/${roomId}").map {
+    override suspend fun observeChatMessages(roomId: String): Flow<String> =
+        session.subscribeText("/sub/chatroom/$roomId").map {
             Logger.d("observeChatMessages() it: $it")
             it
         }
-    }
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
-            val messageJson = json.encodeToString(
-                ChatMessageRequestBody.serializer(),
-                ChatMessageMapper.toRemote(chatMessage)
-            )
+            val messageJson =
+                json.encodeToString(
+                    ChatMessageRequestBody.serializer(),
+                    ChatMessageMapper.toRemote(chatMessage),
+                )
             Logger.d("sendChatMessage() messageJson: $messageJson")
 
             session.send(
-                headers = StompSendHeaders(
-                    destination = "/pub/v1/test"
-                ),
+                headers =
+                    StompSendHeaders(
+                        destination = "/pub/v1/test",
+                    ),
                 body = FrameBody.Text(messageJson),
             )
             return true

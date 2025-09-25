@@ -29,31 +29,34 @@ fun TextBoxInput(
     placeHolder: String = "",
 ) {
     BasicTextField(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MooiTheme.colorScheme.background, RoundedCornerShape(15.dp))
-            .background(Color(0xFF0E0C12).copy(alpha = 0.5f), RoundedCornerShape(15.dp))
-            .padding(18.dp),
-        textStyle = MooiTheme.typography.body4.copy(
-            fontWeight = FontWeight.Light,
-            color = Color.White
-        ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.background, RoundedCornerShape(15.dp))
+                .background(Color(0xFF0E0C12).copy(alpha = 0.5f), RoundedCornerShape(15.dp))
+                .padding(18.dp),
+        textStyle =
+            MooiTheme.typography.body4.copy(
+                fontWeight = FontWeight.Light,
+                color = Color.White,
+            ),
         value = value,
         onValueChange = onValueChange,
     ) {
         Column(
-            verticalArrangement = Arrangement.spacedBy(9.dp)
+            verticalArrangement = Arrangement.spacedBy(9.dp),
         ) {
             Column(
-                modifier = Modifier
-                    .heightIn(min = 156.dp)
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .heightIn(min = 156.dp)
+                        .fillMaxWidth(),
             ) {
                 if (value.isEmpty()) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = MooiTheme.colorScheme.gray500,
-                        text = placeHolder
+                        text = placeHolder,
                     )
                 } else {
                     it()
@@ -62,17 +65,17 @@ fun TextBoxInput(
             if (showCharCount) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.End
+                    horizontalArrangement = Arrangement.End,
                 ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
                         color = if (value.length == 0) MooiTheme.colorScheme.gray300 else MooiTheme.colorScheme.primary,
-                        text = "${value.length}"
+                        text = "${value.length}",
                     )
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
                         color = MooiTheme.colorScheme.gray300,
-                        text = "/${maxCharCount}"
+                        text = "/$maxCharCount",
                     )
                 }
             }
@@ -89,14 +92,14 @@ private fun TextBoxInputPreview() {
             onValueChange = {},
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
-            maxCharCount = 1000
+            maxCharCount = 1000,
         )
         TextBoxInput(
             value = "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
             onValueChange = {},
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
-            maxCharCount = 1000
+            maxCharCount = 1000,
         )
     }
 }

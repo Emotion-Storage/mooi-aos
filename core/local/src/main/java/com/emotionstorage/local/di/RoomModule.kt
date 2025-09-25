@@ -14,16 +14,18 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal object RoomModule {
-
     @Provides
     @Singleton
-    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
-        return Room.databaseBuilder(
-            context,
-            AppDatabase::class.java,
-            AppDatabaseConstant.NAME
-        ).fallbackToDestructiveMigration(false).build()
-    }
+    fun provideAppDatabase(
+        @ApplicationContext context: Context,
+    ): AppDatabase =
+        Room
+            .databaseBuilder(
+                context,
+                AppDatabase::class.java,
+                AppDatabaseConstant.NAME,
+            ).fallbackToDestructiveMigration(false)
+            .build()
 
     @Provides
     @Singleton

@@ -3,7 +3,7 @@ package com.emotionstorage.auth.remote.request
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class KakaoSignupRequestBody (
+data class KakaoSignupRequestBody(
     val accessToken: String,
     val nickname: String,
     val gender: String,

@@ -27,7 +27,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 
 enum class IconWithCountType {
-    KEY
+    KEY,
 }
 
 @Composable
@@ -38,19 +38,22 @@ fun IconWithCount(
     onClick: (() -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .clickable(
-                enabled = onClick != null,
-                onClick = {
-                    onClick?.invoke()
-                })
+        modifier =
+            modifier
+                .clickable(
+                    enabled = onClick != null,
+                    onClick = {
+                        onClick?.invoke()
+                    },
+                ),
     ) {
         when (type) {
             IconWithCountType.KEY -> {
                 Image(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .size(22.dp),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .size(22.dp),
                     painter = painterResource(id = R.drawable.key),
                     contentDescription = "key icon",
                 )
@@ -58,23 +61,25 @@ fun IconWithCount(
         }
 
         Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .background(MooiTheme.colorScheme.secondary, CircleShape)
-                .sizeIn(minWidth = 16.dp, minHeight = 16.dp)
-                .padding(vertical = 0.5.dp, horizontal = 2.dp)
+            modifier =
+                Modifier
+                    .align(Alignment.BottomEnd)
+                    .background(MooiTheme.colorScheme.secondary, CircleShape)
+                    .sizeIn(minWidth = 16.dp, minHeight = 16.dp)
+                    .padding(vertical = 0.5.dp, horizontal = 2.dp),
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = count.toString(),
-                style = TextStyle(
-                    fontFamily = pretendard,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 10.sp,
-                    lineHeight = 20.sp,
-                    letterSpacing = (-0.02).em,
-                    color = Color.White
-                ),
+                style =
+                    TextStyle(
+                        fontFamily = pretendard,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 10.sp,
+                        lineHeight = 20.sp,
+                        letterSpacing = (-0.02).em,
+                        color = Color.White,
+                    ),
                 maxLines = 1,
             )
         }
@@ -87,17 +92,17 @@ private fun IconWithCountPreview() {
     MooiTheme {
         Column(
             modifier = Modifier.background(MooiTheme.colorScheme.background),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             IconWithCount(
                 modifier = Modifier.size(28.dp, 32.dp),
                 type = IconWithCountType.KEY,
-                count = "5"
+                count = "5",
             )
             IconWithCount(
                 modifier = Modifier.size(28.dp, 32.dp),
                 type = IconWithCountType.KEY,
-                count = "99+"
+                count = "99+",
             )
         }
     }
