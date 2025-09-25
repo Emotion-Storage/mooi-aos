@@ -32,27 +32,28 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
-import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
+import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 
 private val DUMMY_TIME_CAPSULES = (1..15).toList().map { it ->
-    TimeCapsuleState(
+    TimeCapsuleItemState(
         id = it.toString(),
+        status = TimeCapsule.STATUS.ARRIVED,
         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
         emotions = listOf(
             Emotion(

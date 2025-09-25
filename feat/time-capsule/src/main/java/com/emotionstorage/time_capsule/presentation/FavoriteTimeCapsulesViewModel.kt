@@ -1,10 +1,11 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState.SortOrder
-import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
+import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 data class FavoriteTimeCapsulesState(
     val sortOrder: SortOrder = SortOrder.SORT_BY_NEWEST,
-    val timeCapsules: List<TimeCapsuleState> = emptyList()
+    val timeCapsules: List<TimeCapsuleItemState> = emptyList()
 ) {
     enum class SortOrder(val label: String) {
         SORT_BY_NEWEST("최신 날짜순"),
@@ -74,8 +75,9 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
         // todo: call use case
 
         val timeCapsules = (1..15).toList().map { it ->
-            TimeCapsuleState(
+            TimeCapsuleItemState(
                 id = it.toString(),
+                status = TimeCapsule.STATUS.ARRIVED,
                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                 emotions = listOf(
                     Emotion(
@@ -91,7 +93,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 ),
                 isFavorite = true,
                 isFavoriteAt = LocalDateTime.now(),
-                createdAt = LocalDateTime.now()
+                createdAt = LocalDateTime.now(),
             )
         }.sortedByDescending {
             when (state.sortOrder) {
@@ -112,8 +114,9 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
             // todo: call use case
             val timeCapsules = (1..15).toList().map { it ->
-                TimeCapsuleState(
+                TimeCapsuleItemState(
                     id = it.toString(),
+                    status = TimeCapsule.STATUS.ARRIVED,
                     title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                     emotions = listOf(
                         Emotion(
@@ -159,7 +162,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
         // todo: call use case
         postSideEffect(
-            FavoriteTimeCapsulesSideEffect.ShowToast(if (isFavorite) ShowToast.FavoriteToast.FAVORITE_REMOVED else ShowToast.FavoriteToast.FAVORITE_ADDED)
+            ShowToast(if (isFavorite) ShowToast.FavoriteToast.FAVORITE_REMOVED else ShowToast.FavoriteToast.FAVORITE_ADDED)
         )
         reduce {
             state.copy(
