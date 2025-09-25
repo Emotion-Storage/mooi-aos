@@ -25,16 +25,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.common.formatToKorDateTime
+import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.time_capsule.ui.model.TimeCapsuleState
+import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 
 private val DUMMY_TIME_CAPSULE =
-    TimeCapsuleState(
+    TimeCapsuleItemState(
         id = "",
+        status = TimeCapsule.STATUS.OPENED,
         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
         emotions =
             listOf(
@@ -54,12 +56,14 @@ private val DUMMY_TIME_CAPSULE =
         isFavorite = true,
         isFavoriteAt = LocalDateTime.now(),
         createdAt = LocalDateTime.now(),
+        openDday = -99,
     )
 
+// todo: add ui per status
 @Composable
 fun TimeCapsuleItem(
     modifier: Modifier = Modifier,
-    timeCapsule: TimeCapsuleState,
+    timeCapsule: TimeCapsuleItemState,
     onFavoriteClick: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
@@ -67,7 +71,7 @@ fun TimeCapsuleItem(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background),
+                .background(Color.Transparent),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(

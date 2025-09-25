@@ -94,7 +94,7 @@ internal fun AppNavHost(
         modifier = modifier.fillMaxSize(),
         bottomBar = {
             AppBottomNavBar(
-                navController = navController, currentDestination = currentDestination
+                navController = navController, currentDestination = currentDestination,
             )
         }
     ) { innerPadding ->
@@ -113,7 +113,7 @@ internal fun AppNavHost(
                     },
                     navToHome = {
                         navController.navigateWithClearStack(AppDestination.Home)
-                    }
+                    },
                 )
             }
 
@@ -134,10 +134,10 @@ internal fun AppNavHost(
                         navController.navigate(
                             AppDestination.OnBoarding(
                                 provider.toString(),
-                                idToken
+                                idToken,
                             )
                         )
-                    }
+                    },
                 )
             }
 
@@ -151,13 +151,13 @@ internal fun AppNavHost(
                         navController.navigate(
                             AppDestination.SignupComplete(
                                 provider.toString(),
-                                idToken
+                                idToken,
                             )
                         )
                     },
                     navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
 
@@ -210,7 +210,7 @@ internal fun AppNavHost(
                     roomId = arguments.roomId,
                     navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
 
@@ -221,7 +221,7 @@ internal fun AppNavHost(
                     },
                     navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
 
@@ -232,7 +232,7 @@ internal fun AppNavHost(
                     },
                     navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
 
@@ -242,7 +242,7 @@ internal fun AppNavHost(
                     id = arguments.id,
                     navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
         }

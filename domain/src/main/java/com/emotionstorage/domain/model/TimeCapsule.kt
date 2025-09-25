@@ -12,13 +12,13 @@ data class TimeCapsule(
     val comments: List<String> = emptyList(),
     val note: String? = null,
     val logs: List<OpenLog> = emptyList(),
-    // 타임캡슐 생성 시각
+    // 생성 시각
     val createdAt: LocalDateTime,
-    // 타임캡슐 도착 시각
+    // 도착 시각
     val arriveAt: LocalDateTime? = null,
     // 즐겨찾기 설정 시각
     val favoriteAt: LocalDateTime? = null,
-    val updatedAt: LocalDateTime,
+    val updatedAt: LocalDateTime? = null,
 ) {
     enum class STATUS {
         // 임시저장 (열람일 지정 X)
@@ -36,7 +36,7 @@ data class TimeCapsule(
 
     data class Emotion(
         val label: String,
-        // todo: text로 바꾸기
+        // todo: text로 이모지 관리하기
         val icon: Int,
         val percentage: Float? = null,
     )
