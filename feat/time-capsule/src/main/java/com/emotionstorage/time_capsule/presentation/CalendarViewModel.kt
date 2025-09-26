@@ -5,6 +5,7 @@ import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.model.TimeCapsule.STATUS
+import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.orhanobut.logger.Logger
@@ -17,7 +18,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class CalendarState(
-    val keyCount: Int = 5,
+    val keyCount: Int = 0,
     val calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
     val timeCapsuleDates: List<LocalDate> = emptyList(),
     // if not null, show bottom sheet
@@ -57,7 +58,7 @@ sealed class CalendarSideEffect {
 
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
-//    private val getKeyCount: GetKeyCountUseCase,
+    private val getKeyCount: GetKeyCountUseCase,
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
 //    private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
 //    private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
@@ -95,8 +96,8 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleInitiate() =
         intent {
-            // todo: init key count
-            reduce { state.copy(keyCount = 5) }
+            // init key count
+            handleInitKey()
 
             // init calendar
             handleSelectCalendarYearMonth(state.calendarYearMonth)
@@ -108,6 +109,29 @@ class CalendarViewModel @Inject constructor(
                 handleSelectCalendarDate(state.calendarDate!!)
             }
         }
+
+    private fun handleInitKey() = intent{
+        getKeyCount().collect { result ->
+            when (result) {
+                is DataState.Success -> {
+                    reduce {
+                        state.copy(keyCount = result.data)
+                    }
+                }
+
+                is DataState.Error -> {
+                    Logger.e("handleInitKey error: $result")
+                    reduce {
+                        state.copy(keyCount = 0)
+                    }
+                }
+
+                is DataState.Loading -> {
+                    // do nothing
+                }
+            }
+        }
+    }
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =
         intent {

@@ -206,7 +206,6 @@ private fun StatelessCalendarScreen(
             )
 
             // calendar date bottom sheet
-            // todo: fix bottom sheet closing after navigation!!
             if (bottomSheetState.showBottomSheet && bottomSheetState.date != null) {
                 TimeCapsuleCalendarBottomSheet(
                     date = bottomSheetState.date,
