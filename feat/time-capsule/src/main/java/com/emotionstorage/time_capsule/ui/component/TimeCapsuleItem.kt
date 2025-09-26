@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -39,6 +40,7 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.LinearGradient
+import com.emotionstorage.ui.util.dropShadow
 import com.emotionstorage.ui.util.errorRedBackground
 import java.time.LocalDateTime
 import kotlin.math.absoluteValue
@@ -72,24 +74,26 @@ fun TimeCapsuleItem(
             onFavoriteClick = onFavoriteClick,
         )
 
-        // content box
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .height(TimeCapsuleItemDesignToken.contentHeight)
-                    .background(
-                        Color.Transparent,
-                        RoundedCornerShape(15.dp),
-                    )
-                    .clickable(onClick = onClick),
-        ) {
-            // content
-            if (timeCapsule.status == TimeCapsule.STATUS.TEMPORARY) {
-                TemporaryContent(
-                    modifier = Modifier.fillMaxSize(),
-                )
-            } else {
+        // content
+        if (timeCapsule.status == TimeCapsule.STATUS.TEMPORARY) {
+            TemporaryContent(
+                modifier = Modifier.fillMaxSize(),
+                onClick = onClick,
+            )
+        } else {
+            // content box
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .height(TimeCapsuleItemDesignToken.contentHeight)
+                        .background(
+                            Color.Transparent,
+                            RoundedCornerShape(15.dp),
+                        )
+                        .clickable(onClick = onClick),
+            ) {
+                // overlay
                 if (timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
                     LockedContentOverLay(
                         modifier = Modifier.fillMaxSize(),
@@ -103,6 +107,7 @@ fun TimeCapsuleItem(
                     )
                 }
 
+                // content
                 TimeCapsuleContent(
                     modifier = Modifier.fillMaxSize(),
                     timeCapsule = timeCapsule,
@@ -115,16 +120,43 @@ fun TimeCapsuleItem(
 @Composable
 private fun TemporaryContent(
     modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
 ) {
-    Box(
+    Row(
         modifier =
             modifier
-                .fillMaxSize()
+                .fillMaxWidth()
                 .errorRedBackground(
                     true, RoundedCornerShape(15.dp),
-                ),
+                )
+                .clickable(onClick = onClick)
+                .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 19.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        // 아직 보관하지 않은 타임 캡슐이 있어요
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
+        ) {
+            Text(
+                modifier = Modifier.height(24.dp),
+                text = "아직 보관하지 않은 타임캡슐이 있어요.",
+                style = MooiTheme.typography.body4,
+                color = MooiTheme.colorScheme.gray500
+            )
+            Text(
+                modifier = Modifier.height(24.dp),
+                text = "이어서 보관하러 갈까요?",
+                style = MooiTheme.typography.body1,
+                color = Color.White
+            )
+        }
+        Image(
+            modifier = Modifier
+                .size(10.dp, 18.dp)
+                .rotate(180f),
+            painter = painterResource(id = R.drawable.arrow_back),
+            contentDescription = "",
+        )
     }
 }
 
@@ -140,6 +172,11 @@ private fun LockedContentOverLay(
             .background(
                 Color(0xFF0E0C12).copy(alpha = 0.8f),
                 RoundedCornerShape(15.dp),
+            ).dropShadow(
+                shape = RoundedCornerShape(15.dp),
+                color = Color(0xFF849BEA).copy(alpha = 0.15f),
+                blur = 5.dp,
+                spread = 2.dp,
             ),
     ) {
         Column(
@@ -152,8 +189,9 @@ private fun LockedContentOverLay(
                 contentDescription = "lock",
             )
             Text(
+                modifier = Modifier.height(24.dp),
                 text = "(D-${openDDay.absoluteValue})",
-                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold, lineHeight = 24.sp),
+                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
                 color = MooiTheme.colorScheme.secondary
             )
         }
@@ -198,8 +236,9 @@ private fun ArrivedContentOverLay(
                 contentDescription = "arrived",
             )
             Text(
+                modifier = Modifier.height(24.dp),
                 text = "도착한지 D+${openDDay}",
-                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold, lineHeight = 24.sp),
+                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
                 color = MooiTheme.colorScheme.secondary
             )
         }
