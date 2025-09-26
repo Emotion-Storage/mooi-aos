@@ -49,7 +49,6 @@ import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 
-
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
@@ -171,9 +170,10 @@ private fun StatelessCalendarScreen(
             }
 
             CalendarTodayActionButton(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 24.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 24.dp),
                 madeTimeCapsuleToday = state.madeTimeCapsuleToday,
                 onTodayAction = {
                     // change calendar year & month to today
@@ -196,14 +196,12 @@ private fun StatelessCalendarScreen(
                     },
                     timeCapsules = state.timeCapsules,
                     navToTimeCapsuleDetail = {
-
                         setShowBottomSheet(false)
                         navToTimeCapsuleDetail(it)
                     },
                     navToDailyReport =
                         state.dailyReportId?.run {
                             {
-
                                 setShowBottomSheet(false)
                                 navToDailyReportDetail(this)
                             }
@@ -317,8 +315,7 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }
-                    .height(44.dp)
+                    }.height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

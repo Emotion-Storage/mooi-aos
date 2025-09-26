@@ -7,13 +7,13 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetKeyCountUseCase @Inject constructor() {
-    suspend operator fun invoke(): Flow<DataState<Int>> = flow {
-        // stub logic for test
-        emit(DataState.Loading(isLoading = true))
-        delay(1000)
-        emit(DataState.Success(data = 5))
-        delay(1000)
-        emit(DataState.Loading(isLoading = false))
-    }
-
+    suspend operator fun invoke(): Flow<DataState<Int>> =
+        flow {
+            // stub logic for test
+            emit(DataState.Loading(isLoading = true))
+            delay(1000)
+            emit(DataState.Success(data = 5))
+            delay(1000)
+            emit(DataState.Loading(isLoading = false))
+        }
 }

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Button
@@ -53,16 +52,19 @@ fun BottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        dragHandle = if (hideDragHandle) null else {
-            {
-                BottomSheetDefaults.DragHandle(
-                    width = 35.dp,
-                    height = 3.dp,
-                    color = MooiTheme.colorScheme.gray500,
-                    shape = RoundedCornerShape(100),
-                )
-            }
-        },
+        dragHandle =
+            if (hideDragHandle) {
+                null
+            } else {
+                {
+                    BottomSheetDefaults.DragHandle(
+                        width = 35.dp,
+                        height = 3.dp,
+                        color = MooiTheme.colorScheme.gray500,
+                        shape = RoundedCornerShape(100),
+                    )
+                }
+            },
         // disable gesture if drag handle is hidden
         sheetGesturesEnabled = !hideDragHandle,
         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),

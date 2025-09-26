@@ -3,7 +3,6 @@ package com.emotionstorage.time_capsule.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
@@ -121,10 +120,11 @@ class CalendarViewModel @Inject constructor(
             // init calendar dates
             viewModelScope.launch {
                 collectDataState(
-                    flow = getTimeCapsuleDates(
-                        state.calendarYearMonth.year,
-                        state.calendarYearMonth.monthValue
-                    ),
+                    flow =
+                        getTimeCapsuleDates(
+                            state.calendarYearMonth.year,
+                            state.calendarYearMonth.monthValue,
+                        ),
                     onSuccess = { data ->
                         reduce {
                             state.copy(
@@ -139,7 +139,7 @@ class CalendarViewModel @Inject constructor(
                                 timeCapsuleDates = emptyList(),
                             )
                         }
-                    }
+                    },
                 )
             }
 
@@ -157,7 +157,7 @@ class CalendarViewModel @Inject constructor(
                         reduce {
                             state.copy(madeTimeCapsuleToday = false)
                         }
-                    }
+                    },
                 )
             }
 
@@ -187,7 +187,7 @@ class CalendarViewModel @Inject constructor(
                             timeCapsuleDates = emptyList(),
                         )
                     }
-                }
+                },
             )
         }
 
@@ -211,7 +211,7 @@ class CalendarViewModel @Inject constructor(
                         reduce {
                             state.copy(timeCapsules = emptyList())
                         }
-                    }
+                    },
                 )
             }
 
@@ -223,7 +223,7 @@ class CalendarViewModel @Inject constructor(
                         reduce {
                             state.copy(
                                 dailyReportId = data.dailyReportId,
-                                isNewDailyReport = data.isNewDailyReport
+                                isNewDailyReport = data.isNewDailyReport,
                             )
                         }
                     },
@@ -232,28 +232,28 @@ class CalendarViewModel @Inject constructor(
                         reduce {
                             state.copy(
                                 dailyReportId = null,
-                                isNewDailyReport = false
+                                isNewDailyReport = false,
                             )
                         }
-                    }
+                    },
                 )
             }
 
             postSideEffect(CalendarSideEffect.ShowBottomSheet)
         }
 
-    private fun handleClearBottomSheet() = intent {
-        // clear bottom sheet states
-        reduce {
-            state.copy(
-                calendarDate = null,
-                timeCapsules = emptyList(),
-                dailyReportId = null,
-                isNewDailyReport = false
-            )
+    private fun handleClearBottomSheet() =
+        intent {
+            // clear bottom sheet states
+            reduce {
+                state.copy(
+                    calendarDate = null,
+                    timeCapsules = emptyList(),
+                    dailyReportId = null,
+                    isNewDailyReport = false,
+                )
+            }
         }
-    }
-
 
     private fun handleEnterChat() =
         intent {
@@ -264,7 +264,7 @@ class CalendarViewModel @Inject constructor(
                 },
                 onError = { throwable, _ ->
                     Logger.e("CalendarViewModel: handleEnterChat error: $throwable")
-                }
+                },
             )
         }
 }

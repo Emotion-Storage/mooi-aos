@@ -35,7 +35,7 @@ suspend fun <T> collectDataState(
     flow: Flow<DataState<T>>,
     onSuccess: suspend (data: T) -> Unit,
     onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
-    onLoading: suspend (isLoading: Boolean) -> Unit = {}
+    onLoading: suspend (isLoading: Boolean) -> Unit = {},
 ) {
     flow.collect { result ->
         when (result) {

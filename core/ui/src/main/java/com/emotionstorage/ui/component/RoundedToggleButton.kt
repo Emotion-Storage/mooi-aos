@@ -39,8 +39,7 @@ fun RoundedToggleButton(
                 .clickable(
                     enabled = enabled,
                     onClick = onSelect,
-                )
-                .padding(3.dp),
+                ).padding(3.dp),
     ) {
         if (type == RoundedToggleButtonType.FAVORITE) {
             Image(
