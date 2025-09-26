@@ -5,9 +5,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -26,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.domain.model.TimeCapsule
@@ -66,67 +70,190 @@ fun TimeCapsuleItem(
         )
 
         // content box
-        Row(
+        Box(
             modifier =
                 Modifier
                     .fillMaxWidth()
+                    .height(TimeCapsuleItemDesignToken.contentHeight)
                     .background(
-                        Color(0x1A849BEA),
+                        Color.Transparent,
                         RoundedCornerShape(15.dp),
                     )
-                    .clickable(onClick = onClick)
-                    .height(TimeCapsuleItemDesignToken.contentHeight)
-                    .padding(TimeCapsuleItemDesignToken.contentPadding),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(11.dp),
+                    .clickable(onClick = onClick),
         ) {
-            // unlocked icon
-            if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-                Column(
-                    modifier =
-                        Modifier
-                            .size(54.dp)
-                            .border(1.dp, Color(0xAECBFA).copy(alpha = 0.2f), CircleShape),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.lock_open),
-                        modifier =
-                            Modifier
-                                .width(11.dp)
-                                .height(14.dp),
-                        contentDescription = "open",
-                    )
-                    Text(
-                        modifier = Modifier.padding(top = 3.dp),
-                        text = "열림",
-                        style = MooiTheme.typography.body3.copy(fontSize = 11.sp, lineHeight = 24.sp),
-                        color = MooiTheme.colorScheme.secondary,
-                    )
-                }
-            }
+            // content
+            if (timeCapsule.status == TimeCapsule.STATUS.TEMPORARY) {
+                TemporaryContent(
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else {
+                TimeCapsuleContentOverLay(
+                    modifier = Modifier.fillMaxSize(),
+                    status = timeCapsule.status,
+                    openDday = timeCapsule.openDday,
+                )
 
-            // time capsule content
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    for (emotion in timeCapsule.emotions) {
-                        EmotionTag(emotion = emotion)
-                    }
-                }
-                Text(
-                    text = timeCapsule.title,
-                    style = MooiTheme.typography.body4,
-                    color = MooiTheme.colorScheme.primary,
-                    maxLines = 1,
+                TimeCapsuleContent(
+                    modifier = Modifier.fillMaxSize(),
+                    timeCapsule = timeCapsule,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun TemporaryContent(
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(
+                    MooiTheme.colorScheme.errorRed, // todo: add gradient bg & border
+                    RoundedCornerShape(15.dp),
+                ),
+    ) {
+        // 아직 보관하지 않은 타임 캡슐이 있어요
+    }
+}
+
+@Composable
+private fun TimeCapsuleContentOverLay(
+    status: TimeCapsule.STATUS,
+    modifier: Modifier = Modifier,
+    openDday: Int? = null,
+) {
+    // locked overlay
+    if (status == TimeCapsule.STATUS.LOCKED) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .zIndex(5f)
+                .background(
+                    Color(0xFF0E0C12).copy(alpha = 0.8f),
+                    RoundedCornerShape(15.dp),
+                ),
+        ) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(17.dp, 20.dp),
+                    painter = painterResource(id = R.drawable.lock),
+                    contentDescription = "lock",
+                )
+                Text(
+                    text = "(D-${openDday})",
+                    style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
+                    color = MooiTheme.colorScheme.secondary
+                )
+            }
+        }
+    }
+    // arrived overlay
+    if (status == TimeCapsule.STATUS.ARRIVED) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .zIndex(5f)
+                .background(
+                    Color(0xFF262736).copy(alpha = 0.85f),
+                    RoundedCornerShape(15.dp),
+                ), // todo: add gradient border
+        ) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    modifier = Modifier.size(17.dp, 20.dp),
+                    painter = painterResource(id = R.drawable.lock),
+                    contentDescription = "arrived",
+                )
+                Text(
+                    text = "도착한지 D+${openDday}",
+                    style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
+                    color = MooiTheme.colorScheme.secondary
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimeCapsuleContent(
+    modifier: Modifier = Modifier,
+    timeCapsule: TimeCapsuleItemState,
+) {
+    Row(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(
+                    Color(0x1A849BEA),
+                    RoundedCornerShape(15.dp),
+                )
+                .run {
+                    // blur content if not opened
+                    if (timeCapsule.status == TimeCapsule.STATUS.LOCKED || timeCapsule.status == TimeCapsule.STATUS.ARRIVED) {
+                        this.blur(4.dp)
+                    } else {
+                        this
+                    }
+                }
+                .padding(TimeCapsuleItemDesignToken.contentPadding),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(11.dp),
+    ) {
+        // unlocked icon
+        if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+            Column(
+                modifier =
+                    Modifier
+                        .size(54.dp)
+                        .border(1.dp, Color(0xAECBFA).copy(alpha = 0.2f), CircleShape),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.lock_open),
+                    modifier =
+                        Modifier
+                            .width(11.dp)
+                            .height(14.dp),
+                    contentDescription = "open",
+                )
+                Text(
+                    modifier = Modifier.padding(top = 3.dp),
+                    text = "열림",
+                    style = MooiTheme.typography.body3.copy(fontSize = 11.sp, lineHeight = 24.sp),
+                    color = MooiTheme.colorScheme.secondary,
+                )
+            }
+        }
+
+        // time capsule content
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                for (emotion in timeCapsule.emotions) {
+                    EmotionTag(emotion = emotion)
+                }
+            }
+            Text(
+                text = timeCapsule.title,
+                style = MooiTheme.typography.body4,
+                color = MooiTheme.colorScheme.primary,
+                maxLines = 1,
+            )
         }
     }
 }
