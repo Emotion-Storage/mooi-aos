@@ -56,23 +56,12 @@ fun TimeCapsuleCalendarBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        dragHandle = {
-            Box(
-                modifier =
-                    Modifier
-                        .size(35.dp, 3.dp)
-                        .background(
-                            MooiTheme.colorScheme.gray500,
-                            RoundedCornerShape(100),
-                        ),
-            )
-        },
+        // disable sheet gesture to prevent scroll interrupt with scrollable content
+        sheetGesturesEnabled = false,
         // todo: add new badge
         confirmLabel = if (navToDailyReport != null) "일일리포트 확인하기" else null,
         onConfirm = navToDailyReport,
-        hideOnConfirm = false,
         dismissLabel = if (navToDailyReport == null) "일일리포트 확인하기" else null,
-        hideOnDismiss = false,
     ) {
         Text(
             modifier =

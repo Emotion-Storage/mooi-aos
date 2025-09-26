@@ -20,6 +20,8 @@ data class CalendarState(
     val keyCount: Int = 5,
     val calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
     val timeCapsuleDates: List<LocalDate> = emptyList(),
+    // if not null, show bottom sheet
+    val calendarDate: LocalDate? = null,
     // 오늘 감정 기록 여부
     val madeTimeCapsuleToday: Boolean = false,
 )
@@ -34,6 +36,8 @@ sealed class CalendarAction {
     data class SelectCalendarDate(
         val date: LocalDate,
     ) : CalendarAction()
+
+    object ClearDalendarDate: CalendarAction()
 
     object EnterChat : CalendarAction()
 }
@@ -77,6 +81,12 @@ class CalendarViewModel @Inject constructor(
                 handleSelectCalendarDate(action.date)
             }
 
+            is CalendarAction.ClearDalendarDate -> {
+                intent {
+                    reduce { state.copy(calendarDate = null) }
+                }
+            }
+
             is CalendarAction.EnterChat -> {
                 handleEnterChat()
             }
@@ -92,6 +102,11 @@ class CalendarViewModel @Inject constructor(
             handleSelectCalendarYearMonth(state.calendarYearMonth)
 
             // todo: init madeTimeCapsuleToday
+
+            // show bottom sheet if calendarDate is not null
+            if (state.calendarDate != null) {
+                handleSelectCalendarDate(state.calendarDate!!)
+            }
         }
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =

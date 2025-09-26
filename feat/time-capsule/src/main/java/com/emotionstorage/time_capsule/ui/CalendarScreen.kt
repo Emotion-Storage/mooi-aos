@@ -104,6 +104,7 @@ fun CalendarScreen(
         bottomSheetState = bottomSheetState.value,
         onDismissBottomSheet = {
             bottomSheetState.value = bottomSheetState.value.copy(showBottomSheet = false)
+            viewModel.onAction(CalendarAction.ClearDalendarDate)
         },
         state = state.value,
         viewModel::onAction,
