@@ -1,5 +1,7 @@
 package com.emotionstorage.domain.common
 
+import kotlinx.coroutines.flow.Flow
+
 /**
  * Sealed class to represent data state - **used in ui & presentation layer**
  * - Success: success, with data
@@ -27,4 +29,19 @@ sealed class DataState<out T> {
             is Loading -> "Loading[isLoading=$isLoading, data=$data]"
             is Error -> "Error[throwable=$throwable]"
         }
+}
+
+suspend fun <T> collectDataState(
+    flow: Flow<DataState<T>>,
+    onSuccess: suspend (data: T) -> Unit,
+    onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
+    onLoading: suspend (isLoading: Boolean) -> Unit = {}
+) {
+    flow.collect { result ->
+        when (result) {
+            is DataState.Success -> onSuccess(result.data)
+            is DataState.Error -> onError(result.throwable, result.data)
+            is DataState.Loading -> onLoading(result.isLoading)
+        }
+    }
 }

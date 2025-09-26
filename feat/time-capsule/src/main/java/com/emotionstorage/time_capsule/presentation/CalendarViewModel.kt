@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
@@ -101,83 +102,63 @@ class CalendarViewModel @Inject constructor(
         intent {
             // init key count
             viewModelScope.launch {
-                getKeyCount().collect { result ->
-                    when (result) {
-                        is DataState.Success -> {
-                            reduce {
-                                state.copy(keyCount = result.data)
-                            }
+                collectDataState(
+                    flow = getKeyCount(),
+                    onSuccess = { data ->
+                        reduce {
+                            state.copy(keyCount = data)
                         }
-
-                        is DataState.Error -> {
-                            Logger.e("handleInitKey error: $result")
-                            reduce {
-                                state.copy(keyCount = 0)
-                            }
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("handleInitKey error: $throwable")
+                        reduce {
+                            state.copy(keyCount = 0)
                         }
-
-                        is DataState.Loading -> {
-                            // do nothing
-                        }
-                    }
-                }
+                    },
+                )
             }
 
             // init calendar dates
             viewModelScope.launch {
-                getTimeCapsuleDates(
-                    state.calendarYearMonth.year,
-                    state.calendarYearMonth.monthValue
-                ).collect { result ->
-                    when (result) {
-                        is DataState.Success -> {
-                            reduce {
-                                state.copy(
-                                    timeCapsuleDates = result.data,
-                                )
-                            }
+                collectDataState(
+                    flow = getTimeCapsuleDates(
+                        state.calendarYearMonth.year,
+                        state.calendarYearMonth.monthValue
+                    ),
+                    onSuccess = { data ->
+                        reduce {
+                            state.copy(
+                                timeCapsuleDates = data,
+                            )
                         }
-
-                        is DataState.Error -> {
-                            Logger.e("getTimeCapsuleDates error, $result")
-                            reduce {
-                                state.copy(
-                                    timeCapsuleDates = emptyList(),
-                                )
-                            }
-                        }
-
-                        is DataState.Loading -> {
-                            // do nothing
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("getTimeCapsuleDates error, $throwable")
+                        reduce {
+                            state.copy(
+                                timeCapsuleDates = emptyList(),
+                            )
                         }
                     }
-                }
+                )
             }
 
             // init madeTimeCapsuleToday
             viewModelScope.launch {
-                getTimeCapsulesOfDate(LocalDate.now()).collect { result ->
-                    when (result) {
-                        is DataState.Success -> {
-                            reduce {
-                                state.copy(madeTimeCapsuleToday = result.data.isNotEmpty())
-                            }
+                collectDataState(
+                    flow = getTimeCapsulesOfDate(LocalDate.now()),
+                    onSuccess = { data ->
+                        reduce {
+                            state.copy(madeTimeCapsuleToday = data.isNotEmpty())
                         }
-
-                        is DataState.Error -> {
-                            Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $result")
-                            reduce {
-                                state.copy(madeTimeCapsuleToday = false)
-                            }
-                        }
-
-
-                        is DataState.Loading -> {
-                            // do nothing
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $throwable")
+                        reduce {
+                            state.copy(madeTimeCapsuleToday = false)
                         }
                     }
-                }
-
+                )
             }
 
             // show bottom sheet if calendarDate is not null
@@ -188,32 +169,26 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =
         intent {
-            getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        reduce {
-                            state.copy(
-                                calendarYearMonth = yearMonth.withDayOfMonth(1),
-                                timeCapsuleDates = result.data,
-                            )
-                        }
+            collectDataState(
+                flow = getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue),
+                onSuccess = { data ->
+                    reduce {
+                        state.copy(
+                            calendarYearMonth = yearMonth.withDayOfMonth(1),
+                            timeCapsuleDates = data,
+                        )
                     }
-
-                    is DataState.Error -> {
-                        Logger.e("getTimeCapsuleDates error, $result")
-                        reduce {
-                            state.copy(
-                                calendarYearMonth = yearMonth.withDayOfMonth(1),
-                                timeCapsuleDates = emptyList(),
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        // do nothing
+                },
+                onError = { throwable, _ ->
+                    Logger.e("getTimeCapsuleDates error, $throwable")
+                    reduce {
+                        state.copy(
+                            calendarYearMonth = yearMonth.withDayOfMonth(1),
+                            timeCapsuleDates = emptyList(),
+                        )
                     }
                 }
-            }
+            )
         }
 
     private fun handleSelectCalendarDate(date: LocalDate) =
@@ -224,62 +199,44 @@ class CalendarViewModel @Inject constructor(
 
             // get time capsules of date
             viewModelScope.launch {
-                getTimeCapsulesOfDate(date).collect { result ->
-                    when (result) {
-                        is DataState.Success -> {
-                            reduce {
-                                state.copy(timeCapsules = result.data.map {
-                                    TimeCapsuleMapper.toUi(
-                                        it
-                                    )
-                                })
-                            }
+                collectDataState(
+                    flow = getTimeCapsulesOfDate(date),
+                    onSuccess = { data ->
+                        reduce {
+                            state.copy(timeCapsules = data.map { TimeCapsuleMapper.toUi(it) })
                         }
-
-                        is DataState.Error -> {
-                            Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $result")
-                            reduce {
-                                state.copy(timeCapsules = emptyList())
-                            }
-                        }
-
-
-                        is DataState.Loading -> {
-                            // do nothing
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $throwable")
+                        reduce {
+                            state.copy(timeCapsules = emptyList())
                         }
                     }
-                }
-
+                )
             }
 
             // get daily report of day
             viewModelScope.launch {
-                getDailyReportOfDate(date).collect { result ->
-                    when (result) {
-                        is DataState.Success -> {
-                            reduce {
-                                state.copy(
-                                    dailyReportId = result.data.dailyReportId,
-                                    isNewDailyReport = result.data.isNewDailyReport
-                                )
-                            }
+                collectDataState(
+                    flow = getDailyReportOfDate(date),
+                    onSuccess = { data ->
+                        reduce {
+                            state.copy(
+                                dailyReportId = data.dailyReportId,
+                                isNewDailyReport = data.isNewDailyReport
+                            )
                         }
-
-                        is DataState.Error -> {
-                            Logger.e("CalendarViewModel: handleGetDailyReportOfDate error: $result")
-                            reduce {
-                                state.copy(
-                                    dailyReportId = null,
-                                    isNewDailyReport = false
-                                )
-                            }
-                        }
-
-                        is DataState.Loading -> {
-                            // do nothing
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("CalendarViewModel: handleGetDailyReportOfDate error: $throwable")
+                        reduce {
+                            state.copy(
+                                dailyReportId = null,
+                                isNewDailyReport = false
+                            )
                         }
                     }
-                }
+                )
             }
 
             postSideEffect(CalendarSideEffect.ShowBottomSheet)
@@ -300,20 +257,14 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleEnterChat() =
         intent {
-            getChatRoomId().collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(result.data))
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e("CalendarViewModel: handleEnterChat error: $result")
-                    }
-
-                    is DataState.Loading -> {
-                        // do nothing
-                    }
+            collectDataState(
+                flow = getChatRoomId(),
+                onSuccess = { data ->
+                    postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(data))
+                },
+                onError = { throwable, _ ->
+                    Logger.e("CalendarViewModel: handleEnterChat error: $throwable")
                 }
-            }
+            )
         }
 }
