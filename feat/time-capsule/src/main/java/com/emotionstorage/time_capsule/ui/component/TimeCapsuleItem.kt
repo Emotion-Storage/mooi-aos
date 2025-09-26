@@ -38,7 +38,10 @@ import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.LinearGradient
+import com.emotionstorage.ui.util.errorRedBackground
 import java.time.LocalDateTime
+import kotlin.math.absoluteValue
 
 private object TimeCapsuleItemDesignToken {
     val contentHeight = 93.dp
@@ -87,11 +90,18 @@ fun TimeCapsuleItem(
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {
-                TimeCapsuleContentOverLay(
-                    modifier = Modifier.fillMaxSize(),
-                    status = timeCapsule.status,
-                    openDday = timeCapsule.openDday,
-                )
+                if (timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                    LockedContentOverLay(
+                        modifier = Modifier.fillMaxSize(),
+                        openDDay = timeCapsule.openDDay ?: 0,
+                    )
+                }
+                if (timeCapsule.status == TimeCapsule.STATUS.ARRIVED) {
+                    ArrivedContentOverLay(
+                        modifier = Modifier.fillMaxSize(),
+                        openDDay = timeCapsule.openDDay ?: 0,
+                    )
+                }
 
                 TimeCapsuleContent(
                     modifier = Modifier.fillMaxSize(),
@@ -110,9 +120,8 @@ private fun TemporaryContent(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(
-                    MooiTheme.colorScheme.errorRed, // todo: add gradient bg & border
-                    RoundedCornerShape(15.dp),
+                .errorRedBackground(
+                    true, RoundedCornerShape(15.dp),
                 ),
     ) {
         // 아직 보관하지 않은 타임 캡슐이 있어요
@@ -120,65 +129,79 @@ private fun TemporaryContent(
 }
 
 @Composable
-private fun TimeCapsuleContentOverLay(
-    status: TimeCapsule.STATUS,
+private fun LockedContentOverLay(
+    openDDay: Int,
     modifier: Modifier = Modifier,
-    openDday: Int? = null,
 ) {
-    // locked overlay
-    if (status == TimeCapsule.STATUS.LOCKED) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .zIndex(5f)
-                .background(
-                    Color(0xFF0E0C12).copy(alpha = 0.8f),
-                    RoundedCornerShape(15.dp),
-                ),
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .zIndex(5f)
+            .background(
+                Color(0xFF0E0C12).copy(alpha = 0.8f),
+                RoundedCornerShape(15.dp),
+            ),
+    ) {
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier.size(17.dp, 20.dp),
-                    painter = painterResource(id = R.drawable.lock),
-                    contentDescription = "lock",
-                )
-                Text(
-                    text = "(D-${openDday})",
-                    style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                    color = MooiTheme.colorScheme.secondary
-                )
-            }
+            Image(
+                modifier = Modifier.size(17.dp, 20.dp),
+                painter = painterResource(id = R.drawable.lock),
+                contentDescription = "lock",
+            )
+            Text(
+                text = "(D-${openDDay.absoluteValue})",
+                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold, lineHeight = 24.sp),
+                color = MooiTheme.colorScheme.secondary
+            )
         }
     }
-    // arrived overlay
-    if (status == TimeCapsule.STATUS.ARRIVED) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .zIndex(5f)
-                .background(
-                    Color(0xFF262736).copy(alpha = 0.85f),
-                    RoundedCornerShape(15.dp),
-                ), // todo: add gradient border
+}
+
+
+@Composable
+private fun ArrivedContentOverLay(
+    openDDay: Int,
+    modifier: Modifier = Modifier,
+) {
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .zIndex(5f)
+            .background(
+                Color(0xFF262736).copy(alpha = 0.85f),
+                RoundedCornerShape(15.dp),
+            )
+            .border(
+                1.dp,
+                LinearGradient(
+                    colors =
+                        listOf(
+                            Color(0xFF849BEA).copy(alpha = 0.4f),
+                            Color(0xFF849BEA).copy(alpha = 0.03f),
+                        ),
+                    angleInDegrees = -17f,
+                ),
+                RoundedCornerShape(15.dp),
+            ), // todo: add drop shadow
+    ) {
+        Column(
+            modifier = Modifier.align(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Image(
-                    modifier = Modifier.size(17.dp, 20.dp),
-                    painter = painterResource(id = R.drawable.lock),
-                    contentDescription = "arrived",
-                )
-                Text(
-                    text = "도착한지 D+${openDday}",
-                    style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                    color = MooiTheme.colorScheme.secondary
-                )
-            }
+            Image(
+                modifier = Modifier.size(17.dp, 20.dp),
+                painter = painterResource(id = R.drawable.lock),
+                contentDescription = "arrived",
+            )
+            Text(
+                text = "도착한지 D+${openDDay}",
+                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold, lineHeight = 24.sp),
+                color = MooiTheme.colorScheme.secondary
+            )
         }
     }
 }
@@ -214,7 +237,7 @@ private fun TimeCapsuleContent(
                 modifier =
                     Modifier
                         .size(54.dp)
-                        .border(1.dp, Color(0xAECBFA).copy(alpha = 0.2f), CircleShape),
+                        .border(1.dp, Color(0xFFAECBFA).copy(alpha = 0.2f), CircleShape),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -380,7 +403,7 @@ private fun TimeCapsuleItemPreview() {
             isFavorite = true,
             isFavoriteAt = LocalDateTime.now(),
             createdAt = LocalDateTime.now(),
-            openDday = -99,
+            openDDay = -99,
         )
 
     MooiTheme {
@@ -399,19 +422,19 @@ private fun TimeCapsuleItemPreview() {
             TimeCapsuleItem(
                 timeCapsule = dummyTimeCapsule.copy(
                     status = TimeCapsule.STATUS.LOCKED,
-                    openDday = -20,
+                    openDDay = -20,
                 ),
             )
             TimeCapsuleItem(
                 timeCapsule = dummyTimeCapsule.copy(
                     status = TimeCapsule.STATUS.ARRIVED,
-                    openDday = 20,
+                    openDDay = 20,
                 ),
             )
             TimeCapsuleItem(
                 timeCapsule = dummyTimeCapsule.copy(
                     status = TimeCapsule.STATUS.OPENED,
-                    openDday = 20,
+                    openDDay = 20,
                 ),
             )
         }

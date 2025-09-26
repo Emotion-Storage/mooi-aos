@@ -131,7 +131,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
                 isFavorite = false,
                 isFavoriteAt = null,
                 createdAt = LocalDateTime.now(),
-                openDday = -99,
+                openDDay = -99,
             )
         }
 

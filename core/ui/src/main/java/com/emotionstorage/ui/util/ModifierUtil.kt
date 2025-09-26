@@ -44,3 +44,24 @@ fun Modifier.subBackground(
     } else {
         this.background(defaultBackground, shape)
     }
+
+
+@Composable
+fun Modifier.errorRedBackground(
+    isActivated: Boolean = false,
+    shape: Shape = RoundedCornerShape(10.dp),
+    defaultBackground: Color = Color.Transparent,
+): Modifier =
+    if (isActivated) {
+        this
+            .background(
+                MooiTheme.brushScheme.errorRedButtonBackground,
+                shape,
+            ).border(
+                1.dp,
+                MooiTheme.brushScheme.errorRedButtonBorder,
+                shape,
+            )
+    } else {
+        this.background(defaultBackground, shape)
+    }
