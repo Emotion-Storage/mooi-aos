@@ -90,8 +90,7 @@ fun TimeCapsuleItem(
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
-                        )
-                        .clickable(onClick = onClick),
+                        ).clickable(onClick = onClick),
             ) {
                 // overlay
                 if (timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
@@ -127,33 +126,34 @@ private fun TemporaryContent(
             modifier
                 .fillMaxWidth()
                 .errorRedBackground(
-                    true, RoundedCornerShape(15.dp),
-                )
-                .clickable(onClick = onClick)
+                    true,
+                    RoundedCornerShape(15.dp),
+                ).clickable(onClick = onClick)
                 .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 19.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier.weight(1f),
-            verticalArrangement = Arrangement.spacedBy(2.dp)
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
                 modifier = Modifier.height(24.dp),
                 text = "아직 보관하지 않은 타임캡슐이 있어요.",
                 style = MooiTheme.typography.body4,
-                color = MooiTheme.colorScheme.gray500
+                color = MooiTheme.colorScheme.gray500,
             )
             Text(
                 modifier = Modifier.height(24.dp),
                 text = "이어서 보관하러 갈까요?",
                 style = MooiTheme.typography.body1,
-                color = Color.White
+                color = Color.White,
             )
         }
         Image(
-            modifier = Modifier
-                .size(10.dp, 18.dp)
-                .rotate(180f),
+            modifier =
+                Modifier
+                    .size(10.dp, 18.dp)
+                    .rotate(180f),
             painter = painterResource(id = R.drawable.arrow_back),
             contentDescription = "",
         )
@@ -166,22 +166,18 @@ private fun LockedContentOverLay(
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .zIndex(5f)
-            .background(
-                Color(0xFF0E0C12).copy(alpha = 0.8f),
-                RoundedCornerShape(15.dp),
-            ).dropShadow(
-                shape = RoundedCornerShape(15.dp),
-                color = Color(0xFF849BEA).copy(alpha = 0.15f),
-                blur = 5.dp,
-                spread = 2.dp,
-            ),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .zIndex(5f)
+                .background(
+                    Color(0xFF0E0C12).copy(alpha = 0.8f),
+                    RoundedCornerShape(15.dp),
+                ),
     ) {
         Column(
             modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 modifier = Modifier.size(17.dp, 20.dp),
@@ -192,43 +188,46 @@ private fun LockedContentOverLay(
                 modifier = Modifier.height(24.dp),
                 text = "(D-${openDDay.absoluteValue})",
                 style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                color = MooiTheme.colorScheme.secondary
+                color = MooiTheme.colorScheme.secondary,
             )
         }
     }
 }
-
 
 @Composable
 private fun ArrivedContentOverLay(
     openDDay: Int,
     modifier: Modifier = Modifier,
 ) {
-
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .zIndex(5f)
-            .background(
-                Color(0xFF262736).copy(alpha = 0.85f),
-                RoundedCornerShape(15.dp),
-            )
-            .border(
-                1.dp,
-                LinearGradient(
-                    colors =
-                        listOf(
-                            Color(0xFF849BEA).copy(alpha = 0.4f),
-                            Color(0xFF849BEA).copy(alpha = 0.03f),
-                        ),
-                    angleInDegrees = -17f,
+        modifier =
+            modifier
+                .fillMaxSize()
+                .zIndex(5f)
+                .background(
+                    Color(0xFF262736).copy(alpha = 0.85f),
+                    RoundedCornerShape(15.dp),
+                ).border(
+                    1.dp,
+                    LinearGradient(
+                        colors =
+                            listOf(
+                                Color(0xFF849BEA).copy(alpha = 0.4f),
+                                Color(0xFF849BEA).copy(alpha = 0.03f),
+                            ),
+                        angleInDegrees = -17f,
+                    ),
+                    RoundedCornerShape(15.dp),
+                ).dropShadow(
+                    shape = RoundedCornerShape(15.dp),
+                    color = Color(0xFF849BEA).copy(alpha = 0.15f),
+                    blur = 5.dp,
+                    spread = 2.dp,
                 ),
-                RoundedCornerShape(15.dp),
-            ), // todo: add drop shadow
     ) {
         Column(
             modifier = Modifier.align(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
                 modifier = Modifier.size(17.dp, 20.dp),
@@ -237,9 +236,9 @@ private fun ArrivedContentOverLay(
             )
             Text(
                 modifier = Modifier.height(24.dp),
-                text = "도착한지 D+${openDDay}",
+                text = "도착한지 D+$openDDay",
                 style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                color = MooiTheme.colorScheme.secondary
+                color = MooiTheme.colorScheme.secondary,
             )
         }
     }
@@ -250,6 +249,8 @@ private fun TimeCapsuleContent(
     modifier: Modifier = Modifier,
     timeCapsule: TimeCapsuleItemState,
 ) {
+    val blurContent =
+        timeCapsule.status == TimeCapsule.STATUS.LOCKED || timeCapsule.status == TimeCapsule.STATUS.ARRIVED
     Row(
         modifier =
             modifier
@@ -257,16 +258,14 @@ private fun TimeCapsuleContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                )
-                .run {
+                ).run {
                     // blur content if not opened
-                    if (timeCapsule.status == TimeCapsule.STATUS.LOCKED || timeCapsule.status == TimeCapsule.STATUS.ARRIVED) {
+                    if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }
-                .padding(TimeCapsuleItemDesignToken.contentPadding),
+                }.padding(TimeCapsuleItemDesignToken.contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
@@ -341,10 +340,11 @@ private fun TimeCapsuleItemInfo(
                     modifier = Modifier.size(16.dp),
                     painter = painterResource(R.drawable.caution),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.errorRed)
+                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.errorRed),
                 )
                 Text(
-                    text = "임시저장 보관기간이 N시간 남았어요.", // todo: set timer
+                    // todo: set timer
+                    text = "임시저장 보관기간이 N시간 남았어요.",
                     style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Normal),
                     color = MooiTheme.colorScheme.errorRed,
                 )
@@ -394,9 +394,10 @@ private fun TimeCapsuleItemInfo(
         TimeCapsule.STATUS.OPENED -> {
             // createdAt & favorite button
             Row(
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp),
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
@@ -414,7 +415,6 @@ private fun TimeCapsuleItemInfo(
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -447,34 +447,39 @@ private fun TimeCapsuleItemPreview() {
 
     MooiTheme {
         Column(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .padding(vertical = 20.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(17.dp)
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(vertical = 20.dp, horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(17.dp),
         ) {
             TimeCapsuleItem(
-                timeCapsule = dummyTimeCapsule.copy(
-                    status = TimeCapsule.STATUS.TEMPORARY,
-                    createdAt = LocalDateTime.now().minusHours(2),
-                ),
+                timeCapsule =
+                    dummyTimeCapsule.copy(
+                        status = TimeCapsule.STATUS.TEMPORARY,
+                        createdAt = LocalDateTime.now().minusHours(2),
+                    ),
             )
             TimeCapsuleItem(
-                timeCapsule = dummyTimeCapsule.copy(
-                    status = TimeCapsule.STATUS.LOCKED,
-                    openDDay = -20,
-                ),
+                timeCapsule =
+                    dummyTimeCapsule.copy(
+                        status = TimeCapsule.STATUS.LOCKED,
+                        openDDay = -20,
+                    ),
             )
             TimeCapsuleItem(
-                timeCapsule = dummyTimeCapsule.copy(
-                    status = TimeCapsule.STATUS.ARRIVED,
-                    openDDay = 20,
-                ),
+                timeCapsule =
+                    dummyTimeCapsule.copy(
+                        status = TimeCapsule.STATUS.ARRIVED,
+                        openDDay = 20,
+                    ),
             )
             TimeCapsuleItem(
-                timeCapsule = dummyTimeCapsule.copy(
-                    status = TimeCapsule.STATUS.OPENED,
-                    openDDay = 20,
-                ),
+                timeCapsule =
+                    dummyTimeCapsule.copy(
+                        status = TimeCapsule.STATUS.OPENED,
+                        openDDay = 20,
+                    ),
             )
         }
     }

@@ -27,20 +27,21 @@ fun Modifier.dropShadow(
     blur: Dp = 1.dp,
     offsetY: Dp = 1.dp,
     offsetX: Dp = 1.dp,
-    spread: Dp = 1.dp
+    spread: Dp = 1.dp,
 ) = composed {
     val density = LocalDensity.current
 
-    val paint = remember(color, blur) {
-        Paint().apply {
-            this.color = color
-            val blurPx = with(density) { blur.toPx() }
-            if (blurPx > 0f) {
-                this.asFrameworkPaint().maskFilter =
-                    BlurMaskFilter(blurPx, BlurMaskFilter.Blur.NORMAL)
+    val paint =
+        remember(color, blur) {
+            Paint().apply {
+                this.color = color
+                val blurPx = with(density) { blur.toPx() }
+                if (blurPx > 0f) {
+                    this.asFrameworkPaint().maskFilter =
+                        BlurMaskFilter(blurPx, BlurMaskFilter.Blur.NORMAL)
+                }
             }
         }
-    }
 
     drawBehind {
         val spreadPx = spread.toPx()
@@ -90,8 +91,7 @@ fun Modifier.subBackground(
             .background(
                 MooiTheme.brushScheme.subButtonBackground,
                 shape,
-            )
-            .border(
+            ).border(
                 1.dp,
                 MooiTheme.brushScheme.subButtonBorder,
                 shape,
@@ -99,7 +99,6 @@ fun Modifier.subBackground(
     } else {
         this.background(defaultBackground, shape)
     }
-
 
 @Composable
 fun Modifier.errorRedBackground(
@@ -112,8 +111,7 @@ fun Modifier.errorRedBackground(
             .background(
                 MooiTheme.brushScheme.errorRedButtonBackground,
                 shape,
-            )
-            .border(
+            ).border(
                 1.dp,
                 MooiTheme.brushScheme.errorRedButtonBorder,
                 shape,
