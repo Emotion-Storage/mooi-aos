@@ -57,7 +57,6 @@ fun TimeCapsuleCalendarBottomSheet(
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
         // disable sheet gesture to prevent scroll interrupt with scrollable content
-        sheetGesturesEnabled = false,
         // todo: add new badge
         confirmLabel = if (navToDailyReport != null) "일일리포트 확인하기" else null,
         onConfirm = navToDailyReport,

@@ -45,7 +45,6 @@ fun BottomSheet(
     dismissLabel: String? = null,
     onDismiss: (() -> Unit)? = null,
     hideDragHandle: Boolean = false,
-    sheetGesturesEnabled: Boolean = true,
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
@@ -64,7 +63,8 @@ fun BottomSheet(
                 )
             }
         },
-        sheetGesturesEnabled = sheetGesturesEnabled,
+        // disable gesture if drag handle is hidden
+        sheetGesturesEnabled = !hideDragHandle,
         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
