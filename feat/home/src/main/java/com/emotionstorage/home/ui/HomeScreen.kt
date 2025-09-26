@@ -39,7 +39,6 @@ import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
-import com.emotionstorage.ui.component.IconWithCountType
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import com.emotionstorage.ui.util.mainBackground
@@ -121,9 +120,9 @@ private fun StatelessHomeScreen(
                 ) {
                     // todo: navigate to key detail screen
                     IconWithCount(
-                        modifier = Modifier.size(30.dp),
-                        type = IconWithCountType.KEY,
-                        count = if (state.keyCount > 999) "999+" else state.keyCount.toString(),
+                        modifier = Modifier.size(32.dp),
+                        iconId = R.drawable.key,
+                        count = state.keyCount,
                     )
                     // todo: navigate to alarm screen
                     Image(

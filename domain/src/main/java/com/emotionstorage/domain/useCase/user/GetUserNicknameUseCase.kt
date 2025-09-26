@@ -1,4 +1,4 @@
-package com.emotionstorage.domain.useCase
+package com.emotionstorage.domain.useCase.user
 
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.repo.UserRepository

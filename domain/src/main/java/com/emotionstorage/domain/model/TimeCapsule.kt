@@ -5,9 +5,9 @@ import java.time.LocalDateTime
 data class TimeCapsule(
     val id: String,
     val status: STATUS,
-    val isFavorite: Boolean = false,
     val title: String,
     val summary: String,
+    val isFavorite: Boolean = false,
     val emotions: List<Emotion> = emptyList(),
     val comments: List<String> = emptyList(),
     val note: String? = null,
