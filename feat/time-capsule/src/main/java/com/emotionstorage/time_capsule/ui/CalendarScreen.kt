@@ -104,7 +104,6 @@ fun CalendarScreen(
         bottomSheetState = bottomSheetState.value,
         onDismissBottomSheet = {
             bottomSheetState.value = bottomSheetState.value.copy(showBottomSheet = false)
-            viewModel.onAction(CalendarAction.ClearDalendarDate)
         },
         state = state.value,
         viewModel::onAction,
@@ -191,7 +190,9 @@ private fun StatelessCalendarScreen(
             }
 
             CalendarTodayActionButton(
-                modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 24.dp),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 24.dp),
                 madeTimeCapsuleToday = state.madeTimeCapsuleToday,
                 onTodayAction = {
                     // change calendar year & month to today
@@ -209,12 +210,21 @@ private fun StatelessCalendarScreen(
             if (bottomSheetState.showBottomSheet && bottomSheetState.date != null) {
                 TimeCapsuleCalendarBottomSheet(
                     date = bottomSheetState.date,
-                    onDismissRequest = onDismissBottomSheet,
+                    onDismissRequest = {
+                        onDismissBottomSheet()
+                        onAction(CalendarAction.ClearDalendarDate)
+                    },
                     timeCapsules = bottomSheetState.timeCapsules,
-                    navToTimeCapsuleDetail = navToTimeCapsuleDetail,
+                    navToTimeCapsuleDetail = {
+                        onDismissBottomSheet()
+                        navToTimeCapsuleDetail(it)
+                    },
                     navToDailyReport =
                         bottomSheetState.dailyReportId?.run {
-                            { navToDailyReportDetail(this) }
+                            {
+                                onDismissBottomSheet()
+                                navToDailyReportDetail(this)
+                            }
                         },
                     isNewDailyReport = bottomSheetState.isNewDailyReport,
                 )
@@ -325,7 +335,8 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

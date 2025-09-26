@@ -37,7 +37,7 @@ sealed class CalendarAction {
         val date: LocalDate,
     ) : CalendarAction()
 
-    object ClearDalendarDate: CalendarAction()
+    object ClearDalendarDate : CalendarAction()
 
     object EnterChat : CalendarAction()
 }
@@ -141,6 +141,10 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarDate(date: LocalDate) =
         intent {
+            reduce {
+                state.copy(calendarDate = date)
+            }
+
             // todo: get time capsules of date
             // todo: get daily report id of date
             postSideEffect(
@@ -186,9 +190,11 @@ class CalendarViewModel @Inject constructor(
                     is DataState.Success -> {
                         postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(result.data))
                     }
+
                     is DataState.Error -> {
                         Logger.e("CalendarViewModel: handleEnterChat error: $result")
                     }
+
                     is DataState.Loading -> {
                         // do nothing
                     }
