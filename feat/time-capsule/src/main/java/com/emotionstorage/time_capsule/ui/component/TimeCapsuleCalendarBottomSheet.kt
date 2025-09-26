@@ -1,14 +1,19 @@
 package com.emotionstorage.time_capsule.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
@@ -17,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
@@ -28,7 +34,9 @@ import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.model.TimeCapsule.STATUS
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.BottomSheet
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.mainBackground
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.String
@@ -42,9 +50,7 @@ fun TimeCapsuleCalendarBottomSheet(
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
-    // 일일 리포트 생성된 경우, 일일 리포트 화면으로 이동
     navToDailyReport: (() -> Unit)? = null,
-    // 일일 리포트 확인 여부, 미확인인 경우 n 뱃지 표시
     isNewDailyReport: Boolean = false,
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp
@@ -54,10 +60,7 @@ fun TimeCapsuleCalendarBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        // todo: add new badge
-        confirmLabel = if (navToDailyReport != null) "일일리포트 확인하기" else null,
-        onConfirm = navToDailyReport,
-        dismissLabel = if (navToDailyReport == null) "일일리포트 확인하기" else null,
+        contentPadding = PaddingValues(top = 7.dp, start = 15.dp, end = 15.dp, bottom = (39.7).dp),
     ) {
         Text(
             modifier =
@@ -73,7 +76,6 @@ fun TimeCapsuleCalendarBottomSheet(
                     .fillMaxWidth()
                     .background(Color.Transparent)
                     .heightIn(max = (screenHeight / 2).dp)
-                    .padding(bottom = 50.dp)
                     .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(32.dp),
         ) {
@@ -84,7 +86,38 @@ fun TimeCapsuleCalendarBottomSheet(
                     onClick = { navToTimeCapsuleDetail(it.id) },
                 )
             }
+            Spacer(modifier = Modifier.height(21.dp))
         }
+
+        DailyReportButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height((66.33).dp),
+            enabled = navToDailyReport != null,
+            isNewDailyReport = isNewDailyReport,
+            onClick = navToDailyReport,
+        )
+    }
+}
+
+@Composable
+private fun DailyReportButton(
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    isNewDailyReport: Boolean,
+    onClick: (() -> Unit)? = null,
+) {
+    Box(
+        modifier = modifier
+            .mainBackground(enabled, RoundedCornerShape(15.dp), MooiTheme.colorScheme.gray700)
+            .clickable(enabled = enabled, onClick = { onClick?.invoke() }),
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = "일일 리포트 확인하기",
+            style = MooiTheme.typography.button,
+            color = if (enabled) Color.White else MooiTheme.colorScheme.gray500,
+        )
     }
 }
 
@@ -116,7 +149,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
                 isFavorite = false,
                 isFavoriteAt = null,
                 createdAt = LocalDateTime.now(),
-                openDDay = -99,
+                openDDay = 10,
             )
         }
 
