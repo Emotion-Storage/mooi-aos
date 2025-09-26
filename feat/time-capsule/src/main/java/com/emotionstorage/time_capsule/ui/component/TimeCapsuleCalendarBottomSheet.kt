@@ -34,14 +34,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.common.toKorDate
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.model.TimeCapsule.STATUS
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.BottomSheet
-import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import com.emotionstorage.ui.util.mainBackground
@@ -114,10 +112,11 @@ private fun DailyReportButton(
     onClick: (() -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .height((66.33).dp)
-            .mainBackground(enabled, RoundedCornerShape(15.dp), MooiTheme.colorScheme.gray700)
-            .clickable(enabled = enabled, onClick = { onClick?.invoke() }),
+        modifier =
+            modifier
+                .height((66.33).dp)
+                .mainBackground(enabled, RoundedCornerShape(15.dp), MooiTheme.colorScheme.gray700)
+                .clickable(enabled = enabled, onClick = { onClick?.invoke() }),
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
@@ -125,22 +124,24 @@ private fun DailyReportButton(
             style = MooiTheme.typography.button,
             color = if (enabled) Color.White else MooiTheme.colorScheme.gray500,
         )
-        if (isNewDailyReport) {
+        if (isNewDailyReport && enabled) {
             Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .offset(x = 78.dp, y = -13.dp)
-                    .size(20.dp)
-                    .background(Color(0xFF1C1A22).copy(alpha = 0.5f), CircleShape),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .offset(x = 78.dp, y = -13.dp)
+                        .size(20.dp)
+                        .background(Color(0xFF1C1A22).copy(alpha = 0.5f), CircleShape),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = "N",
-                    style = TextStyle(
-                        fontFamily = pretendard,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 10.sp,
-                    ),
+                    style =
+                        TextStyle(
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 10.sp,
+                        ),
                     color = Color.White,
                 )
             }
@@ -153,11 +154,12 @@ private fun DailyReportButton(
 private fun DailyReportButtonPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             DailyReportButton(
                 modifier = Modifier.fillMaxWidth(),

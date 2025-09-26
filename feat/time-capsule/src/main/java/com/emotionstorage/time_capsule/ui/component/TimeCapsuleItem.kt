@@ -90,8 +90,7 @@ fun TimeCapsuleItem(
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
-                        )
-                        .clickable(onClick = onClick),
+                        ).clickable(onClick = onClick),
             ) {
                 // overlay
                 if (timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
@@ -226,8 +225,7 @@ private fun TemporaryContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                )
-                .clickable(onClick = onClick)
+                ).clickable(onClick = onClick)
                 .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 19.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -306,8 +304,7 @@ private fun ArrivedContentOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     LinearGradient(
                         colors =
@@ -318,8 +315,7 @@ private fun ArrivedContentOverLay(
                         angleInDegrees = -17f,
                     ),
                     RoundedCornerShape(15.dp),
-                )
-                .dropShadow(
+                ).dropShadow(
                     shape = RoundedCornerShape(15.dp),
                     color = Color(0xFF849BEA).copy(alpha = 0.15f),
                     offsetX = 0.dp,
@@ -361,16 +357,14 @@ private fun TimeCapsuleContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                )
-                .run {
+                ).run {
                     // blur content if not opened
                     if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }
-                .padding(TimeCapsuleItemDesignToken.contentPadding),
+                }.padding(TimeCapsuleItemDesignToken.contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
