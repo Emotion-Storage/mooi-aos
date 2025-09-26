@@ -24,6 +24,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 id = "dummy-id",
                                 status = STATUS.TEMPORARY,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(
@@ -45,6 +46,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 id = "dummy-id",
                                 status = STATUS.LOCKED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(
@@ -67,6 +69,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 id = "dummy-id",
                                 status = STATUS.ARRIVED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(
@@ -89,6 +92,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 id = "dummy-id",
                                 status = STATUS.OPENED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(

@@ -56,7 +56,7 @@ private val DUMMY_TIME_CAPSULE =
         isFavorite = true,
         isFavoriteAt = LocalDateTime.now(),
         createdAt = LocalDateTime.now(),
-        openDday = -99,
+        openDDay = -99,
     )
 
 // todo: add ui per status
