@@ -5,8 +5,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class GetDailyReportOfDateUseCase {
+class GetDailyReportOfDateUseCase @Inject constructor() {
     suspend operator fun invoke(date: LocalDate): Flow<DataState<GetDailyReportOfDateResponse>> =
         flow {
             // stub logic for test

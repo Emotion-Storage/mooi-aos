@@ -8,9 +8,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
+import javax.inject.Inject
 
-class GetTimeCapsulesOfDateUseCase {
-    suspend operator fun invoke(date: LocalDate): Flow<DataState<List<TimeCapsule>>> =
+class GetTimeCapsulesOfDateUseCase @Inject constructor() {
+    operator fun invoke(date: LocalDate): Flow<DataState<List<TimeCapsule>>> =
         flow {
             // stub logic for test
             emit(DataState.Loading(isLoading = true))
