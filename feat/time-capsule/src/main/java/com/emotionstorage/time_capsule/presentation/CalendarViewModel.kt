@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsulesOfDateUseCase
@@ -20,17 +21,15 @@ import javax.inject.Inject
 
 data class CalendarState(
     val keyCount: Int = 0,
+    val madeTimeCapsuleToday: Boolean = false,
     // calendar states
     val calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
     val timeCapsuleDates: List<LocalDate> = emptyList(),
-    // if not null, show bottom sheet
     val calendarDate: LocalDate? = null,
     // bottom sheet states
     val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
     val dailyReportId: String? = null,
     val isNewDailyReport: Boolean = false,
-    // 오늘 감정 기록 여부
-    val madeTimeCapsuleToday: Boolean = false,
 )
 
 sealed class CalendarAction {
@@ -67,7 +66,7 @@ class CalendarViewModel @Inject constructor(
     private val getKeyCount: GetKeyCountUseCase,
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
-//    private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
+    private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(),
     ContainerHost<CalendarState, CalendarSideEffect> {
@@ -155,7 +154,31 @@ class CalendarViewModel @Inject constructor(
                 }
             }
 
-            // todo: init madeTimeCapsuleToday
+            // init madeTimeCapsuleToday
+            viewModelScope.launch {
+                getTimeCapsulesOfDate(LocalDate.now()).collect { result ->
+                    when (result) {
+                        is DataState.Success -> {
+                            reduce {
+                                state.copy(madeTimeCapsuleToday = result.data.isNotEmpty())
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $result")
+                            reduce {
+                                state.copy(madeTimeCapsuleToday = false)
+                            }
+                        }
+
+
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
+                    }
+                }
+
+            }
 
             // show bottom sheet if calendarDate is not null
             if (state.calendarDate != null) {
@@ -229,7 +252,35 @@ class CalendarViewModel @Inject constructor(
 
             }
 
-            // todo: get daily report id of date
+            // get daily report of day
+            viewModelScope.launch {
+                getDailyReportOfDate(date).collect { result ->
+                    when (result) {
+                        is DataState.Success -> {
+                            reduce {
+                                state.copy(
+                                    dailyReportId = result.data.dailyReportId,
+                                    isNewDailyReport = result.data.isNewDailyReport
+                                )
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            Logger.e("CalendarViewModel: handleGetDailyReportOfDate error: $result")
+                            reduce {
+                                state.copy(
+                                    dailyReportId = null,
+                                    isNewDailyReport = false
+                                )
+                            }
+                        }
+
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
+                    }
+                }
+            }
 
             postSideEffect(CalendarSideEffect.ShowBottomSheet)
         }
