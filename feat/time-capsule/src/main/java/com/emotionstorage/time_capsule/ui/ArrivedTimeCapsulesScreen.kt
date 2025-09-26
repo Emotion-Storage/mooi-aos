@@ -138,6 +138,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                 .fillMaxWidth()
                                 .padding(bottom = 17.dp),
                         timeCapsule = it,
+                        showDate = true,
                         onClick = { navToTimeCapsuleDetail(it.id) },
                     )
                 }
