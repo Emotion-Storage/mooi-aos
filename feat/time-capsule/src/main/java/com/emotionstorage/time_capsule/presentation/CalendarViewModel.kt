@@ -1,55 +1,61 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.domain.model.TimeCapsule.STATUS
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsulesOfDateUseCase
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
+import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import org.orbitmvi.orbit.ContainerHost
 import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class CalendarState(
     val keyCount: Int = 0,
+    // calendar states
     val calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
     val timeCapsuleDates: List<LocalDate> = emptyList(),
     // if not null, show bottom sheet
     val calendarDate: LocalDate? = null,
+    // bottom sheet states
+    val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
+    val dailyReportId: String? = null,
+    val isNewDailyReport: Boolean = false,
     // 오늘 감정 기록 여부
     val madeTimeCapsuleToday: Boolean = false,
 )
 
 sealed class CalendarAction {
+    // init screen state
     object Initiate : CalendarAction()
 
+    // set calendar year month & get time capsule dates
     data class SelectCalendarYearMonth(
         val yearMonth: LocalDate,
     ) : CalendarAction()
 
+    // set calendar date & get bottom sheet states
     data class SelectCalendarDate(
         val date: LocalDate,
     ) : CalendarAction()
 
-    object ClearDalendarDate : CalendarAction()
+    // reset bottom sheet states
+    object ClearBottomSheet : CalendarAction()
 
+    // get chat room id
     object EnterChat : CalendarAction()
 }
 
 sealed class CalendarSideEffect {
-    data class ShowBottomSheet(
-        val date: LocalDate,
-        val timeCapsules: List<TimeCapsuleItemState>,
-        val dailyReportId: String?,
-        val isNewDailyReport: Boolean,
-    ) : CalendarSideEffect()
+    object ShowBottomSheet : CalendarSideEffect()
 
     data class EnterCharRoomSuccess(
         val roomId: String,
@@ -60,7 +66,7 @@ sealed class CalendarSideEffect {
 class CalendarViewModel @Inject constructor(
     private val getKeyCount: GetKeyCountUseCase,
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
-//    private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
+    private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
 //    private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(),
@@ -82,10 +88,8 @@ class CalendarViewModel @Inject constructor(
                 handleSelectCalendarDate(action.date)
             }
 
-            is CalendarAction.ClearDalendarDate -> {
-                intent {
-                    reduce { state.copy(calendarDate = null) }
-                }
+            is CalendarAction.ClearBottomSheet -> {
+                handleClearBottomSheet()
             }
 
             is CalendarAction.EnterChat -> {
@@ -97,41 +101,67 @@ class CalendarViewModel @Inject constructor(
     private fun handleInitiate() =
         intent {
             // init key count
-            handleInitKey()
+            viewModelScope.launch {
+                getKeyCount().collect { result ->
+                    when (result) {
+                        is DataState.Success -> {
+                            reduce {
+                                state.copy(keyCount = result.data)
+                            }
+                        }
 
-            // init calendar
-            handleSelectCalendarYearMonth(state.calendarYearMonth)
+                        is DataState.Error -> {
+                            Logger.e("handleInitKey error: $result")
+                            reduce {
+                                state.copy(keyCount = 0)
+                            }
+                        }
+
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
+                    }
+                }
+            }
+
+            // init calendar dates
+            viewModelScope.launch {
+                getTimeCapsuleDates(
+                    state.calendarYearMonth.year,
+                    state.calendarYearMonth.monthValue
+                ).collect { result ->
+                    when (result) {
+                        is DataState.Success -> {
+                            reduce {
+                                state.copy(
+                                    timeCapsuleDates = result.data,
+                                )
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            Logger.e("getTimeCapsuleDates error, $result")
+                            reduce {
+                                state.copy(
+                                    timeCapsuleDates = emptyList(),
+                                )
+                            }
+                        }
+
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
+                    }
+                }
+            }
 
             // todo: init madeTimeCapsuleToday
 
             // show bottom sheet if calendarDate is not null
             if (state.calendarDate != null) {
-                handleSelectCalendarDate(state.calendarDate!!)
+                postSideEffect(CalendarSideEffect.ShowBottomSheet)
             }
         }
-
-    private fun handleInitKey() = intent{
-        getKeyCount().collect { result ->
-            when (result) {
-                is DataState.Success -> {
-                    reduce {
-                        state.copy(keyCount = result.data)
-                    }
-                }
-
-                is DataState.Error -> {
-                    Logger.e("handleInitKey error: $result")
-                    reduce {
-                        state.copy(keyCount = 0)
-                    }
-                }
-
-                is DataState.Loading -> {
-                    // do nothing
-                }
-            }
-        }
-    }
 
     private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =
         intent {
@@ -169,43 +199,53 @@ class CalendarViewModel @Inject constructor(
                 state.copy(calendarDate = date)
             }
 
-            // todo: get time capsules of date
+            // get time capsules of date
+            viewModelScope.launch {
+                getTimeCapsulesOfDate(date).collect { result ->
+                    when (result) {
+                        is DataState.Success -> {
+                            reduce {
+                                state.copy(timeCapsules = result.data.map {
+                                    TimeCapsuleMapper.toUi(
+                                        it
+                                    )
+                                })
+                            }
+                        }
+
+                        is DataState.Error -> {
+                            Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $result")
+                            reduce {
+                                state.copy(timeCapsules = emptyList())
+                            }
+                        }
+
+
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
+                    }
+                }
+
+            }
+
             // todo: get daily report id of date
-            postSideEffect(
-                CalendarSideEffect.ShowBottomSheet(
-                    date = date,
-                    timeCapsules =
-                        (0..3).map { i ->
-                            TimeCapsuleItemState(
-                                id = i.toString(),
-                                status = STATUS.entries.get(i),
-                                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                                emotions =
-                                    listOf(
-                                        Emotion(
-                                            label = "서운함",
-                                            icon = 0,
-                                        ),
-                                        Emotion(
-                                            label = "화남",
-                                            icon = 1,
-                                        ),
-                                        Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
-                                        ),
-                                    ),
-                                isFavorite = false,
-                                isFavoriteAt = null,
-                                createdAt = LocalDateTime.now(),
-                                openDday = -99,
-                            )
-                        },
-                    dailyReportId = null,
-                    isNewDailyReport = false,
-                ),
+
+            postSideEffect(CalendarSideEffect.ShowBottomSheet)
+        }
+
+    private fun handleClearBottomSheet() = intent {
+        // clear bottom sheet states
+        reduce {
+            state.copy(
+                calendarDate = null,
+                timeCapsules = emptyList(),
+                dailyReportId = null,
+                isNewDailyReport = false
             )
         }
+    }
+
 
     private fun handleEnterChat() =
         intent {

@@ -42,7 +42,6 @@ import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
-import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
@@ -50,14 +49,6 @@ import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 
-// state for calendar screen bottom sheet
-data class CalendarBottomSheetState(
-    val showBottomSheet: Boolean = false,
-    val date: LocalDate? = null,
-    val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-    val dailyReportId: String? = null,
-    val isNewDailyReport: Boolean = false,
-)
 
 @Composable
 fun CalendarScreen(
@@ -76,20 +67,12 @@ fun CalendarScreen(
         onPauseOrDispose { }
     }
 
-    var bottomSheetState = remember { mutableStateOf(CalendarBottomSheetState()) }
+    val (showBottomSheet, setShowBottomSheet) = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is CalendarSideEffect.ShowBottomSheet -> {
-                    // update bottom sheet state
-                    bottomSheetState.value =
-                        bottomSheetState.value.copy(
-                            showBottomSheet = true,
-                            date = sideEffect.date,
-                            timeCapsules = sideEffect.timeCapsules,
-                            dailyReportId = sideEffect.dailyReportId,
-                            isNewDailyReport = sideEffect.isNewDailyReport,
-                        )
+                    setShowBottomSheet(true)
                 }
 
                 is CalendarSideEffect.EnterCharRoomSuccess -> {
@@ -101,10 +84,8 @@ fun CalendarScreen(
 
     StatelessCalendarScreen(
         modifier = modifier,
-        bottomSheetState = bottomSheetState.value,
-        onDismissBottomSheet = {
-            bottomSheetState.value = bottomSheetState.value.copy(showBottomSheet = false)
-        },
+        showBottomSheet = showBottomSheet,
+        setShowBottomSheet = setShowBottomSheet,
         state = state.value,
         viewModel::onAction,
         navToKey = navToKey,
@@ -119,8 +100,8 @@ fun CalendarScreen(
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
-    bottomSheetState: CalendarBottomSheetState = CalendarBottomSheetState(),
-    onDismissBottomSheet: () -> Unit = {},
+    showBottomSheet: Boolean = false,
+    setShowBottomSheet: (Boolean) -> Unit = {},
     state: CalendarState = CalendarState(),
     onAction: (CalendarAction) -> Unit = {},
     navToKey: () -> Unit = {},
@@ -206,26 +187,28 @@ private fun StatelessCalendarScreen(
             )
 
             // calendar date bottom sheet
-            if (bottomSheetState.showBottomSheet && bottomSheetState.date != null) {
+            if (showBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
                 TimeCapsuleCalendarBottomSheet(
-                    date = bottomSheetState.date,
+                    date = state.calendarDate,
                     onDismissRequest = {
-                        onDismissBottomSheet()
-                        onAction(CalendarAction.ClearDalendarDate)
+                        setShowBottomSheet(false)
+                        onAction(CalendarAction.ClearBottomSheet)
                     },
-                    timeCapsules = bottomSheetState.timeCapsules,
+                    timeCapsules = state.timeCapsules,
                     navToTimeCapsuleDetail = {
-                        onDismissBottomSheet()
+
+                        setShowBottomSheet(false)
                         navToTimeCapsuleDetail(it)
                     },
                     navToDailyReport =
-                        bottomSheetState.dailyReportId?.run {
+                        state.dailyReportId?.run {
                             {
-                                onDismissBottomSheet()
+
+                                setShowBottomSheet(false)
                                 navToDailyReportDetail(this)
                             }
                         },
-                    isNewDailyReport = bottomSheetState.isNewDailyReport,
+                    isNewDailyReport = state.isNewDailyReport,
                 )
             }
         }
