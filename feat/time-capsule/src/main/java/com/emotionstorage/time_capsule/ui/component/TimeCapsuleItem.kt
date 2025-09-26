@@ -98,8 +98,9 @@ fun TimeCapsuleItem(
                     .background(
                         Color(0x1A849BEA),
                         RoundedCornerShape(15.dp),
-                    ).padding(vertical = 18.dp, horizontal = 15.dp)
-                    .clickable(onClick = onClick),
+                    )
+                    .clickable(onClick = onClick)
+                    .padding(vertical = 18.dp, horizontal = 15.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(11.dp),
         ) {
