@@ -39,7 +39,7 @@ fun TimeCapsuleCalendarBottomSheet(
     date: LocalDate,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false),
+    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     // 일일 리포트 생성된 경우, 일일 리포트 화면으로 이동
