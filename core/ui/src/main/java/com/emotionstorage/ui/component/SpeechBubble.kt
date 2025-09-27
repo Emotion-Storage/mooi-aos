@@ -54,7 +54,7 @@ fun SpeechBubble(
     }
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .then(Modifier.size(sizeParam))
     ) {
         Canvas(
