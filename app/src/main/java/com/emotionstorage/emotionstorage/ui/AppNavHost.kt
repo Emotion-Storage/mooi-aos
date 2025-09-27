@@ -76,7 +76,7 @@ internal sealed class AppDestination {
     ) : AppDestination()
 
     @Serializable
-    data class AI_CHAT_DESC(val roomId: String) : AppDestination()
+    data class AIChatDesc(val roomId: String) : AppDestination()
 
     @Serializable
     object ArrivedTimeCapsules : AppDestination()
@@ -195,7 +195,7 @@ internal fun AppNavHost(
                         if (seen) {
                             navController.navigate(AppDestination.AIChat(roomId))
                         } else {
-                            navController.navigate(AppDestination.AI_CHAT_DESC(roomId))
+                            navController.navigate(AppDestination.AIChatDesc(roomId))
                         }
                     },
                     navToArrivedTimeCapsules = {
@@ -231,8 +231,8 @@ internal fun AppNavHost(
                 )
             }
 
-            composable<AppDestination.AI_CHAT_DESC> { navBackStackEntry ->
-                val arguments = navBackStackEntry.toRoute<AppDestination.AI_CHAT_DESC>()
+            composable<AppDestination.AIChatDesc> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.AIChatDesc>()
                 AIChatDescriptionScreen(
                     roomId = arguments.roomId,
                     onCheckboxChanged = { checked ->
