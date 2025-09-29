@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.domain.usecase
+package com.emotionstorage.ai_chat.domain.usecase.remote
 
 import com.emotionstorage.ai_chat.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.domain.repo.ChatRepository

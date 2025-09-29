@@ -98,8 +98,8 @@ internal fun AppNavHost(
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
 
-    val prefsViewModel: AiChatIntroViewModel = hiltViewModel()
-    val introSeen = prefsViewModel.introSeen.collectAsState()
+    val aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel()
+    val introSeen = aiChatIntroViewModel.introSeen.collectAsState()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -252,7 +252,7 @@ internal fun AppNavHost(
                 AIChatDescriptionScreen(
                     roomId = arguments.roomId,
                     onCheckboxChanged = { checked ->
-                        prefsViewModel.setIntroSeen(checked)
+                        aiChatIntroViewModel.onIntroSeenChanged(checked)
                     },
                     onStartChat = { roomId ->
                         navController.navigateWithClearStack(AppDestination.AIChat(roomId))

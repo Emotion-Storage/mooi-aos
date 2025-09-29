@@ -3,7 +3,7 @@ package com.emotionstorage.ai_chat.data.dataSource.local
 import kotlinx.coroutines.flow.Flow
 
 interface AiChatIntroLocalDataSource {
-    val introSeen: Flow<Boolean>
+    fun observeIntroSeen(): Flow<Boolean>
 
-    suspend fun setIntroSeen(value: Boolean)
+    suspend fun markIntroSeen(value: Boolean)
 }

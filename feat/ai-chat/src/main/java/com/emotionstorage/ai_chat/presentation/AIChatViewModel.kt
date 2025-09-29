@@ -3,10 +3,10 @@ package com.emotionstorage.ai_chat.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.ai_chat.domain.model.ChatMessage
-import com.emotionstorage.ai_chat.domain.usecase.ConnectChatRoomUseCase
-import com.emotionstorage.ai_chat.domain.usecase.DisconnectChatRoomUseCase
-import com.emotionstorage.ai_chat.domain.usecase.ObserveChatMessagesUseCase
-import com.emotionstorage.ai_chat.domain.usecase.SendChatMessageUseCase
+import com.emotionstorage.ai_chat.domain.usecase.remote.ConnectChatRoomUseCase
+import com.emotionstorage.ai_chat.domain.usecase.remote.DisconnectChatRoomUseCase
+import com.emotionstorage.ai_chat.domain.usecase.remote.ObserveChatMessagesUseCase
+import com.emotionstorage.ai_chat.domain.usecase.remote.SendChatMessageUseCase
 import com.emotionstorage.domain.common.DataState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
