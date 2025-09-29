@@ -29,13 +29,18 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun WheelSpinner(
     items: List<String>,
     modifier: Modifier = Modifier,
+    selectedItem: String? = null,
+    onItemSelect: (String) -> Unit = {},
     visibleItemsCount: Int = 5,
-    onItemSelect: (String) -> Unit
+    showCenterLine: Boolean = true
 ) {
     val centerIndex = visibleItemsCount / 2
     val wheelItems = List(centerIndex) { "" } + items + List(centerIndex) { "" }
 
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = centerIndex)
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex =
+            if (selectedItem != null) wheelItems.indexOf(selectedItem) - centerIndex else centerIndex
+    )
     val firstVisibleItemIndex = remember { derivedStateOf { listState.firstVisibleItemIndex } }
 
     LaunchedEffect(listState.isScrollInProgress) {
@@ -43,11 +48,11 @@ fun WheelSpinner(
         if (!listState.isScrollInProgress) {
             val selectedIndex = listState.firstVisibleItemIndex + centerIndex
             if (selectedIndex in wheelItems.indices) {
-                onItemSelect(wheelItems[selectedIndex])
-
                 // scroll to target index to align scroll position
                 val targetIndex = (selectedIndex - centerIndex).coerceIn(0, wheelItems.size - 1)
                 listState.animateScrollToItem(targetIndex)
+
+                onItemSelect(wheelItems[selectedIndex])
             }
         }
     }
@@ -57,13 +62,15 @@ fun WheelSpinner(
             .fillMaxWidth()
             .background(Color.Transparent)
     ) {
-        Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(38.dp)
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
-        )
+        if (showCenterLine) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .height(38.dp)
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
+            )
+        }
 
         LazyColumn(
             modifier = Modifier
@@ -76,21 +83,17 @@ fun WheelSpinner(
             itemsIndexed(wheelItems) { index, item ->
                 val isCenter = firstVisibleItemIndex.value + centerIndex == index
                 val isAdjacent =
-                    firstVisibleItemIndex.value + centerIndex - 1 == index
-                        || firstVisibleItemIndex.value + centerIndex + 1 == index
+                    firstVisibleItemIndex.value + centerIndex - 1 == index || firstVisibleItemIndex.value + centerIndex + 1 == index
                 val color = if (isCenter) Color.White else MooiTheme.colorScheme.gray400
                 val alpha = if (isCenter) 1f else if (isAdjacent) 0.8f else 0.3f
 
                 Box(
                     modifier = Modifier
                         .height(24.dp)
-                        .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                        .fillMaxWidth(), contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = item,
-                        style = MooiTheme.typography.body1,
-                        color = color.copy(alpha = alpha)
+                        text = item, style = MooiTheme.typography.body1, color = color.copy(alpha = alpha)
                     )
                 }
             }
@@ -103,7 +106,7 @@ fun WheelSpinner(
 @Composable
 private fun PreviewWheelSpinner() {
     val items = (1..12).map { "$it 월" }
-    var selected by remember { mutableStateOf<String?>(null) }
+    var selected by remember { mutableStateOf<String?>("7 월") }
 
     MooiTheme {
         Box(
@@ -112,7 +115,10 @@ private fun PreviewWheelSpinner() {
                 .padding(10.dp)
         ) {
             WheelSpinner(
-                modifier = Modifier.align(Alignment.Center), items = items, onItemSelect = { selected = it })
+                modifier = Modifier.align(Alignment.Center),
+                items = items,
+                selectedItem = selected,
+                onItemSelect = { selected = it })
         }
     }
 }
