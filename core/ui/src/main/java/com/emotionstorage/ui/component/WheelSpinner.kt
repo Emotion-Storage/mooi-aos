@@ -1,0 +1,118 @@
+package com.emotionstorage.ui.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.emotionstorage.ui.theme.MooiTheme
+
+@Composable
+fun WheelSpinner(
+    items: List<String>,
+    modifier: Modifier = Modifier,
+    visibleItemsCount: Int = 5,
+    onItemSelect: (String) -> Unit
+) {
+    val centerIndex = visibleItemsCount / 2
+    val wheelItems = List(centerIndex) { "" } + items + List(centerIndex) { "" }
+
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = centerIndex)
+    val firstVisibleItemIndex = remember { derivedStateOf { listState.firstVisibleItemIndex } }
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        // select item on center, when scroll finished
+        if (!listState.isScrollInProgress) {
+            val selectedIndex = listState.firstVisibleItemIndex + centerIndex
+            if (selectedIndex in wheelItems.indices) {
+                onItemSelect(wheelItems[selectedIndex])
+
+                // scroll to target index to align scroll position
+                val targetIndex = (selectedIndex - centerIndex).coerceIn(0, wheelItems.size - 1)
+                listState.animateScrollToItem(targetIndex)
+            }
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .height(38.dp)
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
+        )
+
+        LazyColumn(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .height(168.dp)
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            state = listState,
+        ) {
+            itemsIndexed(wheelItems) { index, item ->
+                val isCenter = firstVisibleItemIndex.value + centerIndex == index
+                val isAdjacent =
+                    firstVisibleItemIndex.value + centerIndex - 1 == index
+                        || firstVisibleItemIndex.value + centerIndex + 1 == index
+                val color = if (isCenter) Color.White else MooiTheme.colorScheme.gray400
+                val alpha = if (isCenter) 1f else if (isAdjacent) 0.8f else 0.3f
+
+                Box(
+                    modifier = Modifier
+                        .height(24.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = item,
+                        style = MooiTheme.typography.body1,
+                        color = color.copy(alpha = alpha)
+                    )
+                }
+            }
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun PreviewWheelSpinner() {
+    val items = (1..12).map { "$it 월" }
+    var selected by remember { mutableStateOf<String?>(null) }
+
+    MooiTheme {
+        Box(
+            modifier = Modifier
+                .background(MooiTheme.colorScheme.background)
+                .padding(10.dp)
+        ) {
+            WheelSpinner(
+                modifier = Modifier.align(Alignment.Center), items = items, onItemSelect = { selected = it })
+        }
+    }
+}
