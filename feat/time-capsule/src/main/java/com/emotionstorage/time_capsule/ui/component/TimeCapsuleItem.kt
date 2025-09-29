@@ -144,7 +144,9 @@ private fun TimeCapsuleItemInfo(
                 )
                 CountDownTimer(
                     deadline = createdAt.plusHours(25),
-                ) { hours, minutes, seconds ->
+                    optimizeMinuteTick = true,
+                    optimizeSecondTick = true,
+                ) { hours, minutes, _ ->
                     Text(
                         text =
                             "임시저장 보관기간이 " +
