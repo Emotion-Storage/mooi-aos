@@ -34,7 +34,9 @@ fun CountDownTimer(
                     60 * 60 * 1000
                 } else if (optimizeSecondTick && remainingTime >= 60 * 1000) {
                     60 * 1000
-                } else 1000
+                } else {
+                    1000
+                }
             delay(tick.toLong())
 
             remainingTime = deadlineMillis - System.currentTimeMillis()
