@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun WheelSpinner(
@@ -52,6 +54,8 @@ fun WheelSpinner(
                 val targetIndex = (selectedIndex - centerIndex).coerceIn(0, wheelItems.size - 1)
                 listState.animateScrollToItem(targetIndex)
 
+                // wait for animation to finish
+                delay(200)
                 onItemSelect(wheelItems[selectedIndex])
             }
         }
@@ -84,8 +88,12 @@ fun WheelSpinner(
                 val isCenter = firstVisibleItemIndex.value + centerIndex == index
                 val isAdjacent =
                     firstVisibleItemIndex.value + centerIndex - 1 == index || firstVisibleItemIndex.value + centerIndex + 1 == index
-                val color = if (isCenter) Color.White else MooiTheme.colorScheme.gray400
-                val alpha = if (isCenter) 1f else if (isAdjacent) 0.8f else 0.3f
+
+                val animatedColor by animateColorAsState(
+                    if (isCenter) Color.White
+                    else if (isAdjacent) MooiTheme.colorScheme.gray400.copy(alpha = 0.8f)
+                    else MooiTheme.colorScheme.gray400.copy(alpha = 0.3f),
+                )
 
                 Box(
                     modifier = Modifier
@@ -93,7 +101,7 @@ fun WheelSpinner(
                         .fillMaxWidth(), contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = item, style = MooiTheme.typography.body1, color = color.copy(alpha = alpha)
+                        text = item, style = MooiTheme.typography.body1, color = animatedColor
                     )
                 }
             }
