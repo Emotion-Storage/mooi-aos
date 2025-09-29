@@ -15,7 +15,7 @@ object TimeCapsuleMapper {
             isFavorite = domain.isFavorite,
             isFavoriteAt = domain.favoriteAt,
             createdAt = domain.createdAt,
-            openDday =
+            openDDay =
                 domain.arriveAt?.run {
                     LocalDate.now().getDaysBetween(this.toLocalDate())
                 },

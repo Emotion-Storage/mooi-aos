@@ -57,6 +57,7 @@ private val DUMMY_TIME_CAPSULES =
             isFavorite = true,
             isFavoriteAt = LocalDateTime.now(),
             createdAt = LocalDateTime.now(),
+            openDDay = it,
         )
     }
 
@@ -138,6 +139,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                 .fillMaxWidth()
                                 .padding(bottom = 17.dp),
                         timeCapsule = it,
+                        showDate = true,
                         onClick = { navToTimeCapsuleDetail(it.id) },
                     )
                 }

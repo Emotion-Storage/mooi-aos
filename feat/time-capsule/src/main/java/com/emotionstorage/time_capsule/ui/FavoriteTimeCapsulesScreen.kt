@@ -53,7 +53,7 @@ private val DUMMY_TIME_CAPSULES =
     (1..15).toList().map { it ->
         TimeCapsuleItemState(
             id = it.toString(),
-            status = TimeCapsule.STATUS.ARRIVED,
+            status = TimeCapsule.STATUS.OPENED,
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =
                 listOf(
@@ -208,6 +208,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                                 .fillMaxWidth()
                                 .padding(bottom = 17.dp),
                         timeCapsule = it,
+                        showDate = true,
                         onClick = { navToTimeCapsuleDetail(it.id) },
                         onFavoriteClick = {
                             onAction(

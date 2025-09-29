@@ -31,7 +31,7 @@ import com.emotionstorage.emotionstorage.R
 private enum class BottomNavDestination(
     val route: String,
     val icon: Int,
-    val label: String
+    val label: String,
 ) {
     HOME(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
     CALENDAR(AppDestination.TimeCapsuleCalendar::class.qualifiedName!!, R.drawable.ic_calendar, "감정 보관함"),
@@ -48,17 +48,18 @@ fun AppBottomNavBar(
 ) {
     if (currentDestination?.route in BottomNavDestinationRoutes) {
         BottomAppBar(
-            modifier = modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
             containerColor = MooiTheme.colorScheme.bottomBarBackground,
             contentColor = Color.White,
-            contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 BottomNavDestination.values().forEach {
                     BottomNavBarItem(
@@ -74,7 +75,7 @@ fun AppBottomNavBar(
                                 launchSingleTop = true
                                 restoreState = true
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -88,21 +89,22 @@ private fun BottomNavBarItem(
     label: String,
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Column(
-        modifier = modifier.clickable(
-            onClick = onClick,
-            indication = null,
-            interactionSource = remember { MutableInteractionSource() },
-        ),
+        modifier =
+            modifier.clickable(
+                onClick = onClick,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+            ),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
             painter = painterResource(id = iconId),
             contentDescription = label,
-            tint = if (isSelected) Color.White else MooiTheme.colorScheme.gray700
+            tint = if (isSelected) Color.White else MooiTheme.colorScheme.gray700,
         )
         Box(modifier = Modifier.height(24.dp)) {
             Text(

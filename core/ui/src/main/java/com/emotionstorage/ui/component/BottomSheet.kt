@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -41,11 +42,10 @@ fun BottomSheet(
     subTitle: String? = null,
     confirmLabel: String? = null,
     onConfirm: (() -> Unit)? = null,
-    hideOnConfirm: Boolean = true,
     dismissLabel: String? = null,
     onDismiss: (() -> Unit)? = null,
-    hideOnDismiss: Boolean = true,
-    dragHandle: @Composable (() -> Unit)? = { BottomSheetDefaults.DragHandle() },
+    hideDragHandle: Boolean = false,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 15.dp, vertical = 20.dp),
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
@@ -54,15 +54,27 @@ fun BottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        dragHandle = dragHandle,
+        dragHandle =
+            if (hideDragHandle) {
+                null
+            } else {
+                {
+                    BottomSheetDefaults.DragHandle(
+                        width = 35.dp,
+                        height = 3.dp,
+                        color = MooiTheme.colorScheme.gray500,
+                        shape = RoundedCornerShape(100),
+                    )
+                }
+            },
+        // disable gesture if drag handle is hidden
+        sheetGesturesEnabled = !hideDragHandle,
         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
     ) {
         Column(
-            modifier =
-                Modifier
-                    .padding(top = 23.dp, bottom = 59.dp, start = 15.dp, end = 15.dp),
+            modifier = Modifier.padding(contentPadding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -103,14 +115,10 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         label = confirmLabel,
                         onClick = {
-                            if (hideOnConfirm) {
-                                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                    if (!sheetState.isVisible) {
-                                        onConfirm?.invoke()
-                                    }
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onConfirm?.invoke()
                                 }
-                            } else {
-                                onConfirm?.invoke()
                             }
                         },
                     )
@@ -120,14 +128,10 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         label = dismissLabel,
                         onClick = {
-                            if (hideOnDismiss) {
-                                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                    if (!sheetState.isVisible) {
-                                        onDismiss?.invoke()
-                                    }
+                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onDismiss?.invoke()
                                 }
-                            } else {
-                                onDismiss?.invoke()
                             }
                         },
                         type = CtaButtonType.TONAL,
@@ -172,7 +176,7 @@ private fun BottomSheetPreview() {
                     onDismissRequest = {
                         setShowBottomSheet(false)
                     },
-                    dragHandle = null,
+                    hideDragHandle = true,
                     title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
                     subTitle = "감정을 충분히 이야기했어요.",
                     confirmLabel = "네, 종료할래요.",

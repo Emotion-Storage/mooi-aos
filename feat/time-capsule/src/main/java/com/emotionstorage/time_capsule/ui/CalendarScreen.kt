@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,40 +15,99 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.time_capsule.presentation.CalendarAction
+import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
+import com.emotionstorage.time_capsule.presentation.CalendarState
+import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
+import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
+import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
+import java.time.LocalDate
 
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
+    viewModel: CalendarViewModel = hiltViewModel(),
+    navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
+    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToDailyReportDetail: (id: String) -> Unit = {},
+    navToAIChat: (roomId: String) -> Unit = {},
 ) {
+    val state = viewModel.container.stateFlow.collectAsState()
+    LifecycleResumeEffect(Unit) {
+        viewModel.onAction(CalendarAction.Initiate)
+        onPauseOrDispose { }
+    }
+
+    val (showBottomSheet, setShowBottomSheet) = remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is CalendarSideEffect.ShowBottomSheet -> {
+                    setShowBottomSheet(true)
+                }
+
+                is CalendarSideEffect.EnterCharRoomSuccess -> {
+                    navToAIChat(sideEffect.roomId)
+                }
+            }
+        }
+    }
+
     StatelessCalendarScreen(
-        modifier,
-        navToArrived,
-        navToFavorites,
+        modifier = modifier,
+        showBottomSheet = showBottomSheet,
+        setShowBottomSheet = setShowBottomSheet,
+        state = state.value,
+        viewModel::onAction,
+        navToKey = navToKey,
+        navToArrived = navToArrived,
+        navToFavorites = navToFavorites,
+        navToTimeCapsuleDetail = navToTimeCapsuleDetail,
+        navToDailyReportDetail = navToDailyReportDetail,
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
+    showBottomSheet: Boolean = false,
+    setShowBottomSheet: (Boolean) -> Unit = {},
+    state: CalendarState = CalendarState(),
+    onAction: (CalendarAction) -> Unit = {},
+    navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
+    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToDailyReportDetail: (id: String) -> Unit = {},
 ) {
     Scaffold(
         modifier
@@ -56,44 +116,99 @@ private fun StatelessCalendarScreen(
             .padding(horizontal = 16.dp),
         topBar = {
             CalendarTopBar(
-                calendarMonth = 7,
-                keyCount = 1,
+                modifier = Modifier.fillMaxWidth(),
+                calendarMonth = state.calendarYearMonth.monthValue,
+                keyCount = state.keyCount,
+                navToKey = navToKey,
             )
         },
     ) { innerPadding ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding),
         ) {
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
+            Column(
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                CalendarNavButton(
-                    modifier = Modifier.weight(1f),
-                    label = "도착한 타임캡슐",
-                    showNewBadge = true,
-                    onClick = navToArrived,
-                )
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                ) {
+                    CalendarNavButton(
+                        modifier = Modifier.weight(1f),
+                        label = "도착한 타임캡슐",
+                        showNewBadge = true,
+                        onClick = navToArrived,
+                    )
 
-                CalendarNavButton(
-                    modifier = Modifier.weight(1f),
-                    label = "내 마음 서랍",
-                    showNewBadge = false,
-                    onClick = navToFavorites,
+                    CalendarNavButton(
+                        modifier = Modifier.weight(1f),
+                        label = "내 마음 서랍",
+                        showNewBadge = false,
+                        onClick = navToFavorites,
+                    )
+                }
+
+                TimeCapsuleCalendar(
+                    modifier = Modifier.fillMaxWidth(),
+                    calendarYearMonth = state.calendarYearMonth,
+                    onCalendarYearMonthSelect = {
+                        onAction(CalendarAction.SelectCalendarYearMonth(it))
+                    },
+                    timeCapsuleDates = state.timeCapsuleDates,
+                    onDateSelect = {
+                        onAction(CalendarAction.SelectCalendarDate(it))
+                    },
                 )
             }
 
-            TimeCapsuleCalendar(
-                modifier = Modifier.fillMaxWidth(),
+            CalendarTodayActionButton(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 24.dp),
+                madeTimeCapsuleToday = state.madeTimeCapsuleToday,
+                onTodayAction = {
+                    // change calendar year & month to today
+                    onAction(CalendarAction.SelectCalendarYearMonth(LocalDate.now().withDayOfMonth(1)))
+                    // open today's bottom sheet
+                    onAction(CalendarAction.SelectCalendarDate(LocalDate.now()))
+                },
+                onChatAction = {
+                    onAction(CalendarAction.EnterChat)
+                },
             )
+
+            // calendar date bottom sheet
+            if (showBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
+                TimeCapsuleCalendarBottomSheet(
+                    date = state.calendarDate,
+                    onDismissRequest = {
+                        setShowBottomSheet(false)
+                        onAction(CalendarAction.ClearBottomSheet)
+                    },
+                    timeCapsules = state.timeCapsules,
+                    navToTimeCapsuleDetail = {
+                        setShowBottomSheet(false)
+                        navToTimeCapsuleDetail(it)
+                    },
+                    navToDailyReport =
+                        state.dailyReportId?.run {
+                            {
+                                setShowBottomSheet(false)
+                                navToDailyReportDetail(this)
+                            }
+                        },
+                    isNewDailyReport = state.isNewDailyReport,
+                )
+            }
         }
     }
 }
@@ -103,10 +218,11 @@ private fun CalendarTopBar(
     calendarMonth: Int,
     keyCount: Int,
     modifier: Modifier = Modifier,
+    navToKey: () -> Unit = {},
 ) {
     Row(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .height(91.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -128,7 +244,12 @@ private fun CalendarTopBar(
             color = Color.White,
         )
 
-        // todo: add key icon
+        IconWithCount(
+            modifier = Modifier.size(32.dp),
+            iconId = R.drawable.key,
+            count = keyCount,
+            onClick = navToKey,
+        )
     }
 }
 
@@ -171,6 +292,47 @@ private fun CalendarNavButton(
             style = MooiTheme.typography.body4,
             color = Color.White,
         )
+    }
+}
+
+@Composable
+private fun CalendarTodayActionButton(
+    modifier: Modifier = Modifier,
+    madeTimeCapsuleToday: Boolean = false,
+    onTodayAction: () -> Unit = {},
+    onChatAction: () -> Unit = {},
+) {
+    Box(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color.Transparent),
+    ) {
+        Row(
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .mainBackground(true, RoundedCornerShape(500.dp))
+                    .clickable {
+                        if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
+                    }.height(44.dp)
+                    .padding(horizontal = 25.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Text(
+                text = if (madeTimeCapsuleToday) "오늘 내 감정 보기" else "오늘 감정 기록하러가기",
+                style = MooiTheme.typography.body3.copy(lineHeight = 24.sp, color = Color.White),
+            )
+            Image(
+                modifier =
+                    Modifier
+                        .size(8.dp, 14.dp)
+                        .rotate(180f),
+                painter = painterResource(R.drawable.arrow_back),
+                contentDescription = null,
+            )
+        }
     }
 }
 
