@@ -1,7 +1,7 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
+import com.emotionstorage.ai_chat.domain.usecase.remote.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase

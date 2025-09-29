@@ -1,6 +1,6 @@
 package com.emotionstorage.ai_chat.remote.dataSource
 
-import com.emotionstorage.ai_chat.data.dataSource.ChatRemoteDataSource
+import com.emotionstorage.ai_chat.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.ai_chat.remote.api.ChatApiService
 import javax.inject.Inject
 
