@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -58,6 +57,24 @@ data class MooiBrushScheme(
                 ),
             angleInDegrees = -42f,
         ),
+    val errorRedButtonBackground: Brush =
+        LinearGradient(
+            colors =
+                listOf(
+                    Color(0xFFE86666).copy(alpha = 0.1f),
+                    Color(0xFFE86666).copy(alpha = 0.05f),
+                ),
+            angleInDegrees = -11f,
+        ),
+    val errorRedButtonBorder: Brush =
+        LinearGradient(
+            colors =
+                listOf(
+                    Color(0xFFE86666).copy(alpha = 0.4f),
+                    Color(0xFFE86666).copy(alpha = 0.03f),
+                ),
+            angleInDegrees = -17f,
+        ),
 )
 
 @Preview(showBackground = true)
@@ -77,7 +94,7 @@ private fun BrushPreview() {
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .weight(1f)
                         .background(
                             MooiTheme.brushScheme.mainButtonBackground,
                             RoundedCornerShape(10.dp),
@@ -88,7 +105,7 @@ private fun BrushPreview() {
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .weight(1f)
                         .background(
                             MooiTheme.brushScheme.subButtonBackground,
                             RoundedCornerShape(10.dp),
@@ -103,11 +120,24 @@ private fun BrushPreview() {
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
+                        .weight(1f)
                         .background(MooiTheme.brushScheme.commentBackground, RoundedCornerShape(10.dp))
                         .border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
+                            shape = RoundedCornerShape(10.dp),
+                        ),
+            )
+            // errorRedButton
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(MooiTheme.brushScheme.errorRedButtonBackground, RoundedCornerShape(10.dp))
+                        .border(
+                            width = 1.dp,
+                            brush = MooiTheme.brushScheme.errorRedButtonBorder,
                             shape = RoundedCornerShape(10.dp),
                         ),
             )

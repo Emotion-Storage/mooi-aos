@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -44,6 +45,7 @@ fun BottomSheet(
     dismissLabel: String? = null,
     onDismiss: (() -> Unit)? = null,
     hideDragHandle: Boolean = false,
+    contentPadding: PaddingValues = PaddingValues(horizontal = 15.dp, vertical = 20.dp),
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
@@ -72,9 +74,7 @@ fun BottomSheet(
         contentColor = Color.White,
     ) {
         Column(
-            modifier =
-                Modifier
-                    .padding(top = 23.dp, bottom = 59.dp, start = 15.dp, end = 15.dp),
+            modifier = Modifier.padding(contentPadding),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
