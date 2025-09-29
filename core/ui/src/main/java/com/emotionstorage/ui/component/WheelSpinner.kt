@@ -113,8 +113,8 @@ fun WheelSpinner(
 @Preview
 @Composable
 private fun PreviewWheelSpinner() {
-    val items = (1..12).map { "$it 월" }
-    var selected by remember { mutableStateOf<String?>("7 월") }
+    val items = (1..12).map { "${it}월" }
+    var selected by remember { mutableStateOf<String?>("7월") }
 
     MooiTheme {
         Box(

@@ -1,0 +1,89 @@
+package com.emotionstorage.ui.component
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.emotionstorage.ui.theme.MooiTheme
+import java.time.LocalDate
+import java.time.YearMonth
+
+@Composable
+fun YearMonthWheelSpinner(
+    modifier: Modifier = Modifier,
+    selectedYearMonth: YearMonth = YearMonth.now(),
+    onYearMonthSelect: (YearMonth) -> Unit = {},
+    minYear: Int = 1970,
+    maxYear: Int = LocalDate.now().year,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.Center)
+                .height(38.dp)
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
+        )
+        Row(
+            modifier = modifier
+                .fillMaxWidth()
+                .align(Alignment.Center)
+        ) {
+            WheelSpinner(
+                modifier = Modifier.weight(1f),
+                items = (minYear..maxYear).map { "${it}년" },
+                selectedItem = selectedYearMonth.year.toString() + "년",
+                onItemSelect = { it ->
+                    onYearMonthSelect(YearMonth.of(it.dropLast(1).toInt(), 1))
+                },
+                showCenterLine = false
+            )
+            WheelSpinner(
+                modifier = Modifier.weight(1f),
+                items = (1..12).map { "${it}월" },
+                selectedItem = selectedYearMonth.monthValue.toString() + "월",
+                onItemSelect = { it ->
+                    onYearMonthSelect(YearMonth.of(selectedYearMonth.year, it.dropLast(1).toInt()))
+                },
+                showCenterLine = false
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun YearMonthWheelSpinnerPreview() {
+    var selected by remember { mutableStateOf<YearMonth>(YearMonth.now()) }
+
+    MooiTheme {
+        Box(
+            modifier = Modifier
+                .background(MooiTheme.colorScheme.background)
+                .padding(10.dp)
+        ) {
+            YearMonthWheelSpinner(
+                modifier = Modifier.align(Alignment.Center),
+                selectedYearMonth = selected,
+                onYearMonthSelect = { selected = it }
+            )
+        }
+    }
+}
