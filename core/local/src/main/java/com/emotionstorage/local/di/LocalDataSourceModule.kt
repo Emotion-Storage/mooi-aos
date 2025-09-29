@@ -24,7 +24,7 @@ abstract class LocalDataSourceModule {
     abstract fun bindSessionLocalDataSource(
         sessionLocalDataSourceImpl: SessionLocalDataSourceImpl,
     ): SessionLocalDataSource
-
+    // TODO 옮기기
     @Binds
     @Singleton
     abstract fun bindChatIntroPrefsLocalDataSource(
