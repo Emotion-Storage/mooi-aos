@@ -5,13 +5,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.emotionstorage.ai_chat.presentation.AIChatIntroPrefsViewModel
+import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
@@ -70,6 +74,11 @@ internal sealed class AppDestination {
     ) : AppDestination()
 
     @Serializable
+    data class AIChatDesc(
+        val roomId: String,
+    ) : AppDestination()
+
+    @Serializable
     object ArrivedTimeCapsules : AppDestination()
 
     @Serializable
@@ -88,6 +97,9 @@ internal fun AppNavHost(
 ) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
+
+    val prefsViewModel: AIChatIntroPrefsViewModel = hiltViewModel()
+    val introSeen = prefsViewModel.introSeen.collectAsState()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -180,7 +192,13 @@ internal fun AppNavHost(
             composable<AppDestination.Home> {
                 HomeScreen(
                     navToChat = { roomId ->
-                        navController.navigate(AppDestination.AIChat(roomId))
+                        // DataStore 의 값에 따라 분기 처리
+                        val seen = introSeen.value
+                        if (seen) {
+                            navController.navigate(AppDestination.AIChat(roomId))
+                        } else {
+                            navController.navigate(AppDestination.AIChatDesc(roomId))
+                        }
                     },
                     navToArrivedTimeCapsules = {
                         navController.navigate(AppDestination.ArrivedTimeCapsules)
@@ -225,6 +243,19 @@ internal fun AppNavHost(
                     roomId = arguments.roomId,
                     navToBack = {
                         navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.AIChatDesc> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.AIChatDesc>()
+                AIChatDescriptionScreen(
+                    roomId = arguments.roomId,
+                    onCheckboxChanged = { checked ->
+                        prefsViewModel.setIntroSeen(checked)
+                    },
+                    onStartChat = { roomId ->
+                        navController.navigateWithClearStack(AppDestination.AIChat(roomId))
                     },
                 )
             }

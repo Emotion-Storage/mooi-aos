@@ -13,15 +13,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.layout.boundsInParent
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,7 +26,6 @@ import com.emotionstorage.ai_chat.presentation.AIChatViewModel
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
-import com.emotionstorage.ai_chat.ui.component.DescriptionOverlayScreen
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -70,42 +63,18 @@ fun AIChatScreen(
         }
     }
 
-    var progressRect by remember { mutableStateOf(Rect.Zero) }
-    var inputRect by remember { mutableStateOf(Rect.Zero) }
-    var topbarRect by remember { mutableStateOf(Rect.Zero) }
-
-    // // TODO : Datastore에 저장해야할 필요 o
-    var showAgain by rememberSaveable { mutableStateOf(true) }
-    var showCoach by rememberSaveable { mutableStateOf(showAgain) }
-
     StatelessAIChatScreen(
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
-        onProgressRect = { progressRect = it },
-        onInputBoxRect = { inputRect = it },
-        onTopbarRect = { topbarRect = it },
-        showCoach = showCoach,
-        progressBarBounds = progressRect,
-        inputBoxBounds = inputRect,
-        topbarBounds = topbarRect,
-        onCoachComplete = { showCoach = false },
     )
 }
 
 @Composable
 private fun StatelessAIChatScreen(
     state: AIChatState = AIChatState(),
-    showCoach: Boolean = true,
-    progressBarBounds: Rect = Rect.Zero,
-    inputBoxBounds: Rect = Rect.Zero,
-    topbarBounds: Rect = Rect.Zero,
-    onCoachComplete: () -> Unit = {},
     onAction: (action: AIChatAction) -> Unit = {},
     navToBack: () -> Unit = {},
-    onProgressRect: (Rect) -> Unit = {},
-    onInputBoxRect: (Rect) -> Unit = {},
-    onTopbarRect: (Rect) -> Unit = {},
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     AIChatExitModel(
@@ -127,10 +96,6 @@ private fun StatelessAIChatScreen(
         ) {
             // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
-                modifier =
-                    Modifier.onGloballyPositioned {
-                        onTopbarRect(it.boundsInParent())
-                    },
                 showBackButton = true,
                 onBackClick = {
                     setExitModalOpen(true)
@@ -141,11 +106,7 @@ private fun StatelessAIChatScreen(
                 progress = state.chatProgress,
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        // ProgressBar 위치 추적
-                        .onGloballyPositioned {
-                            onProgressRect(it.boundsInParent())
-                        },
+                        .fillMaxWidth(),
             )
 
             ChatMessageList(
@@ -169,24 +130,12 @@ private fun StatelessAIChatScreen(
             ChatMessageInputBox(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .onGloballyPositioned {
-                            onInputBoxRect(it.boundsInParent())
-                        },
+                        .fillMaxWidth(),
                 onSendMessage = {
                     onAction(AIChatAction.SendChatMessage(it))
                 },
             )
         }
-    }
-
-    if (showCoach) {
-        DescriptionOverlayScreen(
-            progressBarBounds = progressBarBounds,
-            inputBoxBounds = inputBoxBounds,
-            topbarBounds = topbarBounds,
-            onComplete = onCoachComplete,
-        )
     }
 }
 
