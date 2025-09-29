@@ -87,7 +87,7 @@ fun TimeCapsuleCalendar(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = "${calendarYearMonth.year}년 ${calendarYearMonth.monthValue}월",
-                style = MooiTheme.typography.button,
+                style = MooiTheme.typography.mainButton,
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )

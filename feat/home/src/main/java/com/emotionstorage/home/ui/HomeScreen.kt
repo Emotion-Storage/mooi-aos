@@ -252,7 +252,7 @@ private fun StartChatButton(
             Text(
                 modifier = Modifier.padding(end = 7.dp),
                 text = "대화 시작하기",
-                style = MooiTheme.typography.button,
+                style = MooiTheme.typography.mainButton,
                 color = Color.White,
             )
             Image(
@@ -263,7 +263,7 @@ private fun StartChatButton(
             )
             Text(
                 text = "-1",
-                style = MooiTheme.typography.button,
+                style = MooiTheme.typography.mainButton,
                 color = Color.White.copy(alpha = 0.7f),
             )
         }
@@ -281,7 +281,7 @@ private fun StartChatButton(
         ) {
             Text(
                 text = "대화 시작하기",
-                style = MooiTheme.typography.button,
+                style = MooiTheme.typography.mainButton,
                 color = MooiTheme.colorScheme.gray500,
             )
             Text(

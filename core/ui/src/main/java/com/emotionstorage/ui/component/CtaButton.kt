@@ -33,7 +33,7 @@ fun CtaButton(
     onClick: () -> Unit = {},
     type: CtaButtonType = CtaButtonType.FILLED,
     radius: Int = 15,
-    textStyle: TextStyle = MooiTheme.typography.button,
+    textStyle: TextStyle = MooiTheme.typography.mainButton,
 ) {
     Box(modifier = modifier) {
         Button(
