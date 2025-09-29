@@ -1,8 +1,8 @@
-package com.emotionstorage.ai_chat.domain.repo
+package com.emotionstorage.ai_chat.data.dataSource.local
 
 import kotlinx.coroutines.flow.Flow
 
-interface ChatIntroPrefsRepository {
+interface AiChatIntroLocalDataSource {
     val introSeen: Flow<Boolean>
 
     suspend fun setIntroSeen(value: Boolean)

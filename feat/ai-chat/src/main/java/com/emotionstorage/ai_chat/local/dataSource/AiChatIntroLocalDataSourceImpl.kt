@@ -5,15 +5,15 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.emotionstorage.ai_chat.data.dataSource.local.ChatIntroPrefsLocalDataSource
+import com.emotionstorage.ai_chat.data.dataSource.local.AiChatIntroLocalDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 // TODO 옮기기
-class ChatIntroPrefLocalDataSourceImpl @Inject constructor(
+class AiChatIntroLocalDataSourceImpl @Inject constructor(
     @ApplicationContext context: Context,
-) : ChatIntroPrefsLocalDataSource {
+) : AiChatIntroLocalDataSource {
     companion object {
         const val PREF_NAME = "chat_intro_prefs"
     }

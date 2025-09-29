@@ -14,7 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.emotionstorage.ai_chat.presentation.AIChatIntroPrefsViewModel
+import com.emotionstorage.ai_chat.presentation.AiChatIntroViewModel
 import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
@@ -98,7 +98,7 @@ internal fun AppNavHost(
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry.value?.destination
 
-    val prefsViewModel: AIChatIntroPrefsViewModel = hiltViewModel()
+    val prefsViewModel: AiChatIntroViewModel = hiltViewModel()
     val introSeen = prefsViewModel.introSeen.collectAsState()
 
     Scaffold(
