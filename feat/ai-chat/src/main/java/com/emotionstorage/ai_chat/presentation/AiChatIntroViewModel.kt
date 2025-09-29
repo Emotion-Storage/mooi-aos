@@ -23,7 +23,8 @@ class AiChatIntroViewModel @Inject constructor(
                 false,
             )
 
-    fun onIntroSeenChanged(value: Boolean) = viewModelScope.launch {
-        markIntroSeenUseCase(value)
-    }
+    fun onIntroSeenChanged(value: Boolean) =
+        viewModelScope.launch {
+            markIntroSeenUseCase(value)
+        }
 }

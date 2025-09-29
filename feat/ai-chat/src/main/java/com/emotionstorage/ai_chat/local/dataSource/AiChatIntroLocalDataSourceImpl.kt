@@ -10,14 +10,13 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AiChatIntroLocalDataSourceImpl @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
 ) : AiChatIntroLocalDataSource {
     companion object {
         val KEY = booleanPreferencesKey("ai_chat_intro_seen")
     }
 
-    override fun observeIntroSeen(): Flow<Boolean> =
-        dataStore.data.map { it[KEY] ?: false }
+    override fun observeIntroSeen(): Flow<Boolean> = dataStore.data.map { it[KEY] ?: false }
 
     override suspend fun markIntroSeen(value: Boolean) {
         dataStore.edit { it[KEY] = value }

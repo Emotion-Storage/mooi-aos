@@ -8,8 +8,7 @@ import javax.inject.Inject
 class AiChatIntroRepositoryImpl @Inject constructor(
     private val localDataSource: AiChatIntroLocalDataSource,
 ) : AiChatIntroRepository {
-    override fun observeIntroSeen(): Flow<Boolean> =
-        localDataSource.observeIntroSeen()
+    override fun observeIntroSeen(): Flow<Boolean> = localDataSource.observeIntroSeen()
 
     override suspend fun markIntroSeen(value: Boolean) {
         localDataSource.markIntroSeen(value)

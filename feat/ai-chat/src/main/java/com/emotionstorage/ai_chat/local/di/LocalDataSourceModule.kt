@@ -12,14 +12,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class LocalDataSourceModule {
+    @Binds
+    abstract fun bindAiChatIntroLocalDataSource(impl: AiChatIntroLocalDataSourceImpl): AiChatIntroLocalDataSource
 
     @Binds
-    abstract fun bindAiChatIntroLocalDataSource(
-        aiChatIntroLocalDataSourceImpl: AiChatIntroLocalDataSourceImpl
-    ): AiChatIntroLocalDataSource
-
-    @Binds
-    abstract fun bindAiChatIntroRepository(
-        aiChatIntroRepositoryImpl: AiChatIntroRepositoryImpl
-    ): AiChatIntroRepository
+    abstract fun bindAiChatIntroRepository(impl: AiChatIntroRepositoryImpl): AiChatIntroRepository
 }
