@@ -13,7 +13,7 @@ class AiChatIntroLocalDataSourceImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) : AiChatIntroLocalDataSource {
     companion object {
-        val KEY = booleanPreferencesKey("ai_chat_intro_seen")
+        private val KEY = booleanPreferencesKey("ai_chat_intro_seen")
     }
 
     override fun observeIntroSeen(): Flow<Boolean> = dataStore.data.map { it[KEY] ?: false }

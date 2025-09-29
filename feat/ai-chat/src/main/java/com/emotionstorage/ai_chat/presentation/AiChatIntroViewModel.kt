@@ -5,9 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.emotionstorage.ai_chat.domain.usecase.local.MarkAiChatIntroSeenUseCase
 import com.emotionstorage.ai_chat.domain.usecase.local.ObserveAiChatIntroSeenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +27,8 @@ class AiChatIntroViewModel @Inject constructor(
 
     fun onIntroSeenChanged(value: Boolean) =
         viewModelScope.launch {
-            markIntroSeenUseCase(value)
+            withContext(Dispatchers.IO) {
+                markIntroSeenUseCase(value)
+            }
         }
 }
