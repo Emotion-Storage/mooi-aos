@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,20 +27,19 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 
-enum class IconWithCountType {
-    KEY,
-}
-
 @Composable
 fun IconWithCount(
-    type: IconWithCountType,
     modifier: Modifier = Modifier,
-    count: String = "0",
+    @DrawableRes
+    iconId: Int,
+    count: Int,
+    iconSizeDp: Int = 22,
     onClick: (() -> Unit)? = null,
 ) {
     Box(
         modifier =
             modifier
+                .padding(horizontal = 2.dp)
                 .clickable(
                     enabled = onClick != null,
                     onClick = {
@@ -47,18 +47,14 @@ fun IconWithCount(
                     },
                 ),
     ) {
-        when (type) {
-            IconWithCountType.KEY -> {
-                Image(
-                    modifier =
-                        Modifier
-                            .align(Alignment.TopStart)
-                            .size(22.dp),
-                    painter = painterResource(id = R.drawable.key),
-                    contentDescription = "key icon",
-                )
-            }
-        }
+        Image(
+            modifier =
+                Modifier
+                    .align(Alignment.TopStart)
+                    .size(iconSizeDp.dp),
+            painter = painterResource(id = iconId),
+            contentDescription = null,
+        )
 
         Box(
             modifier =
@@ -70,7 +66,7 @@ fun IconWithCount(
         ) {
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = count.toString(),
+                text = if (count > 99) "99+" else count.toString(),
                 style =
                     TextStyle(
                         fontFamily = pretendard,
@@ -95,14 +91,15 @@ private fun IconWithCountPreview() {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             IconWithCount(
-                modifier = Modifier.size(28.dp, 32.dp),
-                type = IconWithCountType.KEY,
-                count = "5",
+                modifier = Modifier.size(32.dp),
+                iconId = R.drawable.key,
+                count = 3,
             )
+
             IconWithCount(
-                modifier = Modifier.size(28.dp, 32.dp),
-                type = IconWithCountType.KEY,
-                count = "99+",
+                modifier = Modifier.size(32.dp),
+                iconId = R.drawable.key,
+                count = 100,
             )
         }
     }

@@ -51,8 +51,8 @@ private val DUMMY_TIME_CAPSULE_DATES =
 @Composable
 fun TimeCapsuleCalendar(
     modifier: Modifier = Modifier,
-    calendarDate: LocalDate = LocalDate.now().withDayOfMonth(1),
-    onCalendarDateSelect: (calendarDate: LocalDate) -> Unit = {},
+    calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
+    onCalendarYearMonthSelect: (yearMonth: LocalDate) -> Unit = {},
     timeCapsuleDates: List<LocalDate> = emptyList(),
     onDateSelect: (LocalDate) -> Unit = {},
 ) {
@@ -69,14 +69,14 @@ fun TimeCapsuleCalendar(
                     .fillMaxWidth()
                     .padding(bottom = 17.dp),
         ) {
-            if (MIN_CALENDAR_DATE < calendarDate) {
+            if (MIN_CALENDAR_DATE < calendarYearMonth) {
                 Image(
                     modifier =
                         Modifier
                             .align(Alignment.CenterStart)
                             .size(14.dp)
                             .clickable {
-                                onCalendarDateSelect(calendarDate.minusMonths(1))
+                                onCalendarYearMonthSelect(calendarYearMonth.minusMonths(1))
                             },
                     painter = painterResource(id = R.drawable.arrow_back),
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
@@ -86,12 +86,12 @@ fun TimeCapsuleCalendar(
 
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                text = "${calendarDate.year}년 ${calendarDate.monthValue}월",
+                text = "${calendarYearMonth.year}년 ${calendarYearMonth.monthValue}월",
                 style = MooiTheme.typography.button,
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )
-            if (calendarDate < LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)) {
+            if (calendarYearMonth < LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)) {
                 Image(
                     modifier =
                         Modifier
@@ -99,7 +99,7 @@ fun TimeCapsuleCalendar(
                             .size(14.dp)
                             .rotate(180f)
                             .clickable {
-                                onCalendarDateSelect(calendarDate.plusMonths(1))
+                                onCalendarYearMonthSelect(calendarYearMonth.plusMonths(1))
                             },
                     painter = painterResource(id = R.drawable.arrow_back),
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
@@ -132,14 +132,14 @@ fun TimeCapsuleCalendar(
         // calendar dates
         LazyVerticalGrid(columns = GridCells.Fixed(7), modifier = Modifier.fillMaxWidth()) {
             items(
-                items = calendarDate.getWeekDatesOfTargetMonth(),
+                items = calendarYearMonth.getWeekDatesOfTargetMonth(),
                 key = { it.toString() },
             ) { date ->
                 DateItem(
                     modifier = Modifier.padding(bottom = 12.dp),
                     date = date,
                     onClick = onDateSelect,
-                    isShown = date.year == calendarDate.year && date.month == calendarDate.month,
+                    isShown = date.year == calendarYearMonth.year && date.month == calendarYearMonth.month,
                     isFilled = date in timeCapsuleDates,
                     isToday = date == LocalDate.now(),
                 )
@@ -214,14 +214,14 @@ private fun DateItem(
 @Preview
 @Composable
 fun TimeCapsuleCalendarPreview() {
-    val (calendarDate, setCalendarDate) =
+    val (calendarYearMonth, setCalendarYearMonth) =
         remember {
             mutableStateOf(LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1))
         }
     MooiTheme {
         TimeCapsuleCalendar(
-            calendarDate = calendarDate,
-            onCalendarDateSelect = setCalendarDate,
+            calendarYearMonth = calendarYearMonth,
+            onCalendarYearMonthSelect = setCalendarYearMonth,
             timeCapsuleDates = DUMMY_TIME_CAPSULE_DATES,
         )
     }

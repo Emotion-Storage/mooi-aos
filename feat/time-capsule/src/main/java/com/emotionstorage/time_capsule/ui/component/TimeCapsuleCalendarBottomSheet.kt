@@ -8,9 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
@@ -56,23 +54,11 @@ fun TimeCapsuleCalendarBottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        dragHandle = {
-            Box(
-                modifier =
-                    Modifier
-                        .size(35.dp, 3.dp)
-                        .background(
-                            MooiTheme.colorScheme.gray500,
-                            RoundedCornerShape(100),
-                        ),
-            )
-        },
+        // disable sheet gesture to prevent scroll interrupt with scrollable content
         // todo: add new badge
         confirmLabel = if (navToDailyReport != null) "일일리포트 확인하기" else null,
         onConfirm = navToDailyReport,
-        hideOnConfirm = false,
         dismissLabel = if (navToDailyReport == null) "일일리포트 확인하기" else null,
-        hideOnDismiss = false,
     ) {
         Text(
             modifier =
@@ -131,7 +117,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
                 isFavorite = false,
                 isFavoriteAt = null,
                 createdAt = LocalDateTime.now(),
-                openDday = -99,
+                openDDay = -99,
             )
         }
 

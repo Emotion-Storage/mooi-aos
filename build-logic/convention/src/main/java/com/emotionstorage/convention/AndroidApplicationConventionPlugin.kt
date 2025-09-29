@@ -19,6 +19,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("com.google.gms.google-services")
+                apply("org.jlleitschuh.gradle.ktlint")
             }
 
             extensions.configure<ApplicationExtension> {

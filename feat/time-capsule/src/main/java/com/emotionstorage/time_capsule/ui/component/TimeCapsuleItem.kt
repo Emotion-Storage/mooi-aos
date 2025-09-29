@@ -56,7 +56,7 @@ private val DUMMY_TIME_CAPSULE =
         isFavorite = true,
         isFavoriteAt = LocalDateTime.now(),
         createdAt = LocalDateTime.now(),
-        openDday = -99,
+        openDDay = -99,
     )
 
 // todo: add ui per status
@@ -98,8 +98,8 @@ fun TimeCapsuleItem(
                     .background(
                         Color(0x1A849BEA),
                         RoundedCornerShape(15.dp),
-                    ).padding(vertical = 18.dp, horizontal = 15.dp)
-                    .clickable(onClick = onClick),
+                    ).clickable(onClick = onClick)
+                    .padding(vertical = 18.dp, horizontal = 15.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(11.dp),
         ) {

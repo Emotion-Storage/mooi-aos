@@ -3,7 +3,7 @@ package com.emotionstorage.home.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.ai_chat.domain.usecase.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.useCase.GetUserNicknameUseCase
+import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
 import com.emotionstorage.home.domain.usecase.GetHomeUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
