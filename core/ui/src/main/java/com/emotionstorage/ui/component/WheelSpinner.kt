@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -63,7 +64,6 @@ fun WheelSpinner(
 
     Box(
         modifier = modifier
-            .fillMaxWidth()
             .background(Color.Transparent)
     ) {
         if (showCenterLine) {
@@ -123,7 +123,7 @@ private fun PreviewWheelSpinner() {
                 .padding(10.dp)
         ) {
             WheelSpinner(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center).width(100.dp),
                 items = items,
                 selectedItem = selected,
                 onItemSelect = { selected = it })

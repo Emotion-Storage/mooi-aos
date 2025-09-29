@@ -1,11 +1,14 @@
 package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -44,10 +47,11 @@ fun YearMonthWheelSpinner(
         Row(
             modifier = modifier
                 .fillMaxWidth()
-                .align(Alignment.Center)
+                .align(Alignment.Center),
+            horizontalArrangement = Arrangement.Center,
         ) {
             WheelSpinner(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.width(58.dp),
                 items = (minYear..maxYear).map { "${it}년" },
                 selectedItem = selectedYearMonth.year.toString() + "년",
                 onItemSelect = { it ->
@@ -55,8 +59,9 @@ fun YearMonthWheelSpinner(
                 },
                 showCenterLine = false
             )
+            Spacer(modifier = Modifier.width(66.dp))
             WheelSpinner(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.width(35.dp),
                 items = (1..12).map { "${it}월" },
                 selectedItem = selectedYearMonth.monthValue.toString() + "월",
                 onItemSelect = { it ->
