@@ -2,7 +2,7 @@ package com.emotionstorage.ai_chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.domain.repo.ChatIntroPrefsRepository
+import com.emotionstorage.ai_chat.domain.repo.ChatIntroPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.WhileSubscribed

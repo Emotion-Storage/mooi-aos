@@ -1,7 +1,7 @@
 package com.emotionstorage.ai_chat.data.repoImpl
 
-import com.emotionstorage.ai_chat.data.dataSource.ChatRemoteDataSource
-import com.emotionstorage.ai_chat.data.dataSource.ChatWSDataSource
+import com.emotionstorage.ai_chat.data.dataSource.remote.ChatRemoteDataSource
+import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
 import com.emotionstorage.ai_chat.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.domain.repo.ChatRepository
 import com.emotionstorage.domain.common.DataState

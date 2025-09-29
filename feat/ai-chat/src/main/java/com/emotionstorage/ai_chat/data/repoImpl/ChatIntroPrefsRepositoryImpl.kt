@@ -1,7 +1,7 @@
-package com.emotionstorage.data.repoImpl
+package com.emotionstorage.ai_chat.data.repoImpl
 
-import com.emotionstorage.data.dataSource.ChatIntroPrefsLocalDataSource
-import com.emotionstorage.domain.repo.ChatIntroPrefsRepository
+import com.emotionstorage.ai_chat.data.dataSource.local.ChatIntroPrefsLocalDataSource
+import com.emotionstorage.ai_chat.domain.repo.ChatIntroPrefsRepository
 import javax.inject.Inject
 
 class ChatIntroPrefsRepositoryImpl @Inject constructor(

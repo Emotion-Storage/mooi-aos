@@ -1,11 +1,11 @@
-package com.emotionstorage.local.dataSourceImpl
+package com.emotionstorage.ai_chat.local.dataSource
 
 import android.content.Context
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.emotionstorage.data.dataSource.ChatIntroPrefsLocalDataSource
+import com.emotionstorage.ai_chat.data.dataSource.local.ChatIntroPrefsLocalDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

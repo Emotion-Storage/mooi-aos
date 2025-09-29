@@ -1,4 +1,4 @@
-package com.emotionstorage.domain.repo
+package com.emotionstorage.ai_chat.domain.repo
 
 import kotlinx.coroutines.flow.Flow
 
