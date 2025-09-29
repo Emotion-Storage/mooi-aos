@@ -27,7 +27,7 @@ data class MooiTypography(
     val head1: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 26.sp,
             letterSpacing = (-0.02).em,
             lineHeight = (26 * 1.4).sp,
@@ -35,10 +35,9 @@ data class MooiTypography(
     val head2: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.Bold,
-            fontSize = 23.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 22.sp,
             letterSpacing = (-0.02).em,
-            lineHeight = (23 * 1.4).sp,
         ),
     val head3: TextStyle =
         TextStyle(
@@ -58,43 +57,113 @@ data class MooiTypography(
     val body2: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.Medium,
-            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
             letterSpacing = (-0.02).em,
         ),
     val body3: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.Medium,
-            fontSize = 15.sp,
+            fontWeight = FontWeight.Light,
+            fontSize = 17.sp,
             letterSpacing = (-0.02).em,
         ),
     val body4: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium,
+            fontSize = 16.sp,
             letterSpacing = (-0.02).em,
         ),
     val body5: TextStyle =
         TextStyle(
             fontFamily = pretendard,
             fontWeight = FontWeight.Normal,
-            fontSize = 13.sp,
+            fontSize = 16.sp,
             letterSpacing = (-0.02).em,
         ),
     val body6: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.Normal,
-            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 15.sp,
             letterSpacing = (-0.02).em,
         ),
-    val button: TextStyle =
+    val body7: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 15.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val body8: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Normal,
+            fontSize = 15.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption1: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption2: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 14.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption3: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption4: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Light,
+            fontSize = 14.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption5: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 13.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption6: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 13.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val caption7: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Light,
+            fontSize = 13.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val mainButton: TextStyle =
         TextStyle(
             fontFamily = pretendard,
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
+            letterSpacing = (-0.02).em,
+        ),
+    val error: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 13.sp,
             letterSpacing = (-0.02).em,
         ),
 )

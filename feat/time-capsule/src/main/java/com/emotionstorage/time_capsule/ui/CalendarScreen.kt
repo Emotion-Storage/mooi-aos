@@ -281,7 +281,7 @@ private fun CalendarNavButton(
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = "N",
-                    style = MooiTheme.typography.button.copy(fontSize = 10.sp),
+                    style = MooiTheme.typography.mainButton.copy(fontSize = 10.sp),
                     color = Color.White,
                 )
             }

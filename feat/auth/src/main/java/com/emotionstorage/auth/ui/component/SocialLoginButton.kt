@@ -72,7 +72,7 @@ fun SocialLoginButton(
             )
             Text(
                 modifier = Modifier.align(Alignment.Center),
-                style = MooiTheme.typography.button,
+                style = MooiTheme.typography.mainButton,
                 text =
                     if (provider == AuthProvider.KAKAO) {
                         stringResource(R.string.login_btn_kako)

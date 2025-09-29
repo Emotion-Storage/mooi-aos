@@ -121,7 +121,7 @@ private fun DailyReportButton(
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = "일일 리포트 확인하기",
-            style = MooiTheme.typography.button,
+            style = MooiTheme.typography.mainButton,
             color = if (enabled) Color.White else MooiTheme.colorScheme.gray500,
         )
         if (isNewDailyReport && enabled) {
