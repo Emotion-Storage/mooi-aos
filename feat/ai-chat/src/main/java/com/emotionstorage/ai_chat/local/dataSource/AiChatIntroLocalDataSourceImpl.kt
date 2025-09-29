@@ -20,8 +20,9 @@ class AiChatIntroLocalDataSourceImpl @Inject constructor(
     }
 
     override fun observeIntroSeen(): Flow<Boolean> =
-        dataStore.data
-            .catch { e-> if (e is IOException) emit(emptyPreferences()) else throw e }
+        dataStore
+            .data
+            .catch { e -> if (e is IOException) emit(emptyPreferences()) else throw e }
             .map { it[KEY] ?: false }
 
     override suspend fun markIntroSeen(value: Boolean) {
