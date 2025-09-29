@@ -7,7 +7,6 @@ import javax.inject.Inject
 class ChatIntroPrefsRepositoryImpl @Inject constructor(
     private val localDataSource: ChatIntroPrefsLocalDataSource,
 ) : ChatIntroPrefsRepository {
-
     override val introSeen = localDataSource.introSeen
 
     override suspend fun setIntroSeen(value: Boolean) {

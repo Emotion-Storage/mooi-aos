@@ -28,6 +28,6 @@ abstract class LocalDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindChatIntroPrefsLocalDataSource(
-        chatIntroPrefLocalDataSourceImpl: ChatIntroPrefLocalDataSourceImpl
+        chatIntroPrefLocalDataSourceImpl: ChatIntroPrefLocalDataSourceImpl,
     ): ChatIntroPrefsLocalDataSource
 }

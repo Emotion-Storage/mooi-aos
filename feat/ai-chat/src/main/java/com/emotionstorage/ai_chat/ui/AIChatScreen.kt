@@ -63,7 +63,6 @@ fun AIChatScreen(
         }
     }
 
-
     StatelessAIChatScreen(
         state = state.value,
         onAction = viewModel::onAction,
@@ -105,8 +104,9 @@ private fun StatelessAIChatScreen(
 
             ChatProgressBar(
                 progress = state.chatProgress,
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             )
 
             ChatMessageList(
@@ -128,8 +128,9 @@ private fun StatelessAIChatScreen(
                 Text(text = "채팅방 연결 끊기")
             }
             ChatMessageInputBox(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
                 onSendMessage = {
                     onAction(AIChatAction.SendChatMessage(it))
                 },

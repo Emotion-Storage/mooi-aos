@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.dpToPixel
 
-
 enum class BubbleTail { TopCenter, BottomCenter, TopLeft, }
 
 @Composable
@@ -48,104 +47,107 @@ fun SpeechBubble(
     val tailHeightPx = dpToPixel(context, tailHeight.value)
     val tailOffsetPx = dpToPixel(context, tailOffset.value)
 
-    val padding = when (tail) {
-        BubbleTail.TopCenter, BubbleTail.TopLeft -> PaddingValues(top = tailHeight)
-        BubbleTail.BottomCenter -> PaddingValues(bottom = tailHeight)
-    }
+    val padding =
+        when (tail) {
+            BubbleTail.TopCenter, BubbleTail.TopLeft -> PaddingValues(top = tailHeight)
+            BubbleTail.BottomCenter -> PaddingValues(bottom = tailHeight)
+        }
 
     Box(
-        modifier = modifier
-            .then(Modifier.size(sizeParam))
+        modifier =
+            modifier
+                .then(Modifier.size(sizeParam)),
     ) {
         Canvas(
-            modifier = Modifier.matchParentSize()
+            modifier = Modifier.matchParentSize(),
         ) {
             val w = size.width
             val h = size.height
 
-            val path = Path().apply {
-                when (tail) {
-                    BubbleTail.BottomCenter -> {
-                        val rectBottom = h - tailHeightPx
-                        addRoundRect(
-                            RoundRect(
-                                left = 0f,
-                                top = 0f,
-                                right = w,
-                                bottom = rectBottom,
-                                cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
+            val path =
+                Path().apply {
+                    when (tail) {
+                        BubbleTail.BottomCenter -> {
+                            val rectBottom = h - tailHeightPx
+                            addRoundRect(
+                                RoundRect(
+                                    left = 0f,
+                                    top = 0f,
+                                    right = w,
+                                    bottom = rectBottom,
+                                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                                ),
                             )
-                        )
-                        // 하단 가운데 말풍선 꼬리
-                        moveTo(w / 2 - tailWidthPx / 2, rectBottom)
-                        lineTo(w / 2, h)
-                        lineTo(w / 2 + tailWidthPx / 2, rectBottom)
-                        close()
-                    }
+                            // 하단 가운데 말풍선 꼬리
+                            moveTo(w / 2 - tailWidthPx / 2, rectBottom)
+                            lineTo(w / 2, h)
+                            lineTo(w / 2 + tailWidthPx / 2, rectBottom)
+                            close()
+                        }
 
-                    BubbleTail.TopCenter -> {
-                        val rectTop = tailHeightPx
-                        addRoundRect(
-                            RoundRect(
-                                left = 0f,
-                                top = rectTop,
-                                right = w,
-                                bottom = h,
-                                cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
+                        BubbleTail.TopCenter -> {
+                            val rectTop = tailHeightPx
+                            addRoundRect(
+                                RoundRect(
+                                    left = 0f,
+                                    top = rectTop,
+                                    right = w,
+                                    bottom = h,
+                                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                                ),
                             )
-                        )
-                        // 상단 가운데 말풍선 꼬리
-                        moveTo(w / 2 - tailWidthPx / 2, rectTop)
-                        lineTo(w / 2, 0f)
-                        lineTo(w / 2 + tailWidthPx / 2, rectTop)
-                        close()
-                    }
+                            // 상단 가운데 말풍선 꼬리
+                            moveTo(w / 2 - tailWidthPx / 2, rectTop)
+                            lineTo(w / 2, 0f)
+                            lineTo(w / 2 + tailWidthPx / 2, rectTop)
+                            close()
+                        }
 
-                    BubbleTail.TopLeft -> {
-                        val rectTop = tailHeightPx
-                        addRoundRect(
-                            RoundRect(
-                                left = 0f,
-                                top = rectTop,
-                                right = w,
-                                bottom = h,
-                                cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
+                        BubbleTail.TopLeft -> {
+                            val rectTop = tailHeightPx
+                            addRoundRect(
+                                RoundRect(
+                                    left = 0f,
+                                    top = rectTop,
+                                    right = w,
+                                    bottom = h,
+                                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                                ),
                             )
-                        )
-                        // 좌상단 말풍선 꼬리
-                        moveTo(tailOffsetPx - tailWidthPx / 2, rectTop)
-                        lineTo(tailOffsetPx, 0f)
-                        lineTo(tailOffsetPx + tailWidthPx / 2, rectTop)
-                        close()
+                            // 좌상단 말풍선 꼬리
+                            moveTo(tailOffsetPx - tailWidthPx / 2, rectTop)
+                            lineTo(tailOffsetPx, 0f)
+                            lineTo(tailOffsetPx + tailWidthPx / 2, rectTop)
+                            close()
+                        }
                     }
                 }
-            }
             drawPath(path = path, brush = bgBrush)
         }
 
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            contentAlignment = Alignment.Center
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+            contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = text,
                 style = textStyle,
                 color = textColor,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
 }
-
 
 @Preview
 @Composable
 fun SpeechBubblePreview() {
     MooiTheme {
         SpeechBubble(
-            text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요."
+            text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
         )
     }
 }

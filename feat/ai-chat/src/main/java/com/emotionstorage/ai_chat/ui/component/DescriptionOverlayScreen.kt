@@ -98,11 +98,12 @@ fun DescriptionOverlayScreen(
                         drawCircle(
                             color = Color.Transparent,
                             radius = backButtonRadius,
-                            center = androidx.compose.ui.geometry.Offset(
-                                backButtonCenterX,
-                                backButtonCenterY
-                            ),
-                            blendMode = BlendMode.Clear
+                            center =
+                                androidx.compose.ui.geometry.Offset(
+                                    backButtonCenterX,
+                                    backButtonCenterY,
+                                ),
+                            blendMode = BlendMode.Clear,
                         )
                     }
                 }
@@ -175,7 +176,6 @@ private fun BoxScope.PositionedBubble(
         }
     }
 }
-
 
 @Preview
 @Composable

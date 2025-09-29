@@ -105,8 +105,8 @@ private fun StatelessSignupCompleteScreen(
                 SpeechBubble(
                     text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
                     tail = BubbleTail.BottomCenter,
-                    sizeParam = DpSize(265.dp,84.dp),
-                    bgBrush = MooiTheme.brushScheme.subButtonBackground
+                    sizeParam = DpSize(265.dp, 84.dp),
+                    bgBrush = MooiTheme.brushScheme.subButtonBackground,
                 )
 
                 CtaButton(

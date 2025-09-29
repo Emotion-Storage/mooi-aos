@@ -73,41 +73,46 @@ private fun StatelessAIChatDescriptionScreen(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .imePadding()
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .imePadding(),
         ) {
             // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
-                modifier = Modifier.onGloballyPositioned {
-                    onTopbarRect(it.boundsInParent())
-                },
+                modifier =
+                    Modifier.onGloballyPositioned {
+                        onTopbarRect(it.boundsInParent())
+                    },
                 showBackButton = true,
-                onBackClick = {})
+                onBackClick = {},
+            )
 
             ChatProgressBar(
                 progress = progress,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    // ProgressBar 위치 추적
-                    .onGloballyPositioned {
-                        onProgressRect(it.boundsInParent())
-                    }
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        // ProgressBar 위치 추적
+                        .onGloballyPositioned {
+                            onProgressRect(it.boundsInParent())
+                        },
             )
 
             Box(
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
 
             ChatMessageInputBox(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned {
-                        onInputBoxRect(it.boundsInParent())
-                    },
-                onSendMessage = {}
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned {
+                            onInputBoxRect(it.boundsInParent())
+                        },
+                onSendMessage = {},
             )
         }
     }
@@ -118,11 +123,10 @@ private fun StatelessAIChatDescriptionScreen(
             inputBoxBounds = inputBoxBounds,
             topbarBounds = topbarBounds,
             onCheckboxChecked = onCheckboxChanged,
-            onComplete = onDescriptionCompleted
+            onComplete = onDescriptionCompleted,
         )
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

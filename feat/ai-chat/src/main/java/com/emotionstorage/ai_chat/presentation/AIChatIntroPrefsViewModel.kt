@@ -12,15 +12,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AIChatIntroPrefsViewModel @Inject constructor(
-    private val repository: ChatIntroPrefsRepository
+    private val repository: ChatIntroPrefsRepository,
 ) : ViewModel() {
+    val introSeen =
+        repository
+            .introSeen
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(1_000),
+                false,
+            )
 
-    val introSeen = repository.introSeen
-        .stateIn(
-            viewModelScope, SharingStarted.WhileSubscribed(1_000), false
-        )
-
-    fun setIntroSeen(value: Boolean) = viewModelScope.launch {
-        repository.setIntroSeen(value)
-    }
+    fun setIntroSeen(value: Boolean) =
+        viewModelScope.launch {
+            repository.setIntroSeen(value)
+        }
 }

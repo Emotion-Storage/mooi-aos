@@ -13,19 +13,20 @@ import javax.inject.Inject
 class ChatIntroPrefLocalDataSourceImpl @Inject constructor(
     @ApplicationContext context: Context,
 ) : ChatIntroPrefsLocalDataSource {
-
     companion object {
         const val PREF_NAME = "chat_intro_prefs"
     }
 
-    private val dataStore = PreferenceDataStoreFactory.create {
-        context.preferencesDataStoreFile(PREF_NAME)
-    }
+    private val dataStore =
+        PreferenceDataStoreFactory.create {
+            context.preferencesDataStoreFile(PREF_NAME)
+        }
     val key = booleanPreferencesKey("ai_chat_intro_seen")
 
-    override val introSeen = dataStore.data.map {
-        it[key] ?: false
-    }
+    override val introSeen =
+        dataStore.data.map {
+            it[key] ?: false
+        }
 
     override suspend fun setIntroSeen(value: Boolean) {
         dataStore.edit { it[key] = value }

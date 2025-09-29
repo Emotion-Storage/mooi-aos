@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -75,7 +74,9 @@ internal sealed class AppDestination {
     ) : AppDestination()
 
     @Serializable
-    data class AIChatDesc(val roomId: String) : AppDestination()
+    data class AIChatDesc(
+        val roomId: String,
+    ) : AppDestination()
 
     @Serializable
     object ArrivedTimeCapsules : AppDestination()
@@ -256,8 +257,7 @@ internal fun AppNavHost(
                     onStartChat = { roomId ->
                         navController.navigateWithClearStack(AppDestination.AIChat(roomId))
                     },
-
-                    )
+                )
             }
 
             composable<AppDestination.ArrivedTimeCapsules> {
