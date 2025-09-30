@@ -42,6 +42,8 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
@@ -75,11 +77,25 @@ fun TimeCapsuleDetailScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
+    val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
+    val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is DeleteTimeCapsuleSuccess -> {
                     navToBack()
+                }
+
+                is ShowExpiredModal -> {
+                    // hide other modals before showing expired modal
+                    setDeleteModalOpen(false)
+
+                    setExpiredModalOpen(true)
+                }
+
+                is ShowDeleteModal -> {
+                    setDeleteModalOpen(true)
                 }
 
                 is ShowToast -> {
@@ -96,6 +112,10 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        isDeleteModalOpen = isDeleteModalOpen,
+        dismissDeleteModal = { setDeleteModalOpen(false) },
+        isExpiredModalOpen = isExpiredModalOpen,
+        dismissExpiredModal = { setExpiredModalOpen(false) },
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
@@ -108,6 +128,10 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    isDeleteModalOpen: Boolean = false,
+    dismissDeleteModal: () -> Unit = {},
+    isExpiredModalOpen: Boolean = false,
+    dismissExpiredModal: () -> Unit = {},
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToBack: () -> Unit = {},
@@ -115,22 +139,18 @@ private fun StatelessTimeCapsuleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
+    TimeCapsuleDeleteModal(
+        isModalOpen = isDeleteModalOpen,
+        onDismissRequest = dismissDeleteModal,
+        onDelete = {
+            onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))
+        },
+    )
     TimeCapsuleExpiredModal(
         isModalOpen = isExpiredModalOpen,
         onConfirm = {
-            setExpiredModalOpen(false)
+            dismissExpiredModal()
             navToBack()
-            // todo: fix modal opening back after navigating back
-        },
-    )
-
-    val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
-    TimeCapsuleDeleteModal(
-        isModalOpen = isDeleteModalOpen,
-        onDismissRequest = { setDeleteModalOpen(false) },
-        onDelete = {
-            onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))
         },
     )
 
@@ -230,13 +250,13 @@ private fun StatelessTimeCapsuleDetailScreen(
                         navToSaveTimeCapsule(id)
                     },
                     onTimeCapsuleExpired = {
-                        setExpiredModalOpen(true)
+                        onAction(TimeCapsuleDetailAction.OnExpireTrigger)
                     },
                     onSaveMindNote = {
                         // todo: save mind note content
                     },
                     onDeleteTimeCapsule = {
-                        setDeleteModalOpen(true)
+                        onAction(TimeCapsuleDetailAction.OnDeleteTrigger)
                     },
                 )
             }

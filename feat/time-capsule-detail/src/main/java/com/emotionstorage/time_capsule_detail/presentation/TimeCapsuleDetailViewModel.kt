@@ -27,9 +27,13 @@ sealed class TimeCapsuleDetailAction {
         val id: String,
     ) : TimeCapsuleDetailAction()
 
+    object OnExpireTrigger: TimeCapsuleDetailAction()
+
     data class OnToggleFavorite(
         val id: String,
     ) : TimeCapsuleDetailAction()
+
+    object OnDeleteTrigger: TimeCapsuleDetailAction()
 
     data class OnDeleteTimeCapsule(
         val id: String,
@@ -38,6 +42,10 @@ sealed class TimeCapsuleDetailAction {
 
 sealed class TimeCapsuleDetailSideEffect {
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
+
+    object ShowExpiredModal : TimeCapsuleDetailSideEffect()
+
+    object ShowDeleteModal : TimeCapsuleDetailSideEffect()
 
     data class ShowToast(
         val toast: TimeCapsuleDetailToast,
@@ -67,8 +75,22 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
+            is TimeCapsuleDetailAction.OnExpireTrigger -> {
+                // trigger side effect
+                intent {
+                    postSideEffect(TimeCapsuleDetailSideEffect.ShowExpiredModal)
+                }
+            }
+
             is TimeCapsuleDetailAction.OnToggleFavorite -> {
                 handleToggleFavorite(action.id)
+            }
+
+            is TimeCapsuleDetailAction.OnDeleteTrigger -> {
+                // trigger side effect
+                intent {
+                    postSideEffect(TimeCapsuleDetailSideEffect.ShowDeleteModal)
+                }
             }
 
             is TimeCapsuleDetailAction.OnDeleteTimeCapsule -> {
