@@ -38,25 +38,31 @@ fun TextBoxInput(
         modifier =
             modifier
                 .fillMaxWidth()
-                .heightIn(min = 156.dp)
                 .background(MooiTheme.colorScheme.background, RoundedCornerShape(15.dp))
                 .background(Color(0xFF0E0C12).copy(alpha = 0.5f), RoundedCornerShape(15.dp))
                 .padding(18.dp),
         textStyle =
             MooiTheme.typography.caption4.copy(
                 lineHeight = 24.sp,
-                color = if (showPlaceHolder) MooiTheme.colorScheme.gray500 else Color.White,
+                color = Color.White,
             ),
-        value = if (showPlaceHolder) placeHolder else value,
+        value = if(value.length > maxCharCount) value.substring(0, maxCharCount) else value,
         onValueChange = onValueChange,
     ) {
         Column(
             modifier =
-                Modifier
-                    .fillMaxSize(),
+                Modifier.heightIn(min = 156.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            it()
+            if (showPlaceHolder) {
+                Text(
+                    text = placeHolder,
+                    style = MooiTheme.typography.caption4,
+                    color = MooiTheme.colorScheme.gray500
+                )
+            } else {
+                it()
+            }
 
             if (showCharCount) {
                 // space between text and char count
@@ -89,6 +95,7 @@ fun TextBoxInput(
 @Composable
 private fun TextBoxInputPreview() {
     Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        // empty text input value
         TextBoxInput(
             value = "",
             onValueChange = {},
@@ -96,8 +103,12 @@ private fun TextBoxInputPreview() {
             showCharCount = true,
             maxCharCount = 1000,
         )
+
+        // long text input value
         TextBoxInput(
-            value = "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
+            value = "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
+                "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
+                "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
             onValueChange = {},
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
