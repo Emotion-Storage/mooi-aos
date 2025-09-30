@@ -106,12 +106,16 @@ private fun StatelessAIChatDescriptionScreen(
             )
 
             ChatMessageInputBox(
+                text = "",
                 modifier =
                     Modifier
                         .fillMaxWidth()
                         .onGloballyPositioned {
                             onInputBoxRect(it.boundsInParent())
                         },
+                enabled = false,
+                readOnly = true,
+                onTextChange = {},
                 onSendMessage = {},
             )
         }

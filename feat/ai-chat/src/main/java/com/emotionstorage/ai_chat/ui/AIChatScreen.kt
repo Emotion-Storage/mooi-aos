@@ -13,8 +13,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -77,6 +79,9 @@ private fun StatelessAIChatScreen(
     navToBack: () -> Unit = {},
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
+
+    var draft by remember { mutableStateOf("") }
+
     AIChatExitModel(
         isModelOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
@@ -94,7 +99,6 @@ private fun StatelessAIChatScreen(
                     .padding(innerPadding)
                     .imePadding(),
         ) {
-            // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
                 showBackButton = true,
                 onBackClick = {
@@ -128,11 +132,15 @@ private fun StatelessAIChatScreen(
                 Text(text = "채팅방 연결 끊기")
             }
             ChatMessageInputBox(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
+                text = draft,
+                modifier = Modifier.fillMaxWidth(),
+                onTextChange = { draft = it },
                 onSendMessage = {
-                    onAction(AIChatAction.SendChatMessage(it))
+                    val msg = draft.trim()
+                    if (msg.isNotEmpty()) {
+                        onAction(AIChatAction.SendChatMessage(msg))
+                        draft = ""
+                    }
                 },
             )
         }
