@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,9 +28,10 @@ import com.orhanobut.logger.Logger
 fun Modal(
     title: String,
     confirmLabel: String,
-    dismissLabel: String,
     onDismissRequest: () -> Unit,
-    subTitle: String? = null,
+    topDescription: String? = null,
+    bottomDescription: String? = null,
+    dismissLabel: String? = null,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {},
 ) {
@@ -40,46 +42,66 @@ fun Modal(
                     .clip(RoundedCornerShape(15.dp))
                     .background(MooiTheme.colorScheme.background)
                     .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
-            verticalArrangement = Arrangement.Top,
+            verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (!subTitle.isNullOrEmpty()) {
+            // title & descriptions
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (!topDescription.isNullOrEmpty()) {
+                    Text(
+                        text = topDescription,
+                        style = MooiTheme.typography.body2,
+                        color = MooiTheme.colorScheme.gray500,
+                        textAlign = TextAlign.Center,
+                    )
+                }
                 Text(
-                    modifier = Modifier.padding(bottom = 5.dp),
-                    text = subTitle,
-                    style = MooiTheme.typography.body2,
-                    color = MooiTheme.colorScheme.gray500,
+                    text = title,
+                    style =
+                        MooiTheme.typography.head2.copy(
+                            lineHeight = 30.sp,
+                        ),
+                    color = Color.White,
                     textAlign = TextAlign.Center,
                 )
+                if (!bottomDescription.isNullOrEmpty()) {
+                    Text(
+                        text = bottomDescription,
+                        style = MooiTheme.typography.body5,
+                        color = MooiTheme.colorScheme.gray500,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
-            Text(
-                modifier = Modifier.padding(bottom = 19.dp),
-                text = title,
-                style =
-                    MooiTheme.typography.head2.copy(
-                        lineHeight = 30.sp,
-                    ),
-                color = Color.White,
-                textAlign = TextAlign.Center,
-            )
-            ModalButton(
-                label = confirmLabel,
-                onClick = {
-                    Logger.v("confirm button clicked")
-                    onConfirm()
-                    onDismissRequest()
-                },
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            ModalButton(
-                label = dismissLabel,
-                onClick = {
-                    Logger.v("dismiss button clicked")
-                    onDismiss()
-                    onDismissRequest()
-                },
-                type = CtaButtonType.TONAL,
-            )
+
+            // buttons
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                ModalButton(
+                    label = confirmLabel,
+                    onClick = {
+                        onConfirm()
+                        onDismissRequest()
+                    },
+                )
+                if (dismissLabel != null) {
+                    ModalButton(
+                        label = dismissLabel,
+                        onClick = {
+                            onDismiss()
+                            onDismissRequest()
+                        },
+                        type = CtaButtonType.TONAL,
+                    )
+                }
+            }
         }
     }
 }
@@ -104,12 +126,14 @@ private fun ModalButton(
 @Preview(showBackground = true)
 @Composable
 private fun ModalPreview() {
+    // background ui
     Box(modifier = Modifier.fillMaxSize())
+
     Modal(
-        subTitle = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
+        topDescription = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
         title = "그래도 메인 화면으로\n돌아갈까요?",
         confirmLabel = "회원가입을 계속 할게요.",
-        dismissLabel = "메인 화면으로 나갈래요. ",
+        dismissLabel = "메인 화면으로 나갈래요.",
         onDismissRequest = { },
         onConfirm = { },
         onDismiss = { },
