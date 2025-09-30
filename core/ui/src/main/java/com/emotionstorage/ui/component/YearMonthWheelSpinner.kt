@@ -61,7 +61,7 @@ fun YearMonthWheelSpinner(
         )
         Row(
             modifier =
-                modifier
+                Modifier
                     .fillMaxWidth()
                     .align(Alignment.Center),
             horizontalArrangement = Arrangement.Center,
