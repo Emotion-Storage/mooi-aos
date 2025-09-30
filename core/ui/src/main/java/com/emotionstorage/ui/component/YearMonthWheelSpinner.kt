@@ -30,14 +30,18 @@ fun YearMonthWheelSpinner(
     selectedYearMonth: YearMonth = YearMonth.now(),
     onYearMonthSelect: (YearMonth) -> Unit = {},
 ) {
-    require(yearMonthRange.first <= yearMonthRange.second) { "minYearMonth must be less than or equal to maxYearMonth" }
+    require(yearMonthRange.first <= yearMonthRange.second) {
+        "minYearMonth must be less than or equal to maxYearMonth"
+    }
 
     // wheel spinner items
     val yearRange = remember(key1 = yearMonthRange) { (yearMonthRange.first.year..yearMonthRange.second.year) }
     val monthRange =
         remember(key1 = selectedYearMonth, key2 = yearMonthRange) {
             // if min year and max year are the same
-            if (selectedYearMonth.year == yearMonthRange.first.year && selectedYearMonth.year == yearMonthRange.second.year) {
+            if (selectedYearMonth.year == yearMonthRange.first.year &&
+                selectedYearMonth.year == yearMonthRange.second.year
+            ) {
                 yearMonthRange.first.monthValue..yearMonthRange.second.monthValue
             } else if (selectedYearMonth.year == yearMonthRange.first.year) {
                 yearMonthRange.first.monthValue..12
@@ -75,9 +79,9 @@ fun YearMonthWheelSpinner(
                 selectedItem = selectedYearMonth.year.toString() + "년",
                 onItemSelect = { it ->
                     var selectedYearMonth = YearMonth.of(it.dropLast(1).toInt(), selectedYearMonth.monthValue)
-                    if(selectedYearMonth.isAfter(yearMonthRange.second)){
+                    if (selectedYearMonth.isAfter(yearMonthRange.second)) {
                         selectedYearMonth = yearMonthRange.second
-                    }else if(selectedYearMonth.isBefore(yearMonthRange.first)){
+                    } else if (selectedYearMonth.isBefore(yearMonthRange.first)) {
                         selectedYearMonth = yearMonthRange.first
                     }
 

@@ -22,7 +22,10 @@ fun CalendarYearMonthBottomSheet(
     minYearMonth: YearMonth = CALENDER_MIN_YEAR_MONTH,
     maxYearMonth: YearMonth = YearMonth.now(),
 ) {
-    val (spinnerYearMonth, setSpinnerYearMonth) = remember(key1 = selectedYearMonth) { mutableStateOf(selectedYearMonth) }
+    val (spinnerYearMonth, setSpinnerYearMonth) =
+        remember(
+            key1 = selectedYearMonth,
+        ) { mutableStateOf(selectedYearMonth) }
 
     BottomSheet(
         modifier = modifier,

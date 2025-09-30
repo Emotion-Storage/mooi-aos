@@ -95,12 +95,13 @@ fun TimeCapsuleCalendar(
             }
 
             Row(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .clickable(
-                        enabled = showYearMonthDropDownIcon,
-                        onClick = onYearMonthDropDownIconClick,
-                    ),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .clickable(
+                            enabled = showYearMonthDropDownIcon,
+                            onClick = onYearMonthDropDownIconClick,
+                        ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
@@ -200,8 +201,7 @@ private fun DateItem(
                         .background(
                             if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
                             shape = RoundedCornerShape(20.dp),
-                        )
-                        .clickable { onClick(date) }
+                        ).clickable { onClick(date) }
                         .padding(horizontal = 3.5.dp)
                         .padding(top = 6.dp, bottom = 4.dp),
                 verticalArrangement =
@@ -224,8 +224,7 @@ private fun DateItem(
                             .background(
                                 if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                                 shape = CircleShape,
-                            )
-                            .border(
+                            ).border(
                                 width = 1.5.dp,
                                 color =
                                     if (isFilled) {

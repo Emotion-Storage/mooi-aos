@@ -50,7 +50,6 @@ fun WheelSpinner(
             initialFirstVisibleItemIndex = initialIndex,
         )
 
-
     // keep track of the last scroll index, to prevent multiple triggers
     val (lastSelectedIndex, setLastSelectedIndex) = remember(initialIndex) { mutableStateOf(initialIndex) }
 
@@ -64,7 +63,7 @@ fun WheelSpinner(
         if (!listState.isScrollInProgress) {
             if (selectedIndex in wheelItems.indices && selectedIndex != lastSelectedIndex) {
                 // trigger item selection
-                if(wheelItems[selectedIndex].isNotEmpty()) onItemSelect(wheelItems[selectedIndex])
+                if (wheelItems[selectedIndex].isNotEmpty()) onItemSelect(wheelItems[selectedIndex])
             }
         }
     }
