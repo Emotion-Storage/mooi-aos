@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -216,6 +217,14 @@ private fun StatelessTimeCapsuleDetailScreen(
                     Modifier
                         .fillMaxSize()
                         .background(MooiTheme.colorScheme.background)
+                        .run{
+                            // blur all content if locked
+                            if(state.timeCapsule.status == TimeCapsule.STATUS.LOCKED){
+                                this.blur(4.dp)
+                            }else{
+                                this
+                            }
+                        }
                         .padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)
@@ -581,7 +590,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.TEMPORARY,
+                            status = TimeCapsule.STATUS.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
