@@ -16,7 +16,7 @@ fun CalendarYearMonthBottomSheet(
     selectedYearMonth: YearMonth = YearMonth.now(),
     onYearMonthSelect: (YearMonth) -> Unit = {},
 ) {
-    val (spinnerYearMonth, setSpinnerYearMonth) = remember { mutableStateOf(selectedYearMonth) }
+    val (spinnerYearMonth, setSpinnerYearMonth) = remember(key1 = selectedYearMonth) { mutableStateOf(selectedYearMonth) }
 
     BottomSheet(
         modifier = modifier,
