@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import com.emotionstorage.ui.component.Modal
 
 @Composable
-fun TimeCapsuleDeleteModel(
+fun TimeCapsuleDeleteModal(
     isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onDelete: () -> Unit = {},

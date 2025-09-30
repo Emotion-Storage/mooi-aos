@@ -43,7 +43,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
-import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModel
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
@@ -112,7 +112,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     val scrollState = rememberScrollState()
 
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
-    TimeCapsuleDeleteModel(
+    TimeCapsuleDeleteModal(
         isModalOpen = isDeleteModalOpen,
         onDismissRequest = { setDeleteModalOpen(false) },
         onDelete = {

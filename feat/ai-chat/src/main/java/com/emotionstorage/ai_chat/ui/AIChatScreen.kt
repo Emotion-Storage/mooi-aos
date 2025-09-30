@@ -64,6 +64,7 @@ fun AIChatScreen(
     }
 
     StatelessAIChatScreen(
+        modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
@@ -72,12 +73,13 @@ fun AIChatScreen(
 
 @Composable
 private fun StatelessAIChatScreen(
+    modifier: Modifier = Modifier,
     state: AIChatState = AIChatState(),
     onAction: (action: AIChatAction) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
-    AIChatExitModel(
+    AIChatExitModal(
         isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
         onExit = navToBack,
@@ -140,7 +142,7 @@ private fun StatelessAIChatScreen(
 }
 
 @Composable
-private fun AIChatExitModel(
+private fun AIChatExitModal(
     isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onExit: () -> Unit = {},
