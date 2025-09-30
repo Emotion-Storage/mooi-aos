@@ -79,7 +79,7 @@ fun TextBoxInput(
                     Text(
                         style = MooiTheme.typography.caption3,
                         color = if (value.length == 0) MooiTheme.colorScheme.gray300 else MooiTheme.colorScheme.primary,
-                        text = "${value.length}",
+                        text = if (value.length > maxCharCount) maxCharCount.toString() else value.length.toString(),
                     )
                     Text(
                         style = MooiTheme.typography.caption3,
