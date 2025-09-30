@@ -207,7 +207,9 @@ private fun StatelessTimeCapsuleDetailScreen(
                     TimeCapsuleNote(
                         modifier = Modifier.padding(top = 53.dp),
                         note = state.timeCapsule.note,
-                        onNoteChange = { navToSaveTimeCapsule(id) },
+                        onNoteChange = {
+                            // todo: save note content
+                        }
                     )
                 }
 
