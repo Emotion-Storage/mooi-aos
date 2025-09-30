@@ -26,7 +26,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -57,7 +56,6 @@ import java.time.format.DateTimeFormatter
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import kotlinx.coroutines.launch
 
 @Composable
 fun TimeCapsuleDetailScreen(
@@ -85,7 +83,6 @@ fun TimeCapsuleDetailScreen(
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
                     snackState.showSnackbar(sideEffect.toast.message)
-
                 }
             }
         }
@@ -208,7 +205,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         note = state.timeCapsule.note,
                         onNoteChange = {
                             // todo: save note content
-                        }
+                        },
                     )
                 }
 

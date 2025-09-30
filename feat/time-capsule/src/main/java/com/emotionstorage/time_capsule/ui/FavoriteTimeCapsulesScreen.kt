@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -47,7 +46,6 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 private val DUMMY_TIME_CAPSULES =
