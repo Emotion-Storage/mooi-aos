@@ -149,9 +149,8 @@ private fun StatelessAIChatScreen(
             ChatMessageInputBox(
                 text = draft,
                 modifier =
-                    Modifier.fillMaxWidth().onFocusChanged { focusState ->
-                        isInputFocused = focusState.isFocused
-                    },
+                    Modifier.fillMaxWidth(),
+                onFocusChanged = { focused -> isInputFocused = focused },
                 onTextChange = { draft = it },
                 focusRequester = focusRequester,
                 onSendMessage = {

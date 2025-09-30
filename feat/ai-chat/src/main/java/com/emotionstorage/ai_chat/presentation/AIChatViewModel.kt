@@ -22,12 +22,10 @@ data class AIChatState(
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
     val chatProgress: Float = 0f,
-    val today: LocalDate = LocalDate.now(),
 ) {
-    val isEmpty: Boolean
-        get() = messages.isEmpty()
+    val isEmpty: Boolean get() = messages.isEmpty()
     val hasTodayHistory: Boolean
-        get() = messages.any { it.timestamp.toLocalDate() == today }
+        get() = messages.any { it.timestamp.toLocalDate() == LocalDate.now() }
     val isNewDayFirstChat: Boolean
         get() = !isEmpty && !hasTodayHistory
 }
