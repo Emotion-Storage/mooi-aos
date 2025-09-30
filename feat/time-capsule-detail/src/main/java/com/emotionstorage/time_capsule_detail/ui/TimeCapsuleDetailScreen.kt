@@ -221,27 +221,27 @@ private fun StatelessTimeCapsuleDetailScreen(
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
             ) {
-//                TimeCapsuleSummary(
-//                    title = state.timeCapsule.title,
-//                    summary = state.timeCapsule.summary,
-//                )
-//
-//                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
-//
-//                TimeCapsuleEmotionComments(
-//                    emotions = state.timeCapsule.emotions,
-//                    comments = state.timeCapsule.comments,
-//                )
-//
-//                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-//                    TimeCapsuleNote(
-//                        modifier = Modifier.padding(top = 53.dp),
-//                        note = state.timeCapsule.note,
-//                        onNoteChange = {
-//                            // todo: save note content
-//                        },
-//                    )
-//                }
+                TimeCapsuleSummary(
+                    title = state.timeCapsule.title,
+                    summary = state.timeCapsule.summary,
+                )
+
+                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
+
+                TimeCapsuleEmotionComments(
+                    emotions = state.timeCapsule.emotions,
+                    comments = state.timeCapsule.comments,
+                )
+
+                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                    TimeCapsuleNote(
+                        modifier = Modifier.padding(top = 53.dp),
+                        note = state.timeCapsule.note,
+                        onNoteChange = {
+                            // todo: save note content
+                        },
+                    )
+                }
 
                 TimeCapsuleDetailActionButtons(
                     createdAt = state.timeCapsule.createdAt,
@@ -513,8 +513,7 @@ private fun TimeCapsuleDetailActionButtons(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CountDownTimer(
-//                    deadline = createdAt.plusHours(25)
-                    deadline = createdAt.plusSeconds(5)
+                    deadline = createdAt.plusHours(25)
                 ) { hours, minutes, seconds ->
                     if (hours == 0L && minutes == 0L && seconds == 0L) {
                         onTimeCapsuleExpired()
