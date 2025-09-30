@@ -95,8 +95,8 @@ private fun StatelessAIChatScreen(
 
     val showEmptyScreen = state.messages.isEmpty() && !isInputFocused
 
-    AIChatExitModel(
-        isModelOpen = isExitModalOpen,
+    AIChatExitModal(
+        isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
         onExit = navToBack,
     )
