@@ -60,10 +60,11 @@ fun ChatMessageInputBox(
     ) {
         // 바 높이 78dp
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(78.dp)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(78.dp)
+                    .padding(16.dp),
         ) {
             // 입력 캡슐
             BasicTextField(
@@ -73,66 +74,68 @@ fun ChatMessageInputBox(
                 maxLines = 1,
                 readOnly = readOnly,
                 enabled = enabled,
-                textStyle = MooiTheme.typography.caption3.copy(
-                    lineHeight = 24.sp,
-                    color = Color.White
-                ),
+                textStyle = MooiTheme.typography.caption3.copy(lineHeight = 24.sp, color = Color.White),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
                 interactionSource = interaction,
                 decorationBox = { inner ->
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .background(MooiTheme.colorScheme.gray800, shape)
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                                .background(MooiTheme.colorScheme.gray800, shape)
+                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(start = 6.dp)
+                            modifier =
+                                Modifier
+                                    .weight(1f)
+                                    .padding(start = 6.dp),
                         ) {
                             if (text.isEmpty()) {
                                 Text(
                                     text = "지금 떠오르는 감정을 적어보세요",
-                                    style = MooiTheme.typography.caption3.copy(
-                                        lineHeight = 24.sp,
-                                        color = MooiTheme.colorScheme.gray600
-                                    )
+                                    style =
+                                        MooiTheme.typography.caption3.copy(
+                                            lineHeight = 24.sp,
+                                            color = MooiTheme.colorScheme.gray600,
+                                        ),
                                 )
                             }
                             inner()
                         }
                     }
                 },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .focusRequester(focusRequester)
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                        .focusRequester(focusRequester),
             )
 
             if (canSend || readOnly) {
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 7.dp)
-                        .size(33.dp)
-                        .clip(CircleShape)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = null,
-                            enabled = canSend,
-                            onClick = onSendMessage
-                        ),
-                    contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .padding(end = 7.dp)
+                            .size(33.dp)
+                            .clip(CircleShape)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = null,
+                                enabled = canSend,
+                                onClick = onSendMessage,
+                            ),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Image(
                         painterResource(R.drawable.send),
                         contentDescription = "전송",
                         modifier = Modifier.size(33.dp),
-                        contentScale = ContentScale.Fit
+                        contentScale = ContentScale.Fit,
                     )
                 }
             }
@@ -153,7 +156,8 @@ private fun ChatInputEmptyPreview() {
     }
 }
 
-@Preview@Composable
+@Preview
+@Composable
 private fun ChatInputPreview() {
     MooiTheme {
         var text by remember { mutableStateOf("테스트") }

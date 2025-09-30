@@ -126,10 +126,11 @@ private fun StatelessAIChatScreen(
             )
 
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth(),
-                contentAlignment = Alignment.Center
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
             ) {
                 ChatMessageList(
                     modifier = Modifier.fillMaxSize(),
@@ -145,8 +146,8 @@ private fun StatelessAIChatScreen(
 
             ChatMessageInputBox(
                 text = draft,
-                modifier = Modifier.fillMaxWidth()
-                    .onFocusChanged { focusState ->
+                modifier =
+                    Modifier.fillMaxWidth().onFocusChanged { focusState ->
                         isInputFocused = focusState.isFocused
                     },
                 onTextChange = { draft = it },

@@ -22,7 +22,7 @@ data class AIChatState(
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
     val chatProgress: Float = 0f,
-    val today: LocalDate = LocalDate.now()
+    val today: LocalDate = LocalDate.now(),
 ) {
     val isEmpty: Boolean
         get() = messages.isEmpty()
@@ -59,9 +59,7 @@ sealed class AIChatSideEffect {
 }
 
 @HiltViewModel
-class AIChatViewModel
-@Inject
-constructor(
+class AIChatViewModel @Inject constructor(
     private val connectChatRoom: ConnectChatRoomUseCase,
     private val disconnectChatRoom: DisconnectChatRoomUseCase,
     private val sendChatMessage: SendChatMessageUseCase,
