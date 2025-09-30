@@ -38,11 +38,12 @@ fun CtaButton(
     // todo: set cta button size with variables
     Box(modifier = modifier) {
         Button(
-            modifier = Modifier
-                .width(330.dp)
-                .height(65.dp)
-                .fillMaxSize()
-                .mainBackground(enabled, RoundedCornerShape(radius.dp)),
+            modifier =
+                Modifier
+                    .width(330.dp)
+                    .height(65.dp)
+                    .fillMaxSize()
+                    .mainBackground(enabled, RoundedCornerShape(radius.dp)),
             shape = RoundedCornerShape(radius.dp),
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
             colors =

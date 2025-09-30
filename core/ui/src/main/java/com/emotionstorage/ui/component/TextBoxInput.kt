@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,8 +51,9 @@ fun TextBoxInput(
         onValueChange = onValueChange,
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier =
+                Modifier
+                    .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             it()
@@ -62,9 +62,10 @@ fun TextBoxInput(
                 // space between text and char count
                 Spacer(modifier = Modifier.height(18.dp))
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(24.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(24.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.End,
                 ) {

@@ -66,7 +66,7 @@ sealed class FavoriteTimeCapsulesSideEffect {
 @HiltViewModel
 class FavoriteTimeCapsulesViewModel @Inject constructor(
     // private val getFavoriteTimeCapsules: GetFavoriteTimeCapsulesUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase
+    private val toggleFavorite: ToggleFavoriteUseCase,
 ) : ViewModel(),
     ContainerHost<FavoriteTimeCapsulesState, FavoriteTimeCapsulesSideEffect> {
     override val container =
@@ -193,7 +193,10 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 return@intent
             }
 
-            suspend fun updateFavorite(id: String, isFavorite: Boolean) = reduce {
+            suspend fun updateFavorite(
+                id: String,
+                isFavorite: Boolean,
+            ) = reduce {
                 state.copy(
                     timeCapsules =
                         state.timeCapsules.map {
@@ -219,10 +222,10 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                         }
                     },
                     onError = { throwable, data ->
-                        if(data == ToggleToastResult.FAVORITE_FULL) {
+                        if (data == ToggleToastResult.FAVORITE_FULL) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_FULL))
                         }
-                    }
+                    },
                 )
             }
         }
