@@ -35,18 +35,20 @@ fun WheelSpinner(
     selectedItem: String? = null,
     onItemSelect: (String) -> Unit = {},
     visibleItemsCount: Int = 5,
-    showCenterIndicator: Boolean = true
+    showCenterIndicator: Boolean = true,
 ) {
     val centerIndex = visibleItemsCount / 2
     val wheelItems = List(centerIndex) { "" } + items + List(centerIndex) { "" }
 
     // initial scroll position - center selected item
-    val initialIndex = remember(selectedItem) {
-        items.indexOf(selectedItem).takeIf { it != -1 } ?: 0
-    }
-    val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = initialIndex
-    )
+    val initialIndex =
+        remember(selectedItem) {
+            items.indexOf(selectedItem).takeIf { it != -1 } ?: 0
+        }
+    val listState =
+        rememberLazyListState(
+            initialFirstVisibleItemIndex = initialIndex,
+        )
 
     // keep track of the last scroll index, to prevent multiple triggers
     val (lastSelectedIndex, setLastSelectedIndex) = remember { mutableStateOf(initialIndex) }
@@ -76,7 +78,7 @@ fun WheelSpinner(
         wheelItems = wheelItems,
         firstVisibleItemIndex = firstVisibleItemIndex.value,
         centerIndex = centerIndex,
-        showCenterIndicator = showCenterIndicator
+        showCenterIndicator = showCenterIndicator,
     )
 }
 
@@ -90,24 +92,27 @@ private fun WheelSpinnerContent(
     showCenterIndicator: Boolean = true,
 ) {
     Box(
-        modifier = modifier
-            .background(Color.Transparent)
+        modifier =
+            modifier
+                .background(Color.Transparent),
     ) {
         if (showCenterIndicator) {
             Box(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .height(38.dp)
-                    .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .height(38.dp)
+                        .fillMaxWidth()
+                        .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
             )
         }
 
         LazyColumn(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(168.dp)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .height(168.dp)
+                    .fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp),
             state = listState,
         ) {
@@ -117,18 +122,26 @@ private fun WheelSpinnerContent(
                     firstVisibleItemIndex + centerIndex - 1 == index || firstVisibleItemIndex + centerIndex + 1 == index
 
                 val animatedColor by animateColorAsState(
-                    if (isCenter) Color.White
-                    else if (isAdjacent) MooiTheme.colorScheme.gray400.copy(alpha = 0.8f)
-                    else MooiTheme.colorScheme.gray400.copy(alpha = 0.3f),
+                    if (isCenter) {
+                        Color.White
+                    } else if (isAdjacent) {
+                        MooiTheme.colorScheme.gray400.copy(alpha = 0.8f)
+                    } else {
+                        MooiTheme.colorScheme.gray400.copy(alpha = 0.3f)
+                    },
                 )
 
                 Box(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .fillMaxWidth(), contentAlignment = Alignment.Center
+                    modifier =
+                        Modifier
+                            .height(24.dp)
+                            .fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = item, style = MooiTheme.typography.body1, color = animatedColor
+                        text = item,
+                        style = MooiTheme.typography.body1,
+                        color = animatedColor,
                     )
                 }
             }
@@ -144,17 +157,20 @@ private fun PreviewWheelSpinner() {
 
     MooiTheme {
         Box(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .padding(10.dp)
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(10.dp),
         ) {
             WheelSpinner(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .width(100.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .width(100.dp),
                 items = items,
                 selectedItem = selected,
-                onItemSelect = { selected = it })
+                onItemSelect = { selected = it },
+            )
         }
     }
 }

@@ -34,28 +34,36 @@ fun YearMonthWheelSpinner(
     maxYearMonth: YearMonth = YearMonth.now(),
 ) {
     val yearRange = remember(key1 = minYearMonth, key2 = maxYearMonth) { (minYearMonth.year..maxYearMonth.year) }
-    val monthRange = remember(key1 = selectedYearMonth, key2 = minYearMonth, key3 = maxYearMonth) {
-        if (selectedYearMonth.year == minYearMonth.year) (minYearMonth.monthValue..12)
-        else if (selectedYearMonth.year == maxYearMonth.year) (1..maxYearMonth.monthValue)
-        else (1..12)
-    }
+    val monthRange =
+        remember(key1 = selectedYearMonth, key2 = minYearMonth, key3 = maxYearMonth) {
+            if (selectedYearMonth.year == minYearMonth.year) {
+                (minYearMonth.monthValue..12)
+            } else if (selectedYearMonth.year == maxYearMonth.year) {
+                (1..maxYearMonth.monthValue)
+            } else {
+                (1..12)
+            }
+        }
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Transparent)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color.Transparent),
     ) {
         Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(38.dp)
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .height(38.dp)
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
         )
         Row(
-            modifier = modifier
-                .fillMaxWidth()
-                .align(Alignment.Center),
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .align(Alignment.Center),
             horizontalArrangement = Arrangement.Center,
         ) {
             WheelSpinner(
@@ -65,12 +73,16 @@ fun YearMonthWheelSpinner(
                 onItemSelect = { it ->
                     val selectedYearMonth = YearMonth.of(it.dropLast(1).toInt(), selectedYearMonth.monthValue)
                     onYearMonthSelect(
-                        if (selectedYearMonth.isAfter(maxYearMonth)) maxYearMonth
-                        else if (selectedYearMonth.isBefore(minYearMonth)) minYearMonth
-                        else selectedYearMonth
+                        if (selectedYearMonth.isAfter(maxYearMonth)) {
+                            maxYearMonth
+                        } else if (selectedYearMonth.isBefore(minYearMonth)) {
+                            minYearMonth
+                        } else {
+                            selectedYearMonth
+                        },
                     )
                 },
-                showCenterIndicator = false
+                showCenterIndicator = false,
             )
             Spacer(modifier = Modifier.width(66.dp))
             WheelSpinner(
@@ -80,7 +92,7 @@ fun YearMonthWheelSpinner(
                 onItemSelect = { it ->
                     onYearMonthSelect(YearMonth.of(selectedYearMonth.year, it.dropLast(1).toInt()))
                 },
-                showCenterIndicator = false
+                showCenterIndicator = false,
             )
         }
     }
@@ -93,14 +105,15 @@ private fun YearMonthWheelSpinnerPreview() {
 
     MooiTheme {
         Box(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .padding(10.dp)
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(10.dp),
         ) {
             YearMonthWheelSpinner(
                 modifier = Modifier.align(Alignment.Center),
                 selectedYearMonth = selected,
-                onYearMonthSelect = { selected = it }
+                onYearMonthSelect = { selected = it },
             )
         }
     }

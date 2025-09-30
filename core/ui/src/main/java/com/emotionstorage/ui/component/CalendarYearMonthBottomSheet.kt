@@ -32,7 +32,7 @@ fun CalendarYearMonthBottomSheet(
             onYearMonthSelect = {
                 Logger.d("set spinner year month to $it")
                 setSpinnerYearMonth(it)
-            }
+            },
         )
     }
 }

@@ -46,11 +46,14 @@ private object TimeCapsuleCalendarDesignToken {
     val dateWidthDp = 30
 }
 
-private val DUMMY_TIME_CAPSULE_DATES = (1..31).toList().filter {
-    it % 3 == 0
-}.map {
-    LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
-}
+private val DUMMY_TIME_CAPSULE_DATES =
+    (1..31)
+        .toList()
+        .filter {
+            it % 3 == 0
+        }.map {
+            LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
+        }
 
 @Composable
 fun TimeCapsuleCalendar(
@@ -63,25 +66,28 @@ fun TimeCapsuleCalendar(
     onDateSelect: (LocalDate) -> Unit = {},
 ) {
     Column(
-        modifier = modifier
-            .width(TimeCapsuleCalendarDesignToken.calendarWidthDp.dp)
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .width(TimeCapsuleCalendarDesignToken.calendarWidthDp.dp)
+                .background(MooiTheme.colorScheme.background),
     ) {
         // year & month selection
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 17.dp)
-                .padding(horizontal = 1.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 17.dp)
+                    .padding(horizontal = 1.dp),
         ) {
             if (YearMonth.from(CALENDAR_MIN_YEAR_MONTH) < calendarYearMonth) {
                 Image(
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(width = 8.dp, height = 14.dp)
-                        .clickable {
-                            onCalendarYearMonthSelect(calendarYearMonth.minusMonths(1))
-                        },
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterStart)
+                            .size(width = 8.dp, height = 14.dp)
+                            .clickable {
+                                onCalendarYearMonthSelect(calendarYearMonth.minusMonths(1))
+                            },
                     painter = painterResource(id = R.drawable.arrow_back),
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     contentDescription = "",
@@ -102,9 +108,10 @@ fun TimeCapsuleCalendar(
 
                 if (showYearMonthDropDownIcon) {
                     Image(
-                        modifier = Modifier
-                            .size(10.dp, 9.dp)
-                            .clickable { onYearMonthDropDownIconClick() },
+                        modifier =
+                            Modifier
+                                .size(10.dp, 9.dp)
+                                .clickable { onYearMonthDropDownIconClick() },
                         painter = painterResource(id = R.drawable.toggle_down),
                         contentDescription = "calendar year month picker",
                     )
@@ -113,13 +120,14 @@ fun TimeCapsuleCalendar(
 
             if (calendarYearMonth < YearMonth.now()) {
                 Image(
-                    modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(width = 8.dp, height = 14.dp)
-                        .rotate(180f)
-                        .clickable {
-                            onCalendarYearMonthSelect(calendarYearMonth.plusMonths(1))
-                        },
+                    modifier =
+                        Modifier
+                            .align(Alignment.CenterEnd)
+                            .size(width = 8.dp, height = 14.dp)
+                            .rotate(180f)
+                            .clickable {
+                                onCalendarYearMonthSelect(calendarYearMonth.plusMonths(1))
+                            },
                     painter = painterResource(id = R.drawable.arrow_back),
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     contentDescription = "",
@@ -137,9 +145,10 @@ fun TimeCapsuleCalendar(
                 key = { it },
             ) { label ->
                 Text(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 16.dp),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(bottom = 16.dp),
                     text = label,
                     style = MooiTheme.typography.caption5,
                     color = MooiTheme.colorScheme.gray400,
@@ -152,9 +161,10 @@ fun TimeCapsuleCalendar(
                 key = { it.toString() },
             ) { date ->
                 DateItem(
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(bottom = 12.dp),
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(bottom = 12.dp),
                     date = date,
                     onClick = onDateSelect,
                     isShown = date.year == calendarYearMonth.year && date.month == calendarYearMonth.month,
@@ -182,19 +192,20 @@ private fun DateItem(
     } else {
         Box(modifier = modifier) {
             Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-                    .background(
-                        if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
-                        shape = RoundedCornerShape(20.dp),
-                    )
-                    .clickable { onClick(date) }
-                    .padding(horizontal = 3.5.dp)
-                    .padding(top = 6.dp, bottom = 4.dp),
-                verticalArrangement = Arrangement.spacedBy(
-                    9.dp,
-                    alignment = Alignment.CenterVertically,
-                ),
+                modifier =
+                    Modifier
+                        .align(Alignment.Center)
+                        .background(
+                            if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
+                            shape = RoundedCornerShape(20.dp),
+                        ).clickable { onClick(date) }
+                        .padding(horizontal = 3.5.dp)
+                        .padding(top = 6.dp, bottom = 4.dp),
+                verticalArrangement =
+                    Arrangement.spacedBy(
+                        9.dp,
+                        alignment = Alignment.CenterVertically,
+                    ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -204,23 +215,24 @@ private fun DateItem(
                     color = Color.White,
                 )
                 Box(
-                    modifier = Modifier
-                        .size(TimeCapsuleCalendarDesignToken.dateWidthDp.dp)
-                        .background(
-                            if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
-                            shape = CircleShape,
-                        )
-                        .border(
-                            width = 1.5.dp,
-                            color = if (isFilled) {
-                                Color.Transparent
-                            } else {
-                                Color(0xFFAECBFA).copy(
-                                    alpha = 0.2f,
-                                )
-                            },
-                            shape = CircleShape,
-                        ),
+                    modifier =
+                        Modifier
+                            .size(TimeCapsuleCalendarDesignToken.dateWidthDp.dp)
+                            .background(
+                                if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
+                                shape = CircleShape,
+                            ).border(
+                                width = 1.5.dp,
+                                color =
+                                    if (isFilled) {
+                                        Color.Transparent
+                                    } else {
+                                        Color(0xFFAECBFA).copy(
+                                            alpha = 0.2f,
+                                        )
+                                    },
+                                shape = CircleShape,
+                            ),
                 )
             }
         }
@@ -233,9 +245,10 @@ fun TimeCapsuleCalendarPreview() {
     val (calendarYearMonth, setCalendarYearMonth) = remember { mutableStateOf(YearMonth.now()) }
     MooiTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
         ) {
             TimeCapsuleCalendar(
                 modifier = Modifier.align(Alignment.Center),
