@@ -209,6 +209,8 @@ private fun StatelessCalendarScreen(
                         setShowYearMonthBottomSheet(false)
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
+                    // test arguments
+                    minYearMonth = YearMonth.of(2023, 11),
                 )
             }
 

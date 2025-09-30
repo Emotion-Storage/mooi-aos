@@ -38,11 +38,11 @@ fun WheelSpinner(
     showCenterIndicator: Boolean = true,
 ) {
     val centerIndex = visibleItemsCount / 2
-    val wheelItems = List(centerIndex) { "" } + items + List(centerIndex) { "" }
+    val wheelItems = remember(items) { List(centerIndex) { "" } + items + List(centerIndex) { "" } }
 
     // initial scroll position - center selected item
     val initialIndex =
-        remember(selectedItem) {
+        remember(key1 = selectedItem, key2 = items) {
             items.indexOf(selectedItem).takeIf { it != -1 } ?: 0
         }
     val listState =
@@ -50,24 +50,34 @@ fun WheelSpinner(
             initialFirstVisibleItemIndex = initialIndex,
         )
 
+
     // keep track of the last scroll index, to prevent multiple triggers
-    val (lastSelectedIndex, setLastSelectedIndex) = remember { mutableStateOf(initialIndex) }
+    val (lastSelectedIndex, setLastSelectedIndex) = remember(initialIndex) { mutableStateOf(initialIndex) }
+
     val firstVisibleItemIndex = remember { derivedStateOf { listState.firstVisibleItemIndex } }
     val selectedIndex by remember {
         derivedStateOf { listState.firstVisibleItemIndex + centerIndex }
     }
 
-    // select item on center, when scroll finished
+    // trigger item selection when scroll finished
     LaunchedEffect(listState.isScrollInProgress) {
         if (!listState.isScrollInProgress) {
             if (selectedIndex in wheelItems.indices && selectedIndex != lastSelectedIndex) {
-                setLastSelectedIndex(selectedIndex)
-
-                // scroll to target index to align scroll position
-                listState.scrollToItem(selectedIndex - centerIndex)
-
                 // trigger item selection
                 onItemSelect(wheelItems[selectedIndex])
+            }
+        }
+    }
+
+    // scroll to selected item when selectedItem changes
+    LaunchedEffect(key1 = selectedItem, key2 = items) {
+        val target = selectedItem ?: return@LaunchedEffect
+        val targetIndex = items.indexOf(target)
+        if (targetIndex >= 0) {
+            val centeredIndex = targetIndex + centerIndex
+            if (centeredIndex != lastSelectedIndex) {
+                listState.scrollToItem(targetIndex)
+                setLastSelectedIndex(centeredIndex)
             }
         }
     }

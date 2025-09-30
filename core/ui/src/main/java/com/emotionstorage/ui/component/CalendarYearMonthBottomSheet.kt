@@ -10,6 +10,8 @@ import androidx.compose.ui.unit.dp
 import com.orhanobut.logger.Logger
 import java.time.YearMonth
 
+private val CALENDER_MIN_YEAR_MONTH = YearMonth.of(1970, 1)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarYearMonthBottomSheet(
@@ -17,6 +19,8 @@ fun CalendarYearMonthBottomSheet(
     onDismissRequest: () -> Unit = {},
     selectedYearMonth: YearMonth = YearMonth.now(),
     onYearMonthSelect: (YearMonth) -> Unit = {},
+    minYearMonth: YearMonth = CALENDER_MIN_YEAR_MONTH,
+    maxYearMonth: YearMonth = YearMonth.now(),
 ) {
     val (spinnerYearMonth, setSpinnerYearMonth) = remember(key1 = selectedYearMonth) { mutableStateOf(selectedYearMonth) }
 
@@ -28,8 +32,11 @@ fun CalendarYearMonthBottomSheet(
             Logger.d("set calendar year month to $spinnerYearMonth")
             onYearMonthSelect(spinnerYearMonth)
         },
+        // disable gesture to prevent sheet gesture while dragging wheel spinner
+        sheetGesturesEnabled = false,
     ) {
         YearMonthWheelSpinner(
+            yearMonthRange = minYearMonth to maxYearMonth,
             modifier = Modifier.padding(bottom = 48.dp),
             selectedYearMonth = spinnerYearMonth,
             onYearMonthSelect = {

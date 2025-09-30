@@ -23,25 +23,28 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.YearMonth
 
-private val MIN_YEAR_MONTH = YearMonth.of(1970, 1)
-
 @Composable
 fun YearMonthWheelSpinner(
+    yearMonthRange: Pair<YearMonth, YearMonth>,
     modifier: Modifier = Modifier,
     selectedYearMonth: YearMonth = YearMonth.now(),
     onYearMonthSelect: (YearMonth) -> Unit = {},
-    minYearMonth: YearMonth = MIN_YEAR_MONTH,
-    maxYearMonth: YearMonth = YearMonth.now(),
 ) {
-    val yearRange = remember(key1 = minYearMonth, key2 = maxYearMonth) { (minYearMonth.year..maxYearMonth.year) }
+    require(yearMonthRange.first <= yearMonthRange.second) { "minYearMonth must be less than or equal to maxYearMonth" }
+
+    // wheel spinner items
+    val yearRange = remember(key1 = yearMonthRange) { (yearMonthRange.first.year..yearMonthRange.second.year) }
     val monthRange =
-        remember(key1 = selectedYearMonth, key2 = minYearMonth, key3 = maxYearMonth) {
-            if (selectedYearMonth.year == minYearMonth.year) {
-                (minYearMonth.monthValue..12)
-            } else if (selectedYearMonth.year == maxYearMonth.year) {
-                (1..maxYearMonth.monthValue)
+        remember(key1 = selectedYearMonth, key2 = yearMonthRange) {
+            // if min year and max year are the same
+            if (selectedYearMonth.year == yearMonthRange.first.year && selectedYearMonth.year == yearMonthRange.second.year) {
+                yearMonthRange.first.monthValue..yearMonthRange.second.monthValue
+            } else if (selectedYearMonth.year == yearMonthRange.first.year) {
+                yearMonthRange.first.monthValue..12
+            } else if (selectedYearMonth.year == yearMonthRange.second.year) {
+                1..yearMonthRange.second.monthValue
             } else {
-                (1..12)
+                1..12
             }
         }
 
@@ -71,16 +74,14 @@ fun YearMonthWheelSpinner(
                 items = yearRange.map { "${it}년" },
                 selectedItem = selectedYearMonth.year.toString() + "년",
                 onItemSelect = { it ->
-                    val selectedYearMonth = YearMonth.of(it.dropLast(1).toInt(), selectedYearMonth.monthValue)
-                    onYearMonthSelect(
-                        if (selectedYearMonth.isAfter(maxYearMonth)) {
-                            maxYearMonth
-                        } else if (selectedYearMonth.isBefore(minYearMonth)) {
-                            minYearMonth
-                        } else {
-                            selectedYearMonth
-                        },
-                    )
+                    var selectedYearMonth = YearMonth.of(it.dropLast(1).toInt(), selectedYearMonth.monthValue)
+                    if(selectedYearMonth.isAfter(yearMonthRange.second)){
+                        selectedYearMonth = yearMonthRange.second
+                    }else if(selectedYearMonth.isBefore(yearMonthRange.first)){
+                        selectedYearMonth = yearMonthRange.first
+                    }
+
+                    onYearMonthSelect(selectedYearMonth)
                 },
                 showCenterIndicator = false,
             )
@@ -111,6 +112,7 @@ private fun YearMonthWheelSpinnerPreview() {
                     .padding(10.dp),
         ) {
             YearMonthWheelSpinner(
+                yearMonthRange = YearMonth.of(2020, 3) to YearMonth.now(),
                 modifier = Modifier.align(Alignment.Center),
                 selectedYearMonth = selected,
                 onYearMonthSelect = { selected = it },
