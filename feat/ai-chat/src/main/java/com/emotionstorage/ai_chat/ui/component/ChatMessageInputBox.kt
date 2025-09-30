@@ -1,10 +1,6 @@
 package com.emotionstorage.ai_chat.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -79,7 +75,6 @@ fun ChatMessageInputBox(
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
                 interactionSource = interaction,
-                // 여기서 '캡슐 배경 + placeholder + trailing 아이콘'을 한 번에 그림
                 decorationBox = { inner ->
                     Row(
                         modifier = Modifier
@@ -89,11 +84,10 @@ fun ChatMessageInputBox(
                             .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        // 텍스트 영역
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(start = 6.dp) // 왼쪽 여유
+                                .padding(start = 6.dp)
                         ) {
                             if (text.isEmpty()) {
                                 Text(
@@ -104,10 +98,9 @@ fun ChatMessageInputBox(
                                     )
                                 )
                             }
-                            inner() // 실제 텍스트 입력
+                            inner()
                         }
 
-                        // trailing send icon (캡슐 안쪽, 오른쪽 끝)
                         AnimatedVisibility(
                             visible = canSend || readOnly,
                         ) {
