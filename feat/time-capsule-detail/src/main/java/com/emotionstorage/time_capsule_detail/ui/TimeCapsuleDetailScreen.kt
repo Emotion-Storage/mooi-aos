@@ -117,7 +117,7 @@ private fun StatelessTimeCapsuleDetailScreen(
 
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
     TimeCapsuleDeleteModel(
-        isModelOpen = isDeleteModalOpen,
+        isModalOpen = isDeleteModalOpen,
         onDismissRequest = { setDeleteModalOpen(false) },
         onDelete = {
             onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))

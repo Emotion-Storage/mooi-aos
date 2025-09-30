@@ -5,11 +5,11 @@ import com.emotionstorage.ui.component.Modal
 
 @Composable
 fun TimeCapsuleDeleteModel(
-    isModelOpen: Boolean = false,
+    isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onDelete: () -> Unit = {},
 ) {
-    if (isModelOpen) {
+    if (isModalOpen) {
         Modal(
             title =
                 "타임캡슐은 삭제하면\n" +
