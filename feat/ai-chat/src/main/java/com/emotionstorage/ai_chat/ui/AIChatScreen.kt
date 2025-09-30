@@ -4,8 +4,10 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -97,6 +99,7 @@ private fun StatelessAIChatScreen(
                     .fillMaxWidth()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
+                    .consumeWindowInsets(WindowInsets.navigationBars)
                     .imePadding(),
         ) {
             TopAppBar(
