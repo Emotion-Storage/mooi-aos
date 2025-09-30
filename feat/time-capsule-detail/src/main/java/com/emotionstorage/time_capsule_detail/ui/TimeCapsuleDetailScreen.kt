@@ -22,6 +22,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -37,6 +39,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDatailStat
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModel
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
@@ -91,6 +94,15 @@ private fun StatelessTimeCapsuleDetailScreen(
     navToSaveTimeCapsule: (id: String) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
+
+    val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
+    TimeCapsuleDeleteModel(
+        isModelOpen = isDeleteModalOpen,
+        onDismissRequest = { setDeleteModalOpen(false) },
+        onDelete = {
+            onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))
+        }
+    )
 
     if (state.timeCapsule == null) {
         // loading ui
@@ -179,7 +191,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         // todo: save mind note content
                     },
                     onDeleteTimeCapsule = {
-                        // todo: show delete popup
+                        setDeleteModalOpen(true)
                     },
                 )
             }
