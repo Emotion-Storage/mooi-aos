@@ -6,9 +6,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.emotionstorage.common.toEpochMillis
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
-import java.time.ZoneId
 
 @Composable
 fun CountDownTimer(
@@ -19,13 +19,11 @@ fun CountDownTimer(
     optimizeSecondTick: Boolean = false,
     content: @Composable (hours: Long, minutes: Long, seconds: Long) -> Unit,
 ) {
-    val deadlineMillis = deadline.atZone(ZoneId.of("Asia/Seoul")).toInstant().toEpochMilli()
-
-    var remainingTime by remember(key1 = deadlineMillis) {
-        mutableLongStateOf(deadlineMillis - System.currentTimeMillis())
+    var remainingTime by remember(key1 = deadline) {
+        mutableLongStateOf(deadline.toEpochMillis() - LocalDateTime.now().toEpochMillis())
     }
 
-    LaunchedEffect(key1 = deadlineMillis) {
+    LaunchedEffect(key1 = deadline) {
         if (remainingTime <= 0) remainingTime = 0
 
         while (remainingTime > 0) {
@@ -39,7 +37,7 @@ fun CountDownTimer(
                 }
             delay(tick.toLong())
 
-            remainingTime = deadlineMillis - System.currentTimeMillis()
+            remainingTime = deadline.toEpochMillis() - LocalDateTime.now().toEpochMillis()
         }
     }
 
