@@ -191,17 +191,17 @@ private fun StatelessTimeCapsuleDetailScreen(
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
             ) {
-//                TimeCapsuleSummary(
-//                    title = state.timeCapsule.title,
-//                    summary = state.timeCapsule.summary,
-//                )
-//
-//                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
+                TimeCapsuleSummary(
+                    title = state.timeCapsule.title,
+                    summary = state.timeCapsule.summary,
+                )
 
-//                TimeCapsuleEmotionComments(
-//                    emotions = state.timeCapsule.emotions,
-//                    comments = state.timeCapsule.comments,
-//                )
+                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
+
+                TimeCapsuleEmotionComments(
+                    emotions = state.timeCapsule.emotions,
+                    comments = state.timeCapsule.comments,
+                )
 
                 if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
                     TimeCapsuleNote(
