@@ -37,9 +37,9 @@ fun WheelSpinner(
     visibleItemsCount: Int = 5,
     showCenterIndicator: Boolean = true,
 ) {
+    require(visibleItemsCount % 2 == 1) { "WheelSpinner: visibleItemsCount는 홀수여야 합니다." }
     val centerIndex = visibleItemsCount / 2
     val wheelItems = remember(items) { List(centerIndex) { "" } + items + List(centerIndex) { "" } }
-
     // initial scroll position - center selected item
     val initialIndex =
         remember(key1 = selectedItem, key2 = items) {
