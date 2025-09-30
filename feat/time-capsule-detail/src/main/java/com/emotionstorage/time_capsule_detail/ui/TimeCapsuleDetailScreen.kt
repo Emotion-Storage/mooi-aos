@@ -68,12 +68,12 @@ fun TimeCapsuleDetailScreen(
     navToSaveTimeCapsule: (id: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    LaunchedEffect(id) {
+        viewModel.onAction(TimeCapsuleDetailAction.Init(id))
+    }
 
     val snackState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        viewModel.onAction(TimeCapsuleDetailAction.Init(id))
-
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess -> {
@@ -81,12 +81,11 @@ fun TimeCapsuleDetailScreen(
                 }
 
                 is ShowToast -> {
-                    coroutineScope.launch {
-                        // dismiss current snackbar if exists
-                        snackState.currentSnackbarData?.dismiss()
-                        // show new snackbar
-                        snackState.showSnackbar(sideEffect.toast.message)
-                    }
+                    // dismiss current snackbar if exists
+                    snackState.currentSnackbarData?.dismiss()
+                    // show new snackbar
+                    snackState.showSnackbar(sideEffect.toast.message)
+
                 }
             }
         }
