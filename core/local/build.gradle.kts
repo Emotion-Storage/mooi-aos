@@ -2,7 +2,6 @@ plugins {
     id("com.emotionstorage.convention.android.library")
     id("com.emotionstorage.convention.android.library.hilt")
     id("com.emotionstorage.convention.android.library.room")
-    id("com.emotionstorage.convention.android.library.datastore")
 }
 
 android {
