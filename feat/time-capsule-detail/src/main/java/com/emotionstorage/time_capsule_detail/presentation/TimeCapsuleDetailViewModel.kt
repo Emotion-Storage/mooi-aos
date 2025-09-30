@@ -85,7 +85,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.OPENED,
+                            status = TimeCapsule.STATUS.TEMPORARY,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +

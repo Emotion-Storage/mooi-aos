@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import SpeechBubble
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,6 +34,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -54,6 +56,7 @@ import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
 
@@ -187,29 +190,30 @@ private fun StatelessTimeCapsuleDetailScreen(
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
             ) {
-                TimeCapsuleSummary(
-                    title = state.timeCapsule.title,
-                    summary = state.timeCapsule.summary,
-                )
-
-                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
-
-                TimeCapsuleEmotionComments(
-                    emotions = state.timeCapsule.emotions,
-                    comments = state.timeCapsule.comments,
-                )
-
-                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-                    TimeCapsuleNote(
-                        modifier = Modifier.padding(top = 53.dp),
-                        note = state.timeCapsule.note,
-                        onNoteChange = {
-                            // todo: save note content
-                        },
-                    )
-                }
+//                TimeCapsuleSummary(
+//                    title = state.timeCapsule.title,
+//                    summary = state.timeCapsule.summary,
+//                )
+//
+//                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
+//
+//                TimeCapsuleEmotionComments(
+//                    emotions = state.timeCapsule.emotions,
+//                    comments = state.timeCapsule.comments,
+//                )
+//
+//                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+//                    TimeCapsuleNote(
+//                        modifier = Modifier.padding(top = 53.dp),
+//                        note = state.timeCapsule.note,
+//                        onNoteChange = {
+//                            // todo: save note content
+//                        },
+//                    )
+//                }
 
                 TimeCapsuleDetailActionButtons(
+                    createdAt = state.timeCapsule.createdAt,
                     status = state.timeCapsule.status,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule(id)
@@ -455,6 +459,7 @@ private fun TimeCapsuleNote(
 
 @Composable
 private fun TimeCapsuleDetailActionButtons(
+    createdAt: LocalDateTime,
     status: TimeCapsule.STATUS,
     modifier: Modifier = Modifier,
     onSaveTimeCapsule: () -> Unit = {},
@@ -466,12 +471,43 @@ private fun TimeCapsuleDetailActionButtons(
         verticalArrangement = Arrangement.spacedBy(16.7.dp),
         horizontalAlignment = Alignment.End,
     ) {
-        // todo: change action button according to status
-        CtaButton(
-            modifier = Modifier.fillMaxWidth(),
-            label = "타임캡슐 보관하기",
-            isDefaultWidth = false,
-        )
+        if (status == TimeCapsule.STATUS.TEMPORARY) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CountDownTimer(
+                    deadline = createdAt.plusHours(25)
+                ) { hours, minutes, seconds ->
+                    // todo: trigger time capsule closed when remaining time = 0
+
+                    val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                    SpeechBubble(
+                        text = "이 캡슐을 보관할 수 있는 시간이\n${timerString} 남았어요!",
+                        tail = BubbleTail.BottomCenter,
+                        sizeParam = DpSize(265.dp, 84.dp),
+                        textColor = MooiTheme.colorScheme.errorRed
+                    )
+                }
+
+                CtaButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "타임캡슐 보관하기",
+                    onClick = {
+                        onSaveTimeCapsule()
+                    },
+                    isDefaultWidth = false,
+                )
+            }
+        } else {
+            // todo: change action button according to status
+            CtaButton(
+                modifier = Modifier.fillMaxWidth(),
+                label = "타임캡슐 저장하기",
+                isDefaultWidth = false,
+            )
+        }
 
         // delete button
         Row(
@@ -508,7 +544,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.OPENED,
+                            status = TimeCapsule.STATUS.TEMPORARY,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
