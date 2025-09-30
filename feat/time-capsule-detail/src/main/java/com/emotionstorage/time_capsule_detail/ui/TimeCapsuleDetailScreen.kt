@@ -3,6 +3,7 @@ package com.emotionstorage.time_capsule_detail.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,8 +20,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -30,7 +31,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDatailState
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
 import com.emotionstorage.ui.component.TopAppBar
@@ -39,48 +46,36 @@ import com.emotionstorage.ui.util.LinearGradient
 import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import com.emotionstorage.ui.R
 
-private val DUMMY_TIME_CAPSULE =
-    TimeCapsule(
-        id = "id",
-        status = TimeCapsule.STATUS.OPENED,
-        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-        summary =
-            "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
-                "그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. " +
-                "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
-        emotions =
-            listOf(
-                TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
-                TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
-                TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
-            ),
-        comments =
-            listOf(
-                "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
-                "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
-                "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요.",
-            ),
-        note =
-            "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
-                "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
-        logs = emptyList(),
-        createdAt = LocalDateTime.now(),
-        updatedAt = LocalDateTime.now(),
-    )
 
 @Composable
 fun TimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
+    viewModel: TimeCapsuleDetailViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToSaveTimeCapsule: (id: String) -> Unit = {}
 ) {
-    // todo: init time capsule deatil screen state
+    val state = viewModel.container.stateFlow.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.onAction(TimeCapsuleDetailAction.Init(id))
+
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess -> {
+                    navToBack()
+                }
+            }
+        }
+    }
 
     StatelessTimeCapsuleDetailScreen(
-        timeCapsule = DUMMY_TIME_CAPSULE,
+        id = id,
         modifier = modifier,
+        state = state.value,
+        onAction = viewModel::onAction,
         navToBack = navToBack,
         navToSaveTimeCapsule = navToSaveTimeCapsule
     )
@@ -88,63 +83,104 @@ fun TimeCapsuleDetailScreen(
 
 @Composable
 private fun StatelessTimeCapsuleDetailScreen(
-    timeCapsule: TimeCapsule,
+    id: String,
     modifier: Modifier = Modifier,
+    state: TimeCapsuleDatailState = TimeCapsuleDatailState(),
+    onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToBack: () -> Unit = {},
     navToSaveTimeCapsule: (id: String) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
-    Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                title = timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
-                showBackButton = true,
-                onBackClick = navToBack,
-                rightComponent = {
-                    if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-                        RoundedToggleButton(
-                            isSelected = timeCapsule.isFavorite,
-                            onSelect = {
-                                // todo: toggle favorite
-                            },
-                        )
-                    }
-                },
-            )
-        },
-    ) { innerPadding ->
-        Column(
+    if (state.timeCapsule == null) {
+        // loading ui
+        Scaffold(
             modifier =
-                Modifier
+                modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .padding(top = 31.dp, bottom = 55.dp)
-                    .padding(horizontal = 16.dp)
-                    .verticalScroll(scrollState),
-        ) {
-            TimeCapsuleSummary(
-                title = timeCapsule.title,
-                summary = timeCapsule.summary,
-            )
+                    .background(MooiTheme.colorScheme.background),
+            topBar = {
+                TopAppBar(
+                    showBackButton = true,
+                    onBackClick = navToBack,
+                )
+            },
+        ) { innerPadding ->
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(innerPadding)
+            ) {
+                // empty screen
+            }
+        }
+    } else {
+        Scaffold(
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
+            topBar = {
+                TopAppBar(
+                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
+                    showBackButton = true,
+                    onBackClick = navToBack,
+                    rightComponent = {
+                        if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                            RoundedToggleButton(
+                                isSelected = state.timeCapsule.isFavorite,
+                                onSelect = {
+                                    // todo: toggle favorite
+                                },
+                            )
+                        }
+                    },
+                )
+            },
+        ) { innerPadding ->
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(innerPadding)
+                        .padding(top = 31.dp, bottom = 55.dp)
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(scrollState),
+            ) {
+                TimeCapsuleSummary(
+                    title = state.timeCapsule.title,
+                    summary = state.timeCapsule.summary,
+                )
 
-            DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
+                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
 
-            TimeCapsuleEmotionComments(
-                emotions = timeCapsule.emotions,
-                comments = timeCapsule.comments,
-            )
+                TimeCapsuleEmotionComments(
+                    emotions = state.timeCapsule.emotions,
+                    comments = state.timeCapsule.comments,
+                )
 
-            if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-                TimeCapsuleNote(
-                    modifier = Modifier.padding(top = 53.dp),
-                    note = timeCapsule.note,
-                    onNoteChange = { navToSaveTimeCapsule(timeCapsule.id) }
+                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                    TimeCapsuleNote(
+                        modifier = Modifier.padding(top = 53.dp),
+                        note = state.timeCapsule.note,
+                        onNoteChange = { navToSaveTimeCapsule(id) }
+                    )
+                }
+
+                TimeCapsuleDetailActionButtons(
+                    status = state.timeCapsule.status,
+                    onSaveTimeCapsule = {
+                        navToSaveTimeCapsule(id)
+                    },
+                    onSaveMindNote = {
+                        // todo: save mind note content
+                    },
+                    onDeleteTimeCapsule = {
+                        // todo: show delete popup
+                    },
                 )
             }
         }
@@ -378,6 +414,47 @@ private fun TimeCapsuleNote(
     }
 }
 
+@Composable
+private fun TimeCapsuleDetailActionButtons(
+    status: TimeCapsule.STATUS,
+    modifier: Modifier = Modifier,
+    onSaveTimeCapsule: () -> Unit = {},
+    onSaveMindNote: () -> Unit = {},
+    onDeleteTimeCapsule: () -> Unit = {}
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.7.dp),
+        horizontalAlignment = Alignment.End
+    ) {
+        // todo: change action button according to status
+        CtaButton(
+            modifier = Modifier.fillMaxWidth(),
+            label = "타임캡슐 보관하기"
+        )
+
+        // delete button
+        Row(
+            modifier = Modifier
+                .height(20.dp)
+                .clickable(onClick = { onDeleteTimeCapsule() }),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
+            Image(
+                modifier = Modifier.size(13.dp, 14.dp),
+                painter = painterResource(id = R.drawable.trash),
+                contentDescription = "delete"
+            )
+            Text(
+                text = "타임캡슐 삭제하기",
+                style = MooiTheme.typography.caption6,
+                color = MooiTheme.colorScheme.gray600,
+            )
+        }
+    }
+
+}
 
 // @PreviewScreenSizes
 @Preview
@@ -385,7 +462,36 @@ private fun TimeCapsuleNote(
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
-            timeCapsule = DUMMY_TIME_CAPSULE,
+            id = "id",
+            state = TimeCapsuleDatailState(
+                timeCapsule = TimeCapsule(
+                    id = "id",
+                    status = TimeCapsule.STATUS.OPENED,
+                    title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                    summary =
+                        "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
+                            "그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. " +
+                            "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
+                    emotions =
+                        listOf(
+                            TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
+                            TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
+                            TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
+                        ),
+                    comments =
+                        listOf(
+                            "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
+                            "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
+                            "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요.",
+                        ),
+                    note =
+                        "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
+                            "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
+                    logs = emptyList(),
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
+                )
+            )
         )
     }
 }
