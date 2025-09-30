@@ -24,7 +24,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -36,6 +35,7 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast.FavoriteToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
@@ -46,7 +46,6 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.DropDownPicker
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 private val DUMMY_TIME_CAPSULES =
@@ -90,17 +89,14 @@ fun FavoriteTimeCapsulesScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is ShowToast -> {
-                    coroutineScope.launch {
-                        // dismiss current snackbar if exists
-                        snackState.currentSnackbarData?.dismiss()
-                        // show new snackbar
-                        snackState.showSnackbar(sideEffect.toast.message)
-                    }
+                    // dismiss current snackbar if exists
+                    snackState.currentSnackbarData?.dismiss()
+                    // show new snackbar
+                    snackState.showSnackbar(sideEffect.toast.message)
                 }
             }
         }
@@ -137,7 +133,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackState) { snackbarData ->
-                if (snackbarData.visuals.message == ShowToast.FavoriteToast.FAVORITE_FULL.message) {
+                if (snackbarData.visuals.message == FavoriteToast.FAVORITE_FULL.message) {
                     Toast(message = snackbarData.visuals.message)
                 } else {
                     SuccessToast(message = snackbarData.visuals.message)

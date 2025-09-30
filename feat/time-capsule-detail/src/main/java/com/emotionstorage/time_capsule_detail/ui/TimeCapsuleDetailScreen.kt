@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -19,8 +18,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,164 +31,227 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.LinearGradient
 import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-
-private val DUMMY_TIME_CAPSULE =
-    TimeCapsule(
-        id = "id",
-        status = TimeCapsule.STATUS.TEMPORARY,
-        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-        summary =
-            "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
-                "그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. " +
-                "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
-        emotions =
-            listOf(
-                TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
-                TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
-                TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
-            ),
-        comments =
-            listOf(
-                "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
-                "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
-                "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요.",
-            ),
-        note =
-            "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
-                "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
-        logs = emptyList(),
-        createdAt = LocalDateTime.now(),
-        updatedAt = LocalDateTime.now(),
-    )
+import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.SuccessToast
+import com.emotionstorage.ui.component.Toast
 
 @Composable
 fun TimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
+    viewModel: TimeCapsuleDetailViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
+    navToSaveTimeCapsule: (id: String) -> Unit = {},
 ) {
+    val state = viewModel.container.stateFlow.collectAsState()
+    LaunchedEffect(id) {
+        viewModel.onAction(TimeCapsuleDetailAction.Init(id))
+    }
+
+    val snackState = remember { SnackbarHostState() }
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess -> {
+                    navToBack()
+                }
+
+                is ShowToast -> {
+                    // dismiss current snackbar if exists
+                    snackState.currentSnackbarData?.dismiss()
+                    // show new snackbar
+                    snackState.showSnackbar(sideEffect.toast.message)
+                }
+            }
+        }
+    }
+
     StatelessTimeCapsuleDetailScreen(
-        timeCapsule = DUMMY_TIME_CAPSULE,
+        id = id,
         modifier = modifier,
+        snackState = snackState,
+        state = state.value,
+        onAction = viewModel::onAction,
         navToBack = navToBack,
+        navToSaveTimeCapsule = navToSaveTimeCapsule,
     )
 }
 
 @Composable
 private fun StatelessTimeCapsuleDetailScreen(
-    timeCapsule: TimeCapsule,
+    id: String,
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = SnackbarHostState(),
+    state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
+    onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToBack: () -> Unit = {},
+    navToSaveTimeCapsule: (id: String) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
-    Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                title = timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
-                showBackButton = true,
-                onBackClick = navToBack,
-                rightComponent = {
-                    RoundedToggleButton(
-                        isSelected = timeCapsule.isFavorite,
-                        onSelect = {
-                            // todo: toggle favorite
-                        },
-                    )
-                },
-            )
+    val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
+    TimeCapsuleDeleteModal(
+        isModalOpen = isDeleteModalOpen,
+        onDismissRequest = { setDeleteModalOpen(false) },
+        onDelete = {
+            onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))
         },
-    ) { innerPadding ->
-        Column(
+    )
+
+    if (state.timeCapsule == null) {
+        // loading ui
+        Scaffold(
             modifier =
-                Modifier
+                modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .padding(start = 16.dp, end = 16.dp)
-                    .verticalScroll(scrollState),
-        ) {
-            // 대화 요약
-            Text(
-                modifier = Modifier.padding(bottom = 20.dp, top = 21.dp),
-                text = timeCapsule.title,
-                style = MooiTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                color = Color.White,
-            )
-            Box(
-                modifier =
-                    Modifier
-                        .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
-                        .padding(18.dp),
-            ) {
-                Text(
-                    text = timeCapsule.summary,
-                    style = MooiTheme.typography.body4.copy(lineHeight = 24.sp),
-                    color = Color.White,
+                    .background(MooiTheme.colorScheme.background),
+            topBar = {
+                TopAppBar(
+                    showBackButton = true,
+                    onBackClick = navToBack,
                 )
-            }
-
-            DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
-
-            // 감정 분석
-            Text(
+            },
+        ) { innerPadding ->
+            Column(
                 modifier =
                     Modifier
                         .fillMaxSize()
-                        .padding(bottom = 27.dp),
-                text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
-                style = MooiTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.primary,
-            )
-
-            Emotions(
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(innerPadding),
+            ) {
+                // empty screen
+            }
+        }
+    } else {
+        Scaffold(
+            modifier =
+                modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
+            topBar = {
+                TopAppBar(
+                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
+                    showBackButton = true,
+                    onBackClick = navToBack,
+                    rightComponent = {
+                        if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                            RoundedToggleButton(
+                                isSelected = state.timeCapsule.isFavorite,
+                                onSelect = {
+                                    onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
+                                },
+                            )
+                        }
+                    },
+                )
+            },
+            snackbarHost = {
+                SnackbarHost(hostState = snackState) { snackbarData ->
+                    if (snackbarData.visuals.message == TimeCapsuleDetailToast.FAVORITE_FULL.message) {
+                        Toast(message = snackbarData.visuals.message)
+                    } else {
+                        SuccessToast(message = snackbarData.visuals.message)
+                    }
+                }
+            },
+        ) { innerPadding ->
+            Column(
                 modifier =
                     Modifier
-                        .padding(bottom = 27.dp),
-                emotions = timeCapsule.emotions,
-            )
+                        .fillMaxSize()
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(innerPadding)
+                        .padding(top = 31.dp, bottom = 55.dp)
+                        .padding(horizontal = 16.dp)
+                        .verticalScroll(scrollState),
+            ) {
+                TimeCapsuleSummary(
+                    title = state.timeCapsule.title,
+                    summary = state.timeCapsule.summary,
+                )
 
-            Comments(
-                modifier = Modifier.padding(bottom = 53.dp),
-                comments = timeCapsule.comments,
-            )
+                DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
 
-            // 마음 노트
+                TimeCapsuleEmotionComments(
+                    emotions = state.timeCapsule.emotions,
+                    comments = state.timeCapsule.comments,
+                )
+
+                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                    TimeCapsuleNote(
+                        modifier = Modifier.padding(top = 53.dp),
+                        note = state.timeCapsule.note,
+                        onNoteChange = {
+                            // todo: save note content
+                        },
+                    )
+                }
+
+                TimeCapsuleDetailActionButtons(
+                    status = state.timeCapsule.status,
+                    onSaveTimeCapsule = {
+                        navToSaveTimeCapsule(id)
+                    },
+                    onSaveMindNote = {
+                        // todo: save mind note content
+                    },
+                    onDeleteTimeCapsule = {
+                        setDeleteModalOpen(true)
+                    },
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun TimeCapsuleSummary(
+    title: String,
+    summary: String,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp),
+    ) {
+        Text(
+            text = title,
+            style = MooiTheme.typography.body1,
+            color = Color.White,
+        )
+        Box(
+            modifier =
+                Modifier
+                    .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
+                    .padding(18.dp),
+        ) {
             Text(
-                modifier = Modifier.padding(bottom = 5.dp),
-                text = "내 마음 노트",
-                style = MooiTheme.typography.body1,
+                text = summary,
+                style = MooiTheme.typography.caption3.copy(lineHeight = 24.sp),
                 color = Color.White,
-            )
-            Text(
-                modifier = Modifier.padding(bottom = 17.dp),
-                text = "타임캡슐에 직접 남기고 싶은 말이 있다면 적어주세요.",
-                style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Light),
-                textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.gray300,
-            )
-            MindNote(
-                modifier = Modifier.padding(bottom = 500.dp),
-                note = timeCapsule.note ?: "",
             )
         }
     }
@@ -219,6 +285,28 @@ private fun DecorativeDots(modifier: Modifier = Modifier) {
 }
 
 @Composable
+private fun TimeCapsuleEmotionComments(
+    modifier: Modifier = Modifier,
+    emotions: List<TimeCapsule.Emotion> = emptyList(),
+    comments: List<String> = emptyList(),
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(27.dp),
+    ) {
+        Text(
+            text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
+            style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+            textAlign = TextAlign.Center,
+            color = MooiTheme.colorScheme.primary,
+        )
+        Emotions(emotions = emotions)
+        Comments(comments = comments)
+    }
+}
+
+@Composable
 private fun Emotions(
     modifier: Modifier = Modifier,
     emotions: List<TimeCapsule.Emotion> = emptyList(),
@@ -234,11 +322,14 @@ private fun Emotions(
                         .height(92.dp)
                         .weight(1f)
                         .background(
-                            Brush.horizontalGradient(
+                            LinearGradient(
                                 listOf(
-                                    Color(0x80849BEA).copy(alpha = 0.1f),
-                                    Color(0x14849BEA).copy(alpha = 0.016f),
+                                    // alpha = 0.5 * 0.2
+                                    Color(0xFF849BEA).copy(alpha = 0.1f),
+                                    // alpha = 0.08 * 0.2
+                                    Color(0xFF849BEA).copy(alpha = 0.016f),
                                 ),
+                                angleInDegrees = -18f,
                             ),
                             RoundedCornerShape(10.dp),
                         ),
@@ -268,13 +359,13 @@ private fun Emotions(
                         }
                         Text(
                             text = emotion.label,
-                            style = MooiTheme.typography.body4.copy(fontSize = 15.sp),
+                            style = MooiTheme.typography.body8,
                             color = MooiTheme.colorScheme.primary,
                         )
                     }
                     Text(
-                        text = "${emotion.percentage?.toInt() ?: "??"}%",
-                        style = MooiTheme.typography.head3,
+                        text = "${emotion.percentage?.toInt() ?: "- "}%",
+                        style = MooiTheme.typography.head3.copy(lineHeight = 29.sp),
                         color = Color.White,
                     )
                 }
@@ -303,15 +394,18 @@ private fun Comments(
                 horizontalArrangement = Arrangement.spacedBy(11.dp),
             ) {
                 Box(
-                    modifier =
-                        Modifier
-                            .size(5.dp)
-                            .background(Color.White, CircleShape)
-                            .offset(y = 8.dp),
-                )
+                    modifier = Modifier.padding(top = 5.dp),
+                ) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(5.dp)
+                                .background(Color.White, CircleShape),
+                    )
+                }
                 Text(
                     text = comment,
-                    style = MooiTheme.typography.body4,
+                    style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
                     color = Color.White,
                 )
             }
@@ -320,42 +414,83 @@ private fun Comments(
 }
 
 @Composable
-private fun MindNote(
+private fun TimeCapsuleNote(
     modifier: Modifier = Modifier,
-    note: String = "",
-    onSaveNote: (note: String) -> Unit = {},
+    note: String? = null,
+    onNoteChange: (note: String) -> Unit = {},
 ) {
-    val (noteInput, setNoteInput) = remember { mutableStateOf(note) }
-
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.spacedBy(13.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(17.dp),
     ) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(
+                text = "나의 회고 일기",
+                style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+                color = Color.White,
+            )
+            Text(
+                text = "그때의 감정과 지금 달라진것이 있나요?\n감정을 회고하며 노트를 작성해보세요.",
+                style = MooiTheme.typography.caption7.copy(lineHeight = 20.sp),
+                textAlign = TextAlign.Center,
+                color = MooiTheme.colorScheme.gray400,
+            )
+        }
+
         TextBoxInput(
-            modifier =
-                Modifier
-                    .fillMaxWidth(),
-            value = noteInput,
-            onValueChange = setNoteInput,
+            modifier = Modifier.fillMaxWidth(),
+            value = note ?: "",
+            onValueChange = onNoteChange,
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
             maxCharCount = 1000,
         )
+    }
+}
 
-        Box(
-            modifier
-                .size(140.dp, 46.dp)
-                .background(MooiTheme.colorScheme.bottomBarBackground, RoundedCornerShape(10.dp))
-                .clickable(
-                    onClick = { onSaveNote(noteInput) },
-                ),
+@Composable
+private fun TimeCapsuleDetailActionButtons(
+    status: TimeCapsule.STATUS,
+    modifier: Modifier = Modifier,
+    onSaveTimeCapsule: () -> Unit = {},
+    onSaveMindNote: () -> Unit = {},
+    onDeleteTimeCapsule: () -> Unit = {},
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.7.dp),
+        horizontalAlignment = Alignment.End,
+    ) {
+        // todo: change action button according to status
+        CtaButton(
+            modifier = Modifier.fillMaxWidth(),
+            label = "타임캡슐 보관하기",
+            isDefaultWidth = false,
+        )
+
+        // delete button
+        Row(
+            modifier =
+                Modifier
+                    .height(20.dp)
+                    .clickable(onClick = { onDeleteTimeCapsule() }),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
+            Image(
+                modifier = Modifier.size(13.dp, 14.dp),
+                painter = painterResource(id = R.drawable.trash),
+                contentDescription = "delete",
+            )
             Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "변경사항 저장하기",
-                style = MooiTheme.typography.body4,
-                color = Color.White,
+                text = "타임캡슐 삭제하기",
+                style = MooiTheme.typography.caption6,
+                color = MooiTheme.colorScheme.gray600,
             )
         }
     }
@@ -367,7 +502,38 @@ private fun MindNote(
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
-            timeCapsule = DUMMY_TIME_CAPSULE,
+            id = "id",
+            state =
+                TimeCapsuleDetailState(
+                    timeCapsule =
+                        TimeCapsule(
+                            id = "id",
+                            status = TimeCapsule.STATUS.OPENED,
+                            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                            summary =
+                                "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
+                                    "그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. " +
+                                    "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
+                            emotions =
+                                listOf(
+                                    TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
+                                    TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
+                                    TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
+                                ),
+                            comments =
+                                listOf(
+                                    "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
+                                    "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
+                                    "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요.",
+                                ),
+                            note =
+                                "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
+                                    "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
+                            logs = emptyList(),
+                            createdAt = LocalDateTime.now(),
+                            updatedAt = LocalDateTime.now(),
+                        ),
+                ),
         )
     }
 }

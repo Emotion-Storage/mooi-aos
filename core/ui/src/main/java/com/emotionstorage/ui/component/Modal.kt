@@ -57,7 +57,6 @@ fun Modal(
                 text = title,
                 style =
                     MooiTheme.typography.head2.copy(
-                        fontSize = 22.sp,
                         lineHeight = 30.sp,
                     ),
                 color = Color.White,

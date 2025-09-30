@@ -3,6 +3,8 @@ package com.emotionstorage.ui.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -20,6 +22,11 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 
+private object CtaButtonDesignToken {
+    val height = 65.dp
+    val width = 330.dp
+}
+
 enum class CtaButtonType {
     FILLED,
     TONAL,
@@ -33,16 +40,28 @@ fun CtaButton(
     onClick: () -> Unit = {},
     type: CtaButtonType = CtaButtonType.FILLED,
     radius: Int = 15,
+    isDefaultWidth: Boolean = true,
+    isDefaultHeight: Boolean = true,
     textStyle: TextStyle = MooiTheme.typography.mainButton,
 ) {
     Box(modifier = modifier) {
         Button(
             modifier =
                 Modifier
-                    .width(330.dp)
-                    .height(65.dp)
                     .align(Alignment.Center)
-                    .mainBackground(enabled, RoundedCornerShape(radius.dp)),
+                    .run {
+                        if (isDefaultWidth) {
+                            this.width(CtaButtonDesignToken.width)
+                        } else {
+                            this.fillMaxWidth()
+                        }
+                    }.run {
+                        if (isDefaultHeight) {
+                            this.height(CtaButtonDesignToken.height)
+                        } else {
+                            this.fillMaxHeight()
+                        }
+                    }.mainBackground(enabled, RoundedCornerShape(radius.dp)),
             shape = RoundedCornerShape(radius.dp),
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
             colors =

@@ -55,6 +55,7 @@ fun TopAppBar(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
+                // todo: update font to 17.sp
                 style = MooiTheme.typography.body2,
                 color = Color.White,
             )

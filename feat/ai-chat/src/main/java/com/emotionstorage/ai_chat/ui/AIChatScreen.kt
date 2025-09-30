@@ -64,6 +64,7 @@ fun AIChatScreen(
     }
 
     StatelessAIChatScreen(
+        modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
@@ -72,13 +73,14 @@ fun AIChatScreen(
 
 @Composable
 private fun StatelessAIChatScreen(
+    modifier: Modifier = Modifier,
     state: AIChatState = AIChatState(),
     onAction: (action: AIChatAction) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
-    AIChatExitModel(
-        isModelOpen = isExitModalOpen,
+    AIChatExitModal(
+        isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
         onExit = navToBack,
     )
@@ -140,12 +142,12 @@ private fun StatelessAIChatScreen(
 }
 
 @Composable
-private fun AIChatExitModel(
-    isModelOpen: Boolean = false,
+private fun AIChatExitModal(
+    isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
-    if (isModelOpen) {
+    if (isModalOpen) {
         Modal(
             title = "잠시 감정 대화를 중지할까요?\n오늘의 감정 대화는\n오늘까지만 임시저장돼요!",
             confirmLabel = "대화 계속하기",
