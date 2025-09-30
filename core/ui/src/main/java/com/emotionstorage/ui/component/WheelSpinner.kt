@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +27,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun WheelSpinner(
@@ -35,38 +35,65 @@ fun WheelSpinner(
     selectedItem: String? = null,
     onItemSelect: (String) -> Unit = {},
     visibleItemsCount: Int = 5,
-    showCenterLine: Boolean = true
+    showCenterIndicator: Boolean = true
 ) {
     val centerIndex = visibleItemsCount / 2
     val wheelItems = List(centerIndex) { "" } + items + List(centerIndex) { "" }
 
+    // initial scroll position - center selected item
+    val initialIndex = remember(selectedItem) {
+        items.indexOf(selectedItem).takeIf { it != -1 } ?: 0
+    }
     val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex =
-            if (selectedItem != null) wheelItems.indexOf(selectedItem) - centerIndex else centerIndex
+        initialFirstVisibleItemIndex = initialIndex
     )
+
+    // keep track of the last scroll index, to prevent multiple triggers
+    val (lastSelectedIndex, setLastSelectedIndex) = remember { mutableStateOf(initialIndex) }
     val firstVisibleItemIndex = remember { derivedStateOf { listState.firstVisibleItemIndex } }
+    val selectedIndex by remember {
+        derivedStateOf { listState.firstVisibleItemIndex + centerIndex }
+    }
 
+    // select item on center, when scroll finished
     LaunchedEffect(listState.isScrollInProgress) {
-        // select item on center, when scroll finished
         if (!listState.isScrollInProgress) {
-            val selectedIndex = listState.firstVisibleItemIndex + centerIndex
-            if (selectedIndex in wheelItems.indices) {
-                // scroll to target index to align scroll position
-                val targetIndex = (selectedIndex - centerIndex).coerceIn(0, wheelItems.size - 1)
-                listState.animateScrollToItem(targetIndex)
+            if (selectedIndex in wheelItems.indices && selectedIndex != lastSelectedIndex) {
+                setLastSelectedIndex(selectedIndex)
 
-                // wait for animation to finish
-                delay(200)
+                // scroll to target index to align scroll position
+                listState.scrollToItem(selectedIndex - centerIndex)
+
+                // trigger item selection
                 onItemSelect(wheelItems[selectedIndex])
             }
         }
     }
 
+    WheelSpinnerContent(
+        modifier = modifier,
+        listState = listState,
+        wheelItems = wheelItems,
+        firstVisibleItemIndex = firstVisibleItemIndex.value,
+        centerIndex = centerIndex,
+        showCenterIndicator = showCenterIndicator
+    )
+}
+
+@Composable
+private fun WheelSpinnerContent(
+    listState: LazyListState,
+    wheelItems: List<String>,
+    modifier: Modifier = Modifier,
+    firstVisibleItemIndex: Int = 0,
+    centerIndex: Int = 2,
+    showCenterIndicator: Boolean = true,
+) {
     Box(
         modifier = modifier
             .background(Color.Transparent)
     ) {
-        if (showCenterLine) {
+        if (showCenterIndicator) {
             Box(
                 modifier = Modifier
                     .align(Alignment.Center)
@@ -85,9 +112,9 @@ fun WheelSpinner(
             state = listState,
         ) {
             itemsIndexed(wheelItems) { index, item ->
-                val isCenter = firstVisibleItemIndex.value + centerIndex == index
+                val isCenter = firstVisibleItemIndex + centerIndex == index
                 val isAdjacent =
-                    firstVisibleItemIndex.value + centerIndex - 1 == index || firstVisibleItemIndex.value + centerIndex + 1 == index
+                    firstVisibleItemIndex + centerIndex - 1 == index || firstVisibleItemIndex + centerIndex + 1 == index
 
                 val animatedColor by animateColorAsState(
                     if (isCenter) Color.White
@@ -109,7 +136,6 @@ fun WheelSpinner(
     }
 }
 
-
 @Preview
 @Composable
 private fun PreviewWheelSpinner() {
@@ -123,7 +149,9 @@ private fun PreviewWheelSpinner() {
                 .padding(10.dp)
         ) {
             WheelSpinner(
-                modifier = Modifier.align(Alignment.Center).width(100.dp),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .width(100.dp),
                 items = items,
                 selectedItem = selected,
                 onItemSelect = { selected = it })

@@ -33,11 +33,12 @@ fun YearMonthWheelSpinner(
     minYearMonth: YearMonth = MIN_YEAR_MONTH,
     maxYearMonth: YearMonth = YearMonth.now(),
 ) {
-    val yearRange = (minYearMonth.year..maxYearMonth.year)
-    val monthRange =
+    val yearRange = remember(key1 = minYearMonth, key2 = maxYearMonth) { (minYearMonth.year..maxYearMonth.year) }
+    val monthRange = remember(key1 = selectedYearMonth, key2 = minYearMonth, key3 = maxYearMonth) {
         if (selectedYearMonth.year == minYearMonth.year) (minYearMonth.monthValue..12)
         else if (selectedYearMonth.year == maxYearMonth.year) (1..maxYearMonth.monthValue)
         else (1..12)
+    }
 
     Box(
         modifier = modifier
@@ -62,9 +63,14 @@ fun YearMonthWheelSpinner(
                 items = yearRange.map { "${it}년" },
                 selectedItem = selectedYearMonth.year.toString() + "년",
                 onItemSelect = { it ->
-                    onYearMonthSelect(YearMonth.of(it.dropLast(1).toInt(), 1))
+                    val selectedYearMonth = YearMonth.of(it.dropLast(1).toInt(), selectedYearMonth.monthValue)
+                    onYearMonthSelect(
+                        if (selectedYearMonth.isAfter(maxYearMonth)) maxYearMonth
+                        else if (selectedYearMonth.isBefore(minYearMonth)) minYearMonth
+                        else selectedYearMonth
+                    )
                 },
-                showCenterLine = false
+                showCenterIndicator = false
             )
             Spacer(modifier = Modifier.width(66.dp))
             WheelSpinner(
@@ -74,7 +80,7 @@ fun YearMonthWheelSpinner(
                 onItemSelect = { it ->
                     onYearMonthSelect(YearMonth.of(selectedYearMonth.year, it.dropLast(1).toInt()))
                 },
-                showCenterLine = false
+                showCenterIndicator = false
             )
         }
     }

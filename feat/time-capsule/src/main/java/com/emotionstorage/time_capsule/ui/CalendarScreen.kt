@@ -49,6 +49,7 @@ import com.emotionstorage.ui.component.YearMonthWheelSpinner
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
+import com.orhanobut.logger.Logger
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -171,6 +172,10 @@ private fun StatelessCalendarScreen(
                     onCalendarYearMonthSelect = {
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
+                    showYearMonthDropDownIcon = true,
+                    onYearMonthDropDownIconClick = {
+                        setShowYearMonthBottomSheet(true)
+                    },
                     timeCapsuleDates = state.timeCapsuleDates,
                     onDateSelect = {
                         onAction(CalendarAction.SelectCalendarDate(it))
@@ -202,7 +207,7 @@ private fun StatelessCalendarScreen(
                         setShowYearMonthBottomSheet(false)
                     },
                     selectedYearMonth = state.calendarYearMonth,
-                    onSelectedYearMonth = {
+                    onYearMonthSelect = {
                         setShowYearMonthBottomSheet(false)
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
@@ -368,7 +373,7 @@ private fun CalendarYearMonthBottomSheet(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit = {},
     selectedYearMonth: YearMonth = YearMonth.now(),
-    onSelectedYearMonth: (YearMonth) -> Unit = {},
+    onYearMonthSelect: (YearMonth) -> Unit = {},
 ) {
     val (spinnerYearMonth, setSpinnerYearMonth) = remember { mutableStateOf(selectedYearMonth) }
 
@@ -377,12 +382,16 @@ private fun CalendarYearMonthBottomSheet(
         onDismissRequest = onDismissRequest,
         confirmLabel = "확인",
         onConfirm = {
-            onSelectedYearMonth(selectedYearMonth)
+            Logger.d("set calendar year month to $spinnerYearMonth")
+            onYearMonthSelect(spinnerYearMonth)
         },
     ) {
         YearMonthWheelSpinner(
             selectedYearMonth = spinnerYearMonth,
-            onYearMonthSelect = setSpinnerYearMonth,
+            onYearMonthSelect = {
+                Logger.d("set spinner year month to $it")
+                setSpinnerYearMonth(it)
+            }
         )
     }
 }
