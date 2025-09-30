@@ -1,12 +1,10 @@
-package com.emotionstorage.time_capsule.ui.component
+package com.emotionstorage.ui.component
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import com.emotionstorage.ui.component.BottomSheet
-import com.emotionstorage.ui.component.YearMonthWheelSpinner
 import com.orhanobut.logger.Logger
 import java.time.YearMonth
 
