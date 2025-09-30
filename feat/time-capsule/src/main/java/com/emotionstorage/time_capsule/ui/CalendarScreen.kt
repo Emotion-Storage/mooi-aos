@@ -40,6 +40,7 @@ import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
+import com.emotionstorage.ui.component.CalendarYearMonthBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
@@ -48,6 +49,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun CalendarScreen(
@@ -66,12 +68,14 @@ fun CalendarScreen(
         onPauseOrDispose { }
     }
 
-    val (showBottomSheet, setShowBottomSheet) = remember { mutableStateOf(false) }
+    val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
+
+    val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                is CalendarSideEffect.ShowBottomSheet -> {
-                    setShowBottomSheet(true)
+                is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
+                    setShowTimeCapsuleBottomSheet(true)
                 }
 
                 is CalendarSideEffect.EnterCharRoomSuccess -> {
@@ -83,8 +87,10 @@ fun CalendarScreen(
 
     StatelessCalendarScreen(
         modifier = modifier,
-        showBottomSheet = showBottomSheet,
-        setShowBottomSheet = setShowBottomSheet,
+        showYearMonthBottomSheet = showYearMonthBottomSheet,
+        setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
+        showTimeCapsuleBottomSheet = showTimeCapsuleBottomSheet,
+        setShowTimeCapsuleBottomSheet = setShowTimeCapsuleBottomSheet,
         state = state.value,
         viewModel::onAction,
         navToKey = navToKey,
@@ -99,8 +105,10 @@ fun CalendarScreen(
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
-    showBottomSheet: Boolean = false,
-    setShowBottomSheet: (Boolean) -> Unit = {},
+    showYearMonthBottomSheet: Boolean = false,
+    setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
+    showTimeCapsuleBottomSheet: Boolean = false,
+    setShowTimeCapsuleBottomSheet: (Boolean) -> Unit = {},
     state: CalendarState = CalendarState(),
     onAction: (CalendarAction) -> Unit = {},
     navToKey: () -> Unit = {},
@@ -162,6 +170,10 @@ private fun StatelessCalendarScreen(
                     onCalendarYearMonthSelect = {
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
+                    showYearMonthDropDownIcon = true,
+                    onYearMonthDropDownIconClick = {
+                        setShowYearMonthBottomSheet(true)
+                    },
                     timeCapsuleDates = state.timeCapsuleDates,
                     onDateSelect = {
                         onAction(CalendarAction.SelectCalendarDate(it))
@@ -177,7 +189,7 @@ private fun StatelessCalendarScreen(
                 madeTimeCapsuleToday = state.madeTimeCapsuleToday,
                 onTodayAction = {
                     // change calendar year & month to today
-                    onAction(CalendarAction.SelectCalendarYearMonth(LocalDate.now().withDayOfMonth(1)))
+                    onAction(CalendarAction.SelectCalendarYearMonth(YearMonth.now()))
                     // open today's bottom sheet
                     onAction(CalendarAction.SelectCalendarDate(LocalDate.now()))
                 },
@@ -186,23 +198,37 @@ private fun StatelessCalendarScreen(
                 },
             )
 
-            // calendar date bottom sheet
-            if (showBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
+            // calendar year month bottom sheet
+            if (showYearMonthBottomSheet) {
+                CalendarYearMonthBottomSheet(
+                    onDismissRequest = {
+                        setShowYearMonthBottomSheet(false)
+                    },
+                    selectedYearMonth = state.calendarYearMonth,
+                    onYearMonthSelect = {
+                        setShowYearMonthBottomSheet(false)
+                        onAction(CalendarAction.SelectCalendarYearMonth(it))
+                    },
+                )
+            }
+
+            // calendar date's time capsule bottom sheet
+            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
                 TimeCapsuleCalendarBottomSheet(
                     date = state.calendarDate,
                     onDismissRequest = {
-                        setShowBottomSheet(false)
+                        setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
                     },
                     timeCapsules = state.timeCapsules,
                     navToTimeCapsuleDetail = {
-                        setShowBottomSheet(false)
+                        setShowTimeCapsuleBottomSheet(false)
                         navToTimeCapsuleDetail(it)
                     },
                     navToDailyReport =
                         state.dailyReportId?.run {
                             {
-                                setShowBottomSheet(false)
+                                setShowTimeCapsuleBottomSheet(false)
                                 navToDailyReportDetail(this)
                             }
                         },
