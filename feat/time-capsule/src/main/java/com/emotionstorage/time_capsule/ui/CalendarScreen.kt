@@ -40,6 +40,7 @@ import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
+import com.emotionstorage.time_capsule.ui.component.CalendarYearMonthBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
@@ -363,36 +364,6 @@ private fun CalendarTodayActionButton(
                 contentDescription = null,
             )
         }
-    }
-}
-
-// todo: make it to ui component
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun CalendarYearMonthBottomSheet(
-    modifier: Modifier = Modifier,
-    onDismissRequest: () -> Unit = {},
-    selectedYearMonth: YearMonth = YearMonth.now(),
-    onYearMonthSelect: (YearMonth) -> Unit = {},
-) {
-    val (spinnerYearMonth, setSpinnerYearMonth) = remember { mutableStateOf(selectedYearMonth) }
-
-    BottomSheet(
-        modifier = modifier,
-        onDismissRequest = onDismissRequest,
-        confirmLabel = "확인",
-        onConfirm = {
-            Logger.d("set calendar year month to $spinnerYearMonth")
-            onYearMonthSelect(spinnerYearMonth)
-        },
-    ) {
-        YearMonthWheelSpinner(
-            selectedYearMonth = spinnerYearMonth,
-            onYearMonthSelect = {
-                Logger.d("set spinner year month to $it")
-                setSpinnerYearMonth(it)
-            }
-        )
     }
 }
 
