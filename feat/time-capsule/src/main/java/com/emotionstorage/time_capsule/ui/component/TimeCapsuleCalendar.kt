@@ -42,8 +42,8 @@ import java.time.YearMonth
 private val CALENDAR_MIN_YEAR_MONTH = YearMonth.of(1970, 1)
 
 private object TimeCapsuleCalendarDesignToken {
-    val calendarWidthDp = 330
-    val dateWidthDp = 30
+    val calendarWidth = 330
+    val dateWidth = 30
 }
 
 private val DUMMY_TIME_CAPSULE_DATES =
@@ -68,7 +68,7 @@ fun TimeCapsuleCalendar(
     Column(
         modifier =
             modifier
-                .width(TimeCapsuleCalendarDesignToken.calendarWidthDp.dp)
+                .width(TimeCapsuleCalendarDesignToken.calendarWidth.dp)
                 .background(MooiTheme.colorScheme.background),
     ) {
         // year & month selection
@@ -220,7 +220,7 @@ private fun DateItem(
                 Box(
                     modifier =
                         Modifier
-                            .size(TimeCapsuleCalendarDesignToken.dateWidthDp.dp)
+                            .size(TimeCapsuleCalendarDesignToken.dateWidth.dp)
                             .background(
                                 if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                                 shape = CircleShape,

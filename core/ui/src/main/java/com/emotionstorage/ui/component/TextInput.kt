@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,12 +47,12 @@ sealed class TextInputState(
 fun TextInput(
     value: String,
     onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
     label: String? = null,
     showCharCount: Boolean = true,
     maxCharCount: Int = 0,
     placeHolder: String = "",
     state: TextInputState = TextInputState.Empty(),
-    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.background(MooiTheme.colorScheme.background)) {
         Box(modifier = Modifier.fillMaxWidth()) {
@@ -75,7 +77,7 @@ fun TextInput(
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
                         color = MooiTheme.colorScheme.primary,
-                        text = "${value.length}",
+                        text = if (value.length > maxCharCount) maxCharCount.toString() else value.length.toString(),
                     )
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
@@ -92,7 +94,7 @@ fun TextInput(
                     .fillMaxWidth()
                     .heightIn(min = 0.dp),
             textStyle = MooiTheme.typography.body3.copy(fontSize = 15.sp, color = Color.White),
-            value = value,
+            value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
             onValueChange = onValueChange,
             maxLines = 1,
         ) {
@@ -182,31 +184,35 @@ private fun TextInputMessage(
 @Preview
 @Composable
 private fun TextInputPreview() {
-    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        TextInput(
-            label = "이름",
-            value = "",
-            onValueChange = {},
-            placeHolder = "최소 2글자 이상의 이름을 적어주세요",
-            showCharCount = true,
-            maxCharCount = 8,
-            state = TextInputState.Empty("2~8자리의 한글 또는 영문을 사용해주세요"),
-        )
-        TextInput(
-            label = "이름",
-            value = "뿅",
-            onValueChange = {},
-            showCharCount = true,
-            maxCharCount = 8,
-            state = TextInputState.Error("이름은 최소 2글자 이상이어야 합니다"),
-        )
-        TextInput(
-            label = "이름",
-            value = "찡찡이",
-            onValueChange = {},
-            showCharCount = true,
-            maxCharCount = 8,
-            state = TextInputState.Success("사용 가능한 이름입니다."),
-        )
+    val (value, setValue) = remember { mutableStateOf("") }
+
+    MooiTheme {
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextInput(
+                label = "이름",
+                value = value,
+                onValueChange = setValue,
+                placeHolder = "최소 2글자 이상의 이름을 적어주세요",
+                showCharCount = true,
+                maxCharCount = 8,
+                state = TextInputState.Empty("2~8자리의 한글 또는 영문을 사용해주세요"),
+            )
+            TextInput(
+                label = "이름",
+                value = "뿅",
+                onValueChange = {},
+                showCharCount = true,
+                maxCharCount = 8,
+                state = TextInputState.Error("이름은 최소 2글자 이상이어야 합니다"),
+            )
+            TextInput(
+                label = "이름",
+                value = "찡찡이",
+                onValueChange = {},
+                showCharCount = true,
+                maxCharCount = 8,
+                state = TextInputState.Success("사용 가능한 이름입니다."),
+            )
+        }
     }
 }
