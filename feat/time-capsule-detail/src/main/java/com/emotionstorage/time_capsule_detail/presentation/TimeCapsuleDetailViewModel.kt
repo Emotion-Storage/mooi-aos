@@ -3,9 +3,11 @@ package com.emotionstorage.time_capsule_detail.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.Container
@@ -52,6 +54,7 @@ sealed class TimeCapsuleDetailSideEffect {
 
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
+    private val getKeyCount: GetKeyCountUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
 ) : ViewModel(),
     ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
@@ -76,12 +79,23 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleInit(id: String) =
         intent {
-            // todo: get key count
-            // todo: get time capsule detail of id
+            // get key count
+            coroutineScope {
+                collectDataState(
+                    flow = getKeyCount(),
+                    onSuccess = {
+                        reduce { state.copy(keyCount = it) }
+                    },
+                    onError = { throwable, data ->
+                        Logger.e("error getting key count: $throwable")
+                        reduce { state.copy(keyCount = 0) }
+                    },
+                )
+            }
 
+            // todo: get time capsule detail of id
             reduce {
                 state.copy(
-                    keyCount = 5,
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
