@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
-import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
@@ -29,9 +28,15 @@ fun YearMonthWheelSpinner(
     modifier: Modifier = Modifier,
     selectedYearMonth: YearMonth = YearMonth.now(),
     onYearMonthSelect: (YearMonth) -> Unit = {},
-    minYear: Int = 1970,
-    maxYear: Int = LocalDate.now().year,
+    minYearMonth: YearMonth = YearMonth.of(1970, 1),
+    maxYearMonth: YearMonth = YearMonth.now(),
 ) {
+    val yearRange = (minYearMonth.year..maxYearMonth.year)
+    val monthRange =
+        if (selectedYearMonth.year == minYearMonth.year) (minYearMonth.monthValue..12)
+        else if (selectedYearMonth.year == maxYearMonth.year) (1..maxYearMonth.monthValue)
+        else (1..12)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -52,7 +57,7 @@ fun YearMonthWheelSpinner(
         ) {
             WheelSpinner(
                 modifier = Modifier.width(58.dp),
-                items = (minYear..maxYear).map { "${it}년" },
+                items = yearRange.map { "${it}년" },
                 selectedItem = selectedYearMonth.year.toString() + "년",
                 onItemSelect = { it ->
                     onYearMonthSelect(YearMonth.of(it.dropLast(1).toInt(), 1))
@@ -62,7 +67,7 @@ fun YearMonthWheelSpinner(
             Spacer(modifier = Modifier.width(66.dp))
             WheelSpinner(
                 modifier = Modifier.width(35.dp),
-                items = (1..12).map { "${it}월" },
+                items = monthRange.map { "${it}월" },
                 selectedItem = selectedYearMonth.monthValue.toString() + "월",
                 onItemSelect = { it ->
                     onYearMonthSelect(YearMonth.of(selectedYearMonth.year, it.dropLast(1).toInt()))

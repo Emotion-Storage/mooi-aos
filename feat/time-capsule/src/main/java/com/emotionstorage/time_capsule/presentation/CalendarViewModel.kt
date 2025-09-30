@@ -17,13 +17,14 @@ import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
 import org.orbitmvi.orbit.ContainerHost
 import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Inject
 
 data class CalendarState(
     val keyCount: Int = 0,
     val madeTimeCapsuleToday: Boolean = false,
     // calendar states
-    val calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
+    val calendarYearMonth: YearMonth = YearMonth.now(),
     val timeCapsuleDates: List<LocalDate> = emptyList(),
     val calendarDate: LocalDate? = null,
     // bottom sheet states
@@ -38,7 +39,7 @@ sealed class CalendarAction {
 
     // set calendar year month & get time capsule dates
     data class SelectCalendarYearMonth(
-        val yearMonth: LocalDate,
+        val yearMonth: YearMonth,
     ) : CalendarAction()
 
     // set calendar date & get bottom sheet states
@@ -169,14 +170,14 @@ class CalendarViewModel @Inject constructor(
             }
         }
 
-    private fun handleSelectCalendarYearMonth(yearMonth: LocalDate) =
+    private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
         intent {
             collectDataState(
                 flow = getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue),
                 onSuccess = { data ->
                     reduce {
                         state.copy(
-                            calendarYearMonth = yearMonth.withDayOfMonth(1),
+                            calendarYearMonth = yearMonth,
                             timeCapsuleDates = data,
                         )
                     }
@@ -185,7 +186,7 @@ class CalendarViewModel @Inject constructor(
                     Logger.e("getTimeCapsuleDates error, $throwable")
                     reduce {
                         state.copy(
-                            calendarYearMonth = yearMonth.withDayOfMonth(1),
+                            calendarYearMonth = yearMonth,
                             timeCapsuleDates = emptyList(),
                         )
                     }

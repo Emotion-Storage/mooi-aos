@@ -48,6 +48,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun CalendarScreen(
@@ -177,7 +178,7 @@ private fun StatelessCalendarScreen(
                 madeTimeCapsuleToday = state.madeTimeCapsuleToday,
                 onTodayAction = {
                     // change calendar year & month to today
-                    onAction(CalendarAction.SelectCalendarYearMonth(LocalDate.now().withDayOfMonth(1)))
+                    onAction(CalendarAction.SelectCalendarYearMonth(YearMonth.now()))
                     // open today's bottom sheet
                     onAction(CalendarAction.SelectCalendarDate(LocalDate.now()))
                 },

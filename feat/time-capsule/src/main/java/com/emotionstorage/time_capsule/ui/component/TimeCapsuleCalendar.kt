@@ -34,10 +34,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.common.getWeekDatesOfTargetMonth
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.YearMonthWheelSpinner
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
+import java.time.YearMonth
 
-private val MIN_CALENDAR_DATE = LocalDate.of(2023, 1, 1)
+private val CALENDAR_MIN_YEAR_MONTH = YearMonth.of(1970, 1)
 
 private val DUMMY_TIME_CAPSULE_DATES =
     (1..31)
@@ -51,8 +53,8 @@ private val DUMMY_TIME_CAPSULE_DATES =
 @Composable
 fun TimeCapsuleCalendar(
     modifier: Modifier = Modifier,
-    calendarYearMonth: LocalDate = LocalDate.now().withDayOfMonth(1),
-    onCalendarYearMonthSelect: (yearMonth: LocalDate) -> Unit = {},
+    calendarYearMonth: YearMonth = YearMonth.now(),
+    onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
     timeCapsuleDates: List<LocalDate> = emptyList(),
     onDateSelect: (LocalDate) -> Unit = {},
 ) {
@@ -69,7 +71,7 @@ fun TimeCapsuleCalendar(
                     .fillMaxWidth()
                     .padding(bottom = 17.dp),
         ) {
-            if (MIN_CALENDAR_DATE < calendarYearMonth) {
+            if (YearMonth.from(CALENDAR_MIN_YEAR_MONTH) < calendarYearMonth) {
                 Image(
                     modifier =
                         Modifier
@@ -91,7 +93,7 @@ fun TimeCapsuleCalendar(
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )
-            if (calendarYearMonth < LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1)) {
+            if (calendarYearMonth < YearMonth.now()) {
                 Image(
                     modifier =
                         Modifier
@@ -173,7 +175,8 @@ private fun DateItem(
                         .background(
                             if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
                             shape = RoundedCornerShape(20.dp),
-                        ).clickable { onClick(date) },
+                        )
+                        .clickable { onClick(date) },
                 verticalArrangement =
                     Arrangement.spacedBy(
                         9.dp,
@@ -193,7 +196,8 @@ private fun DateItem(
                             .background(
                                 if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                                 shape = CircleShape,
-                            ).border(
+                            )
+                            .border(
                                 width = 1.5.dp,
                                 color =
                                     if (isFilled) {
@@ -214,10 +218,7 @@ private fun DateItem(
 @Preview
 @Composable
 fun TimeCapsuleCalendarPreview() {
-    val (calendarYearMonth, setCalendarYearMonth) =
-        remember {
-            mutableStateOf(LocalDate.of(LocalDate.now().year, LocalDate.now().month, 1))
-        }
+    val (calendarYearMonth, setCalendarYearMonth) = remember { mutableStateOf(YearMonth.now()) }
     MooiTheme {
         TimeCapsuleCalendar(
             calendarYearMonth = calendarYearMonth,
