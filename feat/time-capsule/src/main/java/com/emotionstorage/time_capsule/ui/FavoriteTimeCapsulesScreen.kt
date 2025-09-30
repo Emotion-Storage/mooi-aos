@@ -91,17 +91,14 @@ fun FavoriteTimeCapsulesScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
-    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is ShowToast -> {
-                    coroutineScope.launch {
-                        // dismiss current snackbar if exists
-                        snackState.currentSnackbarData?.dismiss()
-                        // show new snackbar
-                        snackState.showSnackbar(sideEffect.toast.message)
-                    }
+                    // dismiss current snackbar if exists
+                    snackState.currentSnackbarData?.dismiss()
+                    // show new snackbar
+                    snackState.showSnackbar(sideEffect.toast.message)
                 }
             }
         }
