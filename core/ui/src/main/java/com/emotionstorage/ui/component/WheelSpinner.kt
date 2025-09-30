@@ -64,7 +64,7 @@ fun WheelSpinner(
         if (!listState.isScrollInProgress) {
             if (selectedIndex in wheelItems.indices && selectedIndex != lastSelectedIndex) {
                 // trigger item selection
-                onItemSelect(wheelItems[selectedIndex])
+                if(wheelItems[selectedIndex].isNotEmpty()) onItemSelect(wheelItems[selectedIndex])
             }
         }
     }
