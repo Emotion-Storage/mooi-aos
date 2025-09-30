@@ -18,12 +18,15 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -35,9 +38,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDatailState
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModel
 import com.emotionstorage.ui.component.CtaButton
@@ -50,6 +55,9 @@ import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.SuccessToast
+import com.emotionstorage.ui.component.Toast
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -62,6 +70,9 @@ fun TimeCapsuleDetailScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
+
+    val snackState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         viewModel.onAction(TimeCapsuleDetailAction.Init(id))
 
@@ -70,6 +81,15 @@ fun TimeCapsuleDetailScreen(
                 TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
+
+                is ShowToast -> {
+                    coroutineScope.launch {
+                        // dismiss current snackbar if exists
+                        snackState.currentSnackbarData?.dismiss()
+                        // show new snackbar
+                        snackState.showSnackbar(sideEffect.toast.message)
+                    }
+                }
             }
         }
     }
@@ -77,6 +97,7 @@ fun TimeCapsuleDetailScreen(
     StatelessTimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
+        snackState = snackState,
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
@@ -88,7 +109,8 @@ fun TimeCapsuleDetailScreen(
 private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
-    state: TimeCapsuleDatailState = TimeCapsuleDatailState(),
+    snackState: SnackbarHostState = SnackbarHostState(),
+    state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToBack: () -> Unit = {},
     navToSaveTimeCapsule: (id: String) -> Unit = {}
@@ -117,7 +139,8 @@ private fun StatelessTimeCapsuleDetailScreen(
                     onBackClick = navToBack,
                 )
             },
-        ) { innerPadding ->
+
+            ) { innerPadding ->
             Column(
                 modifier =
                     Modifier
@@ -144,12 +167,21 @@ private fun StatelessTimeCapsuleDetailScreen(
                             RoundedToggleButton(
                                 isSelected = state.timeCapsule.isFavorite,
                                 onSelect = {
-                                    // todo: toggle favorite
+                                    onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
                                 },
                             )
                         }
                     },
                 )
+            },
+            snackbarHost = {
+                SnackbarHost(hostState = snackState) { snackbarData ->
+                    if (snackbarData.visuals.message == TimeCapsuleDetailToast.FAVORITE_FULL.message) {
+                        Toast(message = snackbarData.visuals.message)
+                    } else {
+                        SuccessToast(message = snackbarData.visuals.message)
+                    }
+                }
             },
         ) { innerPadding ->
             Column(
@@ -475,7 +507,7 @@ private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
             id = "id",
-            state = TimeCapsuleDatailState(
+            state = TimeCapsuleDetailState(
                 timeCapsule = TimeCapsule(
                     id = "id",
                     status = TimeCapsule.STATUS.OPENED,

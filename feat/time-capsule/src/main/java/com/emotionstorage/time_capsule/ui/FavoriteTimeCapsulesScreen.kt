@@ -36,6 +36,7 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast.FavoriteToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
@@ -137,7 +138,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         },
         snackbarHost = {
             SnackbarHost(hostState = snackState) { snackbarData ->
-                if (snackbarData.visuals.message == ShowToast.FavoriteToast.FAVORITE_FULL.message) {
+                if (snackbarData.visuals.message == FavoriteToast.FAVORITE_FULL.message) {
                     Toast(message = snackbarData.visuals.message)
                 } else {
                     SuccessToast(message = snackbarData.visuals.message)

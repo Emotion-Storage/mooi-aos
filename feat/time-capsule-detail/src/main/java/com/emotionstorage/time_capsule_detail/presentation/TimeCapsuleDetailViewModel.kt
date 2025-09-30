@@ -1,15 +1,20 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-data class TimeCapsuleDatailState(
+data class TimeCapsuleDetailState(
     val keyCount: Int = 0,
     val timeCapsule: TimeCapsule? = null,
     val isMindNoteChanged: Boolean = false,
@@ -17,23 +22,41 @@ data class TimeCapsuleDatailState(
 
 sealed class TimeCapsuleDetailAction {
     data class Init(val id: String) : TimeCapsuleDetailAction()
+    data class OnToggleFavorite(val id: String) : TimeCapsuleDetailAction()
     data class OnDeleteTimeCapsule(val id: String) : TimeCapsuleDetailAction()
 }
 
 sealed class TimeCapsuleDetailSideEffect {
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
+
+    data class ShowToast(
+        val toast: TimeCapsuleDetailToast,
+    ) : TimeCapsuleDetailSideEffect() {
+        enum class TimeCapsuleDetailToast(
+            val message: String,
+        ) {
+            FAVORITE_ADDED("즐겨찾기가 설정되었습니다."),
+            FAVORITE_REMOVED("즐겨찾기가 해제되었습니다."),
+            FAVORITE_FULL("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요."),
+        }
+    }
 }
 
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
-) : ViewModel(), ContainerHost<TimeCapsuleDatailState, TimeCapsuleDetailSideEffect> {
-    override val container: Container<TimeCapsuleDatailState, TimeCapsuleDetailSideEffect> =
-        container(TimeCapsuleDatailState())
+    private val toggleFavorite: ToggleFavoriteUseCase,
+) : ViewModel(), ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
+    override val container: Container<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> =
+        container(TimeCapsuleDetailState())
 
     fun onAction(action: TimeCapsuleDetailAction) {
         when (action) {
             is TimeCapsuleDetailAction.Init -> {
                 handleInit(action.id)
+            }
+
+            is TimeCapsuleDetailAction.OnToggleFavorite -> {
+                handleToggleFavorite(action.id)
             }
 
             is TimeCapsuleDetailAction.OnDeleteTimeCapsule -> {
@@ -76,6 +99,32 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     createdAt = LocalDateTime.now(),
                     updatedAt = LocalDateTime.now(),
                 ),
+            )
+        }
+    }
+
+    private fun handleToggleFavorite(id: String) = intent {
+        coroutineScope {
+            collectDataState(
+                flow = toggleFavorite(id),
+                onSuccess = {
+                    if (it == ToggleToastResult.FAVORITE_ADDED) {
+                        postSideEffect(ShowToast(ShowToast.TimeCapsuleDetailToast.FAVORITE_ADDED))
+                        reduce {
+                            state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
+                        }
+                    } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                        postSideEffect(ShowToast(ShowToast.TimeCapsuleDetailToast.FAVORITE_REMOVED))
+                        reduce {
+                            state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
+                        }
+                    }
+                },
+                onError = { throwable, data ->
+                    if (data == ToggleToastResult.FAVORITE_FULL) {
+                        postSideEffect(ShowToast(ShowToast.TimeCapsuleDetailToast.FAVORITE_FULL))
+                    }
+                }
             )
         }
     }
