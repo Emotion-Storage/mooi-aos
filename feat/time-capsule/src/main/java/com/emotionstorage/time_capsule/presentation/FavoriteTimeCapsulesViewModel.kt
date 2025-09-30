@@ -1,13 +1,17 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
+import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState.SortOrder
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDateTime
@@ -62,7 +66,7 @@ sealed class FavoriteTimeCapsulesSideEffect {
 @HiltViewModel
 class FavoriteTimeCapsulesViewModel @Inject constructor(
     // private val getFavoriteTimeCapsules: GetFavoriteTimeCapsulesUseCase,
-    // private val toggleFavoriteTimeCapsule: ToggleFavoriteTimeCapsuleUseCase
+    private val toggleFavorite: ToggleFavoriteUseCase
 ) : ViewModel(),
     ContainerHost<FavoriteTimeCapsulesState, FavoriteTimeCapsulesSideEffect> {
     override val container =
@@ -96,7 +100,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                     .map { it ->
                         TimeCapsuleItemState(
                             id = it.toString(),
-                            status = TimeCapsule.STATUS.ARRIVED,
+                            status = TimeCapsule.STATUS.OPENED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             emotions =
                                 listOf(
@@ -141,7 +145,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                         .map { it ->
                             TimeCapsuleItemState(
                                 id = it.toString(),
-                                status = TimeCapsule.STATUS.ARRIVED,
+                                status = TimeCapsule.STATUS.OPENED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 emotions =
                                     listOf(
@@ -189,28 +193,36 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 return@intent
             }
 
-            // todo: call use case
-            postSideEffect(
-                ShowToast(
-                    if (isFavorite) {
-                        ShowToast.FavoriteToast.FAVORITE_REMOVED
-                    } else {
-                        ShowToast.FavoriteToast.FAVORITE_ADDED
-                    },
-                ),
-            )
-            reduce {
+            suspend fun updateFavorite(id: String, isFavorite: Boolean) = reduce {
                 state.copy(
                     timeCapsules =
                         state.timeCapsules.map {
                             if (it.id == id) {
-                                it.copy(
-                                    isFavorite = !it.isFavorite,
-                                )
+                                it.copy(isFavorite = isFavorite)
                             } else {
                                 it
                             }
                         },
+                )
+            }
+
+            coroutineScope {
+                collectDataState(
+                    flow = toggleFavorite(id),
+                    onSuccess = {
+                        if (it == ToggleToastResult.FAVORITE_ADDED) {
+                            postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_ADDED))
+                            updateFavorite(id, true)
+                        } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                            postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_REMOVED))
+                            updateFavorite(id, false)
+                        }
+                    },
+                    onError = { throwable, data ->
+                        if(data == ToggleToastResult.FAVORITE_FULL) {
+                            postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_FULL))
+                        }
+                    }
                 )
             }
         }
