@@ -38,6 +38,7 @@ import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.LinearGradient
 import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -76,11 +77,15 @@ fun TimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     navToBack: () -> Unit = {},
+    navToSaveTimeCapsule: (id: String) -> Unit = {}
 ) {
+    // todo: init time capsule deatil screen state
+
     StatelessTimeCapsuleDetailScreen(
         timeCapsule = DUMMY_TIME_CAPSULE,
         modifier = modifier,
         navToBack = navToBack,
+        navToSaveTimeCapsule = navToSaveTimeCapsule
     )
 }
 
@@ -89,6 +94,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     timeCapsule: TimeCapsule,
     modifier: Modifier = Modifier,
     navToBack: () -> Unit = {},
+    navToSaveTimeCapsule: (id: String) -> Unit = {}
 ) {
     val scrollState = rememberScrollState()
 
@@ -103,12 +109,14 @@ private fun StatelessTimeCapsuleDetailScreen(
                 showBackButton = true,
                 onBackClick = navToBack,
                 rightComponent = {
-                    RoundedToggleButton(
-                        isSelected = timeCapsule.isFavorite,
-                        onSelect = {
-                            // todo: toggle favorite
-                        },
-                    )
+                    if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                        RoundedToggleButton(
+                            isSelected = timeCapsule.isFavorite,
+                            onSelect = {
+                                // todo: toggle favorite
+                            },
+                        )
+                    }
                 },
             )
         },
@@ -119,73 +127,59 @@ private fun StatelessTimeCapsuleDetailScreen(
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
-                    .padding(start = 16.dp, end = 16.dp)
+                    .padding(top = 31.dp, bottom = 55.dp)
+                    .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState),
         ) {
-            // 대화 요약
-            Text(
-                modifier = Modifier.padding(bottom = 20.dp, top = 21.dp),
-                text = timeCapsule.title,
-                style = MooiTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                color = Color.White,
+            TimeCapsuleSummary(
+                title = timeCapsule.title,
+                summary = timeCapsule.summary,
             )
-            Box(
-                modifier =
-                    Modifier
-                        .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
-                        .padding(18.dp),
-            ) {
-                Text(
-                    text = timeCapsule.summary,
-                    style = MooiTheme.typography.body4.copy(lineHeight = 24.sp),
-                    color = Color.White,
-                )
-            }
 
             DecorativeDots(modifier = Modifier.padding(vertical = 31.dp))
 
-            // 감정 분석
-            Text(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(bottom = 27.dp),
-                text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
-                style = MooiTheme.typography.body1,
-                textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.primary,
-            )
-
-            Emotions(
-                modifier =
-                    Modifier
-                        .padding(bottom = 27.dp),
+            TimeCapsuleEmotionComments(
                 emotions = timeCapsule.emotions,
-            )
-
-            Comments(
-                modifier = Modifier.padding(bottom = 53.dp),
                 comments = timeCapsule.comments,
             )
 
             // 마음 노트
+            TimeCapsuleNote(
+                modifier = Modifier.padding(top = 53.dp),
+                note = timeCapsule.note,
+                onSaveNote = { navToSaveTimeCapsule(timeCapsule.id) }
+            )
+
+        }
+    }
+}
+
+@Composable
+private fun TimeCapsuleSummary(
+    title: String,
+    summary: String,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp)
+    ) {
+        Text(
+            text = title,
+            style = MooiTheme.typography.body1,
+            color = Color.White,
+        )
+        Box(
+            modifier =
+                Modifier
+                    .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
+                    .padding(18.dp),
+        ) {
             Text(
-                modifier = Modifier.padding(bottom = 5.dp),
-                text = "내 마음 노트",
-                style = MooiTheme.typography.body1,
+                text = summary,
+                style = MooiTheme.typography.caption3.copy(lineHeight = 24.sp),
                 color = Color.White,
-            )
-            Text(
-                modifier = Modifier.padding(bottom = 17.dp),
-                text = "타임캡슐에 직접 남기고 싶은 말이 있다면 적어주세요.",
-                style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Light),
-                textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.gray300,
-            )
-            MindNote(
-                modifier = Modifier.padding(bottom = 500.dp),
-                note = timeCapsule.note ?: "",
             )
         }
     }
@@ -219,6 +213,28 @@ private fun DecorativeDots(modifier: Modifier = Modifier) {
 }
 
 @Composable
+private fun TimeCapsuleEmotionComments(
+    modifier: Modifier = Modifier,
+    emotions: List<TimeCapsule.Emotion> = emptyList(),
+    comments: List<String> = emptyList(),
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(27.dp)
+    ) {
+        Text(
+            text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
+            style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+            textAlign = TextAlign.Center,
+            color = MooiTheme.colorScheme.primary,
+        )
+        Emotions(emotions = emotions)
+        Comments(comments = comments)
+    }
+}
+
+@Composable
 private fun Emotions(
     modifier: Modifier = Modifier,
     emotions: List<TimeCapsule.Emotion> = emptyList(),
@@ -234,11 +250,14 @@ private fun Emotions(
                         .height(92.dp)
                         .weight(1f)
                         .background(
-                            Brush.horizontalGradient(
+                            LinearGradient(
                                 listOf(
-                                    Color(0x80849BEA).copy(alpha = 0.1f),
-                                    Color(0x14849BEA).copy(alpha = 0.016f),
+                                    // alpha = 0.5 * 0.2
+                                    Color(0xFF849BEA).copy(alpha = 0.1f),
+                                    // alpha = 0.08 * 0.2
+                                    Color(0xFF849BEA).copy(alpha = 0.016f),
                                 ),
+                                angleInDegrees = -18f
                             ),
                             RoundedCornerShape(10.dp),
                         ),
@@ -268,13 +287,13 @@ private fun Emotions(
                         }
                         Text(
                             text = emotion.label,
-                            style = MooiTheme.typography.body4.copy(fontSize = 15.sp),
+                            style = MooiTheme.typography.body8,
                             color = MooiTheme.colorScheme.primary,
                         )
                     }
                     Text(
-                        text = "${emotion.percentage?.toInt() ?: "??"}%",
-                        style = MooiTheme.typography.head3,
+                        text = "${emotion.percentage?.toInt() ?: "- "}%",
+                        style = MooiTheme.typography.head3.copy(lineHeight = 29.sp),
                         color = Color.White,
                     )
                 }
@@ -303,19 +322,50 @@ private fun Comments(
                 horizontalArrangement = Arrangement.spacedBy(11.dp),
             ) {
                 Box(
-                    modifier =
-                        Modifier
-                            .size(5.dp)
-                            .background(Color.White, CircleShape)
-                            .offset(y = 8.dp),
-                )
+                    modifier = Modifier.padding(top = 5.dp),
+                ) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(5.dp)
+                                .background(Color.White, CircleShape),
+                    )
+                }
                 Text(
                     text = comment,
-                    style = MooiTheme.typography.body4,
+                    style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
                     color = Color.White,
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun TimeCapsuleNote(
+    modifier: Modifier = Modifier,
+    note: String? = null,
+    onSaveNote: (note: String) -> Unit = {},
+) {
+    Column(modifier = modifier.fillMaxWidth()) {
+        Text(
+            modifier = Modifier.padding(bottom = 5.dp),
+            text = "내 마음 노트",
+            style = MooiTheme.typography.body1,
+            color = Color.White,
+        )
+        Text(
+            modifier = Modifier.padding(bottom = 17.dp),
+            text = "타임캡슐에 직접 남기고 싶은 말이 있다면 적어주세요.",
+            style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Light),
+            textAlign = TextAlign.Center,
+            color = MooiTheme.colorScheme.gray300,
+        )
+        MindNote(
+            modifier = Modifier.padding(bottom = 500.dp),
+            note = note ?: "",
+            onSaveNote = onSaveNote
+        )
     }
 }
 
