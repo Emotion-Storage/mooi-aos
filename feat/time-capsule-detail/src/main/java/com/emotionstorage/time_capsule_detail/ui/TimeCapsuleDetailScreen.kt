@@ -510,10 +510,10 @@ private fun TimeCapsuleDetailActionButtons(
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CountDownTimer(
-                    deadline = createdAt.plusHours(25)
+                    deadline = createdAt.plusHours(25),
                 ) { hours, minutes, seconds ->
                     if (hours == 0L && minutes == 0L && seconds == 0L) {
                         onTimeCapsuleExpired()
@@ -521,10 +521,10 @@ private fun TimeCapsuleDetailActionButtons(
 
                     val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
                     SpeechBubble(
-                        text = "이 캡슐을 보관할 수 있는 시간이\n${timerString} 남았어요!",
+                        text = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
                         tail = BubbleTail.BottomCenter,
                         sizeParam = DpSize(265.dp, 84.dp),
-                        textColor = MooiTheme.colorScheme.errorRed
+                        textColor = MooiTheme.colorScheme.errorRed,
                     )
                 }
 

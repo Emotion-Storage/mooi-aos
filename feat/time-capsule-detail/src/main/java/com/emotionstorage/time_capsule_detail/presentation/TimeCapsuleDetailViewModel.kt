@@ -27,13 +27,13 @@ sealed class TimeCapsuleDetailAction {
         val id: String,
     ) : TimeCapsuleDetailAction()
 
-    object OnExpireTrigger: TimeCapsuleDetailAction()
+    object OnExpireTrigger : TimeCapsuleDetailAction()
 
     data class OnToggleFavorite(
         val id: String,
     ) : TimeCapsuleDetailAction()
 
-    object OnDeleteTrigger: TimeCapsuleDetailAction()
+    object OnDeleteTrigger : TimeCapsuleDetailAction()
 
     data class OnDeleteTimeCapsule(
         val id: String,

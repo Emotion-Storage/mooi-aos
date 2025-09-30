@@ -3,7 +3,6 @@ package com.emotionstorage.time_capsule_detail.ui.component
 import androidx.compose.runtime.Composable
 import com.emotionstorage.ui.component.Modal
 
-
 @Composable
 fun TimeCapsuleExpiredModal(
     isModalOpen: Boolean = false,
