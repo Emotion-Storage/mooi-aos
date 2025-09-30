@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +47,7 @@ fun TextBoxInput(
                 lineHeight = 24.sp,
                 color = Color.White,
             ),
-        value = if(value.length > maxCharCount) value.substring(0, maxCharCount) else value,
+        value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
         onValueChange = onValueChange,
     ) {
         Column(
@@ -94,25 +95,30 @@ fun TextBoxInput(
 @Preview
 @Composable
 private fun TextBoxInputPreview() {
-    Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        // empty text input value
-        TextBoxInput(
-            value = "",
-            onValueChange = {},
-            placeHolder = "지금 내 마음은...",
-            showCharCount = true,
-            maxCharCount = 1000,
-        )
+    val (value, setValue) = remember { mutableStateOf("") }
 
-        // long text input value
-        TextBoxInput(
-            value = "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
-                "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
-                "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
-            onValueChange = {},
-            placeHolder = "지금 내 마음은...",
-            showCharCount = true,
-            maxCharCount = 1000,
-        )
+    MooiTheme {
+        Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            TextBoxInput(
+                value = value,
+                onValueChange = setValue,
+                placeHolder = "지금 내 마음은...",
+                showCharCount = true,
+                maxCharCount = 15,
+            )
+
+            // long text input value
+            TextBoxInput(
+                value = "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
+                    "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
+                    "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
+                    "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야." +
+                    "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. 사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
+                onValueChange = {},
+                placeHolder = "지금 내 마음은...",
+                showCharCount = true,
+                maxCharCount = 1000,
+            )
+        }
     }
 }
