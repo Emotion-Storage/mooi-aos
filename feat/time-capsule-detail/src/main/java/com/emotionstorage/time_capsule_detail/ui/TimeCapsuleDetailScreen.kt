@@ -41,11 +41,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
@@ -77,7 +78,7 @@ fun TimeCapsuleDetailScreen(
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess -> {
+                is DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
 
@@ -113,6 +114,16 @@ private fun StatelessTimeCapsuleDetailScreen(
     navToSaveTimeCapsule: (id: String) -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
+
+    val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
+    TimeCapsuleExpiredModal(
+        isModalOpen = isExpiredModalOpen,
+        onConfirm = {
+            setExpiredModalOpen(false)
+            navToBack()
+            // todo: fix modal opening back after navigating back
+        },
+    )
 
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
     TimeCapsuleDeleteModal(
@@ -217,6 +228,9 @@ private fun StatelessTimeCapsuleDetailScreen(
                     status = state.timeCapsule.status,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule(id)
+                    },
+                    onTimeCapsuleExpired = {
+                        setExpiredModalOpen(true)
                     },
                     onSaveMindNote = {
                         // todo: save mind note content
@@ -463,6 +477,7 @@ private fun TimeCapsuleDetailActionButtons(
     status: TimeCapsule.STATUS,
     modifier: Modifier = Modifier,
     onSaveTimeCapsule: () -> Unit = {},
+    onTimeCapsuleExpired: () -> Unit = {},
     onSaveMindNote: () -> Unit = {},
     onDeleteTimeCapsule: () -> Unit = {},
 ) {
@@ -478,9 +493,12 @@ private fun TimeCapsuleDetailActionButtons(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 CountDownTimer(
-                    deadline = createdAt.plusHours(25)
+//                    deadline = createdAt.plusHours(25)
+                    deadline = createdAt.plusSeconds(5)
                 ) { hours, minutes, seconds ->
-                    // todo: trigger time capsule closed when remaining time = 0
+                    if (hours == 0L && minutes == 0L && seconds == 0L) {
+                        onTimeCapsuleExpired()
+                    }
 
                     val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
                     SpeechBubble(
