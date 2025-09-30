@@ -23,12 +23,14 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.YearMonth
 
+private val MIN_YEAR_MONTH = YearMonth.of(1970, 1)
+
 @Composable
 fun YearMonthWheelSpinner(
     modifier: Modifier = Modifier,
     selectedYearMonth: YearMonth = YearMonth.now(),
     onYearMonthSelect: (YearMonth) -> Unit = {},
-    minYearMonth: YearMonth = YearMonth.of(1970, 1),
+    minYearMonth: YearMonth = MIN_YEAR_MONTH,
     maxYearMonth: YearMonth = YearMonth.now(),
 ) {
     val yearRange = (minYearMonth.year..maxYearMonth.year)

@@ -55,7 +55,7 @@ sealed class CalendarAction {
 }
 
 sealed class CalendarSideEffect {
-    object ShowBottomSheet : CalendarSideEffect()
+    object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
 
     data class EnterCharRoomSuccess(
         val roomId: String,
@@ -166,7 +166,7 @@ class CalendarViewModel @Inject constructor(
 
             // show bottom sheet if calendarDate is not null
             if (state.calendarDate != null) {
-                postSideEffect(CalendarSideEffect.ShowBottomSheet)
+                postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
             }
         }
 
@@ -244,7 +244,7 @@ class CalendarViewModel @Inject constructor(
                 }
             }
 
-            postSideEffect(CalendarSideEffect.ShowBottomSheet)
+            postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
         }
 
     private fun handleClearBottomSheet() =
