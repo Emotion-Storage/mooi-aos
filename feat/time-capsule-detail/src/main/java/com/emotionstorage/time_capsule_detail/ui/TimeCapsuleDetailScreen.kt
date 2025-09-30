@@ -3,7 +3,6 @@ package com.emotionstorage.time_capsule_detail.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -28,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +43,7 @@ import java.time.format.DateTimeFormatter
 private val DUMMY_TIME_CAPSULE =
     TimeCapsule(
         id = "id",
-        status = TimeCapsule.STATUS.TEMPORARY,
+        status = TimeCapsule.STATUS.OPENED,
         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
         summary =
             "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
@@ -143,13 +140,13 @@ private fun StatelessTimeCapsuleDetailScreen(
                 comments = timeCapsule.comments,
             )
 
-            // 마음 노트
-            TimeCapsuleNote(
-                modifier = Modifier.padding(top = 53.dp),
-                note = timeCapsule.note,
-                onSaveNote = { navToSaveTimeCapsule(timeCapsule.id) }
-            )
-
+            if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                TimeCapsuleNote(
+                    modifier = Modifier.padding(top = 53.dp),
+                    note = timeCapsule.note,
+                    onNoteChange = { navToSaveTimeCapsule(timeCapsule.id) }
+                )
+            }
         }
     }
 }
@@ -345,71 +342,42 @@ private fun Comments(
 private fun TimeCapsuleNote(
     modifier: Modifier = Modifier,
     note: String? = null,
-    onSaveNote: (note: String) -> Unit = {},
+    onNoteChange: (note: String) -> Unit = {},
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Text(
-            modifier = Modifier.padding(bottom = 5.dp),
-            text = "내 마음 노트",
-            style = MooiTheme.typography.body1,
-            color = Color.White,
-        )
-        Text(
-            modifier = Modifier.padding(bottom = 17.dp),
-            text = "타임캡슐에 직접 남기고 싶은 말이 있다면 적어주세요.",
-            style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Light),
-            textAlign = TextAlign.Center,
-            color = MooiTheme.colorScheme.gray300,
-        )
-        MindNote(
-            modifier = Modifier.padding(bottom = 500.dp),
-            note = note ?: "",
-            onSaveNote = onSaveNote
-        )
-    }
-}
-
-@Composable
-private fun MindNote(
-    modifier: Modifier = Modifier,
-    note: String = "",
-    onSaveNote: (note: String) -> Unit = {},
-) {
-    val (noteInput, setNoteInput) = remember { mutableStateOf(note) }
-
     Column(
         modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.End,
-        verticalArrangement = Arrangement.spacedBy(13.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(17.dp)
     ) {
+        Column(
+            modifier = modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(6.dp)
+        ) {
+            Text(
+                text = "나의 회고 일기",
+                style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+                color = Color.White,
+            )
+            Text(
+                text = "그때의 감정과 지금 달라진것이 있나요?\n감정을 회고하며 노트를 작성해보세요.",
+                style = MooiTheme.typography.caption7.copy(lineHeight = 20.sp),
+                textAlign = TextAlign.Center,
+                color = MooiTheme.colorScheme.gray400,
+            )
+        }
+
         TextBoxInput(
-            modifier =
-                Modifier
-                    .fillMaxWidth(),
-            value = noteInput,
-            onValueChange = setNoteInput,
+            modifier = Modifier.fillMaxWidth(),
+            value = note ?: "",
+            onValueChange = onNoteChange,
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
             maxCharCount = 1000,
         )
-
-        Box(
-            modifier
-                .size(140.dp, 46.dp)
-                .background(MooiTheme.colorScheme.bottomBarBackground, RoundedCornerShape(10.dp))
-                .clickable(
-                    onClick = { onSaveNote(noteInput) },
-                ),
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = "변경사항 저장하기",
-                style = MooiTheme.typography.body4,
-                color = Color.White,
-            )
-        }
     }
 }
+
 
 // @PreviewScreenSizes
 @Preview
