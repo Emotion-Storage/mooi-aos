@@ -1,42 +1,24 @@
 package com.emotionstorage.time_capsule_detail.ui
 
-import SpeechBubble
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
@@ -59,15 +41,11 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExitModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
-import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
-import com.emotionstorage.ui.component.TextBoxInput
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
 
@@ -185,9 +163,8 @@ private fun StatelessTimeCapsuleDetailScreen(
         onContinue = dismissExitModal,
         onExit = {
             dismissExitModal()
-            navToBack()
-        }
-
+            navToHome()
+        },
     )
     TimeCapsuleUnlockModal(
         keyCount = unlockModalState.keyCount,
@@ -231,11 +208,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     },
                     showCloseButton = isNewTimeCapsule,
                     onCloseClick = {
-                        if (isNewTimeCapsule) {
-                            onAction(TimeCapsuleDetailAction.OnExitTrigger)
-                        } else {
-                            navToHome()
-                        }
+                        onAction(TimeCapsuleDetailAction.OnExitTrigger)
                     },
                     rightComponent = {
                         if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
@@ -246,7 +219,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                                 },
                             )
                         }
-                    }
+                    },
                 )
             },
             snackbarHost = {
@@ -322,9 +295,7 @@ private fun StatelessTimeCapsuleDetailScreen(
 }
 
 @Composable
-private fun TimeCapsuleDetailLoadingScreen(
-    modifier: Modifier = Modifier
-) {
+private fun TimeCapsuleDetailLoadingScreen(modifier: Modifier = Modifier) {
     Scaffold(
         modifier =
             modifier
