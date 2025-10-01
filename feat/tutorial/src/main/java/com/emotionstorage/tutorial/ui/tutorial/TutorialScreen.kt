@@ -91,7 +91,7 @@ fun TutorialScreen(
                                     ),
                                 content = {
                                     CtaButton(
-                                        label = stringResource(R.string.tutorial_btn_start),
+                                        labelString = stringResource(R.string.tutorial_btn_start),
                                         onClick = navToLogin,
                                         modifier = Modifier.align(Alignment.BottomCenter),
                                     )

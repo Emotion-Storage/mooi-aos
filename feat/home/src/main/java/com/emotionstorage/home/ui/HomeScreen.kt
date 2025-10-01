@@ -8,9 +8,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,10 +39,10 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
-import com.emotionstorage.ui.util.mainBackground
 import com.orhanobut.logger.Logger
 
 @Composable
@@ -238,71 +239,55 @@ private fun StartChatButton(
     canStartChat: Boolean = true,
     onChatStart: () -> Unit = {},
 ) {
-    if (canStartChat) {
-        // todo: change to use CtaButton component?
-        Row(
-            modifier =
-                modifier
-                    .mainBackground(isActivated = true)
-                    .clickable {
-                        onChatStart()
-                    }.padding(vertical = 15.dp, horizontal = 37.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                modifier = Modifier.padding(end = 7.dp),
-                text = "대화 시작하기",
-                style = MooiTheme.typography.mainButton,
-                color = Color.White,
-            )
-            Image(
-                modifier = Modifier.size(18.dp),
-                painter = painterResource(id = R.drawable.ticket),
-                contentDescription = "ticket",
-                colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
-            )
-            Text(
-                text = "-1",
-                style = MooiTheme.typography.mainButton,
-                color = Color.White.copy(alpha = 0.7f),
-            )
-        }
-    } else {
-        Column(
-            modifier =
-                Modifier
-                    .size(197.dp, 65.dp)
-                    .background(
-                        MooiTheme.colorScheme.gray700,
-                        RoundedCornerShape(10.dp),
-                    ),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text(
-                text = "대화 시작하기",
-                style = MooiTheme.typography.mainButton,
-                color = MooiTheme.colorScheme.gray500,
-            )
-            Text(
-                text = "(대화 티켓 부족)",
-                style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
-                color = MooiTheme.colorScheme.gray500,
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun StartChatUIPreview() {
-    MooiTheme {
-        Column(
-            modifier = Modifier.background(MooiTheme.colorScheme.background),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-        ) {
-            StartChatButton()
-            StartChatButton(canStartChat = false)
+    CtaButton(
+        modifier =
+            modifier
+                .width(
+                    if (canStartChat) 198.dp else 197.dp,
+                ).height(
+                    if (canStartChat) 54.dp else 65.dp,
+                ),
+        enabled = canStartChat,
+        onClick = onChatStart,
+        radius = 10,
+        isDefaultHeight = false,
+        isDefaultWidth = false,
+    ) {
+        if (canStartChat) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    modifier = Modifier.padding(end = 7.dp),
+                    text = "대화 시작하기",
+                    style = MooiTheme.typography.mainButton,
+                )
+                Image(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(id = R.drawable.ticket),
+                    contentDescription = "ticket",
+                    colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
+                )
+                Text(
+                    text = "-1",
+                    style = MooiTheme.typography.mainButton,
+                    color = Color.White.copy(alpha = 0.7f),
+                )
+            }
+        } else {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    text = "대화 시작하기",
+                    style = MooiTheme.typography.mainButton,
+                )
+                Text(
+                    text = "(대화 티켓 부족)",
+                    style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+                )
+            }
         }
     }
 }

@@ -113,7 +113,7 @@ private fun ModalButton(
 ) {
     CtaButton(
         modifier = modifier.height(50.dp),
-        label = label,
+        labelString = label,
         onClick = onClick,
         type = type,
         radius = 10,

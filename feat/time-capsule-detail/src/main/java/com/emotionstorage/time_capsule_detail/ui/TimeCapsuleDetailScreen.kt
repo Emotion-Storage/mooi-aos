@@ -29,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -46,9 +47,12 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
@@ -77,6 +81,11 @@ fun TimeCapsuleDetailScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
+    val (isUnlockModalOpen, setUnlockModalOpen) = remember { mutableStateOf(false) }
+    val (unlockModalState, setUnlockModalState) =
+        remember {
+            mutableStateOf(UnlockModalState())
+        }
     val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
 
@@ -87,8 +96,14 @@ fun TimeCapsuleDetailScreen(
                     navToBack()
                 }
 
+                is ShowUnlockModal -> {
+                    setUnlockModalState(sideEffect.modalState)
+                    setUnlockModalOpen(true)
+                }
+
                 is ShowExpiredModal -> {
                     // dismiss other modals before showing expired modal
+                    setUnlockModalOpen(false)
                     setDeleteModalOpen(false)
                     setExpiredModalOpen(true)
                 }
@@ -110,6 +125,9 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        unlockModalState = unlockModalState,
+        isUnlockModalOpen = isUnlockModalOpen,
+        dismissUnlockModal = { setUnlockModalOpen(false) },
         isDeleteModalOpen = isDeleteModalOpen,
         dismissDeleteModal = { setDeleteModalOpen(false) },
         isExpiredModalOpen = isExpiredModalOpen,
@@ -126,6 +144,9 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    unlockModalState: UnlockModalState = UnlockModalState(),
+    isUnlockModalOpen: Boolean = false,
+    dismissUnlockModal: () -> Unit = {},
     isDeleteModalOpen: Boolean = false,
     dismissDeleteModal: () -> Unit = {},
     isExpiredModalOpen: Boolean = false,
@@ -137,6 +158,16 @@ private fun StatelessTimeCapsuleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    TimeCapsuleUnlockModal(
+        keyCount = unlockModalState.keyCount,
+        requiredKeyCount = unlockModalState.requiredKeyCount,
+        arriveAt = unlockModalState.arriveAt,
+        isModalOpen = isUnlockModalOpen,
+        onUnlock = {
+            // todo: unlock time capsule
+            dismissUnlockModal()
+        },
+    )
     TimeCapsuleDeleteModal(
         isModalOpen = isDeleteModalOpen,
         onDismissRequest = dismissDeleteModal,
@@ -214,7 +245,14 @@ private fun StatelessTimeCapsuleDetailScreen(
                     Modifier
                         .fillMaxSize()
                         .background(MooiTheme.colorScheme.background)
-                        .padding(innerPadding)
+                        .run {
+                            // blur all content if locked
+                            if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                                this.blur(4.dp)
+                            } else {
+                                this
+                            }
+                        }.padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
@@ -530,7 +568,7 @@ private fun TimeCapsuleDetailActionButtons(
 
                 CtaButton(
                     modifier = Modifier.fillMaxWidth(),
-                    label = "타임캡슐 보관하기",
+                    labelString = "타임캡슐 보관하기",
                     onClick = {
                         onSaveTimeCapsule()
                     },
@@ -541,7 +579,7 @@ private fun TimeCapsuleDetailActionButtons(
             // todo: change action button according to status
             CtaButton(
                 modifier = Modifier.fillMaxWidth(),
-                label = "타임캡슐 저장하기",
+                labelString = "타임캡슐 저장하기",
                 isDefaultWidth = false,
             )
         }
@@ -581,7 +619,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.TEMPORARY,
+                            status = TimeCapsule.STATUS.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +

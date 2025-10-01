@@ -113,7 +113,7 @@ fun BottomSheet(
                 if (confirmLabel != null) {
                     CtaButton(
                         modifier = Modifier.fillMaxWidth(),
-                        label = confirmLabel,
+                        labelString = confirmLabel,
                         onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 if (!sheetState.isVisible) {
@@ -126,7 +126,7 @@ fun BottomSheet(
                 if (dismissLabel != null) {
                     CtaButton(
                         modifier = Modifier.fillMaxWidth(),
-                        label = dismissLabel,
+                        labelString = dismissLabel,
                         onClick = {
                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                 if (!sheetState.isVisible) {

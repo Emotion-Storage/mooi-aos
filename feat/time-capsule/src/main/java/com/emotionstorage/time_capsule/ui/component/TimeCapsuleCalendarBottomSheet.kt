@@ -1,7 +1,6 @@
 package com.emotionstorage.time_capsule.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
@@ -40,9 +38,9 @@ import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.model.TimeCapsule.STATUS
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.BottomSheet
+import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
-import com.emotionstorage.ui.util.mainBackground
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.String
@@ -111,39 +109,40 @@ private fun DailyReportButton(
     isNewDailyReport: Boolean = false,
     onClick: (() -> Unit)? = null,
 ) {
-    Box(
-        modifier =
-            modifier
-                .height((66.33).dp)
-                .mainBackground(enabled, RoundedCornerShape(15.dp), MooiTheme.colorScheme.gray700)
-                .clickable(enabled = enabled, onClick = { onClick?.invoke() }),
+    CtaButton(
+        modifier = modifier.fillMaxWidth(),
+        enabled = enabled,
+        onClick = { onClick?.invoke() },
+        isDefaultWidth = false,
     ) {
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = "일일 리포트 확인하기",
-            style = MooiTheme.typography.mainButton,
-            color = if (enabled) Color.White else MooiTheme.colorScheme.gray500,
-        )
-        if (isNewDailyReport && enabled) {
-            Box(
-                modifier =
-                    Modifier
-                        .align(Alignment.Center)
-                        .offset(x = 78.dp, y = -13.dp)
-                        .size(20.dp)
-                        .background(Color(0xFF1C1A22).copy(alpha = 0.5f), CircleShape),
-            ) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "N",
-                    style =
-                        TextStyle(
-                            fontFamily = pretendard,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 10.sp,
-                        ),
-                    color = Color.White,
-                )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = "일일 리포트 확인하기",
+                style = MooiTheme.typography.mainButton,
+                color = if (enabled) Color.White else MooiTheme.colorScheme.gray500,
+            )
+            if (isNewDailyReport && enabled) {
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center)
+                            .offset(x = 78.dp, y = -12.dp)
+                            .size(20.dp)
+                            .background(Color(0xFF1C1A22).copy(alpha = 0.5f), CircleShape),
+                ) {
+                    Text(
+                        modifier = Modifier.align(Alignment.Center),
+                        text = "N",
+                        style =
+                            TextStyle(
+                                fontFamily = pretendard,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 10.sp,
+                            ),
+                        color = Color.White,
+                    )
+                }
             }
         }
     }

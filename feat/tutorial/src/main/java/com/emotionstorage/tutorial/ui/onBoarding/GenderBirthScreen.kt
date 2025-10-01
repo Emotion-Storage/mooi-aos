@@ -141,7 +141,7 @@ private fun StatelessGenderBirthScreen(
                     Modifier
                         .fillMaxWidth(),
                 //                    .padding(bottom = 39.dp),
-                label = "다음으로",
+                labelString = "다음으로",
                 enabled = state.isNextButtonEnabled,
                 onClick = {
                     if (
