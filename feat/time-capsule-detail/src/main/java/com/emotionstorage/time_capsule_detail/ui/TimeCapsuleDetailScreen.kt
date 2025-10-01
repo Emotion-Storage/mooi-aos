@@ -227,14 +227,16 @@ private fun StatelessTimeCapsuleDetailScreen(
                     title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = {
+                        navToBack()
+                    },
+                    showCloseButton = isNewTimeCapsule,
+                    onCloseClick = {
                         if (isNewTimeCapsule) {
                             onAction(TimeCapsuleDetailAction.OnExitTrigger)
                         } else {
-                            navToBack()
+                            navToHome()
                         }
                     },
-                    showCloseButton = isNewTimeCapsule,
-                    onCloseClick = navToHome,
                     rightComponent = {
                         if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
                             RoundedToggleButton(
