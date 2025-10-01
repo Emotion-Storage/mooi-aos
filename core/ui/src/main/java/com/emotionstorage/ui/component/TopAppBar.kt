@@ -34,10 +34,6 @@ fun TopAppBar(
     title: String? = null,
     rightComponent: (@Composable () -> Unit)? = null,
 ) {
-    if (showCloseButton) {
-        require(rightComponent == null) { "rightComponent cannot be set when showCloseButton is true" }
-    }
-
     Box(
         modifier = modifier
             .background(MooiTheme.colorScheme.background)
@@ -48,7 +44,6 @@ fun TopAppBar(
     ) {
         if (showBackButton) {
             Image(
-                painter = painterResource(id = R.drawable.arrow_back),
                 modifier = Modifier
                     .width(11.dp)
                     .height(24.dp)
@@ -56,6 +51,7 @@ fun TopAppBar(
                     .clickable {
                         onBackClick()
                     },
+                painter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = "back",
             )
         }
@@ -67,21 +63,22 @@ fun TopAppBar(
                 color = Color.White,
             )
         }
-        if (showBackButton) {
+        if (showCloseButton) {
             Image(
-                painter = painterResource(id = R.drawable.close),
                 modifier = Modifier
                     .size(16.dp)
                     .align(Alignment.CenterEnd)
                     .clickable {
                         onCloseClick()
                     },
+                painter = painterResource(id = R.drawable.close),
                 contentDescription = "close",
             )
-        }
-        if (rightComponent != null) {
-            Box(modifier = Modifier.align(Alignment.CenterEnd)) {
-                rightComponent()
+        } else {
+            if (rightComponent != null) {
+                Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+                    rightComponent()
+                }
             }
         }
     }
@@ -92,7 +89,8 @@ fun TopAppBar(
 private fun TopAppBarPreview() {
     MooiTheme {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            TopAppBar(showBackButton = true, showCloseButton = true)
+            TopAppBar(showBackButton = true)
+            TopAppBar(showCloseButton = true)
             TopAppBar(
                 showBackButton = true,
                 title = "타임캡슐 상세",
