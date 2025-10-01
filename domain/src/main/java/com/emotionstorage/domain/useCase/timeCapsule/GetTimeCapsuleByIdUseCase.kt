@@ -42,6 +42,7 @@ class GetTimeCapsuleByIdUseCase @Inject constructor() {
                         logs = emptyList(),
                         createdAt = LocalDateTime.now(),
                         updatedAt = LocalDateTime.now(),
+                        arriveAt = LocalDateTime.now().plusDays(15),
                     ),
                 ),
             )
