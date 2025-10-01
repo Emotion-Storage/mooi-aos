@@ -52,6 +52,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailView
 import com.emotionstorage.time_capsule_detail.ui.component.DecorativeDots
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDetailActionButtons
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleEmotionComments
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleNote
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
@@ -319,53 +320,12 @@ private fun TimeCapsuleDetailLoadingScreen(
     }
 }
 
-@Composable
-private fun TimeCapsuleNote(
-    modifier: Modifier = Modifier,
-    note: String? = null,
-    onNoteChange: (note: String) -> Unit = {},
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(17.dp),
-    ) {
-        Column(
-            modifier = modifier.fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            Text(
-                text = "나의 회고 일기",
-                style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
-                color = Color.White,
-            )
-            Text(
-                text = "그때의 감정과 지금 달라진것이 있나요?\n감정을 회고하며 노트를 작성해보세요.",
-                style = MooiTheme.typography.caption7.copy(lineHeight = 20.sp),
-                textAlign = TextAlign.Center,
-                color = MooiTheme.colorScheme.gray400,
-            )
-        }
-
-        TextBoxInput(
-            modifier = Modifier.fillMaxWidth(),
-            value = note ?: "",
-            onValueChange = onNoteChange,
-            placeHolder = "지금 내 마음은...",
-            showCharCount = true,
-            maxCharCount = 1000,
-        )
-    }
-}
-
 // @PreviewScreenSizes
 @Preview
 @Composable
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
-            isNewTimeCapsule = true,
             id = "id",
             state =
                 TimeCapsuleDetailState(
