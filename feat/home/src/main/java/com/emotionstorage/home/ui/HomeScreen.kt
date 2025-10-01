@@ -44,7 +44,6 @@ import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
-import com.emotionstorage.ui.util.mainBackground
 import com.orhanobut.logger.Logger
 
 @Composable
