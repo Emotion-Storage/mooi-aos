@@ -173,6 +173,5 @@ private fun TimeCapsuleUnlockModalPreview() {
         requiredKeyCount = 3,
         arriveAt = LocalDateTime.now().plusMinutes(1),
         isModalOpen = true,
-        onDismissRequest = { },
     )
 }
