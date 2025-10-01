@@ -280,7 +280,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 }
 
                 TimeCapsuleDetailActionButtons(
-                    createdAt = state.timeCapsule.createdAt,
+                    expireAt = state.timeCapsule.expireAt,
                     status = state.timeCapsule.status,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule(id)
@@ -529,7 +529,7 @@ private fun TimeCapsuleNote(
 
 @Composable
 private fun TimeCapsuleDetailActionButtons(
-    createdAt: LocalDateTime,
+    expireAt: LocalDateTime,
     status: TimeCapsule.STATUS,
     modifier: Modifier = Modifier,
     onSaveTimeCapsule: () -> Unit = {},
@@ -549,7 +549,7 @@ private fun TimeCapsuleDetailActionButtons(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CountDownTimer(
-                    deadline = createdAt.plusHours(25),
+                    deadline = expireAt,
                 ) { hours, minutes, seconds ->
                     LaunchedEffect(hours, minutes, seconds) {
                         if (hours == 0L && minutes == 0L && seconds == 0L) {
