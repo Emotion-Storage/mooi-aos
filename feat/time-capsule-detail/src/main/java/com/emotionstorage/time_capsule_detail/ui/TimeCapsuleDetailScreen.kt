@@ -89,9 +89,8 @@ fun TimeCapsuleDetailScreen(
                 }
 
                 is ShowExpiredModal -> {
-                    // hide other modals before showing expired modal
+                    // dismiss other modals before showing expired modal
                     setDeleteModalOpen(false)
-
                     setExpiredModalOpen(true)
                 }
 
@@ -102,7 +101,6 @@ fun TimeCapsuleDetailScreen(
                 is ShowToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
-                    // show new snackbar
                     snackState.showSnackbar(sideEffect.toast.message)
                 }
             }
@@ -524,8 +522,10 @@ private fun TimeCapsuleDetailActionButtons(
                 CountDownTimer(
                     deadline = createdAt.plusHours(25),
                 ) { hours, minutes, seconds ->
-                    if (hours == 0L && minutes == 0L && seconds == 0L) {
-                        onTimeCapsuleExpired()
+                    LaunchedEffect(hours, minutes, seconds) {
+                        if (hours == 0L && minutes == 0L && seconds == 0L) {
+                            onTimeCapsuleExpired()
+                        }
                     }
 
                     val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
