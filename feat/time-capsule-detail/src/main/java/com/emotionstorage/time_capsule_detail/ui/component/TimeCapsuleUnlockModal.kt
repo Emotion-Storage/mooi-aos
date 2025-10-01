@@ -55,8 +55,8 @@ fun TimeCapsuleUnlockModal(
                     Modifier
                         .clip(RoundedCornerShape(15.dp))
                         .background(MooiTheme.colorScheme.background)
-                        // todo: align center
-                        .padding(top = 19.dp, bottom = 29.dp, start = 30.dp, end = 24.dp),
+                        .padding(top = 19.dp, bottom = 29.dp)
+                        .padding(horizontal = 27.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
