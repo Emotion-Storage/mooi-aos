@@ -8,7 +8,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class getRequiredKeyCountUseCase @Inject constructor() {
+class GetRequiredKeyCountUseCase @Inject constructor() {
     operator fun invoke(arriveAt: LocalDate): Flow<DataState<Int>> = flow {
         when (LocalDate.now().getDaysBetween(arriveAt).absoluteValue) {
             in 0..7 -> emit(DataState.Success(1))
