@@ -198,7 +198,15 @@ private fun StatelessTimeCapsuleDetailScreen(
             modifier =
                 modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.background)
+                    .run {
+                        // blur whole screen if locked
+                        if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                            this.blur(8.dp)
+                        } else {
+                            this
+                        }
+                    },
             topBar = {
                 TopAppBar(
                     title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
@@ -209,6 +217,14 @@ private fun StatelessTimeCapsuleDetailScreen(
                     showCloseButton = isNewTimeCapsule,
                     onCloseClick = {
                         onAction(TimeCapsuleDetailAction.OnExitTrigger)
+                    },
+                    handleBackPress = true,
+                    onHandleBackPress = {
+                        if (isNewTimeCapsule) {
+                            onAction(TimeCapsuleDetailAction.OnExitTrigger)
+                        } else {
+                            navToBack()
+                        }
                     },
                     rightComponent = {
                         if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
@@ -237,14 +253,6 @@ private fun StatelessTimeCapsuleDetailScreen(
                     Modifier
                         .fillMaxSize()
                         .background(MooiTheme.colorScheme.background)
-                        .run {
-                            // blur all content if locked
-                            if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
-                                this.blur(4.dp)
-                            } else {
-                                this
-                            }
-                        }
                         .padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)

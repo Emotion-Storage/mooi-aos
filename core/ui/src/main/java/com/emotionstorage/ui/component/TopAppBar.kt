@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -30,9 +31,17 @@ fun TopAppBar(
     onBackClick: () -> Unit = {},
     showCloseButton: Boolean = false,
     onCloseClick: () -> Unit = {},
+    handleBackPress: Boolean = false,
+    onHandleBackPress: () -> Unit = {},
     title: String? = null,
     rightComponent: (@Composable () -> Unit)? = null,
 ) {
+    if (handleBackPress) {
+        BackHandler {
+            onHandleBackPress()
+        }
+    }
+
     Box(
         modifier =
             modifier
