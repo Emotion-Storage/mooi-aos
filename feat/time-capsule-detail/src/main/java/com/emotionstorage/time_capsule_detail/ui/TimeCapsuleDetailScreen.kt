@@ -55,8 +55,7 @@ fun TimeCapsuleDetailScreen(
     modifier: Modifier = Modifier,
     viewModel: TimeCapsuleDetailViewModel = hiltViewModel(),
     // is new, if navigated from ai chat
-    // todo: set to default value to false after testing
-    isNewTimeCapsule: Boolean = true,
+    isNewTimeCapsule: Boolean = false,
     navToHome: () -> Unit = {},
     navToSaveTimeCapsule: (id: String) -> Unit = {},
     navToBack: () -> Unit = {},
