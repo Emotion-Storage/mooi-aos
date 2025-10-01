@@ -61,13 +61,15 @@ fun CtaButton(
                         } else {
                             this.fillMaxWidth()
                         }
-                    }.run {
+                    }
+                    .run {
                         if (isDefaultHeight) {
                             this.height(CtaButtonDesignToken.height)
                         } else {
                             this.fillMaxHeight()
                         }
-                    }.mainBackground(enabled, RoundedCornerShape(radius.dp)),
+                    }
+                    .mainBackground(enabled, RoundedCornerShape(radius.dp)),
             shape = RoundedCornerShape(radius.dp),
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
             colors =
@@ -82,19 +84,19 @@ fun CtaButton(
                             CtaButtonType.FILLED -> Color.White
                             CtaButtonType.TONAL -> MooiTheme.colorScheme.gray500
                         },
-                    disabledContainerColor = MooiTheme.colorScheme.gray500,
-                    disabledContentColor = Color.White,
+                    disabledContainerColor = MooiTheme.colorScheme.gray700,
+                    disabledContentColor = MooiTheme.colorScheme.gray500,
                 ),
             enabled = enabled,
             onClick = onClick,
         ) {
-            if(labelString != null) {
+            if (labelString != null) {
                 Text(
                     style = textStyle,
                     text = labelString,
                 )
             }
-            if(labelContent != null){
+            if (labelContent != null) {
                 labelContent()
             }
         }
@@ -110,16 +112,17 @@ private fun CtaButtonPreview() {
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             CtaButton(
-                labelString = "확인",
+                labelString = "FILLED Button (enabled)",
             )
             CtaButton(
-                labelString = "확인",
-                type = CtaButtonType.TONAL,
-            )
-            CtaButton(
-                labelString = "확인",
+                labelString = "FILLED Button (disabled)",
                 enabled = false,
             )
+            CtaButton(
+                labelString = "TONAL Button (enabled)",
+                type = CtaButtonType.TONAL,
+            )
+
             CtaButton(
                 labelContent = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
