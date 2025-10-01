@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,27 +29,33 @@ fun TopAppBar(
     showBackground: Boolean = true,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {},
+    showCloseButton: Boolean = false,
+    onCloseClick: () -> Unit = {},
     title: String? = null,
     rightComponent: (@Composable () -> Unit)? = null,
 ) {
+    if (showCloseButton) {
+        require(rightComponent == null) { "rightComponent cannot be set when showCloseButton is true" }
+    }
+
     Box(
-        modifier =
-            modifier
-                .background(MooiTheme.colorScheme.background)
-                .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
-                .fillMaxWidth()
-                .height(62.dp)
-                .padding(horizontal = 16.dp),
+        modifier = modifier
+            .background(MooiTheme.colorScheme.background)
+            .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
+            .fillMaxWidth()
+            .height(62.dp)
+            .padding(horizontal = 16.dp),
     ) {
         if (showBackButton) {
             Image(
                 painter = painterResource(id = R.drawable.arrow_back),
-                modifier =
-                    Modifier
-                        .width(11.dp)
-                        .height(24.dp)
-                        .align(Alignment.CenterStart)
-                        .clickable { onBackClick() },
+                modifier = Modifier
+                    .width(11.dp)
+                    .height(24.dp)
+                    .align(Alignment.CenterStart)
+                    .clickable {
+                        onBackClick()
+                    },
                 contentDescription = "back",
             )
         }
@@ -55,9 +63,20 @@ fun TopAppBar(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
-                // todo: update font to 17.sp
                 style = MooiTheme.typography.body2,
                 color = Color.White,
+            )
+        }
+        if (showBackButton) {
+            Image(
+                painter = painterResource(id = R.drawable.close),
+                modifier = Modifier
+                    .size(16.dp)
+                    .align(Alignment.CenterEnd)
+                    .clickable {
+                        onCloseClick()
+                    },
+                contentDescription = "close",
             )
         }
         if (rightComponent != null) {
@@ -73,7 +92,7 @@ fun TopAppBar(
 private fun TopAppBarPreview() {
     MooiTheme {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
-            TopAppBar(showBackButton = true)
+            TopAppBar(showBackButton = true, showCloseButton = true)
             TopAppBar(
                 showBackButton = true,
                 title = "타임캡슐 상세",
