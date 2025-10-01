@@ -204,7 +204,7 @@ private fun StatelessAgreeTermsScreen(
                     Modifier
                         .fillMaxWidth(),
                 //                    .padding(bottom = 39.dp),
-                label = "가입 완료하기",
+                labelString = "가입 완료하기",
                 enabled = state.isSignupCompleteButtonEnabled,
                 onClick = {
                     coroutineScope.launch {

@@ -539,7 +539,7 @@ private fun TimeCapsuleDetailActionButtons(
 
                 CtaButton(
                     modifier = Modifier.fillMaxWidth(),
-                    label = "타임캡슐 보관하기",
+                    labelString = "타임캡슐 보관하기",
                     onClick = {
                         onSaveTimeCapsule()
                     },
@@ -550,7 +550,7 @@ private fun TimeCapsuleDetailActionButtons(
             // todo: change action button according to status
             CtaButton(
                 modifier = Modifier.fillMaxWidth(),
-                label = "타임캡슐 저장하기",
+                labelString = "타임캡슐 저장하기",
                 isDefaultWidth = false,
             )
         }

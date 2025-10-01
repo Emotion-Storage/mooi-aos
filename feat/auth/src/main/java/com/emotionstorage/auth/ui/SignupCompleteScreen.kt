@@ -113,7 +113,7 @@ private fun StatelessSignupCompleteScreen(
                         Modifier
                             .fillMaxWidth()
                             .padding(bottom = 39.dp),
-                    label = "메인화면으로 이동",
+                    labelString = "메인화면으로 이동",
                     onClick = {
                         onLogin()
                     },
