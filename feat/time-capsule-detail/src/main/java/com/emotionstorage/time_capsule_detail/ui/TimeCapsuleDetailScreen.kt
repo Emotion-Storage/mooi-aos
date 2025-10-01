@@ -163,12 +163,9 @@ private fun StatelessTimeCapsuleDetailScreen(
         requiredKeyCount = unlockModalState.requiredKeyCount,
         arriveAt = unlockModalState.arriveAt,
         isModalOpen = isUnlockModalOpen,
-        onDismissRequest = {
-            dismissUnlockModal()
-            navToBack()
-        },
         onUnlock = {
             // todo: unlock time capsule
+            dismissUnlockModal()
         },
     )
     TimeCapsuleDeleteModal(

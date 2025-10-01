@@ -42,7 +42,6 @@ fun TimeCapsuleUnlockModal(
     requiredKeyCount: Int,
     arriveAt: LocalDateTime,
     isModalOpen: Boolean = false,
-    onDismissRequest: () -> Unit = {},
     onUnlock: () -> Unit = {},
 ) {
     val canUnlock = keyCount >= requiredKeyCount
@@ -101,13 +100,6 @@ fun TimeCapsuleUnlockModal(
                             optimizeMinuteTick = true,
                             optimizeSecondTick = true,
                         ) { hours, minutes, seconds ->
-                            LaunchedEffect(hours, minutes, seconds) {
-                                if (hours == 0L && minutes == 0L && seconds == 0L) {
-                                    // close modal if count down time is zero
-                                    onDismissRequest()
-                                }
-                            }
-
                             Text(
                                 modifier = Modifier.height(30.dp),
                                 text =
@@ -145,7 +137,6 @@ fun TimeCapsuleUnlockModal(
                     enabled = canUnlock,
                     onClick = {
                         onUnlock()
-                        onDismissRequest()
                     },
                     radius = 10,
                     isDefaultHeight = false,
