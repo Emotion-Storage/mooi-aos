@@ -49,7 +49,9 @@ fun TimeCapsuleUnlockModal(
 
     if (isModalOpen) {
         // custom modal
-        Dialog(onDismissRequest = onDismissRequest) {
+        Dialog(onDismissRequest = {
+            // cannot dismiss unless confirm button clicked
+        }) {
             Column(
                 modifier =
                     Modifier
