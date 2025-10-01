@@ -89,28 +89,30 @@ fun TimeCapsuleExitModal(
                 // buttons
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     CtaButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
                         labelString = "아니요, 계속할래요.",
                         onClick = onContinue,
                         radius = 10,
                         isDefaultWidth = false,
-                        isDefaultHeight = false
+                        isDefaultHeight = false,
                     )
                     CtaButton(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(50.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
                         labelString = "네, 그냥 나갈래요.",
                         onClick = onExit,
                         radius = 10,
                         isDefaultWidth = false,
                         isDefaultHeight = false,
-                        type = CtaButtonType.TONAL
+                        type = CtaButtonType.TONAL,
                     )
                 }
             }

@@ -1,6 +1,5 @@
 package com.emotionstorage.ui.component
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,22 +34,24 @@ fun TopAppBar(
     rightComponent: (@Composable () -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .background(MooiTheme.colorScheme.background)
-            .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
-            .fillMaxWidth()
-            .height(62.dp)
-            .padding(horizontal = 16.dp),
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
+                .fillMaxWidth()
+                .height(62.dp)
+                .padding(horizontal = 16.dp),
     ) {
         if (showBackButton) {
             Image(
-                modifier = Modifier
-                    .width(11.dp)
-                    .height(24.dp)
-                    .align(Alignment.CenterStart)
-                    .clickable {
-                        onBackClick()
-                    },
+                modifier =
+                    Modifier
+                        .width(11.dp)
+                        .height(24.dp)
+                        .align(Alignment.CenterStart)
+                        .clickable {
+                            onBackClick()
+                        },
                 painter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = "back",
             )
@@ -65,12 +66,13 @@ fun TopAppBar(
         }
         if (showCloseButton) {
             Image(
-                modifier = Modifier
-                    .size(16.dp)
-                    .align(Alignment.CenterEnd)
-                    .clickable {
-                        onCloseClick()
-                    },
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .align(Alignment.CenterEnd)
+                        .clickable {
+                            onCloseClick()
+                        },
                 painter = painterResource(id = R.drawable.close),
                 contentDescription = "close",
             )
