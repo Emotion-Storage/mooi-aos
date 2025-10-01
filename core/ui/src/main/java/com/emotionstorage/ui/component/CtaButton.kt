@@ -41,7 +41,6 @@ enum class CtaButtonType {
 fun CtaButton(
     modifier: Modifier = Modifier,
     labelString: String? = null,
-    labelContent: @Composable (() -> Unit)? = null,
     enabled: Boolean = true,
     onClick: () -> Unit = {},
     type: CtaButtonType = CtaButtonType.FILLED,
@@ -49,6 +48,7 @@ fun CtaButton(
     isDefaultWidth: Boolean = true,
     isDefaultHeight: Boolean = true,
     textStyle: TextStyle = MooiTheme.typography.mainButton,
+    labelContent: @Composable (() -> Unit)? = null,
 ) {
     Box(modifier = modifier) {
         Button(
@@ -123,23 +123,22 @@ private fun CtaButtonPreview() {
                 type = CtaButtonType.TONAL,
             )
 
-            CtaButton(
-                labelContent = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Image(
-                            modifier = Modifier.size(20.dp),
-                            painter = painterResource(id = R.drawable.alarm),
-                            contentDescription = "alarm",
-                        )
-                        Text(
-                            text = "Custom Content Button",
-                            style = MooiTheme.typography.mainButton,
-                            color = Color.White,
-                            modifier = Modifier.padding(start = 8.dp),
-                        )
-                    }
-                },
-            )
+            CtaButton {
+                // labelContent
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        modifier = Modifier.size(20.dp),
+                        painter = painterResource(id = R.drawable.alarm),
+                        contentDescription = "alarm",
+                    )
+                    Text(
+                        text = "Custom Content Button",
+                        style = MooiTheme.typography.mainButton,
+                        color = Color.White,
+                        modifier = Modifier.padding(start = 8.dp),
+                    )
+                }
+            }
         }
     }
 }
