@@ -31,7 +31,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
@@ -191,7 +191,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         arriveAt = unlockModalState.arriveAt,
         isModalOpen = isUnlockModalOpen,
         onUnlock = {
-            // todo: unlock time capsule
+            onAction(OnUnlockTimeCapsule(id))
             dismissUnlockModal()
         },
     )
@@ -219,9 +219,8 @@ private fun StatelessTimeCapsuleDetailScreen(
         onDismiss = {
             dismissSaveChangesModal()
             navToBack()
-        }
+        },
     )
-
 
     if (state.timeCapsule == null) {
         TimeCapsuleDetailLoadingScreen()
@@ -373,7 +372,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.OPENED,
+                            status = TimeCapsule.STATUS.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +

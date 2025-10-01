@@ -18,6 +18,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
@@ -53,6 +54,10 @@ sealed class TimeCapsuleDetailAction {
     ) : TimeCapsuleDetailAction()
 
     data class OnDeleteTimeCapsule(
+        val id: String,
+    ) : TimeCapsuleDetailAction()
+
+    data class OnUnlockTimeCapsule(
         val id: String,
     ) : TimeCapsuleDetailAction()
 
@@ -132,6 +137,10 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleDeleteTimeCapsule(action.id)
             }
 
+            is OnUnlockTimeCapsule -> {
+                handleUnlockTimeCapsule(action.id)
+            }
+
             is OnNoteChanged -> {
                 handleNoteChanged(action.note)
             }
@@ -163,7 +172,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
             is OnSaveChangeTrigger -> {
                 // trigger side effect
-                intent{
+                intent {
                     postSideEffect(ShowSaveChangesModal)
                 }
             }
@@ -180,6 +189,15 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                             timeCapsule = it,
                             note = it.note ?: "",
                         )
+                    }
+                    if (it.status == TimeCapsule.STATUS.ARRIVED) {
+                        // todo: open time capsule if arrived
+                        reduce {
+                            state.copy(
+                                timeCapsule = it.copy(status = TimeCapsule.STATUS.OPENED),
+                                note = it.note ?: "",
+                            )
+                        }
                     }
                     if (it.status == TimeCapsule.STATUS.LOCKED) {
                         triggerUnlockModal()
@@ -259,6 +277,18 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         intent {
             // todo: delete time capsule
             postSideEffect(DeleteTimeCapsuleSuccess)
+        }
+
+    private fun handleUnlockTimeCapsule(id: String) =
+        intent {
+            // todo: unlock time capsule
+            reduce {
+                state.copy(
+                    timeCapsule = state.timeCapsule?.copy(
+                        status = TimeCapsule.STATUS.ARRIVED
+                    )
+                )
+            }
         }
 
     private fun handleNoteChanged(note: String) = intent {
