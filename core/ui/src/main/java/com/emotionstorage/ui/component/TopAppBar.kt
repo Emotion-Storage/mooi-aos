@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,9 +29,19 @@ fun TopAppBar(
     showBackground: Boolean = true,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {},
+    showCloseButton: Boolean = false,
+    onCloseClick: () -> Unit = {},
+    handleBackPress: Boolean = false,
+    onHandleBackPress: () -> Unit = {},
     title: String? = null,
     rightComponent: (@Composable () -> Unit)? = null,
 ) {
+    if (handleBackPress) {
+        BackHandler {
+            onHandleBackPress()
+        }
+    }
+
     Box(
         modifier =
             modifier
@@ -41,13 +53,15 @@ fun TopAppBar(
     ) {
         if (showBackButton) {
             Image(
-                painter = painterResource(id = R.drawable.arrow_back),
                 modifier =
                     Modifier
                         .width(11.dp)
                         .height(24.dp)
                         .align(Alignment.CenterStart)
-                        .clickable { onBackClick() },
+                        .clickable {
+                            onBackClick()
+                        },
+                painter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = "back",
             )
         }
@@ -55,14 +69,27 @@ fun TopAppBar(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = title,
-                // todo: update font to 17.sp
                 style = MooiTheme.typography.body2,
                 color = Color.White,
             )
         }
-        if (rightComponent != null) {
-            Box(modifier = Modifier.align(Alignment.CenterEnd)) {
-                rightComponent()
+        if (showCloseButton) {
+            Image(
+                modifier =
+                    Modifier
+                        .size(16.dp)
+                        .align(Alignment.CenterEnd)
+                        .clickable {
+                            onCloseClick()
+                        },
+                painter = painterResource(id = R.drawable.close),
+                contentDescription = "close",
+            )
+        } else {
+            if (rightComponent != null) {
+                Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+                    rightComponent()
+                }
             }
         }
     }
@@ -74,6 +101,7 @@ private fun TopAppBarPreview() {
     MooiTheme {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             TopAppBar(showBackButton = true)
+            TopAppBar(showCloseButton = true)
             TopAppBar(
                 showBackButton = true,
                 title = "타임캡슐 상세",

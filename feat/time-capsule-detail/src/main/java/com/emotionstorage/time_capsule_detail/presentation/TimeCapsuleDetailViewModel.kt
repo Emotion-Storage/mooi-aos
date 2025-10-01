@@ -8,7 +8,19 @@ import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.time_capsule_detail.domain.useCase.GetRequiredKeyCountUseCase
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,6 +40,8 @@ sealed class TimeCapsuleDetailAction {
     data class Init(
         val id: String,
     ) : TimeCapsuleDetailAction()
+
+    object OnExitTrigger : TimeCapsuleDetailAction()
 
     object OnExpireTrigger : TimeCapsuleDetailAction()
 
@@ -54,6 +68,8 @@ sealed class TimeCapsuleDetailSideEffect {
             val arriveAt: LocalDateTime = LocalDateTime.now(),
         )
     }
+
+    object ShowExitModal : TimeCapsuleDetailSideEffect()
 
     object ShowExpiredModal : TimeCapsuleDetailSideEffect()
 
@@ -85,29 +101,36 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     fun onAction(action: TimeCapsuleDetailAction) {
         when (action) {
-            is TimeCapsuleDetailAction.Init -> {
+            is Init -> {
                 handleInit(action.id)
             }
 
-            is TimeCapsuleDetailAction.OnExpireTrigger -> {
+            is OnExitTrigger -> {
                 // trigger side effect
                 intent {
-                    postSideEffect(TimeCapsuleDetailSideEffect.ShowExpiredModal)
+                    postSideEffect(ShowExitModal)
                 }
             }
 
-            is TimeCapsuleDetailAction.OnToggleFavorite -> {
+            is OnExpireTrigger -> {
+                // trigger side effect
+                intent {
+                    postSideEffect(ShowExpiredModal)
+                }
+            }
+
+            is OnToggleFavorite -> {
                 handleToggleFavorite(action.id)
             }
 
-            is TimeCapsuleDetailAction.OnDeleteTrigger -> {
+            is OnDeleteTrigger -> {
                 // trigger side effect
                 intent {
-                    postSideEffect(TimeCapsuleDetailSideEffect.ShowDeleteModal)
+                    postSideEffect(ShowDeleteModal)
                 }
             }
 
-            is TimeCapsuleDetailAction.OnDeleteTimeCapsule -> {
+            is OnDeleteTimeCapsule -> {
                 handleDeleteTimeCapsule(action.id)
             }
         }
@@ -151,7 +174,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         flow = getKeyCount(),
                         onSuccess = { keyCount ->
                             postSideEffect(
-                                TimeCapsuleDetailSideEffect.ShowUnlockModal(
+                                ShowUnlockModal(
                                     UnlockModalState(
                                         keyCount = keyCount,
                                         requiredKeyCount = requiredKeyCount,
@@ -175,12 +198,12 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 flow = toggleFavorite(id),
                 onSuccess = {
                     if (it == ToggleToastResult.FAVORITE_ADDED) {
-                        postSideEffect(ShowToast(ShowToast.TimeCapsuleDetailToast.FAVORITE_ADDED))
+                        postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_ADDED))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
                         }
                     } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
-                        postSideEffect(ShowToast(ShowToast.TimeCapsuleDetailToast.FAVORITE_REMOVED))
+                        postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_REMOVED))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
                         }
@@ -188,7 +211,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, data ->
                     if (data == ToggleToastResult.FAVORITE_FULL) {
-                        postSideEffect(ShowToast(ShowToast.TimeCapsuleDetailToast.FAVORITE_FULL))
+                        postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_FULL))
                     }
                 },
             )
@@ -197,6 +220,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private fun handleDeleteTimeCapsule(id: String) =
         intent {
             // todo: delete time capsule
-            postSideEffect(TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess)
+            postSideEffect(DeleteTimeCapsuleSuccess)
         }
 }

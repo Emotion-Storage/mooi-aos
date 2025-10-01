@@ -71,6 +71,7 @@ fun TimeCapsuleItem(
             modifier = Modifier.fillMaxWidth(),
             status = timeCapsule.status,
             createdAt = timeCapsule.createdAt,
+            expireAt = timeCapsule.expireAt,
             showDate = showDate,
             isFavorite = timeCapsule.isFavorite,
             onFavoriteClick = onFavoriteClick,
@@ -123,6 +124,7 @@ fun TimeCapsuleItem(
 private fun TimeCapsuleItemInfo(
     status: TimeCapsule.STATUS,
     createdAt: LocalDateTime,
+    expireAt: LocalDateTime,
     modifier: Modifier = Modifier,
     showDate: Boolean = false,
     isFavorite: Boolean = false,
@@ -143,7 +145,7 @@ private fun TimeCapsuleItemInfo(
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.errorRed),
                 )
                 CountDownTimer(
-                    deadline = createdAt.plusHours(25),
+                    deadline = expireAt,
                     optimizeMinuteTick = true,
                     optimizeSecondTick = true,
                 ) { hours, minutes, _ ->
@@ -456,6 +458,7 @@ private fun TimeCapsuleItemPreview() {
             isFavorite = true,
             isFavoriteAt = LocalDateTime.now(),
             createdAt = LocalDateTime.now(),
+            expireAt = LocalDateTime.now().plusHours(5),
             openDDay = -99,
         )
 

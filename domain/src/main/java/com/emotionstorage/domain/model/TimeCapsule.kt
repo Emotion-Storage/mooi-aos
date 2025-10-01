@@ -2,6 +2,8 @@ package com.emotionstorage.domain.model
 
 import java.time.LocalDateTime
 
+const val TIME_CAPSULE_TEMPORARY_HOURS = 24
+
 data class TimeCapsule(
     val id: String,
     val status: STATUS,
@@ -20,6 +22,9 @@ data class TimeCapsule(
     val favoriteAt: LocalDateTime? = null,
     val updatedAt: LocalDateTime? = null,
 ) {
+    // 임시저장 만료 시각
+    val expireAt: LocalDateTime = createdAt.plusHours(TIME_CAPSULE_TEMPORARY_HOURS.toLong())
+
     enum class STATUS {
         // 임시저장 (열람일 지정 X)
         TEMPORARY,
