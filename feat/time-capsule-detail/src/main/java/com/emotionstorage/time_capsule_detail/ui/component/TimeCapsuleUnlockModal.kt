@@ -84,7 +84,7 @@ fun TimeCapsuleUnlockModal(
                                         color = MooiTheme.colorScheme.primary,
                                     ),
                                 ) {
-                                    append("열쇠 3개")
+                                    append("열쇠 ${requiredKeyCount}개")
                                 }
                                 append("가 필요해요!")
                             },
@@ -169,7 +169,7 @@ private fun TimeCapsuleUnlockModalPreview() {
 
     TimeCapsuleUnlockModal(
         keyCount = 1,
-        requiredKeyCount = 3,
+        requiredKeyCount = 5,
         arriveAt = LocalDateTime.now().plusMinutes(1),
         isModalOpen = true,
     )
