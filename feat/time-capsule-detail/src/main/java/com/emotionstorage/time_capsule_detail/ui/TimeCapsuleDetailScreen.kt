@@ -47,9 +47,11 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
@@ -76,8 +78,14 @@ fun TimeCapsuleDetailScreen(
     LaunchedEffect(id) {
         viewModel.onAction(TimeCapsuleDetailAction.Init(id))
     }
+    LaunchedEffect(state.value.timeCapsule) {
+        if(state.value.timeCapsule?.status == TimeCapsule.STATUS.LOCKED){
+            viewModel.onAction(TimeCapsuleDetailAction.OnLockedTrigger)
+        }
+    }
 
     val snackState = remember { SnackbarHostState() }
+    val (isUnlockModalOpen, setUnlockModalOpen) = remember { mutableStateOf(false) }
     val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
 
@@ -87,9 +95,13 @@ fun TimeCapsuleDetailScreen(
                 is DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
+                is ShowUnlockModal -> {
+                    setUnlockModalOpen(true)
+                }
 
                 is ShowExpiredModal -> {
                     // dismiss other modals before showing expired modal
+                    setUnlockModalOpen(false)
                     setDeleteModalOpen(false)
                     setExpiredModalOpen(true)
                 }
@@ -111,6 +123,8 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        isUnlockModalOpen = isUnlockModalOpen,
+        dismissUnlockModal = { setUnlockModalOpen(false) },
         isDeleteModalOpen = isDeleteModalOpen,
         dismissDeleteModal = { setDeleteModalOpen(false) },
         isExpiredModalOpen = isExpiredModalOpen,
@@ -127,6 +141,8 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    isUnlockModalOpen: Boolean = false,
+    dismissUnlockModal: () -> Unit = {},
     isDeleteModalOpen: Boolean = false,
     dismissDeleteModal: () -> Unit = {},
     isExpiredModalOpen: Boolean = false,
@@ -138,6 +154,19 @@ private fun StatelessTimeCapsuleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    TimeCapsuleUnlockModal(
+        keyCount = state.keyCount,
+        requiredKeyCount = state.requiredKeyCount!!,
+        arriveAt = state.timeCapsule?.arriveAt!!,
+        isModalOpen = isUnlockModalOpen,
+        onDismissRequest = {
+            dismissUnlockModal()
+            navToBack()
+        },
+        onUnlock = {
+            // todo: unlock time capsule
+        },
+    )
     TimeCapsuleDeleteModal(
         isModalOpen = isDeleteModalOpen,
         onDismissRequest = dismissDeleteModal,
@@ -217,14 +246,13 @@ private fun StatelessTimeCapsuleDetailScreen(
                         .background(MooiTheme.colorScheme.background)
                         .run {
                             // blur all content if locked
-                            if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED)
-                                {
-                                    this.blur(4.dp)
-                                } else
-                                {
-                                    this
-                                }
-                        }.padding(innerPadding)
+                            if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                                this.blur(4.dp)
+                            } else {
+                                this
+                            }
+                        }
+                        .padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
