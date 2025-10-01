@@ -19,11 +19,17 @@ sealed class MyPageAction {
     object Initiate : MyPageAction()
     object Logout : MyPageAction()
     object NicknameChange : MyPageAction()
+    object KeyDescription : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
     object NavigateToNicknameChange : MyPageSideEffect()
+
+    data class NavigateToKeyDescription(
+        val keyCount: Int,
+    ) : MyPageSideEffect()
+
     data class ShowToast(
         val message: String,
     ) : MyPageSideEffect()
@@ -51,6 +57,10 @@ constructor(
             is MyPageAction.Logout -> {
                 handleLogout()
             }
+
+            is MyPageAction.KeyDescription -> {
+                handleKeyDescription()
+            }
         }
     }
 
@@ -76,5 +86,10 @@ constructor(
     private fun handleNicknameChange() =
         intent {
             postSideEffect(MyPageSideEffect.NavigateToNicknameChange)
+        }
+
+    private fun handleKeyDescription() =
+        intent {
+            postSideEffect(MyPageSideEffect.NavigateToKeyDescription(state.keyCount))
         }
 }

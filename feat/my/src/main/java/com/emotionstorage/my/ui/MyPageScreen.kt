@@ -3,8 +3,10 @@ package com.emotionstorage.my.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,6 +21,7 @@ import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
+import com.emotionstorage.my.ui.component.KeyCard
 import com.emotionstorage.my.ui.component.ProfileHeader
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
@@ -30,6 +33,7 @@ fun MyPageScreen(
     navToLogin: () -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
+    navToKeyDescription: (Int) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -52,6 +56,10 @@ fun MyPageScreen(
                     navToNickNameChange()
                 }
 
+                is MyPageSideEffect.NavigateToKeyDescription -> {
+                    navToKeyDescription(sideEffect.keyCount)
+                }
+
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
                 }
@@ -64,7 +72,8 @@ fun MyPageScreen(
         state = state.value,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdraw,
-        navToNickNameChange = navToNickNameChange
+        navToNickNameChange = navToNickNameChange,
+        navToKeyDescription = navToKeyDescription
     )
 }
 
@@ -75,6 +84,7 @@ private fun StatelessMyPageScreen(
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
+    navToKeyDescription: (Int) -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
 
@@ -103,6 +113,14 @@ private fun StatelessMyPageScreen(
                     // TODO 이미지 변경 기능 구현 필요
                 },
             )
+
+            Spacer(modifier = Modifier.size(16.dp))
+
+            KeyCard(
+                keyCount = state.keyCount
+            ) {
+                navToKeyDescription(it)
+            }
         }
     }
 }
