@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
-import android.text.format.Time
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -30,7 +29,6 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -127,11 +125,9 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
-
             is OnToggleFavorite -> {
                 handleToggleFavorite(action.id)
             }
-
 
             is OnDeleteTimeCapsule -> {
                 handleDeleteTimeCapsule(action.id)
@@ -284,29 +280,32 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             // todo: unlock time capsule
             reduce {
                 state.copy(
-                    timeCapsule = state.timeCapsule?.copy(
-                        status = TimeCapsule.STATUS.ARRIVED
-                    )
+                    timeCapsule =
+                        state.timeCapsule?.copy(
+                            status = TimeCapsule.STATUS.ARRIVED,
+                        ),
                 )
             }
         }
 
-    private fun handleNoteChanged(note: String) = intent {
-        reduce {
-            state.copy(
-                note = note,
-                isNoteChanged = state.timeCapsule?.note != note,
-            )
+    private fun handleNoteChanged(note: String) =
+        intent {
+            reduce {
+                state.copy(
+                    note = note,
+                    isNoteChanged = state.timeCapsule?.note != note,
+                )
+            }
         }
-    }
 
-    private fun handleSaveNote() = intent {
-        // todo: call save note use case
-        reduce {
-            state.copy(
-                timeCapsule = state.timeCapsule?.copy(note = state.note),
-                isNoteChanged = false,
-            )
+    private fun handleSaveNote() =
+        intent {
+            // todo: call save note use case
+            reduce {
+                state.copy(
+                    timeCapsule = state.timeCapsule?.copy(note = state.note),
+                    isNoteChanged = false,
+                )
+            }
         }
-    }
 }

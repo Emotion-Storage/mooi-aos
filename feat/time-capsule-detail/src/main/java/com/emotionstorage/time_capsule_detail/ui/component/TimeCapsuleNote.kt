@@ -29,7 +29,7 @@ fun TimeCapsuleNote(
     note: String = "",
     onNoteChange: (note: String) -> Unit = {},
 ) {
-    val (noteInput, setNoteInput) = remember { mutableStateOf(note)}
+    val (noteInput, setNoteInput) = remember { mutableStateOf(note) }
     val coroutineScope = rememberCoroutineScope()
     var debounceJob by remember { mutableStateOf<Job?>(null) }
 
@@ -64,11 +64,12 @@ fun TimeCapsuleNote(
 
                 // call onNoteChange with debounce
                 debounceJob?.cancel()
-                debounceJob = coroutineScope.launch {
-                    delay(300)
-                    Logger.d("Timecapsule detail note - call onNoteChange, ${it}")
-                    onNoteChange(it)
-                }
+                debounceJob =
+                    coroutineScope.launch {
+                        delay(300)
+                        Logger.d("Timecapsule detail note - call onNoteChange, $it")
+                        onNoteChange(it)
+                    }
             },
             placeHolder = "지금 내 마음은...",
             showCharCount = true,
