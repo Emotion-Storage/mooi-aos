@@ -79,11 +79,6 @@ fun TimeCapsuleDetailScreen(
     LaunchedEffect(id) {
         viewModel.onAction(TimeCapsuleDetailAction.Init(id))
     }
-    LaunchedEffect(state.value.timeCapsule) {
-        if (state.value.timeCapsule?.status == TimeCapsule.STATUS.LOCKED) {
-            viewModel.onAction(TimeCapsuleDetailAction.OnLockedTrigger)
-        }
-    }
 
     val snackState = remember { SnackbarHostState() }
     val (isUnlockModalOpen, setUnlockModalOpen) = remember { mutableStateOf(false) }

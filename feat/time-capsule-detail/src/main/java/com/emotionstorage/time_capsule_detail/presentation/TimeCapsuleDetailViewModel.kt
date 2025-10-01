@@ -12,9 +12,9 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
@@ -27,8 +27,6 @@ sealed class TimeCapsuleDetailAction {
     data class Init(
         val id: String,
     ) : TimeCapsuleDetailAction()
-
-    object OnLockedTrigger : TimeCapsuleDetailAction()
 
     object OnExpireTrigger : TimeCapsuleDetailAction()
 
@@ -89,10 +87,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
-            is TimeCapsuleDetailAction.OnLockedTrigger -> {
-                handleOnLockedTrigger()
-            }
-
             is TimeCapsuleDetailAction.OnExpireTrigger -> {
                 // trigger side effect
                 intent {
@@ -127,6 +121,9 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                             timeCapsule = it,
                         )
                     }
+                    if (it.status == TimeCapsule.STATUS.LOCKED) {
+                        triggerUnlockModal()
+                    }
                 },
                 onError = { throwable, data ->
                     Logger.e("getTimeCapsuleById error: $throwable")
@@ -135,19 +132,12 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             )
         }
 
-    private fun handleOnLockedTrigger() =
-        intent {
-            if (state.timeCapsule == null) {
-                Logger.e("time capsule is null")
-                return@intent
-            }
-            if (state.timeCapsule?.status != TimeCapsule.STATUS.LOCKED) {
-                Logger.d("time capsule is not locked")
-                return@intent
-            }
-            if (state.timeCapsule?.arriveAt == null) {
-                Logger.e("arriveAt is null")
-                return@intent
+    @OptIn(OrbitExperimental::class)
+    private suspend fun triggerUnlockModal() =
+        subIntent {
+            if (state.timeCapsule == null || state.timeCapsule?.arriveAt == null) {
+                Logger.e("invalid time capsule, ${state.timeCapsule}")
+                return@subIntent
             }
 
             // get required key count
