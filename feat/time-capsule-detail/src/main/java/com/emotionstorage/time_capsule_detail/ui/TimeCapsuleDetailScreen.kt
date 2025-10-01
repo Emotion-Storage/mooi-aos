@@ -215,15 +215,16 @@ private fun StatelessTimeCapsuleDetailScreen(
                     Modifier
                         .fillMaxSize()
                         .background(MooiTheme.colorScheme.background)
-                        .run{
+                        .run {
                             // blur all content if locked
-                            if(state.timeCapsule.status == TimeCapsule.STATUS.LOCKED){
-                                this.blur(4.dp)
-                            }else{
-                                this
-                            }
-                        }
-                        .padding(innerPadding)
+                            if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED)
+                                {
+                                    this.blur(4.dp)
+                                } else
+                                {
+                                    this
+                                }
+                        }.padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),

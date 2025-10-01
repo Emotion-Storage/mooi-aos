@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -96,16 +95,18 @@ private fun StatelessHomeScreen(
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(horizontal = 16.dp)
-                .padding(innerPadding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(horizontal = 16.dp)
+                    .padding(innerPadding),
         ) {
             // icons
             Column(
@@ -127,19 +128,21 @@ private fun StatelessHomeScreen(
                     // todo: navigate to alarm screen
                     Image(
                         modifier = Modifier.size(30.dp),
-                        painter = painterResource(
-                            id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
-                        ),
+                        painter =
+                            painterResource(
+                                id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
+                            ),
                         contentDescription = "alarm",
                     )
                 }
                 if (state.newTimeCapsuleArrived) {
                     Image(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickable {
-                                navToArrivedTimeCapsules()
-                            },
+                        modifier =
+                            Modifier
+                                .size(30.dp)
+                                .clickable {
+                                    navToArrivedTimeCapsules()
+                                },
                         painter = painterResource(id = R.drawable.time_capsule_new),
                         contentDescription = "new time capsule arrived",
                     )
@@ -162,13 +165,14 @@ private fun StatelessHomeScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
-                    text = buildAnnotatedString {
-                        append("${state.nickname}님,\n")
-                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                            append("오늘의 기분")
-                        }
-                        append("은 어떤가요?")
-                    },
+                    text =
+                        buildAnnotatedString {
+                            append("${state.nickname}님,\n")
+                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                                append("오늘의 기분")
+                            }
+                            append("은 어떤가요?")
+                        },
                     style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
                     textAlign = TextAlign.Center,
                     color = Color.White,
@@ -176,13 +180,14 @@ private fun StatelessHomeScreen(
                 Text(
                     modifier = Modifier.padding(top = 12.dp),
                     text = "대화로 내 감정을 들여다보고\n타임캡슐로 저장해보세요",
-                    style = TextStyle(
-                        fontFamily = pretendard,
-                        fontWeight = FontWeight.Light,
-                        fontSize = 17.sp,
-                        lineHeight = 24.sp,
-                        letterSpacing = (-0.02).em,
-                    ),
+                    style =
+                        TextStyle(
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.Light,
+                            fontSize = 17.sp,
+                            lineHeight = 24.sp,
+                            letterSpacing = (-0.02).em,
+                        ),
                     textAlign = TextAlign.Center,
                     color = MooiTheme.colorScheme.gray500,
                 )
@@ -235,13 +240,13 @@ private fun StartChatButton(
     onChatStart: () -> Unit = {},
 ) {
     CtaButton(
-        modifier = modifier
-            .width(
-                if (canStartChat) 198.dp else 197.dp
-            )
-            .height(
-                if (canStartChat) 54.dp else 65.dp
-            ),
+        modifier =
+            modifier
+                .width(
+                    if (canStartChat) 198.dp else 197.dp,
+                ).height(
+                    if (canStartChat) 54.dp else 65.dp,
+                ),
         enabled = canStartChat,
         onClick = onChatStart,
         radius = 10,
@@ -292,14 +297,15 @@ private fun StartChatButton(
 private fun HomeScreenPreview() {
     MooiTheme {
         StatelessHomeScreen(
-            state = HomeState(
-                nickname = "찡찡이",
-                keyCount = 3,
-                ticketCount = 5,
-                newNotificationArrived = true,
-                newTimeCapsuleArrived = true,
-                newReportArrived = true,
-            ),
+            state =
+                HomeState(
+                    nickname = "찡찡이",
+                    keyCount = 3,
+                    ticketCount = 5,
+                    newNotificationArrived = true,
+                    newTimeCapsuleArrived = true,
+                    newReportArrived = true,
+                ),
         )
     }
 }

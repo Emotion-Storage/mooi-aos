@@ -51,10 +51,12 @@ fun TimeCapsuleUnlockModal(
         // custom modal
         Dialog(onDismissRequest = onDismissRequest) {
             Column(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(top = 19.dp, bottom = 29.dp, start = 30.dp, end = 24.dp),
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(MooiTheme.colorScheme.background)
+                        // todo: align center
+                        .padding(top = 19.dp, bottom = 29.dp, start = 30.dp, end = 24.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -66,24 +68,26 @@ fun TimeCapsuleUnlockModal(
                 )
                 // title & descriptions
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 13.dp, bottom = 20.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 13.dp, bottom = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
                         modifier = Modifier.padding(bottom = 8.dp),
-                        text = buildAnnotatedString {
-                            append("이 타임캡슐을 미리 열려면\n")
-                            withStyle(
-                                SpanStyle(
-                                    color = MooiTheme.colorScheme.primary,
-                                ),
-                            ) {
-                                append("열쇠 3개")
-                            }
-                            append("가 필요해요!")
-                        },
+                        text =
+                            buildAnnotatedString {
+                                append("이 타임캡슐을 미리 열려면\n")
+                                withStyle(
+                                    SpanStyle(
+                                        color = MooiTheme.colorScheme.primary,
+                                    ),
+                                ) {
+                                    append("열쇠 3개")
+                                }
+                                append("가 필요해요!")
+                            },
                         style = MooiTheme.typography.body5.copy(lineHeight = 24.sp),
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
@@ -104,9 +108,10 @@ fun TimeCapsuleUnlockModal(
 
                             Text(
                                 modifier = Modifier.height(30.dp),
-                                text = "남은 기간 : " +
-                                    (if (hours == 0L) "" else "${hours}시간 ") +
-                                    (if (hours != 0L && minutes == 0L) "" else "${minutes}분"),
+                                text =
+                                    "남은 기간 : " +
+                                        (if (hours == 0L) "" else "${hours}시간 ") +
+                                        (if (hours != 0L && minutes == 0L) "" else "${minutes}분"),
                                 style = MooiTheme.typography.head2,
                                 color = Color.White,
                             )
@@ -127,15 +132,14 @@ fun TimeCapsuleUnlockModal(
                         style = MooiTheme.typography.head2,
                         color = Color.White,
                     )
-
                 }
                 // button
                 CtaButton(
-                    modifier = Modifier
-                        .height(
-                            if (canUnlock) 50.dp else 65.dp
-                        )
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .height(
+                                if (canUnlock) 50.dp else 65.dp,
+                            ).fillMaxWidth(),
                     enabled = canUnlock,
                     onClick = {
                         onUnlock()

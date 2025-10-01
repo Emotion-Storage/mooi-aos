@@ -61,15 +61,13 @@ fun CtaButton(
                         } else {
                             this.fillMaxWidth()
                         }
-                    }
-                    .run {
+                    }.run {
                         if (isDefaultHeight) {
                             this.height(CtaButtonDesignToken.height)
                         } else {
                             this.fillMaxHeight()
                         }
-                    }
-                    .mainBackground(enabled, RoundedCornerShape(radius.dp)),
+                    }.mainBackground(enabled, RoundedCornerShape(radius.dp)),
             shape = RoundedCornerShape(radius.dp),
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
             colors =
