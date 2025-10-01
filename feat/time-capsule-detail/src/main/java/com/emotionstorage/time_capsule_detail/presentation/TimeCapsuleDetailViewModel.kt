@@ -16,6 +16,7 @@ import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class TimeCapsuleDetailState(
@@ -50,6 +51,7 @@ sealed class TimeCapsuleDetailSideEffect {
         data class UnlockModalState(
             val keyCount: Int = 0,
             val requiredKeyCount: Int = 0,
+            val arriveAt: LocalDateTime = LocalDateTime.now(),
         )
     }
 
@@ -152,7 +154,8 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                                 TimeCapsuleDetailSideEffect.ShowUnlockModal(
                                     UnlockModalState(
                                         keyCount = keyCount,
-                                        requiredKeyCount = requiredKeyCount
+                                        requiredKeyCount = requiredKeyCount,
+                                        arriveAt = state.timeCapsule?.arriveAt!!,
                                     )
                                 )
                             )
