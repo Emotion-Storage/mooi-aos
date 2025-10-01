@@ -156,10 +156,10 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                                         keyCount = keyCount,
                                         requiredKeyCount = requiredKeyCount,
                                         arriveAt = state.timeCapsule?.arriveAt!!,
-                                    )
-                                )
+                                    ),
+                                ),
                             )
-                        }
+                        },
                     )
                 },
                 onError = { throwable, data ->
@@ -168,7 +168,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
             )
         }
-
 
     private fun handleToggleFavorite(id: String) =
         intent {
@@ -193,7 +192,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     }
                 },
             )
-
         }
 
     private fun handleDeleteTimeCapsule(id: String) =

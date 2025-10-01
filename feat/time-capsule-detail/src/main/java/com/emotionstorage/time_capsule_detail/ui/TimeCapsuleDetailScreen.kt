@@ -82,9 +82,10 @@ fun TimeCapsuleDetailScreen(
 
     val snackState = remember { SnackbarHostState() }
     val (isUnlockModalOpen, setUnlockModalOpen) = remember { mutableStateOf(false) }
-    val (unlockModalState, setUnlockModalState) = remember {
-        mutableStateOf(UnlockModalState())
-    }
+    val (unlockModalState, setUnlockModalState) =
+        remember {
+            mutableStateOf(UnlockModalState())
+        }
     val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
 
@@ -254,8 +255,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                             } else {
                                 this
                             }
-                        }
-                        .padding(innerPadding)
+                        }.padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
