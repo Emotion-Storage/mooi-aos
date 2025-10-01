@@ -51,6 +51,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExitModal
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.component.CtaButton
@@ -66,14 +67,19 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
+import com.orhanobut.logger.Logger
 
 @Composable
 fun TimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     viewModel: TimeCapsuleDetailViewModel = hiltViewModel(),
-    navToBack: () -> Unit = {},
+    // is new, if navigated from ai chat
+    // todo: set to default value to false after testing
+    isNewTimeCapsule: Boolean = true,
+    navToHome: () -> Unit = {},
     navToSaveTimeCapsule: (id: String) -> Unit = {},
+    navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(id) {
@@ -125,6 +131,7 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        isNewTimeCapsule = isNewTimeCapsule,
         unlockModalState = unlockModalState,
         isUnlockModalOpen = isUnlockModalOpen,
         dismissUnlockModal = { setUnlockModalOpen(false) },
@@ -134,8 +141,9 @@ fun TimeCapsuleDetailScreen(
         dismissExpiredModal = { setExpiredModalOpen(false) },
         state = state.value,
         onAction = viewModel::onAction,
-        navToBack = navToBack,
+        navToHome = navToHome,
         navToSaveTimeCapsule = navToSaveTimeCapsule,
+        navToBack = navToBack,
     )
 }
 
@@ -144,6 +152,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    isNewTimeCapsule: Boolean = false,
     unlockModalState: UnlockModalState = UnlockModalState(),
     isUnlockModalOpen: Boolean = false,
     dismissUnlockModal: () -> Unit = {},
@@ -153,8 +162,9 @@ private fun StatelessTimeCapsuleDetailScreen(
     dismissExpiredModal: () -> Unit = {},
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
-    navToBack: () -> Unit = {},
+    navToHome: () -> Unit = {},
     navToSaveTimeCapsule: (id: String) -> Unit = {},
+    navToBack: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
 
@@ -184,29 +194,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     )
 
     if (state.timeCapsule == null) {
-        // loading ui
-        Scaffold(
-            modifier =
-                modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
-            topBar = {
-                TopAppBar(
-                    showBackButton = true,
-                    onBackClick = navToBack,
-                )
-            },
-        ) { innerPadding ->
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(MooiTheme.colorScheme.background)
-                        .padding(innerPadding),
-            ) {
-                // empty screen
-            }
-        }
+        TimeCapsuleDetailLoadingScreen()
     } else {
         Scaffold(
             modifier =
@@ -216,16 +204,28 @@ private fun StatelessTimeCapsuleDetailScreen(
             topBar = {
                 TopAppBar(
                     title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
-                    showBackButton = true,
-                    onBackClick = navToBack,
-                    rightComponent = {
-                        if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-                            RoundedToggleButton(
-                                isSelected = state.timeCapsule.isFavorite,
-                                onSelect = {
-                                    onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
-                                },
-                            )
+                    showBackButton = !isNewTimeCapsule,
+                    onBackClick = {
+                        if (isNewTimeCapsule) {
+                            // todo: open exit modal
+                        } else {
+                            navToBack()
+                        }
+                    },
+                    showCloseButton = isNewTimeCapsule,
+                    onCloseClick = navToHome,
+                    rightComponent = if (isNewTimeCapsule) {
+                        null
+                    } else {
+                        {
+                            if(state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                                RoundedToggleButton(
+                                    isSelected = state.timeCapsule.isFavorite,
+                                    onSelect = {
+                                        onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
+                                    },
+                                )
+                            }
                         }
                     },
                 )
@@ -252,7 +252,8 @@ private fun StatelessTimeCapsuleDetailScreen(
                             } else {
                                 this
                             }
-                        }.padding(innerPadding)
+                        }
+                        .padding(innerPadding)
                         .padding(top = 31.dp, bottom = 55.dp)
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
@@ -282,6 +283,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 TimeCapsuleDetailActionButtons(
                     expireAt = state.timeCapsule.expireAt,
                     status = state.timeCapsule.status,
+                    isNewTimeCapsule = isNewTimeCapsule,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule(id)
                     },
@@ -296,6 +298,28 @@ private fun StatelessTimeCapsuleDetailScreen(
                     },
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun TimeCapsuleDetailLoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    Scaffold(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
+    ) { innerPadding ->
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
+        ) {
+            // empty screen
         }
     }
 }
@@ -532,6 +556,7 @@ private fun TimeCapsuleDetailActionButtons(
     expireAt: LocalDateTime,
     status: TimeCapsule.STATUS,
     modifier: Modifier = Modifier,
+    isNewTimeCapsule: Boolean = false,
     onSaveTimeCapsule: () -> Unit = {},
     onTimeCapsuleExpired: () -> Unit = {},
     onSaveMindNote: () -> Unit = {},
@@ -544,28 +569,38 @@ private fun TimeCapsuleDetailActionButtons(
     ) {
         if (status == TimeCapsule.STATUS.TEMPORARY) {
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 79.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                CountDownTimer(
-                    deadline = expireAt,
-                ) { hours, minutes, seconds ->
-                    LaunchedEffect(hours, minutes, seconds) {
-                        if (hours == 0L && minutes == 0L && seconds == 0L) {
-                            onTimeCapsuleExpired()
-                        }
-                    }
-
-                    val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
-                    SpeechBubble(
-                        text = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
-                        tail = BubbleTail.BottomCenter,
-                        sizeParam = DpSize(265.dp, 84.dp),
-                        textColor = MooiTheme.colorScheme.errorRed,
+                if (isNewTimeCapsule) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 5.dp),
+                        text = "이 감정을 회고하고 싶다면, 타임캡슐로 보관해보세요.",
+                        style = MooiTheme.typography.caption7,
+                        color = MooiTheme.colorScheme.gray400,
                     )
-                }
+                } else {
+                    CountDownTimer(
+                        deadline = expireAt,
+                    ) { hours, minutes, seconds ->
+                        LaunchedEffect(hours, minutes, seconds) {
+                            if (hours == 0L && minutes == 0L && seconds == 0L) {
+                                onTimeCapsuleExpired()
+                            }
+                        }
 
+                        val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                        SpeechBubble(
+                            text = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
+                            tail = BubbleTail.BottomCenter,
+                            sizeParam = DpSize(265.dp, 84.dp),
+                            textColor = MooiTheme.colorScheme.errorRed,
+                        )
+                    }
+                }
                 CtaButton(
                     modifier = Modifier.fillMaxWidth(),
                     labelString = "타임캡슐 보관하기",
@@ -585,24 +620,26 @@ private fun TimeCapsuleDetailActionButtons(
         }
 
         // delete button
-        Row(
-            modifier =
-                Modifier
-                    .height(20.dp)
-                    .clickable(onClick = { onDeleteTimeCapsule() }),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
-        ) {
-            Image(
-                modifier = Modifier.size(13.dp, 14.dp),
-                painter = painterResource(id = R.drawable.trash),
-                contentDescription = "delete",
-            )
-            Text(
-                text = "타임캡슐 삭제하기",
-                style = MooiTheme.typography.caption6,
-                color = MooiTheme.colorScheme.gray600,
-            )
+        if (!isNewTimeCapsule) {
+            Row(
+                modifier =
+                    Modifier
+                        .height(20.dp)
+                        .clickable(onClick = { onDeleteTimeCapsule() }),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                Image(
+                    modifier = Modifier.size(13.dp, 14.dp),
+                    painter = painterResource(id = R.drawable.trash),
+                    contentDescription = "delete",
+                )
+                Text(
+                    text = "타임캡슐 삭제하기",
+                    style = MooiTheme.typography.caption6,
+                    color = MooiTheme.colorScheme.gray600,
+                )
+            }
         }
     }
 }
@@ -613,13 +650,14 @@ private fun TimeCapsuleDetailActionButtons(
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
+            isNewTimeCapsule = true,
             id = "id",
             state =
                 TimeCapsuleDetailState(
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.LOCKED,
+                            status = TimeCapsule.STATUS.OPENED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
