@@ -110,7 +110,7 @@ private fun BottomNavBarItem(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = label,
-                style = MooiTheme.typography.body3.copy(fontSize = 10.sp),
+                style = MooiTheme.typography.bottomBar,
                 color = if (isSelected) Color.White else MooiTheme.colorScheme.gray700,
                 textAlign = TextAlign.Center,
             )

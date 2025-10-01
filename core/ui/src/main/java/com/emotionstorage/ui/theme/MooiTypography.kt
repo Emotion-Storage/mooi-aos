@@ -152,6 +152,13 @@ data class MooiTypography(
             fontSize = 13.sp,
             letterSpacing = (-0.02).em,
         ),
+    val bottomBar: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 10.sp,
+            letterSpacing = (-0.02).em,
+        ),
     val mainButton: TextStyle =
         TextStyle(
             fontFamily = pretendard,
