@@ -234,6 +234,13 @@ internal fun AppNavHost(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
                     },
+                    navToWithdraw = {
+                        // todo: add withdraw screen
+                    },
+                    navToNickNameChange = {
+                        // todo : add nickname change screen
+                    }
+
                 )
             }
 

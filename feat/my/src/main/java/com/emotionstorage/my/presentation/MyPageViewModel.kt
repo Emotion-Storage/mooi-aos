@@ -17,13 +17,13 @@ data class MyPageState(
 
 sealed class MyPageAction {
     object Initiate : MyPageAction()
-
     object Logout : MyPageAction()
+    object NicknameChange : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
-
+    object NavigateToNicknameChange : MyPageSideEffect()
     data class ShowToast(
         val message: String,
     ) : MyPageSideEffect()
@@ -31,41 +31,50 @@ sealed class MyPageSideEffect {
 
 @HiltViewModel
 class MyPageViewModel
-    @Inject
-    constructor(
+@Inject
+constructor(
 //    private val logout: LogoutUseCase
-    ) : ViewModel(),
-        ContainerHost<MyPageState, MyPageSideEffect> {
-        override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
+) : ViewModel(),
+    ContainerHost<MyPageState, MyPageSideEffect> {
+    override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
 
-        fun onAction(action: MyPageAction) {
-            when (action) {
-                is MyPageAction.Initiate -> {
-                    handleInitiate()
-                }
+    fun onAction(action: MyPageAction) {
+        when (action) {
+            is MyPageAction.Initiate -> {
+                handleInitiate()
+            }
 
-                is MyPageAction.Logout -> {
-                    handleLogout()
-                }
+            is MyPageAction.NicknameChange -> {
+                handleNicknameChange()
+            }
+
+            is MyPageAction.Logout -> {
+                handleLogout()
+            }
+        }
+    }
+
+    private fun handleInitiate() =
+        intent {
+            // todo: call use case
+            reduce {
+                state.copy(
+                    nickname = "찡찡이",
+                    signupDday = 280,
+                    keyCount = 5,
+                    versionName = "1.0.0",
+                )
             }
         }
 
-        private fun handleInitiate() =
-            intent {
-                // todo: call use case
-                reduce {
-                    state.copy(
-                        nickname = "찡찡이",
-                        signupDday = 280,
-                        keyCount = 5,
-                        versionName = "1.0.0",
-                    )
-                }
-            }
+    private fun handleLogout() =
+        intent {
+            // todo: call use case
+            postSideEffect(MyPageSideEffect.LogoutSuccess)
+        }
 
-        private fun handleLogout() =
-            intent {
-                // todo: call use case
-                postSideEffect(MyPageSideEffect.LogoutSuccess)
-            }
-    }
+    private fun handleNicknameChange() =
+        intent {
+            postSideEffect(MyPageSideEffect.NavigateToNicknameChange)
+        }
+}

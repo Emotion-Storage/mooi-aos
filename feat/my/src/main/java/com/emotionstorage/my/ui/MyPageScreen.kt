@@ -48,6 +48,10 @@ fun MyPageScreen(
                     navToLogin()
                 }
 
+                is MyPageSideEffect.NavigateToNicknameChange -> {
+                    navToNickNameChange()
+                }
+
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
                 }
