@@ -106,7 +106,7 @@ private fun StatelessAIChatScreen(
     ) { innerPadding ->
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)

@@ -19,9 +19,9 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun EmptyChatScreen(modifier: Modifier = Modifier) {
-    Box(modifier.fillMaxWidth()) {
+    Box(modifier = modifier.fillMaxWidth()) {
         Column(
-            modifier = modifier.align(Alignment.Center),
+            modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
