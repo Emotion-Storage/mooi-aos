@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import SpeechBubble
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -33,17 +34,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
@@ -54,6 +59,7 @@ import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
 
@@ -71,17 +77,29 @@ fun TimeCapsuleDetailScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
+    val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
+    val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess -> {
+                is DeleteTimeCapsuleSuccess -> {
                     navToBack()
+                }
+
+                is ShowExpiredModal -> {
+                    // dismiss other modals before showing expired modal
+                    setDeleteModalOpen(false)
+                    setExpiredModalOpen(true)
+                }
+
+                is ShowDeleteModal -> {
+                    setDeleteModalOpen(true)
                 }
 
                 is ShowToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
-                    // show new snackbar
                     snackState.showSnackbar(sideEffect.toast.message)
                 }
             }
@@ -92,6 +110,10 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        isDeleteModalOpen = isDeleteModalOpen,
+        dismissDeleteModal = { setDeleteModalOpen(false) },
+        isExpiredModalOpen = isExpiredModalOpen,
+        dismissExpiredModal = { setExpiredModalOpen(false) },
         state = state.value,
         onAction = viewModel::onAction,
         navToBack = navToBack,
@@ -104,6 +126,10 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    isDeleteModalOpen: Boolean = false,
+    dismissDeleteModal: () -> Unit = {},
+    isExpiredModalOpen: Boolean = false,
+    dismissExpiredModal: () -> Unit = {},
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToBack: () -> Unit = {},
@@ -111,12 +137,18 @@ private fun StatelessTimeCapsuleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
     TimeCapsuleDeleteModal(
         isModalOpen = isDeleteModalOpen,
-        onDismissRequest = { setDeleteModalOpen(false) },
+        onDismissRequest = dismissDeleteModal,
         onDelete = {
             onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))
+        },
+    )
+    TimeCapsuleExpiredModal(
+        isModalOpen = isExpiredModalOpen,
+        onConfirm = {
+            dismissExpiredModal()
+            navToBack()
         },
     )
 
@@ -210,15 +242,19 @@ private fun StatelessTimeCapsuleDetailScreen(
                 }
 
                 TimeCapsuleDetailActionButtons(
+                    createdAt = state.timeCapsule.createdAt,
                     status = state.timeCapsule.status,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule(id)
+                    },
+                    onTimeCapsuleExpired = {
+                        onAction(TimeCapsuleDetailAction.OnExpireTrigger)
                     },
                     onSaveMindNote = {
                         // todo: save mind note content
                     },
                     onDeleteTimeCapsule = {
-                        setDeleteModalOpen(true)
+                        onAction(TimeCapsuleDetailAction.OnDeleteTrigger)
                     },
                 )
             }
@@ -455,9 +491,11 @@ private fun TimeCapsuleNote(
 
 @Composable
 private fun TimeCapsuleDetailActionButtons(
+    createdAt: LocalDateTime,
     status: TimeCapsule.STATUS,
     modifier: Modifier = Modifier,
     onSaveTimeCapsule: () -> Unit = {},
+    onTimeCapsuleExpired: () -> Unit = {},
     onSaveMindNote: () -> Unit = {},
     onDeleteTimeCapsule: () -> Unit = {},
 ) {
@@ -466,12 +504,47 @@ private fun TimeCapsuleDetailActionButtons(
         verticalArrangement = Arrangement.spacedBy(16.7.dp),
         horizontalAlignment = Alignment.End,
     ) {
-        // todo: change action button according to status
-        CtaButton(
-            modifier = Modifier.fillMaxWidth(),
-            label = "타임캡슐 보관하기",
-            isDefaultWidth = false,
-        )
+        if (status == TimeCapsule.STATUS.TEMPORARY) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CountDownTimer(
+                    deadline = createdAt.plusHours(25),
+                ) { hours, minutes, seconds ->
+                    LaunchedEffect(hours, minutes, seconds) {
+                        if (hours == 0L && minutes == 0L && seconds == 0L) {
+                            onTimeCapsuleExpired()
+                        }
+                    }
+
+                    val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
+                    SpeechBubble(
+                        text = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
+                        tail = BubbleTail.BottomCenter,
+                        sizeParam = DpSize(265.dp, 84.dp),
+                        textColor = MooiTheme.colorScheme.errorRed,
+                    )
+                }
+
+                CtaButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    label = "타임캡슐 보관하기",
+                    onClick = {
+                        onSaveTimeCapsule()
+                    },
+                    isDefaultWidth = false,
+                )
+            }
+        } else {
+            // todo: change action button according to status
+            CtaButton(
+                modifier = Modifier.fillMaxWidth(),
+                label = "타임캡슐 저장하기",
+                isDefaultWidth = false,
+            )
+        }
 
         // delete button
         Row(
@@ -508,7 +581,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.OPENED,
+                            status = TimeCapsule.STATUS.TEMPORARY,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +

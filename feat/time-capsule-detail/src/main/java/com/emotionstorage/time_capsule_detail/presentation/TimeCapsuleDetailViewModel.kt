@@ -3,9 +3,11 @@ package com.emotionstorage.time_capsule_detail.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.Container
@@ -25,9 +27,13 @@ sealed class TimeCapsuleDetailAction {
         val id: String,
     ) : TimeCapsuleDetailAction()
 
+    object OnExpireTrigger : TimeCapsuleDetailAction()
+
     data class OnToggleFavorite(
         val id: String,
     ) : TimeCapsuleDetailAction()
+
+    object OnDeleteTrigger : TimeCapsuleDetailAction()
 
     data class OnDeleteTimeCapsule(
         val id: String,
@@ -36,6 +42,10 @@ sealed class TimeCapsuleDetailAction {
 
 sealed class TimeCapsuleDetailSideEffect {
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
+
+    object ShowExpiredModal : TimeCapsuleDetailSideEffect()
+
+    object ShowDeleteModal : TimeCapsuleDetailSideEffect()
 
     data class ShowToast(
         val toast: TimeCapsuleDetailToast,
@@ -52,6 +62,7 @@ sealed class TimeCapsuleDetailSideEffect {
 
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
+    private val getKeyCount: GetKeyCountUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
 ) : ViewModel(),
     ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
@@ -64,8 +75,22 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
+            is TimeCapsuleDetailAction.OnExpireTrigger -> {
+                // trigger side effect
+                intent {
+                    postSideEffect(TimeCapsuleDetailSideEffect.ShowExpiredModal)
+                }
+            }
+
             is TimeCapsuleDetailAction.OnToggleFavorite -> {
                 handleToggleFavorite(action.id)
+            }
+
+            is TimeCapsuleDetailAction.OnDeleteTrigger -> {
+                // trigger side effect
+                intent {
+                    postSideEffect(TimeCapsuleDetailSideEffect.ShowDeleteModal)
+                }
             }
 
             is TimeCapsuleDetailAction.OnDeleteTimeCapsule -> {
@@ -76,16 +101,27 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleInit(id: String) =
         intent {
-            // todo: get key count
-            // todo: get time capsule detail of id
+            // get key count
+            coroutineScope {
+                collectDataState(
+                    flow = getKeyCount(),
+                    onSuccess = {
+                        reduce { state.copy(keyCount = it) }
+                    },
+                    onError = { throwable, data ->
+                        Logger.e("error getting key count: $throwable")
+                        reduce { state.copy(keyCount = 0) }
+                    },
+                )
+            }
 
+            // todo: get time capsule detail of id
             reduce {
                 state.copy(
-                    keyCount = 5,
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.OPENED,
+                            status = TimeCapsule.STATUS.TEMPORARY,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
