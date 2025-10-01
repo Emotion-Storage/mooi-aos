@@ -120,6 +120,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                             isFavorite = true,
                             isFavoriteAt = LocalDateTime.now(),
                             createdAt = LocalDateTime.now(),
+                            expireAt = LocalDateTime.now().plusHours(5),
                         )
                     }.sortedByDescending {
                         when (state.sortOrder) {
@@ -165,6 +166,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                                 isFavorite = true,
                                 isFavoriteAt = LocalDateTime.now(),
                                 createdAt = LocalDateTime.now(),
+                                expireAt = LocalDateTime.now().plusHours(5),
                             )
                         }.sortedByDescending {
                             when (sortOrder) {
