@@ -208,22 +208,26 @@ private fun StatelessTimeCapsuleDetailScreen(
                         }
                     },
             topBar = {
+                val onTimeCapsuleExit = {
+                    // todo: show save changes modal
+                    navToBack()
+                }
+                val onNewTimeCapsuleExit = {
+                    onAction(TimeCapsuleDetailAction.OnExitTrigger)
+                }
+
                 TopAppBar(
                     title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
                     showBackButton = !isNewTimeCapsule,
-                    onBackClick = {
-                        navToBack()
-                    },
+                    onBackClick = onTimeCapsuleExit,
                     showCloseButton = isNewTimeCapsule,
-                    onCloseClick = {
-                        onAction(TimeCapsuleDetailAction.OnExitTrigger)
-                    },
+                    onCloseClick = onNewTimeCapsuleExit,
                     handleBackPress = true,
                     onHandleBackPress = {
                         if (isNewTimeCapsule) {
-                            onAction(TimeCapsuleDetailAction.OnExitTrigger)
+                            onNewTimeCapsuleExit()
                         } else {
-                            navToBack()
+                            onTimeCapsuleExit()
                         }
                     },
                     rightComponent = {
