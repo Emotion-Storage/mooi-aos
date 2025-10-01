@@ -1,21 +1,16 @@
 package com.emotionstorage.my.ui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -24,6 +19,7 @@ import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
+import com.emotionstorage.my.ui.component.ProfileHeader
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -33,6 +29,7 @@ fun MyPageScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
     navToWithdraw: () -> Unit = {},
+    navToNickNameChange: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -63,6 +60,7 @@ fun MyPageScreen(
         state = state.value,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdraw,
+        navToNickNameChange = navToNickNameChange
     )
 }
 
@@ -72,6 +70,7 @@ private fun StatelessMyPageScreen(
     state: MyPageState = MyPageState(),
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
+    navToNickNameChange: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
 
@@ -86,38 +85,20 @@ private fun StatelessMyPageScreen(
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 35.dp, bottom = 44.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            Text(text = "${state.nickname}님", color = Color.White)
-            Text(text = "MOOI와 함께한 지 +${state.signupDday}일", color = Color.White)
-            Text(text = "보유 열쇠 ${state.keyCount}개", color = Color.White)
-            Text(text = "버전 정보 ${state.versionName}", color = Color.White)
-            Text(
-                modifier =
-                    Modifier.clickable {
-                        // Copy reply email to clipboard
-                        clipboardManager.setText(AnnotatedString(state.replyEmail))
-                    },
-                text = "MOOI에게 의견 보내기\n${state.replyEmail}",
-                color = Color.White,
+            ProfileHeader(
+                profileImage = "Glide or Coil이 필요해 보인다",
+                nickname = state.nickname,
+                signupDday = state.signupDday,
+                onEditClick = {
+                    navToNickNameChange()
+                },
+                onProfileClick = {
+                    // TODO 이미지 변경 기능 구현 필요
+                },
             )
-
-            Button(
-                onClick = {
-                    // todo: add confirm modal
-                    onAction(MyPageAction.Logout)
-                },
-            ) {
-                Text("로그아웃")
-            }
-            Button(
-                onClick = {
-                    navToWithdraw()
-                },
-            ) {
-                Text("탈퇴하기")
-            }
         }
     }
 }
