@@ -9,6 +9,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.time_capsule_detail.domain.useCase.GetRequiredKeyCountUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -18,8 +19,6 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class TimeCapsuleDetailState(
-    val keyCount: Int = 0,
-    val requiredKeyCount: Int? = null,
     val timeCapsule: TimeCapsule? = null,
     val isMindNoteChanged: Boolean = false,
 )
@@ -47,7 +46,14 @@ sealed class TimeCapsuleDetailAction {
 sealed class TimeCapsuleDetailSideEffect {
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
 
-    object ShowUnlockModal : TimeCapsuleDetailSideEffect()
+    data class ShowUnlockModal(
+        val modalState: UnlockModalState,
+    ) : TimeCapsuleDetailSideEffect() {
+        data class UnlockModalState(
+            val keyCount: Int = 0,
+            val requiredKeyCount: Int = 0,
+        )
+    }
 
     object ShowExpiredModal : TimeCapsuleDetailSideEffect()
 
@@ -113,19 +119,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleInit(id: String) =
         intent {
-            // get key count
-            collectDataState(
-                flow = getKeyCount(),
-                onSuccess = {
-                    reduce {
-                        state.copy(
-                            keyCount = it,
-                        )
-                    }
-                }
-            )
-
-            // get time capsule detail
             collectDataState(
                 flow = getTimeCapsuleById(id),
                 onSuccess = {
@@ -160,13 +153,21 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             // get required key count
             collectDataState(
                 flow = getRequiredKeyCount(state.timeCapsule?.arriveAt!!.toLocalDate()),
-                onSuccess = {
-                    reduce {
-                        state.copy(
-                            requiredKeyCount = it,
-                        )
-                    }
-                    postSideEffect(TimeCapsuleDetailSideEffect.ShowUnlockModal)
+                onSuccess = { requiredKeyCount ->
+                    // get key count
+                    collectDataState(
+                        flow = getKeyCount(),
+                        onSuccess = { keyCount ->
+                            postSideEffect(
+                                TimeCapsuleDetailSideEffect.ShowUnlockModal(
+                                    UnlockModalState(
+                                        keyCount = keyCount,
+                                        requiredKeyCount = requiredKeyCount
+                                    )
+                                )
+                            )
+                        }
+                    )
                 },
                 onError = { throwable, data ->
                     Logger.e("getRequiredKeyCount error: $throwable")

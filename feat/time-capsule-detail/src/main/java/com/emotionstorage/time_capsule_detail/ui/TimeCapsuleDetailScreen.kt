@@ -48,6 +48,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
@@ -79,13 +80,16 @@ fun TimeCapsuleDetailScreen(
         viewModel.onAction(TimeCapsuleDetailAction.Init(id))
     }
     LaunchedEffect(state.value.timeCapsule) {
-        if(state.value.timeCapsule?.status == TimeCapsule.STATUS.LOCKED){
+        if (state.value.timeCapsule?.status == TimeCapsule.STATUS.LOCKED) {
             viewModel.onAction(TimeCapsuleDetailAction.OnLockedTrigger)
         }
     }
 
     val snackState = remember { SnackbarHostState() }
     val (isUnlockModalOpen, setUnlockModalOpen) = remember { mutableStateOf(false) }
+    val (unlockModalState, setUnlockModalState) = remember {
+        mutableStateOf(UnlockModalState())
+    }
     val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
 
@@ -95,7 +99,9 @@ fun TimeCapsuleDetailScreen(
                 is DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
+
                 is ShowUnlockModal -> {
+                    setUnlockModalState(sideEffect.modalState)
                     setUnlockModalOpen(true)
                 }
 
@@ -123,6 +129,7 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        unlockModalState = unlockModalState,
         isUnlockModalOpen = isUnlockModalOpen,
         dismissUnlockModal = { setUnlockModalOpen(false) },
         isDeleteModalOpen = isDeleteModalOpen,
@@ -141,6 +148,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: String,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    unlockModalState: UnlockModalState = UnlockModalState(),
     isUnlockModalOpen: Boolean = false,
     dismissUnlockModal: () -> Unit = {},
     isDeleteModalOpen: Boolean = false,
@@ -155,8 +163,8 @@ private fun StatelessTimeCapsuleDetailScreen(
     val scrollState = rememberScrollState()
 
     TimeCapsuleUnlockModal(
-        keyCount = state.keyCount,
-        requiredKeyCount = state.requiredKeyCount!!,
+        keyCount = unlockModalState.keyCount,
+        requiredKeyCount = unlockModalState.requiredKeyCount,
         arriveAt = state.timeCapsule?.arriveAt!!,
         isModalOpen = isUnlockModalOpen,
         onDismissRequest = {
