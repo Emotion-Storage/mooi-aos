@@ -72,6 +72,7 @@ private val DUMMY_TIME_CAPSULES =
             isFavorite = true,
             isFavoriteAt = LocalDateTime.now(),
             createdAt = LocalDateTime.now(),
+            expireAt = LocalDateTime.now().plusHours(5),
         )
     }
 

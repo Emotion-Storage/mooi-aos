@@ -1,17 +1,20 @@
 package com.emotionstorage.ui.component
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import com.emotionstorage.common.toEpochMillis
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 
 @Composable
 fun CountDownTimer(
+    modifier: Modifier = Modifier,
     deadline: LocalDateTime,
     // tick duration set to 1h if optimized & remaining time >= 1h
     optimizeMinuteTick: Boolean = false,
@@ -45,5 +48,7 @@ fun CountDownTimer(
     val minutes = (remainingTime / (1000 * 60)) % 60
     val hours = (remainingTime / (1000 * 60 * 60))
 
-    content(hours, minutes, seconds)
+    Box(modifier = modifier) {
+        content(hours, minutes, seconds)
+    }
 }

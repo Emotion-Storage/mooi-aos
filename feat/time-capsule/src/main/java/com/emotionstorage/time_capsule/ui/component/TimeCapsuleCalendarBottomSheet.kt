@@ -202,6 +202,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
                 isFavorite = false,
                 isFavoriteAt = null,
                 createdAt = LocalDateTime.now(),
+                expireAt = LocalDateTime.now().plusHours(5),
                 openDDay = 10,
             )
         }
