@@ -3,7 +3,6 @@ package com.emotionstorage.time_capsule_detail.ui
 import SpeechBubble
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,24 +49,24 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
-import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDeleteModal
-import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExitModal
-import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleExpiredModal
-import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleUnlockModal
+import com.emotionstorage.time_capsule_detail.ui.component.DecorativeDots
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDetailActionButtons
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleEmotionComments
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TextBoxInput
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.LinearGradient
-import com.emotionstorage.ui.util.getIconResId
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
-import com.orhanobut.logger.Logger
 
 @Composable
 fun TimeCapsuleDetailScreen(
@@ -214,20 +213,16 @@ private fun StatelessTimeCapsuleDetailScreen(
                     },
                     showCloseButton = isNewTimeCapsule,
                     onCloseClick = navToHome,
-                    rightComponent = if (isNewTimeCapsule) {
-                        null
-                    } else {
-                        {
-                            if(state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
-                                RoundedToggleButton(
-                                    isSelected = state.timeCapsule.isFavorite,
-                                    onSelect = {
-                                        onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
-                                    },
-                                )
-                            }
+                    rightComponent = {
+                        if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                            RoundedToggleButton(
+                                isSelected = state.timeCapsule.isFavorite,
+                                onSelect = {
+                                    onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
+                                },
+                            )
                         }
-                    },
+                    }
                 )
             },
             snackbarHost = {
@@ -325,193 +320,6 @@ private fun TimeCapsuleDetailLoadingScreen(
 }
 
 @Composable
-private fun TimeCapsuleSummary(
-    title: String,
-    summary: String,
-    modifier: Modifier = Modifier,
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
-    ) {
-        Text(
-            text = title,
-            style = MooiTheme.typography.body1,
-            color = Color.White,
-        )
-        Box(
-            modifier =
-                Modifier
-                    .background(Color(0x1AAECBFA), RoundedCornerShape(15.dp))
-                    .padding(18.dp),
-        ) {
-            Text(
-                text = summary,
-                style = MooiTheme.typography.caption3.copy(lineHeight = 24.sp),
-                color = Color.White,
-            )
-        }
-    }
-}
-
-@Composable
-private fun DecorativeDots(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        for (alpha in listOf(0.1f, 0.3f, 0.7f)) {
-            Box(
-                modifier =
-                    Modifier
-                        .size(8.dp)
-                        .background(
-                            Brush.horizontalGradient(
-                                listOf(
-                                    MooiTheme.colorScheme.primary.copy(alpha = alpha),
-                                    Color(0xFF9AB4F2).copy(alpha = alpha),
-                                    MooiTheme.colorScheme.tertiary.copy(alpha = alpha),
-                                ),
-                            ),
-                            CircleShape,
-                        ),
-            )
-        }
-    }
-}
-
-@Composable
-private fun TimeCapsuleEmotionComments(
-    modifier: Modifier = Modifier,
-    emotions: List<TimeCapsule.Emotion> = emptyList(),
-    comments: List<String> = emptyList(),
-) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(27.dp),
-    ) {
-        Text(
-            text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
-            style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
-            textAlign = TextAlign.Center,
-            color = MooiTheme.colorScheme.primary,
-        )
-        Emotions(emotions = emotions)
-        Comments(comments = comments)
-    }
-}
-
-@Composable
-private fun Emotions(
-    modifier: Modifier = Modifier,
-    emotions: List<TimeCapsule.Emotion> = emptyList(),
-) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(11.dp),
-    ) {
-        for (emotion in emotions) {
-            Box(
-                modifier =
-                    Modifier
-                        .height(92.dp)
-                        .weight(1f)
-                        .background(
-                            LinearGradient(
-                                listOf(
-                                    // alpha = 0.5 * 0.2
-                                    Color(0xFF849BEA).copy(alpha = 0.1f),
-                                    // alpha = 0.08 * 0.2
-                                    Color(0xFF849BEA).copy(alpha = 0.016f),
-                                ),
-                                angleInDegrees = -18f,
-                            ),
-                            RoundedCornerShape(10.dp),
-                        ),
-            ) {
-                Column(
-                    modifier = Modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(5.dp),
-                ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    ) {
-                        if (emotion.getIconResId() == null) {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .size(22.dp)
-                                        .background(Color.Gray, CircleShape),
-                            )
-                        } else {
-                            Image(
-                                painter = painterResource(id = emotion.getIconResId()!!),
-                                modifier = Modifier.size(22.dp),
-                                contentDescription = emotion.label,
-                            )
-                        }
-                        Text(
-                            text = emotion.label,
-                            style = MooiTheme.typography.body8,
-                            color = MooiTheme.colorScheme.primary,
-                        )
-                    }
-                    Text(
-                        text = "${emotion.percentage?.toInt() ?: "- "}%",
-                        style = MooiTheme.typography.head3.copy(lineHeight = 29.sp),
-                        color = Color.White,
-                    )
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun Comments(
-    modifier: Modifier = Modifier,
-    comments: List<String> = emptyList(),
-) {
-    Column(
-        modifier =
-            modifier
-                .background(Color(0x0AAECBFA), RoundedCornerShape(15.dp))
-                .border(1.dp, Color(0x33849BEA), RoundedCornerShape(15.dp))
-                .padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        for (comment in comments) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(11.dp),
-            ) {
-                Box(
-                    modifier = Modifier.padding(top = 5.dp),
-                ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(5.dp)
-                                .background(Color.White, CircleShape),
-                    )
-                }
-                Text(
-                    text = comment,
-                    style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
-                    color = Color.White,
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun TimeCapsuleNote(
     modifier: Modifier = Modifier,
     note: String? = null,
@@ -548,99 +356,6 @@ private fun TimeCapsuleNote(
             showCharCount = true,
             maxCharCount = 1000,
         )
-    }
-}
-
-@Composable
-private fun TimeCapsuleDetailActionButtons(
-    expireAt: LocalDateTime,
-    status: TimeCapsule.STATUS,
-    modifier: Modifier = Modifier,
-    isNewTimeCapsule: Boolean = false,
-    onSaveTimeCapsule: () -> Unit = {},
-    onTimeCapsuleExpired: () -> Unit = {},
-    onSaveMindNote: () -> Unit = {},
-    onDeleteTimeCapsule: () -> Unit = {},
-) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.7.dp),
-        horizontalAlignment = Alignment.End,
-    ) {
-        if (status == TimeCapsule.STATUS.TEMPORARY) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 79.dp),
-                verticalArrangement = Arrangement.spacedBy(15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                if (isNewTimeCapsule) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 5.dp),
-                        text = "이 감정을 회고하고 싶다면, 타임캡슐로 보관해보세요.",
-                        style = MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.gray400,
-                    )
-                } else {
-                    CountDownTimer(
-                        deadline = expireAt,
-                    ) { hours, minutes, seconds ->
-                        LaunchedEffect(hours, minutes, seconds) {
-                            if (hours == 0L && minutes == 0L && seconds == 0L) {
-                                onTimeCapsuleExpired()
-                            }
-                        }
-
-                        val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
-                        SpeechBubble(
-                            text = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
-                            tail = BubbleTail.BottomCenter,
-                            sizeParam = DpSize(265.dp, 84.dp),
-                            textColor = MooiTheme.colorScheme.errorRed,
-                        )
-                    }
-                }
-                CtaButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    labelString = "타임캡슐 보관하기",
-                    onClick = {
-                        onSaveTimeCapsule()
-                    },
-                    isDefaultWidth = false,
-                )
-            }
-        } else {
-            // todo: change action button according to status
-            CtaButton(
-                modifier = Modifier.fillMaxWidth(),
-                labelString = "타임캡슐 저장하기",
-                isDefaultWidth = false,
-            )
-        }
-
-        // delete button
-        if (!isNewTimeCapsule) {
-            Row(
-                modifier =
-                    Modifier
-                        .height(20.dp)
-                        .clickable(onClick = { onDeleteTimeCapsule() }),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                Image(
-                    modifier = Modifier.size(13.dp, 14.dp),
-                    painter = painterResource(id = R.drawable.trash),
-                    contentDescription = "delete",
-                )
-                Text(
-                    text = "타임캡슐 삭제하기",
-                    style = MooiTheme.typography.caption6,
-                    color = MooiTheme.colorScheme.gray600,
-                )
-            }
-        }
     }
 }
 
