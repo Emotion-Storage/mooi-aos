@@ -43,6 +43,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailStat
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
@@ -55,6 +56,7 @@ import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleEmotionCom
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleNote
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExitModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.component.CtaButton
@@ -87,6 +89,7 @@ fun TimeCapsuleDetailScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
+    val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     val (isUnlockModalOpen, setUnlockModalOpen) = remember { mutableStateOf(false) }
     val (unlockModalState, setUnlockModalState) =
         remember {
@@ -105,6 +108,10 @@ fun TimeCapsuleDetailScreen(
                 is ShowUnlockModal -> {
                     setUnlockModalState(sideEffect.modalState)
                     setUnlockModalOpen(true)
+                }
+
+                is ShowExitModal -> {
+                    setExitModalOpen(true)
                 }
 
                 is ShowExpiredModal -> {
@@ -132,6 +139,8 @@ fun TimeCapsuleDetailScreen(
         modifier = modifier,
         snackState = snackState,
         isNewTimeCapsule = isNewTimeCapsule,
+        isExitModalOpen = isExitModalOpen,
+        dismissExitModal = { setExitModalOpen(false) },
         unlockModalState = unlockModalState,
         isUnlockModalOpen = isUnlockModalOpen,
         dismissUnlockModal = { setUnlockModalOpen(false) },
@@ -153,6 +162,8 @@ private fun StatelessTimeCapsuleDetailScreen(
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
     isNewTimeCapsule: Boolean = false,
+    isExitModalOpen: Boolean = false,
+    dismissExitModal: () -> Unit = {},
     unlockModalState: UnlockModalState = UnlockModalState(),
     isUnlockModalOpen: Boolean = false,
     dismissUnlockModal: () -> Unit = {},
@@ -168,6 +179,16 @@ private fun StatelessTimeCapsuleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
+    TimeCapsuleExitModal(
+        isModalOpen = isNewTimeCapsule && isExitModalOpen,
+        onDismissRequest = dismissExitModal,
+        onContinue = dismissExitModal,
+        onExit = {
+            dismissExitModal()
+            navToBack()
+        }
+
+    )
     TimeCapsuleUnlockModal(
         keyCount = unlockModalState.keyCount,
         requiredKeyCount = unlockModalState.requiredKeyCount,
@@ -207,7 +228,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = {
                         if (isNewTimeCapsule) {
-                            // todo: open exit modal
+                            onAction(TimeCapsuleDetailAction.OnExitTrigger)
                         } else {
                             navToBack()
                         }
