@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
+import android.text.format.Time
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -13,17 +14,22 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
@@ -33,7 +39,8 @@ import javax.inject.Inject
 
 data class TimeCapsuleDetailState(
     val timeCapsule: TimeCapsule? = null,
-    val isMindNoteChanged: Boolean = false,
+    val note: String = "",
+    val isNoteChanged: Boolean = false,
 )
 
 sealed class TimeCapsuleDetailAction {
@@ -41,19 +48,27 @@ sealed class TimeCapsuleDetailAction {
         val id: String,
     ) : TimeCapsuleDetailAction()
 
-    object OnExitTrigger : TimeCapsuleDetailAction()
-
-    object OnExpireTrigger : TimeCapsuleDetailAction()
-
     data class OnToggleFavorite(
         val id: String,
     ) : TimeCapsuleDetailAction()
 
-    object OnDeleteTrigger : TimeCapsuleDetailAction()
-
     data class OnDeleteTimeCapsule(
         val id: String,
     ) : TimeCapsuleDetailAction()
+
+    data class OnNoteChanged(
+        val note: String,
+    ) : TimeCapsuleDetailAction()
+
+    object OnSaveNote : TimeCapsuleDetailAction()
+
+    object OnDeleteTrigger : TimeCapsuleDetailAction()
+
+    object OnExitTrigger : TimeCapsuleDetailAction()
+
+    object OnExpireTrigger : TimeCapsuleDetailAction()
+
+    object OnSaveChangeTrigger : TimeCapsuleDetailAction()
 }
 
 sealed class TimeCapsuleDetailSideEffect {
@@ -74,6 +89,8 @@ sealed class TimeCapsuleDetailSideEffect {
     object ShowExpiredModal : TimeCapsuleDetailSideEffect()
 
     object ShowDeleteModal : TimeCapsuleDetailSideEffect()
+
+    object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
 
     data class ShowToast(
         val toast: TimeCapsuleDetailToast,
@@ -105,6 +122,31 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
+
+            is OnToggleFavorite -> {
+                handleToggleFavorite(action.id)
+            }
+
+
+            is OnDeleteTimeCapsule -> {
+                handleDeleteTimeCapsule(action.id)
+            }
+
+            is OnNoteChanged -> {
+                handleNoteChanged(action.note)
+            }
+
+            is OnSaveNote -> {
+                handleSaveNote()
+            }
+
+            is OnDeleteTrigger -> {
+                // trigger side effect
+                intent {
+                    postSideEffect(ShowDeleteModal)
+                }
+            }
+
             is OnExitTrigger -> {
                 // trigger side effect
                 intent {
@@ -119,19 +161,11 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 }
             }
 
-            is OnToggleFavorite -> {
-                handleToggleFavorite(action.id)
-            }
-
-            is OnDeleteTrigger -> {
+            is OnSaveChangeTrigger -> {
                 // trigger side effect
-                intent {
-                    postSideEffect(ShowDeleteModal)
+                intent{
+                    postSideEffect(ShowSaveChangesModal)
                 }
-            }
-
-            is OnDeleteTimeCapsule -> {
-                handleDeleteTimeCapsule(action.id)
             }
         }
     }
@@ -144,6 +178,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             timeCapsule = it,
+                            note = it.note ?: "",
                         )
                     }
                     if (it.status == TimeCapsule.STATUS.LOCKED) {
@@ -152,6 +187,9 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, data ->
                     Logger.e("getTimeCapsuleById error: $throwable")
+                    reduce {
+                        state.copy(timeCapsule = null, note = "")
+                    }
                     // todo: handle error
                 },
             )
@@ -222,4 +260,23 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             // todo: delete time capsule
             postSideEffect(DeleteTimeCapsuleSuccess)
         }
+
+    private fun handleNoteChanged(note: String) = intent {
+        reduce {
+            state.copy(
+                note = note,
+                isNoteChanged = state.timeCapsule?.note != note,
+            )
+        }
+    }
+
+    private fun handleSaveNote() = intent {
+        // todo: call save note use case
+        reduce {
+            state.copy(
+                timeCapsule = state.timeCapsule?.copy(note = state.note),
+                isNoteChanged = false,
+            )
+        }
+    }
 }
