@@ -2,6 +2,7 @@ package com.emotionstorage.ui.component
 
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
@@ -17,14 +18,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+
+private const val SNACKBAR_VERTICAL_PADDING = 30
 
 @Composable
 fun AppSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    gravity: Int = Gravity.BOTTOM,
+    paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
     hostContent: @Composable (snackbarData: SnackbarData) -> Unit = {
         Snackbar(
             snackbarData = it,
@@ -64,7 +70,7 @@ fun AppSnackbarHost(
             ) {
                 // Position the dialog at the bottom of the screen
                 (LocalView.current.parent as DialogWindowProvider).window.apply {
-                    setGravity(Gravity.BOTTOM)
+                    setGravity(gravity)
                     clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)  // Remove the dim background
                     // Don't add FLAG_NOT_TOUCHABLE so swipe gestures work
                     // Don't add FLAG_NOT_FOCUSABLE so clicks outside can dismiss
@@ -82,7 +88,7 @@ fun AppSnackbarHost(
                 }
 
                 SwipeToDismissBox(
-                    modifier = modifier.padding(bottom = navigationBarPadding),
+                    modifier = modifier.padding(bottom = navigationBarPadding).padding(paddingValues),
                     state = dismissState,
                     backgroundContent = {}
                 ) {
