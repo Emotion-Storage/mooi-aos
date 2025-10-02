@@ -28,7 +28,7 @@ fun MenuSection(
     onAccountInfoClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
     onEmailCopyClick: () -> Unit = {},
-    onTermsClick: () -> Unit = {},
+    onTermsAndPrivacyClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
 ) {
     Column(
@@ -63,7 +63,7 @@ fun MenuSection(
 
         MenuItem(
             title = "이용약관 및 개인정보처리방침",
-            onClick = onTermsClick
+            onClick = onTermsAndPrivacyClick
         )
 
         Spacer(modifier = Modifier.size(8.dp))

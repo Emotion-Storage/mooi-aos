@@ -22,6 +22,7 @@ import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyPageScreen
+import com.emotionstorage.my.ui.TermsAndPrivacyScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -88,6 +89,9 @@ internal sealed class AppDestination {
     data class TimeCapsuleDetail(
         val id: String,
     ) : AppDestination()
+
+    @Serializable
+    object TermsAndPrivacy : AppDestination()
 }
 
 @Composable
@@ -242,6 +246,9 @@ internal fun AppNavHost(
                     },
                     navToKeyDescription = { keyCount ->
                         // TODO : add keyDescription screen
+                    },
+                    navToTermsAndPrivacy = {
+                        navController.navigate(AppDestination.TermsAndPrivacy)
                     }
 
                 )
@@ -299,6 +306,15 @@ internal fun AppNavHost(
                     navToBack = {
                         navController.popBackStack()
                     },
+                )
+            }
+
+            composable<AppDestination.TermsAndPrivacy> { navBackStackEntry->
+                val arguments = navBackStackEntry.toRoute<AppDestination.TermsAndPrivacy>()
+                TermsAndPrivacyScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

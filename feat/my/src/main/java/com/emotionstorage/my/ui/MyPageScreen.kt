@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -42,9 +41,9 @@ import com.emotionstorage.my.ui.component.KeyCard
 import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
 import com.emotionstorage.my.ui.component.TempToast
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
-import com.emotionstorage.ui.R
 
 @Composable
 fun MyPageScreen(
@@ -54,6 +53,7 @@ fun MyPageScreen(
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: (Int) -> Unit = {},
+    navToTermsAndPrivacy: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     var showEmailCopiedToast by remember { mutableStateOf(false) }
@@ -88,6 +88,10 @@ fun MyPageScreen(
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
                 }
+
+                is MyPageSideEffect.NavigateToTermsAndPrivacy -> {
+                    navToTermsAndPrivacy()
+                }
             }
         }
     }
@@ -100,6 +104,7 @@ fun MyPageScreen(
         navToWithdraw = navToWithdraw,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
+        navToTermsAndPrivacy = navToTermsAndPrivacy,
         onToastDismissed = { showEmailCopiedToast = false }
     )
 }
@@ -113,6 +118,7 @@ private fun StatelessMyPageScreen(
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: (Int) -> Unit = {},
+    navToTermsAndPrivacy: () -> Unit = {},
     onToastDismissed: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
@@ -181,7 +187,8 @@ private fun StatelessMyPageScreen(
                 onEmailCopyClick = {
                     clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
                     onAction(MyPageAction.CopyEmail)
-                }
+                },
+                onTermsAndPrivacyClick = navToTermsAndPrivacy,
             )
 
             Spacer(modifier = Modifier.size(8.dp))
