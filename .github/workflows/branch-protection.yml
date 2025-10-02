@@ -8,9 +8,6 @@ on:
 jobs:
     check-source-branch:
         runs-on: ubuntu-latest
-        steps:
-    check-source-branch:
-        runs-on: ubuntu-latest
         env:
             TARGET_BRANCH: ${{ github.base_ref }}
             SOURCE_BRANCH: ${{ github.head_ref }}
