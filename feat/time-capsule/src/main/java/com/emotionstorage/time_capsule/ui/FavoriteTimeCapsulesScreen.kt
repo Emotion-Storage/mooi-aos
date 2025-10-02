@@ -17,7 +17,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -136,7 +135,14 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             AppSnackbarHost(hostState = snackState) { snackbarData ->
                 Toast(
                     message = snackbarData.visuals.message,
-                    iconId = if (snackbarData.visuals.message == FavoriteToast.FAVORITE_FULL.message) R.drawable.success_filled else null
+                    iconId =
+                        if (snackbarData.visuals.message ==
+                            FavoriteToast.FAVORITE_FULL.message
+                        ) {
+                            R.drawable.success_filled
+                        } else {
+                            null
+                        },
                 )
             }
         },

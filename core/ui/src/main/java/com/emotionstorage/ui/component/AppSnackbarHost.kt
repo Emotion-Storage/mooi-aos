@@ -50,18 +50,19 @@ fun AppSnackbarHost(
             message = it.visuals.message,
             iconId = snackbarIconId,
         )
-    }
+    },
 ) {
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { value ->
-            if (value != SwipeToDismissBoxValue.Settled) {
-                hostState.currentSnackbarData?.dismiss()
-                true
-            } else {
-                false
-            }
-        }
-    )
+    val dismissState =
+        rememberSwipeToDismissBoxState(
+            confirmValueChange = { value ->
+                if (value != SwipeToDismissBoxValue.Settled) {
+                    hostState.currentSnackbarData?.dismiss()
+                    true
+                } else {
+                    false
+                }
+            },
+        )
 
     LaunchedEffect(hostState.currentSnackbarData) {
         hostState.currentSnackbarData?.let {
@@ -69,44 +70,49 @@ fun AppSnackbarHost(
         }
     }
 
-    hostState.currentSnackbarData
+    hostState
+        .currentSnackbarData
         ?.takeIf { it.visuals.message.isNotEmpty() }
         ?.let { data ->
             Dialog(
                 onDismissRequest = {
                     data.dismiss()
                 },
-                properties = DialogProperties(
-                    dismissOnClickOutside = true,
-                    dismissOnBackPress = true,
-                    usePlatformDefaultWidth = false
-                )
+                properties =
+                    DialogProperties(
+                        dismissOnClickOutside = true,
+                        dismissOnBackPress = true,
+                        usePlatformDefaultWidth = false,
+                    ),
             ) {
                 // Position the dialog at the bottom of the screen
                 (LocalView.current.parent as DialogWindowProvider).window.apply {
                     setGravity(gravity)
-                    clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)  // Remove the dim background
+                    clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND) // Remove the dim background
                     // Don't add FLAG_NOT_TOUCHABLE so swipe gestures work
                     // Don't add FLAG_NOT_FOCUSABLE so clicks outside can dismiss
 
                     // Set layout parameters to position at bottom with proper width
-                    attributes = attributes.apply {
-                        width = WindowManager.LayoutParams.MATCH_PARENT
-                        // No need to set height as it will wrap content
-                    }
+                    attributes =
+                        attributes.apply {
+                            width = WindowManager.LayoutParams.MATCH_PARENT
+                            // No need to set height as it will wrap content
+                        }
                 }
 
                 val density = LocalDensity.current
-                val navigationBarPadding = with(density) {
-                    WindowInsets.navigationBars.getBottom(this).toDp()
-                }
+                val navigationBarPadding =
+                    with(density) {
+                        WindowInsets.navigationBars.getBottom(this).toDp()
+                    }
 
                 SwipeToDismissBox(
-                    modifier = modifier
-                        .padding(bottom = navigationBarPadding)
-                        .padding(paddingValues),
+                    modifier =
+                        modifier
+                            .padding(bottom = navigationBarPadding)
+                            .padding(paddingValues),
                     state = dismissState,
-                    backgroundContent = {}
+                    backgroundContent = {},
                 ) {
                     SnackbarHost(hostState = hostState) {
                         hostContent(it)
@@ -115,7 +121,6 @@ fun AppSnackbarHost(
             }
         }
 }
-
 
 @Composable
 fun Toast(
@@ -130,8 +135,7 @@ fun Toast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(paddingValues),
+                ).padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
