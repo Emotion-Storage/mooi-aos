@@ -1,20 +1,28 @@
 package com.emotionstorage.my.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.my.presentation.MyPageAction
@@ -22,6 +30,7 @@ import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.component.KeyCard
+import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
@@ -99,8 +108,9 @@ private fun StatelessMyPageScreen(
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
-                    .padding(start = 16.dp, end = 16.dp, top = 35.dp, bottom = 44.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+                    .padding(start = 16.dp, end = 16.dp, top = 35.dp)
+                    .consumeWindowInsets(WindowInsets.navigationBars),
+            verticalArrangement = Arrangement.Top,
         ) {
             ProfileHeader(
                 profileImage = "Glide or Coil이 필요해 보인다",
@@ -121,6 +131,25 @@ private fun StatelessMyPageScreen(
             ) {
                 navToKeyDescription(it)
             }
+
+            Spacer(modifier = Modifier.size(24.dp))
+
+            MenuSection(
+                versionInfo = state.versionName,
+            )
+
+            Spacer(modifier=Modifier.size(8.dp))
+            Text(
+                text="계정 탈퇴하기",
+                modifier = Modifier.wrapContentSize()
+                    .align(alignment = androidx.compose.ui.Alignment.End)
+                    .clickable {
+                        navToWithdraw
+                    },
+                textAlign = TextAlign.End,
+                color = MooiTheme.colorScheme.gray600,
+                style = MooiTheme.typography.caption7.copy(lineHeight = 24.sp),
+            )
         }
     }
 }

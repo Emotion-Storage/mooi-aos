@@ -12,6 +12,7 @@ data class MooiColorScheme(
     val dropBox: Color = Color(0xFF100E14),
     val blueGrayBackground: Color = Color(0xFF262736),
     val bottomBarBackground: Color = Color(0xFF0E0C12),
+    val chatMessageColor: Color = Color(0xFF26262C),
     val errorRed: Color = Color(0xFFF36868),
     val gray900: Color = Color(0xFF1C1C1C),
     val gray800: Color = Color(0xFF3C3C3C),
