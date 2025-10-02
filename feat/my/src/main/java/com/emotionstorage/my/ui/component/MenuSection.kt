@@ -27,6 +27,7 @@ fun MenuSection(
     versionInfo: String,
     onAccountInfoClick: () -> Unit = {},
     onNotificationClick: () -> Unit = {},
+    onEmailCopyClick: () -> Unit = {},
     onTermsClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
 ) {
@@ -56,7 +57,7 @@ fun MenuSection(
             title = "MOOI에게 의견 보내기",
             email = "(mooi.reply@gmail.com)",
             onCopyClick = {
-                // TODO : 클립 보드에 복사 및 Toast 띄우기
+                onEmailCopyClick
             }
         )
 
@@ -172,7 +173,8 @@ fun EmailMenuItem(
 @Composable
 fun DividerLine() {
     HorizontalDivider(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 16.dp),
         thickness = 1.5.dp,
         color = MooiTheme.colorScheme.gray800

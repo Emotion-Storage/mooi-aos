@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +68,10 @@ fun MyPageScreen(
 
                 is MyPageSideEffect.NavigateToKeyDescription -> {
                     navToKeyDescription(sideEffect.keyCount)
+                }
+
+                is MyPageSideEffect.EmailCopied -> {
+                    // 토스트 메세지 출력
                 }
 
                 is MyPageSideEffect.ShowToast -> {
@@ -136,6 +141,10 @@ private fun StatelessMyPageScreen(
 
             MenuSection(
                 versionInfo = state.versionName,
+                onEmailCopyClick = {
+                    clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
+                    onAction(MyPageAction.CopyEmail)
+                }
             )
 
             Spacer(modifier=Modifier.size(8.dp))

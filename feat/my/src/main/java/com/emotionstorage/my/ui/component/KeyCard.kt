@@ -85,7 +85,7 @@ fun KeyCard(
                     .size(13.dp)
                     .align(Alignment.CenterVertically)
                     .clickable {
-                        onCardClick
+                        onCardClick(keyCount)
                     }
             )
         }

@@ -20,11 +20,13 @@ sealed class MyPageAction {
     object Logout : MyPageAction()
     object NicknameChange : MyPageAction()
     object KeyDescription : MyPageAction()
+    object CopyEmail : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
     object NavigateToNicknameChange : MyPageSideEffect()
+    object EmailCopied: MyPageSideEffect()
 
     data class NavigateToKeyDescription(
         val keyCount: Int,
@@ -61,6 +63,9 @@ constructor(
             is MyPageAction.KeyDescription -> {
                 handleKeyDescription()
             }
+            is MyPageAction.CopyEmail -> {
+                handleCopyEmail()
+            }
         }
     }
 
@@ -91,5 +96,10 @@ constructor(
     private fun handleKeyDescription() =
         intent {
             postSideEffect(MyPageSideEffect.NavigateToKeyDescription(state.keyCount))
+        }
+
+    private fun handleCopyEmail() =
+        intent {
+            postSideEffect(MyPageSideEffect.EmailCopied)
         }
 }
