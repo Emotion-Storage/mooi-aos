@@ -68,7 +68,7 @@ fun TimeCapsuleDetailScreen(
     // is new, if navigated from ai chat
     isNewTimeCapsule: Boolean = false,
     navToHome: () -> Unit = {},
-    navToSaveTimeCapsule: (id: String) -> Unit = {},
+    navToSaveTimeCapsule: (createdAt: LocalDateTime) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -171,7 +171,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToHome: () -> Unit = {},
-    navToSaveTimeCapsule: (id: String) -> Unit = {},
+    navToSaveTimeCapsule: (createdAt: LocalDateTime) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
@@ -324,7 +324,9 @@ private fun StatelessTimeCapsuleDetailScreen(
                     status = state.timeCapsule.status,
                     isNewTimeCapsule = isNewTimeCapsule,
                     onSaveTimeCapsule = {
-                        navToSaveTimeCapsule(id)
+                        navToSaveTimeCapsule(
+                            state.timeCapsule.createdAt
+                        )
                     },
                     onTimeCapsuleExpired = {
                         onAction(OnExpireTrigger)

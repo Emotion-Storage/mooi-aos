@@ -35,8 +35,8 @@ fun SaveTimeCapsuleScreen(
     isNewTimeCapsule: Boolean = true,
     createdAt: LocalDateTime = LocalDateTime.now(),
     viewModel: SaveTimeCapsuleViewModel = hiltViewModel(),
-    navToMain: () -> Unit = {},
-    // should pop navigation twice
+    navToHome: () -> Unit = {},
+    navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -48,7 +48,8 @@ fun SaveTimeCapsuleScreen(
         modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
-        navToMain = navToMain,
+        navToMain = navToHome,
+        navToPrevious = navToPrevious,
         navToBack = navToBack,
     )
 }
@@ -59,6 +60,7 @@ private fun StatelessSaveTimeCapsuleScreen(
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
     navToMain: () -> Unit = {},
+    navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     Scaffold(

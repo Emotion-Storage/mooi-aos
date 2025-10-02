@@ -19,12 +19,14 @@ import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
+import com.emotionstorage.common.LocalDateTimeSerializer
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyPageScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
+import com.emotionstorage.time_capsule_detail.ui.SaveTimeCapsuleScreen
 import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
@@ -32,6 +34,7 @@ import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.navigateWithClearStack
 import kotlinx.serialization.Serializable
+import java.time.LocalDateTime
 
 /**
  * App destinations
@@ -88,6 +91,15 @@ internal sealed class AppDestination {
     data class TimeCapsuleDetail(
         val id: String,
         val isNewTimeCapsule: Boolean,
+    ) : AppDestination()
+
+
+    @Serializable
+    data class SaveTimeCapsule(
+        val id: String,
+        val isNewTimeCapsule: Boolean,
+        @Serializable(with = LocalDateTimeSerializer::class)
+        val createdAt: LocalDateTime,
     ) : AppDestination()
 
 }
@@ -292,6 +304,38 @@ internal fun AppNavHost(
                 TimeCapsuleDetailScreen(
                     id = arguments.id,
                     isNewTimeCapsule = arguments.isNewTimeCapsule,
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    },
+                    navToSaveTimeCapsule = { createdAt ->
+                        navController.navigate(
+                            AppDestination.SaveTimeCapsule(
+                                arguments.id,
+                                arguments.isNewTimeCapsule,
+                                createdAt
+                            )
+                        )
+                    },
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.SaveTimeCapsule> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.SaveTimeCapsule>()
+                SaveTimeCapsuleScreen(
+                    id = arguments.id,
+                    isNewTimeCapsule = arguments.isNewTimeCapsule,
+                    createdAt = arguments.createdAt,
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    },
+                    navToPrevious = {
+                        // pop twice, to navigate to previous screen
+                        navController.popBackStack()
+                        navController.popBackStack()
+                    },
                     navToBack = {
                         navController.popBackStack()
                     },
