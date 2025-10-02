@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -31,20 +32,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
+import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast.CalendarToast
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.ui.component.CalendarYearMonthBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
@@ -68,14 +72,22 @@ fun CalendarScreen(
         onPauseOrDispose { }
     }
 
+    val snackState = remember { SnackbarHostState() }
     val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
-
     val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
                     setShowTimeCapsuleBottomSheet(true)
+                }
+
+                is CalendarSideEffect.ShowToast -> {
+                    // dismiss current snackbar if exists
+                    snackState.currentSnackbarData?.dismiss()
+                    // show new snackbar
+                    snackState.showSnackbar(sideEffect.toast.message)
                 }
 
                 is CalendarSideEffect.EnterCharRoomSuccess -> {
@@ -87,6 +99,7 @@ fun CalendarScreen(
 
     StatelessCalendarScreen(
         modifier = modifier,
+        snackState = snackState,
         showYearMonthBottomSheet = showYearMonthBottomSheet,
         setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
         showTimeCapsuleBottomSheet = showTimeCapsuleBottomSheet,
@@ -105,6 +118,7 @@ fun CalendarScreen(
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = SnackbarHostState(),
     showYearMonthBottomSheet: Boolean = false,
     setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
     showTimeCapsuleBottomSheet: Boolean = false,
@@ -129,6 +143,21 @@ private fun StatelessCalendarScreen(
                 keyCount = state.keyCount,
                 navToKey = navToKey,
             )
+        },
+        snackbarHost = {
+            AppSnackbarHost(hostState = snackState) { snackbarData ->
+                Toast(
+                    message = snackbarData.visuals.message,
+                    iconId =
+                        if (snackbarData.visuals.message ==
+                            CalendarToast.FAVORITE_FULL.message
+                        ) {
+                            R.drawable.success_filled
+                        } else {
+                            null
+                        },
+                )
+            }
         },
     ) { innerPadding ->
         Box(
@@ -221,6 +250,9 @@ private fun StatelessCalendarScreen(
                         onAction(CalendarAction.ClearBottomSheet)
                     },
                     timeCapsules = state.timeCapsules,
+                    onToggleFavorite = {
+                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(it))
+                    },
                     navToTimeCapsuleDetail = {
                         setShowTimeCapsuleBottomSheet(false)
                         navToTimeCapsuleDetail(it)
@@ -362,7 +394,7 @@ private fun CalendarTodayActionButton(
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun CalendarScreenPreview() {
     MooiTheme {

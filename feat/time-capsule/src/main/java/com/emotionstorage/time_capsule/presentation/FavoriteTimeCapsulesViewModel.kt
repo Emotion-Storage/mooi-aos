@@ -189,8 +189,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
     private fun handleToggleFavorite(id: String) =
         intent {
-            val isFavorite = state.timeCapsules.find { it.id == id }?.isFavorite
-            if (isFavorite == null) {
+            if (state.timeCapsules.find { it.id == id } == null) {
                 Logger.e("Cannot find time capsule of id $id")
                 return@intent
             }

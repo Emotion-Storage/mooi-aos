@@ -7,6 +7,9 @@ import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsulesOfDateUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
@@ -47,6 +50,10 @@ sealed class CalendarAction {
         val date: LocalDate,
     ) : CalendarAction()
 
+    data class ToggleTimeCapsuleFavorite(
+        val id: String,
+    ) : CalendarAction()
+
     // reset bottom sheet states
     object ClearBottomSheet : CalendarAction()
 
@@ -56,6 +63,18 @@ sealed class CalendarAction {
 
 sealed class CalendarSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
+
+    data class ShowToast(
+        val toast: CalendarToast,
+    ) : CalendarSideEffect() {
+        enum class CalendarToast(
+            val message: String,
+        ) {
+            FAVORITE_ADDED("즐겨찾기가 설정되었습니다."),
+            FAVORITE_REMOVED("즐겨찾기가 해제되었습니다."),
+            FAVORITE_FULL("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요."),
+        }
+    }
 
     data class EnterCharRoomSuccess(
         val roomId: String,
@@ -68,6 +87,7 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
+    private val toggleFavorite: ToggleFavoriteUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(),
     ContainerHost<CalendarState, CalendarSideEffect> {
@@ -86,6 +106,10 @@ class CalendarViewModel @Inject constructor(
 
             is CalendarAction.SelectCalendarDate -> {
                 handleSelectCalendarDate(action.date)
+            }
+
+            is CalendarAction.ToggleTimeCapsuleFavorite -> {
+                handleToggleFavorite(action.id)
             }
 
             is CalendarAction.ClearBottomSheet -> {
@@ -245,6 +269,50 @@ class CalendarViewModel @Inject constructor(
             }
 
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
+        }
+
+    private fun handleToggleFavorite(id: String) =
+        intent {
+            if (state.timeCapsules.find { it.id == id } == null) {
+                Logger.e("Cannot find time capsule of id $id")
+                return@intent
+            }
+
+            suspend fun updateFavorite(
+                id: String,
+                isFavorite: Boolean,
+            ) = reduce {
+                state.copy(
+                    timeCapsules =
+                        state.timeCapsules.map {
+                            if (it.id == id) {
+                                it.copy(isFavorite = isFavorite)
+                            } else {
+                                it
+                            }
+                        },
+                )
+            }
+
+            coroutineScope {
+                collectDataState(
+                    flow = toggleFavorite(id),
+                    onSuccess = {
+                        if (it == ToggleToastResult.FAVORITE_ADDED) {
+                            postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_ADDED))
+                            updateFavorite(id, true)
+                        } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                            postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_REMOVED))
+                            updateFavorite(id, false)
+                        }
+                    },
+                    onError = { throwable, data ->
+                        if (data == ToggleToastResult.FAVORITE_FULL) {
+                            postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_FULL))
+                        }
+                    },
+                )
+            }
         }
 
     private fun handleClearBottomSheet() =
