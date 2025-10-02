@@ -93,7 +93,6 @@ internal sealed class AppDestination {
         val isNewTimeCapsule: Boolean,
     ) : AppDestination()
 
-
     @Serializable
     data class SaveTimeCapsule(
         val id: String,
@@ -101,7 +100,6 @@ internal sealed class AppDestination {
         @Serializable(with = LocalDateTimeSerializer::class)
         val createdAt: LocalDateTime,
     ) : AppDestination()
-
 }
 
 @Composable
@@ -312,8 +310,8 @@ internal fun AppNavHost(
                             AppDestination.SaveTimeCapsule(
                                 arguments.id,
                                 arguments.isNewTimeCapsule,
-                                createdAt
-                            )
+                                createdAt,
+                            ),
                         )
                     },
                     navToBack = {

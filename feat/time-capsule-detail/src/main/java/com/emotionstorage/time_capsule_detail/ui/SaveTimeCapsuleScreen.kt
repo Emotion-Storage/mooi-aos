@@ -64,30 +64,33 @@ private fun StatelessSaveTimeCapsuleScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
                 showBackground = false,
                 showBackButton = true,
-                onBackClick = navToBack
+                onBackClick = navToBack,
             )
-        }
+        },
     ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 39.67.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 39.67.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             // title & selection grid
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             ) {
                 Text(
                     text =
@@ -106,8 +109,9 @@ private fun StatelessSaveTimeCapsuleScreen(
 
             // speech bubble & button
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
             ) {
                 CtaButton(
                     modifier = Modifier.fillMaxWidth(),

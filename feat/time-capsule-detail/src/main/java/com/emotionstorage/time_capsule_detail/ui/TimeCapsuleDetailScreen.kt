@@ -325,7 +325,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     isNewTimeCapsule = isNewTimeCapsule,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule(
-                            state.timeCapsule.createdAt
+                            state.timeCapsule.createdAt,
                         )
                     },
                     onTimeCapsuleExpired = {

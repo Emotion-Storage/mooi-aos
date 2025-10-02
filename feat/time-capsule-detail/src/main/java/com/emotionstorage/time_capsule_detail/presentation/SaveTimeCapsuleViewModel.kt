@@ -30,7 +30,7 @@ data class SaveTimeCapsuleState(
     }
 }
 
-sealed class SaveTimeCapsuleAction() {
+sealed class SaveTimeCapsuleAction {
     data class Init(
         val id: String,
         val isNewTimeCapsule: Boolean,
@@ -50,135 +50,143 @@ sealed class SaveTimeCapsuleAction() {
     object SaveTimeCapsule : SaveTimeCapsuleAction()
 }
 
-sealed class SaveTimeCapsuleSideEffect() {
+sealed class SaveTimeCapsuleSideEffect {
     object SaveTimeCapsuleSuccess : SaveTimeCapsuleSideEffect()
 }
 
 @HiltViewModel
-class SaveTimeCapsuleViewModel @Inject constructor(
-) : ViewModel(), ContainerHost<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> {
-    override val container: Container<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> =
-        container(SaveTimeCapsuleState())
+class SaveTimeCapsuleViewModel @Inject constructor() :
+    ViewModel(),
+    ContainerHost<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> {
+        override val container: Container<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> =
+            container(SaveTimeCapsuleState())
 
-    fun onAction(action: SaveTimeCapsuleAction) {
-        when (action) {
-            is SaveTimeCapsuleAction.Init -> {
-                handleInit(action.id, action.isNewTimeCapsule, action.createdAt)
-            }
+        fun onAction(action: SaveTimeCapsuleAction) {
+            when (action) {
+                is SaveTimeCapsuleAction.Init -> {
+                    handleInit(action.id, action.isNewTimeCapsule, action.createdAt)
+                }
 
-            is SaveTimeCapsuleAction.SelectArriveAfter -> {
-                handleSelectArriveAfter(action.arriveAfter)
-            }
+                is SaveTimeCapsuleAction.SelectArriveAfter -> {
+                    handleSelectArriveAfter(action.arriveAfter)
+                }
 
-            is SaveTimeCapsuleAction.SelectArriveAfterCustom -> {
-                handleSelectArriveAfterCustom(action.arriveAt)
-            }
+                is SaveTimeCapsuleAction.SelectArriveAfterCustom -> {
+                    handleSelectArriveAfterCustom(action.arriveAt)
+                }
 
-            is SaveTimeCapsuleAction.SaveTimeCapsule -> {
-                handleSaveTimeCapsule()
+                is SaveTimeCapsuleAction.SaveTimeCapsule -> {
+                    handleSaveTimeCapsule()
+                }
             }
         }
+
+        private fun handleInit(
+            id: String,
+            isNewTimeCapsule: Boolean,
+            createdAt: LocalDateTime,
+        ) = intent {
+            reduce {
+                state.copy(
+                    id = id,
+                    isNewTimeCapsule = isNewTimeCapsule,
+                    createdAt = createdAt,
+                    // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
+                    saveAt = if (isNewTimeCapsule) createdAt else LocalDateTime.now(),
+                    arriveAfter = null,
+                    arriveAt = null,
+                )
+            }
+        }
+
+        private fun handleSelectArriveAfter(arriveAfter: ArriveAfter) =
+            intent {
+                when (arriveAfter) {
+                    ArriveAfter.AFTER_24HOURS -> {
+                        reduce {
+                            state.copy(
+                                arriveAfter = arriveAfter,
+                                arriveAt = state.saveAt.plusHours(24),
+                            )
+                        }
+                    }
+
+                    ArriveAfter.AFTER_3DAYS -> {
+                        reduce {
+                            state.copy(
+                                arriveAfter = arriveAfter,
+                                arriveAt = state.saveAt.plusDays(3),
+                            )
+                        }
+                    }
+
+                    ArriveAfter.AFTER_1WEEK -> {
+                        reduce {
+                            state.copy(
+                                arriveAfter = arriveAfter,
+                                arriveAt = state.saveAt.plusDays(7),
+                            )
+                        }
+                    }
+
+                    ArriveAfter.AFTER_15DAYS -> {
+                        reduce {
+                            state.copy(
+                                arriveAfter = arriveAfter,
+                                arriveAt = state.saveAt.plusDays(15),
+                            )
+                        }
+                    }
+
+                    ArriveAfter.AFTER_30DAYS -> {
+                        reduce {
+                            state.copy(
+                                arriveAfter = arriveAfter,
+                                arriveAt = state.saveAt.plusDays(30),
+                            )
+                        }
+                    }
+
+                    ArriveAfter.AFTER_1YEAR -> {
+                        reduce {
+                            state.copy(
+                                arriveAfter = arriveAfter,
+                                arriveAt = state.saveAt.plusYears(1),
+                            )
+                        }
+                    }
+
+                    ArriveAfter.AFTER_CUSTOM -> {
+                        // 오픈일 직접 선택하는 경우는, SelectArriveAfterCustom 액션을 통해 처리
+                        return@intent
+                    }
+                }
+            }
+
+        private fun handleSelectArriveAfterCustom(arriveAt: LocalDate) =
+            intent {
+                if (arriveAt.isBefore(state.saveAt.toLocalDate())) {
+                    Logger.e("Timecapsule open date can not be before save date")
+                    return@intent
+                }
+                if (arriveAt.isAfter(state.saveAt.toLocalDate().plusYears(1))) {
+                    Logger.e("Timecapsule open date can not be after 1 year from save date")
+                    return@intent
+                }
+
+                reduce {
+                    state.copy(
+                        arriveAfter = ArriveAfter.AFTER_CUSTOM,
+                        arriveAt = LocalDateTime.of(arriveAt, state.saveAt.toLocalTime()),
+                    )
+                }
+            }
+
+        private fun handleSaveTimeCapsule() =
+            intent {
+                // todo: call save open date use case
+                postSideEffect(
+                    SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess,
+                )
+            }
     }
-
-    private fun handleInit(id: String, isNewTimeCapsule: Boolean, createdAt: LocalDateTime) = intent {
-        reduce {
-            state.copy(
-                id = id,
-                isNewTimeCapsule = isNewTimeCapsule,
-                createdAt = createdAt,
-                // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
-                saveAt = if (isNewTimeCapsule) createdAt else LocalDateTime.now(),
-                arriveAfter = null,
-                arriveAt = null,
-            )
-        }
-    }
-
-    private fun handleSelectArriveAfter(arriveAfter: ArriveAfter) = intent {
-        when (arriveAfter) {
-            ArriveAfter.AFTER_24HOURS -> {
-                reduce {
-                    state.copy(
-                        arriveAfter = arriveAfter,
-                        arriveAt = state.saveAt.plusHours(24)
-                    )
-                }
-            }
-
-            ArriveAfter.AFTER_3DAYS -> {
-                reduce {
-                    state.copy(
-                        arriveAfter = arriveAfter,
-                        arriveAt = state.saveAt.plusDays(3)
-                    )
-                }
-            }
-
-            ArriveAfter.AFTER_1WEEK -> {
-                reduce {
-                    state.copy(
-                        arriveAfter = arriveAfter,
-                        arriveAt = state.saveAt.plusDays(7)
-                    )
-                }
-            }
-
-            ArriveAfter.AFTER_15DAYS -> {
-                reduce {
-                    state.copy(
-                        arriveAfter = arriveAfter,
-                        arriveAt = state.saveAt.plusDays(15)
-                    )
-                }
-            }
-
-            ArriveAfter.AFTER_30DAYS -> {
-                reduce {
-                    state.copy(
-                        arriveAfter = arriveAfter,
-                        arriveAt = state.saveAt.plusDays(30)
-                    )
-                }
-            }
-
-            ArriveAfter.AFTER_1YEAR -> {
-                reduce {
-                    state.copy(
-                        arriveAfter = arriveAfter,
-                        arriveAt = state.saveAt.plusYears(1)
-                    )
-                }
-            }
-
-            ArriveAfter.AFTER_CUSTOM -> {
-                // 오픈일 직접 선택하는 경우는, SelectArriveAfterCustom 액션을 통해 처리
-                return@intent
-            }
-        }
-    }
-
-    private fun handleSelectArriveAfterCustom(arriveAt: LocalDate) = intent {
-        if (arriveAt.isBefore(state.saveAt.toLocalDate())) {
-            Logger.e("Timecapsule open date can not be before save date")
-            return@intent
-        }
-        if (arriveAt.isAfter(state.saveAt.toLocalDate().plusYears(1))) {
-            Logger.e("Timecapsule open date can not be after 1 year from save date")
-            return@intent
-        }
-
-        reduce {
-            state.copy(
-                arriveAfter = ArriveAfter.AFTER_CUSTOM,
-                arriveAt = LocalDateTime.of(arriveAt, state.saveAt.toLocalTime())
-            )
-        }
-    }
-
-    private fun handleSaveTimeCapsule() = intent {
-        // todo: call save open date use case
-        postSideEffect(
-            SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess
-        )
-    }
-}
