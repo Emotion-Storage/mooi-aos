@@ -12,6 +12,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class SaveTimeCapsuleState(
+    val id: String = "",
     val isNewTimeCapsule: Boolean = false,
     val saveAt: LocalDateTime = LocalDateTime.now(),
     val arriveAfter: ArriveAfter? = null,
@@ -30,6 +31,7 @@ data class SaveTimeCapsuleState(
 
 sealed class SaveTimeCapsuleAction() {
     data class Init(
+        val id: String,
         val isNewTimeCapsule: Boolean,
         val createdAt: LocalDateTime,
     ) : SaveTimeCapsuleAction()
@@ -44,9 +46,7 @@ sealed class SaveTimeCapsuleAction() {
         val arriveAt: LocalDate,
     ) : SaveTimeCapsuleAction()
 
-    data class SaveTimeCapsule(
-        val id: String
-    ) : SaveTimeCapsuleAction()
+    object SaveTimeCapsule : SaveTimeCapsuleAction()
 }
 
 sealed class SaveTimeCapsuleSideEffect() {
@@ -62,7 +62,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
     fun onAction(action: SaveTimeCapsuleAction) {
         when (action) {
             is SaveTimeCapsuleAction.Init -> {
-                handleInit(action.isNewTimeCapsule, action.createdAt)
+                handleInit(action.id, action.isNewTimeCapsule, action.createdAt)
             }
 
             is SaveTimeCapsuleAction.SelectArriveAfter -> {
@@ -74,14 +74,15 @@ class SaveTimeCapsuleViewModel @Inject constructor(
             }
 
             is SaveTimeCapsuleAction.SaveTimeCapsule -> {
-                handleSaveTimeCapsule(action.id)
+                handleSaveTimeCapsule()
             }
         }
     }
 
-    private fun handleInit(isNewTimeCapsule: Boolean, createdAt: LocalDateTime) = intent {
+    private fun handleInit(id: String, isNewTimeCapsule: Boolean, createdAt: LocalDateTime) = intent {
         reduce {
             state.copy(
+                id = id,
                 isNewTimeCapsule = isNewTimeCapsule,
                 // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
                 saveAt = if (isNewTimeCapsule) createdAt else LocalDateTime.now(),
@@ -172,7 +173,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         }
     }
 
-    private fun handleSaveTimeCapsule(id: String) = intent {
+    private fun handleSaveTimeCapsule() = intent {
         // todo: call save open date use case
         postSideEffect(
             SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess
