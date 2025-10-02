@@ -197,7 +197,7 @@ private fun StatelessMyPageScreen(
                     Modifier
                         .wrapContentSize()
                         .align(alignment = Alignment.End)
-                        .clickable { navToWithdraw },
+                        .clickable { navToWithdraw() },
                 textAlign = TextAlign.End,
                 color = MooiTheme.colorScheme.gray600,
                 style = MooiTheme.typography.caption7.copy(lineHeight = 24.sp),

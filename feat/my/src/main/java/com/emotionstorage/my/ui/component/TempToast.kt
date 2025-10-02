@@ -1,6 +1,6 @@
 package com.emotionstorage.my.ui.component
 
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
