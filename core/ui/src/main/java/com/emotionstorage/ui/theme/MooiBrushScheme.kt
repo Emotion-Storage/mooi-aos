@@ -75,6 +75,16 @@ data class MooiBrushScheme(
                 ),
             angleInDegrees = -17f,
         ),
+    val chatMessageBackground: Brush =
+        LinearGradient(
+            colors =
+                listOf(
+                    Color(0xFF000000),
+                    Color(0xFF26262C),
+                ),
+            stops = listOf(0.2f, 1.0f),
+            angleInDegrees = -9f,
+        ),
 )
 
 @Preview(showBackground = true)
