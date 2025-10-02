@@ -137,7 +137,6 @@
     <string name="thirteenth_privacy_content">이 개인정보 처리방침은 2025년 9월 30일부터 적용됩니다. 개인정보 처리방침의 내용이 변경될 경우, 변경사항은 사전에 고지됩니다.</string>
 
     <string-array name="privacy_titles">
-        <item>@string/first_privacy_title</item>
         <item>@string/second_privacy_title</item>
         <item>@string/third_privacy_title</item>
         <item>@string/fourth_privacy_title</item>
@@ -153,7 +152,6 @@
     </string-array>
 
     <string-array name="privacy_contents">
-        <item>@string/first_privacy_content</item>
         <item>@string/second_privacy_content</item>
         <item>@string/third_privacy_content</item>
         <item>@string/fourth_privacy_content</item>
