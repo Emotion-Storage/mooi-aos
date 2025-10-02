@@ -14,6 +14,7 @@ import javax.inject.Inject
 data class SaveTimeCapsuleState(
     val id: String = "",
     val isNewTimeCapsule: Boolean = false,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
     val saveAt: LocalDateTime = LocalDateTime.now(),
     val arriveAfter: ArriveAfter? = null,
     val arriveAt: LocalDateTime? = null,
@@ -84,6 +85,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
             state.copy(
                 id = id,
                 isNewTimeCapsule = isNewTimeCapsule,
+                createdAt = createdAt,
                 // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
                 saveAt = if (isNewTimeCapsule) createdAt else LocalDateTime.now(),
                 arriveAfter = null,
