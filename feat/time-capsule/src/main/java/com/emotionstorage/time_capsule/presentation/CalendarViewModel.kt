@@ -51,7 +51,7 @@ sealed class CalendarAction {
     ) : CalendarAction()
 
     data class ToggleTimeCapsuleFavorite(
-        val id: String
+        val id: String,
     ) : CalendarAction()
 
     // reset bottom sheet states
@@ -271,7 +271,6 @@ class CalendarViewModel @Inject constructor(
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
         }
 
-
     private fun handleToggleFavorite(id: String) =
         intent {
             if (state.timeCapsules.find { it.id == id } == null) {
@@ -315,7 +314,6 @@ class CalendarViewModel @Inject constructor(
                 )
             }
         }
-
 
     private fun handleClearBottomSheet() =
         intent {

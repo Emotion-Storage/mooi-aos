@@ -366,8 +366,7 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }
-                    .height(44.dp)
+                    }.height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
