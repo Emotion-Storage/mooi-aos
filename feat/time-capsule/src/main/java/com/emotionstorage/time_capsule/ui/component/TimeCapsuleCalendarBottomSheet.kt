@@ -53,6 +53,7 @@ fun TimeCapsuleCalendarBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
+    onToggleFavorite: (id: String) -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToDailyReport: (() -> Unit)? = null,
     isNewDailyReport: Boolean = false,
@@ -88,6 +89,7 @@ fun TimeCapsuleCalendarBottomSheet(
                     modifier = Modifier.fillMaxWidth(),
                     timeCapsule = it,
                     onClick = { navToTimeCapsuleDetail(it.id) },
+                    onFavoriteClick = { onToggleFavorite(it.id) },
                 )
             }
             Spacer(modifier = Modifier.height(21.dp))

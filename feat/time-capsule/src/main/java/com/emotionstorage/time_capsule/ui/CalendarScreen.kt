@@ -34,6 +34,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -246,6 +247,9 @@ private fun StatelessCalendarScreen(
                         onAction(CalendarAction.ClearBottomSheet)
                     },
                     timeCapsules = state.timeCapsules,
+                    onToggleFavorite = {
+                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(it))
+                    },
                     navToTimeCapsuleDetail = {
                         setShowTimeCapsuleBottomSheet(false)
                         navToTimeCapsuleDetail(it)
@@ -387,7 +391,7 @@ private fun CalendarTodayActionButton(
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun CalendarScreenPreview() {
     MooiTheme {
