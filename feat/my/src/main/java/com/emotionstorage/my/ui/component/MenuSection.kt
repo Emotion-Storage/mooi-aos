@@ -57,7 +57,7 @@ fun MenuSection(
             title = "MOOI에게 의견 보내기",
             email = "(mooi.reply@gmail.com)",
             onCopyClick = {
-                onEmailCopyClick
+                onEmailCopyClick()
             }
         )
 

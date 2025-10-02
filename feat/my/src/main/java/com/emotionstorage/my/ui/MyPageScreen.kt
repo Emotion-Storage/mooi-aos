@@ -13,10 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
@@ -33,8 +41,10 @@ import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.component.KeyCard
 import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
+import com.emotionstorage.my.ui.component.TempToast
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
+import com.emotionstorage.ui.R
 
 @Composable
 fun MyPageScreen(
@@ -46,6 +56,7 @@ fun MyPageScreen(
     navToKeyDescription: (Int) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    var showEmailCopiedToast by remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("MyPageScreen: onResume triggered")
@@ -71,7 +82,7 @@ fun MyPageScreen(
                 }
 
                 is MyPageSideEffect.EmailCopied -> {
-                    // 토스트 메세지 출력
+                    showEmailCopiedToast = true
                 }
 
                 is MyPageSideEffect.ShowToast -> {
@@ -84,10 +95,12 @@ fun MyPageScreen(
     StatelessMyPageScreen(
         modifier = modifier,
         state = state.value,
+        showEmailCopiedToast = showEmailCopiedToast,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdraw,
         navToNickNameChange = navToNickNameChange,
-        navToKeyDescription = navToKeyDescription
+        navToKeyDescription = navToKeyDescription,
+        onToastDismissed = { showEmailCopiedToast = false }
     )
 }
 
@@ -95,17 +108,41 @@ fun MyPageScreen(
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     state: MyPageState = MyPageState(),
+    showEmailCopiedToast: Boolean = false,
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: (Int) -> Unit = {},
+    onToastDismissed: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(showEmailCopiedToast) {
+        if (showEmailCopiedToast) {
+            snackbarHostState.showSnackbar(
+                message = "",
+                duration = SnackbarDuration.Short
+            )
+            onToastDismissed()
+        }
+    }
 
     Scaffold(
         modifier
             .fillMaxSize()
             .background(MooiTheme.colorScheme.background),
+
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) {
+                TempToast(
+                    modifier = Modifier,
+                    message = "이메일이 복사되었습니다.",
+                    resId = R.drawable.mail
+                )
+            }
+        }
+
     ) { innerPadding ->
         Column(
             modifier =
@@ -147,10 +184,11 @@ private fun StatelessMyPageScreen(
                 }
             )
 
-            Spacer(modifier=Modifier.size(8.dp))
+            Spacer(modifier = Modifier.size(8.dp))
             Text(
-                text="계정 탈퇴하기",
-                modifier = Modifier.wrapContentSize()
+                text = "계정 탈퇴하기",
+                modifier = Modifier
+                    .wrapContentSize()
                     .align(alignment = androidx.compose.ui.Alignment.End)
                     .clickable {
                         navToWithdraw
