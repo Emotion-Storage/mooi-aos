@@ -29,6 +29,7 @@ import com.emotionstorage.auth.presentation.SignupCompleteSideEffect
 import com.emotionstorage.auth.presentation.SignupCompleteViewModel
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -70,6 +71,12 @@ private fun StatelessSignupCompleteScreen(
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                showBackButton = false,
+            )
+        },
     ) { padding ->
         Column(
             modifier =
@@ -86,7 +93,6 @@ private fun StatelessSignupCompleteScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
-                    modifier = Modifier.padding(top = 62.dp),
                     text =
                         buildAnnotatedString {
                             append("가입을 환영해요.\n")
