@@ -1,0 +1,26 @@
+name: Validate Source Branch
+
+on:
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    check-source-branch:
+        runs-on: ubuntu-latest
+        steps:
+            -   name: Display branch ref
+                run: |
+                    echo "Base Branch: ${{ github.base_ref }}"
+                    echo "Head Branch: ${{ github.head_ref }}"
+
+            -   name: Check source branch
+                run: |
+                    if [ "${{ github.base_ref }}" != "main" ]; then
+                        echo "Error: Target branch must be 'main'."
+                        exit 1
+                    fi
+                    if [[ "${{ github.head_ref }}" != "develop" && ! "${{ github.head_ref }}" =~ ^hotfix/ ]]; then
+                        echo "Error: Only 'develop' branch or branches starting with 'hotfix/' are allowed to merge into 'main'."
+                        exit 1
+                    fi
