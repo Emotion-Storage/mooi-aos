@@ -9,18 +9,24 @@ jobs:
     check-source-branch:
         runs-on: ubuntu-latest
         steps:
+    check-source-branch:
+        runs-on: ubuntu-latest
+        env:
+            TARGET_BRANCH: ${{ github.base_ref }}
+            SOURCE_BRANCH: ${{ github.head_ref }}
+        steps:
             -   name: Display branch ref
                 run: |
-                    echo "Base Branch: ${{ github.base_ref }}"
-                    echo "Head Branch: ${{ github.head_ref }}"
+                    echo "Base Branch: ${TARGET_BRANCH}"
+                    echo "Head Branch: ${SOURCE_BRANCH}"
 
             -   name: Check source branch
                 run: |
-                    if [ "${{ github.base_ref }}" != "main" ]; then
+                    if [ "${TARGET_BRANCH}" != "main" ]; then
                         echo "Error: Target branch must be 'main'."
                         exit 1
                     fi
-                    if [[ "${{ github.head_ref }}" != "develop" && ! "${{ github.head_ref }}" =~ ^hotfix/ ]]; then
+                    if [[ "${SOURCE_BRANCH}" != "develop" && ! "${SOURCE_BRANCH}" =~ ^hotfix/ ]]; then
                         echo "Error: Only 'develop' branch or branches starting with 'hotfix/' are allowed to merge into 'main'."
                         exit 1
                     fi
