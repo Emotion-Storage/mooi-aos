@@ -26,36 +26,37 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun KeyCard(
     keyCount: Int,
-    onCardClick: (Int) -> Unit
+    onCardClick: (Int) -> Unit,
 ) {
     Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(61.dp)
-            .background(
-                color = MooiTheme.colorScheme.blueGrayBackground,
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(61.dp)
+                .background(
+                    color = MooiTheme.colorScheme.blueGrayBackground,
+                ),
         shape = RoundedCornerShape(10.dp),
-        color = Color.Transparent
+        color = Color.Transparent,
     ) {
         Row(
-            modifier = Modifier
-                .background(
-                    brush = MooiTheme.brushScheme.subButtonBackground
-                )
-                .border(
-                    width = 1.dp,
-                    brush = MooiTheme.brushScheme.subButtonBorder,
-                    shape = RoundedCornerShape(10.dp),
-                )
-                .padding(start = 16.dp, end = 16.dp)
+            modifier =
+                Modifier
+                    .background(
+                        brush = MooiTheme.brushScheme.subButtonBackground,
+                    ).border(
+                        width = 1.dp,
+                        brush = MooiTheme.brushScheme.subButtonBorder,
+                        shape = RoundedCornerShape(10.dp),
+                    ).padding(start = 16.dp, end = 16.dp),
         ) {
             Image(
                 painter = painterResource(R.drawable.key_white),
                 contentDescription = "열쇠",
-                modifier = Modifier
-                    .size(13.dp)
-                    .align(Alignment.CenterVertically),
+                modifier =
+                    Modifier
+                        .size(13.dp)
+                        .align(Alignment.CenterVertically),
             )
 
             Spacer(modifier = Modifier.size(6.dp))
@@ -64,7 +65,7 @@ fun KeyCard(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = "보유한 열쇠",
                 style = MooiTheme.typography.caption3,
-                color = Color.White
+                color = Color.White,
             )
 
             Spacer(modifier = Modifier.weight(1f))
@@ -73,7 +74,7 @@ fun KeyCard(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = "${keyCount}개",
                 style = MooiTheme.typography.caption3,
-                color = MooiTheme.colorScheme.primary
+                color = MooiTheme.colorScheme.primary,
             )
 
             Spacer(modifier = Modifier.size(6.dp))
@@ -81,17 +82,17 @@ fun KeyCard(
             Image(
                 painter = painterResource(R.drawable.arrow_front),
                 contentDescription = "열쇠 갯수 확인",
-                modifier = Modifier
-                    .size(13.dp)
-                    .align(Alignment.CenterVertically)
-                    .clickable {
-                        onCardClick(keyCount)
-                    }
+                modifier =
+                    Modifier
+                        .size(13.dp)
+                        .align(Alignment.CenterVertically)
+                        .clickable {
+                            onCardClick(keyCount)
+                        },
             )
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -100,8 +101,7 @@ fun KeyCardPreview() {
         KeyCard(
             keyCount = 10,
             onCardClick = { key ->
-
-            }
+            },
         )
     }
 }

@@ -1,11 +1,11 @@
 package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
-import com.emotionstorage.my.BuildConfig
 
 data class MyPageState(
     val nickname: String = "",
@@ -17,17 +17,24 @@ data class MyPageState(
 
 sealed class MyPageAction {
     object Initiate : MyPageAction()
+
     object Logout : MyPageAction()
+
     object NicknameChange : MyPageAction()
+
     object KeyDescription : MyPageAction()
-    object TermsAndPrivacy: MyPageAction()
+
+    object TermsAndPrivacy : MyPageAction()
+
     object CopyEmail : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
+
     object NavigateToNicknameChange : MyPageSideEffect()
-    object EmailCopied: MyPageSideEffect()
+
+    object EmailCopied : MyPageSideEffect()
 
     object NavigateToTermsAndPrivacy : MyPageSideEffect()
 
@@ -41,9 +48,7 @@ sealed class MyPageSideEffect {
 }
 
 @HiltViewModel
-class MyPageViewModel
-@Inject
-constructor(
+class MyPageViewModel @Inject constructor(
 //    private val logout: LogoutUseCase
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
@@ -66,12 +71,13 @@ constructor(
             is MyPageAction.KeyDescription -> {
                 handleKeyDescription()
             }
+
             is MyPageAction.CopyEmail -> {
                 handleCopyEmail()
             }
 
             is MyPageAction.TermsAndPrivacy -> {
-
+                handleTermsAndPrivacy()
             }
         }
     }

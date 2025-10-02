@@ -1,7 +1,5 @@
 package com.emotionstorage.my.ui.component
 
-import android.widget.Space
-import androidx.appcompat.widget.DialogTitle
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -36,17 +34,17 @@ fun PrivacyPolicyContent() {
     val contents = context.resources.getStringArray(R.array.privacy_contents)
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp),
-        contentPadding = PaddingValues(vertical = 18.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
+        contentPadding = PaddingValues(vertical = 18.dp),
     ) {
-
         item {
             Text(
                 text = stringResource(id = R.string.privacy_main),
                 style = MooiTheme.typography.caption1.copy(lineHeight = 22.sp),
-                color = Color.White
+                color = Color.White,
             )
         }
 
@@ -54,7 +52,7 @@ fun PrivacyPolicyContent() {
             Spacer(modifier = Modifier.size(12.dp))
             PrivacyPolicySection(
                 title = stringResource(id = R.string.first_privacy_title),
-                content = stringResource(id = R.string.first_privacy_content)
+                content = stringResource(id = R.string.first_privacy_content),
             )
         }
 
@@ -63,7 +61,7 @@ fun PrivacyPolicyContent() {
         itemsIndexed(titles) { index, title ->
             PrivacyPolicySection(
                 title = title,
-                content = contents[index]
+                content = contents[index],
             )
 
             if (index < titles.size - 1) Spacer(modifier = Modifier.size(12.dp))
@@ -74,16 +72,18 @@ fun PrivacyPolicyContent() {
 @Composable
 fun PrivacyTable() {
     Column(
-        modifier = Modifier.fillMaxWidth()
-            .border(
-                width = 1.dp,
-                color = MooiTheme.colorScheme.gray700,
-                shape = RoundedCornerShape(5.dp)
-            )
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .border(
+                    width = 1.dp,
+                    color = MooiTheme.colorScheme.gray700,
+                    shape = RoundedCornerShape(5.dp),
+                ),
     ) {
         TableRow(
             items = listOf("개인정보", "필수항목", "선택항목", "보유 및 이용기간"),
-            isHeader = true
+            isHeader = true,
         )
     }
 }
@@ -94,24 +94,33 @@ fun TableRow(
     isHeader: Boolean = false,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(
-                if (isHeader) MooiTheme.colorScheme.gray800
-                else Color.Transparent
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .background(
+                    if (isHeader) {
+                        MooiTheme.colorScheme.gray800
+                    } else {
+                        Color.Transparent
+                    },
+                ),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.Center,
     ) {
         items.forEachIndexed { index, item ->
             Text(
                 text = item,
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(12.dp)
-                    .align(Alignment.CenterVertically),
-                style = if (isHeader) MooiTheme.typography.body6
-                else MooiTheme.typography.caption5,
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .padding(12.dp)
+                        .align(Alignment.CenterVertically),
+                style =
+                    if (isHeader) {
+                        MooiTheme.typography.body6
+                    } else {
+                        MooiTheme.typography.caption5
+                    },
                 color = Color.White,
                 fontSize = 12.sp,
             )
@@ -128,7 +137,7 @@ fun PrivacyPolicySection(
         Text(
             text = title,
             style = MooiTheme.typography.caption1.copy(lineHeight = 22.sp),
-            color = Color.White
+            color = Color.White,
         )
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -136,7 +145,7 @@ fun PrivacyPolicySection(
         Text(
             text = content,
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
-            color = Color.White
+            color = Color.White,
         )
     }
 }
@@ -147,10 +156,9 @@ fun TableRowPreview() {
     MooiTheme {
         TableRow(
             items = listOf("개인정보", "필수항목", "선택항목", "보유 및 이용기간"),
-            isHeader = true
+            isHeader = true,
         )
     }
-
 }
 
 @Preview

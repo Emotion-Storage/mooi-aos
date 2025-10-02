@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
@@ -105,7 +106,7 @@ fun MyPageScreen(
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
-        onToastDismissed = { showEmailCopiedToast = false }
+        onToastDismissed = { showEmailCopiedToast = false },
     )
 }
 
@@ -128,7 +129,7 @@ private fun StatelessMyPageScreen(
         if (showEmailCopiedToast) {
             snackbarHostState.showSnackbar(
                 message = "",
-                duration = SnackbarDuration.Short
+                duration = SnackbarDuration.Short,
             )
             onToastDismissed()
         }
@@ -138,17 +139,15 @@ private fun StatelessMyPageScreen(
         modifier
             .fillMaxSize()
             .background(MooiTheme.colorScheme.background),
-
         snackbarHost = {
             SnackbarHost(snackbarHostState) {
                 TempToast(
                     modifier = Modifier,
                     message = "이메일이 복사되었습니다.",
-                    resId = R.drawable.mail
+                    resId = R.drawable.mail,
                 )
             }
-        }
-
+        },
     ) { innerPadding ->
         Column(
             modifier =
@@ -175,7 +174,7 @@ private fun StatelessMyPageScreen(
             Spacer(modifier = Modifier.size(16.dp))
 
             KeyCard(
-                keyCount = state.keyCount
+                keyCount = state.keyCount,
             ) {
                 navToKeyDescription(it)
             }
@@ -194,12 +193,11 @@ private fun StatelessMyPageScreen(
             Spacer(modifier = Modifier.size(8.dp))
             Text(
                 text = "계정 탈퇴하기",
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(alignment = androidx.compose.ui.Alignment.End)
-                    .clickable {
-                        navToWithdraw
-                    },
+                modifier =
+                    Modifier
+                        .wrapContentSize()
+                        .align(alignment = Alignment.End)
+                        .clickable { navToWithdraw },
                 textAlign = TextAlign.End,
                 color = MooiTheme.colorScheme.gray600,
                 style = MooiTheme.typography.caption7.copy(lineHeight = 24.sp),

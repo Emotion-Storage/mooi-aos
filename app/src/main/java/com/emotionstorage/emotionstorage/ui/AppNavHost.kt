@@ -249,8 +249,7 @@ internal fun AppNavHost(
                     },
                     navToTermsAndPrivacy = {
                         navController.navigate(AppDestination.TermsAndPrivacy)
-                    }
-
+                    },
                 )
             }
 
@@ -309,12 +308,12 @@ internal fun AppNavHost(
                 )
             }
 
-            composable<AppDestination.TermsAndPrivacy> { navBackStackEntry->
+            composable<AppDestination.TermsAndPrivacy> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.TermsAndPrivacy>()
                 TermsAndPrivacyScreen(
                     navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
         }

@@ -25,7 +25,6 @@ import com.emotionstorage.my.ui.component.TermsOfServiceContent
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
-
 @Composable
 fun TermsAndPrivacyScreen(
     modifier: Modifier = Modifier,
@@ -35,21 +34,24 @@ fun TermsAndPrivacyScreen(
     val tabs = listOf("이용약관", "개인정보처리방침")
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(title = "이용 약관 및 개인정보처리방침", showBackButton = true, onBackClick = navToBack)
-        }) { innerPadding ->
+        },
+    ) { innerPadding ->
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .consumeWindowInsets(WindowInsets.navigationBars)
-                .background(
-                    color = MooiTheme.colorScheme.background
-                )
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding)
+                    .consumeWindowInsets(WindowInsets.navigationBars)
+                    .background(
+                        color = MooiTheme.colorScheme.background,
+                    ),
         ) {
             TabRow(
                 selectedTabIndex = selectedTabIndex,
@@ -57,9 +59,9 @@ fun TermsAndPrivacyScreen(
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                        color = MooiTheme.colorScheme.primary
+                        color = MooiTheme.colorScheme.primary,
                     )
-                }
+                },
             ) {
                 tabs.forEachIndexed { index, title ->
                     Tab(
@@ -69,20 +71,26 @@ fun TermsAndPrivacyScreen(
                             Text(
                                 text = title,
                                 style = MooiTheme.typography.body7,
-                                color = if (selectedTabIndex == index) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.gray800
+                                color =
+                                    if (selectedTabIndex ==
+                                        index
+                                    ) {
+                                        MooiTheme.colorScheme.primary
+                                    } else {
+                                        MooiTheme.colorScheme.gray800
+                                    },
                             )
-                        }
+                        },
                     )
                 }
             }
-            when(selectedTabIndex) {
-                0-> TermsOfServiceContent()
-                1-> PrivacyPolicyContent()
+            when (selectedTabIndex) {
+                0 -> TermsOfServiceContent()
+                1 -> PrivacyPolicyContent()
             }
         }
     }
 }
-
 
 @Preview
 @Composable

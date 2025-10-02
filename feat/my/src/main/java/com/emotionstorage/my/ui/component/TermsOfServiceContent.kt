@@ -22,21 +22,21 @@ import com.emotionstorage.my.R
 
 @Composable
 fun TermsOfServiceContent() {
-
     val context = LocalContext.current
     val titles = context.resources.getStringArray(R.array.terms_titles)
     val contents = context.resources.getStringArray(R.array.terms_contents)
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 12.dp),
-        contentPadding = PaddingValues(vertical = 18.dp)
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(horizontal = 12.dp),
+        contentPadding = PaddingValues(vertical = 18.dp),
     ) {
         itemsIndexed(titles) { index, title ->
             TermSection(
                 title = title,
-                content = contents[index]
+                content = contents[index],
             )
 
             if (index < titles.size - 1) Spacer(modifier = Modifier.size(12.dp))
@@ -46,7 +46,7 @@ fun TermsOfServiceContent() {
             Spacer(modifier = Modifier.size(12.dp))
             TermSection(
                 title = stringResource(id = R.string.sub_terms_title),
-                content = stringResource(id = R.string.sub_terms_content)
+                content = stringResource(id = R.string.sub_terms_content),
             )
         }
     }
@@ -61,7 +61,7 @@ fun TermSection(
         Text(
             text = title,
             style = MooiTheme.typography.caption1.copy(lineHeight = 22.sp),
-            color = Color.White
+            color = Color.White,
         )
 
         Spacer(modifier = Modifier.size(8.dp))
@@ -69,11 +69,10 @@ fun TermSection(
         Text(
             text = content,
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
-            color = Color.White
+            color = Color.White,
         )
     }
 }
-
 
 @Preview
 @Composable

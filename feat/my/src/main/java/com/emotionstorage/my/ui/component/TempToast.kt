@@ -33,8 +33,7 @@ fun TempToast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(horizontal = 20.dp, vertical = 13.dp),
+                ).padding(horizontal = 20.dp, vertical = 13.dp),
         verticalAlignment = Alignment.Bottom,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -60,7 +59,7 @@ fun TempToastPreview() {
         TempToast(
             modifier = Modifier,
             message = "이메일이 복사되었습니다.",
-            resId = R.drawable.mail
+            resId = R.drawable.mail,
         )
     }
 }
