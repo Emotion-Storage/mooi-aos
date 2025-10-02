@@ -17,7 +17,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -27,4 +27,5 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
     implementation(projects.core.ui)
+    implementation(projects.feat.aiChat)
 }

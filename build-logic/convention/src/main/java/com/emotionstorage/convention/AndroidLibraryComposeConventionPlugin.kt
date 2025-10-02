@@ -1,6 +1,5 @@
 package com.emotionstorage.convention
 
-import com.android.build.api.dsl.CommonExtension
 import com.android.build.api.dsl.LibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -16,20 +15,20 @@ class AndroidLibraryComposeConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.plugin.compose")
+                apply("org.jetbrains.kotlin.plugin.serialization")
+            }
 
-                extensions.configure<LibraryExtension> {
-                    buildFeatures {
-                        compose = true
-                    }
-
-                    val libs =
-                        project.extensions.getByType<VersionCatalogsExtension>().named("libs")
-                    project.dependencies {
-                        add("implementation", libs.findBundle("compose").get())
-                        add("debugImplementation", libs.findBundle("compose.debug").get())
-                        add("androidTestImplementation", libs.findBundle("compose.test").get())
-                    }
+            extensions.configure<LibraryExtension> {
+                buildFeatures {
+                    compose = true
                 }
+            }
+
+            val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
+            project.dependencies {
+                add("implementation", libs.findBundle("compose").get())
+                add("debugImplementation", libs.findBundle("compose.debug").get())
+                add("androidTestImplementation", libs.findBundle("compose.test").get())
             }
         }
     }

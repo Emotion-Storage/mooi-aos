@@ -1,7 +1,26 @@
 package com.emotionstorage.auth.domain.usecase
 
-interface AutomaticLoginUseCase {
-    // TODO AutomaticLoginUseCase - 자동 로그인 기능 구현
-    // domain 모듈의 GetUserUseCase를 의존하여 access token이 유효한지 확인
-    suspend operator fun invoke(): Boolean
-}
+import com.emotionstorage.auth.domain.repository.AuthRepository
+import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.repo.SessionRepository
+import com.emotionstorage.domain.repo.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+
+class AutomaticLoginUseCase
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val sessionRepository: SessionRepository,
+        private val userRepository: UserRepository,
+    ) {
+        suspend operator fun invoke(): Flow<DataState<Boolean>> =
+            authRepository.checkSession().map { it ->
+                if (it is DataState.Error) {
+                    sessionRepository.deleteSession()
+                    userRepository.deleteUser()
+                }
+                it
+            }
+    }

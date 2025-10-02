@@ -1,5 +1,8 @@
 plugins {
     `kotlin-dsl`
+
+    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "com.emotionstorage.buildlogic"
@@ -49,17 +52,30 @@ gradlePlugin {
             id = "com.emotionstorage.convention.android.library.hilt"
             implementationClass = "com.emotionstorage.convention.AndroidLibraryHiltConventionPlugin"
         }
+        create("androidLibraryRoom") {
+            id = "com.emotionstorage.convention.android.library.room"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryRoomConventionPlugin"
+        }
+
+        create("androidLibraryDatastore") {
+            id = "com.emotionstorage.convention.android.library.datastore"
+            implementationClass = "com.emotionstorage.convention.AndroidLibraryDatastoreConventionPlugin"
+        }
 
         /**
          * java kotlin library plugins
          */
-        create("javaKotlinLibrary"){
+        create("kotlinLibrary"){
             id = "com.emotionstorage.convention.kotlin.library"
-            implementationClass = "com.emotionstorage.convention.JavaKotlinLibraryConventionPlugin"
+            implementationClass = "com.emotionstorage.convention.KotlinLibraryConventionPlugin"
         }
         create("hilt"){
             id = "com.emotionstorage.convention.kotlin.library.hilt"
             implementationClass = "com.emotionstorage.convention.HiltConventionPlugin"
+        }
+        create("retrofit"){
+            id = "com.emotionstorage.convention.kotlin.library.retrofit"
+            implementationClass = "com.emotionstorage.convention.RetrofitConventionPlugin"
         }
     }
 }

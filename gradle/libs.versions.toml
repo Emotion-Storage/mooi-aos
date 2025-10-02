@@ -5,22 +5,36 @@ coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
+krossbow = "7.0.0"
 lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.09.00"
 appcompat = "1.6.1"
-material = "1.10.0"
 composeRuntime = "1.8.3"
 material3Android = "1.4.0-alpha17"
-composeMaterial = "1.9.0-beta02"
-composeMaterialIcons = "1.7.8"
 jetbrainsKotlinJvm = "2.0.21"
 navigationCompose = "2.9.1"
 uiToolingPreviewAndroid = "1.8.3"
 hiltNavigation = "1.2.0"
 daggerHilt = "2.52"
+room = "2.7.2"
+credentials = "1.5.0"
+googleId = "1.1.1"
+coil = "3.3.0"
+okHttp = "4.12.0"
+retrofit = "2.11.0"
+serialization = "1.7.3"
+serializationConverter = "1.0.0"
+logger = "2.2.0"
+orbitMvi = "10.0.0"
+kakao = "2.21.4"
+kotlinxCoroutines = "1.10.2"
+
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
+googleServices = "4.4.3"
+ktlint = "12.1.1"
+dataStore = "1.1.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,22 +50,43 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "composeRuntime" }
-androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "composeMaterial" }
-androidx-compose-material-icons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "composeMaterialIcons" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
+androidx-compose-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "daggerHilt" }
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
+google-android-identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
+coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+krossbow-stomp-kxserialization = { module = "org.hildan.krossbow:krossbow-stomp-kxserialization", version.ref = "krossbow" }
+krossbow-websocket-builtin = { module = "org.hildan.krossbow:krossbow-websocket-builtin", version.ref = "krossbow" }
+krossbow-websocket-okhttp = { module = "org.hildan.krossbow:krossbow-websocket-okhttp", version.ref = "krossbow" }
+krossbow-stomp-core = { module = "org.hildan.krossbow:krossbow-stomp-core", version.ref = "krossbow" }
+okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp" }
+okhttp3-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconnection", version.ref = "okHttp" }
+okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
+squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
+kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "serializationConverter" }
+android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
+orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
+orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
+kakao-sdk-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "dataStore" }
 
 [bundles]
 core = [
@@ -66,16 +101,44 @@ compose = [
     "androidx-ui-graphics",
     "androidx-ui-tooling-preview",
     "androidx-compose-runtime",
-    "androidx-material3-android",
-    "androidx-compose-material",
-    "androidx-compose-material-icons",
-    "androidx-navigation-compose"
+    "androidx-compose-material3-android",
+    "androidx-navigation-compose",
+    #    "coil-compose",
+    #    "coil-network-ktor"
+]
+orbit-mvi = [
+    "orbit-viewmodel",
+    "orbit-compose"
 ]
 hilt-android = [
-    "hilt-navigation-compose", "google-dagger-hilt"
+    "hilt-navigation-compose",
+    "google-dagger-hilt"
 ]
 hilt-core = [
     "google-dagger-hilt-core"
+]
+room = [
+    "androidx-room-ktx",
+    "androidx-room-runtime"
+]
+credentials = [
+    "androidx-credentials",
+    "androidx-credentials-play-services",
+    "google-android-identity-googleid"
+]
+retrofit = [
+    "okhttp3-okhttp",
+    "okhttp3-urlconnection",
+    "okhttp3-logging-interceptor",
+    "squareup-retrofit",
+    "kotlinx-serialization-json",
+    "kotlinx-serialization-converter"
+]
+krossbow = [
+    "krossbow-stomp-kxserialization",
+    "krossbow-websocket-okhttp",
+    "krossbow-stomp-core",
+    "krossbow-websocket-builtin"
 ]
 compose-debug = [
     "androidx-ui-tooling",
@@ -102,6 +165,7 @@ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "ko
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 google-dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
 vanniktech-dependency-graph-generator = { id = "com.vanniktech.dependency.graph.generator", version.ref = "dependencyGraphGenerator" }
-
-
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }

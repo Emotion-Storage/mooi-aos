@@ -15,20 +15,19 @@ class AndroidApplicationComposeConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.plugin.compose")
+            }
 
-                extensions.configure<ApplicationExtension> {
-                    buildFeatures {
-                        compose = true
-                    }
-
-                    val libs =
-                        project.extensions.getByType<VersionCatalogsExtension>().named("libs")
-                    project.dependencies {
-                        add("implementation", libs.findBundle("compose").get())
-                        add("debugImplementation", libs.findBundle("compose.debug").get())
-                        add("androidTestImplementation", libs.findBundle("compose.test").get())
-                    }
+            extensions.configure<ApplicationExtension> {
+                buildFeatures {
+                    compose = true
                 }
+            }
+
+            val libs = project.extensions.getByType<VersionCatalogsExtension>().named("libs")
+            project.dependencies {
+                add("implementation", libs.findBundle("compose").get())
+                add("debugImplementation", libs.findBundle("compose.debug").get())
+                add("androidTestImplementation", libs.findBundle("compose.test").get())
             }
         }
     }
