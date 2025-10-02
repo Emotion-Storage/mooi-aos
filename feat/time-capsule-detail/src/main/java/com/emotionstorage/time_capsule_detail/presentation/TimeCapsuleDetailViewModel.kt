@@ -205,15 +205,15 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         }
 
     @OptIn(OrbitExperimental::class)
-    private suspend fun openArrivedTimeCapsule(timeCapsule: TimeCapsule) = subIntent {
-        // todo: open time capsule if arrived
-        reduce {
-            state.copy(
-                timeCapsule = timeCapsule.copy(status = TimeCapsule.STATUS.OPENED),
-            )
+    private suspend fun openArrivedTimeCapsule(timeCapsule: TimeCapsule) =
+        subIntent {
+            // todo: open time capsule if arrived
+            reduce {
+                state.copy(
+                    timeCapsule = timeCapsule.copy(status = TimeCapsule.STATUS.OPENED),
+                )
+            }
         }
-    }
-
 
     @OptIn(OrbitExperimental::class)
     private suspend fun triggerUnlockModal() =
@@ -306,7 +306,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleSaveNote() =
         intent {
-            if(!state.isNoteChanged) return@intent
+            if (!state.isNoteChanged) return@intent
 
             // todo: call save note use case
             reduce {
