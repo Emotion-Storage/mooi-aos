@@ -311,6 +311,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             // todo: call save note use case
             reduce {
                 state.copy(
+                    // stub logic for note save
                     timeCapsule = state.timeCapsule?.copy(note = state.note),
                     isNoteChanged = false,
                 )
