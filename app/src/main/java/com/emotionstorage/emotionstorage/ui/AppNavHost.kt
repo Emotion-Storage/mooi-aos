@@ -87,7 +87,9 @@ internal sealed class AppDestination {
     @Serializable
     data class TimeCapsuleDetail(
         val id: String,
+        val isNewTimeCapsule: Boolean,
     ) : AppDestination()
+
 }
 
 @Composable
@@ -218,7 +220,7 @@ internal fun AppNavHost(
                         navController.navigate(AppDestination.FavoriteTimeCapsules)
                     },
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToDailyReportDetail = { id ->
                         // todo: add daily report detail screen
@@ -241,6 +243,9 @@ internal fun AppNavHost(
                 val arguments = navBackStackEntry.toRoute<AppDestination.AIChat>()
                 AIChatScreen(
                     roomId = arguments.roomId,
+                    navToTimeCapsuleDetail = { id ->
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = true))
+                    },
                     navToBack = {
                         navController.popBackStack()
                     },
@@ -263,7 +268,7 @@ internal fun AppNavHost(
             composable<AppDestination.ArrivedTimeCapsules> {
                 ArrivedTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToBack = {
                         navController.popBackStack()
@@ -274,7 +279,7 @@ internal fun AppNavHost(
             composable<AppDestination.FavoriteTimeCapsules> {
                 FavoriteTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToBack = {
                         navController.popBackStack()
@@ -286,6 +291,7 @@ internal fun AppNavHost(
                 val arguments = navBackStackEntry.toRoute<AppDestination.TimeCapsuleDetail>()
                 TimeCapsuleDetailScreen(
                     id = arguments.id,
+                    isNewTimeCapsule = arguments.isNewTimeCapsule,
                     navToBack = {
                         navController.popBackStack()
                     },
