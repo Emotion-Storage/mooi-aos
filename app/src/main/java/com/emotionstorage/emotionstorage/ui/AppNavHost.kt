@@ -23,6 +23,7 @@ import com.emotionstorage.common.LocalDateTimeSerializer
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyPageScreen
+import com.emotionstorage.my.ui.TermsAndPrivacyScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -100,6 +101,9 @@ internal sealed class AppDestination {
         @Serializable(with = LocalDateTimeSerializer::class)
         val createdAt: LocalDateTime,
     ) : AppDestination()
+
+    @Serializable
+    object TermsAndPrivacy : AppDestination()
 }
 
 @Composable
@@ -246,6 +250,18 @@ internal fun AppNavHost(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
                     },
+                    navToWithdraw = {
+                        // TODO: add withdraw screen
+                    },
+                    navToNickNameChange = {
+                        // TODO : add nickname change screen
+                    },
+                    navToKeyDescription = { keyCount ->
+                        // TODO : add keyDescription screen
+                    },
+                    navToTermsAndPrivacy = {
+                        navController.navigate(AppDestination.TermsAndPrivacy)
+                    },
                 )
             }
 
@@ -334,6 +350,15 @@ internal fun AppNavHost(
                         navController.popBackStack()
                         navController.popBackStack()
                     },
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.TermsAndPrivacy> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.TermsAndPrivacy>()
+                TermsAndPrivacyScreen(
                     navToBack = {
                         navController.popBackStack()
                     },
