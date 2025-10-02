@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,10 +22,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
@@ -37,16 +46,18 @@ import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleEmotionComments
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleNote
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
+import com.emotionstorage.time_capsule_detail.ui.modal.SaveChangesModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExitModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
+import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
 
 @Composable
@@ -74,6 +85,7 @@ fun TimeCapsuleDetailScreen(
         }
     val (isExpiredModalOpen, setExpiredModalOpen) = remember { mutableStateOf(false) }
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
+    val (isSaveChangesModalOpen, setSaveChangesModalOpen) = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
@@ -102,6 +114,10 @@ fun TimeCapsuleDetailScreen(
                     setDeleteModalOpen(true)
                 }
 
+                is ShowSaveChangesModal -> {
+                    setSaveChangesModalOpen(true)
+                }
+
                 is ShowToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
@@ -125,6 +141,8 @@ fun TimeCapsuleDetailScreen(
         dismissDeleteModal = { setDeleteModalOpen(false) },
         isExpiredModalOpen = isExpiredModalOpen,
         dismissExpiredModal = { setExpiredModalOpen(false) },
+        isSaveChangesModalOpen = isSaveChangesModalOpen,
+        dismissSaveChangesModal = { setSaveChangesModalOpen(false) },
         state = state.value,
         onAction = viewModel::onAction,
         navToHome = navToHome,
@@ -148,6 +166,8 @@ private fun StatelessTimeCapsuleDetailScreen(
     dismissDeleteModal: () -> Unit = {},
     isExpiredModalOpen: Boolean = false,
     dismissExpiredModal: () -> Unit = {},
+    isSaveChangesModalOpen: Boolean = false,
+    dismissSaveChangesModal: () -> Unit = {},
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
     navToHome: () -> Unit = {},
@@ -171,7 +191,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         arriveAt = unlockModalState.arriveAt,
         isModalOpen = isUnlockModalOpen,
         onUnlock = {
-            // todo: unlock time capsule
+            onAction(OnUnlockTimeCapsule(id))
             dismissUnlockModal()
         },
     )
@@ -179,13 +199,26 @@ private fun StatelessTimeCapsuleDetailScreen(
         isModalOpen = isDeleteModalOpen,
         onDismissRequest = dismissDeleteModal,
         onDelete = {
-            onAction(TimeCapsuleDetailAction.OnDeleteTimeCapsule(id))
+            onAction(OnDeleteTimeCapsule(id))
         },
     )
     TimeCapsuleExpiredModal(
         isModalOpen = isExpiredModalOpen,
         onConfirm = {
             dismissExpiredModal()
+            navToBack()
+        },
+    )
+    SaveChangesModal(
+        isModalOpen = isSaveChangesModalOpen,
+        onDismissRequest = dismissSaveChangesModal,
+        onSave = {
+            onAction(OnSaveNote)
+            dismissSaveChangesModal()
+            navToBack()
+        },
+        onDismiss = {
+            dismissSaveChangesModal()
             navToBack()
         },
     )
@@ -208,11 +241,14 @@ private fun StatelessTimeCapsuleDetailScreen(
                     },
             topBar = {
                 val onTimeCapsuleExit = {
-                    // todo: show save changes modal
-                    navToBack()
+                    if (state.isNoteChanged) {
+                        onAction(OnSaveChangeTrigger)
+                    } else {
+                        navToBack()
+                    }
                 }
                 val onNewTimeCapsuleExit = {
-                    onAction(TimeCapsuleDetailAction.OnExitTrigger)
+                    onAction(OnExitTrigger)
                 }
 
                 TopAppBar(
@@ -234,7 +270,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                             RoundedToggleButton(
                                 isSelected = state.timeCapsule.isFavorite,
                                 onSelect = {
-                                    onAction(TimeCapsuleDetailAction.OnToggleFavorite(id))
+                                    onAction(OnToggleFavorite(id))
                                 },
                             )
                         }
@@ -242,12 +278,18 @@ private fun StatelessTimeCapsuleDetailScreen(
                 )
             },
             snackbarHost = {
-                SnackbarHost(hostState = snackState) { snackbarData ->
-                    if (snackbarData.visuals.message == TimeCapsuleDetailToast.FAVORITE_FULL.message) {
-                        Toast(message = snackbarData.visuals.message)
-                    } else {
-                        SuccessToast(message = snackbarData.visuals.message)
-                    }
+                AppSnackbarHost(hostState = snackState) { snackbarData ->
+                    Toast(
+                        message = snackbarData.visuals.message,
+                        iconId =
+                            if (snackbarData.visuals.message ==
+                                TimeCapsuleDetailToast.FAVORITE_FULL.message
+                            ) {
+                                R.drawable.success_filled
+                            } else {
+                                null
+                            },
+                    )
                 }
             },
         ) { innerPadding ->
@@ -276,9 +318,9 @@ private fun StatelessTimeCapsuleDetailScreen(
                 if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
                     TimeCapsuleNote(
                         modifier = Modifier.padding(top = 53.dp),
-                        note = state.timeCapsule.note,
+                        note = state.timeCapsule.note ?: "",
                         onNoteChange = {
-                            // todo: save note content
+                            onAction(OnNoteChanged(it))
                         },
                     )
                 }
@@ -291,13 +333,13 @@ private fun StatelessTimeCapsuleDetailScreen(
                         navToSaveTimeCapsule(id)
                     },
                     onTimeCapsuleExpired = {
-                        onAction(TimeCapsuleDetailAction.OnExpireTrigger)
+                        onAction(OnExpireTrigger)
                     },
                     onSaveMindNote = {
-                        // todo: save mind note content
+                        onAction(OnSaveNote)
                     },
                     onDeleteTimeCapsule = {
-                        onAction(TimeCapsuleDetailAction.OnDeleteTrigger)
+                        onAction(OnDeleteTrigger)
                     },
                 )
             }
@@ -337,7 +379,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.OPENED,
+                            status = TimeCapsule.STATUS.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
