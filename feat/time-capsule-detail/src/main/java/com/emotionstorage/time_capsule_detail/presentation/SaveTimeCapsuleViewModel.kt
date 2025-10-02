@@ -32,7 +32,7 @@ sealed class SaveTimeCapsuleAction() {
     data class Init(
         val isNewTimeCapsule: Boolean,
         val createdAt: LocalDateTime,
-    )
+    ) : SaveTimeCapsuleAction()
 
     // select open date from grid item
     data class SelectArriveAfter(
