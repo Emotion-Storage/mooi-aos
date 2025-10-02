@@ -17,6 +17,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,11 +42,15 @@ import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
+import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast.FavoriteToast
 import com.emotionstorage.ui.component.CalendarYearMonthBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.SuccessToast
+import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
@@ -68,14 +74,22 @@ fun CalendarScreen(
         onPauseOrDispose { }
     }
 
+    val snackState = remember { SnackbarHostState() }
     val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
-
     val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
                     setShowTimeCapsuleBottomSheet(true)
+                }
+
+                is CalendarSideEffect.ShowToast -> {
+                    // dismiss current snackbar if exists
+                    snackState.currentSnackbarData?.dismiss()
+                    // show new snackbar
+                    snackState.showSnackbar(sideEffect.toast.message)
                 }
 
                 is CalendarSideEffect.EnterCharRoomSuccess -> {
@@ -87,6 +101,7 @@ fun CalendarScreen(
 
     StatelessCalendarScreen(
         modifier = modifier,
+        snackState = snackState,
         showYearMonthBottomSheet = showYearMonthBottomSheet,
         setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
         showTimeCapsuleBottomSheet = showTimeCapsuleBottomSheet,
@@ -105,6 +120,7 @@ fun CalendarScreen(
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = SnackbarHostState(),
     showYearMonthBottomSheet: Boolean = false,
     setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
     showTimeCapsuleBottomSheet: Boolean = false,
@@ -129,6 +145,15 @@ private fun StatelessCalendarScreen(
                 keyCount = state.keyCount,
                 navToKey = navToKey,
             )
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackState) { snackbarData ->
+                if (snackbarData.visuals.message == FavoriteToast.FAVORITE_FULL.message) {
+                    Toast(message = snackbarData.visuals.message)
+                } else {
+                    SuccessToast(message = snackbarData.visuals.message)
+                }
+            }
         },
     ) { innerPadding ->
         Box(
@@ -341,7 +366,8 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
