@@ -43,8 +43,8 @@ import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.DropDownPicker
-import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
 import java.time.LocalDateTime
 
@@ -133,12 +133,11 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
         },
         snackbarHost = {
-            SnackbarHost(hostState = snackState) { snackbarData ->
-                if (snackbarData.visuals.message == FavoriteToast.FAVORITE_FULL.message) {
-                    Toast(message = snackbarData.visuals.message)
-                } else {
-                    SuccessToast(message = snackbarData.visuals.message)
-                }
+            AppSnackbarHost(hostState = snackState) { snackbarData ->
+                Toast(
+                    message = snackbarData.visuals.message,
+                    iconId = if (snackbarData.visuals.message == FavoriteToast.FAVORITE_FULL.message) R.drawable.success_filled else null
+                )
             }
         },
     ) { innerPadding ->

@@ -52,12 +52,13 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExitModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
+import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.emotionstorage.ui.component.SuccessToast
 import com.emotionstorage.ui.component.Toast
 
 @Composable
@@ -278,12 +279,11 @@ private fun StatelessTimeCapsuleDetailScreen(
                 )
             },
             snackbarHost = {
-                SnackbarHost(hostState = snackState) { snackbarData ->
-                    if (snackbarData.visuals.message == TimeCapsuleDetailToast.FAVORITE_FULL.message) {
-                        Toast(message = snackbarData.visuals.message)
-                    } else {
-                        SuccessToast(message = snackbarData.visuals.message)
-                    }
+                AppSnackbarHost(hostState = snackState) { snackbarData ->
+                    Toast(
+                        message = snackbarData.visuals.message,
+                        iconId = if (snackbarData.visuals.message == TimeCapsuleDetailToast.FAVORITE_FULL.message) R.drawable.success_filled else null
+                    )
                 }
             },
         ) { innerPadding ->

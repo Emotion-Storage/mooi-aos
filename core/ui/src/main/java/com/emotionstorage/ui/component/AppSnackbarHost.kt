@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -47,7 +46,7 @@ fun AppSnackbarHost(
     paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
     snackbarIconId: Int? = null,
     hostContent: @Composable (snackbarData: SnackbarData) -> Unit = {
-        SnackbarContent(
+        Toast(
             message = it.visuals.message,
             iconId = snackbarIconId,
         )
@@ -119,7 +118,7 @@ fun AppSnackbarHost(
 
 
 @Composable
-private fun SnackbarContent(
+fun Toast(
     message: String,
     modifier: Modifier = Modifier,
     iconId: Int? = null,
@@ -155,7 +154,7 @@ private fun SnackbarContent(
 
 @Preview
 @Composable
-private fun SnackbarContentPreview() {
+private fun ToastPreview() {
     MooiTheme {
         Column(
             modifier =
@@ -164,8 +163,8 @@ private fun SnackbarContentPreview() {
                     .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
         ) {
-            SnackbarContent("즐겨찾기가 설정되었습니다.", iconId = R.drawable.success_filled)
-            SnackbarContent("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요.")
+            Toast("즐겨찾기가 설정되었습니다.", iconId = R.drawable.success_filled)
+            Toast("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요.")
         }
     }
 }
