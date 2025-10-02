@@ -306,6 +306,8 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleSaveNote() =
         intent {
+            if(!state.isNoteChanged) return@intent
+
             // todo: call save note use case
             reduce {
                 state.copy(

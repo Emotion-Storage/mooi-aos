@@ -215,6 +215,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         onSave = {
             onAction(OnSaveNote)
             dismissSaveChangesModal()
+            navToBack()
         },
         onDismiss = {
             dismissSaveChangesModal()
