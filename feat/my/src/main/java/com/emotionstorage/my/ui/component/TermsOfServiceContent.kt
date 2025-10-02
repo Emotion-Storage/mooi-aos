@@ -45,8 +45,8 @@ fun TermsOfServiceContent() {
         item {
             Spacer(modifier = Modifier.size(12.dp))
             TermSection(
-                title = stringResource(id = R.string.sub_title),
-                content = stringResource(id = R.string.sub_content)
+                title = stringResource(id = R.string.sub_terms_title),
+                content = stringResource(id = R.string.sub_terms_content)
             )
         }
     }
