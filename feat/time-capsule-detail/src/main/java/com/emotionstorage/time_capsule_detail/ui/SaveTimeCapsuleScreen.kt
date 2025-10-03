@@ -1,18 +1,27 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -23,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -63,6 +73,8 @@ private fun StatelessSaveTimeCapsuleScreen(
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
+
     Scaffold(
         modifier =
             modifier
@@ -76,7 +88,7 @@ private fun StatelessSaveTimeCapsuleScreen(
             )
         },
     ) { innerPadding ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
@@ -84,27 +96,20 @@ private fun StatelessSaveTimeCapsuleScreen(
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 39.67.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
         ) {
+            if (showToolTip) {
+                // todo: tool tip
+                // todo: handle background click
+            }
+
             // title & selection grid
             Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
+                modifier = Modifier.align(Alignment.TopStart),
+                verticalArrangement = Arrangement.spacedBy(17.dp),
             ) {
-                Text(
-                    text =
-                        buildAnnotatedString {
-                            append("이 감정을\n")
-                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                                append("언제 다시")
-                            }
-                            append("꺼내볼까요?")
-                        },
-                    style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
-                    color = Color.White,
+                SaveTimeCapsuleTitle(
+                    onToolTipClick = { setShowToolTip(true) }
                 )
-                // todo: add tool tip
             }
 
             // speech bubble & button
@@ -122,6 +127,42 @@ private fun StatelessSaveTimeCapsuleScreen(
                     isDefaultWidth = false,
                 )
             }
+        }
+    }
+}
+
+@Composable
+private fun SaveTimeCapsuleTitle(
+    modifier: Modifier = Modifier,
+    onToolTipClick: () -> Unit = {},
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = "이 감정을",
+            style = MooiTheme.typography.head1,
+            color = Color.White,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+            Text(
+                text =
+                    buildAnnotatedString {
+                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            append("언제 다시")
+                        }
+                        append("꺼내볼까요?")
+                    },
+                style = MooiTheme.typography.head1,
+                color = Color.White,
+            )
+            Image(
+                modifier = Modifier
+                    .size(26.dp)
+                    .clickable(
+                        onClick = onToolTipClick
+                    ),
+                painter = painterResource(R.drawable.info),
+                contentDescription = "tool tip"
+            )
         }
     }
 }
