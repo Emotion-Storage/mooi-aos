@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.emotionstorage.emotionstorage"
-        versionCode = 1
+        versionCode = 2
         versionName = "0.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
