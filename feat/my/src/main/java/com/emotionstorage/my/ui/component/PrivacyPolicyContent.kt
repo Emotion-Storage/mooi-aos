@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -71,6 +72,14 @@ fun PrivacyPolicyContent() {
 
 @Composable
 fun PrivacyTable() {
+
+    val context = LocalContext.current
+
+    val headers = context.resources.getStringArray(R.array.privacy_table_headers)
+    val row1 = context.resources.getStringArray(R.array.privacy_table_1th_row)
+    val row2 = context.resources.getStringArray(R.array.privacy_table_2th_row)
+    val row3 = context.resources.getStringArray(R.array.privacy_table_3th_row)
+
     Column(
         modifier =
             Modifier
@@ -80,11 +89,17 @@ fun PrivacyTable() {
                     color = MooiTheme.colorScheme.gray700,
                     shape = RoundedCornerShape(5.dp),
                 ),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TableRow(
-            items = listOf("개인정보", "필수항목", "선택항목", "보유 및 이용기간"),
+            items = headers.toList(),
             isHeader = true,
         )
+
+        TableRow(items = row1.toList())
+        TableRow(items = row2.toList())
+        TableRow(items = row3.toList())
     }
 }
 
@@ -103,8 +118,12 @@ fun TableRow(
                     } else {
                         Color.Transparent
                     },
+                )
+                .border(
+                    width = 1.dp,
+                    color = MooiTheme.colorScheme.gray700
                 ),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = if (isHeader) Alignment.CenterVertically else Alignment.Top,
         horizontalArrangement = Arrangement.Center,
     ) {
         items.forEachIndexed { index, item ->
@@ -123,6 +142,7 @@ fun TableRow(
                     },
                 color = Color.White,
                 fontSize = 12.sp,
+                textAlign = if (isHeader) TextAlign.Center else TextAlign.Start,
             )
         }
     }
@@ -146,17 +166,6 @@ fun PrivacyPolicySection(
             text = content,
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
             color = Color.White,
-        )
-    }
-}
-
-@Preview
-@Composable
-fun TableRowPreview() {
-    MooiTheme {
-        TableRow(
-            items = listOf("개인정보", "필수항목", "선택항목", "보유 및 이용기간"),
-            isHeader = true,
         )
     }
 }
