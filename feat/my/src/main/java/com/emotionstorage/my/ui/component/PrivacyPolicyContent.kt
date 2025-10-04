@@ -43,6 +43,12 @@ fun PrivacyPolicyContent() {
     val context = LocalContext.current
     val titles = context.resources.getStringArray(R.array.privacy_titles)
     val contents = context.resources.getStringArray(R.array.privacy_contents)
+    val tableHeaders = context.resources.getStringArray(R.array.privacy_table_headers).toList()
+    val tableRow1 = context.resources.getStringArray(R.array.privacy_table_1th_row).toList()
+    val tableRow2 = context.resources.getStringArray(R.array.privacy_table_2th_row).toList()
+    val tableRow3 = context.resources.getStringArray(R.array.privacy_table_3th_row).toList()
+    val rows = listOf(tableRow1, tableRow2, tableRow3)
+
 
     LazyColumn(
         modifier =
@@ -69,7 +75,10 @@ fun PrivacyPolicyContent() {
 
         item {
             Spacer(modifier = Modifier.size(18.dp))
-            PrivacyTable()
+            PrivacyTable(
+                header = tableHeaders,
+                rows = rows
+            )
             Spacer(modifier = Modifier.size(18.dp))
         }
 
@@ -87,13 +96,10 @@ fun PrivacyPolicyContent() {
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
-fun PrivacyTable() {
-    val context = LocalContext.current
-    val headers = context.resources.getStringArray(R.array.privacy_table_headers)
-    val row1 = context.resources.getStringArray(R.array.privacy_table_1th_row)
-    val row2 = context.resources.getStringArray(R.array.privacy_table_2th_row)
-    val row3 = context.resources.getStringArray(R.array.privacy_table_3th_row)
-
+fun PrivacyTable(
+    header: List<String>,
+    rows: List<List<String>>,
+) {
     val baseTableW = 328f
     val baseColDp = listOf(76.5f, 108f, 67f, 76.6f)
     val baseRowDp = listOf(56f, 84f, 68f, 68f)
@@ -117,18 +123,18 @@ fun PrivacyTable() {
                 .background(MooiTheme.colorScheme.background)
         ) {
             TableRow(
-                items = headers.toList(),
+                items = header,
                 weights = weights,
                 height = rowHeights[0],
                 isHeader = true
             )
 
             HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
-            TableRow(items = row1.toList(), weights = weights, height = rowHeights[1])
+            TableRow(items = rows[0], weights = weights, height = rowHeights[1])
             HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
-            TableRow(items = row2.toList(), weights = weights, height = rowHeights[2])
+            TableRow(items = rows[1], weights = weights, height = rowHeights[2])
             HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
-            TableRow(items = row3.toList(), weights = weights, height = rowHeights[3])
+            TableRow(items = rows[2], weights = weights, height = rowHeights[3])
         }
     }
 }
@@ -200,14 +206,6 @@ fun PrivacyPolicySection(
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
             color = Color.White,
         )
-    }
-}
-
-@Preview
-@Composable
-fun PrivacyTablePreview() {
-    MooiTheme {
-        PrivacyTable()
     }
 }
 
