@@ -49,7 +49,6 @@ fun PrivacyPolicyContent() {
     val tableRow3 = context.resources.getStringArray(R.array.privacy_table_3th_row).toList()
     val rows = listOf(tableRow1, tableRow2, tableRow3)
 
-
     LazyColumn(
         modifier =
             Modifier
@@ -77,7 +76,7 @@ fun PrivacyPolicyContent() {
             Spacer(modifier = Modifier.size(18.dp))
             PrivacyTable(
                 header = tableHeaders,
-                rows = rows
+                rows = rows,
             )
             Spacer(modifier = Modifier.size(18.dp))
         }
@@ -92,7 +91,6 @@ fun PrivacyPolicyContent() {
         }
     }
 }
-
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
@@ -117,16 +115,17 @@ fun PrivacyTable(
         val rowHeights = baseRowDp.map { it.dp * scale }
 
         Column(
-            modifier = Modifier
-                .width(tableW)
-                .border(border, MooiTheme.colorScheme.gray700, RoundedCornerShape(5.dp))
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .width(tableW)
+                    .border(border, MooiTheme.colorScheme.gray700, RoundedCornerShape(5.dp))
+                    .background(MooiTheme.colorScheme.background),
         ) {
             TableRow(
                 items = header,
                 weights = weights,
                 height = rowHeights[0],
-                isHeader = true
+                isHeader = true,
             )
 
             HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
@@ -147,12 +146,13 @@ private fun TableRow(
     isHeader: Boolean = false,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-            .requiredHeight(height)
-            .background(if (isHeader) MooiTheme.colorScheme.gray800 else Color.Transparent),
-        verticalAlignment = if (isHeader) Alignment.CenterVertically else Alignment.Top
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min)
+                .requiredHeight(height)
+                .background(if (isHeader) MooiTheme.colorScheme.gray800 else Color.Transparent),
+        verticalAlignment = if (isHeader) Alignment.CenterVertically else Alignment.Top,
     ) {
         items.forEachIndexed { index, text ->
             Box(
@@ -161,17 +161,22 @@ private fun TableRow(
                     .fillMaxHeight()
                     .padding(12.dp)
                     .align(Alignment.CenterVertically),
-                contentAlignment = if (isHeader) Alignment.Center else Alignment.TopStart
+                contentAlignment = if (isHeader) Alignment.Center else Alignment.TopStart,
             ) {
                 Text(
                     text = text,
                     color = Color.White,
-                    style = if (isHeader) MooiTheme.typography.body6.copy(
-                        fontSize = 12.sp,
-                        lineHeight = 18.sp
-                    ) else MooiTheme.typography.caption5.copy(
-                        fontSize = 12.sp
-                    ),
+                    style =
+                        if (isHeader) {
+                            MooiTheme.typography.body6.copy(
+                                fontSize = 12.sp,
+                                lineHeight = 18.sp,
+                            )
+                        } else {
+                            MooiTheme.typography.caption5.copy(
+                                fontSize = 12.sp,
+                            )
+                        },
                     textAlign = if (isHeader) TextAlign.Center else TextAlign.Start,
                     lineHeight = 18.sp,
                 )
@@ -180,7 +185,7 @@ private fun TableRow(
                 VerticalDivider(
                     color = MooiTheme.colorScheme.gray700,
                     thickness = 1.dp,
-                    modifier = Modifier.fillMaxHeight()
+                    modifier = Modifier.fillMaxHeight(),
                 )
             }
         }
