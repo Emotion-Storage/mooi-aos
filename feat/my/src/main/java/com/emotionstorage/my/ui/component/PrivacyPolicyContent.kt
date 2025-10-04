@@ -50,14 +50,18 @@ fun PrivacyPolicyContent() {
         }
 
         item {
-            Spacer(modifier = Modifier.size(12.dp))
+            Spacer(modifier = Modifier.size(32.dp))
             PrivacyPolicySection(
                 title = stringResource(id = R.string.first_privacy_title),
                 content = stringResource(id = R.string.first_privacy_content),
             )
         }
 
-        item { PrivacyTable() }
+        item {
+            Spacer(modifier = Modifier.size(18.dp))
+            PrivacyTable()
+            Spacer(modifier = Modifier.size(18.dp))
+        }
 
         itemsIndexed(titles) { index, title ->
             PrivacyPolicySection(
@@ -65,7 +69,7 @@ fun PrivacyPolicyContent() {
                 content = contents[index],
             )
 
-            if (index < titles.size - 1) Spacer(modifier = Modifier.size(12.dp))
+            if (index < titles.size - 1) Spacer(modifier = Modifier.size(32.dp))
         }
     }
 }
@@ -84,6 +88,7 @@ fun PrivacyTable() {
         modifier =
             Modifier
                 .fillMaxWidth()
+                .background(color = MooiTheme.colorScheme.background)
                 .border(
                     width = 1.dp,
                     color = MooiTheme.colorScheme.gray700,

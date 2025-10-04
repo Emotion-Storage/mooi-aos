@@ -39,7 +39,7 @@ fun TermsOfServiceContent() {
                 content = contents[index],
             )
 
-            if (index < titles.size - 1) Spacer(modifier = Modifier.size(12.dp))
+            if (index < titles.size - 1) Spacer(modifier = Modifier.size(32.dp))
         }
 
         item {
