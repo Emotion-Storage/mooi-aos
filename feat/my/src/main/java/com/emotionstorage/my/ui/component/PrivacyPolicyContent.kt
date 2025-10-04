@@ -1,20 +1,29 @@
 package com.emotionstorage.my.ui.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +32,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.my.R
@@ -74,81 +84,99 @@ fun PrivacyPolicyContent() {
     }
 }
 
+
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun PrivacyTable() {
-
     val context = LocalContext.current
-
     val headers = context.resources.getStringArray(R.array.privacy_table_headers)
     val row1 = context.resources.getStringArray(R.array.privacy_table_1th_row)
     val row2 = context.resources.getStringArray(R.array.privacy_table_2th_row)
     val row3 = context.resources.getStringArray(R.array.privacy_table_3th_row)
 
-    Column(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(color = MooiTheme.colorScheme.background)
-                .border(
-                    width = 1.dp,
-                    color = MooiTheme.colorScheme.gray700,
-                    shape = RoundedCornerShape(5.dp),
-                ),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        TableRow(
-            items = headers.toList(),
-            isHeader = true,
-        )
+    val baseTableW = 328f
+    val baseColDp = listOf(76.5f, 108f, 67f, 76.6f)
+    val baseRowDp = listOf(56f, 84f, 68f, 68f)
 
-        TableRow(items = row1.toList())
-        TableRow(items = row2.toList())
-        TableRow(items = row3.toList())
+    val weights = baseColDp.map { it / baseTableW }
+
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val tableW = maxWidth
+        // 화면 별 비율 측정
+        val scale = tableW / baseTableW.dp
+
+        val border = 1.dp
+        val divider = 1.dp
+
+        val rowHeights = baseRowDp.map { it.dp * scale }
+
+        Column(
+            modifier = Modifier
+                .width(tableW)
+                .border(border, MooiTheme.colorScheme.gray700, RoundedCornerShape(5.dp))
+                .background(MooiTheme.colorScheme.background)
+        ) {
+            TableRow(
+                items = headers.toList(),
+                weights = weights,
+                height = rowHeights[0],
+                isHeader = true
+            )
+
+            HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
+            TableRow(items = row1.toList(), weights = weights, height = rowHeights[1])
+            HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
+            TableRow(items = row2.toList(), weights = weights, height = rowHeights[2])
+            HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
+            TableRow(items = row3.toList(), weights = weights, height = rowHeights[3])
+        }
     }
 }
 
 @Composable
-fun TableRow(
+private fun TableRow(
     items: List<String>,
+    weights: List<Float>,
+    height: Dp,
     isHeader: Boolean = false,
 ) {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .background(
-                    if (isHeader) {
-                        MooiTheme.colorScheme.gray800
-                    } else {
-                        Color.Transparent
-                    },
-                )
-                .border(
-                    width = 1.dp,
-                    color = MooiTheme.colorScheme.gray700
-                ),
-        verticalAlignment = if (isHeader) Alignment.CenterVertically else Alignment.Top,
-        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(IntrinsicSize.Min)
+            .requiredHeight(height)
+            .background(if (isHeader) MooiTheme.colorScheme.gray800 else Color.Transparent),
+        verticalAlignment = if (isHeader) Alignment.CenterVertically else Alignment.Top
     ) {
-        items.forEachIndexed { index, item ->
-            Text(
-                text = item,
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(12.dp)
-                        .align(Alignment.CenterVertically),
-                style =
-                    if (isHeader) {
-                        MooiTheme.typography.body6
-                    } else {
-                        MooiTheme.typography.caption5
-                    },
-                color = Color.White,
-                fontSize = 12.sp,
-                textAlign = if (isHeader) TextAlign.Center else TextAlign.Start,
-            )
+        items.forEachIndexed { index, text ->
+            Box(
+                Modifier
+                    .weight(weights[index])
+                    .fillMaxHeight()
+                    .padding(12.dp)
+                    .align(Alignment.CenterVertically),
+                contentAlignment = if (isHeader) Alignment.Center else Alignment.TopStart
+            ) {
+                Text(
+                    text = text,
+                    color = Color.White,
+                    style = if (isHeader) MooiTheme.typography.body6.copy(
+                        fontSize = 12.sp,
+                        lineHeight = 18.sp
+                    ) else MooiTheme.typography.caption5.copy(
+                        fontSize = 12.sp
+                    ),
+                    textAlign = if (isHeader) TextAlign.Center else TextAlign.Start,
+                    lineHeight = 18.sp,
+                )
+            }
+            if (index < items.lastIndex) {
+                VerticalDivider(
+                    color = MooiTheme.colorScheme.gray700,
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxHeight()
+                )
+            }
         }
     }
 }
