@@ -52,7 +52,7 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
-    navToWithdraw: () -> Unit = {},
+    navToWithdrawNotice: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: (Int) -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
@@ -94,6 +94,12 @@ fun MyPageScreen(
                 is MyPageSideEffect.NavigateToTermsAndPrivacy -> {
                     navToTermsAndPrivacy()
                 }
+
+                is MyPageSideEffect.NavigateToWithDrawNotice -> {
+                    navToWithdrawNotice()
+                }
+
+                else -> Unit
             }
         }
     }
@@ -103,7 +109,7 @@ fun MyPageScreen(
         state = state.value,
         showEmailCopiedToast = showEmailCopiedToast,
         onAction = viewModel::onAction,
-        navToWithdraw = navToWithdraw,
+        navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
         navToTermsAndPrivacy = navToTermsAndPrivacy,

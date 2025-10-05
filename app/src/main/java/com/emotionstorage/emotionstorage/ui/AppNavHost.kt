@@ -92,6 +92,9 @@ internal sealed class AppDestination {
 
     @Serializable
     object TermsAndPrivacy : AppDestination()
+
+    @Serializable
+    object WithDrawNotice : AppDestination()
 }
 
 @Composable
@@ -238,8 +241,8 @@ internal fun AppNavHost(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
                     },
-                    navToWithdraw = {
-                        // TODO: add withdraw screen
+                    navToWithdrawNotice = {
+                        navController.navigate(AppDestination.WithDrawNotice)
                     },
                     navToNickNameChange = {
                         // TODO : add nickname change screen

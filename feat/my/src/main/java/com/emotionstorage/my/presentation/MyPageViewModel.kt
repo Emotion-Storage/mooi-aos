@@ -28,6 +28,8 @@ sealed class MyPageAction {
     object TermsAndPrivacy : MyPageAction()
 
     object CopyEmail : MyPageAction()
+
+    object WithDrawConfirm : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
@@ -38,6 +40,10 @@ sealed class MyPageSideEffect {
     object EmailCopied : MyPageSideEffect()
 
     object NavigateToTermsAndPrivacy : MyPageSideEffect()
+
+    object NavigateToWithDrawNotice : MyPageSideEffect()
+
+    object WithDrawSuccess : MyPageSideEffect()
 
     data class NavigateToKeyDescription(
         val keyCount: Int,
@@ -79,6 +85,10 @@ class MyPageViewModel @Inject constructor(
 
             is MyPageAction.TermsAndPrivacy -> {
                 handleTermsAndPrivacy()
+            }
+
+            is MyPageAction.WithDrawConfirm -> {
+                handleWithDraw()
             }
         }
     }
@@ -124,5 +134,10 @@ class MyPageViewModel @Inject constructor(
     private fun handleTermsAndPrivacy() =
         intent {
             postSideEffect(MyPageSideEffect.NavigateToTermsAndPrivacy)
+        }
+
+    private fun handleWithDraw() =
+        intent {
+            postSideEffect(MyPageSideEffect.WithDrawSuccess)
         }
 }
