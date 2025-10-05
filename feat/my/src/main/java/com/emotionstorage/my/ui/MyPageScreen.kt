@@ -43,6 +43,7 @@ import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
 import com.emotionstorage.my.ui.component.TempToast
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -125,6 +126,8 @@ private fun StatelessMyPageScreen(
     val clipboardManager = LocalClipboardManager.current
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var showLogoutModal by remember { mutableStateOf(false) }
+
     LaunchedEffect(showEmailCopiedToast) {
         if (showEmailCopiedToast) {
             snackbarHostState.showSnackbar(
@@ -188,7 +191,23 @@ private fun StatelessMyPageScreen(
                     onAction(MyPageAction.CopyEmail)
                 },
                 onTermsAndPrivacyClick = navToTermsAndPrivacy,
+                onLogoutClick = { showLogoutModal = true },
             )
+
+            if (showLogoutModal) {
+                Modal(
+                    title = "정말 로그아웃 하시겠어요?",
+                    confirmLabel = "네, 로그아웃 할래요.",
+                    onDismissRequest = { showLogoutModal = false },
+                    topDescription = null,
+                    bottomDescription = "다시 돌아오실거죠? 기다리고있을게요",
+                    dismissLabel = "아니요, 그냥 있을래요.",
+                    onConfirm = {
+                        onAction(MyPageAction.Logout)
+                    },
+                    onDismiss = { showLogoutModal = false },
+                )
+            }
 
             Spacer(modifier = Modifier.size(8.dp))
             Text(

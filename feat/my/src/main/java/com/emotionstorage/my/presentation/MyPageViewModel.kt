@@ -1,6 +1,7 @@
 package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -49,7 +50,7 @@ sealed class MyPageSideEffect {
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
-//    private val logout: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
@@ -97,8 +98,12 @@ class MyPageViewModel @Inject constructor(
 
     private fun handleLogout() =
         intent {
-            // todo: call use case
-            postSideEffect(MyPageSideEffect.LogoutSuccess)
+            try {
+                logoutUseCase()
+                postSideEffect(MyPageSideEffect.LogoutSuccess)
+            } catch (t: Throwable) {
+                postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "로그아웃 실패"))
+            }
         }
 
     private fun handleNicknameChange() =
