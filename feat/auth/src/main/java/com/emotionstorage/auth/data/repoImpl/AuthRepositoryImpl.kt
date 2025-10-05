@@ -4,8 +4,8 @@ import com.emotionstorage.auth.data.dataSource.AuthRemoteDataSource
 import com.emotionstorage.auth.data.dataSource.GoogleRemoteDataSource
 import com.emotionstorage.auth.data.dataSource.KakaoRemoteDataSource
 import com.emotionstorage.auth.data.modelMapper.SignupFormMapper
-import com.emotionstorage.auth.domain.model.SignupForm
-import com.emotionstorage.auth.domain.repository.AuthRepository
+import com.emotionstorage.domain.model.SignupForm
+import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 import com.orhanobut.logger.Logger

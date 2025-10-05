@@ -1,6 +1,6 @@
-package com.emotionstorage.auth.domain.usecase
+package com.emotionstorage.domain.useCase.auth
 
-import com.emotionstorage.auth.domain.model.SignupForm
+import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.auth.domain.repository.AuthRepository
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow

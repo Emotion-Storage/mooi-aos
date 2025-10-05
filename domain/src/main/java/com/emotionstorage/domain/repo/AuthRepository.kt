@@ -1,7 +1,7 @@
-package com.emotionstorage.auth.domain.repository
+package com.emotionstorage.domain.repo
 
-import com.emotionstorage.auth.domain.model.SignupForm
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User
 import kotlinx.coroutines.flow.Flow
 

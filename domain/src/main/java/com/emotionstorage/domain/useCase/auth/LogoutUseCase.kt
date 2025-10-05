@@ -1,4 +1,4 @@
-package com.emotionstorage.auth.domain.usecase
+package com.emotionstorage.domain.useCase.auth
 
 import com.emotionstorage.auth.domain.repository.AuthRepository
 import com.emotionstorage.domain.repo.SessionRepository
