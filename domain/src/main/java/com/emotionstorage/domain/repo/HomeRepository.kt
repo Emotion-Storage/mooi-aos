@@ -1,7 +1,7 @@
-package com.emotionstorage.home.domain.repo
+package com.emotionstorage.domain.repo
 
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.home.domain.model.Home
+import com.emotionstorage.domain.model.Home
 import kotlinx.coroutines.flow.Flow
 
 interface HomeRepository {

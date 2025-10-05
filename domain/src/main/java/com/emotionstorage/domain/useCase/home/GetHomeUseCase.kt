@@ -1,8 +1,8 @@
-package com.emotionstorage.home.domain.usecase
+package com.emotionstorage.domain.useCase.home
 
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.home.domain.model.Home
-import com.emotionstorage.home.domain.repo.HomeRepository
+import com.emotionstorage.domain.model.Home
+import com.emotionstorage.domain.repo.HomeRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

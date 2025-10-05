@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
-import com.emotionstorage.home.domain.usecase.GetHomeUseCase
+import com.emotionstorage.domain.useCase.home.GetHomeUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
