@@ -1,7 +1,7 @@
 package com.emotionstorage.ai_chat.remote.dataSource
 
 import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
-import com.emotionstorage.ai_chat.domain.model.ChatMessage
+import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
 import com.emotionstorage.remote.BuildConfig

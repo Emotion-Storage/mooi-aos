@@ -1,6 +1,6 @@
-package com.emotionstorage.ai_chat.domain.usecase.remote
+package com.emotionstorage.domain.useCase.chat
 
-import com.emotionstorage.ai_chat.domain.repo.ChatRepository
+import com.emotionstorage.domain.repo.ChatRepository
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

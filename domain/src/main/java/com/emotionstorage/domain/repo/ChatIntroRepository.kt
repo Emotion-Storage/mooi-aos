@@ -1,8 +1,8 @@
-package com.emotionstorage.ai_chat.domain.repo
+package com.emotionstorage.domain.repo
 
 import kotlinx.coroutines.flow.Flow
 
-interface AiChatIntroRepository {
+interface ChatIntroRepository {
     fun observeIntroSeen(): Flow<Boolean>
 
     suspend fun markIntroSeen(value: Boolean)

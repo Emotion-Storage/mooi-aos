@@ -1,6 +1,6 @@
-package com.emotionstorage.ai_chat.domain.repo
+package com.emotionstorage.domain.repo
 
-import com.emotionstorage.ai_chat.domain.model.ChatMessage
+import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 

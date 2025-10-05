@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.domain.model
+package com.emotionstorage.domain.model
 
 import java.time.LocalDateTime
 import java.util.UUID

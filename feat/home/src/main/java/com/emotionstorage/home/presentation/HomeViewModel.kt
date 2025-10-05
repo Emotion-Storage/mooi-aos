@@ -1,7 +1,7 @@
 package com.emotionstorage.home.presentation
 
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.ai_chat.domain.usecase.remote.GetChatRoomIdUseCase
+import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
 import com.emotionstorage.home.domain.usecase.GetHomeUseCase

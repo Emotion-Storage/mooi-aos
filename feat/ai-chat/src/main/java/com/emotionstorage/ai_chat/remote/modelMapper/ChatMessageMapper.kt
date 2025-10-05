@@ -1,6 +1,6 @@
 package com.emotionstorage.ai_chat.remote.modelMapper
 
-import com.emotionstorage.ai_chat.domain.model.ChatMessage
+import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
 
 object ChatMessageMapper {
