@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.auth.domain.model.Expectation
+import com.emotionstorage.domain.model.Expectation
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel

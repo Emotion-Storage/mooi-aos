@@ -2,7 +2,7 @@ package com.emotionstorage.tutorial.presentation.onBoarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.auth.domain.model.Expectation
+import com.emotionstorage.domain.model.Expectation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

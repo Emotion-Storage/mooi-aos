@@ -2,8 +2,8 @@ package com.emotionstorage.ai_chat.data.repoImpl
 
 import com.emotionstorage.ai_chat.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
-import com.emotionstorage.ai_chat.domain.model.ChatMessage
-import com.emotionstorage.ai_chat.domain.repo.ChatRepository
+import com.emotionstorage.domain.model.ChatMessage
+import com.emotionstorage.domain.repo.ChatRepository
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

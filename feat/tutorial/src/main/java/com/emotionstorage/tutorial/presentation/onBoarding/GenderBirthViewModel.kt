@@ -2,7 +2,7 @@ package com.emotionstorage.tutorial.presentation.onBoarding
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.auth.domain.model.SignupForm.GENDER
+import com.emotionstorage.domain.model.SignupForm.GENDER
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State.PickerState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -2,7 +2,7 @@ package com.emotionstorage.ai_chat.local.di
 
 import com.emotionstorage.ai_chat.data.dataSource.local.AiChatIntroLocalDataSource
 import com.emotionstorage.ai_chat.data.repoImpl.AiChatIntroRepositoryImpl
-import com.emotionstorage.ai_chat.domain.repo.AiChatIntroRepository
+import com.emotionstorage.domain.repo.ChatIntroRepository
 import com.emotionstorage.ai_chat.local.dataSource.AiChatIntroLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -16,5 +16,5 @@ abstract class LocalDataSourceModule {
     abstract fun bindAiChatIntroLocalDataSource(impl: AiChatIntroLocalDataSourceImpl): AiChatIntroLocalDataSource
 
     @Binds
-    abstract fun bindAiChatIntroRepository(impl: AiChatIntroRepositoryImpl): AiChatIntroRepository
+    abstract fun bindAiChatIntroRepository(impl: AiChatIntroRepositoryImpl): ChatIntroRepository
 }

@@ -1,10 +1,10 @@
 package com.emotionstorage.tutorial.presentation
 
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.auth.domain.model.Expectation
-import com.emotionstorage.auth.domain.model.SignupForm
-import com.emotionstorage.auth.domain.model.SignupForm.GENDER
-import com.emotionstorage.auth.domain.usecase.SignupUseCase
+import com.emotionstorage.domain.model.Expectation
+import com.emotionstorage.domain.model.SignupForm
+import com.emotionstorage.domain.model.SignupForm.GENDER
+import com.emotionstorage.domain.useCase.auth.SignupUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.orhanobut.logger.Logger
