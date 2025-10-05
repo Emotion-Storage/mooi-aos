@@ -12,10 +12,10 @@ import javax.inject.Inject
  * - signup fail: return false
  */
 class SignupUseCase
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-) {
-    suspend operator fun invoke(signupForm: SignupForm): Flow<DataState<Boolean>> =
-        authRepository.signup(signupForm)
-}
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+    ) {
+        suspend operator fun invoke(signupForm: SignupForm): Flow<DataState<Boolean>> =
+            authRepository.signup(signupForm)
+    }
