@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.common.toKorDate
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
@@ -159,7 +161,7 @@ private fun SaveTimeCapsuleTitle(
             Text(
                 text = buildAnnotatedString {
                     withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                        append("언제 다시")
+                        append("언제 다시 ")
                     }
                     append("꺼내볼까요?")
                 },
@@ -194,59 +196,46 @@ fun SaveTimeCapsuleGrid(
             color = Color.White
         )
         Text(
+            modifier = Modifier.padding(top = 4.dp, bottom = 15.dp),
             text = "* 감정 회고일을 선택하세요. 한 번 더 탭하면 해제돼요.",
             style = MooiTheme.typography.caption7,
             color = MooiTheme.colorScheme.gray500
         )
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            items(
-                items = ArriveAfter.entries.toTypedArray(),
-                key = { it },
-            ) { it ->
 
-                ArriveAfterGridItem(
-                    arriveAfter = it,
-                    isSelected = it == arriveAfter,
-                    onSelect = {
-                        onSelectArriveAfter(it)
-                    }
-                )
-                if (it == ArriveAfter.AFTER_CUSTOM && it == arriveAfter) {
-                    // todo: style date selection row
-                    Row(
-                        modifier = Modifier.clickable {
-                            // todo: show date picker bottom sheet
-                        }
-                    ) {
-                        if (arriveAt == null) {
-                            Text("날짜를 선택해주세요")
-                        } else {
-                            Text(text = arriveAt.toString())
-                        }
-                        Image(
-                            modifier = Modifier.size(16.dp),
-                            painter = painterResource(R.drawable.calendar),
-                            contentDescription = "calendar date picker"
+        Column(
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            for (arriveAfters in ArriveAfter.entries.chunked(3)) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    for (it in arriveAfters) {
+                        ArriveAfterGridItem(
+                            arriveAfter = it,
+                            isSelected = it == arriveAfter,
+                            onSelect = {
+                                onSelectArriveAfter(it)
+                            },
+                            arriveAt = arriveAt,
+                            onDatePickerClick = {
+                                // todo: show date picker bottom sheet
+                            }
                         )
                     }
                 }
             }
-
-
         }
     }
 }
 
 @Composable
-private fun ArriveAfterGridItem(
+private fun RowScope.ArriveAfterGridItem(
     arriveAfter: ArriveAfter,
     modifier: Modifier = Modifier,
     onSelect: () -> Unit = {},
     isSelected: Boolean = false,
+    arriveAt: LocalDate? = null,
+    onDatePickerClick: (() -> Unit)? = null
 ) {
     Box(
         modifier = modifier
@@ -267,6 +256,41 @@ private fun ArriveAfterGridItem(
             style = MooiTheme.typography.body8,
             color = if (isSelected) MooiTheme.colorScheme.primary else Color.White
         )
+    }
+
+    if (arriveAfter == ArriveAfter.AFTER_CUSTOM && isSelected) {
+        Row(
+            modifier = Modifier
+                .size(198.dp, 54.dp)
+                .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
+                .clickable {
+                    onDatePickerClick?.invoke()
+                }
+                .padding(
+                    start = 17.dp, end = 20.dp
+                ),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            if (arriveAt == null) {
+                Text(
+                    "날짜를 선택해주세요",
+                    style = MooiTheme.typography.body8,
+                    color = MooiTheme.colorScheme.gray600
+                )
+            } else {
+                Text(
+                    arriveAt.toKorDate(),
+                    style = MooiTheme.typography.body8,
+                    color = Color.White
+                )
+            }
+            Image(
+                modifier = Modifier.size(16.dp),
+                painter = painterResource(R.drawable.calendar),
+                contentDescription = "calendar date picker"
+            )
+        }
     }
 }
 
