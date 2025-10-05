@@ -1,6 +1,6 @@
 package com.emotionstorage.domain.useCase.auth
 
-import com.emotionstorage.auth.domain.repository.AuthRepository
+import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
 import javax.inject.Inject

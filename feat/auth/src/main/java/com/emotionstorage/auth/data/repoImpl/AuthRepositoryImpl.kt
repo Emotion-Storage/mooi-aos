@@ -68,7 +68,7 @@ class AuthRepositoryImpl @Inject constructor(
                 if (signupForm.provider == null) throw Exception("provider is null")
                 if (signupForm.idToken == null) throw Exception("idToken is null")
 
-                authRemoteDataSource.signup(signupForm.provider, SignupFormMapper.toData(signupForm))
+                authRemoteDataSource.signup(signupForm.provider!!, SignupFormMapper.toData(signupForm))
                 emit(DataState.Success(true))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
