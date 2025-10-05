@@ -40,7 +40,7 @@ sealed class SaveTimeCapsuleAction {
 
     // select open date from grid item
     data class SelectArriveAfter(
-        val arriveAfter: ArriveAfter,
+        val arriveAfter: ArriveAfter?,
     ) : SaveTimeCapsuleAction()
 
     // select open date from calendar bottom sheet
@@ -116,9 +116,18 @@ class SaveTimeCapsuleViewModel @Inject constructor() :
         }
     }
 
-    private fun handleSelectArriveAfter(arriveAfter: ArriveAfter) =
+    private fun handleSelectArriveAfter(arriveAfter: ArriveAfter?) =
         intent {
             when (arriveAfter) {
+                null -> {
+                    reduce {
+                        state.copy(
+                            arriveAfter = null,
+                            arriveAt = null,
+                        )
+                    }
+                }
+
                 ArriveAfter.AFTER_24HOURS -> {
                     reduce {
                         state.copy(

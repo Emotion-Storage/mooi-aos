@@ -136,6 +136,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                 CtaButton(
                     modifier = Modifier.fillMaxWidth(),
                     labelString = "타임캡슐 보관하기",
+                    enabled = state.arriveAt != null,
                     onClick = {
                         onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
                     },
@@ -184,7 +185,7 @@ fun SaveTimeCapsuleGrid(
     modifier: Modifier = Modifier,
     arriveAt: LocalDate? = null,
     arriveAfter: ArriveAfter? = null,
-    onSelectArriveAfter: (ArriveAfter) -> Unit = {},
+    onSelectArriveAfter: (ArriveAfter?) -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -214,7 +215,12 @@ fun SaveTimeCapsuleGrid(
                             arriveAfter = it,
                             isSelected = it == arriveAfter,
                             onSelect = {
-                                onSelectArriveAfter(it)
+                                if(it == arriveAfter){
+                                    // remove selection on double click
+                                    onSelectArriveAfter(null)
+                                } else {
+                                    onSelectArriveAfter(it)
+                                }
                             },
                             arriveAt = arriveAt,
                             onDatePickerClick = {
@@ -245,10 +251,9 @@ private fun RowScope.ArriveAfterGridItem(
                 defaultBackground = Color.Black,
                 shape = RoundedCornerShape(10.dp)
             )
-            .clickable(
-                enabled = !isSelected,
-                onClick = onSelect
-            )
+            .clickable{
+                onSelect()
+            }
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
