@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.tutorial.domain.NicknameState
-import com.emotionstorage.tutorial.domain.ValidateNicknameUseCase
+import com.emotionstorage.domain.useCase.user.NicknameState
+import com.emotionstorage.domain.useCase.user.ValidateNicknameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

@@ -1,12 +1,10 @@
-package com.emotionstorage.time_capsule_detail.domain.useCase
+package com.emotionstorage.domain.useCase.key
 
-import com.emotionstorage.common.getDaysBetween
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 import javax.inject.Inject
-import kotlin.math.absoluteValue
 
 class GetRequiredKeyCountUseCase @Inject constructor() {
     operator fun invoke(arriveAt: LocalDate): Flow<DataState<Int>> =

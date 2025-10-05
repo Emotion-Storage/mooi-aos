@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.domain
+package com.emotionstorage.domain.useCase.user
 
 import com.emotionstorage.domain.common.DataState
 import javax.inject.Inject
