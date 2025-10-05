@@ -1,7 +1,7 @@
 package com.emotionstorage.auth.data.di
 
 import com.emotionstorage.auth.data.repoImpl.AuthRepositoryImpl
-import com.emotionstorage.auth.domain.repository.AuthRepository
+import com.emotionstorage.domain.repo.AuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

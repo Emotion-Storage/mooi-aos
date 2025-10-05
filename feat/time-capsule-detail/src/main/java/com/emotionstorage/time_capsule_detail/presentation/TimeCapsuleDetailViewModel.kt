@@ -7,7 +7,7 @@ import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
-import com.emotionstorage.time_capsule_detail.domain.useCase.GetRequiredKeyCountUseCase
+import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger

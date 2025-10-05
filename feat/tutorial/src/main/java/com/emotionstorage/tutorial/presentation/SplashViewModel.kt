@@ -1,7 +1,7 @@
 package com.emotionstorage.tutorial.presentation
 
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.auth.domain.usecase.AutomaticLoginUseCase
+import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.emotionstorage.domain.common.DataState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
