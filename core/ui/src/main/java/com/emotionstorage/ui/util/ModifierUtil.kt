@@ -67,11 +67,11 @@ fun Modifier.dropShadow(
 
 @Composable
 fun Modifier.mainBackground(
-    isActivated: Boolean = false,
+    enabled: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
     defaultBackground: Color = Color.Transparent,
 ): Modifier =
-    if (isActivated) {
+    if (enabled) {
         this.background(
             MooiTheme.brushScheme.mainButtonBackground,
             shape,
@@ -82,11 +82,11 @@ fun Modifier.mainBackground(
 
 @Composable
 fun Modifier.subBackground(
-    isActivated: Boolean = false,
+    enabled: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
     defaultBackground: Color = Color.Transparent,
 ): Modifier =
-    if (isActivated) {
+    if (enabled) {
         this
             .background(
                 MooiTheme.brushScheme.subButtonBackground,
@@ -102,11 +102,11 @@ fun Modifier.subBackground(
 
 @Composable
 fun Modifier.errorRedBackground(
-    isActivated: Boolean = false,
+    enabled: Boolean = false,
     shape: Shape = RoundedCornerShape(10.dp),
     defaultBackground: Color = Color.Transparent,
 ): Modifier =
-    if (isActivated) {
+    if (enabled) {
         this
             .background(
                 MooiTheme.brushScheme.errorRedButtonBackground,
