@@ -2,8 +2,8 @@ package com.emotionstorage.ai_chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.ai_chat.domain.usecase.local.MarkAiChatIntroSeenUseCase
-import com.emotionstorage.ai_chat.domain.usecase.local.ObserveAiChatIntroSeenUseCase
+import com.emotionstorage.domain.useCase.chat.MarkChatIntroSeenUseCase
+import com.emotionstorage.domain.useCase.chat.ObserveChatIntroSeenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,8 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AiChatIntroViewModel @Inject constructor(
-    observesIntroSeenUseCase: ObserveAiChatIntroSeenUseCase,
-    private val markIntroSeenUseCase: MarkAiChatIntroSeenUseCase,
+    observesIntroSeenUseCase: ObserveChatIntroSeenUseCase,
+    private val markIntroSeenUseCase: MarkChatIntroSeenUseCase,
 ) : ViewModel() {
     val introSeen =
         observesIntroSeenUseCase()

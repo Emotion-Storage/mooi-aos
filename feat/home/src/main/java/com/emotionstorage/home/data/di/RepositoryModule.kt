@@ -1,7 +1,7 @@
 package com.emotionstorage.home.data.di
 
 import com.emotionstorage.home.data.repoImpl.HomeRepositoryImpl
-import com.emotionstorage.home.domain.repo.HomeRepository
+import com.emotionstorage.domain.repo.HomeRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

@@ -1,7 +1,7 @@
 package com.emotionstorage.auth.data.modelMapper
 
 import com.emotionstorage.auth.data.model.SignupFormEntity
-import com.emotionstorage.auth.domain.model.SignupForm
+import com.emotionstorage.domain.model.SignupForm
 
 internal object SignupFormMapper {
     fun toData(signupForm: SignupForm) =
