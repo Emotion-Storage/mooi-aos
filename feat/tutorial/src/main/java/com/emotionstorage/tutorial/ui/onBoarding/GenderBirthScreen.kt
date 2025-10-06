@@ -135,12 +135,11 @@ private fun StatelessGenderBirthScreen(
                 )
             }
 
-            // todo: add bottom padding when keyboard is hidden
             CtaButton(
                 modifier =
                     Modifier
-                        .fillMaxWidth(),
-                //                    .padding(bottom = 39.dp),
+                        .fillMaxWidth()
+                        .padding(bottom = 39.dp),
                 labelString = "다음으로",
                 enabled = state.isNextButtonEnabled,
                 onClick = {
@@ -198,7 +197,8 @@ private fun GenderInput(
                             .subBackground(isSelected, defaultBackground = Color.Black)
                             .clickable {
                                 if (isSelected) onGenderSelect(null) else onGenderSelect(it)
-                            }.padding(14.dp),
+                            }
+                            .padding(14.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
