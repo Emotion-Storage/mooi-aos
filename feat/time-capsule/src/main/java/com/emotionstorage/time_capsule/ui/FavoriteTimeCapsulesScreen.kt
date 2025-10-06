@@ -58,17 +58,16 @@ private val DUMMY_TIME_CAPSULES =
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =
                 listOf(
-                    TimeCapsule.Emotion(
+                    Emotion(
                         emoji = "\uD83D\uDE14",
                         label = "서운함",
                         percentage = 30.0f,
-                    ),
-                    TimeCapsule.Emotion(
+                    ), Emotion(
                         emoji = "\uD83D\uDE0A",
                         label = "고마움",
                         percentage = 30.0f,
                     ),
-                    TimeCapsule.Emotion(
+                    Emotion(
                         emoji = "\uD83E\uDD70",
                         label = "안정감",
                         percentage = 80.0f,
@@ -91,7 +90,7 @@ fun FavoriteTimeCapsulesScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(Unit) {
         // initial load, triggered on launch
-        viewModel.onAction(FavoriteTimeCapsulesAction.PullToRefresh)
+        viewModel.onAction(FavoriteTimeCapsulesAction.Init)
     }
 
     val snackState = remember { SnackbarHostState() }
