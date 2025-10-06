@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SetFavoriteTimeCapsuleUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         id: String,
         isFavorite: Boolean,
     ): Flow<DataState<SetFavoriteResult>> = timeCapsuleRepository.setFavoriteTimeCapsule(id, isFavorite)
