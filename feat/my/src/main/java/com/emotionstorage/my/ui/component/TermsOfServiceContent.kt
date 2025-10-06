@@ -1,76 +1,92 @@
 package com.emotionstorage.my.ui.component
 
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.my.R
+import com.emotionstorage.ui.theme.MooiTheme
+
+enum class ListStyle { Bulleted, Numbered }
 
 @Composable
-fun TermsOfServiceContent() {
-    val context = LocalContext.current
-    val titles = context.resources.getStringArray(R.array.terms_titles)
-    val contents = context.resources.getStringArray(R.array.terms_contents)
+fun TermsOfServiceContent(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(16.dp),
+) {
+    val titles = stringArrayResource(id = R.array.terms_titles)
+    val contents = stringArrayResource(id = R.array.terms_contents)
 
     LazyColumn(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 12.dp),
-        contentPadding = PaddingValues(vertical = 18.dp),
+        modifier = modifier.fillMaxSize(),
+        contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         itemsIndexed(titles) { index, title ->
-            TermSection(
+            val body = contents.getOrNull(index).orEmpty()
+
+            val listItems =
+                rememberOptionalStringArray(
+                    name = "terms_section_${index + 1}_items",
+                )
+
+            TermSectionWithOptionalList(
                 title = title,
-                content = contents[index],
-            )
-
-            if (index < titles.size - 1) Spacer(modifier = Modifier.size(32.dp))
-        }
-
-        item {
-            Spacer(modifier = Modifier.size(12.dp))
-            TermSection(
-                title = stringResource(id = R.string.sub_terms_title),
-                content = stringResource(id = R.string.sub_terms_content),
+                paragraph = body,
+                listItems = listItems,
+                listStyle = ListStyle.Numbered,
             )
         }
+        item { Spacer(Modifier.size(40.dp)) }
     }
 }
 
 @Composable
-fun TermSection(
+private fun TermSectionWithOptionalList(
     title: String,
-    content: String,
+    paragraph: String?,
+    listItems: List<String>?,
+    listStyle: ListStyle = ListStyle.Numbered,
 ) {
-    Column {
-        Text(
-            text = title,
-            style = MooiTheme.typography.caption1.copy(lineHeight = 22.sp),
-            color = Color.White,
-        )
+    Text(
+        text = title,
+        style =
+            TextStyle(
+                fontSize = 15.sp,
+                lineHeight = 22.sp,
+                platformStyle = PlatformTextStyle(includeFontPadding = false),
+            ),
+        color = Color.White,
+    )
+    Spacer(Modifier.size(8.dp))
+    if (!paragraph.isNullOrBlank()) RichBody(paragraph)
+    if (!listItems.isNullOrEmpty()) {
+        Spacer(Modifier.size(6.dp))
+        RichList(items = listItems, style = listStyle)
+    }
+}
 
-        Spacer(modifier = Modifier.size(8.dp))
-
-        Text(
-            text = content,
-            style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
-            color = Color.White,
-        )
+@Composable
+private fun rememberOptionalStringArray(name: String): List<String>? {
+    val context = LocalContext.current
+    return remember(name) {
+        val id = context.resources.getIdentifier(name, "array", context.packageName)
+        if (id != 0) context.resources.getStringArray(id).toList() else null
     }
 }
 

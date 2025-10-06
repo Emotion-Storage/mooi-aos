@@ -206,7 +206,7 @@ fun PrivacyPolicySection(
 
         Spacer(modifier = Modifier.size(8.dp))
 
-        Text(
+        RichBody(
             text = content,
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
             color = Color.White,
