@@ -47,12 +47,13 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                val result = timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(
-                    when (sortBy) {
-                        FavoriteSortBy.FAVORITE_AT -> "favorite"
-                        FavoriteSortBy.NEWEST -> "latest"
-                    }
-                )
+                val result =
+                    timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(
+                        when (sortBy) {
+                            FavoriteSortBy.FAVORITE_AT -> "favorite"
+                            FavoriteSortBy.NEWEST -> "latest"
+                        },
+                    )
                 emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
@@ -72,7 +73,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 emit(DataState.Loading(isLoading = false))
             }
         }
-
 
     override suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>> =
         flow {

@@ -7,6 +7,5 @@ import javax.inject.Inject
 class GetFavoriteTimeCapsulesUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    suspend operator fun invoke(sortBy: FavoriteSortBy) =
-        timeCapsuleRepository.getFavoriteTimeCapsules(sortBy)
+    suspend operator fun invoke(sortBy: FavoriteSortBy) = timeCapsuleRepository.getFavoriteTimeCapsules(sortBy)
 }

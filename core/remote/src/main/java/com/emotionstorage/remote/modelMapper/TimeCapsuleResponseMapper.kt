@@ -11,15 +11,15 @@ internal object TimeCapsuleResponseMapper {
                 status = it.status,
                 title = it.title,
                 isFavorite = it.isFavorite,
-                emotions = it.emotions.map { emotion ->
-                    TimeCapsuleEntity.Emotion(
-                        emotion = emotion
-                    )
-                },
+                emotions =
+                    it.emotions.map { emotion ->
+                        TimeCapsuleEntity.Emotion(
+                            emotion = emotion,
+                        )
+                    },
                 createdAt = it.createdAt,
                 arriveAt = it.openAt,
-                updatedAt = it.updatedAt
+                updatedAt = it.updatedAt,
             )
         }
 }
-

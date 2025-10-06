@@ -304,7 +304,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, _ ->
                     Logger.e("deleteTimeCapsule error: $throwable")
-                }
+                },
             )
         }
 
