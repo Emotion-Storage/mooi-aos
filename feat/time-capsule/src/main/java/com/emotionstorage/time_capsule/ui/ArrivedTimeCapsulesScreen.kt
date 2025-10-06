@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -23,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
@@ -107,22 +110,22 @@ private fun StatelessArrivedTimeCapsulesScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = 13.dp, bottom = 14.dp),
+                        .padding(top = 13.dp, bottom = 20.dp),
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.lock_open),
                     modifier =
                         Modifier
+                            .offset(y=4.dp)
                             .width(11.dp)
                             .height(12.dp),
                     contentDescription = "arrived",
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
                 )
                 Text(
-                    text = "최근 3주간 도착한 타임캡슐입니다.",
-                    style = MooiTheme.typography.body5,
+                    text = "최근 3주간 도착한 타임캡슐을 표시합니다.\n도착한 타임캡슐을 열어 내 지난 감정을 확인해보세요.",
+                    style = MooiTheme.typography.body5.copy(lineHeight = 22.sp),
                     color = MooiTheme.colorScheme.gray500,
                 )
             }
@@ -141,6 +144,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                 .padding(bottom = 17.dp),
                         timeCapsule = it,
                         showDate = true,
+                        showInfoText = false,
                         onClick = { navToTimeCapsuleDetail(it.id) },
                     )
                 }
@@ -149,7 +153,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun ArrivedTimeCapsulesScreenPreview() {
     MooiTheme {
