@@ -28,8 +28,10 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun TimeCapsuleSpeechBubble(
+    createdAt: LocalDateTime,
+    saveAt: LocalDateTime,
     modifier: Modifier = Modifier,
-    saveAt: LocalDateTime = LocalDateTime.now(),
+    isNewTimeCapsule: Boolean = false,
     arriveAt: LocalDateTime? = null,
     emotions: List<String> = emptyList(),
 ) {
@@ -47,7 +49,7 @@ fun TimeCapsuleSpeechBubble(
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary),
                 )
                 Text(
-                    text = "${arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))}에 열릴 예정이에요!",
+                    text = "${arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))} 에 열릴 예정이에요!",
                     style = MooiTheme.typography.body6,
                     color = MooiTheme.colorScheme.primary,
                 )
@@ -55,14 +57,34 @@ fun TimeCapsuleSpeechBubble(
         }
 
         SpeechBubble(
-            sizeParam = DpSize(286.dp, 83.dp),
+            sizeParam = DpSize(
+                286.dp,
+                if (isNewTimeCapsule) 83.dp else 115.5.dp
+            ),
             cornerRadius = 100.dp,
         ) {
             Column(
                 modifier = Modifier,
-                verticalArrangement = Arrangement.spacedBy(6.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                if (!isNewTimeCapsule) {
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Image(
+                            modifier = Modifier.size(14.dp),
+                            painter = painterResource(R.drawable.pencil),
+                            contentDescription = "",
+                        )
+                        Text(
+                            text = "감정 기록일 : ${createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))}",
+                            style = MooiTheme.typography.caption3,
+                            color = MooiTheme.colorScheme.gray300,
+                        )
+                    }
+                }
                 Row(
                     modifier = Modifier,
                     verticalAlignment = Alignment.CenterVertically,
@@ -81,7 +103,7 @@ fun TimeCapsuleSpeechBubble(
                 }
 
                 Row(
-                    modifier = Modifier,
+                    modifier = Modifier.padding(top = 8.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -122,9 +144,26 @@ private fun TimeCapsuleSpeeckBubblePreview() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             TimeCapsuleSpeechBubble(
+                isNewTimeCapsule = true,
+                createdAt = LocalDateTime.now(),
+                saveAt = LocalDateTime.now(),
                 emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
             )
             TimeCapsuleSpeechBubble(
+                isNewTimeCapsule = true,
+                createdAt = LocalDateTime.now(),
+                saveAt = LocalDateTime.now(),
+                arriveAt = LocalDateTime.now(),
+                emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+            )
+            TimeCapsuleSpeechBubble(
+                createdAt = LocalDateTime.now().minusHours(3),
+                saveAt = LocalDateTime.now(),
+                emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+            )
+            TimeCapsuleSpeechBubble(
+                createdAt = LocalDateTime.now().minusHours(3),
+                saveAt = LocalDateTime.now(),
                 arriveAt = LocalDateTime.now(),
                 emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
             )
