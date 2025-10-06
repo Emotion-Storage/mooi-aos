@@ -1,6 +1,7 @@
 package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.data.dataSource.UserRemoteDataSource
 import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
@@ -13,6 +14,7 @@ class UserRepositoryImpl
     @Inject
     constructor(
         private val userLocalDataSource: UserLocalDataSource,
+        private val userRemoteDataSource: UserRemoteDataSource,
     ) : UserRepository {
         override suspend fun saveUser(user: User): Boolean = userLocalDataSource.saveUser(UserMapper.toData(user))
 
@@ -37,4 +39,6 @@ class UserRepositoryImpl
             }
 
         override suspend fun deleteUser(): Boolean = userLocalDataSource.deleteUser()
+
+        override suspend fun updateUserNickname(nickname: String) = userRemoteDataSource.updateUserNickname(nickname)
     }

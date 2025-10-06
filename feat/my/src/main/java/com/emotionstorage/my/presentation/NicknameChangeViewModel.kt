@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.user.NicknameState
+import com.emotionstorage.domain.useCase.user.UpdateUserNicknameUseCase
 import com.emotionstorage.domain.useCase.user.ValidateNicknameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,7 @@ interface InputNicknameEvent {
 @HiltViewModel
 class NicknameChangeViewModel @Inject constructor(
     private val validateNicknameUseCase: ValidateNicknameUseCase,
-//    private val updateNicknameUseCase: UpdateNicknameUseCase,
+    private val updateNicknameUseCase: UpdateUserNicknameUseCase,
 ) : ViewModel(), InputNicknameEvent {
 
     data class State(
@@ -71,6 +72,33 @@ class NicknameChangeViewModel @Inject constructor(
                         }
                     }
                 }
+        }
+    }
+
+    fun submit(onSuccess: (String) -> Unit = {}) {
+        val state = _state.value
+        if (!state.buttonEnabled) return
+        viewModelScope.launch {
+            _state.update { it.copy(submitting = true, submitError = null) }
+            when (updateNicknameUseCase(state.nickname)) {
+                is DataState.Success -> {
+                    _state.update { it.copy(submitting = false) }
+                    onSuccess(state.nickname)
+                }
+
+                is DataState.Error -> {
+                    _state.update {
+                        it.copy(
+                            submitting = false,
+                            submitError = null,
+                            inputState = State.InputState.INVALID,
+                            helperMessage = null
+                        )
+                    }
+                }
+
+                else -> _state.update { it.copy(submitting = false) }
+            }
         }
     }
 }

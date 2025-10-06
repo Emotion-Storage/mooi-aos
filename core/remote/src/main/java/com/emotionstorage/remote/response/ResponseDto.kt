@@ -1,6 +1,7 @@
 package com.emotionstorage.remote.response
 
 import com.emotionstorage.common.LocalDateTimeSerializer
+import com.emotionstorage.domain.common.DataState
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -13,3 +14,11 @@ data class ResponseDto<T>(
     @Serializable(with = LocalDateTimeSerializer::class)
     val timestamp: LocalDateTime? = null,
 )
+
+fun <T> ResponseDto<T>.toEmptyDataState(onSuccessMap: (T?) -> Unit = {}): DataState<Unit> {
+    return if (status in 200..299) {
+        DataState.Success(Unit)
+    } else {
+        DataState.Error(Exception(message ?: "Unknown Error"))
+    }
+}

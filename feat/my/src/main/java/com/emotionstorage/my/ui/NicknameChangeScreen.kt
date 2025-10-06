@@ -44,7 +44,9 @@ fun NicknameChangeScreen(
         state = state.value,
         event = viewModel as InputNicknameEvent,
         onNicknameInputComplete = {
-
+            viewModel.submit {
+                navToBack()
+            }
         },
         navToBack = navToBack
     )
