@@ -185,7 +185,7 @@ private fun TimeCapsuleItemInfo(
                     style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.Light),
                     color = MooiTheme.colorScheme.gray300,
                 )
-                if(showInfoText) {
+                if (showInfoText) {
                     Row(
                         modifier = modifier.padding(bottom = 7.dp),
                         verticalAlignment = Alignment.CenterVertically,
