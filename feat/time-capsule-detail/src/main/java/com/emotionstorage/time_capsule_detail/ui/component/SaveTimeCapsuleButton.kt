@@ -39,7 +39,7 @@ fun SaveTimeCapsuleButton(
             onClick = onSave,
             isDefaultWidth = false,
         )
-    } else if (expireAt != null) {
+    } else {
         CtaButton(
             modifier = modifier
                 .fillMaxWidth()
@@ -50,7 +50,7 @@ fun SaveTimeCapsuleButton(
             isDefaultHeight = false,
         ) {
             CountDownTimer(
-                deadline = expireAt,
+                deadline = expireAt ?: LocalDateTime.now().plusHours(24),
             ) { hours, minutes, seconds ->
                 LaunchedEffect(hours, minutes, seconds) {
                     if (hours == 0L && minutes == 0L && seconds == 0L) {
