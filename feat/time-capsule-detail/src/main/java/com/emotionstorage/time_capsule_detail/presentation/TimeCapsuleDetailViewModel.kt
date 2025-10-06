@@ -66,7 +66,7 @@ sealed class TimeCapsuleDetailAction {
     ) : TimeCapsuleDetailAction()
 
     data class OnSaveNote(
-        val id: String
+        val id: String,
     ) : TimeCapsuleDetailAction()
 
     object OnDeleteTrigger : TimeCapsuleDetailAction()
@@ -339,7 +339,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, data ->
                     Logger.e("saveNote error: $throwable")
-                }
+                },
             )
         }
 }

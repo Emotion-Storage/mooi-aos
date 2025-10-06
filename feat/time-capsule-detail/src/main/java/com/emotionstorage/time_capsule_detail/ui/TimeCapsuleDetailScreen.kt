@@ -31,7 +31,6 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
@@ -401,17 +400,17 @@ private fun TimeCapsuleDetailScreenPreview() {
                                     TimeCapsule.Emotion(
                                         emoji = "\uD83D\uDE14",
                                         label = "서운함",
-                                        percentage = 30.0f
+                                        percentage = 30.0f,
                                     ),
                                     TimeCapsule.Emotion(
                                         emoji = "\uD83D\uDE0A",
                                         label = "고마움",
-                                        percentage = 30.0f
+                                        percentage = 30.0f,
                                     ),
                                     TimeCapsule.Emotion(
                                         emoji = "\uD83E\uDD70",
                                         label = "안정감",
-                                        percentage = 80.0f
+                                        percentage = 80.0f,
                                     ),
                                 ),
                             comments =

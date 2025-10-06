@@ -5,7 +5,7 @@ import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import javax.inject.Inject
 
 class GetFavoriteTimeCapsules @Inject constructor(
-    private val timeCapsuleRepository: TimeCapsuleRepository
+    private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
     suspend operator fun invoke(sortBy: FavoriteSortBy) = timeCapsuleRepository.getFavoriteTimeCapsules(sortBy)
 }

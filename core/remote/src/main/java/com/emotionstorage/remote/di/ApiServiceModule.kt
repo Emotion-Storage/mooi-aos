@@ -13,5 +13,6 @@ import javax.inject.Singleton
 object ApiServiceModule {
     @Singleton
     @Provides
-    fun provideTimeCapsuleApiService(retrofit: Retrofit): TimeCapsuleApiService = retrofit.create(TimeCapsuleApiService::class.java)
+    fun provideTimeCapsuleApiService(retrofit: Retrofit): TimeCapsuleApiService =
+        retrofit.create(TimeCapsuleApiService::class.java)
 }

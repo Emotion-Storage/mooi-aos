@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -51,17 +50,17 @@ private fun EmotionTagPreview() {
             Emotion(
                 emoji = "\uD83D\uDE14",
                 label = "서운함",
-                percentage = 30.0f
+                percentage = 30.0f,
             ),
             Emotion(
                 emoji = "\uD83D\uDE0A",
                 label = "고마움",
-                percentage = 30.0f
+                percentage = 30.0f,
             ),
             Emotion(
                 emoji = "\uD83E\uDD70",
                 label = "안정감",
-                percentage = 80.0f
+                percentage = 80.0f,
             ),
         )
 

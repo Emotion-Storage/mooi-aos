@@ -6,10 +6,14 @@ import kotlinx.coroutines.flow.Flow
 
 interface TimeCapsuleRepository {
     suspend fun openArrivedTimeCapsule(id: String): Flow<DataState<Unit>>
-    suspend fun saveTimeCapsuleNote(id: String, note: String): Flow<DataState<Boolean>>
+
+    suspend fun saveTimeCapsuleNote(
+        id: String,
+        note: String,
+    ): Flow<DataState<Boolean>>
+
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
 }
-
 
 enum class FavoriteSortBy(
     val label: String,
@@ -19,9 +23,8 @@ enum class FavoriteSortBy(
     ;
 
     companion object {
-        fun getByLabel(label: String): FavoriteSortBy {
-            return FavoriteSortBy.entries.find { it.label == label }
+        fun getByLabel(label: String): FavoriteSortBy =
+            FavoriteSortBy.entries.find { it.label == label }
                 ?: throw IllegalArgumentException("Invalid sort order label: $label")
-        }
     }
 }

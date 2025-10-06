@@ -22,11 +22,16 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun patchTimeCapsuleNote(id: String, note: String): Boolean {
+    override suspend fun patchTimeCapsuleNote(
+        id: String,
+        note: String,
+    ): Boolean {
         try {
-            val response = timeCapsuleApiService.patchTimeCapsuleNote(
-                id, PatchTimeCapsuleNoteRequest(note)
-            )
+            val response =
+                timeCapsuleApiService.patchTimeCapsuleNote(
+                    id,
+                    PatchTimeCapsuleNoteRequest(note),
+                )
             if (response.status == ResponseStatus.Created.code) {
                 return true
             } else {
@@ -36,5 +41,4 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             throw Exception("patchTimeCapsuleOpen api fail, $e")
         }
     }
-
 }
