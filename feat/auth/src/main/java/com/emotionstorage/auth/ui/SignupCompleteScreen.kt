@@ -22,12 +22,14 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.auth.presentation.SignupCompleteAction
 import com.emotionstorage.auth.presentation.SignupCompleteSideEffect
 import com.emotionstorage.auth.presentation.SignupCompleteViewModel
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -45,6 +47,7 @@ fun SignupCompleteScreen(
                 is SignupCompleteSideEffect.LoginSuccess -> {
                     navToHome()
                 }
+
                 is SignupCompleteSideEffect.LoginFailed -> {
                     navToLogin()
                 }
@@ -68,6 +71,12 @@ private fun StatelessSignupCompleteScreen(
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                showBackButton = false,
+            )
+        },
     ) { padding ->
         Column(
             modifier =
@@ -75,27 +84,33 @@ private fun StatelessSignupCompleteScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 15.dp)
                     .imePadding(),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
-                modifier = Modifier.padding(top = 62.dp),
-                text =
-                    buildAnnotatedString {
-                        append("가입을 환영해요.\n이제 ")
-                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                            append("당신의 이야기")
-                        }
-                        append("를\n")
-                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                            append("우리만의 공간")
-                        }
-                        append("에 담아보세요.")
-                    },
-                style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
-                color = Color.White,
-            )
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(10.dp),
+            ) {
+                Text(
+                    text =
+                        buildAnnotatedString {
+                            append("가입을 환영해요.\n")
+                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                                append("당신의 감정")
+                            }
+                            append("을,\n")
+                            append("이곳에 천천히 담아보세요.")
+                        },
+                    style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White,
+                )
+                Text(
+                    text = "여기부터 당신만의 기록이 시작돼요.",
+                    style = MooiTheme.typography.body2,
+                    color = MooiTheme.colorScheme.gray500,
+                )
+            }
 
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -103,7 +118,8 @@ private fun StatelessSignupCompleteScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 SpeechBubble(
-                    text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                    contentText = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                    textStyle = MooiTheme.typography.caption3.copy(lineHeight = 20.sp),
                     tail = BubbleTail.BottomCenter,
                     sizeParam = DpSize(265.dp, 84.dp),
                 )
@@ -117,6 +133,7 @@ private fun StatelessSignupCompleteScreen(
                     onClick = {
                         onLogin()
                     },
+                    isDefaultWidth = false,
                 )
             }
         }

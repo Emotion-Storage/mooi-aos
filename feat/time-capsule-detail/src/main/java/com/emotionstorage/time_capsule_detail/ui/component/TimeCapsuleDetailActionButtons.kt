@@ -98,7 +98,7 @@ private fun SaveTimeCapsuleButton(
 
                 val timerString = String.format("%02d:%02d:%02d", hours, minutes, seconds)
                 SpeechBubble(
-                    text = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
+                    contentText = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
                     tail = BubbleTail.BottomCenter,
                     sizeParam = DpSize(265.dp, 84.dp),
                     textColor = MooiTheme.colorScheme.errorRed,

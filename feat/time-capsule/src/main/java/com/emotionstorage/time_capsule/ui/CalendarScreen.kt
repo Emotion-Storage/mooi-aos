@@ -42,7 +42,7 @@ import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast.CalendarToast
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
-import com.emotionstorage.ui.component.CalendarYearMonthBottomSheet
+import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
@@ -229,7 +229,7 @@ private fun StatelessCalendarScreen(
 
             // calendar year month bottom sheet
             if (showYearMonthBottomSheet) {
-                CalendarYearMonthBottomSheet(
+                YearMonthPickerBottomSheet(
                     onDismissRequest = {
                         setShowYearMonthBottomSheet(false)
                     },
