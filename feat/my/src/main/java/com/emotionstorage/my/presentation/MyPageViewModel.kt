@@ -45,6 +45,8 @@ sealed class MyPageSideEffect {
 
     object WithDrawSuccess : MyPageSideEffect()
 
+    object NavigateToSplash : MyPageSideEffect()
+
     data class NavigateToKeyDescription(
         val keyCount: Int,
     ) : MyPageSideEffect()
@@ -57,6 +59,7 @@ sealed class MyPageSideEffect {
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
+    // add usecase
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
@@ -138,6 +141,12 @@ class MyPageViewModel @Inject constructor(
 
     private fun handleWithDraw() =
         intent {
+            try {
+                // usecase 호출
+                postSideEffect(MyPageSideEffect.NavigateToSplash)
+            } catch (t: Throwable) {
+                postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
+            }
             postSideEffect(MyPageSideEffect.WithDrawSuccess)
         }
 }

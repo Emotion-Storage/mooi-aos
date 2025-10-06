@@ -23,6 +23,7 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyPageScreen
 import com.emotionstorage.my.ui.TermsAndPrivacyScreen
+import com.emotionstorage.my.ui.WithDrawNoticeScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -317,6 +318,17 @@ internal fun AppNavHost(
                     navToBack = {
                         navController.popBackStack()
                     },
+                )
+            }
+
+            composable<AppDestination.WithDrawNotice> {
+                WithDrawNoticeScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                    navToSplash = {
+                        navController.navigateWithClearStack(AppDestination.Splash)
+                    }
                 )
             }
         }
