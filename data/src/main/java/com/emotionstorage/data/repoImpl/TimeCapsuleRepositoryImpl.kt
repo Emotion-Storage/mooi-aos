@@ -46,7 +46,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
 
     override suspend fun setFavoriteTimeCapsule(
         id: String,
-        isFavorite: Boolean
+        isFavorite: Boolean,
     ): Flow<DataState<SetFavoriteResult>> =
         flow {
             emit(DataState.Loading(isLoading = true))
@@ -54,10 +54,11 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 val result = timeCapsuleRemoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
 
                 // todo: handle time capsule favorite fail - list is full
-                emit(DataState.Success(
-                    if (result) SetFavoriteResult.ADDED else SetFavoriteResult.REMOVED
-                ))
-
+                emit(
+                    DataState.Success(
+                        if (result) SetFavoriteResult.ADDED else SetFavoriteResult.REMOVED,
+                    ),
+                )
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
