@@ -14,11 +14,19 @@ interface TimeCapsuleRepository {
         note: String,
     ): Flow<DataState<Boolean>>
 
+    suspend fun setFavoriteTimeCapsule(id: String, isFavorite: Boolean): Flow<DataState<SetFavoriteResult>>
+
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>
 
     suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>>
+}
+
+enum class SetFavoriteResult {
+    ADDED,
+    REMOVED,
+    FULL,
 }
 
 enum class FavoriteSortBy(

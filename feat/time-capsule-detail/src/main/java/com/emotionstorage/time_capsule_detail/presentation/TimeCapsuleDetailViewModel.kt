@@ -5,8 +5,8 @@ import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase.ToggleToastResult
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
@@ -123,7 +123,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val openArrivedTimeCapsule: OpenArrivedTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase,
+    private val toggleFavorite: SetFavoriteTimeCapsuleUseCase,
     private val saveNote: SaveTimeCapsuleNoteUseCase,
     private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : ViewModel(),

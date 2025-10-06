@@ -3,9 +3,9 @@ package com.emotionstorage.time_capsule.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteSortBy
+import com.emotionstorage.domain.repo.SetFavoriteResult
 import com.emotionstorage.domain.useCase.timeCapsule.GetFavoriteTimeCapsulesUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
@@ -50,7 +50,7 @@ sealed class FavoriteTimeCapsulesSideEffect {
 @HiltViewModel
 class FavoriteTimeCapsulesViewModel @Inject constructor(
     private val getFavoriteTimeCapsules: GetFavoriteTimeCapsulesUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase,
+    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<FavoriteTimeCapsulesState, FavoriteTimeCapsulesSideEffect> {
     override val container =
@@ -118,6 +118,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 return@intent
             }
 
+            val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
             suspend fun updateFavorite(
                 id: String,
                 isFavorite: Boolean,
@@ -136,18 +137,18 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
             coroutineScope {
                 collectDataState(
-                    flow = toggleFavorite(id),
+                    flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
-                        if (it == ToggleToastResult.FAVORITE_ADDED) {
+                        if (it == SetFavoriteResult.ADDED) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_ADDED))
                             updateFavorite(id, true)
-                        } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                        } else if (it == SetFavoriteResult.REMOVED) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_REMOVED))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
-                        if (data == ToggleToastResult.FAVORITE_FULL) {
+                        if (data == SetFavoriteResult.FULL) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_FULL))
                         }
                     },

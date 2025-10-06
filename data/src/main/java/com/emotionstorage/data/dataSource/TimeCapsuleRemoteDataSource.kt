@@ -12,6 +12,11 @@ interface TimeCapsuleRemoteDataSource {
         note: String,
     ): Boolean
 
+    suspend fun patchTimeCapsuleFavorite(
+        id: String,
+        isFavorite: Boolean,
+    ): Boolean
+
     suspend fun getFavoriteTimeCapsules(sortBy: String): List<TimeCapsuleEntity>
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>
