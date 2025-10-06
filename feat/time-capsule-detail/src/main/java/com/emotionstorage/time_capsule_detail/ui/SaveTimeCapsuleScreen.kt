@@ -1,11 +1,13 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import android.view.Gravity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,7 +42,8 @@ import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
@@ -56,12 +60,24 @@ fun SaveTimeCapsuleScreen(
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val snackState = remember { SnackbarHostState() }
+
     LaunchedEffect(id, isNewTimeCapsule) {
         viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule))
+
+        if (!isNewTimeCapsule) {
+            // dismiss current snackbar if exists
+            snackState.currentSnackbarData?.dismiss()
+            snackState.showSnackbar(
+                "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요."
+            )
+        }
     }
+
 
     StatelessSaveTimeCapsuleScreen(
         modifier = modifier,
+        snackbarHostState = snackState,
         state = state.value,
         onAction = viewModel::onAction,
         navToMain = navToHome,
@@ -73,6 +89,7 @@ fun SaveTimeCapsuleScreen(
 @Composable
 private fun StatelessSaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
     navToMain: () -> Unit = {},
@@ -80,7 +97,7 @@ private fun StatelessSaveTimeCapsuleScreen(
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
-    val (showExpiredModal, setShowExpiredModal)  = remember { mutableStateOf(false) }
+    val (showExpiredModal, setShowExpiredModal) = remember { mutableStateOf(false) }
 
     TimeCapsuleExpiredModal(
         isModalOpen = showExpiredModal,
@@ -91,10 +108,9 @@ private fun StatelessSaveTimeCapsuleScreen(
     )
 
     Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+        modifier = modifier
+            .fillMaxSize()
+            .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
                 showBackground = false,
@@ -102,15 +118,26 @@ private fun StatelessSaveTimeCapsuleScreen(
                 onBackClick = navToBack,
             )
         },
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackbarHostState,
+                gravity = Gravity.TOP
+            ) { snackbarData ->
+                // todo: change toast duration to 4s
+                Toast(
+                    message = snackbarData.visuals.message,
+                    paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
+                )
+            }
+        },
     ) { innerPadding ->
         Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 39.67.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background)
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 39.67.dp),
         ) {
             if (showToolTip) {
                 // todo: tool tip
@@ -136,10 +163,9 @@ private fun StatelessSaveTimeCapsuleScreen(
 
             // speech bubble & button
             Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {
@@ -164,8 +190,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                     },
                     onExpire = {
                         setShowExpiredModal(true)
-                    }
-                )
+                    })
             }
         }
     }
@@ -184,23 +209,21 @@ private fun SaveTimeCapsuleTitle(
         )
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text =
-                    buildAnnotatedString {
-                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                            append("언제 다시 ")
-                        }
-                        append("꺼내볼까요?")
-                    },
+                text = buildAnnotatedString {
+                    withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                        append("언제 다시 ")
+                    }
+                    append("꺼내볼까요?")
+                },
                 style = MooiTheme.typography.head1,
                 color = Color.White,
             )
             Image(
-                modifier =
-                    Modifier
-                        .size(26.dp)
-                        .clickable(
-                            onClick = onToolTipClick,
-                        ),
+                modifier = Modifier
+                    .size(26.dp)
+                    .clickable(
+                        onClick = onToolTipClick,
+                    ),
                 painter = painterResource(R.drawable.info),
                 contentDescription = "tool tip",
             )
@@ -272,17 +295,16 @@ private fun RowScope.ArriveAfterGridItem(
     onDatePickerClick: (() -> Unit)? = null,
 ) {
     Box(
-        modifier =
-            modifier
-                .size(95.dp, 54.dp)
-                .subBackground(
-                    enabled = isSelected,
-                    defaultBackground = Color.Black,
-                    shape = RoundedCornerShape(10.dp),
-                )
-                .clickable {
-                    onSelect()
-                },
+        modifier = modifier
+            .size(95.dp, 54.dp)
+            .subBackground(
+                enabled = isSelected,
+                defaultBackground = Color.Black,
+                shape = RoundedCornerShape(10.dp),
+            )
+            .clickable {
+                onSelect()
+            },
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
@@ -294,17 +316,16 @@ private fun RowScope.ArriveAfterGridItem(
 
     if (arriveAfter == ArriveAfter.AFTER_CUSTOM && isSelected) {
         Row(
-            modifier =
-                Modifier
-                    .size(198.dp, 54.dp)
-                    .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
-                    .clickable {
-                        onDatePickerClick?.invoke()
-                    }
-                    .padding(
-                        start = 17.dp,
-                        end = 20.dp,
-                    ),
+            modifier = Modifier
+                .size(198.dp, 54.dp)
+                .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
+                .clickable {
+                    onDatePickerClick?.invoke()
+                }
+                .padding(
+                    start = 17.dp,
+                    end = 20.dp,
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -335,10 +356,9 @@ private fun RowScope.ArriveAfterGridItem(
 private fun SaveTimeCapsuleScreenPreview() {
     MooiTheme {
         StatelessSaveTimeCapsuleScreen(
-            state =
-                SaveTimeCapsuleState(
-                    emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
-                ),
+            state = SaveTimeCapsuleState(
+                emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+            ),
         )
     }
 }
