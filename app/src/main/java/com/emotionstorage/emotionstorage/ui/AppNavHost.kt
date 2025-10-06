@@ -19,7 +19,6 @@ import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
-import com.emotionstorage.common.LocalDateTimeSerializer
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.MyPageScreen
@@ -35,7 +34,6 @@ import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.navigateWithClearStack
 import kotlinx.serialization.Serializable
-import java.time.LocalDateTime
 
 /**
  * App destinations

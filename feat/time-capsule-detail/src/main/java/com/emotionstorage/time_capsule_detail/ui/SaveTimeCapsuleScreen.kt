@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.ui
 
-import SpeechBubble
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,12 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -31,11 +26,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
@@ -50,7 +42,6 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Composable
 fun SaveTimeCapsuleScreen(
@@ -89,9 +80,10 @@ private fun StatelessSaveTimeCapsuleScreen(
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
                 showBackground = false,
@@ -101,12 +93,13 @@ private fun StatelessSaveTimeCapsuleScreen(
         },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding)
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 39.67.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 39.67.dp),
         ) {
             if (showToolTip) {
                 // todo: tool tip
@@ -119,20 +112,23 @@ private fun StatelessSaveTimeCapsuleScreen(
                 verticalArrangement = Arrangement.spacedBy(17.dp),
             ) {
                 SaveTimeCapsuleTitle(
-                    onToolTipClick = { setShowToolTip(true) })
+                    onToolTipClick = { setShowToolTip(true) },
+                )
                 SaveTimeCapsuleGrid(
                     arriveAt = state.arriveAt?.toLocalDate(),
                     arriveAfter = state.arriveAfter,
                     onSelectArriveAfter = {
                         onAction(SaveTimeCapsuleAction.SelectArriveAfter(it))
-                    })
+                    },
+                )
             }
 
             // speech bubble & button
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.BottomCenter),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {
@@ -168,21 +164,25 @@ private fun SaveTimeCapsuleTitle(
         )
         Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = buildAnnotatedString {
-                    withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
-                        append("언제 다시 ")
-                    }
-                    append("꺼내볼까요?")
-                },
+                text =
+                    buildAnnotatedString {
+                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            append("언제 다시 ")
+                        }
+                        append("꺼내볼까요?")
+                    },
                 style = MooiTheme.typography.head1,
                 color = Color.White,
             )
             Image(
-                modifier = Modifier
-                    .size(26.dp)
-                    .clickable(
-                        onClick = onToolTipClick
-                    ), painter = painterResource(R.drawable.info), contentDescription = "tool tip"
+                modifier =
+                    Modifier
+                        .size(26.dp)
+                        .clickable(
+                            onClick = onToolTipClick,
+                        ),
+                painter = painterResource(R.drawable.info),
+                contentDescription = "tool tip",
             )
         }
     }
@@ -197,18 +197,18 @@ fun SaveTimeCapsuleGrid(
 ) {
     Column(
         modifier = modifier,
-        horizontalAlignment = Alignment.Start
+        horizontalAlignment = Alignment.Start,
     ) {
         Text(
             text = "타임캡슐 오픈일",
             style = MooiTheme.typography.body1,
-            color = Color.White
+            color = Color.White,
         )
         Text(
             modifier = Modifier.padding(top = 4.dp, bottom = 15.dp),
             text = "* 감정 회고일을 선택하세요. 한 번 더 탭하면 해제돼요.",
             style = MooiTheme.typography.caption7,
-            color = MooiTheme.colorScheme.gray500
+            color = MooiTheme.colorScheme.gray500,
         )
 
         Column(
@@ -216,7 +216,7 @@ fun SaveTimeCapsuleGrid(
         ) {
             for (arriveAfters in ArriveAfter.entries.chunked(3)) {
                 Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     for (it in arriveAfters) {
                         ArriveAfterGridItem(
@@ -233,7 +233,7 @@ fun SaveTimeCapsuleGrid(
                             arriveAt = arriveAt,
                             onDatePickerClick = {
                                 // todo: show date picker bottom sheet
-                            }
+                            },
                         )
                     }
                 }
@@ -249,73 +249,74 @@ private fun RowScope.ArriveAfterGridItem(
     onSelect: () -> Unit = {},
     isSelected: Boolean = false,
     arriveAt: LocalDate? = null,
-    onDatePickerClick: (() -> Unit)? = null
+    onDatePickerClick: (() -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .size(95.dp, 54.dp)
-            .subBackground(
-                enabled = isSelected,
-                defaultBackground = Color.Black,
-                shape = RoundedCornerShape(10.dp)
-            )
-            .clickable {
-                onSelect()
-            }
+        modifier =
+            modifier
+                .size(95.dp, 54.dp)
+                .subBackground(
+                    enabled = isSelected,
+                    defaultBackground = Color.Black,
+                    shape = RoundedCornerShape(10.dp),
+                ).clickable {
+                    onSelect()
+                },
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = arriveAfter.label,
             style = MooiTheme.typography.body8,
-            color = if (isSelected) MooiTheme.colorScheme.primary else Color.White
+            color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
         )
     }
 
     if (arriveAfter == ArriveAfter.AFTER_CUSTOM && isSelected) {
         Row(
-            modifier = Modifier
-                .size(198.dp, 54.dp)
-                .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
-                .clickable {
-                    onDatePickerClick?.invoke()
-                }
-                .padding(
-                    start = 17.dp, end = 20.dp
-                ),
+            modifier =
+                Modifier
+                    .size(198.dp, 54.dp)
+                    .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
+                    .clickable {
+                        onDatePickerClick?.invoke()
+                    }.padding(
+                        start = 17.dp,
+                        end = 20.dp,
+                    ),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             if (arriveAt == null) {
                 Text(
                     "날짜를 선택해주세요",
                     style = MooiTheme.typography.body8,
-                    color = MooiTheme.colorScheme.gray600
+                    color = MooiTheme.colorScheme.gray600,
                 )
             } else {
                 Text(
                     arriveAt.toKorDate(),
                     style = MooiTheme.typography.body8,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
             Image(
                 modifier = Modifier.size(16.dp),
                 painter = painterResource(R.drawable.calendar),
-                contentDescription = "calendar date picker"
+                contentDescription = "calendar date picker",
             )
         }
     }
 }
-
 
 @Preview
 @Composable
 private fun SaveTimeCapsuleScreenPreview() {
     MooiTheme {
         StatelessSaveTimeCapsuleScreen(
-            state = SaveTimeCapsuleState(
-                emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
-            )
+            state =
+                SaveTimeCapsuleState(
+                    emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+                ),
         )
     }
 }

@@ -9,7 +9,6 @@ import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -24,7 +23,9 @@ data class SaveTimeCapsuleState(
     val arriveAfter: ArriveAfter? = null,
     val arriveAt: LocalDateTime? = null,
 ) {
-    enum class ArriveAfter(val label: String) {
+    enum class ArriveAfter(
+        val label: String,
+    ) {
         AFTER_24HOURS("24시간 후"),
         AFTER_3DAYS("3일 후"),
         AFTER_1WEEK("일주일 후"),
@@ -55,8 +56,9 @@ sealed class SaveTimeCapsuleAction {
 }
 
 sealed class SaveTimeCapsuleSideEffect {
-    data class ShowToast(val toast: String = "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.") :
-        SaveTimeCapsuleSideEffect()
+    data class ShowToast(
+        val toast: String = "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
+    ) : SaveTimeCapsuleSideEffect()
 
 //    data class ShowDatePickerBottomSheet(
 //        val yearMonth: YearMonth,
@@ -72,9 +74,8 @@ sealed class SaveTimeCapsuleSideEffect {
 
 @HiltViewModel
 class SaveTimeCapsuleViewModel @Inject constructor(
-    private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase
-) :
-    ViewModel(),
+    private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
+) : ViewModel(),
     ContainerHost<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> {
     override val container: Container<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> =
         container(SaveTimeCapsuleState())
@@ -111,7 +112,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                         id = id,
                         isNewTimeCapsule = isNewTimeCapsule,
                         // todo: change domain model's emotion list type
-                        emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움",  "\uD83E\uDD70 안정감"),
+                        emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
                         createdAt = it.createdAt,
                         // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
                         saveAt = if (isNewTimeCapsule) it.createdAt else LocalDateTime.now(),
@@ -123,7 +124,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                 if (!isNewTimeCapsule) {
                     postSideEffect(ShowToast())
                 }
-            }
+            },
         )
     }
 

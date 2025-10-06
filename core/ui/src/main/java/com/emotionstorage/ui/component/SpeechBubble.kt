@@ -162,7 +162,7 @@ fun SpeechBubblePreview() {
         Column(
             modifier = Modifier.background(MooiTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(10.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             SpeechBubble(
                 contentText = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
@@ -175,17 +175,17 @@ fun SpeechBubblePreview() {
                     Row(
                         modifier = Modifier,
                         verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Image(
                             modifier = Modifier.size(14.dp),
                             painter = painterResource(R.drawable.clock),
-                            contentDescription = ""
+                            contentDescription = "",
                         )
                         Text(
                             text = "보관일 : 2025. 07. 30  08:40",
                             style = MooiTheme.typography.caption3,
-                            color = MooiTheme.colorScheme.gray300
+                            color = MooiTheme.colorScheme.gray300,
                         )
                     }
                 }
