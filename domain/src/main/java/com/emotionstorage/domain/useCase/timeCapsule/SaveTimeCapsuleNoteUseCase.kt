@@ -5,6 +5,6 @@ import javax.inject.Inject
 
 class SaveTimeCapsuleNoteUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository
-){
-    suspend operator fun invoke(note: String) = timeCapsuleRepository.saveTimeCapsuleNote(note)
+) {
+    suspend operator fun invoke(id: String, note: String) = timeCapsuleRepository.saveTimeCapsuleNote(id, note)
 }
