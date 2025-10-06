@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -75,6 +76,7 @@ private fun StatelessNicknameChangeScreen(
                 modifier = Modifier
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
+                    .imePadding()
                     .consumeWindowInsets(WindowInsets.navigationBars)
             ) {
                 NicknameChangeTitle()
