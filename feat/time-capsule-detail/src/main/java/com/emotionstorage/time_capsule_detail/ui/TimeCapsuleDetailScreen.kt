@@ -243,7 +243,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     .background(MooiTheme.colorScheme.background)
                     .run {
                         // blur whole screen if locked
-                        if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                        if (state.timeCapsule.status == TimeCapsule.Status.LOCKED) {
                             this.blur(8.dp)
                         } else {
                             this
@@ -276,7 +276,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         }
                     },
                     rightComponent = {
-                        if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                        if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.Status.OPENED) {
                             RoundedToggleButton(
                                 isSelected = state.timeCapsule.isFavorite,
                                 onSelect = {
@@ -325,7 +325,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     comments = state.timeCapsule.comments,
                 )
 
-                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                if (state.timeCapsule.status == TimeCapsule.Status.OPENED) {
                     TimeCapsuleNote(
                         modifier = Modifier.padding(top = 53.dp),
                         note = state.timeCapsule.note ?: "",
@@ -389,7 +389,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.LOCKED,
+                            status = TimeCapsule.Status.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +

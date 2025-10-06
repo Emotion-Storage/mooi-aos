@@ -80,7 +80,7 @@ fun TimeCapsuleItem(
         )
 
         // content
-        if (timeCapsule.status == TimeCapsule.STATUS.TEMPORARY) {
+        if (timeCapsule.status == TimeCapsule.Status.TEMPORARY) {
             TemporaryContent(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClick,
@@ -99,13 +99,13 @@ fun TimeCapsuleItem(
                         .clickable(onClick = onClick),
             ) {
                 // overlay
-                if (timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                if (timeCapsule.status == TimeCapsule.Status.LOCKED) {
                     LockedContentOverLay(
                         modifier = Modifier.fillMaxSize(),
                         openDDay = timeCapsule.openDDay ?: 0,
                     )
                 }
-                if (timeCapsule.status == TimeCapsule.STATUS.ARRIVED) {
+                if (timeCapsule.status == TimeCapsule.Status.ARRIVED) {
                     ArrivedContentOverLay(
                         modifier = Modifier.fillMaxSize(),
                         openDDay = timeCapsule.openDDay ?: 0,
@@ -124,7 +124,7 @@ fun TimeCapsuleItem(
 
 @Composable
 private fun TimeCapsuleItemInfo(
-    status: TimeCapsule.STATUS,
+    status: TimeCapsule.Status,
     createdAt: LocalDateTime,
     expireAt: LocalDateTime,
     modifier: Modifier = Modifier,
@@ -134,7 +134,7 @@ private fun TimeCapsuleItemInfo(
     onFavoriteClick: () -> Unit = {},
 ) {
     when (status) {
-        TimeCapsule.STATUS.TEMPORARY -> {
+        TimeCapsule.Status.TEMPORARY -> {
             // timer
             Row(
                 modifier = modifier.padding(bottom = 7.dp),
@@ -164,7 +164,7 @@ private fun TimeCapsuleItemInfo(
             }
         }
 
-        TimeCapsule.STATUS.LOCKED -> {
+        TimeCapsule.Status.LOCKED -> {
             // createdAt
             Text(
                 modifier = modifier.padding(bottom = 6.dp),
@@ -174,7 +174,7 @@ private fun TimeCapsuleItemInfo(
             )
         }
 
-        TimeCapsule.STATUS.ARRIVED -> {
+        TimeCapsule.Status.ARRIVED -> {
             // createdAt & open info text
             Column(
                 modifier = modifier.padding(bottom = (10.5).dp),
@@ -206,7 +206,7 @@ private fun TimeCapsuleItemInfo(
             }
         }
 
-        TimeCapsule.STATUS.OPENED -> {
+        TimeCapsule.Status.OPENED -> {
             // createdAt & favorite button
             Row(
                 modifier =
@@ -368,7 +368,7 @@ private fun TimeCapsuleContent(
     timeCapsule: TimeCapsuleItemState,
 ) {
     val blurContent =
-        timeCapsule.status == TimeCapsule.STATUS.LOCKED || timeCapsule.status == TimeCapsule.STATUS.ARRIVED
+        timeCapsule.status == TimeCapsule.Status.LOCKED || timeCapsule.status == TimeCapsule.Status.ARRIVED
     Row(
         modifier =
             modifier
@@ -388,7 +388,7 @@ private fun TimeCapsuleContent(
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
         // unlocked icon
-        if (timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+        if (timeCapsule.status == TimeCapsule.Status.OPENED) {
             Column(
                 modifier =
                     Modifier
@@ -443,7 +443,7 @@ private fun TimeCapsuleItemPreview() {
     val dummyTimeCapsule =
         TimeCapsuleItemState(
             id = "",
-            status = TimeCapsule.STATUS.OPENED,
+            status = TimeCapsule.Status.OPENED,
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =
                 listOf(
@@ -481,28 +481,28 @@ private fun TimeCapsuleItemPreview() {
             TimeCapsuleItem(
                 timeCapsule =
                     dummyTimeCapsule.copy(
-                        status = TimeCapsule.STATUS.TEMPORARY,
+                        status = TimeCapsule.Status.TEMPORARY,
                         createdAt = LocalDateTime.now().minusHours(2),
                     ),
             )
             TimeCapsuleItem(
                 timeCapsule =
                     dummyTimeCapsule.copy(
-                        status = TimeCapsule.STATUS.LOCKED,
+                        status = TimeCapsule.Status.LOCKED,
                         openDDay = -20,
                     ),
             )
             TimeCapsuleItem(
                 timeCapsule =
                     dummyTimeCapsule.copy(
-                        status = TimeCapsule.STATUS.ARRIVED,
+                        status = TimeCapsule.Status.ARRIVED,
                         openDDay = 20,
                     ),
             )
             TimeCapsuleItem(
                 timeCapsule =
                     dummyTimeCapsule.copy(
-                        status = TimeCapsule.STATUS.OPENED,
+                        status = TimeCapsule.Status.OPENED,
                         openDDay = 20,
                     ),
             )

@@ -9,13 +9,13 @@ internal object TimeCapsuleMapper {
             id = entity.id,
             status =
                 if (entity.status == "임시 저장") {
-                    TimeCapsule.STATUS.TEMPORARY
+                    TimeCapsule.Status.TEMPORARY
                 } else if (entity.status == "잠김") {
-                    TimeCapsule.STATUS.LOCKED
+                    TimeCapsule.Status.LOCKED
                 } else if (entity.status == "도착") {
-                    TimeCapsule.STATUS.ARRIVED
+                    TimeCapsule.Status.ARRIVED
                 } else if (entity.status == "열림") {
-                    TimeCapsule.STATUS.OPENED
+                    TimeCapsule.Status.OPENED
                 } else {
                     throw IllegalArgumentException("Invalid status label")
                 },

@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.common.toKorDate
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.STATUS
+import com.emotionstorage.domain.model.TimeCapsule.Status
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.BottomSheet
 import com.emotionstorage.ui.component.CtaButton
@@ -184,7 +184,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
         (0..3).map { i ->
             TimeCapsuleItemState(
                 id = i.toString(),
-                status = STATUS.entries.get(i),
+                status = Status.entries.get(i),
                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                 emotions =
                     listOf(

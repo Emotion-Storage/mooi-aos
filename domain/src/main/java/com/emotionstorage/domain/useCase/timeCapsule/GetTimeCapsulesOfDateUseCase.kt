@@ -3,7 +3,7 @@ package com.emotionstorage.domain.useCase.timeCapsule
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.domain.model.TimeCapsule.STATUS
+import com.emotionstorage.domain.model.TimeCapsule.Status
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,7 +22,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                         listOf(
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.TEMPORARY,
+                                status = Status.TEMPORARY,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
@@ -47,7 +47,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                             ),
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.LOCKED,
+                                status = Status.LOCKED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
@@ -73,7 +73,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                             ),
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.ARRIVED,
+                                status = Status.ARRIVED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
@@ -99,7 +99,7 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                             ),
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.OPENED,
+                                status = Status.OPENED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =

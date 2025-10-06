@@ -199,10 +199,10 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                             isNoteChanged = false,
                         )
                     }
-                    if (it.status == TimeCapsule.STATUS.ARRIVED) {
+                    if (it.status == TimeCapsule.Status.ARRIVED) {
                         openArrivedTimeCapsule(it)
                     }
-                    if (it.status == TimeCapsule.STATUS.LOCKED) {
+                    if (it.status == TimeCapsule.Status.LOCKED) {
                         triggerUnlockModal()
                     }
                 },
@@ -224,7 +224,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 onSuccess = {
                     reduce {
                         state.copy(
-                            timeCapsule = timeCapsule.copy(status = TimeCapsule.STATUS.OPENED),
+                            timeCapsule = timeCapsule.copy(status = TimeCapsule.Status.OPENED),
                         )
                     }
                 },
@@ -319,7 +319,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 state.copy(
                     timeCapsule =
                         state.timeCapsule?.copy(
-                            status = TimeCapsule.STATUS.ARRIVED,
+                            status = TimeCapsule.Status.ARRIVED,
                         ),
                 )
             }

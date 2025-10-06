@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
@@ -39,7 +38,7 @@ private val DUMMY_TIME_CAPSULES =
     (1..15).toList().map { it ->
         TimeCapsuleItemState(
             id = it.toString(),
-            status = TimeCapsule.STATUS.ARRIVED,
+            status = TimeCapsule.Status.ARRIVED,
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =
                 listOf(
