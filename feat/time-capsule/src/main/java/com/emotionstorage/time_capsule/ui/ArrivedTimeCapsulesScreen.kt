@@ -145,13 +145,13 @@ private fun StatelessArrivedTimeCapsulesScreen(
                         Modifier
                             .fillMaxWidth()
                             .scrollable(scrollState, orientation = Orientation.Vertical),
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
                 ) {
                     items(items = timeCapsules, key = { it.id }) {
                         TimeCapsuleItem(
                             modifier =
                                 Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 17.dp),
+                                    .fillMaxWidth(),
                             timeCapsule = it,
                             showDate = true,
                             showInfoText = false,

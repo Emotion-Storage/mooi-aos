@@ -221,13 +221,11 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         Modifier
                             .fillMaxWidth()
                             .scrollable(scrollState, orientation = Orientation.Vertical),
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
                 ) {
                     items(items = state.timeCapsules, key = { it.id }) {
                         TimeCapsuleItem(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 17.dp),
+                            modifier = Modifier.fillMaxWidth(),
                             timeCapsule = it,
                             showDate = true,
                             onClick = { navToTimeCapsuleDetail(it.id) },
