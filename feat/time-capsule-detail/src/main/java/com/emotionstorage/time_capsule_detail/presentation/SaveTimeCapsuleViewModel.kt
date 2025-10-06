@@ -19,7 +19,7 @@ data class SaveTimeCapsuleState(
     val isNewTimeCapsule: Boolean = false,
     val emotions: List<String> = emptyList(),
     val createdAt: LocalDateTime = LocalDateTime.now(),
-    val expireAt: LocalDateTime= LocalDateTime.now(),
+    val expireAt: LocalDateTime? = null,
     val saveAt: LocalDateTime = LocalDateTime.now(),
     val arriveAfter: ArriveAfter? = null,
     val arriveAt: LocalDateTime? = null,
@@ -112,10 +112,8 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                     state.copy(
                         id = id,
                         isNewTimeCapsule = isNewTimeCapsule,
-                        // todo: change domain model's emotion list type
-                        emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+                        emotions = it.emotions.map { it.emoji + " " + it.label },
                         createdAt = it.createdAt,
-                        // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
                         saveAt = if (isNewTimeCapsule) it.createdAt else LocalDateTime.now(),
                         expireAt = it.expireAt,
                         arriveAfter = null,

@@ -25,8 +25,8 @@ import java.time.LocalDateTime
 @Composable
 fun SaveTimeCapsuleButton(
     isNewTimeCapsule: Boolean,
-    expireAt: LocalDateTime,
     modifier: Modifier = Modifier,
+    expireAt: LocalDateTime? = null,
     enabled: Boolean = false,
     onSave: () -> Unit = {},
     onExpire: () -> Unit = {},
@@ -39,7 +39,7 @@ fun SaveTimeCapsuleButton(
             onClick = onSave,
             isDefaultWidth = false,
         )
-    } else {
+    } else if (expireAt != null) {
         CtaButton(
             modifier = modifier
                 .fillMaxWidth()
@@ -57,7 +57,6 @@ fun SaveTimeCapsuleButton(
                         onExpire()
                     }
                 }
-
                 val remainingTime = String.format("%02d:%02d:%02d", hours, minutes, seconds)
                 Text(
                     text = buildAnnotatedString {

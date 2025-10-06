@@ -18,7 +18,7 @@ class GetTimeCapsuleByIdUseCase @Inject constructor() {
                 DataState.Success(
                     TimeCapsule(
                         id = "id",
-                        status = TimeCapsule.Status.OPENED,
+                        status = TimeCapsule.Status.TEMPORARY,
                         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                         summary =
                             "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
@@ -52,7 +52,7 @@ class GetTimeCapsuleByIdUseCase @Inject constructor() {
                             "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
                                 "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
                         logs = emptyList(),
-                        createdAt = LocalDateTime.now(),
+                        createdAt = LocalDateTime.now().minusHours(24).plusSeconds(90),
                         updatedAt = LocalDateTime.now(),
                         arriveAt = LocalDateTime.now().plusDays(15),
                     ),

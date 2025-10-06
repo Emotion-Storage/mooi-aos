@@ -37,6 +37,7 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
@@ -79,6 +80,15 @@ private fun StatelessSaveTimeCapsuleScreen(
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
+    val (showExpiredModal, setShowExpiredModal)  = remember { mutableStateOf(false) }
+
+    TimeCapsuleExpiredModal(
+        isModalOpen = showExpiredModal,
+        onConfirm = {
+            setShowExpiredModal(false)
+            navToPrevious()
+        },
+    )
 
     Scaffold(
         modifier =
@@ -153,7 +163,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                         }
                     },
                     onExpire = {
-                        // todo: show expired modal
+                        setShowExpiredModal(true)
                     }
                 )
             }
