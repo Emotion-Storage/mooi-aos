@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class GetFavoriteTimeCapsulesResponse(
     val pagination: PaginationInfo,
     val totalCapsules: Int,
-    val timeCapsules: TimeCapsule,
+    val timeCapsules: List<TimeCapsule>,
 ) {
     @Serializable
     data class PaginationInfo(

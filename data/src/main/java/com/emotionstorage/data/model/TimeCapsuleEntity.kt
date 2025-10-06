@@ -6,7 +6,7 @@ data class TimeCapsuleEntity(
     val id: String,
     val status: String,
     val title: String,
-    val summary: String,
+    val summary: String = "",
     val isFavorite: Boolean = false,
     val emotions: List<Emotion> = emptyList(),
     val comments: List<String> = emptyList(),
