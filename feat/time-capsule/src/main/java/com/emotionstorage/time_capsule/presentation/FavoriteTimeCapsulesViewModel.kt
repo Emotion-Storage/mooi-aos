@@ -2,7 +2,6 @@ package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
-import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.useCase.timeCapsule.GetFavoriteTimeCapsulesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
@@ -15,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class FavoriteTimeCapsulesState(
@@ -82,13 +80,14 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 flow = getFavoriteTimeCapsules(state.sortOrder),
                 onSuccess = { timeCapsules ->
                     reduce {
-                        state.copy(timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) }
+                        state.copy(
+                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
                         )
                     }
                 },
                 onError = { throwable, _ ->
-                    Logger.e("Failed to get favorite time capsules, ${throwable}")
-                }
+                    Logger.e("Failed to get favorite time capsules, $throwable")
+                },
             )
         }
 
@@ -102,13 +101,13 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             sortOrder = sortOrder,
-                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) }
+                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
                         )
                     }
                 },
                 onError = { throwable, _ ->
-                    Logger.e("Failed to get favorite time capsules, ${throwable}")
-                }
+                    Logger.e("Failed to get favorite time capsules, $throwable")
+                },
             )
         }
 

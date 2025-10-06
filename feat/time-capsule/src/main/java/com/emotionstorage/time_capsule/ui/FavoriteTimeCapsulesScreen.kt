@@ -62,7 +62,8 @@ private val DUMMY_TIME_CAPSULES =
                         emoji = "\uD83D\uDE14",
                         label = "서운함",
                         percentage = 30.0f,
-                    ), Emotion(
+                    ),
+                    Emotion(
                         emoji = "\uD83D\uDE0A",
                         label = "고마움",
                         percentage = 30.0f,
