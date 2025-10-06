@@ -1,5 +1,6 @@
 package com.emotionstorage.auth.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -65,6 +67,9 @@ fun LoginScreen(
     StatelessLoginScreen(
         modifier = modifier,
         onAction = viewModel::onAction,
+        navToOnboarding = {
+            navToOnBoarding(AuthProvider.KAKAO, "")
+        },
         navToHome = navToHome,
     )
 }
@@ -74,6 +79,7 @@ private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
     onAction: (LoginAction) -> Unit = {},
     // todo: delete after testing
+    navToOnboarding: () -> Unit = {},
     navToHome: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
@@ -89,57 +95,29 @@ private fun StatelessLoginScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
+                    .padding(top = 67.dp, bottom = 36.dp)
                     .verticalScroll(scrollState),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier =
-                    Modifier
-                        .padding(top = 67.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    modifier = Modifier.height(37.dp),
-                    style = MooiTheme.typography.body1,
-                    color = MooiTheme.colorScheme.primary,
-                    text = stringResource(id = R.string.login_title),
-                )
-                Text(
-                    modifier = Modifier.height(56.dp),
-                    color = Color.White,
-                    style =
-                        TextStyle(
-                            fontFamily = pretendard,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 40.sp,
-                            letterSpacing = (-0.02).em,
-                            lineHeight = (40 * 1.4).sp,
-                        ),
-                    text = stringResource(id = R.string.login_app_name),
-                )
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-            Box(
-                modifier =
-                    Modifier
-                        .background(Color.Black)
-                        .width(148.dp)
-                        .height(148.dp),
+            Text(
+                modifier = Modifier.height(37.dp),
+                style = MooiTheme.typography.body2,
+                color = MooiTheme.colorScheme.primary,
+                text = stringResource(id = R.string.login_title),
             )
-            Spacer(modifier = Modifier.height(20.dp))
-
             Column(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 36.dp),
+                        .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Button(onClick = navToHome) {
                     Text("홈 화면 이동")
+                }
+                Button(onClick = navToOnboarding) {
+                    Text("온보딩 이동")
                 }
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
