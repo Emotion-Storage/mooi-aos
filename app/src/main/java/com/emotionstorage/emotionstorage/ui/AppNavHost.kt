@@ -26,6 +26,7 @@ import com.emotionstorage.my.ui.TermsAndPrivacyScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
+import com.emotionstorage.time_capsule_detail.ui.SaveTimeCapsuleScreen
 import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
@@ -88,6 +89,13 @@ internal sealed class AppDestination {
     @Serializable
     data class TimeCapsuleDetail(
         val id: String,
+        val isNewTimeCapsule: Boolean,
+    ) : AppDestination()
+
+    @Serializable
+    data class SaveTimeCapsule(
+        val id: String,
+        val isNewTimeCapsule: Boolean,
     ) : AppDestination()
 
     @Serializable
@@ -222,7 +230,7 @@ internal fun AppNavHost(
                         navController.navigate(AppDestination.FavoriteTimeCapsules)
                     },
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToDailyReportDetail = { id ->
                         // todo: add daily report detail screen
@@ -257,6 +265,9 @@ internal fun AppNavHost(
                 val arguments = navBackStackEntry.toRoute<AppDestination.AIChat>()
                 AIChatScreen(
                     roomId = arguments.roomId,
+                    navToTimeCapsuleDetail = { id ->
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = true))
+                    },
                     navToBack = {
                         navController.popBackStack()
                     },
@@ -279,7 +290,7 @@ internal fun AppNavHost(
             composable<AppDestination.ArrivedTimeCapsules> {
                 ArrivedTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToBack = {
                         navController.popBackStack()
@@ -290,7 +301,7 @@ internal fun AppNavHost(
             composable<AppDestination.FavoriteTimeCapsules> {
                 FavoriteTimeCapsulesScreen(
                     navToTimeCapsuleDetail = { id ->
-                        navController.navigate(AppDestination.TimeCapsuleDetail(id))
+                        navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToBack = {
                         navController.popBackStack()
@@ -302,6 +313,37 @@ internal fun AppNavHost(
                 val arguments = navBackStackEntry.toRoute<AppDestination.TimeCapsuleDetail>()
                 TimeCapsuleDetailScreen(
                     id = arguments.id,
+                    isNewTimeCapsule = arguments.isNewTimeCapsule,
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    },
+                    navToSaveTimeCapsule = {
+                        navController.navigate(
+                            AppDestination.SaveTimeCapsule(
+                                arguments.id,
+                                arguments.isNewTimeCapsule,
+                            ),
+                        )
+                    },
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.SaveTimeCapsule> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.SaveTimeCapsule>()
+                SaveTimeCapsuleScreen(
+                    id = arguments.id,
+                    isNewTimeCapsule = arguments.isNewTimeCapsule,
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    },
+                    navToPrevious = {
+                        // pop twice, to navigate to previous screen
+                        navController.popBackStack()
+                        navController.popBackStack()
+                    },
                     navToBack = {
                         navController.popBackStack()
                     },

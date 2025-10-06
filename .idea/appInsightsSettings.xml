@@ -22,10 +22,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.emotionstorage.emotionstorage" />
+                  <option name="mobileSdkAppId" value="1:847874687910:android:79c6089313c8f53df40567" />
+                  <option name="projectId" value="mooi-466911" />
+                  <option name="projectNumber" value="847874687910" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
