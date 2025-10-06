@@ -3,10 +3,10 @@ package com.emotionstorage.time_capsule_detail.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.domain.repo.SetFavoriteResult
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase.ToggleToastResult
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
@@ -123,7 +123,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val openArrivedTimeCapsule: OpenArrivedTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
-    private val toggleFavorite: SetFavoriteTimeCapsuleUseCase,
+    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
     private val saveNote: SaveTimeCapsuleNoteUseCase,
     private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : ViewModel(),
@@ -272,15 +272,19 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleToggleFavorite(id: String) =
         intent {
+            if (state.timeCapsule == null) {
+                return@intent
+            }
+
             collectDataState(
-                flow = toggleFavorite(id),
+                flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
                 onSuccess = {
-                    if (it == ToggleToastResult.FAVORITE_ADDED) {
+                    if (it == SetFavoriteResult.ADDED) {
                         postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_ADDED))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
                         }
-                    } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                    } else if (it == SetFavoriteResult.REMOVED) {
                         postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_REMOVED))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
@@ -288,7 +292,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     }
                 },
                 onError = { throwable, data ->
-                    if (data == ToggleToastResult.FAVORITE_FULL) {
+                    if (data == SetFavoriteResult.FULL) {
                         postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_FULL))
                     }
                 },
