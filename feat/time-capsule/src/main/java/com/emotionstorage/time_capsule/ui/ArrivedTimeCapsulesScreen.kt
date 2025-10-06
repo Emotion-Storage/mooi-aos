@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,7 +99,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
             TopAppBar(title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
         },
     ) { innerPadding ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
@@ -105,67 +107,83 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
         ) {
-            // info text
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 13.dp, bottom = 20.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.lock_open),
-                    modifier =
-                        Modifier
-                            .width(12.dp)
-                            .height(14.dp)
-                            .offset(y = 4.dp),
-                    contentDescription = "arrived",
-                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
-                )
+            if (timeCapsules.isEmpty()) {
                 Text(
-                    text = "최근 3주간 도착한 타임캡슐을 표시합니다.\n도착한 타임캡슐을 열어 내 지난 감정을 확인해보세요.",
-                    style = MooiTheme.typography.body5.copy(lineHeight = 22.sp),
-                    color = MooiTheme.colorScheme.gray500,
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "최근 도착한 타임캡슐이 없어요.",
+                    style = MooiTheme.typography.caption2,
+                    color = MooiTheme.colorScheme.gray400,
                 )
             }
 
-            LazyColumn(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .scrollable(scrollState, orientation = Orientation.Vertical),
-            ) {
-                items(items = timeCapsules, key = { it.id }) {
-                    TimeCapsuleItem(
+            Column(
+                modifier = Modifier.align(Alignment.TopCenter).fillMaxWidth(),
+            ){
+                // info text
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 13.dp, bottom = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.lock_open),
                         modifier =
                             Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 17.dp),
-                        timeCapsule = it,
-                        showDate = true,
-                        showInfoText = false,
-                        onClick = { navToTimeCapsuleDetail(it.id) },
+                                .width(12.dp)
+                                .height(14.dp),
+                        contentDescription = "arrived",
+                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
+                    )
+                    Text(
+                        text = "최근 3주간 도착한 타임캡슐을 표시합니다.\n도착한 타임캡슐을 열어 내 지난 감정을 확인해보세요.",
+                        style = MooiTheme.typography.caption7.copy(lineHeight = 22.sp),
+                        color = MooiTheme.colorScheme.gray500,
                     )
                 }
+
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .scrollable(scrollState, orientation = Orientation.Vertical),
+                ) {
+                    items(items = timeCapsules, key = { it.id }) {
+                        TimeCapsuleItem(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 17.dp),
+                            timeCapsule = it,
+                            showDate = true,
+                            showInfoText = false,
+                            onClick = { navToTimeCapsuleDetail(it.id) },
+                        )
+                    }
+                }
+
             }
         }
     }
 }
 
-@Composable
-private fun EmptyScreen(
-    modifier: Modifier = Modifier
-) {
-
-}
-
-@PreviewScreenSizes
+@Preview
 @Composable
 private fun ArrivedTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessArrivedTimeCapsulesScreen(
             timeCapsules = DUMMY_TIME_CAPSULES,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmptyArrivedTimeCapsulesScreenPreview() {
+    MooiTheme {
+        StatelessArrivedTimeCapsulesScreen(
+            timeCapsules = emptyList(),
         )
     }
 }
