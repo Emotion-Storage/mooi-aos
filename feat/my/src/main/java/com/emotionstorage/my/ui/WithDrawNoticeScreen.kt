@@ -2,8 +2,6 @@ package com.emotionstorage.my.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +24,6 @@ fun WithDrawNoticeScreen(
     var showSuggestDialog by remember { mutableStateOf(false) }
     var showDoneDialog by remember { mutableStateOf(false) }
     var pendingNavigate by remember { mutableStateOf(false) }
-
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
@@ -58,7 +55,6 @@ fun WithDrawNoticeScreen(
         }
     }
 
-
     StatelessWithDrawNoticeScreen(
         showSuggestDialog = showSuggestDialog,
         showFinalConfirmDialog = showDoneDialog,
@@ -72,7 +68,7 @@ fun WithDrawNoticeScreen(
         onFinalConfirmClick = {
             pendingNavigate = true
             showDoneDialog = false
-        }
+        },
     )
 }
 
@@ -94,7 +90,7 @@ fun StatelessWithDrawNoticeScreen(
         onBackClick = onBackClick,
         onWithDrawClick = onWithDrawClick,
         onFinalConfirmClick = onFinalConfirmClick,
-        onDismiss = {}
+        onDismiss = {},
     )
 }
 

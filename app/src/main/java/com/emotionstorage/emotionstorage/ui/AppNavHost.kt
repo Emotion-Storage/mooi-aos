@@ -328,7 +328,7 @@ internal fun AppNavHost(
                     },
                     navToSplash = {
                         navController.navigateWithClearStack(AppDestination.Splash)
-                    }
+                    },
                 )
             }
         }

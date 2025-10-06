@@ -52,30 +52,32 @@ fun CtaButton(
     textStyle: TextStyle = MooiTheme.typography.mainButton,
     labelContent: @Composable (() -> Unit)? = null,
 ) {
-
-    val sized = Modifier.run {
-        if (isDefaultWidth) {
-            this.width(CtaButtonDesignToken.width)
-        } else {
-            this.fillMaxWidth()
-        }
-    }.run {
-        if (isDefaultHeight) {
-            this.height(CtaButtonDesignToken.height)
-        } else {
-            this.fillMaxHeight()
-        }
-    }
+    val sized =
+        Modifier
+            .run {
+                if (isDefaultWidth) {
+                    this.width(CtaButtonDesignToken.width)
+                } else {
+                    this.fillMaxWidth()
+                }
+            }.run {
+                if (isDefaultHeight) {
+                    this.height(CtaButtonDesignToken.height)
+                } else {
+                    this.fillMaxHeight()
+                }
+            }
 
     val shape = RoundedCornerShape(radius.dp)
 
-    val backgroundOrBorder = when (type) {
-        CtaButtonType.FILLED -> sized.mainBackground(enabled, shape) // 기존 배경 유지
-        CtaButtonType.TONAL -> sized // 톤 배경은 colors.containerColor로 처리
-        CtaButtonType.OUTLINED -> {
-            sized.border(width = 1.dp, color = MooiTheme.colorScheme.gray700, shape = shape)
+    val backgroundOrBorder =
+        when (type) {
+            CtaButtonType.FILLED -> sized.mainBackground(enabled, shape) // 기존 배경 유지
+            CtaButtonType.TONAL -> sized // 톤 배경은 colors.containerColor로 처리
+            CtaButtonType.OUTLINED -> {
+                sized.border(width = 1.dp, color = MooiTheme.colorScheme.gray700, shape = shape)
+            }
         }
-    }
 
     Box(modifier = modifier) {
         Button(
