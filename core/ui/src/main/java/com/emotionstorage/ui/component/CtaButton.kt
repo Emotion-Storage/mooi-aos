@@ -1,6 +1,7 @@
 package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,7 @@ private object CtaButtonDesignToken {
 enum class CtaButtonType {
     FILLED,
     TONAL,
+    OUTLINED,
 }
 
 @Composable
@@ -50,25 +52,37 @@ fun CtaButton(
     textStyle: TextStyle = MooiTheme.typography.mainButton,
     labelContent: @Composable (() -> Unit)? = null,
 ) {
+
+    val sized = Modifier.run {
+        if (isDefaultWidth) {
+            this.width(CtaButtonDesignToken.width)
+        } else {
+            this.fillMaxWidth()
+        }
+    }.run {
+        if (isDefaultHeight) {
+            this.height(CtaButtonDesignToken.height)
+        } else {
+            this.fillMaxHeight()
+        }
+    }
+
+    val shape = RoundedCornerShape(radius.dp)
+
+    val backgroundOrBorder = when (type) {
+        CtaButtonType.FILLED -> sized.mainBackground(enabled, shape) // 기존 배경 유지
+        CtaButtonType.TONAL -> sized // 톤 배경은 colors.containerColor로 처리
+        CtaButtonType.OUTLINED -> {
+            sized.border(width = 1.dp, color = MooiTheme.colorScheme.gray700, shape = shape)
+        }
+    }
+
     Box(modifier = modifier) {
         Button(
             modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .run {
-                        if (isDefaultWidth) {
-                            this.width(CtaButtonDesignToken.width)
-                        } else {
-                            this.fillMaxWidth()
-                        }
-                    }.run {
-                        if (isDefaultHeight) {
-                            this.height(CtaButtonDesignToken.height)
-                        } else {
-                            this.fillMaxHeight()
-                        }
-                    }.mainBackground(enabled, RoundedCornerShape(radius.dp)),
-            shape = RoundedCornerShape(radius.dp),
+                backgroundOrBorder
+                    .align(Alignment.Center),
+            shape = shape,
             elevation = ButtonDefaults.buttonElevation(0.dp, 0.dp, 0.dp, 0.dp, 0.dp),
             colors =
                 ButtonDefaults.buttonColors(
@@ -76,11 +90,13 @@ fun CtaButton(
                         when (type) {
                             CtaButtonType.FILLED -> Color.Transparent
                             CtaButtonType.TONAL -> MooiTheme.colorScheme.gray700
+                            CtaButtonType.OUTLINED -> Color.Transparent
                         },
                     contentColor =
                         when (type) {
                             CtaButtonType.FILLED -> Color.White
                             CtaButtonType.TONAL -> MooiTheme.colorScheme.gray500
+                            CtaButtonType.OUTLINED -> MooiTheme.colorScheme.gray700
                         },
                     disabledContainerColor = MooiTheme.colorScheme.gray700,
                     disabledContentColor = MooiTheme.colorScheme.gray500,
@@ -137,6 +153,11 @@ private fun CtaButtonPreview() {
                     )
                 }
             }
+
+            CtaButton(
+                labelString = "OUTLINED Button (enabled)",
+                type = CtaButtonType.OUTLINED,
+            )
         }
     }
 }
