@@ -22,4 +22,15 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun saveTimeCapsuleNote(id: String, note: String): Flow<DataState<Boolean>> = flow {
+        emit(DataState.Loading(isLoading = true))
+        try {
+            emit(DataState.Success(timeCapsuleRemoteDataSource.patchTimeCapsuleNote(id, note)))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        } finally {
+            emit(DataState.Loading(isLoading = false))
+        }
+    }
+
 }
