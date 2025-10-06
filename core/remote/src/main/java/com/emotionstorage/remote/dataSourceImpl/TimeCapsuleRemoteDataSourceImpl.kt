@@ -27,7 +27,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             val response = timeCapsuleApiService.patchTimeCapsuleNote(
                 id, PatchTimeCapsuleNoteRequest(note)
             )
-            if (response.status == ResponseStatus.OK.code) {
+            if (response.status == ResponseStatus.Created.code) {
                 return true
             } else {
                 throw Exception("patchTimeCapsuleOpen api fail, $response")
