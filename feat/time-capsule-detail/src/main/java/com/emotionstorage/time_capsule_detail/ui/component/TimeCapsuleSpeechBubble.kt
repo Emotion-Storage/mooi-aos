@@ -69,12 +69,12 @@ fun TimeCapsuleSpeechBubble(
             ) {
                 if (!isNewTimeCapsule) {
                     Row(
-                        modifier = Modifier,
+                        modifier = Modifier.height(20.dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
                         Image(
-                            modifier = Modifier.size(14.dp),
+                            modifier = Modifier.size(12.dp),
                             painter = painterResource(R.drawable.pencil),
                             contentDescription = "",
                         )
@@ -86,7 +86,7 @@ fun TimeCapsuleSpeechBubble(
                     }
                 }
                 Row(
-                    modifier = Modifier,
+                    modifier = Modifier.height(20.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
