@@ -2,43 +2,27 @@ package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
-import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.domain.repo.FavoriteSortBy
+import com.emotionstorage.domain.repo.SetFavoriteResult
+import com.emotionstorage.domain.useCase.timeCapsule.GetFavoriteTimeCapsulesUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
-import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState.SortOrder
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
+import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class FavoriteTimeCapsulesState(
-    val sortOrder: SortOrder = SortOrder.SORT_BY_NEWEST,
+    val sortOrder: FavoriteSortBy = FavoriteSortBy.NEWEST,
     val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-) {
-    enum class SortOrder(
-        val label: String,
-    ) {
-        SORT_BY_NEWEST("최신 날짜순"),
-        SORT_BY_FAVORITE("즐겨찾기순"),
-        ;
-
-        companion object {
-            fun getByLabel(label: String): SortOrder {
-                return values().find { it.label == label }
-                    ?: throw IllegalArgumentException("Invalid sort order label: $label")
-            }
-        }
-    }
-}
+)
 
 sealed class FavoriteTimeCapsulesAction {
-    object PullToRefresh : FavoriteTimeCapsulesAction()
+    object Init : FavoriteTimeCapsulesAction()
 
     data class SetSortOrder(
         val sortOrderLabel: String,
@@ -65,8 +49,8 @@ sealed class FavoriteTimeCapsulesSideEffect {
 
 @HiltViewModel
 class FavoriteTimeCapsulesViewModel @Inject constructor(
-    // private val getFavoriteTimeCapsules: GetFavoriteTimeCapsulesUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase,
+    private val getFavoriteTimeCapsules: GetFavoriteTimeCapsulesUseCase,
+    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<FavoriteTimeCapsulesState, FavoriteTimeCapsulesSideEffect> {
     override val container =
@@ -76,8 +60,8 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
     fun onAction(action: FavoriteTimeCapsulesAction) {
         when (action) {
-            is FavoriteTimeCapsulesAction.PullToRefresh -> {
-                handlePullToRefresh()
+            is FavoriteTimeCapsulesAction.Init -> {
+                handleInit()
             }
 
             is FavoriteTimeCapsulesAction.SetSortOrder -> {
@@ -90,101 +74,41 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
         }
     }
 
-    private fun handlePullToRefresh() =
+    private fun handleInit() =
         intent {
-            // todo: call use case
-
-            val timeCapsules =
-                (1..15)
-                    .toList()
-                    .map { it ->
-                        TimeCapsuleItemState(
-                            id = it.toString(),
-                            status = TimeCapsule.STATUS.OPENED,
-                            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                            emotions =
-                                listOf(
-                                    Emotion(
-                                        label = "서운함",
-                                        icon = 0,
-                                    ),
-                                    Emotion(
-                                        label = "화남",
-                                        icon = 1,
-                                    ),
-                                    Emotion(
-                                        label = "피곤함",
-                                        icon = 2,
-                                    ),
-                                ),
-                            isFavorite = true,
-                            isFavoriteAt = LocalDateTime.now(),
-                            createdAt = LocalDateTime.now(),
-                            expireAt = LocalDateTime.now().plusHours(5),
+            collectDataState(
+                flow = getFavoriteTimeCapsules(state.sortOrder),
+                onSuccess = { timeCapsules ->
+                    reduce {
+                        state.copy(
+                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
                         )
-                    }.sortedByDescending {
-                        when (state.sortOrder) {
-                            SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
-                            SortOrder.SORT_BY_NEWEST -> it.createdAt
-                        }
                     }
-
-            reduce {
-                state.copy(timeCapsules = timeCapsules)
-            }
+                },
+                onError = { throwable, _ ->
+                    Logger.e("Failed to get favorite time capsules, $throwable")
+                },
+            )
         }
 
     private fun handleSetSortOrder(sortOrderLabel: String) =
         intent {
-            try {
-                val sortOrder = SortOrder.getByLabel(sortOrderLabel)
+            val sortOrder = FavoriteSortBy.getByLabel(sortOrderLabel)
 
-                // todo: call use case
-                val timeCapsules =
-                    (1..15)
-                        .toList()
-                        .map { it ->
-                            TimeCapsuleItemState(
-                                id = it.toString(),
-                                status = TimeCapsule.STATUS.OPENED,
-                                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                                emotions =
-                                    listOf(
-                                        Emotion(
-                                            label = "서운함",
-                                            icon = 0,
-                                        ),
-                                        Emotion(
-                                            label = "화남",
-                                            icon = 1,
-                                        ),
-                                        Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
-                                        ),
-                                    ),
-                                isFavorite = true,
-                                isFavoriteAt = LocalDateTime.now(),
-                                createdAt = LocalDateTime.now(),
-                                expireAt = LocalDateTime.now().plusHours(5),
-                            )
-                        }.sortedByDescending {
-                            when (sortOrder) {
-                                SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
-                                SortOrder.SORT_BY_NEWEST -> it.createdAt
-                            }
-                        }
-
-                reduce {
-                    state.copy(sortOrder = sortOrder, timeCapsules = timeCapsules)
-                }
-            } catch (e: IllegalArgumentException) {
-                Logger.e("Invalid sort order label: $sortOrderLabel")
-                return@intent
-            } catch (e: Exception) {
-                Logger.e(e.toString())
-                return@intent
-            }
+            collectDataState(
+                flow = getFavoriteTimeCapsules(sortOrder),
+                onSuccess = { timeCapsules ->
+                    reduce {
+                        state.copy(
+                            sortOrder = sortOrder,
+                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
+                        )
+                    }
+                },
+                onError = { throwable, _ ->
+                    Logger.e("Failed to get favorite time capsules, $throwable")
+                },
+            )
         }
 
     private fun handleToggleFavorite(id: String) =
@@ -193,6 +117,8 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 Logger.e("Cannot find time capsule of id $id")
                 return@intent
             }
+
+            val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
 
             suspend fun updateFavorite(
                 id: String,
@@ -212,18 +138,18 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
             coroutineScope {
                 collectDataState(
-                    flow = toggleFavorite(id),
+                    flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
-                        if (it == ToggleToastResult.FAVORITE_ADDED) {
+                        if (it == SetFavoriteResult.ADDED) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_ADDED))
                             updateFavorite(id, true)
-                        } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                        } else if (it == SetFavoriteResult.REMOVED) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_REMOVED))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
-                        if (data == ToggleToastResult.FAVORITE_FULL) {
+                        if (data == SetFavoriteResult.FULL) {
                             postSideEffect(ShowToast(ShowToast.FavoriteToast.FAVORITE_FULL))
                         }
                     },

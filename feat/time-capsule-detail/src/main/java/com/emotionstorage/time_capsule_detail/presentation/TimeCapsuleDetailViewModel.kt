@@ -3,11 +3,14 @@ package com.emotionstorage.time_capsule_detail.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.domain.repo.SetFavoriteResult
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
@@ -63,7 +66,9 @@ sealed class TimeCapsuleDetailAction {
         val note: String,
     ) : TimeCapsuleDetailAction()
 
-    object OnSaveNote : TimeCapsuleDetailAction()
+    data class OnSaveNote(
+        val id: String,
+    ) : TimeCapsuleDetailAction()
 
     object OnDeleteTrigger : TimeCapsuleDetailAction()
 
@@ -75,6 +80,10 @@ sealed class TimeCapsuleDetailAction {
 }
 
 sealed class TimeCapsuleDetailSideEffect {
+    object GetTimeCapsuleFail : TimeCapsuleDetailSideEffect()
+
+    object OpenTimeCapsuleFail : TimeCapsuleDetailSideEffect()
+
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
 
     data class ShowUnlockModal(
@@ -111,9 +120,12 @@ sealed class TimeCapsuleDetailSideEffect {
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
+    private val openArrivedTimeCapsule: OpenArrivedTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase,
+    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
+    private val saveNote: SaveTimeCapsuleNoteUseCase,
+    private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
     override val container: Container<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> =
@@ -142,7 +154,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
 
             is OnSaveNote -> {
-                handleSaveNote()
+                handleSaveNote(action.id)
             }
 
             is OnDeleteTrigger -> {
@@ -187,10 +199,10 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                             isNoteChanged = false,
                         )
                     }
-                    if (it.status == TimeCapsule.STATUS.ARRIVED) {
+                    if (it.status == TimeCapsule.Status.ARRIVED) {
                         openArrivedTimeCapsule(it)
                     }
-                    if (it.status == TimeCapsule.STATUS.LOCKED) {
+                    if (it.status == TimeCapsule.Status.LOCKED) {
                         triggerUnlockModal()
                     }
                 },
@@ -199,7 +211,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     reduce {
                         state.copy(timeCapsule = null, note = "")
                     }
-                    // todo: handle error
+                    postSideEffect(TimeCapsuleDetailSideEffect.GetTimeCapsuleFail)
                 },
             )
         }
@@ -207,12 +219,20 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     @OptIn(OrbitExperimental::class)
     private suspend fun openArrivedTimeCapsule(timeCapsule: TimeCapsule) =
         subIntent {
-            // todo: open time capsule if arrived
-            reduce {
-                state.copy(
-                    timeCapsule = timeCapsule.copy(status = TimeCapsule.STATUS.OPENED),
-                )
-            }
+            collectDataState(
+                flow = openArrivedTimeCapsule(timeCapsule.id),
+                onSuccess = {
+                    reduce {
+                        state.copy(
+                            timeCapsule = timeCapsule.copy(status = TimeCapsule.Status.OPENED),
+                        )
+                    }
+                },
+                onError = { throwable, data ->
+                    Logger.e("openArrivedTimeCapsule error: $throwable")
+                    postSideEffect(TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail)
+                },
+            )
         }
 
     @OptIn(OrbitExperimental::class)
@@ -252,15 +272,19 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleToggleFavorite(id: String) =
         intent {
+            if (state.timeCapsule == null) {
+                return@intent
+            }
+
             collectDataState(
-                flow = toggleFavorite(id),
+                flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
                 onSuccess = {
-                    if (it == ToggleToastResult.FAVORITE_ADDED) {
+                    if (it == SetFavoriteResult.ADDED) {
                         postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_ADDED))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
                         }
-                    } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                    } else if (it == SetFavoriteResult.REMOVED) {
                         postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_REMOVED))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
@@ -268,7 +292,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     }
                 },
                 onError = { throwable, data ->
-                    if (data == ToggleToastResult.FAVORITE_FULL) {
+                    if (data == SetFavoriteResult.FULL) {
                         postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_FULL))
                     }
                 },
@@ -277,8 +301,15 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleDeleteTimeCapsule(id: String) =
         intent {
-            // todo: delete time capsule
-            postSideEffect(DeleteTimeCapsuleSuccess)
+            collectDataState(
+                flow = deleteTimeCapsule(id),
+                onSuccess = {
+                    postSideEffect(DeleteTimeCapsuleSuccess)
+                },
+                onError = { throwable, _ ->
+                    Logger.e("deleteTimeCapsule error: $throwable")
+                },
+            )
         }
 
     private fun handleUnlockTimeCapsule(id: String) =
@@ -288,7 +319,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 state.copy(
                     timeCapsule =
                         state.timeCapsule?.copy(
-                            status = TimeCapsule.STATUS.ARRIVED,
+                            status = TimeCapsule.Status.ARRIVED,
                         ),
                 )
             }
@@ -304,17 +335,24 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
         }
 
-    private fun handleSaveNote() =
+    private fun handleSaveNote(id: String) =
         intent {
             if (!state.isNoteChanged) return@intent
 
-            // todo: call save note use case
-            reduce {
-                state.copy(
-                    // stub logic for note save
-                    timeCapsule = state.timeCapsule?.copy(note = state.note),
-                    isNoteChanged = false,
-                )
-            }
+            collectDataState(
+                flow = saveNote(id, state.note),
+                onSuccess = {
+                    reduce {
+                        state.copy(
+                            // stub logic for note save
+                            timeCapsule = state.timeCapsule?.copy(note = state.note),
+                            isNoteChanged = false,
+                        )
+                    }
+                },
+                onError = { throwable, data ->
+                    Logger.e("saveNote error: $throwable")
+                },
+            )
         }
 }

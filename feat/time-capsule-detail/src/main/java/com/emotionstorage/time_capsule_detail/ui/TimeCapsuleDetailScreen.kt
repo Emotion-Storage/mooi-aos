@@ -32,6 +32,8 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
@@ -90,6 +92,14 @@ fun TimeCapsuleDetailScreen(
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
+                is GetTimeCapsuleFail -> {
+                    navToBack()
+                }
+
+                is OpenTimeCapsuleFail -> {
+                    navToBack()
+                }
+
                 is DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
@@ -213,7 +223,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         isModalOpen = isSaveChangesModalOpen,
         onDismissRequest = dismissSaveChangesModal,
         onSave = {
-            onAction(OnSaveNote)
+            onAction(OnSaveNote(id))
             dismissSaveChangesModal()
             navToBack()
         },
@@ -233,7 +243,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     .background(MooiTheme.colorScheme.background)
                     .run {
                         // blur whole screen if locked
-                        if (state.timeCapsule.status == TimeCapsule.STATUS.LOCKED) {
+                        if (state.timeCapsule.status == TimeCapsule.Status.LOCKED) {
                             this.blur(8.dp)
                         } else {
                             this
@@ -266,7 +276,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         }
                     },
                     rightComponent = {
-                        if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                        if (!isNewTimeCapsule && state.timeCapsule.status == TimeCapsule.Status.OPENED) {
                             RoundedToggleButton(
                                 isSelected = state.timeCapsule.isFavorite,
                                 onSelect = {
@@ -315,7 +325,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     comments = state.timeCapsule.comments,
                 )
 
-                if (state.timeCapsule.status == TimeCapsule.STATUS.OPENED) {
+                if (state.timeCapsule.status == TimeCapsule.Status.OPENED) {
                     TimeCapsuleNote(
                         modifier = Modifier.padding(top = 53.dp),
                         note = state.timeCapsule.note ?: "",
@@ -336,7 +346,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         onAction(OnExpireTrigger)
                     },
                     onSaveMindNote = {
-                        onAction(OnSaveNote)
+                        onAction(OnSaveNote(id))
                     },
                     onDeleteTimeCapsule = {
                         onAction(OnDeleteTrigger)
@@ -379,7 +389,7 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = "id",
-                            status = TimeCapsule.STATUS.LOCKED,
+                            status = TimeCapsule.Status.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
@@ -387,9 +397,21 @@ private fun TimeCapsuleDetailScreenPreview() {
                                     "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
                             emotions =
                                 listOf(
-                                    TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
-                                    TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
-                                    TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83D\uDE14",
+                                        label = "서운함",
+                                        percentage = 30.0f,
+                                    ),
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83D\uDE0A",
+                                        label = "고마움",
+                                        percentage = 30.0f,
+                                    ),
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83E\uDD70",
+                                        label = "안정감",
+                                        percentage = 80.0f,
+                                    ),
                                 ),
                             comments =
                                 listOf(

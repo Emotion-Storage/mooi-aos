@@ -29,7 +29,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun TimeCapsuleDetailActionButtons(
-    status: TimeCapsule.STATUS,
+    status: TimeCapsule.Status,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = false,
     expireAt: LocalDateTime = LocalDateTime.now(),
@@ -43,7 +43,7 @@ fun TimeCapsuleDetailActionButtons(
         verticalArrangement = Arrangement.spacedBy(16.7.dp),
         horizontalAlignment = Alignment.End,
     ) {
-        if (status == TimeCapsule.STATUS.TEMPORARY) {
+        if (status == TimeCapsule.Status.TEMPORARY) {
             SaveTimeCapsuleButton(
                 modifier = Modifier.padding(top = 79.dp),
                 expireAt = expireAt,
@@ -173,18 +173,18 @@ private fun TimeCapsuleDetailActionButtonsPreview() {
                     .padding(16.dp),
         ) {
             TimeCapsuleDetailActionButtons(
-                status = TimeCapsule.STATUS.TEMPORARY,
+                status = TimeCapsule.Status.TEMPORARY,
                 isNewTimeCapsule = true,
             )
             TimeCapsuleDetailActionButtons(
                 expireAt = LocalDateTime.now().plusMinutes(25),
-                status = TimeCapsule.STATUS.TEMPORARY,
+                status = TimeCapsule.Status.TEMPORARY,
             )
             TimeCapsuleDetailActionButtons(
-                status = TimeCapsule.STATUS.LOCKED,
+                status = TimeCapsule.Status.LOCKED,
             )
             TimeCapsuleDetailActionButtons(
-                status = TimeCapsule.STATUS.OPENED,
+                status = TimeCapsule.Status.OPENED,
                 isNewTimeCapsule = false,
             )
         }

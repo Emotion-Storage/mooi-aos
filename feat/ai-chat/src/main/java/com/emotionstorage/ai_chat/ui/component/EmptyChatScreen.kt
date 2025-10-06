@@ -26,7 +26,7 @@ fun EmptyChatScreen(modifier: Modifier = Modifier) {
         ) {
             Image(
                 modifier = Modifier.size(100.dp),
-                painter = painterResource(R.drawable.emotion_0),
+                painter = painterResource(R.drawable.success_filled),
                 contentDescription = null,
             )
             Spacer(modifier.size(18.dp))

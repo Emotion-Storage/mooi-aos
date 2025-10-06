@@ -40,7 +40,7 @@ fun ProfileHeader(
         modifier = Modifier.fillMaxWidth(),
     ) {
         Image(
-            painterResource(R.drawable.emotion_0),
+            painterResource(R.drawable.success_filled),
             contentDescription = "프로필 이미지",
             modifier =
                 Modifier

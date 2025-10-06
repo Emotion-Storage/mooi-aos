@@ -6,7 +6,7 @@ import java.time.LocalDateTime
 
 data class TimeCapsuleItemState(
     val id: String,
-    val status: TimeCapsule.STATUS,
+    val status: TimeCapsule.Status,
     val title: String,
     val emotions: List<Emotion> = emptyList(),
     val isFavorite: Boolean,

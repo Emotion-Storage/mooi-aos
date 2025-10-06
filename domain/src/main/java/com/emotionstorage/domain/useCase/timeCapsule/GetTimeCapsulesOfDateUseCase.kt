@@ -3,7 +3,7 @@ package com.emotionstorage.domain.useCase.timeCapsule
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.domain.model.TimeCapsule.STATUS
+import com.emotionstorage.domain.model.TimeCapsule.Status
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -22,44 +22,50 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                         listOf(
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.TEMPORARY,
+                                status = Status.TEMPORARY,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
                                     listOf(
-                                        Emotion(
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f,
                                         ),
-                                        Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f,
                                         ),
-                                        Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f,
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),
                             ),
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.LOCKED,
+                                status = Status.LOCKED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f,
                                         ),
                                         Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f,
                                         ),
                                         Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f,
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),
@@ -67,22 +73,25 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                             ),
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.ARRIVED,
+                                status = Status.ARRIVED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f,
                                         ),
                                         Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f,
                                         ),
                                         Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f,
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),
@@ -90,22 +99,25 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                             ),
                             TimeCapsule(
                                 id = "dummy-id",
-                                status = STATUS.OPENED,
+                                status = Status.OPENED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 summary = "",
                                 emotions =
                                     listOf(
                                         Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f,
                                         ),
                                         Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f,
                                         ),
                                         Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f,
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),

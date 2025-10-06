@@ -27,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
@@ -39,21 +38,24 @@ private val DUMMY_TIME_CAPSULES =
     (1..15).toList().map { it ->
         TimeCapsuleItemState(
             id = it.toString(),
-            status = TimeCapsule.STATUS.ARRIVED,
+            status = TimeCapsule.Status.ARRIVED,
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =
                 listOf(
-                    Emotion(
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83D\uDE14",
                         label = "서운함",
-                        icon = 0,
+                        percentage = 30.0f,
                     ),
-                    Emotion(
-                        label = "화남",
-                        icon = 1,
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83D\uDE0A",
+                        label = "고마움",
+                        percentage = 30.0f,
                     ),
-                    Emotion(
-                        label = "피곤함",
-                        icon = 2,
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83E\uDD70",
+                        label = "안정감",
+                        percentage = 80.0f,
                     ),
                 ),
             isFavorite = true,
