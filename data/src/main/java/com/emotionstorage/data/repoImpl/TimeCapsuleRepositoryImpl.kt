@@ -58,4 +58,16 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 emit(DataState.Loading(isLoading = false))
             }
         }
+
+    override suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                emit(DataState.Success(timeCapsuleRemoteDataSource.deleteTimeCapsule(id)))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
+        }
 }

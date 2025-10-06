@@ -11,4 +11,6 @@ interface TimeCapsuleRemoteDataSource {
     ): Boolean
 
     suspend fun getFavoriteTimeCapsules(sortBy: String): List<TimeCapsuleEntity>
+
+    suspend fun deleteTimeCapsule(id: String): Boolean
 }

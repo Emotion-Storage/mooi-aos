@@ -37,10 +37,10 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.status == ResponseStatus.Created.code) {
                 return true
             } else {
-                throw Exception("patchTimeCapsuleOpen api fail, $response")
+                throw Exception("patchTimeCapsuleNote api fail, $response")
             }
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleOpen api fail, $e")
+            throw Exception("patchTimeCapsuleNote api fail, $e")
         }
     }
 
@@ -56,10 +56,24 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.status == ResponseStatus.OK.code && response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)
             } else {
-                throw Exception("patchTimeCapsuleOpen api fail, $response")
+                throw Exception("getFavoriteTimeCapsules api fail, $response")
             }
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleOpen api fail, $e")
+            throw Exception("getFavoriteTimeCapsules api fail, $e")
+        }
+    }
+
+    override suspend fun deleteTimeCapsule(id: String): Boolean {
+        try {
+            val response =
+                timeCapsuleApiService.deleteTimeCapsule(id)
+            if (response.status == ResponseStatus.OK.code) {
+                return true
+            } else {
+                throw Exception("deleteTimeCapsule api fail, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("deleteTimeCapsule api fail, $e")
         }
     }
 }

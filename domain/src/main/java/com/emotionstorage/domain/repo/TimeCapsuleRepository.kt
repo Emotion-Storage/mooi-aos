@@ -13,6 +13,8 @@ interface TimeCapsuleRepository {
     ): Flow<DataState<Boolean>>
 
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
+
+    suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>>
 }
 
 enum class FavoriteSortBy(

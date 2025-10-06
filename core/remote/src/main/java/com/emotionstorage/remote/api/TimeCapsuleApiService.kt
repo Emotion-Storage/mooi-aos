@@ -8,6 +8,7 @@ import com.emotionstorage.remote.response.timeCapsule.PatchTimeCapsuleFavoriteRe
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.DELETE
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -35,4 +36,9 @@ interface TimeCapsuleApiService {
         @Path(value = "capsuleId") id: String,
         @Body requestBody: PatchTimeCapsuleFavoriteRequest,
     ): ResponseDto<PatchTimeCapsuleFavoriteResponse>
+
+    @DELETE("api/v1/time-capsule/{capsuleId}")
+    suspend fun deleteTimeCapsule(
+        @Path(value = "capsuleId") id: String,
+    ): ResponseDto<Unit>
 }

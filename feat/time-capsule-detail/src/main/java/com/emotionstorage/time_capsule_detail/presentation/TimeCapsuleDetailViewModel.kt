@@ -8,6 +8,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
@@ -124,6 +125,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
     private val saveNote: SaveTimeCapsuleNoteUseCase,
+    private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
     override val container: Container<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> =
@@ -295,8 +297,15 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleDeleteTimeCapsule(id: String) =
         intent {
-            // todo: delete time capsule
-            postSideEffect(DeleteTimeCapsuleSuccess)
+            collectDataState(
+                flow = deleteTimeCapsule(id),
+                onSuccess = {
+                    postSideEffect(DeleteTimeCapsuleSuccess)
+                },
+                onError = { throwable, _ ->
+                    Logger.e("deleteTimeCapsule error: $throwable")
+                }
+            )
         }
 
     private fun handleUnlockTimeCapsule(id: String) =
