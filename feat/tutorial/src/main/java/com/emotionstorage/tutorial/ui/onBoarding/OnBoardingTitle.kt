@@ -25,7 +25,7 @@ import androidx.compose.ui.zIndex
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
-private const val ON_BOARDING_STEP_COUNT = 4
+private const val ON_BOARDING_MAX_STEP = 3
 
 @Composable
 fun OnBoardingTitle(
@@ -34,7 +34,7 @@ fun OnBoardingTitle(
     titleHighlights: List<String> = emptyList(),
     showSteps: Boolean = true,
     currentStep: Int = 0,
-    totalStep: Int = ON_BOARDING_STEP_COUNT,
+    totalStep: Int = ON_BOARDING_MAX_STEP,
 ) {
     Box(
         modifier = modifier,
@@ -53,7 +53,7 @@ fun OnBoardingTitle(
         if (showSteps) {
             OnBoardingStep(
                 currentStep = currentStep,
-                totalStep = totalStep,
+                maxStep = totalStep,
                 modifier = Modifier.align(Alignment.TopEnd),
             )
         }
@@ -64,17 +64,20 @@ fun OnBoardingTitle(
 private fun OnBoardingStep(
     modifier: Modifier = Modifier,
     currentStep: Int = 0,
-    totalStep: Int = ON_BOARDING_STEP_COUNT,
+    maxStep: Int = ON_BOARDING_MAX_STEP,
 ) {
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .padding(
+                end = if (currentStep != maxStep) 10.dp else 0.dp
+            )
+            .offset(x = 5.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        repeat(totalStep) { step ->
+        repeat(maxStep + 1) { step ->
             OnBoardingStepItem(
                 isCurrentStep = step == currentStep,
-                isLastStep = step == totalStep - 1,
-                modifier = Modifier.padding(start = if (step == 0) 5.dp else 0.dp),
+                isLastStep = step == maxStep,
             )
         }
     }
@@ -82,9 +85,9 @@ private fun OnBoardingStep(
 
 @Composable
 private fun RowScope.OnBoardingStepItem(
+    modifier: Modifier = Modifier,
     isCurrentStep: Boolean = false,
     isLastStep: Boolean = false,
-    modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {
         Row(
@@ -130,10 +133,10 @@ private fun RowScope.OnBoardingStepItem(
 private fun OnBoardingStepPreview() {
     MooiTheme {
         Column {
-            OnBoardingStep(currentStep = 0)
+            OnBoardingStep(currentStep = 0, modifier = Modifier.background(Color.Red))
             OnBoardingStep(currentStep = 1)
             OnBoardingStep(currentStep = 2)
-            OnBoardingStep(currentStep = 3)
+            OnBoardingStep(currentStep = 3, modifier = Modifier.background(Color.Red))
         }
     }
 }
@@ -142,14 +145,25 @@ private fun OnBoardingStepPreview() {
 @Composable
 private fun OnBoardingTitlePreview() {
     MooiTheme {
-        OnBoardingTitle(
-            title = "어떤 이름으로\n불러드릴까요?",
-            currentStep = 0,
-            titleHighlights = listOf("어떤", "이름"),
-            modifier =
-                Modifier
-                    .background(MooiTheme.colorScheme.background)
-                    .fillMaxWidth(),
-        )
+        Column {
+            OnBoardingTitle(
+                title = "어떤 이름으로\n불러드릴까요?",
+                currentStep = 0,
+                titleHighlights = listOf("어떤", "이름"),
+                modifier =
+                    Modifier
+                        .background(MooiTheme.colorScheme.background)
+                        .fillMaxWidth(),
+            )
+            OnBoardingTitle(
+                title = "마지막으로,\n이용약관에 동의해주세요.",
+                currentStep = 3,
+                titleHighlights = listOf("이용약관"),
+                modifier =
+                    Modifier
+                        .background(MooiTheme.colorScheme.background)
+                        .fillMaxWidth(),
+            )
+        }
     }
 }
