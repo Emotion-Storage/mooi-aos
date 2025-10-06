@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
@@ -147,7 +149,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             }
         },
     ) { innerPadding ->
-        Column(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
@@ -155,69 +157,85 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
         ) {
-            // info text
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 13.dp),
-                horizontalArrangement = Arrangement.spacedBy(6.dp),
-                verticalAlignment = Alignment.Top,
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.favorite_filled),
-                    modifier =
-                        Modifier
-                            .width(11.dp)
-                            .height(12.dp),
-                    contentDescription = "open",
-                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
-                )
+            if (state.timeCapsules.isEmpty()) {
                 Text(
-                    text = "오래 기억하고싶은 타임캡슐을 즐겨찾기 해보세요.\n최대 30개까지 저장할 수 있습니다.",
-                    style = MooiTheme.typography.body5,
-                    color = MooiTheme.colorScheme.gray500,
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "아직 즐겨찾기한 타임캡슐이 없어요.",
+                    style = MooiTheme.typography.caption2,
+                    color = MooiTheme.colorScheme.gray400,
                 )
             }
-
-            Box(modifier = Modifier.fillMaxWidth()) {
-                DropDownPicker(
-                    modifier =
-                        Modifier
-                            .align(Alignment.CenterEnd)
-                            .width(102.dp)
-                            .padding(top = 7.dp, bottom = 22.dp),
-                    selectedValue = state.sortOrder.label,
-                    options = FavoriteTimeCapsulesState.SortOrder.entries.map { it.label },
-                    onSelect = { label ->
-                        onAction(
-                            FavoriteTimeCapsulesAction.SetSortOrder(label),
-                        )
-                    },
-                )
-            }
-
-            LazyColumn(
+            Column(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .scrollable(scrollState, orientation = Orientation.Vertical),
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth(),
             ) {
-                items(items = state.timeCapsules, key = { it.id }) {
-                    TimeCapsuleItem(
+                // info text
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 13.dp)
+                            .offset(x = -1.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.Top,
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.favorite_filled),
                         modifier =
                             Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 17.dp),
-                        timeCapsule = it,
-                        showDate = true,
-                        onClick = { navToTimeCapsuleDetail(it.id) },
-                        onFavoriteClick = {
-                            onAction(
-                                FavoriteTimeCapsulesAction.ToggleFavorite(it.id),
-                            )
-                        },
+                                .width(11.dp)
+                                .height(12.dp),
+                        contentDescription = "open",
+                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
                     )
+                    Text(
+                        text = "오래 기억하고싶은 타임캡슐을 즐겨찾기 해보세요.\n최대 30개까지 저장할 수 있습니다.",
+                        style = MooiTheme.typography.caption7.copy(lineHeight = 22.sp),
+                        color = MooiTheme.colorScheme.gray500,
+                    )
+                }
+
+                if (!state.timeCapsules.isEmpty()) {
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        DropDownPicker(
+                            modifier =
+                                Modifier
+                                    .align(Alignment.CenterEnd)
+                                    .width(102.dp)
+                                    .padding(top = 7.dp, bottom = 22.dp),
+                            selectedValue = state.sortOrder.label,
+                            options = FavoriteTimeCapsulesState.SortOrder.entries.map { it.label },
+                            onSelect = { label ->
+                                onAction(
+                                    FavoriteTimeCapsulesAction.SetSortOrder(label),
+                                )
+                            },
+                        )
+                    }
+                }
+
+                LazyColumn(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .scrollable(scrollState, orientation = Orientation.Vertical),
+                    verticalArrangement = Arrangement.spacedBy(32.dp),
+                ) {
+                    items(items = state.timeCapsules, key = { it.id }) {
+                        TimeCapsuleItem(
+                            modifier = Modifier.fillMaxWidth(),
+                            timeCapsule = it,
+                            showDate = true,
+                            onClick = { navToTimeCapsuleDetail(it.id) },
+                            onFavoriteClick = {
+                                onAction(
+                                    FavoriteTimeCapsulesAction.ToggleFavorite(it.id),
+                                )
+                            },
+                        )
+                    }
                 }
             }
         }
@@ -230,6 +248,16 @@ private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessFavoriteTimeCapsulesScreen(
             state = FavoriteTimeCapsulesState(timeCapsules = DUMMY_TIME_CAPSULES),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmptyFavoriteTimeCapsulesScreenPreview() {
+    MooiTheme {
+        StatelessFavoriteTimeCapsulesScreen(
+            state = FavoriteTimeCapsulesState(timeCapsules = emptyList()),
         )
     }
 }

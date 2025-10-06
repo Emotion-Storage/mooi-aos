@@ -133,7 +133,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                 verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {
                 TimeCapsuleSpeechBubble(
-                    saveAt = state.createdAt,
+                    saveAt = state.saveAt,
                     arriveAt = state.arriveAt,
                     emotions = state.emotions,
                 )

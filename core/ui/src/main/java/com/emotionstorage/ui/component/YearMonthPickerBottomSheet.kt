@@ -66,21 +66,19 @@ fun YearMonthPickerBottomSheet(
 @Composable
 private fun YearMonthPickerBottomSheetPreview() {
     MooiTheme {
-        MooiTheme {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(MooiTheme.colorScheme.background),
-            ) {
-                YearMonthPickerBottomSheet(
-                    // open sheet state for preview
-                    sheetState =
-                        rememberStandardBottomSheetState(
-                            initialValue = SheetValue.Expanded,
-                        ),
-                )
-            }
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
+        ) {
+            YearMonthPickerBottomSheet(
+                // open sheet state for preview
+                sheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.Expanded,
+                    ),
+            )
         }
     }
 }

@@ -133,12 +133,13 @@ fun SpeechBubble(
             drawPath(path = path, brush = bgBrush)
         }
 
-        Box(
+        Column(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .padding(padding),
-            contentAlignment = Alignment.Center,
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             if (contentText != null) {
                 Text(
