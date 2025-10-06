@@ -1,8 +1,8 @@
 package com.emotionstorage.my.ui.component
 
-import android.text.Layout
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.CtaButtonType
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -61,11 +60,11 @@ fun WithDrawNoticeContent(
         Box(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
                     .matchParentSize()
+                    .padding(innerPadding)
                     .background(MooiTheme.colorScheme.background),
             ) {
 
@@ -101,21 +100,21 @@ fun WithDrawNoticeContent(
                         title = "회원 탈퇴가\n완료되었습니다.",
                         confirmLabel = "확인",
                         onConfirm = onFinalConfirmClick,
-                        onDismiss = onFinalConfirmClick,
+                        onDismiss = {},
                         onDismissRequest = { },
                         topDescription = null,
                     )
                 }
             }
 
-            // TODO : 공통 컴포넌트 버튼에 합치기
-            Button(
-                modifier = Modifier.fillMaxWidth()
-                    .height(56.dp)
-                    .align(alignment = Alignment.BottomCenter)
-                    .padding(start = 16.dp, end = 16.dp, bottom = 28.dp),
-                onClick = onWithDrawButtonClick,
-            ) { }
+            CtaButton(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .clickable { onWithDrawButtonClick() }
+                    .padding(bottom = 28.dp),
+                type = CtaButtonType.OUTLINED,
+                labelString = "MOOI 서비스 탈퇴하기"
+            )
         }
     }
 }
