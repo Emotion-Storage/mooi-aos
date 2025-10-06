@@ -67,11 +67,11 @@ private fun OnBoardingStep(
     maxStep: Int = ON_BOARDING_MAX_STEP,
 ) {
     Row(
-        modifier = modifier
-            .padding(
-                end = if (currentStep != maxStep) 10.dp else 0.dp
-            )
-            .offset(x = 5.dp),
+        modifier =
+            modifier
+                .padding(
+                    end = if (currentStep != maxStep) 10.dp else 0.dp,
+                ).offset(x = 5.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(maxStep + 1) { step ->

@@ -29,116 +29,118 @@ interface GenderBirthEvent {
 
 @HiltViewModel
 class GenderBirthViewModel
-@Inject
-constructor() :
+    @Inject
+    constructor() :
     ViewModel(),
-    GenderBirthEvent {
-    private val pGender = MutableStateFlow<GENDER?>(null)
-    private val pBirthYear = MutableStateFlow<String?>(null)
-    private val pBirthMonth = MutableStateFlow<String?>(null)
-    private val pBirthDay = MutableStateFlow<String?>(null)
-    private val pBirthDayRange: MutableStateFlow<IntRange> = MutableStateFlow(1..31)
+        GenderBirthEvent {
+        private val pGender = MutableStateFlow<GENDER?>(null)
+        private val pBirthYear = MutableStateFlow<String?>(null)
+        private val pBirthMonth = MutableStateFlow<String?>(null)
+        private val pBirthDay = MutableStateFlow<String?>(null)
+        private val pBirthDayRange: MutableStateFlow<IntRange> = MutableStateFlow(1..31)
 
-    val state =
-        combine(
-            pGender,
-            pBirthYear,
-            pBirthMonth,
-            pBirthDay,
-            pBirthDayRange,
-        ) { gender, birthYear, birthMonth, birthDay, birthDayRange ->
-            State(
-                gender = gender,
-                yearPickerState =
-                    PickerState(
-                        selectedValue = birthYear,
-                        range = (MIN_YEAR..LocalDate.now().minusYears(MIN_AGE).year).toList().reversed().map { it.toString() },
-                        enabled = true,
-                    ),
-                monthPickerState =
-                    PickerState(
-                        selectedValue = birthMonth,
-                        range = (1..12).toList().map { it.toString() },
-                        enabled = birthYear != null,
-                    ),
-                dayPickerState =
-                    PickerState(
-                        selectedValue = birthDay,
-                        range = birthDayRange.toList().map { it.toString() },
-                        enabled = birthYear != null && birthMonth != null,
-                    ),
+        val state =
+            combine(
+                pGender,
+                pBirthYear,
+                pBirthMonth,
+                pBirthDay,
+                pBirthDayRange,
+            ) { gender, birthYear, birthMonth, birthDay, birthDayRange ->
+                State(
+                    gender = gender,
+                    yearPickerState =
+                        PickerState(
+                            selectedValue = birthYear,
+                            range =
+                                (MIN_YEAR..
+                                    LocalDate.now().minusYears(MIN_AGE).year).toList().reversed().map { it.toString() },
+                            enabled = true,
+                        ),
+                    monthPickerState =
+                        PickerState(
+                            selectedValue = birthMonth,
+                            range = (1..12).toList().map { it.toString() },
+                            enabled = birthYear != null,
+                        ),
+                    dayPickerState =
+                        PickerState(
+                            selectedValue = birthDay,
+                            range = birthDayRange.toList().map { it.toString() },
+                            enabled = birthYear != null && birthMonth != null,
+                        ),
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = State(),
             )
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000),
-            initialValue = State(),
-        )
-    val event: GenderBirthEvent = this@GenderBirthViewModel
+        val event: GenderBirthEvent = this@GenderBirthViewModel
 
-    init {
-        viewModelScope.launch {
-            combine(pBirthYear, pBirthMonth) { year, month ->
-                year to month
-            }.collect { (year, month) ->
-                pBirthDayRange.update {
-                    if (year == null || month == null) {
-                        1..31
-                    } else {
-                        1..LocalDate.of(year.toInt(), month.toInt(), 1).lengthOfMonth()
+        init {
+            viewModelScope.launch {
+                combine(pBirthYear, pBirthMonth) { year, month ->
+                    year to month
+                }.collect { (year, month) ->
+                    pBirthDayRange.update {
+                        if (year == null || month == null) {
+                            1..31
+                        } else {
+                            1..LocalDate.of(year.toInt(), month.toInt(), 1).lengthOfMonth()
+                        }
                     }
                 }
             }
         }
-    }
 
-    override fun onGenderSelect(gender: GENDER?) {
-        pGender.update { gender }
-    }
+        override fun onGenderSelect(gender: GENDER?) {
+            pGender.update { gender }
+        }
 
-    override fun onYearPickerSelect(year: String) {
-        pBirthYear.update { year }
-        pBirthMonth.update { null }
-        pBirthDay.update { null }
-    }
+        override fun onYearPickerSelect(year: String) {
+            pBirthYear.update { year }
+            pBirthMonth.update { null }
+            pBirthDay.update { null }
+        }
 
-    override fun onMonthPickerSelect(month: String) {
-        pBirthMonth.update { month }
-        pBirthDay.update { null }
-    }
+        override fun onMonthPickerSelect(month: String) {
+            pBirthMonth.update { month }
+            pBirthDay.update { null }
+        }
 
-    override fun onDayPickerSelect(day: String) {
-        pBirthDay.update { day }
-    }
+        override fun onDayPickerSelect(day: String) {
+            pBirthDay.update { day }
+        }
 
-    data class State(
-        val gender: GENDER? = null,
-        val yearPickerState: PickerState =
-            PickerState(
-                range = (LocalDate.now().year - MIN_AGE..MIN_YEAR).toList().map { it.toString() },
-                enabled = true,
-            ),
-        val monthPickerState: PickerState =
-            PickerState(
-                range = (1..12).toList().map { it.toString().format("%2d") },
-                enabled = true,
-            ),
-        val dayPickerState: PickerState =
-            PickerState(
-                range = (1..31).toList().map { it.toString().format("%2d") },
-                enabled = true,
-            ),
-    ) {
-        val isNextButtonEnabled: Boolean
-            get() =
-                gender != null &&
-                    yearPickerState.selectedValue != null &&
-                    monthPickerState.selectedValue != null &&
-                    dayPickerState.selectedValue != null
+        data class State(
+            val gender: GENDER? = null,
+            val yearPickerState: PickerState =
+                PickerState(
+                    range = (LocalDate.now().year - MIN_AGE..MIN_YEAR).toList().map { it.toString() },
+                    enabled = true,
+                ),
+            val monthPickerState: PickerState =
+                PickerState(
+                    range = (1..12).toList().map { it.toString().format("%2d") },
+                    enabled = true,
+                ),
+            val dayPickerState: PickerState =
+                PickerState(
+                    range = (1..31).toList().map { it.toString().format("%2d") },
+                    enabled = true,
+                ),
+        ) {
+            val isNextButtonEnabled: Boolean
+                get() =
+                    gender != null &&
+                        yearPickerState.selectedValue != null &&
+                        monthPickerState.selectedValue != null &&
+                        dayPickerState.selectedValue != null
 
-        data class PickerState(
-            val selectedValue: String? = null,
-            val range: List<String> = emptyList(),
-            val enabled: Boolean = true,
-        )
+            data class PickerState(
+                val selectedValue: String? = null,
+                val range: List<String> = emptyList(),
+                val enabled: Boolean = true,
+            )
+        }
     }
-}
