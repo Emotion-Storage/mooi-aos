@@ -19,6 +19,7 @@ data class SaveTimeCapsuleState(
     val isNewTimeCapsule: Boolean = false,
     val emotions: List<String> = emptyList(),
     val createdAt: LocalDateTime = LocalDateTime.now(),
+    val expireAt: LocalDateTime= LocalDateTime.now(),
     val saveAt: LocalDateTime = LocalDateTime.now(),
     val arriveAfter: ArriveAfter? = null,
     val arriveAt: LocalDateTime? = null,
@@ -116,6 +117,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                         createdAt = it.createdAt,
                         // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
                         saveAt = if (isNewTimeCapsule) it.createdAt else LocalDateTime.now(),
+                        expireAt = it.expireAt,
                         arriveAfter = null,
                         arriveAt = null,
                     )

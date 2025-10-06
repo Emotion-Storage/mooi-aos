@@ -35,6 +35,7 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
+import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CtaButton
@@ -139,14 +140,21 @@ private fun StatelessSaveTimeCapsuleScreen(
                     arriveAt = state.arriveAt,
                     emotions = state.emotions,
                 )
-                CtaButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    labelString = "타임캡슐 보관하기",
-                    enabled = state.arriveAt != null,
-                    onClick = {
-                        onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+
+                SaveTimeCapsuleButton(
+                    isNewTimeCapsule = state.isNewTimeCapsule,
+                    expireAt = state.expireAt,
+                    enabled = state.arriveAfter != null,
+                    onSave = {
+                        if (state.isNewTimeCapsule) {
+                            onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+                        } else {
+                            // todo: show check arrive at time modal
+                        }
                     },
-                    isDefaultWidth = false,
+                    onExpire = {
+                        // todo: show expired modal
+                    }
                 )
             }
         }
@@ -261,7 +269,8 @@ private fun RowScope.ArriveAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -281,7 +290,8 @@ private fun RowScope.ArriveAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
