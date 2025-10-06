@@ -20,7 +20,10 @@ internal object TimeCapsuleMapper {
         title = entity.title,
         summary = entity.summary,
         isFavorite = entity.isFavorite,
-        emotions = entity.emotions.map {
+        emotions = entity.emotions.filter {
+            // check emotion string format
+            (it.emotion.split(" ")).size == 2
+        }.map{
             val (emoji, label) = it.emotion.split(" ")
             TimeCapsule.Emotion(
                 emoji = emoji,
