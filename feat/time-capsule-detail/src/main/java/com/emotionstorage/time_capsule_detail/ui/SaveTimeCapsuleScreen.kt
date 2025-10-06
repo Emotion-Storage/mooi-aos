@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import SpeechBubble
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -33,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
@@ -40,12 +43,12 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
+import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
-import org.intellij.lang.annotations.JdkConstants
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -54,15 +57,14 @@ fun SaveTimeCapsuleScreen(
     id: String,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = true,
-    createdAt: LocalDateTime = LocalDateTime.now(),
     viewModel: SaveTimeCapsuleViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-    LaunchedEffect(id, isNewTimeCapsule, createdAt) {
-        viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule, createdAt))
+    LaunchedEffect(id, isNewTimeCapsule) {
+        viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule))
     }
 
     StatelessSaveTimeCapsuleScreen(
@@ -132,7 +134,13 @@ private fun StatelessSaveTimeCapsuleScreen(
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {
+                TimeCapsuleSpeechBubble(
+                    saveAt = state.createdAt,
+                    arriveAt = state.arriveAt,
+                    emotions = state.emotions,
+                )
                 CtaButton(
                     modifier = Modifier.fillMaxWidth(),
                     labelString = "타임캡슐 보관하기",
@@ -158,7 +166,7 @@ private fun SaveTimeCapsuleTitle(
             style = MooiTheme.typography.head1,
             color = Color.White,
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(3.dp)) {
+        Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(
                 text = buildAnnotatedString {
                     withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
@@ -215,7 +223,7 @@ fun SaveTimeCapsuleGrid(
                             arriveAfter = it,
                             isSelected = it == arriveAfter,
                             onSelect = {
-                                if(it == arriveAfter){
+                                if (it == arriveAfter) {
                                     // remove selection on double click
                                     onSelectArriveAfter(null)
                                 } else {
@@ -251,7 +259,7 @@ private fun RowScope.ArriveAfterGridItem(
                 defaultBackground = Color.Black,
                 shape = RoundedCornerShape(10.dp)
             )
-            .clickable{
+            .clickable {
                 onSelect()
             }
     ) {
@@ -304,6 +312,10 @@ private fun RowScope.ArriveAfterGridItem(
 @Composable
 private fun SaveTimeCapsuleScreenPreview() {
     MooiTheme {
-        StatelessSaveTimeCapsuleScreen()
+        StatelessSaveTimeCapsuleScreen(
+            state = SaveTimeCapsuleState(
+                emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+            )
+        )
     }
 }

@@ -1,12 +1,15 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.compose.collectAsState
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -15,6 +18,7 @@ import javax.inject.Inject
 data class SaveTimeCapsuleState(
     val id: String = "",
     val isNewTimeCapsule: Boolean = false,
+    val emotions: List<String> = emptyList(),
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val saveAt: LocalDateTime = LocalDateTime.now(),
     val arriveAfter: ArriveAfter? = null,
@@ -35,7 +39,6 @@ sealed class SaveTimeCapsuleAction {
     data class Init(
         val id: String,
         val isNewTimeCapsule: Boolean,
-        val createdAt: LocalDateTime,
     ) : SaveTimeCapsuleAction()
 
     // select open date from grid item
@@ -68,7 +71,9 @@ sealed class SaveTimeCapsuleSideEffect {
 }
 
 @HiltViewModel
-class SaveTimeCapsuleViewModel @Inject constructor() :
+class SaveTimeCapsuleViewModel @Inject constructor(
+    private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase
+) :
     ViewModel(),
     ContainerHost<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> {
     override val container: Container<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> =
@@ -77,7 +82,7 @@ class SaveTimeCapsuleViewModel @Inject constructor() :
     fun onAction(action: SaveTimeCapsuleAction) {
         when (action) {
             is SaveTimeCapsuleAction.Init -> {
-                handleInit(action.id, action.isNewTimeCapsule, action.createdAt)
+                handleInit(action.id, action.isNewTimeCapsule)
             }
 
             is SaveTimeCapsuleAction.SelectArriveAfter -> {
@@ -97,23 +102,29 @@ class SaveTimeCapsuleViewModel @Inject constructor() :
     private fun handleInit(
         id: String,
         isNewTimeCapsule: Boolean,
-        createdAt: LocalDateTime,
     ) = intent {
-        if (!isNewTimeCapsule) {
-            postSideEffect(ShowToast())
-        }
+        collectDataState(
+            flow = getTimeCapsuleById(id),
+            onSuccess = {
+                reduce {
+                    state.copy(
+                        id = id,
+                        isNewTimeCapsule = isNewTimeCapsule,
+                        // todo: change domain model's emotion list type
+                        emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움",  "\uD83E\uDD70 안정감"),
+                        createdAt = it.createdAt,
+                        // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
+                        saveAt = if (isNewTimeCapsule) it.createdAt else LocalDateTime.now(),
+                        arriveAfter = null,
+                        arriveAt = null,
+                    )
+                }
 
-        reduce {
-            state.copy(
-                id = id,
-                isNewTimeCapsule = isNewTimeCapsule,
-                createdAt = createdAt,
-                // 보관일 = 새 타임캡슐인 경우, 생성 시점 / 일시저장 타임캡슐인 경우, 화면 진입 시점
-                saveAt = if (isNewTimeCapsule) createdAt else LocalDateTime.now(),
-                arriveAfter = null,
-                arriveAt = null,
-            )
-        }
+                if (!isNewTimeCapsule) {
+                    postSideEffect(ShowToast())
+                }
+            }
+        )
     }
 
     private fun handleSelectArriveAfter(arriveAfter: ArriveAfter?) =
