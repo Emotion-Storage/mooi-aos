@@ -44,6 +44,7 @@ fun TimeCapsuleSpeechBubble(
                     modifier = Modifier.size(11.dp, 14.dp),
                     painter = painterResource(R.drawable.lock),
                     contentDescription = "",
+                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary),
                 )
                 Text(
                     text = "${arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))}에 열릴 예정이에요!",
@@ -71,7 +72,6 @@ fun TimeCapsuleSpeechBubble(
                         modifier = Modifier.size(14.dp),
                         painter = painterResource(R.drawable.clock),
                         contentDescription = "",
-                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary),
                     )
                     Text(
                         text = "보관일 : ${saveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))}",
