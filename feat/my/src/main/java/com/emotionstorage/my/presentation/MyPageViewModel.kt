@@ -3,6 +3,7 @@ package com.emotionstorage.my.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
+import com.emotionstorage.domain.useCase.user.ValidateNicknameUseCase
 import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -61,6 +62,8 @@ sealed class MyPageSideEffect {
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val validateNicknameUseCase: ValidateNicknameUseCase,
+    // todo : add nickname change usecase
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
