@@ -34,6 +34,7 @@ fun TermsAndPrivacyScreen(
     val tabs = listOf("이용약관", "개인정보처리방침")
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
