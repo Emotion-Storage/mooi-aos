@@ -53,8 +53,9 @@ class GenderBirthViewModel
                         PickerState(
                             selectedValue = birthYear,
                             range =
-                                (MIN_YEAR..
-                                    LocalDate.now().minusYears(MIN_AGE).year).toList().reversed().map { it.toString() },
+                                (
+                                    MIN_YEAR..LocalDate.now().minusYears(MIN_AGE).year
+                                ).toList().reversed().map { it.toString() },
                             enabled = true,
                         ),
                     monthPickerState =
