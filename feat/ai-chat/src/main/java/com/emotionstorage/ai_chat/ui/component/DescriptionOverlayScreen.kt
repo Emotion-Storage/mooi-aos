@@ -137,7 +137,7 @@ private fun BoxScope.PositionedBubble(
         HighlightType.PROGRESS_BAR -> {
             val y = (area.bottom + gap).roundToInt()
             SpeechBubble(
-                text = stringResource(R.string.ai_chat_desc0),
+                contentText = stringResource(R.string.ai_chat_desc0),
                 tail = BubbleTail.TopCenter,
                 sizeParam = DpSize(265.dp, 101.dp),
                 modifier =
@@ -155,7 +155,7 @@ private fun BoxScope.PositionedBubble(
             val y = (area.top - bh - gap).roundToInt()
 
             SpeechBubble(
-                text = stringResource(R.string.ai_chat_desc1),
+                contentText = stringResource(R.string.ai_chat_desc1),
                 tail = BubbleTail.BottomCenter,
                 sizeParam = DpSize(216.dp, 91.dp),
                 modifier =
@@ -167,7 +167,7 @@ private fun BoxScope.PositionedBubble(
             val x = with(density) { area.left.toDp() + 8.dp }
             val y = with(density) { area.bottom.toDp() + 8.dp }
             SpeechBubble(
-                text = stringResource(R.string.ai_chat_desc2),
+                contentText = stringResource(R.string.ai_chat_desc2),
                 tail = BubbleTail.TopLeft,
                 sizeParam = DpSize(222.dp, 122.dp),
                 modifier =

@@ -118,7 +118,7 @@ private fun StatelessSignupCompleteScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 SpeechBubble(
-                    text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                    contentText = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
                     textStyle = MooiTheme.typography.caption3.copy(lineHeight = 20.sp),
                     tail = BubbleTail.BottomCenter,
                     sizeParam = DpSize(265.dp, 84.dp),

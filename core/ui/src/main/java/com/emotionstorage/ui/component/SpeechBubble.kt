@@ -1,6 +1,11 @@
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -14,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.dpToPixel
 
@@ -28,7 +35,6 @@ enum class BubbleTail { TopCenter, BottomCenter, TopLeft, }
 
 @Composable
 fun SpeechBubble(
-    text: String,
     modifier: Modifier = Modifier,
     tail: BubbleTail = BubbleTail.BottomCenter,
     sizeParam: DpSize = DpSize(265.dp, 101.dp),
@@ -39,6 +45,8 @@ fun SpeechBubble(
     bgBrush: Brush = MooiTheme.brushScheme.subButtonBackground,
     textStyle: TextStyle = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
     textColor: Color = MooiTheme.colorScheme.gray300,
+    contentText: String? = null,
+    content: @Composable (() -> Unit)? = null,
 ) {
     val context = LocalContext.current
 
@@ -132,12 +140,17 @@ fun SpeechBubble(
                     .padding(padding),
             contentAlignment = Alignment.Center,
         ) {
-            Text(
-                text = text,
-                style = textStyle,
-                color = textColor,
-                textAlign = TextAlign.Center,
-            )
+            if (contentText != null) {
+                Text(
+                    text = contentText,
+                    style = textStyle,
+                    color = textColor,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            if (content != null) {
+                content()
+            }
         }
     }
 }
@@ -146,8 +159,37 @@ fun SpeechBubble(
 @Composable
 fun SpeechBubblePreview() {
     MooiTheme {
-        SpeechBubble(
-            text = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
-        )
+        Column(
+            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            SpeechBubble(
+                contentText = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+            )
+            SpeechBubble(
+                sizeParam = DpSize(286.dp, 83.dp),
+                cornerRadius = 100.dp,
+            ) {
+                Column(modifier = Modifier) {
+                    Row(
+                        modifier = Modifier,
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        Image(
+                            modifier = Modifier.size(14.dp),
+                            painter = painterResource(R.drawable.clock),
+                            contentDescription = ""
+                        )
+                        Text(
+                            text = "보관일 : 2025. 07. 30  08:40",
+                            style = MooiTheme.typography.caption3,
+                            color = MooiTheme.colorScheme.gray300
+                        )
+                    }
+                }
+            }
+        }
     }
 }

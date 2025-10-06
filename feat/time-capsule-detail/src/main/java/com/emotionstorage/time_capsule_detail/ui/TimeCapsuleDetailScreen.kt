@@ -252,7 +252,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 }
 
                 TopAppBar(
-                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd hh:mm")),
+                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")),
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = onTimeCapsuleExit,
                     showCloseButton = isNewTimeCapsule,
