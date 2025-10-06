@@ -1,6 +1,7 @@
 package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.TimeCapsuleRemoteDataSource
+import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
@@ -44,9 +45,13 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                // todo: implement function
-//            val result = timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(sortBy.label)
-//            emit(DataState.Success(result))
+                val result = timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(
+                    when (sortBy) {
+                        FavoriteSortBy.FAVORITE_AT -> "favorite"
+                        FavoriteSortBy.NEWEST -> "latest"
+                    }
+                )
+                emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {

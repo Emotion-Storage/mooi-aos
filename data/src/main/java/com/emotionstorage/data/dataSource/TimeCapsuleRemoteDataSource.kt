@@ -1,5 +1,7 @@
 package com.emotionstorage.data.dataSource
 
+import com.emotionstorage.data.model.TimeCapsuleEntity
+
 interface TimeCapsuleRemoteDataSource {
     suspend fun patchTimeCapsuleOpen(id: String): Boolean
 
@@ -7,4 +9,6 @@ interface TimeCapsuleRemoteDataSource {
         id: String,
         note: String,
     ): Boolean
+
+    suspend fun getFavoriteTimeCapsules(sortBy: String): List<TimeCapsuleEntity>
 }
