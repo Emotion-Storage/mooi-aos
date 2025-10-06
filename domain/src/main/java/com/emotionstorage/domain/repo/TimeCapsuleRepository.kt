@@ -14,7 +14,10 @@ interface TimeCapsuleRepository {
         note: String,
     ): Flow<DataState<Boolean>>
 
-    suspend fun setFavoriteTimeCapsule(id: String, isFavorite: Boolean): Flow<DataState<SetFavoriteResult>>
+    suspend fun setFavoriteTimeCapsule(
+        id: String,
+        isFavorite: Boolean,
+    ): Flow<DataState<SetFavoriteResult>>
 
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
 

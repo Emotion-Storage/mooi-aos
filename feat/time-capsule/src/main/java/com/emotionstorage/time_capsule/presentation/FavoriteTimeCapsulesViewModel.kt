@@ -119,6 +119,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
             }
 
             val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
+
             suspend fun updateFavorite(
                 id: String,
                 isFavorite: Boolean,
