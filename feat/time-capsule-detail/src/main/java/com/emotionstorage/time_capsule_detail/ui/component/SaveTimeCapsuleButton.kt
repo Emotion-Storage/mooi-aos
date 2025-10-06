@@ -41,9 +41,10 @@ fun SaveTimeCapsuleButton(
         )
     } else {
         CtaButton(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(77.dp),
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .height(77.dp),
             enabled = enabled,
             onClick = onSave,
             isDefaultWidth = false,
@@ -59,18 +60,19 @@ fun SaveTimeCapsuleButton(
                 }
                 val remainingTime = String.format("%02d:%02d:%02d", hours, minutes, seconds)
                 Text(
-                    text = buildAnnotatedString {
-                        withStyle(
-                            SpanStyle(
-                                color = MooiTheme.colorScheme.errorRed,
-                            ),
-                        ) {
-                            append("${remainingTime} 남은\n")
-                        }
-                        append("타임캡슐 보관하기")
-                    },
+                    text =
+                        buildAnnotatedString {
+                            withStyle(
+                                SpanStyle(
+                                    color = MooiTheme.colorScheme.errorRed,
+                                ),
+                            ) {
+                                append("$remainingTime 남은\n")
+                            }
+                            append("타임캡슐 보관하기")
+                        },
                     style = MooiTheme.typography.mainButton.copy(lineHeight = 20.sp),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -82,11 +84,12 @@ fun SaveTimeCapsuleButton(
 private fun SaveTimeCapsuleButtonPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             SaveTimeCapsuleButton(
                 isNewTimeCapsule = true,

@@ -47,7 +47,6 @@ fun AppSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
     gravity: Int = Gravity.BOTTOM,
-
     paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
     snackbarIconId: Int? = null,
     hostContent: @Composable (snackbarData: SnackbarData) -> Unit = {
@@ -140,8 +139,7 @@ fun Toast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(paddingValues),
+                ).padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {

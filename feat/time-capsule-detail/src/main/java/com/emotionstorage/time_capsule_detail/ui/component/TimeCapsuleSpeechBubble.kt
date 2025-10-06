@@ -57,10 +57,11 @@ fun TimeCapsuleSpeechBubble(
         }
 
         SpeechBubble(
-            sizeParam = DpSize(
-                286.dp,
-                if (isNewTimeCapsule) 83.dp else 115.5.dp
-            ),
+            sizeParam =
+                DpSize(
+                    286.dp,
+                    if (isNewTimeCapsule) 83.dp else 115.5.dp,
+                ),
             cornerRadius = 100.dp,
         ) {
             Column(
