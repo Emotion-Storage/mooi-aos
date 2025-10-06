@@ -115,10 +115,11 @@ fun WithDrawNoticeContent(
             CtaButton(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .clickable { onWithDrawButtonClick() }
-                    .padding(bottom = 28.dp),
+                    .padding(start = 16.dp, end = 16.dp, bottom = 28.dp),
                 type = CtaButtonType.OUTLINED,
-                labelString = "MOOI 서비스 탈퇴하기"
+                labelString = "MOOI 서비스 탈퇴하기",
+                onClick = onWithDrawButtonClick,
+                isDefaultWidth = false,
             )
         }
     }
