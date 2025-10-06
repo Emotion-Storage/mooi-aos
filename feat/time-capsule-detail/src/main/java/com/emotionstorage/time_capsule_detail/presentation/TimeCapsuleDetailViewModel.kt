@@ -76,6 +76,10 @@ sealed class TimeCapsuleDetailAction {
 }
 
 sealed class TimeCapsuleDetailSideEffect {
+    object GetTimeCapsuleFail: TimeCapsuleDetailSideEffect()
+
+    object OpenTimeCapsuleFail : TimeCapsuleDetailSideEffect()
+
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
 
     data class ShowUnlockModal(
@@ -201,7 +205,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     reduce {
                         state.copy(timeCapsule = null, note = "")
                     }
-                    // todo: handle error
+                    postSideEffect(TimeCapsuleDetailSideEffect.GetTimeCapsuleFail)
                 },
             )
         }
@@ -220,7 +224,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, data ->
                     Logger.e("openArrivedTimeCapsule error: $throwable")
-                    // todo: handle error
+                    postSideEffect(TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail)
                 },
             )
         }
