@@ -8,6 +8,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
@@ -111,6 +112,7 @@ sealed class TimeCapsuleDetailSideEffect {
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
+    private val openArrivedTimeCapsule: OpenArrivedTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
@@ -207,12 +209,20 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     @OptIn(OrbitExperimental::class)
     private suspend fun openArrivedTimeCapsule(timeCapsule: TimeCapsule) =
         subIntent {
-            // todo: open time capsule if arrived
-            reduce {
-                state.copy(
-                    timeCapsule = timeCapsule.copy(status = TimeCapsule.STATUS.OPENED),
-                )
-            }
+            collectDataState(
+                flow = openArrivedTimeCapsule(timeCapsule.id),
+                onSuccess = {
+                    reduce {
+                        state.copy(
+                            timeCapsule = timeCapsule.copy(status = TimeCapsule.STATUS.OPENED),
+                        )
+                    }
+                },
+                onError = { throwable, data ->
+                    Logger.e("openArrivedTimeCapsule error: $throwable")
+                    // todo: handle error
+                },
+            )
         }
 
     @OptIn(OrbitExperimental::class)
