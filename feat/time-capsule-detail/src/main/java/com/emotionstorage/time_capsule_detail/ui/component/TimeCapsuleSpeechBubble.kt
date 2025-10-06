@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
@@ -69,7 +70,8 @@ fun TimeCapsuleSpeechBubble(
                     Image(
                         modifier = Modifier.size(14.dp),
                         painter = painterResource(R.drawable.clock),
-                        contentDescription = ""
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary)
                     )
                     Text(
                         text = "보관일 : ${saveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))}",
@@ -118,6 +120,10 @@ private fun TimeCapsuleSpeeckBubblePreview() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             TimeCapsuleSpeechBubble(
+                emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
+            )
+            TimeCapsuleSpeechBubble(
+                arriveAt = LocalDateTime.now(),
                 emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
             )
         }
