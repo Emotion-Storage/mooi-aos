@@ -15,6 +15,7 @@ import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.component.WithDrawNoticeContent
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun WithDrawNoticeScreen(
@@ -24,6 +25,7 @@ fun WithDrawNoticeScreen(
 ) {
     var showSuggestDialog by remember { mutableStateOf(false) }
     var showDoneDialog by remember { mutableStateOf(false) }
+    var pendingNavigate by remember { mutableStateOf(false) }
 
 
     LaunchedEffect(Unit) {
@@ -31,13 +33,31 @@ fun WithDrawNoticeScreen(
             when (sideEffect) {
                 is MyPageSideEffect.WithDrawSuccess -> {
                     showDoneDialog = true
-                    navToSplash()
                 }
 
                 else -> Unit
             }
         }
     }
+
+    LaunchedEffect(showDoneDialog) {
+        if (showDoneDialog) {
+            delay(5_000)
+            if (showDoneDialog) {
+                pendingNavigate = true
+                showDoneDialog = false
+            }
+        }
+    }
+
+    LaunchedEffect(showDoneDialog, pendingNavigate) {
+        if (!showDoneDialog && pendingNavigate) {
+            delay(250)
+            pendingNavigate = false
+            navToSplash()
+        }
+    }
+
 
     StatelessWithDrawNoticeScreen(
         showSuggestDialog = showSuggestDialog,
@@ -50,11 +70,10 @@ fun WithDrawNoticeScreen(
             viewModel.onAction(MyPageAction.WithDrawConfirm)
         },
         onFinalConfirmClick = {
+            pendingNavigate = true
             showDoneDialog = false
-            navToSplash()
         }
     )
-
 }
 
 @Composable

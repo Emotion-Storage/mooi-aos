@@ -1,6 +1,7 @@
 package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,7 +60,7 @@ sealed class MyPageSideEffect {
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    // add usecase
+    private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
@@ -142,7 +143,7 @@ class MyPageViewModel @Inject constructor(
     private fun handleWithDraw() =
         intent {
             try {
-                // usecase 호출
+                deleteAccountUseCase()
                 postSideEffect(MyPageSideEffect.NavigateToSplash)
             } catch (t: Throwable) {
                 postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
