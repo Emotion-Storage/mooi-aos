@@ -6,8 +6,8 @@ import retrofit2.http.Body
 import retrofit2.http.PATCH
 
 interface UserApiService {
-
     @PATCH("/api/v1/mypage/nickname")
-    suspend fun updateNickName(@Body request: RequestBody): ResponseDto<Unit?>
-
+    suspend fun updateNickName(
+        @Body request: RequestBody,
+    ): ResponseDto<Unit?>
 }

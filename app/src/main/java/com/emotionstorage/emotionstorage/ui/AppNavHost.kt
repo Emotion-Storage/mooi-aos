@@ -107,7 +107,7 @@ internal sealed class AppDestination {
     object WithDrawNotice : AppDestination()
 
     @Serializable
-    object NicknameChange: AppDestination()
+    object NicknameChange : AppDestination()
 }
 
 @Composable

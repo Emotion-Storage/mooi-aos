@@ -8,9 +8,7 @@ import kotlinx.serialization.encodeToString
 
 @Serializable
 data class UpdateNicknameParam(
-    val nickname: String
+    val nickname: String,
 )
 
-fun UpdateNicknameParam.toRequestBody(): RequestBody {
-    return Json.encodeToString(this).toRequestBody()
-}
+fun UpdateNicknameParam.toRequestBody(): RequestBody = Json.encodeToString(this).toRequestBody()

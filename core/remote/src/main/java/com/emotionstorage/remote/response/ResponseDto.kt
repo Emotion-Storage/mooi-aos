@@ -15,10 +15,9 @@ data class ResponseDto<T>(
     val timestamp: LocalDateTime? = null,
 )
 
-fun <T> ResponseDto<T>.toEmptyDataState(onSuccessMap: (T?) -> Unit = {}): DataState<Unit> {
-    return if (status in 200..299) {
+fun <T> ResponseDto<T>.toEmptyDataState(onSuccessMap: (T?) -> Unit = {}): DataState<Unit> =
+    if (status in 200..299) {
         DataState.Success(Unit)
     } else {
         DataState.Error(Exception(message ?: "Unknown Error"))
     }
-}

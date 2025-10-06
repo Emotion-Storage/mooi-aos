@@ -48,7 +48,7 @@ fun NicknameChangeScreen(
                 navToBack()
             }
         },
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -67,19 +67,21 @@ private fun StatelessNicknameChangeScreen(
                 handleBackPress = true,
                 onBackClick = navToBack,
             )
-        }
+        },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize(),
         ) {
             Column(
-                modifier = Modifier
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .imePadding()
-                    .consumeWindowInsets(WindowInsets.navigationBars)
+                modifier =
+                    Modifier
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(innerPadding)
+                        .imePadding()
+                        .consumeWindowInsets(WindowInsets.navigationBars),
             ) {
                 NicknameChangeTitle()
 
@@ -95,23 +97,25 @@ private fun StatelessNicknameChangeScreen(
                         onValueChange = event::onNicknameChange,
                         showCharCount = true,
                         maxCharCount = 8,
-                        state = when (state.inputState) {
-                            InputState.EMPTY ->
-                                TextInputState.Empty(infoMessage = state.helperMessage)
+                        state =
+                            when (state.inputState) {
+                                InputState.EMPTY ->
+                                    TextInputState.Empty(infoMessage = state.helperMessage)
 
-                            InputState.INVALID ->
-                                TextInputState.Error(errorMessage = state.helperMessage)
+                                InputState.INVALID ->
+                                    TextInputState.Error(errorMessage = state.helperMessage)
 
-                            InputState.VALID ->
-                                TextInputState.Success(successMessage = state.helperMessage)
-                        },
+                                InputState.VALID ->
+                                    TextInputState.Success(successMessage = state.helperMessage)
+                            },
                     )
                 }
 
                 CtaButton(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 40.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 16.dp, end = 16.dp, bottom = 40.dp),
                     labelString = "변경하기",
                     isDefaultWidth = false,
                     enabled = state.inputState == InputState.VALID && !state.submitting,
@@ -151,7 +155,6 @@ fun NicknameChangeTitle() {
 @Composable
 fun NicknameChangeScreenPreview() {
     MooiTheme {
-
         StatelessNicknameChangeScreen(
             state = PreviewEmpty,
             event = NoopInputNicknameEvent,
@@ -170,25 +173,29 @@ fun NicknameChangeScreenPreview() {
 }
 
 // For Preview
-private val NoopInputNicknameEvent = object : InputNicknameEvent {
-    override fun onNicknameChange(input: String) = Unit
-}
+private val NoopInputNicknameEvent =
+    object : InputNicknameEvent {
+        override fun onNicknameChange(input: String) = Unit
+    }
 
 // 대표 상태들
-private val PreviewEmpty = NicknameChangeViewModel.State(
-    nickname = "",
-    inputState = InputState.EMPTY,
-    helperMessage = "닉네임을 입력해 주세요",
-)
+private val PreviewEmpty =
+    NicknameChangeViewModel.State(
+        nickname = "",
+        inputState = InputState.EMPTY,
+        helperMessage = "닉네임을 입력해 주세요",
+    )
 
-private val PreviewInvalid = NicknameChangeViewModel.State(
-    nickname = "??",
-    inputState = InputState.INVALID,
-    helperMessage = "허용되지 않는 문자예요",
-)
+private val PreviewInvalid =
+    NicknameChangeViewModel.State(
+        nickname = "??",
+        inputState = InputState.INVALID,
+        helperMessage = "허용되지 않는 문자예요",
+    )
 
-private val PreviewValid = NicknameChangeViewModel.State(
-    nickname = "모이",
-    inputState = InputState.VALID,
-    helperMessage = "멋진 닉네임이네요!",
-)
+private val PreviewValid =
+    NicknameChangeViewModel.State(
+        nickname = "모이",
+        inputState = InputState.VALID,
+        helperMessage = "멋진 닉네임이네요!",
+    )

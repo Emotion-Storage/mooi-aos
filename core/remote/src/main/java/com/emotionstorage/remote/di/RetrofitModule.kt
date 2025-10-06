@@ -64,7 +64,5 @@ object RetrofitModule {
 
     @Provides
     @Singleton
-    fun bindUserApiService(retrofit: Retrofit): UserApiService {
-        return retrofit.create(UserApiService::class.java)
-    }
+    fun bindUserApiService(retrofit: Retrofit): UserApiService = retrofit.create(UserApiService::class.java)
 }

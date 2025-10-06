@@ -17,7 +17,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 interface InputNicknameEvent {
     fun onNicknameChange(nickname: String)
 }
@@ -26,8 +25,8 @@ interface InputNicknameEvent {
 class NicknameChangeViewModel @Inject constructor(
     private val validateNicknameUseCase: ValidateNicknameUseCase,
     private val updateNicknameUseCase: UpdateUserNicknameUseCase,
-) : ViewModel(), InputNicknameEvent {
-
+) : ViewModel(),
+    InputNicknameEvent {
     data class State(
         val nickname: String = "",
         val inputState: InputState = InputState.EMPTY,
@@ -56,15 +55,15 @@ class NicknameChangeViewModel @Inject constructor(
                 .debounce(120)
                 .mapLatest { nickname ->
                     validateNicknameUseCase(nickname)
-                }
-                .collect { result ->
+                }.collect { result ->
                     if (result is DataState.Success) {
-                        val (st, msg) = when (result.data) {
-                            NicknameState.INVALID_EMPTY -> State.InputState.EMPTY to result.data.message
-                            NicknameState.INVALID_CHAR -> State.InputState.INVALID to result.data.message
-                            NicknameState.INVALID_LENGTH -> State.InputState.INVALID to result.data.message
-                            NicknameState.VALID -> State.InputState.VALID to result.data.message
-                        }
+                        val (st, msg) =
+                            when (result.data) {
+                                NicknameState.INVALID_EMPTY -> State.InputState.EMPTY to result.data.message
+                                NicknameState.INVALID_CHAR -> State.InputState.INVALID to result.data.message
+                                NicknameState.INVALID_LENGTH -> State.InputState.INVALID to result.data.message
+                                NicknameState.VALID -> State.InputState.VALID to result.data.message
+                            }
                         _state.update { it.copy(inputState = st, helperMessage = msg) }
                     } else if (result is DataState.Error) {
                         _state.update {
@@ -92,7 +91,7 @@ class NicknameChangeViewModel @Inject constructor(
                             submitting = false,
                             submitError = null,
                             inputState = State.InputState.INVALID,
-                            helperMessage = null
+                            helperMessage = null,
                         )
                     }
                 }
