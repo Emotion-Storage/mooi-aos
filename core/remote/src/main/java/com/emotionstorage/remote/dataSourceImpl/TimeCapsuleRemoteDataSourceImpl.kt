@@ -39,13 +39,14 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun patchTimeCapsuleFavorite(
         id: String,
-        isFavorite: Boolean
+        isFavorite: Boolean,
     ): Boolean {
         try {
-            val response = timeCapsuleApiService.patchTimeCapsuleFavorite(
-                id,
-                PatchTimeCapsuleFavoriteRequest(isFavorite),
-            )
+            val response =
+                timeCapsuleApiService.patchTimeCapsuleFavorite(
+                    id,
+                    PatchTimeCapsuleFavoriteRequest(isFavorite),
+                )
 
             // todo: handle time capsule favorite fail - list is full
             if (response.data != null) {
