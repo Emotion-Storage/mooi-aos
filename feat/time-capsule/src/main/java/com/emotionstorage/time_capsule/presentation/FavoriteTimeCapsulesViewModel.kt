@@ -3,11 +3,10 @@ package com.emotionstorage.time_capsule.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
+import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
-import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState.SortOrder
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,24 +17,9 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class FavoriteTimeCapsulesState(
-    val sortOrder: SortOrder = SortOrder.SORT_BY_NEWEST,
+    val sortOrder: FavoriteSortBy = FavoriteSortBy.NEWEST,
     val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-) {
-    enum class SortOrder(
-        val label: String,
-    ) {
-        SORT_BY_NEWEST("최신 날짜순"),
-        SORT_BY_FAVORITE("즐겨찾기순"),
-        ;
-
-        companion object {
-            fun getByLabel(label: String): SortOrder {
-                return values().find { it.label == label }
-                    ?: throw IllegalArgumentException("Invalid sort order label: $label")
-            }
-        }
-    }
-}
+)
 
 sealed class FavoriteTimeCapsulesAction {
     object PullToRefresh : FavoriteTimeCapsulesAction()
@@ -104,17 +88,20 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             emotions =
                                 listOf(
-                                    Emotion(
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83D\uDE14",
                                         label = "서운함",
-                                        icon = 0,
+                                        percentage = 30.0f
                                     ),
-                                    Emotion(
-                                        label = "화남",
-                                        icon = 1,
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83D\uDE0A",
+                                        label = "고마움",
+                                        percentage = 30.0f
                                     ),
-                                    Emotion(
-                                        label = "피곤함",
-                                        icon = 2,
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83E\uDD70",
+                                        label = "안정감",
+                                        percentage = 80.0f
                                     ),
                                 ),
                             isFavorite = true,
@@ -124,8 +111,8 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                         )
                     }.sortedByDescending {
                         when (state.sortOrder) {
-                            SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
-                            SortOrder.SORT_BY_NEWEST -> it.createdAt
+                            FavoriteSortBy.FAVORITE_AT -> it.isFavoriteAt
+                            FavoriteSortBy.NEWEST -> it.createdAt
                         }
                     }
 
@@ -137,7 +124,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
     private fun handleSetSortOrder(sortOrderLabel: String) =
         intent {
             try {
-                val sortOrder = SortOrder.getByLabel(sortOrderLabel)
+                val sortOrder = FavoriteSortBy.getByLabel(sortOrderLabel)
 
                 // todo: call use case
                 val timeCapsules =
@@ -150,17 +137,20 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 emotions =
                                     listOf(
-                                        Emotion(
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f
                                         ),
-                                        Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f
                                         ),
-                                        Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f
                                         ),
                                     ),
                                 isFavorite = true,
@@ -170,8 +160,8 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                             )
                         }.sortedByDescending {
                             when (sortOrder) {
-                                SortOrder.SORT_BY_FAVORITE -> it.isFavoriteAt
-                                SortOrder.SORT_BY_NEWEST -> it.createdAt
+                                FavoriteSortBy.FAVORITE_AT -> it.isFavoriteAt
+                                FavoriteSortBy.NEWEST -> it.createdAt
                             }
                         }
 

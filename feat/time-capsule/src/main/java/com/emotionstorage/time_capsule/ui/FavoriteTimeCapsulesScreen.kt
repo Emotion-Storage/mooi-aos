@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
+import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast.FavoriteToast
@@ -57,17 +58,20 @@ private val DUMMY_TIME_CAPSULES =
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =
                 listOf(
-                    Emotion(
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83D\uDE14",
                         label = "서운함",
-                        icon = 0,
+                        percentage = 30.0f
                     ),
-                    Emotion(
-                        label = "화남",
-                        icon = 1,
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83D\uDE0A",
+                        label = "고마움",
+                        percentage = 30.0f
                     ),
-                    Emotion(
-                        label = "피곤함",
-                        icon = 2,
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83E\uDD70",
+                        label = "안정감",
+                        percentage = 80.0f
                     ),
                 ),
             isFavorite = true,
@@ -206,7 +210,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                                     .width(102.dp)
                                     .padding(top = 7.dp, bottom = 22.dp),
                             selectedValue = state.sortOrder.label,
-                            options = FavoriteTimeCapsulesState.SortOrder.entries.map { it.label },
+                            options = FavoriteSortBy.entries.map { it.label },
                             onSelect = { label ->
                                 onAction(
                                     FavoriteTimeCapsulesAction.SetSortOrder(label),

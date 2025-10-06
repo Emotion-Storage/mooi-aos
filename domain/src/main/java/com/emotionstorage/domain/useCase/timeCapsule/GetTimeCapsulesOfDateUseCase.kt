@@ -27,17 +27,20 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 summary = "",
                                 emotions =
                                     listOf(
-                                        Emotion(
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f
                                         ),
-                                        Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f
                                         ),
-                                        Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                        TimeCapsule.Emotion(
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),
@@ -50,16 +53,19 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 emotions =
                                     listOf(
                                         Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f
                                         ),
                                         Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f
                                         ),
                                         Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),
@@ -73,16 +79,19 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 emotions =
                                     listOf(
                                         Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f
                                         ),
                                         Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f
                                         ),
                                         Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),
@@ -96,16 +105,19 @@ class GetTimeCapsulesOfDateUseCase @Inject constructor() {
                                 emotions =
                                     listOf(
                                         Emotion(
+                                            emoji = "\uD83D\uDE14",
                                             label = "서운함",
-                                            icon = 0,
+                                            percentage = 30.0f
                                         ),
                                         Emotion(
-                                            label = "화남",
-                                            icon = 1,
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f
                                         ),
                                         Emotion(
-                                            label = "피곤함",
-                                            icon = 2,
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f
                                         ),
                                     ),
                                 createdAt = date.atStartOfDay(),

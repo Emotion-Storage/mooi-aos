@@ -40,9 +40,8 @@ data class TimeCapsule(
     }
 
     data class Emotion(
+        val emoji: String,
         val label: String,
-        // todo: text로 이모지 관리하기
-        val icon: Int,
         val percentage: Float? = null,
     )
 

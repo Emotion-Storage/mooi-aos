@@ -398,9 +398,21 @@ private fun TimeCapsuleDetailScreenPreview() {
                                     "나를 가장 생각해주는 건 가족밖에 없다는 생각이 들었어.",
                             emotions =
                                 listOf(
-                                    TimeCapsule.Emotion("서운함", icon = 0, 30.0f),
-                                    TimeCapsule.Emotion("고마움", icon = 3, 30.0f),
-                                    TimeCapsule.Emotion("안정감", icon = 4, 80.0f),
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83D\uDE14",
+                                        label = "서운함",
+                                        percentage = 30.0f
+                                    ),
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83D\uDE0A",
+                                        label = "고마움",
+                                        percentage = 30.0f
+                                    ),
+                                    TimeCapsule.Emotion(
+                                        emoji = "\uD83E\uDD70",
+                                        label = "안정감",
+                                        percentage = 80.0f
+                                    ),
                                 ),
                             comments =
                                 listOf(
