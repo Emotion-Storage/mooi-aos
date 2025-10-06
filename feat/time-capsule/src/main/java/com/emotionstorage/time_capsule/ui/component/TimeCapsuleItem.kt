@@ -80,7 +80,7 @@ fun TimeCapsuleItem(
         // content
         if (timeCapsule.status == TimeCapsule.STATUS.TEMPORARY) {
             TemporaryContent(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = onClick,
             )
         } else {
