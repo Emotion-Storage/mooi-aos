@@ -1,7 +1,7 @@
 package com.emotionstorage.auth.presentation
 
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.auth.domain.usecase.LoginUseCase
+import com.emotionstorage.domain.useCase.auth.LoginUseCase
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 import com.orhanobut.logger.Logger

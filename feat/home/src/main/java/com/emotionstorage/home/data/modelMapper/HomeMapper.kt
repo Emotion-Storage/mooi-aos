@@ -1,7 +1,7 @@
 package com.emotionstorage.home.data.modelMapper
 
 import com.emotionstorage.home.data.model.HomeEntity
-import com.emotionstorage.home.domain.model.Home
+import com.emotionstorage.domain.model.Home
 
 object HomeMapper {
     fun toDomain(entity: HomeEntity): Home =
