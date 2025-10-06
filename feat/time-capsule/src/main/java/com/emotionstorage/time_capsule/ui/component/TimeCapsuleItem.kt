@@ -57,6 +57,7 @@ fun TimeCapsuleItem(
     modifier: Modifier = Modifier,
     timeCapsule: TimeCapsuleItemState,
     showDate: Boolean = false,
+    showInfoText: Boolean = true,
     onFavoriteClick: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
@@ -73,6 +74,7 @@ fun TimeCapsuleItem(
             createdAt = timeCapsule.createdAt,
             expireAt = timeCapsule.expireAt,
             showDate = showDate,
+            showInfoText = showInfoText,
             isFavorite = timeCapsule.isFavorite,
             onFavoriteClick = onFavoriteClick,
         )
@@ -80,7 +82,7 @@ fun TimeCapsuleItem(
         // content
         if (timeCapsule.status == TimeCapsule.STATUS.TEMPORARY) {
             TemporaryContent(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxWidth(),
                 onClick = onClick,
             )
         } else {
@@ -127,6 +129,7 @@ private fun TimeCapsuleItemInfo(
     expireAt: LocalDateTime,
     modifier: Modifier = Modifier,
     showDate: Boolean = false,
+    showInfoText: Boolean = true,
     isFavorite: Boolean = false,
     onFavoriteClick: () -> Unit = {},
 ) {
@@ -182,21 +185,23 @@ private fun TimeCapsuleItemInfo(
                     style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.Light),
                     color = MooiTheme.colorScheme.gray300,
                 )
-                Row(
-                    modifier = modifier.padding(bottom = 7.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(7.dp),
-                ) {
-                    Image(
-                        modifier = Modifier.size(16.dp),
-                        painter = painterResource(R.drawable.key),
-                        contentDescription = "",
-                    )
-                    Text(
-                        text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
-                        style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Medium),
-                        color = MooiTheme.colorScheme.gray400,
-                    )
+                if (showInfoText) {
+                    Row(
+                        modifier = modifier.padding(bottom = 7.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(7.dp),
+                    ) {
+                        Image(
+                            modifier = Modifier.size(16.dp),
+                            painter = painterResource(R.drawable.key),
+                            contentDescription = "",
+                        )
+                        Text(
+                            text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
+                            style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Medium),
+                            color = MooiTheme.colorScheme.gray400,
+                        )
+                    }
                 }
             }
         }
