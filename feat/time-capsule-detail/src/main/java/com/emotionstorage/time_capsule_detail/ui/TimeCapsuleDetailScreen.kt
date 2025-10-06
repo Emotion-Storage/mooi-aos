@@ -224,7 +224,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         isModalOpen = isSaveChangesModalOpen,
         onDismissRequest = dismissSaveChangesModal,
         onSave = {
-            onAction(OnSaveNote)
+            onAction(OnSaveNote(id))
             dismissSaveChangesModal()
             navToBack()
         },
@@ -347,7 +347,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         onAction(OnExpireTrigger)
                     },
                     onSaveMindNote = {
-                        onAction(OnSaveNote)
+                        onAction(OnSaveNote(id))
                     },
                     onDeleteTimeCapsule = {
                         onAction(OnDeleteTrigger)

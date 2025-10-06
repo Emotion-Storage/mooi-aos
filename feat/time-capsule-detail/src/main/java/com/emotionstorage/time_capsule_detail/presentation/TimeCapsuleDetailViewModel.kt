@@ -9,6 +9,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
@@ -64,7 +65,9 @@ sealed class TimeCapsuleDetailAction {
         val note: String,
     ) : TimeCapsuleDetailAction()
 
-    object OnSaveNote : TimeCapsuleDetailAction()
+    data class OnSaveNote(
+        val id: String
+    ) : TimeCapsuleDetailAction()
 
     object OnDeleteTrigger : TimeCapsuleDetailAction()
 
@@ -76,7 +79,7 @@ sealed class TimeCapsuleDetailAction {
 }
 
 sealed class TimeCapsuleDetailSideEffect {
-    object GetTimeCapsuleFail: TimeCapsuleDetailSideEffect()
+    object GetTimeCapsuleFail : TimeCapsuleDetailSideEffect()
 
     object OpenTimeCapsuleFail : TimeCapsuleDetailSideEffect()
 
@@ -120,6 +123,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
     private val toggleFavorite: ToggleFavoriteUseCase,
+    private val saveNote: SaveTimeCapsuleNoteUseCase,
 ) : ViewModel(),
     ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
     override val container: Container<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> =
@@ -148,7 +152,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
 
             is OnSaveNote -> {
-                handleSaveNote()
+                handleSaveNote(action.id)
             }
 
             is OnDeleteTrigger -> {
@@ -318,17 +322,24 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
         }
 
-    private fun handleSaveNote() =
+    private fun handleSaveNote(id: String) =
         intent {
             if (!state.isNoteChanged) return@intent
 
-            // todo: call save note use case
-            reduce {
-                state.copy(
-                    // stub logic for note save
-                    timeCapsule = state.timeCapsule?.copy(note = state.note),
-                    isNoteChanged = false,
-                )
-            }
+            collectDataState(
+                flow = saveNote(id, state.note),
+                onSuccess = {
+                    reduce {
+                        state.copy(
+                            // stub logic for note save
+                            timeCapsule = state.timeCapsule?.copy(note = state.note),
+                            isNoteChanged = false,
+                        )
+                    }
+                },
+                onError = { throwable, data ->
+                    Logger.e("saveNote error: $throwable")
+                }
+            )
         }
 }
