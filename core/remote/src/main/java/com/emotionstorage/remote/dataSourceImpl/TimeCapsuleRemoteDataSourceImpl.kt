@@ -13,12 +13,8 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 ) : TimeCapsuleRemoteDataSource {
     override suspend fun patchTimeCapsuleOpen(id: String): Boolean {
         try {
-            val response = timeCapsuleApiService.patchTimeCapsuleOpen(id)
-            if (response.status == ResponseStatus.OK.code) {
-                return true
-            } else {
-                throw Exception("patchTimeCapsuleOpen api fail, $response")
-            }
+            timeCapsuleApiService.patchTimeCapsuleOpen(id)
+            return true
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleOpen api fail, $e")
         }
@@ -29,16 +25,11 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         note: String,
     ): Boolean {
         try {
-            val response =
-                timeCapsuleApiService.patchTimeCapsuleNote(
-                    id,
-                    PatchTimeCapsuleNoteRequest(note),
-                )
-            if (response.status == ResponseStatus.Created.code) {
-                return true
-            } else {
-                throw Exception("patchTimeCapsuleNote api fail, $response")
-            }
+            timeCapsuleApiService.patchTimeCapsuleNote(
+                id,
+                PatchTimeCapsuleNoteRequest(note),
+            )
+            return true
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleNote api fail, $e")
         }
@@ -53,10 +44,10 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                     limit = 30,
                     sortBy = sortBy,
                 )
-            if (response.status == ResponseStatus.OK.code && response.data != null) {
+            if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)
             } else {
-                throw Exception("getFavoriteTimeCapsules api fail, $response")
+                throw Exception("getFavoriteTimeCapsules reponse data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getFavoriteTimeCapsules api fail, $e")
@@ -65,13 +56,8 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteTimeCapsule(id: String): Boolean {
         try {
-            val response =
-                timeCapsuleApiService.deleteTimeCapsule(id)
-            if (response.status == ResponseStatus.OK.code) {
-                return true
-            } else {
-                throw Exception("deleteTimeCapsule api fail, $response")
-            }
+            timeCapsuleApiService.deleteTimeCapsule(id)
+            return true
         } catch (e: Exception) {
             throw Exception("deleteTimeCapsule api fail, $e")
         }
