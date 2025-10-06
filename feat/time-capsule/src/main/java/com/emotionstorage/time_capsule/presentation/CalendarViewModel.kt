@@ -146,11 +146,7 @@ class CalendarViewModel @Inject constructor(
                 // init calendar dates
                 launch {
                     collectDataState(
-                        flow =
-                            getTimeCapsuleDates(
-                                state.calendarYearMonth.year,
-                                state.calendarYearMonth.monthValue,
-                            ),
+                        flow = getTimeCapsuleDates(state.calendarYearMonth),
                         onSuccess = { data ->
                             reduce {
                                 state.copy(
@@ -197,7 +193,7 @@ class CalendarViewModel @Inject constructor(
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
         intent {
             collectDataState(
-                flow = getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue),
+                flow = getTimeCapsuleDates(yearMonth),
                 onSuccess = { data ->
                     reduce {
                         state.copy(
@@ -224,6 +220,7 @@ class CalendarViewModel @Inject constructor(
                 state.copy(calendarDate = date)
             }
 
+            // todo: return if selected date is not in time capsule dates
             coroutineScope {
                 // get time capsules of date
                 launch {

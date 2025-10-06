@@ -8,6 +8,8 @@ import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Inject
 
 class TimeCapsuleRepositoryImpl @Inject constructor(
@@ -58,6 +60,19 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 emit(DataState.Loading(isLoading = false))
             }
         }
+
+    override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                emit(DataState.Success(timeCapsuleRemoteDataSource.getTimeCapsuleDates(yearMonth)))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
+        }
+
 
     override suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>> =
         flow {

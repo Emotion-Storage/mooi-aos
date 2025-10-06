@@ -5,7 +5,8 @@ import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
-import com.emotionstorage.remote.response.ResponseStatus
+import java.time.LocalDate
+import java.time.YearMonth
 import javax.inject.Inject
 
 class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
@@ -51,6 +52,20 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             throw Exception("getFavoriteTimeCapsules api fail, $e")
+        }
+    }
+
+    override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate> {
+        try {
+            val response =
+                timeCapsuleApiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
+            if (response.data != null) {
+                return response.data!!.dates.map { LocalDate.parse(it) }
+            } else {
+                throw Exception("getTimeCapsuleDates reponse data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("getTimeCapsuleDates api fail, $e")
         }
     }
 

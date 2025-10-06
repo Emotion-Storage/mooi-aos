@@ -3,6 +3,8 @@ package com.emotionstorage.domain.repo
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
+import java.time.YearMonth
 
 interface TimeCapsuleRepository {
     suspend fun openArrivedTimeCapsule(id: String): Flow<DataState<Unit>>
@@ -13,6 +15,8 @@ interface TimeCapsuleRepository {
     ): Flow<DataState<Boolean>>
 
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
+
+    suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>
 
     suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>>
 }
