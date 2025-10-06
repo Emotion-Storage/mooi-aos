@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.ui.component
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -18,14 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.LinearGradient
-import com.emotionstorage.ui.util.getIconResId
 
 @Composable
 fun TimeCapsuleEmotionComments(
@@ -86,20 +83,10 @@ private fun Emotions(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(5.dp),
                     ) {
-                        if (emotion.getIconResId() == null) {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .size(22.dp)
-                                        .background(Color.Gray, CircleShape),
-                            )
-                        } else {
-                            Image(
-                                painter = painterResource(id = emotion.getIconResId()!!),
-                                modifier = Modifier.size(22.dp),
-                                contentDescription = emotion.label,
-                            )
-                        }
+                        Text(
+                            text = emotion.emoji,
+                            style = MooiTheme.typography.head2,
+                        )
                         Text(
                             text = emotion.label,
                             style = MooiTheme.typography.body8,

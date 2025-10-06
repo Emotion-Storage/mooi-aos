@@ -6,7 +6,7 @@ const val TIME_CAPSULE_TEMPORARY_HOURS = 24
 
 data class TimeCapsule(
     val id: String,
-    val status: STATUS,
+    val status: Status,
     val title: String,
     val summary: String,
     val isFavorite: Boolean = false,
@@ -25,7 +25,7 @@ data class TimeCapsule(
     // 임시저장 만료 시각
     val expireAt: LocalDateTime = createdAt.plusHours(TIME_CAPSULE_TEMPORARY_HOURS.toLong())
 
-    enum class STATUS {
+    enum class Status {
         // 임시저장 (열람일 지정 X)
         TEMPORARY,
 
@@ -40,9 +40,8 @@ data class TimeCapsule(
     }
 
     data class Emotion(
+        val emoji: String,
         val label: String,
-        // todo: text로 이모지 관리하기
-        val icon: Int,
         val percentage: Float? = null,
     )
 

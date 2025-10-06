@@ -3,12 +3,12 @@ package com.emotionstorage.time_capsule.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.repo.SetFavoriteResult
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsulesOfDateUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.ToggleFavoriteUseCase.ToggleToastResult
+import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
@@ -87,7 +87,7 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
-    private val toggleFavorite: ToggleFavoriteUseCase,
+    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(),
     ContainerHost<CalendarState, CalendarSideEffect> {
@@ -146,11 +146,7 @@ class CalendarViewModel @Inject constructor(
                 // init calendar dates
                 launch {
                     collectDataState(
-                        flow =
-                            getTimeCapsuleDates(
-                                state.calendarYearMonth.year,
-                                state.calendarYearMonth.monthValue,
-                            ),
+                        flow = getTimeCapsuleDates(state.calendarYearMonth),
                         onSuccess = { data ->
                             reduce {
                                 state.copy(
@@ -197,7 +193,7 @@ class CalendarViewModel @Inject constructor(
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
         intent {
             collectDataState(
-                flow = getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue),
+                flow = getTimeCapsuleDates(yearMonth),
                 onSuccess = { data ->
                     reduce {
                         state.copy(
@@ -224,6 +220,7 @@ class CalendarViewModel @Inject constructor(
                 state.copy(calendarDate = date)
             }
 
+            // todo: return if selected date is not in time capsule dates
             coroutineScope {
                 // get time capsules of date
                 launch {
@@ -277,6 +274,7 @@ class CalendarViewModel @Inject constructor(
                 Logger.e("Cannot find time capsule of id $id")
                 return@intent
             }
+            val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
 
             suspend fun updateFavorite(
                 id: String,
@@ -296,18 +294,18 @@ class CalendarViewModel @Inject constructor(
 
             coroutineScope {
                 collectDataState(
-                    flow = toggleFavorite(id),
+                    flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
-                        if (it == ToggleToastResult.FAVORITE_ADDED) {
+                        if (it == SetFavoriteResult.ADDED) {
                             postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_ADDED))
                             updateFavorite(id, true)
-                        } else if (it == ToggleToastResult.FAVORITE_REMOVED) {
+                        } else if (it == SetFavoriteResult.REMOVED) {
                             postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_REMOVED))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
-                        if (data == ToggleToastResult.FAVORITE_FULL) {
+                        if (data == SetFavoriteResult.FULL) {
                             postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_FULL))
                         }
                     },
