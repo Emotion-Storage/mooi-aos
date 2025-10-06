@@ -117,9 +117,9 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     painter = painterResource(id = R.drawable.lock_open),
                     modifier =
                         Modifier
-                            .offset(y=4.dp)
-                            .width(11.dp)
-                            .height(12.dp),
+                            .width(12.dp)
+                            .height(14.dp)
+                            .offset(y = 4.dp),
                     contentDescription = "arrived",
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
                 )
@@ -151,6 +151,13 @@ private fun StatelessArrivedTimeCapsulesScreen(
             }
         }
     }
+}
+
+@Composable
+private fun EmptyScreen(
+    modifier: Modifier = Modifier
+) {
+
 }
 
 @PreviewScreenSizes
