@@ -62,7 +62,6 @@ sealed class MyPageSideEffect {
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val validateNicknameUseCase: ValidateNicknameUseCase,
     // todo : add nickname change usecase
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
