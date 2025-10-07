@@ -1,6 +1,5 @@
 package com.emotionstorage.my.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,9 +34,9 @@ fun AccountInfoContent(
     email: String,
     socialType: AuthProvider,
     gender: String,
-    birthYear: String,
-    birthMonth: String,
-    birthDay: String,
+    birthYear: Int,
+    birthMonth: Int,
+    birthDay: Int,
 ) {
     Column(
         modifier = modifier
@@ -75,19 +74,19 @@ fun AccountInfoContent(
             Row {
                 Pill(
                     modifier = Modifier.widthIn(98.dp),
-                    text = birthYear,
+                    text = "${birthYear}년",
                     style = PillStyle.Center
                 )
                 Spacer(Modifier.width(10.dp))
                 Pill(
                     modifier = Modifier.widthIn(63.dp),
-                    text = birthMonth,
+                    text = "${birthMonth}월",
                     style = PillStyle.Center
                 )
                 Spacer(Modifier.width(10.dp))
                 Pill(
                     modifier = Modifier.widthIn(73.dp),
-                    text = birthDay,
+                    text = "${birthDay}일",
                     style = PillStyle.Center
                 )
             }
@@ -162,9 +161,9 @@ fun AccountInfoContentPreview() {
             email = "mooi.reply@gmail.com",
             socialType = AuthProvider.GOOGLE,
             gender = "남성",
-            birthYear = "1999년",
-            birthMonth = "7월",
-            birthDay = "30일"
+            birthYear = 1999,
+            birthMonth = 7,
+            birthDay = 30,
         )
     }
 }

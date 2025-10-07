@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -28,9 +29,10 @@ fun AccountInfoScreen(
     viewModel: AccountInfoViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
 ) {
-
+    val state = viewModel.state.collectAsState()
 
     PreviewAccountInfoScreen(
+        state = state.value,
         navToBack = navToBack
     )
 }
@@ -87,9 +89,9 @@ fun PreviewAccountInfoScreen(
                     email = state.email,
                     socialType = state.authProvider,
                     gender = state.gender,
-                    birthYear = state.birth,
-                    birthMonth = state.birth,
-                    birthDay = state.birth
+                    birthYear = state.birthYear,
+                    birthMonth = state.birthMonth,
+                    birthDay = state.birthDay,
                 )
             }
         }
