@@ -13,6 +13,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
@@ -66,6 +67,7 @@ private fun StatelessNicknameScreen(
         onExit = navToBack,
     )
 
+    val focusManager = LocalFocusManager.current
     Scaffold(
         modifier =
             modifier
@@ -118,7 +120,7 @@ private fun StatelessNicknameScreen(
                             InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
                             InputState.INVALID -> TextInputState.Error(errorMessage = state.nicknameHelperMessage)
                             InputState.VALID -> TextInputState.Success(successMessage = state.nicknameHelperMessage)
-                        } as TextInputState,
+                        },
                 )
             }
 
@@ -131,6 +133,7 @@ private fun StatelessNicknameScreen(
                 labelString = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
                 onClick = {
+                    focusManager.clearFocus()
                     onNicknameInputComplete(state.nickname)
                     navToGenderBirth()
                 },
