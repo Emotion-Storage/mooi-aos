@@ -135,12 +135,11 @@ private fun StatelessGenderBirthScreen(
                 )
             }
 
-            // todo: add bottom padding when keyboard is hidden
             CtaButton(
                 modifier =
                     Modifier
-                        .fillMaxWidth(),
-                //                    .padding(bottom = 39.dp),
+                        .fillMaxWidth()
+                        .padding(bottom = 39.dp),
                 labelString = "다음으로",
                 enabled = state.isNextButtonEnabled,
                 onClick = {

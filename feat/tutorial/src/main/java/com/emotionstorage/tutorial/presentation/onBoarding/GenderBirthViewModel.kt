@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-private const val MIN_AGE = 14
+private const val MIN_AGE = 14L
 private const val MIN_YEAR = 1970
 
 interface GenderBirthEvent {
@@ -52,7 +52,10 @@ class GenderBirthViewModel
                     yearPickerState =
                         PickerState(
                             selectedValue = birthYear,
-                            range = (MIN_YEAR..LocalDate.now().year).toList().map { it.toString() },
+                            range =
+                                (
+                                    MIN_YEAR..LocalDate.now().minusYears(MIN_AGE).year
+                                ).toList().reversed().map { it.toString() },
                             enabled = true,
                         ),
                     monthPickerState =
