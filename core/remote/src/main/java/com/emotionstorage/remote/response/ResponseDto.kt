@@ -2,7 +2,6 @@ package com.emotionstorage.remote.response
 
 import com.emotionstorage.common.LocalDateTimeSerializer
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.model.MyPage
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -19,6 +18,10 @@ data class ResponseDto<T>(
 fun <T> ResponseDto<T>.toEmptyDataState(onSuccessMap: (T?) -> Unit = {}): DataState<Unit> =
     if (status in 200..299) {
         DataState.Success(Unit)
+    } else if (status in 400..499) {
+        DataState.Error(Exception(message ?: "Client Error"))
+    } else if (status in 500..599) {
+        DataState.Error(Exception(message ?: "Internal Server Error"))
     } else {
         DataState.Error(Exception(message ?: "Unknown Error"))
     }
@@ -33,7 +36,7 @@ inline fun <T, R> ResponseDto<T>.toDataState(
     } else if (status in 400..499) {
         DataState.Error(Exception(message ?: "Client Error"))
     } else if (status in 500..599) {
-        DataState.Error(Exception(message ?: "Server Error"))
+        DataState.Error(Exception(message ?: "Internal Server Error"))
     } else {
         DataState.Error(Exception(message ?: "Unknown Error"))
 
