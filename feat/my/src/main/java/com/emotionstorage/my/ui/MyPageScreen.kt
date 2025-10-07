@@ -55,6 +55,7 @@ fun MyPageScreen(
     navToWithdrawNotice: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: (Int) -> Unit = {},
+    navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -112,6 +113,7 @@ fun MyPageScreen(
         navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
+        navToAccountInfo = navToAccountInfo,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
         onToastDismissed = { showEmailCopiedToast = false },
     )
@@ -126,6 +128,7 @@ private fun StatelessMyPageScreen(
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: (Int) -> Unit = {},
+    navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
     onToastDismissed: () -> Unit = {},
 ) {
@@ -192,6 +195,7 @@ private fun StatelessMyPageScreen(
 
             MenuSection(
                 versionInfo = state.versionName,
+                onAccountInfoClick = navToAccountInfo,
                 onEmailCopyClick = {
                     clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
                     onAction(MyPageAction.CopyEmail)

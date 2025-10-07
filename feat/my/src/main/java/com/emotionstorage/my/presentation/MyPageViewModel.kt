@@ -28,6 +28,7 @@ sealed class MyPageAction {
     object NicknameChange : MyPageAction()
 
     object KeyDescription : MyPageAction()
+    object AccountInfo : MyPageAction()
 
     object TermsAndPrivacy : MyPageAction()
 
@@ -42,6 +43,7 @@ sealed class MyPageSideEffect {
     object NavigateToNicknameChange : MyPageSideEffect()
 
     object EmailCopied : MyPageSideEffect()
+    object NavigateToAccountInfo : MyPageSideEffect()
 
     object NavigateToTermsAndPrivacy : MyPageSideEffect()
 
@@ -87,6 +89,10 @@ class MyPageViewModel @Inject constructor(
                 handleKeyDescription()
             }
 
+            is MyPageAction.AccountInfo -> {
+                handleAccountInfo()
+            }
+
             is MyPageAction.CopyEmail -> {
                 handleCopyEmail()
             }
@@ -103,26 +109,27 @@ class MyPageViewModel @Inject constructor(
 
     private fun handleInitiate() =
         intent {
-           myPageOverviewUseCase().collect { result ->
-               when (result) {
-                   is DataState.Success -> {
-                       reduce {
-                           state.copy(
-                               nickname = result.data.nickname,
-                               signupDday = result.data.days,
-                               keyCount = result.data.keys,
-                           )
-                       }
-                   }
-                   is DataState.Error -> {
-                       postSideEffect(MyPageSideEffect.ShowToast(result.throwable.message ?: "마이페이지 불러오기 실패"))
-                   }
+            myPageOverviewUseCase().collect { result ->
+                when (result) {
+                    is DataState.Success -> {
+                        reduce {
+                            state.copy(
+                                nickname = result.data.nickname,
+                                signupDday = result.data.days,
+                                keyCount = result.data.keys,
+                            )
+                        }
+                    }
 
-                   is DataState.Loading -> {
-                       // do nothing
-                   }
-               }
-           }
+                    is DataState.Error -> {
+                        postSideEffect(MyPageSideEffect.ShowToast(result.throwable.message ?: "마이페이지 불러오기 실패"))
+                    }
+
+                    is DataState.Loading -> {
+                        // do nothing
+                    }
+                }
+            }
         }
 
     private fun handleLogout() =
@@ -164,5 +171,10 @@ class MyPageViewModel @Inject constructor(
                 postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
             }
             postSideEffect(MyPageSideEffect.WithDrawSuccess)
+        }
+
+    private fun handleAccountInfo() =
+        intent {
+            postSideEffect(MyPageSideEffect.NavigateToAccountInfo)
         }
 }
