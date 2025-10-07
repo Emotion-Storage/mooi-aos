@@ -27,7 +27,10 @@ class AccountInfoViewModel @Inject constructor(
                     _state.value = AccountInfoState(
                         email = info.email,
                         authProvider = AuthProvider.valueOf(info.socialType.uppercase()),
-                        gender = Gender.valueOf(info.gender.uppercase()).toString(),
+                        gender = when (info.gender.uppercase()) {
+                            "MALE" -> "남성"
+                            else -> "여성"
+                        },
                         birthYear = info.birthYear,
                         birthMonth = info.birthMonth,
                         birthDay = info.birthDay
@@ -47,7 +50,6 @@ data class AccountInfoState(
     val birthDay: Int = 0,
 )
 
-enum class Gender { MALE, FEMALE }
 enum class AuthProvider { GOOGLE, KAKAO }
 
 
