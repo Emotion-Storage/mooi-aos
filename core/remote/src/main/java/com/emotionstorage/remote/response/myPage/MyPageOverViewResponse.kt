@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MyPageOverViewResponse(
     val nickname: String,
-    val days: Long,
+    val days: Int,
     val keys: Int,
 )
 
