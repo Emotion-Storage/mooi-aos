@@ -3,8 +3,8 @@ package com.emotionstorage.remote.datasourceImpl
 import com.emotionstorage.data.dataSource.UserRemoteDataSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.remote.api.UserApiService
-import com.emotionstorage.remote.request.UpdateNicknameParam
-import com.emotionstorage.remote.request.toRequestBody
+import com.emotionstorage.remote.request.myPage.UpdateNicknameParam
+import com.emotionstorage.remote.request.myPage.toRequestBody
 import com.emotionstorage.remote.response.toEmptyDataState
 import javax.inject.Inject
 

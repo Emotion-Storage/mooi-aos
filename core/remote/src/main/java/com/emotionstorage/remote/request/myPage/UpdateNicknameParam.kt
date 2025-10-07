@@ -1,4 +1,4 @@
-package com.emotionstorage.remote.request
+package com.emotionstorage.remote.request.myPage
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
