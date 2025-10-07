@@ -12,6 +12,6 @@ class MyPageRepositoryImpl @Inject constructor(
     private val myPageRemoteDataSource: MyPageRemoteDataSource,
 ) : MyPageRepository {
     override suspend fun getMyPageOverview(): Flow<DataState<MyPage>> = flow {
-        myPageRemoteDataSource.getMyPageOverview()
+        emit(myPageRemoteDataSource.getMyPageOverview())
     }
 }

@@ -1,8 +1,10 @@
 package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
+import com.emotionstorage.domain.useCase.myPage.GetMyPageOverviewUseCase
 import com.emotionstorage.domain.useCase.user.ValidateNicknameUseCase
 import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -62,7 +64,7 @@ sealed class MyPageSideEffect {
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    // todo : add nickname change usecase
+    private val myPageOverviewUseCase: GetMyPageOverviewUseCase,
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
     override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
@@ -101,15 +103,26 @@ class MyPageViewModel @Inject constructor(
 
     private fun handleInitiate() =
         intent {
-            // todo: call use case
-            reduce {
-                state.copy(
-                    nickname = "찡찡이",
-                    signupDday = 280,
-                    keyCount = 5,
-                    versionName = "1.0.0",
-                )
-            }
+           myPageOverviewUseCase().collect { result ->
+               when (result) {
+                   is DataState.Success -> {
+                       reduce {
+                           state.copy(
+                               nickname = result.data.nickname,
+                               signupDday = result.data.days,
+                               keyCount = result.data.keys,
+                           )
+                       }
+                   }
+                   is DataState.Error -> {
+                       postSideEffect(MyPageSideEffect.ShowToast(result.throwable.message ?: "마이페이지 불러오기 실패"))
+                   }
+
+                   is DataState.Loading -> {
+                       // do nothing
+                   }
+               }
+           }
         }
 
     private fun handleLogout() =

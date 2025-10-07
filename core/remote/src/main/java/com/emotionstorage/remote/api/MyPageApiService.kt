@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 interface MyPageApiService {
     @GET("api/v1/mypage")
-    fun getMyPageOverview(): ResponseDto<MyPageOverViewResponse>
+    suspend fun getMyPageOverview(): ResponseDto<MyPageOverViewResponse>
 
 }
