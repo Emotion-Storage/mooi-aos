@@ -33,7 +33,7 @@ fun AccountInfoScreen(
 
     PreviewAccountInfoScreen(
         state = state.value,
-        navToBack = navToBack
+        navToBack = navToBack,
     )
 }
 
@@ -54,32 +54,37 @@ fun PreviewAccountInfoScreen(
         },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(color = MooiTheme.colorScheme.background),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .consumeWindowInsets(WindowInsets.navigationBars),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .consumeWindowInsets(WindowInsets.navigationBars),
             ) {
-
                 Row {
                     Text(
-                        modifier = Modifier.padding(
-                            start = 16.dp, top = 14.dp
-                        ),
+                        modifier =
+                            Modifier.padding(
+                                start = 16.dp,
+                                top = 14.dp,
+                            ),
                         text = "*",
                         style = MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.gray500
+                        color = MooiTheme.colorScheme.gray500,
                     )
                     Text(
-                        modifier = Modifier.padding(
-                            start = 2.dp, top = 16.dp
-                        ),
+                        modifier =
+                            Modifier.padding(
+                                start = 2.dp,
+                                top = 16.dp,
+                            ),
                         text = "가입 시 입력한 기본 정보는 변경할 수 없습니다.",
                         style = MooiTheme.typography.caption3,
-                        color = MooiTheme.colorScheme.gray500
+                        color = MooiTheme.colorScheme.gray500,
                     )
                 }
 

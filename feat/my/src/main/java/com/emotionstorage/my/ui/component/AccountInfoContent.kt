@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.presentation.AuthProvider
 import com.emotionstorage.ui.theme.MooiTheme
 
-
 enum class PillStyle { Start, Center }
 
 @Composable
@@ -39,10 +38,11 @@ fun AccountInfoContent(
     birthDay: Int,
 ) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
         // 내 계정 (트레일링 아이콘이 있으면 넣고, 없으면 null)
         LabeledSection(label = "내 계정") {
@@ -52,21 +52,20 @@ fun AccountInfoContent(
                 trailing = {
                     when (socialType) {
                         AuthProvider.GOOGLE -> {
-
                         }
 
                         AuthProvider.KAKAO -> {
-
                         }
                     }
-                }
+                },
             )
         }
 
         LabeledSection(label = "성별") {
             Pill(
-                text = gender, style = PillStyle.Center,
-                modifier = Modifier.widthIn(84.dp)
+                text = gender,
+                style = PillStyle.Center,
+                modifier = Modifier.widthIn(84.dp),
             )
         }
 
@@ -75,19 +74,19 @@ fun AccountInfoContent(
                 Pill(
                     modifier = Modifier.widthIn(98.dp),
                     text = "${birthYear}년",
-                    style = PillStyle.Center
+                    style = PillStyle.Center,
                 )
                 Spacer(Modifier.width(10.dp))
                 Pill(
                     modifier = Modifier.widthIn(63.dp),
                     text = "${birthMonth}월",
-                    style = PillStyle.Center
+                    style = PillStyle.Center,
                 )
                 Spacer(Modifier.width(10.dp))
                 Pill(
                     modifier = Modifier.widthIn(73.dp),
                     text = "${birthDay}일",
-                    style = PillStyle.Center
+                    style = PillStyle.Center,
                 )
             }
         }
@@ -121,7 +120,7 @@ fun Pill(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(12.dp),
-        color = MooiTheme.colorScheme.gray800
+        color = MooiTheme.colorScheme.gray800,
     ) {
         when (style) {
             PillStyle.Start -> {
@@ -130,7 +129,7 @@ fun Pill(
                         .fillMaxWidth()
                         .height(50.dp)
                         .padding(horizontal = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text, style = MooiTheme.typography.body8, color = MooiTheme.colorScheme.gray500)
                     Spacer(Modifier.weight(1f))
@@ -143,7 +142,7 @@ fun Pill(
                     Modifier
                         .height(50.dp)
                         .padding(horizontal = 0.dp),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(text, style = MooiTheme.typography.body8, color = MooiTheme.colorScheme.gray500)
                 }

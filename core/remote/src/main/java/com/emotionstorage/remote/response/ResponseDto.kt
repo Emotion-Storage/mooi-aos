@@ -26,12 +26,11 @@ fun <T> ResponseDto<T>.toEmptyDataState(onSuccessMap: (T?) -> Unit = {}): DataSt
         DataState.Error(Exception(message ?: "Unknown Error"))
     }
 
-inline fun <T, R> ResponseDto<T>.toDataState(
-    crossinline map: (T) -> R
-): DataState<R> {
+inline fun <T, R> ResponseDto<T>.toDataState(crossinline map: (T) -> R): DataState<R> {
     return if (status in 200..299) {
-        val body = data
-            ?: return DataState.Error(IllegalStateException("Empty body"))
+        val body =
+            data
+                ?: return DataState.Error(IllegalStateException("Empty body"))
         DataState.Success(map(body))
     } else if (status in 400..499) {
         DataState.Error(Exception(message ?: "Client Error"))
@@ -39,6 +38,5 @@ inline fun <T, R> ResponseDto<T>.toDataState(
         DataState.Error(Exception(message ?: "Internal Server Error"))
     } else {
         DataState.Error(Exception(message ?: "Unknown Error"))
-
     }
 }

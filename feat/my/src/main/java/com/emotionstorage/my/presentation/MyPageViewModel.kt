@@ -5,7 +5,6 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.domain.useCase.myPage.GetMyPageOverviewUseCase
-import com.emotionstorage.domain.useCase.user.ValidateNicknameUseCase
 import com.emotionstorage.my.BuildConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -28,6 +27,7 @@ sealed class MyPageAction {
     object NicknameChange : MyPageAction()
 
     object KeyDescription : MyPageAction()
+
     object AccountInfo : MyPageAction()
 
     object TermsAndPrivacy : MyPageAction()
@@ -43,6 +43,7 @@ sealed class MyPageSideEffect {
     object NavigateToNicknameChange : MyPageSideEffect()
 
     object EmailCopied : MyPageSideEffect()
+
     object NavigateToAccountInfo : MyPageSideEffect()
 
     object NavigateToTermsAndPrivacy : MyPageSideEffect()

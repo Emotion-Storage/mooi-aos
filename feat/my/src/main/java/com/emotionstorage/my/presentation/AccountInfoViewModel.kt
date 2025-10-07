@@ -7,15 +7,13 @@ import com.emotionstorage.domain.useCase.myPage.GetAccountInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AccountInfoViewModel @Inject constructor(
-    private val getAccountInfoUseCase: GetAccountInfoUseCase
+    private val getAccountInfoUseCase: GetAccountInfoUseCase,
 ) : ViewModel() {
-
     private val _state = MutableStateFlow(AccountInfoState())
     val state: StateFlow<AccountInfoState> = _state
 
@@ -24,17 +22,19 @@ class AccountInfoViewModel @Inject constructor(
             getAccountInfoUseCase().collect { dataState ->
                 if (dataState is DataState.Success) {
                     val info = dataState.data
-                    _state.value = AccountInfoState(
-                        email = info.email,
-                        authProvider = AuthProvider.valueOf(info.socialType.uppercase()),
-                        gender = when (info.gender.uppercase()) {
-                            "MALE" -> "남성"
-                            else -> "여성"
-                        },
-                        birthYear = info.birthYear,
-                        birthMonth = info.birthMonth,
-                        birthDay = info.birthDay
-                    )
+                    _state.value =
+                        AccountInfoState(
+                            email = info.email,
+                            authProvider = AuthProvider.valueOf(info.socialType.uppercase()),
+                            gender =
+                                when (info.gender.uppercase()) {
+                                    "MALE" -> "남성"
+                                    else -> "여성"
+                                },
+                            birthYear = info.birthYear,
+                            birthMonth = info.birthMonth,
+                            birthDay = info.birthDay,
+                        )
                 }
             }
         }
@@ -51,5 +51,3 @@ data class AccountInfoState(
 )
 
 enum class AuthProvider { GOOGLE, KAKAO }
-
-

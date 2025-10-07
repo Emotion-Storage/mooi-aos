@@ -11,8 +11,8 @@ data class AccountInfoResponse(
     val birthday: String,
 )
 
-fun AccountInfoResponse.toDomain(): AccountInfo {
-    return AccountInfo(
+fun AccountInfoResponse.toDomain(): AccountInfo =
+    AccountInfo(
         email = email,
         socialType = socialType,
         gender = gender,
@@ -20,4 +20,3 @@ fun AccountInfoResponse.toDomain(): AccountInfo {
         birthMonth = birthday.split("-")[1].toInt(),
         birthDay = birthday.split("-")[2].toInt(),
     )
-}

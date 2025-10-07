@@ -12,13 +12,15 @@ import javax.inject.Inject
 
 class MyPageRepositoryImpl @Inject constructor(
     private val myPageRemoteDataSource: MyPageRemoteDataSource,
-    private val userRemoteDataSource: UserRemoteDataSource
+    private val userRemoteDataSource: UserRemoteDataSource,
 ) : MyPageRepository {
-    override suspend fun getMyPageOverview(): Flow<DataState<MyPage>> = flow {
-        emit(myPageRemoteDataSource.getMyPageOverview())
-    }
+    override suspend fun getMyPageOverview(): Flow<DataState<MyPage>> =
+        flow {
+            emit(myPageRemoteDataSource.getMyPageOverview())
+        }
 
-    override suspend fun getAccountInfo(): Flow<DataState<AccountInfo>> = flow {
-        emit(userRemoteDataSource.getUserAccountInfo())
-    }
+    override suspend fun getAccountInfo(): Flow<DataState<AccountInfo>> =
+        flow {
+            emit(userRemoteDataSource.getUserAccountInfo())
+        }
 }

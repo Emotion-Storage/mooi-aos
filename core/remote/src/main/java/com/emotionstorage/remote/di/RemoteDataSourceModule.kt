@@ -26,5 +26,4 @@ abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindMyPageRemoteDataSource(impl: MyPageRemoteDataSourceImpl): MyPageRemoteDataSource
-
 }

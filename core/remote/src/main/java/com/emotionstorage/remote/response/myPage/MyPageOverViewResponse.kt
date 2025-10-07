@@ -10,11 +10,9 @@ data class MyPageOverViewResponse(
     val keys: Int,
 )
 
-fun MyPageOverViewResponse.toDomainModel(): MyPage {
-    return MyPage(
+fun MyPageOverViewResponse.toDomainModel(): MyPage =
+    MyPage(
         nickname = nickname,
         days = days,
         keys = keys,
     )
-}
-
