@@ -54,7 +54,7 @@ fun MyPageScreen(
     navToLogin: () -> Unit = {},
     navToWithdrawNotice: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
-    navToKeyDescription: (Int) -> Unit = {},
+    navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
 ) {
@@ -81,7 +81,7 @@ fun MyPageScreen(
                 }
 
                 is MyPageSideEffect.NavigateToKeyDescription -> {
-                    navToKeyDescription(sideEffect.keyCount)
+                    navToKeyDescription()
                 }
 
                 is MyPageSideEffect.EmailCopied -> {
@@ -98,6 +98,10 @@ fun MyPageScreen(
 
                 is MyPageSideEffect.NavigateToWithDrawNotice -> {
                     navToWithdrawNotice()
+                }
+
+                is MyPageSideEffect.NavigateToAccountInfo -> {
+                    navToAccountInfo()
                 }
 
                 else -> Unit
@@ -127,7 +131,7 @@ private fun StatelessMyPageScreen(
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
-    navToKeyDescription: (Int) -> Unit = {},
+    navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
     onToastDismissed: () -> Unit = {},
@@ -188,7 +192,7 @@ private fun StatelessMyPageScreen(
             KeyCard(
                 keyCount = state.keyCount,
             ) {
-                navToKeyDescription(it)
+                navToKeyDescription()
             }
 
             Spacer(modifier = Modifier.size(24.dp))

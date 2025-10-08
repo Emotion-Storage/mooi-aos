@@ -22,6 +22,7 @@ import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.AccountInfoScreen
+import com.emotionstorage.my.ui.KeyDescriptionScreen
 import com.emotionstorage.my.ui.MyPageScreen
 import com.emotionstorage.my.ui.NicknameChangeScreen
 import com.emotionstorage.my.ui.TermsAndPrivacyScreen
@@ -112,6 +113,9 @@ internal sealed class AppDestination {
 
     @Serializable
     object AccountInfo : AppDestination()
+
+    @Serializable
+    object KeyDescription : AppDestination()
 }
 
 @Composable
@@ -267,8 +271,8 @@ internal fun AppNavHost(
                     navToAccountInfo = {
                         navController.navigate(AppDestination.AccountInfo)
                     },
-                    navToKeyDescription = { keyCount ->
-                        // TODO : add keyDescription screen
+                    navToKeyDescription = {
+                        navController.navigate(AppDestination.KeyDescription)
                     },
                     navToTermsAndPrivacy = {
                         navController.navigate(AppDestination.TermsAndPrivacy)
@@ -398,6 +402,14 @@ internal fun AppNavHost(
                     navToBack = {
                         navController.popBackStack()
                     },
+                )
+            }
+
+            composable<AppDestination.KeyDescription> {
+                KeyDescriptionScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

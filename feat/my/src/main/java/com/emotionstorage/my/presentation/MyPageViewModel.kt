@@ -46,6 +46,8 @@ sealed class MyPageSideEffect {
 
     object NavigateToAccountInfo : MyPageSideEffect()
 
+    object NavigateToKeyDescription: MyPageSideEffect()
+
     object NavigateToTermsAndPrivacy : MyPageSideEffect()
 
     object NavigateToWithDrawNotice : MyPageSideEffect()
@@ -53,10 +55,6 @@ sealed class MyPageSideEffect {
     object WithDrawSuccess : MyPageSideEffect()
 
     object NavigateToSplash : MyPageSideEffect()
-
-    data class NavigateToKeyDescription(
-        val keyCount: Int,
-    ) : MyPageSideEffect()
 
     data class ShowToast(
         val message: String,
@@ -150,7 +148,7 @@ class MyPageViewModel @Inject constructor(
 
     private fun handleKeyDescription() =
         intent {
-            postSideEffect(MyPageSideEffect.NavigateToKeyDescription(state.keyCount))
+            postSideEffect(MyPageSideEffect.NavigateToKeyDescription)
         }
 
     private fun handleCopyEmail() =

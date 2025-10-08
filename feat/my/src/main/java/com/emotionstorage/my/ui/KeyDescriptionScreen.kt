@@ -30,7 +30,9 @@ import com.emotionstorage.ui.R
 fun KeyDescriptionScreen(
     navToBack: () -> Unit,
 ) {
-
+    PreviewKeyDescriptionScreen(
+        navToBack = navToBack,
+    )
 }
 
 @Composable
