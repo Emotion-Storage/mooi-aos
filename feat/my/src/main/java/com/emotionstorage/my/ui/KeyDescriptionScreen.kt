@@ -27,14 +27,14 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 
 @Composable
-fun KeyInfoScreen(
+fun KeyDescriptionScreen(
     navToBack: () -> Unit,
 ) {
 
 }
 
 @Composable
-fun PreviewKeyInfoScreen(
+fun PreviewKeyDescriptionScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -129,8 +129,8 @@ fun PreviewKeyInfoScreen(
 
 @Preview
 @Composable
-fun PreviewKeyInfoScreenPreview() {
+fun KeyDescriptionScreenPreview() {
     MooiTheme {
-        PreviewKeyInfoScreen()
+        PreviewKeyDescriptionScreen()
     }
 }
