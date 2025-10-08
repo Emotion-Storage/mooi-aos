@@ -66,6 +66,7 @@ private fun StatelessNicknameChangeScreen(
                 showBackButton = true,
                 handleBackPress = true,
                 onBackClick = navToBack,
+                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->
