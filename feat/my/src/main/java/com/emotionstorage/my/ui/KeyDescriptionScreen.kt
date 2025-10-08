@@ -15,6 +15,10 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.ui.component.CountRow
+import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -40,6 +45,9 @@ fun KeyDescriptionScreen(
 fun PreviewKeyDescriptionScreen(
     navToBack: () -> Unit = {},
 ) {
+
+    var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -111,7 +119,7 @@ fun PreviewKeyDescriptionScreen(
             ) {
                 Row(
                     modifier = Modifier.clickable {
-
+                        showWhenToUseDialog=true
                     },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -129,6 +137,9 @@ fun PreviewKeyDescriptionScreen(
                     )
                 }
             }
+        }
+        if (showWhenToUseDialog) {
+            WhenToUseKeyDialog { showWhenToUseDialog = false }
         }
     }
 }
