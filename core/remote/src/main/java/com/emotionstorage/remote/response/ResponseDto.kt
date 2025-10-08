@@ -17,6 +17,7 @@ data class ResponseDto<T>(
 
 fun <T> ResponseDto<T>.toEmptyDataState(onSuccessMap: (T?) -> Unit = {}): DataState<Unit> =
     if (status in 200..299) {
+        onSuccessMap(data)
         DataState.Success(Unit)
     } else if (status in 400..499) {
         DataState.Error(Exception(message ?: "Client Error"))

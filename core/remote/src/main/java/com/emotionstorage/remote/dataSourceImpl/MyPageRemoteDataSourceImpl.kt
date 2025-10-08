@@ -12,7 +12,11 @@ class MyPageRemoteDataSourceImpl @Inject constructor(
     private val myPageApiService: MyPageApiService,
 ) : MyPageRemoteDataSource {
     override suspend fun getMyPageOverview(): DataState<MyPage> =
-        myPageApiService.getMyPageOverview().toDataState { dto ->
-            dto.toDomainModel()
+        try {
+            myPageApiService.getMyPageOverview().toDataState { dto ->
+                dto.toDomainModel()
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
 }

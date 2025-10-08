@@ -29,7 +29,8 @@ class AccountInfoViewModel @Inject constructor(
                             gender =
                                 when (info.gender.uppercase()) {
                                     "MALE" -> "남성"
-                                    else -> "여성"
+                                    "FEMALE" -> "여성"
+                                    else -> "기타"
                                 },
                             birthYear = info.birthYear,
                             birthMonth = info.birthMonth,

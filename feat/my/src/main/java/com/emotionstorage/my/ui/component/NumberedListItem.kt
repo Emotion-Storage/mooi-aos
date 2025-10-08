@@ -40,7 +40,7 @@ fun NumberedListItem(
 
 @Composable
 @Preview
-fun NuberedListItemPreview() {
+fun NumberedListItemPreview() {
     MooiTheme {
         NumberedListItem(index = 1, text = "테스트")
     }

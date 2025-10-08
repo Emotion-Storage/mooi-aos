@@ -50,6 +50,7 @@ fun PreviewAccountInfoScreen(
                 title = "계정 정보",
                 handleBackPress = true,
                 onBackClick = navToBack,
+                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->

@@ -20,3 +20,17 @@ fun AccountInfoResponse.toDomain(): AccountInfo =
         birthMonth = birthday.split("-")[1].toInt(),
         birthDay = birthday.split("-")[2].toInt(),
     )
+
+private val AccountInfoResponse.parsedBirthday: Triple<Int, Int, Int>
+    get() {
+        val segments = birthday.split("-")
+        val year = segments.getOrNull(0)?.toIntOrNull()
+        val month = segments.getOrNull(1)?.toIntOrNull()
+        val day = segments.getOrNull(2)?.toIntOrNull()
+
+        return if (year != null && month != null && day != null) {
+            Triple(year, month, day)
+        } else {
+            Triple(0, 0, 0)
+        }
+    }
