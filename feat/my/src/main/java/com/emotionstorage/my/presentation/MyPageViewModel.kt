@@ -46,7 +46,7 @@ sealed class MyPageSideEffect {
 
     object NavigateToAccountInfo : MyPageSideEffect()
 
-    object NavigateToKeyDescription: MyPageSideEffect()
+    object NavigateToKeyDescription : MyPageSideEffect()
 
     object NavigateToTermsAndPrivacy : MyPageSideEffect()
 

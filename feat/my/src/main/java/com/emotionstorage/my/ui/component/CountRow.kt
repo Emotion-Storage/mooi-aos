@@ -32,13 +32,11 @@ fun CountRow(
     Row(
         modifier = modifier,
         horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             digits.forEach { char -> DigitBox(char) }
         }
-
 
         Spacer(Modifier.width(8.dp))
         Text(
@@ -50,23 +48,22 @@ fun CountRow(
 }
 
 @Composable
-private fun DigitBox(
-    char: Char
-) {
+private fun DigitBox(char: Char) {
     Box(
-        modifier = Modifier
-            .widthIn(37.dp)
-            .heightIn(57.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(
-                color = MooiTheme.colorScheme.blueGrayBackground
-            ),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .widthIn(37.dp)
+                .heightIn(57.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .background(
+                    color = MooiTheme.colorScheme.blueGrayBackground,
+                ),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = char.toString(),
             style = MooiTheme.typography.head1,
-            color = MooiTheme.colorScheme.secondary
+            color = MooiTheme.colorScheme.secondary,
         )
     }
 }
@@ -75,7 +72,7 @@ private fun DigitBox(
 @Composable
 fun CountRowPreview() {
     MooiTheme {
-        Column() {
+        Column {
             CountRow(
                 count = 123,
             )

@@ -1,6 +1,5 @@
 package com.emotionstorage.my.ui.component
 
-import android.widget.Space
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -34,10 +33,10 @@ fun ToggleRow(
     enabled: Boolean = true,
 ) {
     Row(
-        modifier = modifier
-            .minimumInteractiveComponentSize()
-            .padding(horizontal = 16.dp)
-        ,
+        modifier =
+            modifier
+                .minimumInteractiveComponentSize()
+                .padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -69,7 +68,7 @@ fun ToggleSwitch(
 
     val offset by animateDpAsState(
         if (checked) trackWidth - thumbSize - padding else padding,
-        label = "thumbOffset"
+        label = "thumbOffset",
     )
 
     val trackColor = if (checked) MooiTheme.colorScheme.secondary else MooiTheme.colorScheme.gray500
@@ -80,7 +79,7 @@ fun ToggleSwitch(
             .size(trackWidth, trackHeight)
             .clip(RoundedCornerShape(trackHeight / 2))
             .background(trackColor)
-            .clickable(enabled = enabled, onClick = { onCheckedChange(!checked) })
+            .clickable(enabled = enabled, onClick = { onCheckedChange(!checked) }),
     ) {
         Box(
             Modifier
@@ -89,7 +88,7 @@ fun ToggleSwitch(
                 .size(thumbSize)
                 .clip(CircleShape)
                 .background(thumbColor)
-                .align(Alignment.CenterStart)
+                .align(Alignment.CenterStart),
         )
     }
 }
@@ -98,7 +97,6 @@ fun ToggleSwitch(
 @Composable
 fun ToggleRowPreview() {
     MooiTheme {
-
         var isChecked = true
 
         Column {
@@ -133,7 +131,6 @@ fun ToggleRowPreview() {
                 onCheckedChange = { value -> isChecked = false },
                 enabled = true,
             )
-
         }
     }
 }

@@ -33,19 +33,14 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun KeyDescriptionScreen(
-    navToBack: () -> Unit,
-) {
+fun KeyDescriptionScreen(navToBack: () -> Unit) {
     PreviewKeyDescriptionScreen(
         navToBack = navToBack,
     )
 }
 
 @Composable
-fun PreviewKeyDescriptionScreen(
-    navToBack: () -> Unit = {},
-) {
-
+fun PreviewKeyDescriptionScreen(navToBack: () -> Unit = {}) {
     var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -55,24 +50,26 @@ fun PreviewKeyDescriptionScreen(
                 handleBackPress = true,
                 onBackClick = navToBack,
             )
-        }
+        },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(color = MooiTheme.colorScheme.background),
         ) {
             Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .align(Alignment.TopCenter)
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .align(Alignment.TopCenter),
             ) {
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
                     text = "차곡차곡 모은 열쇠로\n타입캡슐을 미리 열어보세요!",
                     style = MooiTheme.typography.head2,
                     color = MooiTheme.colorScheme.primary,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.padding(10.dp))
@@ -86,10 +83,11 @@ fun PreviewKeyDescriptionScreen(
                 Spacer(modifier = Modifier.padding(28.dp))
 
                 Image(
-                    modifier = Modifier
-                        .heightIn(198.dp)
-                        .widthIn(198.dp)
-                        .align(Alignment.CenterHorizontally),
+                    modifier =
+                        Modifier
+                            .heightIn(198.dp)
+                            .widthIn(198.dp)
+                            .align(Alignment.CenterHorizontally),
                     painter = painterResource(R.drawable.big_key),
                     contentDescription = "열쇠",
                 )
@@ -113,15 +111,17 @@ fun PreviewKeyDescriptionScreen(
             }
 
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 48.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 48.dp),
             ) {
                 Row(
-                    modifier = Modifier.clickable {
-                        showWhenToUseDialog=true
-                    },
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier.clickable {
+                            showWhenToUseDialog = true
+                        },
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
                         painter = painterResource(R.drawable.question_mark),
@@ -133,7 +133,7 @@ fun PreviewKeyDescriptionScreen(
                     Text(
                         text = "열쇠는 언제 써야 좋을까요?",
                         style = MooiTheme.typography.caption5,
-                        color = MooiTheme.colorScheme.gray500
+                        color = MooiTheme.colorScheme.gray500,
                     )
                 }
             }

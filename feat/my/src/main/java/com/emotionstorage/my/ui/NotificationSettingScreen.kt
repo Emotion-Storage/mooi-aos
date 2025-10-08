@@ -26,17 +26,11 @@ import java.time.DayOfWeek
 import java.time.LocalTime
 
 @Composable
-fun NotificationSettingScreen(
-    navToBack: () -> Unit,
-) {
-
+fun NotificationSettingScreen(navToBack: () -> Unit) {
 }
 
 @Composable
-private fun PreviewNotificationSettingScreen(
-    navToBack: () -> Unit
-) {
-
+private fun PreviewNotificationSettingScreen(navToBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -45,15 +39,16 @@ private fun PreviewNotificationSettingScreen(
                 showBackButton = true,
                 handleBackPress = true,
             )
-        }
+        },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(color = MooiTheme.colorScheme.background),
         ) {
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
             ) {
                 ToggleRow(
                     modifier = Modifier.padding(vertical = 24.dp),
@@ -114,24 +109,24 @@ private fun PreviewNotificationSettingScreen(
 
                 // TODO : UI 수정 필요
                 DayOfWeekSelector(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
+                    modifier =
+                        Modifier
+                            .padding(horizontal = 16.dp)
+                            .fillMaxWidth(),
                     selected = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
                     enabled = true,
                     onToggle = { dayOfWeek ->
-
-                    })
+                    },
+                )
 
                 Spacer(modifier = Modifier.size(16.dp))
-                
+
                 ReminderTimeComponent(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     time = LocalTime.now(),
                     enabled = true,
-                    onClick = { }
+                    onClick = { },
                 )
-
 
                 Spacer(modifier = Modifier.size(28.dp))
 

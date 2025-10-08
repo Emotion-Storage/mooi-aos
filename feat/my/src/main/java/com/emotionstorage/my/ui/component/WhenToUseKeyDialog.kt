@@ -29,49 +29,51 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun WhenToUseKeyDialog(
-    onDismiss: () -> Unit,
-) {
+fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false)
-        ) {
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
         Surface(
             shape = RoundedCornerShape(10.dp),
             tonalElevation = 6.dp,
             shadowElevation = 12.dp,
             color = MooiTheme.colorScheme.background,
-            modifier = Modifier
-                .padding(16.dp)
-                .widthIn(328.dp)
-                .heightIn(451.dp)
+            modifier =
+                Modifier
+                    .padding(16.dp)
+                    .widthIn(328.dp)
+                    .heightIn(451.dp),
         ) {
             Column(
-                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp)
+                modifier = Modifier.padding(horizontal = 20.dp, vertical = 16.dp),
             ) {
-
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(28.dp), // 헤더 높이 확보
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .height(28.dp),
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.key),
                         contentDescription = "열쇠",
                         tint = MooiTheme.colorScheme.primary,
-                        modifier = Modifier
-                            .size(18.dp)
-                            .align(Alignment.Center)     // 가운데
+                        modifier =
+                            Modifier
+                                .size(18.dp)
+                                .align(Alignment.Center),
                     )
                     IconButton(
                         onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.CenterEnd)
-                            .offset(20.dp, 0.dp)
+                        modifier =
+                            Modifier
+                                .align(Alignment.CenterEnd)
+                                .offset(20.dp, 0.dp),
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.close),
                             contentDescription = "닫기",
-                            tint= Color.White
+                            tint = Color.White,
                         )
                     }
                 }
@@ -90,22 +92,22 @@ fun WhenToUseKeyDialog(
                 TipItem(
                     emoji = "\uD83D\uDE22",
                     title = "불안하고 지쳐, 위로가 필요할 때",
-                    content = "감정이 벅차오를 땐, 과거의 나 또는\n모이의 말이 위로가 될 수 있어요."
+                    content = "감정이 벅차오를 땐, 과거의 나 또는\n모이의 말이 위로가 될 수 있어요.",
                 )
                 TipItem(
                     emoji = "\uD83E\uDD14",
                     title = "호기심 폭발! 지금 당장 알고 싶을 때",
-                    content = "어떤 감정을 적었는지 너무 궁금해서,\n하루도 기다리기 힘든 순간이 있죠."
+                    content = "어떤 감정을 적었는지 너무 궁금해서,\n하루도 기다리기 힘든 순간이 있죠.",
                 )
                 TipItem(
                     emoji = "\uD83D\uDC91",
                     title = "소중한 사람과의 감정이 달라졌을 때",
-                    content = "상황이 바뀌면, 과거의 내가 남긴\n감정을 다시 꺼내보고 싶어져요."
+                    content = "상황이 바뀌면, 과거의 내가 남긴\n감정을 다시 꺼내보고 싶어져요.",
                 )
                 TipItem(
                     emoji = "\uD83D\uDD51",
                     title = "지금의 나와 과거의 나를 비교하고 싶을 때",
-                    content = "지금의 나는 그때와 어떻게 달라졌고,\n얼마나 성장했을까요?"
+                    content = "지금의 나는 그때와 어떻게 달라졌고,\n얼마나 성장했을까요?",
                 )
             }
         }
@@ -119,11 +121,11 @@ private fun TipItem(
     content: String,
 ) {
     Row(
-        modifier = Modifier.padding(vertical = 10.dp)
+        modifier = Modifier.padding(vertical = 10.dp),
     ) {
         Text(
             text = emoji,
-            modifier = Modifier.padding(end = 6.dp)
+            modifier = Modifier.padding(end = 6.dp),
         )
 
         Column(
@@ -132,7 +134,7 @@ private fun TipItem(
             Text(
                 text = title,
                 style = MooiTheme.typography.body5,
-                color = Color.White
+                color = Color.White,
             )
 
             Spacer(modifier = Modifier.size(6.dp))

@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -18,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
@@ -34,14 +31,14 @@ fun ReminderTimeComponent(
     enabled: Boolean,
     onClick: () -> Unit,
 ) {
-
     Row(
-        modifier = modifier
-            .widthIn(126.dp)
-            .heightIn(50.dp)
-            .border(1.dp,color = MooiTheme.colorScheme.gray800, shape = RoundedCornerShape(10.dp))
-            .clip(RoundedCornerShape(10.dp))
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .widthIn(126.dp)
+                .heightIn(50.dp)
+                .border(1.dp, color = MooiTheme.colorScheme.gray800, shape = RoundedCornerShape(10.dp))
+                .clip(RoundedCornerShape(10.dp))
+                .background(MooiTheme.colorScheme.background),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -62,7 +59,7 @@ fun ReminderTimeComponent(
 }
 
 private fun LocalTime.formatKoreanAmPm(): String {
-    val pattern = DateTimeFormatter.ofPattern("a h : mm") // “오후 9 : 00”
+    val pattern = DateTimeFormatter.ofPattern("a h : mm")
     return format(pattern)
 }
 
@@ -75,8 +72,7 @@ fun ReminderTimeComponentPreview() {
             time = LocalTime.now(),
             enabled = true,
             onClick = {
-
-            }
+            },
         )
     }
 }
