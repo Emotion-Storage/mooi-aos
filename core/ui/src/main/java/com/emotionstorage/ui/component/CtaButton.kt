@@ -73,12 +73,8 @@ fun CtaButton(
     val backgroundOrBorder =
         when (type) {
             CtaButtonType.FILLED -> sized.mainBackground(enabled, shape)
-
             CtaButtonType.TONAL -> sized
-
-            CtaButtonType.OUTLINED -> {
-                sized.border(width = 1.dp, color = MooiTheme.colorScheme.gray700, shape = shape)
-            }
+            CtaButtonType.OUTLINED -> sized.border(width = 1.dp, color = MooiTheme.colorScheme.gray700, shape = shape)
         }
 
     Box(modifier = modifier) {
