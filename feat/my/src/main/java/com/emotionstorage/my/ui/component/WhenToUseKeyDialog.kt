@@ -24,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -31,13 +32,17 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun WhenToUseKeyDialog(
     onDismiss: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+        ) {
         Surface(
             shape = RoundedCornerShape(10.dp),
             tonalElevation = 6.dp,
             shadowElevation = 12.dp,
             color = MooiTheme.colorScheme.background,
             modifier = Modifier
+                .padding(16.dp)
                 .widthIn(328.dp)
                 .heightIn(451.dp)
         ) {
