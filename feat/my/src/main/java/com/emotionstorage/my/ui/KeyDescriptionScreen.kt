@@ -22,9 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.my.ui.component.CountRow
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.R
 
 @Composable
 fun KeyDescriptionScreen(
@@ -96,8 +97,11 @@ fun PreviewKeyDescriptionScreen(
                 )
                 Spacer(modifier = Modifier.size(12.dp))
 
-                // TODO : Add Key Count Content
-
+                CountRow(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    // Todo : ViewModel에 keyCount를 UI State로 변경한 후 값 전달하기
+                    count = 123,
+                )
             }
 
             Box(
