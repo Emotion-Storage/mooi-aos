@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.HorizontalDivider
@@ -16,9 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.my.ui.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.component.ToggleRow
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import java.time.DayOfWeek
 
 @Composable
 fun NotificationSettingScreen(
@@ -105,7 +108,18 @@ private fun PreviewNotificationSettingScreen(
                     )
                 }
 
-                // TODO : 날짜 선택 화면
+                Spacer(modifier = Modifier.size(14.dp))
+
+
+                DayOfWeekSelector(
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    selected = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
+                    enabled = true,
+                    onToggle = {  dayOfWeek ->
+
+                    })
+                
                 // TODO : 시간 선택 화면
 
                 Spacer(modifier = Modifier.size(28.dp))
