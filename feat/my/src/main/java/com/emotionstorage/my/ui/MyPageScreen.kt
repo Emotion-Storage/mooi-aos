@@ -103,7 +103,6 @@ fun MyPageScreen(
                 is MyPageSideEffect.NavigateToAccountInfo -> {
                     navToAccountInfo()
                 }
-
                 else -> Unit
             }
         }

@@ -95,7 +95,6 @@ class NicknameChangeViewModel @Inject constructor(
                         )
                     }
                 }
-
                 else -> _state.update { it.copy(submitting = false) }
             }
         }

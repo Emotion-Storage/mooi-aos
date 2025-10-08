@@ -99,14 +99,17 @@ private fun StatelessNicknameChangeScreen(
                         maxCharCount = 8,
                         state =
                             when (state.inputState) {
-                                InputState.EMPTY ->
+                                InputState.EMPTY -> {
                                     TextInputState.Empty(infoMessage = state.helperMessage)
+                                }
 
-                                InputState.INVALID ->
+                                InputState.INVALID -> {
                                     TextInputState.Error(errorMessage = state.helperMessage)
+                                }
 
-                                InputState.VALID ->
+                                InputState.VALID -> {
                                     TextInputState.Success(successMessage = state.helperMessage)
+                                }
                             },
                     )
                 }

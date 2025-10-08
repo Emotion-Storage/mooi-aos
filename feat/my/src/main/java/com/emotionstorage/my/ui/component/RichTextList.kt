@@ -67,11 +67,17 @@ fun RichList(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         when (style) {
-            ListStyle.Bulleted -> items.forEach { BulletListItem(it, style = textStyle, color = color) }
-            ListStyle.Numbered ->
+            ListStyle.Bulleted -> {
+                items.forEach {
+                    BulletListItem(it, style = textStyle, color = color)
+                }
+            }
+
+            ListStyle.Numbered -> {
                 items.forEachIndexed { i, s ->
                     NumberedListItem(index = i + 1, text = s, style = textStyle, color = color)
                 }
+            }
         }
     }
 }

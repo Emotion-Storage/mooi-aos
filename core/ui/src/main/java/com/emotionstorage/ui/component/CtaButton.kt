@@ -72,8 +72,10 @@ fun CtaButton(
 
     val backgroundOrBorder =
         when (type) {
-            CtaButtonType.FILLED -> sized.mainBackground(enabled, shape) // 기존 배경 유지
-            CtaButtonType.TONAL -> sized // 톤 배경은 colors.containerColor로 처리
+            CtaButtonType.FILLED -> sized.mainBackground(enabled, shape)
+
+            CtaButtonType.TONAL -> sized
+
             CtaButtonType.OUTLINED -> {
                 sized.border(width = 1.dp, color = MooiTheme.colorScheme.gray700, shape = shape)
             }
