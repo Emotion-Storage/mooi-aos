@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -33,7 +30,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun CheckOpenDateModal(
     createdAt: LocalDate,
-    openAt: LocalDate,
+    arriveAt: LocalDate,
     isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onSaveOpenDate: () -> Unit = {},
@@ -71,7 +68,7 @@ fun CheckOpenDateModal(
                                     color = MooiTheme.colorScheme.primary,
                                 ),
                             ) {
-                                append(openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                                append(arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                             }
                         },
                     style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
@@ -104,7 +101,7 @@ private fun CheckOpenDateModalPreview() {
 
     CheckOpenDateModal(
         createdAt = LocalDate.now(),
-        openAt = LocalDate.now().plusDays(3),
+        arriveAt = LocalDate.now().plusDays(3),
         isModalOpen = true
     )
 }
