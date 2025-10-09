@@ -3,55 +3,118 @@
     <string name="first_terms_title">제1조 목적</string>
     <string name="first_terms_content">본 이용약관은 MOOI(이하 "MOOI")의 서비스 이용에 관한 제반 사항을 규정하여, 서비스 이용자가 MOOI의 서비스를 원활하게 이용할 수 있도록 합니다.</string>
     <string name="second_terms_title">제2조 용어의 정의</string>
-    <string name="second_terms_content">본 약관에서 사용되는 주요한 용어의 정의는 다음과 같습니다. 회원 : MOOI의 약관에 동의하고 개인정보를 제공하여 회원등록을 한 자로서, MOOI와의 이용계약을 체결하고 서비스를 이용하는 이용자를 말합니다. 이용계약 : MOOI의 서비스를 이용하고자 하는 자와 MOOI가 체결하는 계약을 말합니다. 회원 아이디(ID) : 회원이 SNS 계정으로 가입 시 사용되는 이메일 계정 자체를 의미합니다. MOOI에서는 해당 이메일을 기반으로 회원의 고유한 식별을 위해 일련번호를 관리합니다. SNS 계정 탈퇴 시, MOOI 이용이 불가할 수 있습니다. 닉네임 : 사용자가 MOOI 서비스 내에서 사용할 가상의 이름을 의미합니다. 실명이 아니며, 사용자는 앱 내에서 자유롭게 수정할 수 있습니다. 운영자 : MOOI의 서비스를 제공하고 관리하는 자를 말합니다. 탈퇴 : 회원이 MOOI와의 이용계약을 해지하고, 서비스 이용을 중단하는 행위를 말합니다. 타임캡슐 : 사용자가 기록한 감정 데이터를 바탕으로 저장된, 일정 시간 후에 다시 열어볼 수 있는 감정 기록을 의미합니다. 일일리포트 : 사용자가 기록한 감정 데이터를 바탕으로 하루 동안의 감정을 분석한 리포트를 의미합니다. 열쇠 : 타임캡슐을 열기 위해 필요한 도구로, 일정 조건을 충족하거나 특정 활동을 통해 획득할 수 있는 아이템을 의미합니다.
+    <string name="second_terms_content">본 약관에서 사용되는 주요한 용어의 정의는 다음과 같습니다.\n1. 회원 : MOOI의 약관에 동의하고 개인정보를 제공하여 회원등록을 한 자로서, MOOI와의 이용계약을 체결하고 서비스를 이용하는 이용자를 말합니다.\n2. 이용계약 : MOOI의 서비스를 이용하고자 하는 자와 MOOI가 체결하는 계약을 말합니다.\n3. 회원 아이디(ID) : 회원이 SNS 계정으로 가입 시 사용되는 이메일 계정 자체를 의미합니다. MOOI에서는 해당 이메일을 기반으로 회원의 고유한 식별을 위해 일련번호를 관리합니다. SNS 계정 탈퇴 시, MOOI 이용이 불가할 수 있습니다.\n4. 닉네임 : 사용자가 MOOI 서비스 내에서 사용할 가상의 이름을 의미합니다. 실명이 아니며, 사용자는 앱 내에서 자유롭게 수정할 수 있습니다.\n5. 운영자 : MOOI의 서비스를 제공하고 관리하는 자를 말합니다.\n6. 탈퇴 : 회원이 MOOI와의 이용계약을 해지하고, 서비스 이용을 중단하는 행위를 말합니다.\n7. 타임캡슐 : 사용자가 기록한 감정 데이터를 바탕으로 저장된, 일정 시간 후에 다시 열어볼 수 있는 감정 기록을 의미합니다.\n8. 일일리포트 : 사용자가 기록한 감정 데이터를 바탕으로 하루 동안의 감정을 분석한 리포트를 의미합니다.\n9. 열쇠 : 타임캡슐을 열기 위해 필요한 도구로, 일정 조건을 충족하거나 특정 활동을 통해 획득할 수 있는 아이템을 의미합니다.
 </string>
     <string name="third_terms_title">제3조 약관 외 준칙</string>
     <string name="third_terms_content">운영자는 필요한 경우 별도의 운영정책을 공지할 수 있으며, 본 약관과 운영정책이 중복될 경우 운영정책이 우선 적용됩니다.
 </string>
     <string name="fourth_terms_title">제4조 이용계약 체결</string>
-    <string name="fourth_terms_content">이용계약은 회원이 본 약관에 동의하고, 회원 가입 신청을 완료함으로써 성립합니다. 회원 가입 시 본 약관을 읽고 "동의"를 선택함으로써 본 약관에 대한 동의 의사 표시를 합니다.
+    <string name="fourth_terms_content">1. 이용계약은 회원이 본 약관에 동의하고, 회원 가입 신청을 완료함으로써 성립합니다.\n2. 회원 가입 시 본 약관을 읽고 "동의"를 선택함으로써 본 약관에 대한 동의 의사 표시를 합니다.
 </string>
     <string name="fifth_terms_title">제5조 서비스 이용 신청</string>
-    <string name="fifth_terms_content">회원으로 등록하려는 이용자는 MOOI에서 요구하는 필수 정보를 제공해야 합니다. 타인의 정보를 도용하거나 허위 정보를 등록한 경우, MOOI는 해당 회원에게 서비스 이용을 제한하거나 제재를 가할 수 있습니다.
+    <string name="fifth_terms_content">1. 회원으로 등록하려는 이용자는 MOOI에서 요구하는 필수 정보를 제공해야 합니다.\n2. 타인의 정보를 도용하거나 허위 정보를 등록한 경우, MOOI는 해당 회원에게 서비스 이용을 제한하거나 제재를 가할 수 있습니다.
 </string>
     <string name="sixth_terms_title">제6조 개인정보처리방침</string>
     <string name="sixth_terms_content">MOOI는 회원가입 시 제공된 개인정보를 보호하기 위해 관련 법령을 준수하며, 개인정보처리방침에 따라 개인정보를 처리합니다. 회원은 개인정보처리방침에 동의한 것으로 간주됩니다.
 </string>
     <string name="seventh_terms_title">제7조 운영자의 의무</string>
-    <string name="seventh_terms_content">운영자는 이용자의 의견이나 불만을 신속하게 처리하며, 처리가 어려운 경우 사후 공지 또는 이메일 등을 통해 안내합니다. 시스템 장애나 서비스 제공에 문제가 생길 경우, 이를 신속하게 복구하여 이용에 불편함이 없도록 노력합니다.
+    <string name="seventh_terms_content">1. 운영자는 이용자의 의견이나 불만을 신속하게 처리하며, 처리가 어려운 경우 사후 공지 또는 이메일 등을 통해 안내합니다.\n2. 시스템 장애나 서비스 제공에 문제가 생길 경우, 이를 신속하게 복구하여 이용에 불편함이 없도록 노력합니다.
 </string>
     <string name="eighth_terms_title">제8조 회원의 의무</string>
-    <string name="eighth_terms_content">회원은 본 약관 및 관련 법령을 준수하며, 서비스의 원활한 운영을 방해하는 행위를 하지 않아야 합니다. 회원은 아이디 및 비밀번호를 안전하게 관리해야 하며, 이를 타인에게 제공하거나 공유해서는 안 됩니다.
+    <string name="eighth_terms_content">1. 회원은 본 약관 및 관련 법령을 준수하며, 서비스의 원활한 운영을 방해하는 행위를 하지 않아야 합니다.\n2. 회원은 아이디 및 비밀번호를 안전하게 관리해야 하며, 이를 타인에게 제공하거나 공유해서는 안 됩니다.
 </string>
     <string name="ninth_terms_title">제9조 서비스 이용 시간</string>
-    <string name="ninth_terms_content">MOOI는 원칙적으로 1일 24시간 서비스를 제공하며, 서비스 점검 및 기술적 이유로 일시적인 서비스 중단이 있을 수 있습니다. 서비스 중단이 불가피한 경우 사전에 공지하며, 예기치 못한 상황에 대해서는 사후 공지로 대신할 수 있습니다.
+    <string name="ninth_terms_content">1. MOOI는 원칙적으로 1일 24시간 서비스를 제공하며, 서비스 점검 및 기술적 이유로 일시적인 서비스 중단이 있을 수 있습니다.\n2. 서비스 중단이 불가피한 경우 사전에 공지하며, 예기치 못한 상황에 대해서는 사후 공지로 대신할 수 있습니다.
 </string>
     <string name="tenth_terms_title">제10조 탈퇴</string>
-    <string name="tenth_terms_content">회원은 MOOI의 마이페이지에서 회원탈퇴 버튼을 클릭하고, 마지막 확인 절차를 완료하면 언제든지 탈퇴할 수 있습니다. 회원탈퇴 후에는 회원의 모든 개인정보와 관련 데이터가 삭제됩니다. 단, 법령에 의해 보관이 요구되는 정보는 예외로 합니다.
+    <string name="tenth_terms_content">1. 회원은 MOOI의 마이페이지에서 회원탈퇴 버튼을 클릭하고, 마지막 확인 절차를 완료하면 언제든지 탈퇴할 수 있습니다.\n2. 회원탈퇴 후에는 회원의 모든 개인정보와 관련 데이터가 삭제됩니다. 단, 법령에 의해 보관이 요구되는 정보는 예외로 합니다.
 </string>
     <string name="eleventh_terms_title">제11조 서비스 이용 제한</string>
-    <string name="eleventh_terms_content">회원이 다음 각 항목에 해당하는 행위를 하는 경우, MOOI는 해당 회원의 서비스 이용을 제한하거나 계약을 해지할 수 있습니다. 타인의 개인정보를 도용하거나, 불법적인 방법으로 서비스 이용을 방해하는 행위 사이트 또는 서비스의 명예를 훼손하는 행위 불법적인 콘텐츠를 등록하거나 배포하는 행위 기타 관계 법령에 위반되는 행위
+    <string name="eleventh_terms_content">회원이 다음 각 항목에 해당하는 행위를 하는 경우, MOOI는 해당 회원의 서비스 이용을 제한하거나 계약을 해지할 수 있습니다.\n1. 타인의 개인정보를 도용하거나, 불법적인 방법으로 서비스 이용을 방해하는 행위\n2. 사이트 또는 서비스의 명예를 훼손하는 행위\n3. 불법적인 콘텐츠를 등록하거나 배포하는 행위\n4. 기타 관계 법령에 위반되는 행위
 </string>
     <string name="twelfth_terms_title">제12조 게시물의 관리</string>
-    <string name="twelfth_terms_content">MOOI는 사용자 게시물에 대해 관리 책임이 있으며, 불법적인 게시물 발견 시 이를 삭제하고, 해당 회원에게 경고 조치를 취할 수 있습니다. 게시물은 저작권 보호를 받으며, 회원은 자신의 게시물을 상업적으로 이용할 수 없습니다.
+    <string name="twelfth_terms_content">1. MOOI는 사용자 게시물에 대해 관리 책임이 있으며, 불법적인 게시물 발견 시 이를 삭제하고, 해당 회원에게 경고 조치를 취할 수 있습니다.\n2. 게시물은 저작권 보호를 받으며, 회원은 자신의 게시물을 상업적으로 이용할 수 없습니다.
 </string>
     <string name="thirteenth_terms_title">제13조 손해배상</string>
-    <string name="thirteenth_terms_content"> MOOI는 서비스 이용 중 발생한 손해에 대해, 운영자의 귀책 사유로 발생한 경우에만 책임을 집니다. 천재지변 등 불가항력적인 사유로 인한 손해는 배상하지 않습니다.
+    <string name="thirteenth_terms_content"> 1. MOOI는 서비스 이용 중 발생한 손해에 대해, 운영자의 귀책 사유로 발생한 경우에만 책임을 집니다.\n2. 천재지변 등 불가항력적인 사유로 인한 손해는 배상하지 않습니다.
 </string>
     <string name="fourteenth_terms_title">제14조 면책조항</string>
-    <string name="fourteenth_terms_content"> MOOI는 다음과 같은 상황에 대해 책임을 지지 않습니다. 서비스 제공을 위한 통신상의 장애 회원이 자신의 아이디 및 비밀번호를 타인에게 제공한 경우 발생한 문제 시스템 고장, 바이러스, 해킹 등에 의한 손해
+    <string name="fourteenth_terms_content">MOOI는 다음과 같은 상황에 대해 책임을 지지 않습니다.\n1. 서비스 제공을 위한 통신상의 장애\n2. 회원이 자신의 아이디 및 비밀번호를 타인에게 제공한 경우 발생한 문제\n3. 시스템 고장, 바이러스, 해킹 등에 의한 손해
 </string>
     <string name="fifteenth_terms_title">제15조 연령제한</string>
-    <string name="fifteenth_terms_content">MOOI는 만 14세 이상의 사용자만 가입할 수 있습니다. 만 14세 미만의 사용자는 본 서비스를 이용할 수 없습니다. 만약 가입 시 만 14세 미만으로 확인된 경우, 해당 계정은 즉시 종료되며, 제공된 개인정보는 삭제됩니다. 만 14세 이상인 경우에도 법정 대리인의 동의를 받아야 하는 경우가 있을 수 있으며, 이 경우 별도로 안내를 받을 수 있습니다.
+    <string name="fifteenth_terms_content">1. MOOI는 만 14세 이상의 사용자만 가입할 수 있습니다. 만 14세 미만의 사용자는 본 서비스를 이용할 수 없습니다.\n2. 만약 가입 시 만 14세 미만으로 확인된 경우, 해당 계정은 즉시 종료되며, 제공된 개인정보는 삭제됩니다.\n3. 만 14세 이상인 경우에도 법정 대리인의 동의를 받아야 하는 경우가 있을 수 있으며, 이 경우 별도로 안내를 받을 수 있습니다.
 </string>
     <string name="sixteenth_terms_title">제16조 감정 대화 내용의 보호</string>
-    <string name="sixteenth_terms_content">MOOI는 사용자가 작성한 감정 대화 내용에 대한 비공개 정책을 준수하며, 이를 제3자에게 제공하거나 공개하지 않습니다. 다만, 법적으로 요구되는 경우에는 예외적으로 공개될 수 있습니다. 감정 대화 내용은 MOOI의 서비스 내에서만 사용되며, 사용자가 이를 요청하지 않는 한 외부로 유출되지 않습니다. 서비스 제공을 위해 필요한 경우, 감정 대화 내용의 일부를 분석하거나 집계할 수 있지만, 이때도 개인 식별이 가능한 정보는 제외됩니다.
+    <string name="sixteenth_terms_content">1. MOOI는 사용자가 작성한 감정 대화 내용에 대한 비공개 정책을 준수하며, 이를 제3자에게 제공하거나 공개하지 않습니다. 다만, 법적으로 요구되는 경우에는 예외적으로 공개될 수 있습니다.\n2. 감정 대화 내용은 MOOI의 서비스 내에서만 사용되며, 사용자가 이를 요청하지 않는 한 외부로 유출되지 않습니다.\n3. 서비스 제공을 위해 필요한 경우, 감정 대화 내용의 일부를 분석하거나 집계할 수 있지만, 이때도 개인 식별이 가능한 정보는 제외됩니다.
 </string>
     <string name="seventeenth_terms_title">제17조 감정 대화 내용의 저작권</string>
-    <string name="seventeenth_terms_content">사용자가 MOOI 서비스 내에서 작성한 감정 대화 내용에 대한 저작권은 원칙적으로 사용자가 보유합니다. 사용자는 자신이 작성한 감정 대화 내용에 대해 MOOI에게 비독점적이고, 전 세계적으로 사용, 복제, 수정, 배포할 수 있는 권한을 부여합니다. 단, 이 권한은 서비스 개선 및 분석 목적으로만 사용됩니다. MOOI는 감정 대화 내용을 외부에 공개하거나 상업적 용도로 사용할 수 없으며, 사용자의 명시적인 동의 없이 이를 제3자에게 제공하지 않습니다.
+    <string name="seventeenth_terms_content">1. 사용자가 MOOI 서비스 내에서 작성한 감정 대화 내용에 대한 저작권은 원칙적으로 사용자가 보유합니다.\n2. 사용자는 자신이 작성한 감정 대화 내용에 대해 MOOI에게 비독점적이고, 전 세계적으로 사용, 복제, 수정, 배포할 수 있는 권한을 부여합니다. 단, 이 권한은 서비스 개선 및 분석 목적으로만 사용됩니다.\n3. MOOI는 감정 대화 내용을 외부에 공개하거나 상업적 용도로 사용할 수 없으며, 사용자의 명시적인 동의 없이 이를 제3자에게 제공하지 않습니다.
 </string>
     <string name="sub_terms_title">부칙</string>
     <string name="sub_terms_content">이 약관은 2025년 9월 30일부터 시행합니다.</string>
+
+    <string name="privacy_main">MOOI(이하 ‘MOOI’라 한다)는 개인정보 보호법 제30조에 따라 정보 주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리지침을 수립, 공개합니다.
+</string>
+    <string name="first_privacy_title">제1조 (개인정보의 처리목적)</string>
+    <string name="first_privacy_content">MOOI는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.
+</string>
+
+    <string name="table_header_first">개인정보\n수집목적</string>
+    <string name="table_header_second">필수항목</string>
+    <string name="table_header_third">선택항목</string>
+    <string name="table_header_fourth">보유 및\n이용기간</string>
+
+    <string name="table_1th_row_first">회원가입\n및 서비스\n제공</string>
+    <string name="table_1th_row_second">SNS 이메일(아이디), 이름(닉네임), 성별, 생년월일, 앱이용목적</string>
+    <string name="table_1th_row_third">없음</string>
+    <string name="table_1th_row_fourth">회원탈퇴\n후 6개월\n까지</string>
+
+    <string name="table_2th_row_first">서비스 개\n선 및 분석</string>
+    <string name="table_2th_row_second">감정 대화 내용</string>
+    <string name="table_2th_row_third">없음</string>
+    <string name="table_2th_row_fourth">회원탈퇴\n후 6개월\n까지</string>
+
+    <string name="table_3th_row_first">문의 및 고충 처리</string>
+    <string name="table_3th_row_second">이름, 이메일(아이디)</string>
+    <string name="table_3th_row_third">없음</string>
+    <string name="table_3th_row_fourth">회원탈퇴\n후 1개월\n까지</string>
+
+    <string name="second_privacy_title">제2조 (개인정보의 처리 및 보유기간)</string>
+    <string name="second_privacy_content">① MOOI는 법령에 따른 개인정보 보유, 이용 기간 또는 정보주체로부터 개인정보를 수집 시에 동의 받은 개인정보 보유, 이용 기간 내에서 개인정보를 처리하고 보유합니다.\n② 개인정보 처리 및 보유 기간은 다음과 같습니다.\n1. 회원 가입 및 관리 : 사업자/단체 홈페이지 탈퇴 시까지\n2. 다만, 다음의 사유에 해당하는 경우에는 해당 사유 종료 시까지 보유합니다.\n· 법령 위반에 따른 수사, 조사 등이 진행 중인 경우\n· 채권 및 채무 관계 정산 시까지\n3. 서비스 제공 : 회원 탈퇴 시까지\n4. 다만, 법령에 의거하여 추가 보관이 필요한 경우 보관합니다.
+</string>
+    <string name="third_privacy_title">제3조 (개인정보의 제3자 제공)</string>
+    <string name="third_privacy_content">MOOI는 정보주체의 개인정보를 제1조(개인정보의 처리목적)에서 명시한 범위 내에서만 처리하며, 정보주체의 동의가 있는 경우나 법적 의무가 있는 경우에만 개인정보를 제3자에게 제공합니다. MOOI는 외부 제공 없이 본 서비스 내에서만 개인정보를 처리합니다.
+</string>
+    <string name="fourth_privacy_title">제4조 (개인정보처리의 위탁)</string>
+    <string name="fourth_privacy_content">MOOI는 원활한 서비스 제공을 위해 외부 업체에 개인정보 처리 업무를 위탁하지 않으며, 관련 법률에 따라 개인정보 보호를 철저히 관리합니다.
+</string>
+    <string name="fifth_privacy_title">제5조 (정보주체 및 법정대리인의 권리와 그 행사 방법)</string>
+    <string name="fifth_privacy_content">① 정보주체는 언제든지 본인의 개인정보에 대해 열람, 수정, 삭제, 처리정지 등을 요구할 수 있습니다.\n② 권리 행사는 서면, 전화, 전자우편 등을 통해 요청할 수 있으며, MOOI는 지체 없이 이에 응답합니다.
+</string>
+    <string name="sixth_privacy_title">제6조 (처리하는 개인정보 항목)</string>
+    <string name="sixth_privacy_content">MOOI는 회원 가입 및 서비스를 제공하기 위해 다음과 같은 개인정보를 처리합니다.\n1. 회원 가입 및 관리\n· 필수항목: 이메일(아이디), 이름(닉네임),
+성별, 생년월일, 앱이용목적\n· 선택항목: 없음\n2. 서비스 제공\n· 필수항목: 감정 대화 내용\n· 선택항목: 없음
+</string>
+    <string name="seventh_privacy_title">제7조 (개인정보의 파기)</string>
+    <string name="seventh_privacy_content">MOOI는 개인정보의 보유 기간이 경과하거나 처리 목적이 달성된 경우, 해당 개인정보를 지체 없이 파기합니다.\n· 파기 방법: 전자적 파일 형태로 저장된 개인정보는 복구할 수 없도록 파기하며, 종이 문서에 저장된 개인정보는 분쇄기로 분쇄합니다.
+</string>
+    <string name="eighth_privacy_title">제8조 (개인정보의 안전성 확보조치)</string>
+    <string name="eighth_privacy_content">MOOI는 개인정보 보호를 위해 다음과 같은 기술적, 관리적 조치를 취합니다.\n· 관리적 조치: 내부 관리 계획 수립 및 시행, 정기적 직원 교육\n· 기술적 조치: 암호화, 보안 프로그램 설치, 개인정보 처리 시스템 접근 권한 관리\n· 물리적 조치: 전산실 및 자료보관실 접근 통제
+</string>
+    <string name="ninth_privacy_title">제9조 (개인정보 자동 수집 장치의 설치∙운영 및 거부에 관한 사항)</string>
+    <string name="ninth_privacy_content">MOOI는 이용자의 맞춤 서비스를 제공하기 위해 쿠키를 사용합니다. 이용자는 웹 브라우저에서 쿠키 설정을 통해 쿠키를 허용하거나 차단할 수 있습니다. 다만, 쿠키 차단 시 일부 맞춤형 서비스 이용에 제한이 있을 수 있습니다.
+</string>
+    <string name="tenth_privacy_title">제10조 (개인정보 보호책임자)</string>
+    <string name="tenth_privacy_content">MOOI는 개인정보 처리에 관한 업무를 총괄하여 책임지고 있으며, 개인정보 처리와 관련한 문의는 다음의 개인정보 보호책임자에게 접수됩니다.\n· 개인정보 보호책임자\n· 성명: 김윤정\n· 연락처: 이메일 mooi.reply@gmail.com
+</string>
+    <string name="eleventh_privacy_title">제11조 (개인정보 열람청구)</string>
+    <string name="eleventh_privacy_content">정보주체는 개인정보 보호법 제35조에 따른 개인정보 열람 청구를 아래의 부서에 할 수 있습니다.\n· 개인정보 열람청구 접수․처리 부서\n· 부서명: Team MOOI\n· 연락처: 이메일 mooi.reply@gmail.com
+</string>
+    <string name="twelfth_privacy_title">제12조 (권익침해 구제 방법)</string>
+    <string name="twelfth_privacy_content">정보주체는 아래의 기관에 대해 개인정보 침해에 대한 피해구제, 상담 등을 문의하실 수 있습니다.\n1. 개인정보 분쟁조정위원회 : (국번없이) 1833-6972\n(www.kopico.go.kr)\n2. 개인정보침해신고센터 : (국번없이) 118\n(privacy.kisa.or.kr)\n3. 대검찰청 : (국번없이) 1301 (www.spo.go.kr)\n4. 경찰청 : (국번없이) 182 (ecrm.police.go.kr/minwon/main)
+</string>
+    <string name="thirteenth_privacy_title">제13조 (개인정보 처리방침 시행 및 변경)</string>
+    <string name="thirteenth_privacy_content">이 개인정보 처리방침은 2025년 9월 30일부터 적용됩니다. 개인정보 처리방침의 내용이 변경될 경우, 변경사항은 사전에 고지됩니다.</string>
 
     <string-array name="terms_titles">
         <item>@string/first_terms_title</item>
@@ -93,49 +156,6 @@
         <item>@string/seventeenth_terms_content</item>
     </string-array>
 
-    <string name="privacy_main">MOOI(이하 ‘MOOI’라 한다)는 개인정보 보호법 제30조에 따라 정보 주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록 하기 위하여 다음과 같이 개인정보 처리지침을 수립, 공개합니다.
-</string>
-
-    <string name="first_privacy_title">제1조 (개인정보의 처리목적)</string>
-    <string name="first_privacy_content"> MOOI는 다음의 목적을 위하여 개인정보를 처리합니다. 처리하고 있는 개인정보는 다음의 목적 이외의 용도로는 이용되지 않으며, 이용 목적이 변경되는 경우에는 개인정보 보호법 제18조에 따라 별도의 동의를 받는 등 필요한 조치를 이행할 예정입니다.
-</string>
-    <string name="second_privacy_title">제2조 (개인정보의 처리 및 보유기간)</string>
-    <string name="second_privacy_content">① MOOI는 법령에 따른 개인정보 보유, 이용 기간 또는 정보주체로부터 개인정보를 수집 시에 동의 받은 개인정보 보유, 이용 기간 내에서 개인정보를 처리하고 보유합니다. ② 개인정보 처리 및 보유 기간은 다음과 같습니다. 회원 가입 및 관리 : 사업자/단체 홈페이지 탈퇴 시까지 다만, 다음의 사유에 해당하는 경우에는 해당 사유 종료 시까지 보유합니다. 법령 위반에 따른 수사, 조사 등이 진행 중인 경우 채권 및 채무 관계 정산 시까지 서비스 제공 : 회원 탈퇴 시까지 다만, 법령에 의거하여 추가 보관이 필요한 경우 보관합니다.
-</string>
-    <string name="third_privacy_title">제3조 (개인정보의 제3자 제공)</string>
-    <string name="third_privacy_content"> MOOI는 정보주체의 개인정보를 제1조(개인정보의 처리목적)에서 명시한 범위 내에서만 처리하며, 정보주체의 동의가 있는 경우나 법적 의무가 있는 경우에만 개인정보를 제3자에게 제공합니다. MOOI는 외부 제공 없이 본 서비스 내에서만 개인정보를 처리합니다.
-</string>
-    <string name="fourth_privacy_title">제4조 (개인정보처리의 위탁)</string>
-    <string name="fourth_privacy_content">MOOI는 원활한 서비스 제공을 위해 외부 업체에 개인정보 처리 업무를 위탁하지 않으며, 관련 법률에 따라 개인정보 보호를 철저히 관리합니다.
-</string>
-    <string name="fifth_privacy_title">제5조 (정보주체 및 법정대리인의 권리와 그 행사 방법)</string>
-    <string name="fifth_privacy_content">① 정보주체는 언제든지 본인의 개인정보에 대해 열람, 수정, 삭제, 처리정지 등을 요구할 수 있습니다. ② 권리 행사는 서면, 전화, 전자우편 등을 통해 요청할 수 있으며, MOOI는 지체 없이 이에 응답합니다.
-</string>
-    <string name="sixth_privacy_title">제6조 (처리하는 개인정보 항목)</string>
-    <string name="sixth_privacy_content">MOOI는 회원 가입 및 서비스를 제공하기 위해 다음과 같은 개인정보를 처리합니다. 회원 가입 및 관리 필수항목: 이메일(아이디), 이름(닉네임),
-성별, 생년월일, 앱이용목적 선택항목: 없음 서비스 제공 필수항목: 감정 대화 내용 선택항목: 없음
-</string>
-    <string name="seventh_privacy_title">제7조 (개인정보의 파기)</string>
-    <string name="seventh_privacy_content">MOOI는 개인정보의 보유 기간이 경과하거나 처리 목적이 달성된 경우, 해당 개인정보를 지체 없이 파기합니다. 파기 방법: 전자적 파일 형태로 저장된 개인정보는 복구할 수 없도록 파기하며, 종이 문서에 저장된 개인정보는 분쇄기로 분쇄합니다.
-</string>
-    <string name="eighth_privacy_title">제8조 (개인정보의 안전성 확보조치)</string>
-    <string name="eighth_privacy_content">MOOI는 개인정보 보호를 위해 다음과 같은 기술적, 관리적 조치를 취합니다. 관리적 조치: 내부 관리 계획 수립 및 시행, 정기적 직원 교육 기술적 조치: 암호화, 보안 프로그램 설치, 개인정보 처리 시스템 접근 권한 관리 물리적 조치: 전산실 및 자료보관실 접근 통제
-</string>
-    <string name="ninth_privacy_title">제9조 (개인정보 자동 수집 장치의 설치∙운영 및 거부에 관한 사항)</string>
-    <string name="ninth_privacy_content">MOOI는 이용자의 맞춤 서비스를 제공하기 위해 쿠키를 사용합니다. 이용자는 웹 브라우저에서 쿠키 설정을 통해 쿠키를 허용하거나 차단할 수 있습니다. 다만, 쿠키 차단 시 일부 맞춤형 서비스 이용에 제한이 있을 수 있습니다.
-</string>
-    <string name="tenth_privacy_title">제10조 (개인정보 보호책임자)</string>
-    <string name="tenth_privacy_content">MOOI는 개인정보 처리에 관한 업무를 총괄하여 책임지고 있으며, 개인정보 처리와 관련한 문의는 다음의 개인정보 보호책임자에게 접수됩니다. 개인정보 보호책임자 성명: 김윤정 연락처: 이메일 mooi.reply@gmail.com
-</string>
-    <string name="eleventh_privacy_title">제11조 (개인정보 열람청구)</string>
-    <string name="eleventh_privacy_content">정보주체는 개인정보 보호법 제35조에 따른 개인정보 열람 청구를 아래의 부서에 할 수 있습니다. 개인정보 열람청구 접수․처리 부서 부서명: Team MOOI 연락처: 이메일 mooi.reply@gmail.com
-</string>
-    <string name="twelfth_privacy_title">제12조 (권익침해 구제 방법)</string>
-    <string name="twelfth_privacy_content">정보주체는 아래의 기관에 대해 개인정보 침해에 대한 피해구제, 상담 등을 문의하실 수 있습니다. 개인정보 분쟁조정위원회 : (국번없이) 1833-6972 (www.kopico.go.kr) 개인정보침해신고센터 : (국번없이) 118 (privacy.kisa.or.kr) 대검찰청 : (국번없이) 1301 (www.spo.go.kr) 경찰청 : (국번없이) 182 (ecrm.police.go.kr/minwon/main)
-</string>
-    <string name="thirteenth_privacy_title">제13조 (개인정보 처리방침 시행 및 변경)</string>
-    <string name="thirteenth_privacy_content">이 개인정보 처리방침은 2025년 9월 30일부터 적용됩니다. 개인정보 처리방침의 내용이 변경될 경우, 변경사항은 사전에 고지됩니다.</string>
-
     <string-array name="privacy_titles">
         <item>@string/second_privacy_title</item>
         <item>@string/third_privacy_title</item>
@@ -164,5 +184,33 @@
         <item>@string/eleventh_privacy_content</item>
         <item>@string/twelfth_privacy_content</item>
         <item>@string/thirteenth_privacy_content</item>
+    </string-array>
+
+    <string-array name="privacy_table_headers">
+        <item>@string/table_header_first</item>
+        <item>@string/table_header_second</item>
+        <item>@string/table_header_third</item>
+        <item>@string/table_header_fourth</item>
+    </string-array>
+
+    <string-array name="privacy_table_1th_row">
+        <item>@string/table_1th_row_first</item>
+        <item>@string/table_1th_row_second</item>
+        <item>@string/table_1th_row_third</item>
+        <item>@string/table_1th_row_fourth</item>
+    </string-array>
+
+    <string-array name="privacy_table_2th_row">
+        <item>@string/table_2th_row_first</item>
+        <item>@string/table_2th_row_second</item>
+        <item>@string/table_2th_row_third</item>
+        <item>@string/table_2th_row_fourth</item>
+    </string-array>
+
+    <string-array name="privacy_table_3th_row">
+        <item>@string/table_3th_row_first</item>
+        <item>@string/table_3th_row_second</item>
+        <item>@string/table_3th_row_third</item>
+        <item>@string/table_3th_row_fourth</item>
     </string-array>
 </resources>
