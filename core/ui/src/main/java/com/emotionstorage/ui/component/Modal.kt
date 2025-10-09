@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,14 +25,16 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun Modal(
-    title: String,
     confirmLabel: String,
+    title: String? = null,
     onDismissRequest: () -> Unit,
     topDescription: String? = null,
     bottomDescription: String? = null,
     dismissLabel: String? = null,
     onConfirm: () -> Unit = {},
     onDismiss: () -> Unit = {},
+    contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
+    content: @Composable (() -> Unit)? = null,
 ) {
     Dialog(onDismissRequest = onDismissRequest) {
         Column(
@@ -39,7 +42,7 @@ fun Modal(
                 Modifier
                     .clip(RoundedCornerShape(15.dp))
                     .background(MooiTheme.colorScheme.background)
-                    .padding(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
+                    .padding(contentPadding),
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -57,15 +60,17 @@ fun Modal(
                         textAlign = TextAlign.Center,
                     )
                 }
-                Text(
-                    text = title,
-                    style =
-                        MooiTheme.typography.head2.copy(
-                            lineHeight = 30.sp,
-                        ),
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                )
+                if(!title.isNullOrEmpty()) {
+                    Text(
+                        text = title,
+                        style =
+                            MooiTheme.typography.head2.copy(
+                                lineHeight = 30.sp,
+                            ),
+                        color = Color.White,
+                        textAlign = TextAlign.Center,
+                    )
+                }
                 if (!bottomDescription.isNullOrEmpty()) {
                     Text(
                         text = bottomDescription,
@@ -75,6 +80,8 @@ fun Modal(
                     )
                 }
             }
+
+            content?.invoke()
 
             // buttons
             Column(
