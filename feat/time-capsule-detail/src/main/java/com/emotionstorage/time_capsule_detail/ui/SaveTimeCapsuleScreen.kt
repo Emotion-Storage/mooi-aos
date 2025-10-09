@@ -40,6 +40,7 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
+import com.emotionstorage.time_capsule_detail.ui.modal.CheckOpenDateModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
@@ -55,7 +56,7 @@ fun SaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = true,
     viewModel: SaveTimeCapsuleViewModel = hiltViewModel(),
-    navToHome: () -> Unit = {},
+    navToMain: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
@@ -74,12 +75,13 @@ fun SaveTimeCapsuleScreen(
         }
     }
 
+    // todo: nav to main on save open date success
+
     StatelessSaveTimeCapsuleScreen(
         modifier = modifier,
         snackbarHostState = snackState,
         state = state.value,
         onAction = viewModel::onAction,
-        navToMain = navToHome,
         navToPrevious = navToPrevious,
         navToBack = navToBack,
     )
@@ -91,12 +93,12 @@ private fun StatelessSaveTimeCapsuleScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
-    navToMain: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
     val (showExpiredModal, setShowExpiredModal) = remember { mutableStateOf(false) }
+    val (showCheckOpenDateModal, setShowCheckOpenDateModal) = remember { mutableStateOf(false) }
 
     TimeCapsuleExpiredModal(
         isModalOpen = showExpiredModal,
@@ -105,6 +107,20 @@ private fun StatelessSaveTimeCapsuleScreen(
             navToPrevious()
         },
     )
+
+    if (state.arriveAt != null) {
+        CheckOpenDateModal(
+            createdAt = state.createdAt.toLocalDate(),
+            arriveAt = state.arriveAt.toLocalDate(),
+            isModalOpen = showCheckOpenDateModal,
+            onDismissRequest = {
+                setShowCheckOpenDateModal(false)
+            },
+            onSaveOpenDate = {
+                onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+            }
+        )
+    }
 
     Scaffold(
         modifier =
@@ -187,7 +203,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
                         } else {
-                            // todo: show check arrive at time modal
+                            setShowCheckOpenDateModal(true)
                         }
                     },
                     onExpire = {
@@ -307,7 +323,8 @@ private fun RowScope.ArriveAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -327,7 +344,8 @@ private fun RowScope.ArriveAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
