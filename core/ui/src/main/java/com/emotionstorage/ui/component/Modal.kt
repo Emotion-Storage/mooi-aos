@@ -60,7 +60,7 @@ fun Modal(
                         textAlign = TextAlign.Center,
                     )
                 }
-                if(!title.isNullOrEmpty()) {
+                if (!title.isNullOrEmpty()) {
                     Text(
                         text = title,
                         style =

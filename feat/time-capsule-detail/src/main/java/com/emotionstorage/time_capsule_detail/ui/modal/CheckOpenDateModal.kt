@@ -26,7 +26,6 @@ import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-
 @Composable
 fun CheckOpenDateModal(
     createdAt: LocalDate,
@@ -41,7 +40,7 @@ fun CheckOpenDateModal(
             contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
             confirmLabel = "네, 보관할래요.",
             onConfirm = onSaveOpenDate,
-            dismissLabel = "아니요, 다시 고를래요."
+            dismissLabel = "아니요, 다시 고를래요.",
         ) {
             Column(
                 modifier =
@@ -102,6 +101,6 @@ private fun CheckOpenDateModalPreview() {
     CheckOpenDateModal(
         createdAt = LocalDate.now(),
         arriveAt = LocalDate.now().plusDays(3),
-        isModalOpen = true
+        isModalOpen = true,
     )
 }
