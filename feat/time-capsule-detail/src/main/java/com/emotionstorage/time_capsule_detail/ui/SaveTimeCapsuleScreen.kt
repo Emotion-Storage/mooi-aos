@@ -118,7 +118,7 @@ private fun StatelessSaveTimeCapsuleScreen(
             },
             onSaveOpenDate = {
                 onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
-            }
+            },
         )
     }
 
@@ -323,8 +323,7 @@ private fun RowScope.ArriveAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                )
-                .clickable {
+                ).clickable {
                     onSelect()
                 },
     ) {
@@ -344,8 +343,7 @@ private fun RowScope.ArriveAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }
-                    .padding(
+                    }.padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
