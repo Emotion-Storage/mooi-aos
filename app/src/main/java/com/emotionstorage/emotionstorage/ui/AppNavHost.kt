@@ -355,7 +355,7 @@ internal fun AppNavHost(
                 SaveTimeCapsuleScreen(
                     id = arguments.id,
                     isNewTimeCapsule = arguments.isNewTimeCapsule,
-                    navToHome = {
+                    navToMain = {
                         navController.navigateWithClearStack(AppDestination.Home)
                     },
                     navToPrevious = {

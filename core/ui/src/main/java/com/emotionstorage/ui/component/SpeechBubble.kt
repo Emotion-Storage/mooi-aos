@@ -18,6 +18,7 @@ import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -42,7 +43,8 @@ fun SpeechBubble(
     tailWidth: Dp = 14.dp,
     tailHeight: Dp = 12.dp,
     tailOffset: Dp = 14.dp,
-    bgBrush: Brush = MooiTheme.brushScheme.subButtonBackground,
+    bgBrush: Brush = MooiTheme.brushScheme.commentBackground,
+    borderBrush: Brush = MooiTheme.brushScheme.subButtonBorder,
     textStyle: TextStyle = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
     textColor: Color = MooiTheme.colorScheme.gray300,
     contentText: String? = null,
@@ -54,6 +56,7 @@ fun SpeechBubble(
     val tailWidthPx = dpToPixel(context, tailWidth.value)
     val tailHeightPx = dpToPixel(context, tailHeight.value)
     val tailOffsetPx = dpToPixel(context, tailOffset.value)
+    val borderWidth = dpToPixel(context, 1f)
 
     val padding =
         when (tail) {
@@ -67,7 +70,9 @@ fun SpeechBubble(
                 .then(Modifier.size(sizeParam)),
     ) {
         Canvas(
-            modifier = Modifier.matchParentSize(),
+            modifier =
+                Modifier
+                    .matchParentSize(),
         ) {
             val w = size.width
             val h = size.height
@@ -130,7 +135,9 @@ fun SpeechBubble(
                         }
                     }
                 }
-            drawPath(path = path, brush = bgBrush)
+            drawPath(path = path, brush = bgBrush, style = Fill)
+            // todo: fix border
+            // drawPath(path = path, brush = borderBrush, style = Stroke(borderWidth))
         }
 
         Column(

@@ -1,11 +1,13 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import android.view.Gravity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,9 +38,13 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
+import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
+import com.emotionstorage.time_capsule_detail.ui.modal.CheckArriveDateModal
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
@@ -49,20 +56,32 @@ fun SaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = true,
     viewModel: SaveTimeCapsuleViewModel = hiltViewModel(),
-    navToHome: () -> Unit = {},
+    navToMain: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val snackState = remember { SnackbarHostState() }
+
     LaunchedEffect(id, isNewTimeCapsule) {
         viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule))
+
+        if (!isNewTimeCapsule) {
+            // dismiss current snackbar if exists
+            snackState.currentSnackbarData?.dismiss()
+            snackState.showSnackbar(
+                "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
+            )
+        }
     }
+
+    // todo: nav to main on save open date success
 
     StatelessSaveTimeCapsuleScreen(
         modifier = modifier,
+        snackbarHostState = snackState,
         state = state.value,
         onAction = viewModel::onAction,
-        navToMain = navToHome,
         navToPrevious = navToPrevious,
         navToBack = navToBack,
     )
@@ -71,13 +90,37 @@ fun SaveTimeCapsuleScreen(
 @Composable
 private fun StatelessSaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
-    navToMain: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
+    val (showExpiredModal, setShowExpiredModal) = remember { mutableStateOf(false) }
+    val (showCheckOpenDateModal, setShowCheckOpenDateModal) = remember { mutableStateOf(false) }
+
+    TimeCapsuleExpiredModal(
+        isModalOpen = showExpiredModal,
+        onConfirm = {
+            setShowExpiredModal(false)
+            navToPrevious()
+        },
+    )
+
+    if (state.arriveAt != null) {
+        CheckArriveDateModal(
+            createdAt = state.createdAt.toLocalDate(),
+            arriveAt = state.arriveAt.toLocalDate(),
+            isModalOpen = showCheckOpenDateModal,
+            onDismissRequest = {
+                setShowCheckOpenDateModal(false)
+            },
+            onSaveOpenDate = {
+                onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+            },
+        )
+    }
 
     Scaffold(
         modifier =
@@ -90,6 +133,18 @@ private fun StatelessSaveTimeCapsuleScreen(
                 showBackButton = true,
                 onBackClick = navToBack,
             )
+        },
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackbarHostState,
+                gravity = Gravity.TOP,
+            ) { snackbarData ->
+                // todo: change toast duration to 4s
+                Toast(
+                    message = snackbarData.visuals.message,
+                    paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
+                )
+            }
         },
     ) { innerPadding ->
         Box(
@@ -133,18 +188,27 @@ private fun StatelessSaveTimeCapsuleScreen(
                 verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {
                 TimeCapsuleSpeechBubble(
+                    isNewTimeCapsule = state.isNewTimeCapsule,
+                    createdAt = state.createdAt,
                     saveAt = state.saveAt,
                     arriveAt = state.arriveAt,
                     emotions = state.emotions,
                 )
-                CtaButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    labelString = "타임캡슐 보관하기",
-                    enabled = state.arriveAt != null,
-                    onClick = {
-                        onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+
+                SaveTimeCapsuleButton(
+                    isNewTimeCapsule = state.isNewTimeCapsule,
+                    expireAt = state.expireAt,
+                    enabled = state.arriveAfter != null,
+                    onSave = {
+                        if (state.isNewTimeCapsule) {
+                            onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+                        } else {
+                            setShowCheckOpenDateModal(true)
+                        }
                     },
-                    isDefaultWidth = false,
+                    onExpire = {
+                        setShowExpiredModal(true)
+                    },
                 )
             }
         }
