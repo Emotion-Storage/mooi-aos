@@ -30,7 +30,7 @@ fun NotificationSettingScreen(navToBack: () -> Unit) {
 }
 
 @Composable
-private fun PreviewNotificationSettingScreen(navToBack: () -> Unit) {
+private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -162,7 +162,7 @@ private fun PreviewNotificationSettingScreen(navToBack: () -> Unit) {
 @Composable
 private fun NotificationSettingScreenPreview() {
     MooiTheme {
-        PreviewNotificationSettingScreen(
+        StatelessNotificationSettingScreen(
             navToBack = {},
         )
     }

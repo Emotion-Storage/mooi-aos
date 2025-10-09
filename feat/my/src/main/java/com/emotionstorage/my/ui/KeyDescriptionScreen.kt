@@ -34,13 +34,13 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun KeyDescriptionScreen(navToBack: () -> Unit) {
-    PreviewKeyDescriptionScreen(
+    StatelessKeyDescriptionScreen(
         navToBack = navToBack,
     )
 }
 
 @Composable
-fun PreviewKeyDescriptionScreen(navToBack: () -> Unit = {}) {
+fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
     var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -149,6 +149,6 @@ fun PreviewKeyDescriptionScreen(navToBack: () -> Unit = {}) {
 @Composable
 fun KeyDescriptionScreenPreview() {
     MooiTheme {
-        PreviewKeyDescriptionScreen()
+        StatelessKeyDescriptionScreen()
     }
 }

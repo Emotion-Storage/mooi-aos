@@ -2,6 +2,8 @@ package com.emotionstorage.remote.response.myPage
 
 import com.emotionstorage.domain.model.AccountInfo
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Serializable
 data class AccountInfoResponse(
@@ -11,26 +13,16 @@ data class AccountInfoResponse(
     val birthday: String,
 )
 
-fun AccountInfoResponse.toDomain(): AccountInfo =
-    AccountInfo(
+fun AccountInfoResponse.toDomain(): AccountInfo {
+
+    val date = LocalDate.parse(birthday, DateTimeFormatter.ISO_DATE)
+
+    return AccountInfo(
         email = email,
         socialType = socialType,
         gender = gender,
-        birthYear = birthday.split("-")[0].toInt(),
-        birthMonth = birthday.split("-")[1].toInt(),
-        birthDay = birthday.split("-")[2].toInt(),
+        birthYear = date.year,
+        birthMonth = date.monthValue,
+        birthDay = date.dayOfMonth,
     )
-
-private val AccountInfoResponse.parsedBirthday: Triple<Int, Int, Int>
-    get() {
-        val segments = birthday.split("-")
-        val year = segments.getOrNull(0)?.toIntOrNull()
-        val month = segments.getOrNull(1)?.toIntOrNull()
-        val day = segments.getOrNull(2)?.toIntOrNull()
-
-        return if (year != null && month != null && day != null) {
-            Triple(year, month, day)
-        } else {
-            Triple(0, 0, 0)
-        }
-    }
+}

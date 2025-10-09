@@ -31,14 +31,14 @@ fun AccountInfoScreen(
 ) {
     val state = viewModel.state.collectAsState()
 
-    PreviewAccountInfoScreen(
+    StatelessAccountInfoScreen(
         state = state.value,
         navToBack = navToBack,
     )
 }
 
 @Composable
-fun PreviewAccountInfoScreen(
+fun StatelessAccountInfoScreen(
     state: AccountInfoState = AccountInfoState(),
     navToBack: () -> Unit = {},
 ) {
@@ -108,6 +108,6 @@ fun PreviewAccountInfoScreen(
 @Composable
 fun PreviewAccountInfoScreenPreview() {
     MooiTheme {
-        PreviewAccountInfoScreen()
+        StatelessAccountInfoScreen()
     }
 }

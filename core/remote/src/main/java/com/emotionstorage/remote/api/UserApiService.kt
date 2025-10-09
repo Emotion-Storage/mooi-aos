@@ -11,7 +11,7 @@ interface UserApiService {
     @PATCH("/api/v1/mypage/nickname")
     suspend fun updateNickName(
         @Body request: RequestBody,
-    ): ResponseDto<Unit?>
+    ): ResponseDto<Unit>
 
     @GET("/api/v1/mypage/profile")
     suspend fun getAccountInfo(): ResponseDto<AccountInfoResponse>
