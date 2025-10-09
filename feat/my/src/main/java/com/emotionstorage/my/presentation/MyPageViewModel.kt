@@ -165,11 +165,11 @@ class MyPageViewModel @Inject constructor(
         intent {
             try {
                 deleteAccountUseCase()
+                postSideEffect(MyPageSideEffect.WithDrawSuccess)
                 postSideEffect(MyPageSideEffect.NavigateToSplash)
             } catch (t: Throwable) {
                 postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
             }
-            postSideEffect(MyPageSideEffect.WithDrawSuccess)
         }
 
     private fun handleAccountInfo() =

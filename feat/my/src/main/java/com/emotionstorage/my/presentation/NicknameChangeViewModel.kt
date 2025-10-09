@@ -67,7 +67,7 @@ class NicknameChangeViewModel @Inject constructor(
                         _state.update { it.copy(inputState = st, helperMessage = msg) }
                     } else if (result is DataState.Error) {
                         _state.update {
-                            it.copy(inputState = State.InputState.INVALID, helperMessage = "닉네임 변경 중 오류 발생")
+                            it.copy(inputState = State.InputState.INVALID, helperMessage = "닉네임 검증 중 오류 발생")
                         }
                     }
                 }
