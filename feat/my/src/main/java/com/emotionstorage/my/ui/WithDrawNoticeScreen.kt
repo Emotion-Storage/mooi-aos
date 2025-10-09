@@ -31,6 +31,7 @@ fun WithDrawNoticeScreen(
                 is MyPageSideEffect.WithDrawSuccess -> {
                     showDoneDialog = true
                 }
+
                 else -> {
                     Unit
                 }
