@@ -2,6 +2,8 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.SessionLocalDataSource
 import com.emotionstorage.remote.BuildConfig
+import com.emotionstorage.remote.api.MyPageApiService
+import com.emotionstorage.remote.api.UserApiService
 import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -60,4 +62,12 @@ object RetrofitModule {
     @Provides
     fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
         RequestHeaderInterceptor(sessionLocalDataSource)
+
+    @Provides
+    @Singleton
+    fun bindUserApiService(retrofit: Retrofit): UserApiService = retrofit.create(UserApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun bindMyPageApiService(retrofit: Retrofit): MyPageApiService = retrofit.create(MyPageApiService::class.java)
 }

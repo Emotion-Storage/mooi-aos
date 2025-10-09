@@ -39,10 +39,10 @@ interface AuthApiService {
     suspend fun getAuthSession(): ResponseDto<Unit>
 
     @AuthRequest
-    @POST("auth/logout")
+    @DELETE("/api/v1/mypage/logout")
     suspend fun postLogout(): ResponseDto<Unit>
 
     @AuthRequest
-    @DELETE("mypage/account")
+    @DELETE("/api/v1/mypage/account")
     suspend fun deleteAccount(): ResponseDto<Unit>
 }

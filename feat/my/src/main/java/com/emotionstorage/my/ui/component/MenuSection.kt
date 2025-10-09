@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
+enum class ClickArea { Row, Text, Icon, None }
+
 @Composable
 fun MenuSection(
     versionInfo: String,
@@ -75,12 +77,14 @@ fun MenuSection(
             title = "버전정보",
             trailingText = versionInfo,
             showArrow = false,
+            clickArea = ClickArea.None,
         )
 
         MenuItem(
             title = "로그아웃",
             showArrow = false,
             trailingText = null,
+            clickArea = ClickArea.Text,
             onClick = onLogoutClick,
         )
     }
@@ -91,6 +95,7 @@ fun MenuItem(
     title: String,
     showArrow: Boolean = true,
     trailingText: String? = null,
+    clickArea: ClickArea = ClickArea.Icon,
     onClick: () -> Unit = {},
 ) {
     Row(
@@ -101,7 +106,12 @@ fun MenuItem(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
-            modifier = Modifier.weight(1f),
+            modifier =
+                Modifier
+                    .weight(1f)
+                    .let {
+                        if (clickArea == ClickArea.Text) it.clickable { onClick() } else it
+                    },
             text = title,
             style = MooiTheme.typography.body7,
             color = MooiTheme.colorScheme.gray300,

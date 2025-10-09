@@ -43,6 +43,7 @@ import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
 import com.emotionstorage.my.ui.component.TempToast
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -51,9 +52,10 @@ fun MyPageScreen(
     modifier: Modifier = Modifier,
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
-    navToWithdraw: () -> Unit = {},
+    navToWithdrawNotice: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
-    navToKeyDescription: (Int) -> Unit = {},
+    navToKeyDescription: () -> Unit = {},
+    navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -79,7 +81,7 @@ fun MyPageScreen(
                 }
 
                 is MyPageSideEffect.NavigateToKeyDescription -> {
-                    navToKeyDescription(sideEffect.keyCount)
+                    navToKeyDescription()
                 }
 
                 is MyPageSideEffect.EmailCopied -> {
@@ -93,6 +95,18 @@ fun MyPageScreen(
                 is MyPageSideEffect.NavigateToTermsAndPrivacy -> {
                     navToTermsAndPrivacy()
                 }
+
+                is MyPageSideEffect.NavigateToWithDrawNotice -> {
+                    navToWithdrawNotice()
+                }
+
+                is MyPageSideEffect.NavigateToAccountInfo -> {
+                    navToAccountInfo()
+                }
+
+                else -> {
+                    Unit
+                }
             }
         }
     }
@@ -102,9 +116,10 @@ fun MyPageScreen(
         state = state.value,
         showEmailCopiedToast = showEmailCopiedToast,
         onAction = viewModel::onAction,
-        navToWithdraw = navToWithdraw,
+        navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
+        navToAccountInfo = navToAccountInfo,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
         onToastDismissed = { showEmailCopiedToast = false },
     )
@@ -118,12 +133,15 @@ private fun StatelessMyPageScreen(
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
-    navToKeyDescription: (Int) -> Unit = {},
+    navToKeyDescription: () -> Unit = {},
+    navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
     onToastDismissed: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
     val snackbarHostState = remember { SnackbarHostState() }
+
+    var showLogoutModal by remember { mutableStateOf(false) }
 
     LaunchedEffect(showEmailCopiedToast) {
         if (showEmailCopiedToast) {
@@ -176,19 +194,36 @@ private fun StatelessMyPageScreen(
             KeyCard(
                 keyCount = state.keyCount,
             ) {
-                navToKeyDescription(it)
+                navToKeyDescription()
             }
 
             Spacer(modifier = Modifier.size(24.dp))
 
             MenuSection(
                 versionInfo = state.versionName,
+                onAccountInfoClick = navToAccountInfo,
                 onEmailCopyClick = {
                     clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
                     onAction(MyPageAction.CopyEmail)
                 },
                 onTermsAndPrivacyClick = navToTermsAndPrivacy,
+                onLogoutClick = { showLogoutModal = true },
             )
+
+            if (showLogoutModal) {
+                Modal(
+                    title = "정말 로그아웃 하시겠어요?",
+                    confirmLabel = "네, 로그아웃 할래요.",
+                    onDismissRequest = { showLogoutModal = false },
+                    topDescription = null,
+                    bottomDescription = "다시 돌아오실거죠? 기다리고있을게요",
+                    dismissLabel = "아니요, 그냥 있을래요.",
+                    onConfirm = {
+                        onAction(MyPageAction.Logout)
+                    },
+                    onDismiss = { showLogoutModal = false },
+                )
+            }
 
             Spacer(modifier = Modifier.size(8.dp))
             Text(

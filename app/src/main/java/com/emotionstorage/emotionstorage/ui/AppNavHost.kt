@@ -21,8 +21,12 @@ import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
+import com.emotionstorage.my.ui.AccountInfoScreen
+import com.emotionstorage.my.ui.KeyDescriptionScreen
 import com.emotionstorage.my.ui.MyPageScreen
+import com.emotionstorage.my.ui.NicknameChangeScreen
 import com.emotionstorage.my.ui.TermsAndPrivacyScreen
+import com.emotionstorage.my.ui.WithDrawNoticeScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -100,6 +104,18 @@ internal sealed class AppDestination {
 
     @Serializable
     object TermsAndPrivacy : AppDestination()
+
+    @Serializable
+    object WithDrawNotice : AppDestination()
+
+    @Serializable
+    object NicknameChange : AppDestination()
+
+    @Serializable
+    object AccountInfo : AppDestination()
+
+    @Serializable
+    object KeyDescription : AppDestination()
 }
 
 @Composable
@@ -246,14 +262,17 @@ internal fun AppNavHost(
                     navToLogin = {
                         navController.navigateWithClearStack(AppDestination.Login)
                     },
-                    navToWithdraw = {
-                        // TODO: add withdraw screen
+                    navToWithdrawNotice = {
+                        navController.navigate(AppDestination.WithDrawNotice)
                     },
                     navToNickNameChange = {
-                        // TODO : add nickname change screen
+                        navController.navigate(AppDestination.NicknameChange)
                     },
-                    navToKeyDescription = { keyCount ->
-                        // TODO : add keyDescription screen
+                    navToAccountInfo = {
+                        navController.navigate(AppDestination.AccountInfo)
+                    },
+                    navToKeyDescription = {
+                        navController.navigate(AppDestination.KeyDescription)
                     },
                     navToTermsAndPrivacy = {
                         navController.navigate(AppDestination.TermsAndPrivacy)
@@ -353,6 +372,41 @@ internal fun AppNavHost(
             composable<AppDestination.TermsAndPrivacy> { navBackStackEntry ->
                 val arguments = navBackStackEntry.toRoute<AppDestination.TermsAndPrivacy>()
                 TermsAndPrivacyScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.WithDrawNotice> {
+                WithDrawNoticeScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                    navToSplash = {
+                        navController.navigateWithClearStack(AppDestination.Splash)
+                    },
+                )
+            }
+
+            composable<AppDestination.NicknameChange> {
+                NicknameChangeScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.AccountInfo> {
+                AccountInfoScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.KeyDescription> {
+                KeyDescriptionScreen(
                     navToBack = {
                         navController.popBackStack()
                     },
