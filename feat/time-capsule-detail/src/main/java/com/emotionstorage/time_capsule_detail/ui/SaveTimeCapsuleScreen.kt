@@ -40,7 +40,7 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
-import com.emotionstorage.time_capsule_detail.ui.modal.CheckOpenDateModal
+import com.emotionstorage.time_capsule_detail.ui.modal.CheckArriveDateModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
@@ -109,7 +109,7 @@ private fun StatelessSaveTimeCapsuleScreen(
     )
 
     if (state.arriveAt != null) {
-        CheckOpenDateModal(
+        CheckArriveDateModal(
             createdAt = state.createdAt.toLocalDate(),
             arriveAt = state.arriveAt.toLocalDate(),
             isModalOpen = showCheckOpenDateModal,

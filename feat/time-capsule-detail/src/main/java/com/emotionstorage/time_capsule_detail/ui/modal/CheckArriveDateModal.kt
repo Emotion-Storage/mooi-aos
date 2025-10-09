@@ -27,7 +27,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun CheckOpenDateModal(
+fun CheckArriveDateModal(
     createdAt: LocalDate,
     arriveAt: LocalDate,
     isModalOpen: Boolean = false,
@@ -94,11 +94,11 @@ fun CheckOpenDateModal(
 
 @Preview(showBackground = true)
 @Composable
-private fun CheckOpenDateModalPreview() {
+private fun CheckArriveDateModalPreview() {
     // background ui
     Box(modifier = Modifier.fillMaxSize())
 
-    CheckOpenDateModal(
+    CheckArriveDateModal(
         createdAt = LocalDate.now(),
         arriveAt = LocalDate.now().plusDays(3),
         isModalOpen = true,
