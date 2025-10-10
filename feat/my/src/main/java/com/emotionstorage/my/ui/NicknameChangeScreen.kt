@@ -64,6 +64,7 @@ private fun StatelessNicknameChangeScreen(
         topBar = {
             TopAppBar(
                 showBackButton = true,
+                showBackground = false,
                 handleBackPress = true,
                 onBackClick = navToBack,
                 onHandleBackPress = navToBack,
@@ -79,7 +80,6 @@ private fun StatelessNicknameChangeScreen(
             Column(
                 modifier =
                     Modifier
-                        .background(MooiTheme.colorScheme.background)
                         .padding(innerPadding)
                         .imePadding()
                         .consumeWindowInsets(WindowInsets.navigationBars),
@@ -97,6 +97,7 @@ private fun StatelessNicknameChangeScreen(
                         value = state.nickname,
                         onValueChange = event::onNicknameChange,
                         showCharCount = true,
+                        placeHolder = "최소 2글자 이상의 이름을 적어주세요",
                         maxCharCount = 8,
                         state =
                             when (state.inputState) {
@@ -133,10 +134,7 @@ private fun StatelessNicknameChangeScreen(
 @Composable
 fun NicknameChangeTitle() {
     val base =
-        MooiTheme.typography.head1.copy(
-            lineHeight = 36.sp,
-            platformStyle = PlatformTextStyle(includeFontPadding = false),
-        )
+        MooiTheme.typography.head1
 
     val title =
         buildAnnotatedString {
