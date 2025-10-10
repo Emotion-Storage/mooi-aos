@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ fun MenuSection(
                 .wrapContentSize()
                 .background(
                     color = MooiTheme.colorScheme.chatMessageColor,
+                    shape = RoundedCornerShape(10.dp)
                 ),
     ) {
         MenuItem(
