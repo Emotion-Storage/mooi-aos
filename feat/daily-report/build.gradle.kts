@@ -4,7 +4,6 @@ plugins {
     id("com.emotionstorage.convention.android.library.hilt")
 }
 
-
 android {
     namespace = "com.emotionstorage.daily_report"
 
@@ -25,4 +24,5 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
     implementation(projects.core.ui)
+    testImplementation(kotlin("test"))
 }

@@ -135,11 +135,12 @@ private fun StatelessHomeScreen(
                         onClick = navToKey,
                     )
                     Image(
-                        modifier = Modifier
-                            .size(30.dp)
-                            .clickable {
-                                navToAlarm()
-                            },
+                        modifier =
+                            Modifier
+                                .size(30.dp)
+                                .clickable {
+                                    navToAlarm()
+                                },
                         painter =
                             painterResource(
                                 id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
@@ -172,9 +173,10 @@ private fun StatelessHomeScreen(
 
             // home content
             Column(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .padding(top = 193.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 193.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
@@ -258,8 +260,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
@@ -342,4 +343,3 @@ private fun HomeScreenPreview2() {
         )
     }
 }
-

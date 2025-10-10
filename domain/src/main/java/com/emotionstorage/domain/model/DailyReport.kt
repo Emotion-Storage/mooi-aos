@@ -12,11 +12,11 @@ data class DailyReport(
     val emotionSummary: String = "",
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-    ) {
+) {
     data class EmotionLog(
         val emoji: String,
         val label: String,
         val description: String,
-        val time: LocalDateTime
+        val time: LocalDateTime,
     )
 }
