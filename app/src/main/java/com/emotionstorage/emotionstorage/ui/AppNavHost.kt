@@ -19,6 +19,7 @@ import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
+import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.AccountInfoScreen
@@ -100,6 +101,11 @@ internal sealed class AppDestination {
     data class SaveTimeCapsule(
         val id: String,
         val isNewTimeCapsule: Boolean,
+    ) : AppDestination()
+
+    @Serializable
+    data class DailyReportDetail(
+        val id: String,
     ) : AppDestination()
 
     @Serializable
@@ -236,8 +242,7 @@ internal fun AppNavHost(
             composable<AppDestination.TimeCapsuleCalendar> {
                 CalendarScreen(
                     navToKey = {
-                        // todo: add key detail screen
-                        // navController.navigate(AppDestination.Key)
+                        navController.navigate(AppDestination.KeyDescription)
                     },
                     navToArrived = {
                         navController.navigate(AppDestination.ArrivedTimeCapsules)
@@ -249,8 +254,7 @@ internal fun AppNavHost(
                         navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                     },
                     navToDailyReportDetail = { id ->
-                        // todo: add daily report detail screen
-                        // navController.navigate(AppDestination.DailyReportDetail(id))
+                        navController.navigate(AppDestination.DailyReportDetail(id))
                     },
                     navToAIChat = { roomId ->
                         navController.navigate(AppDestination.AIChat(roomId))
@@ -369,8 +373,17 @@ internal fun AppNavHost(
                 )
             }
 
+            composable<AppDestination.DailyReportDetail> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.DailyReportDetail>()
+                DailyReportDetailScreen(
+                    id = arguments.id,
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
             composable<AppDestination.TermsAndPrivacy> { navBackStackEntry ->
-                val arguments = navBackStackEntry.toRoute<AppDestination.TermsAndPrivacy>()
                 TermsAndPrivacyScreen(
                     navToBack = {
                         navController.popBackStack()

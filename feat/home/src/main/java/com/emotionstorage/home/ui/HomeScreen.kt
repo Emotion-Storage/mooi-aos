@@ -49,6 +49,9 @@ import com.orhanobut.logger.Logger
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    navToKey: () -> Unit = {},
+    navToAlarm: () -> Unit = {},
+    navToDailyReport: (id: String) -> Unit = {},
     navToChat: (roomId: String) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
@@ -83,6 +86,9 @@ fun HomeScreen(
         modifier = modifier,
         state = state.value,
         onAction = viewModel::onAction,
+        navToKey = navToKey,
+        navToAlarm = navToAlarm,
+        navToDailyReport = navToDailyReport,
         navToArrivedTimeCapsules = navToArrivedTimeCapsules,
     )
 }
@@ -92,6 +98,9 @@ private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
     state: HomeState = HomeState(),
     onAction: (HomeAction) -> Unit = {},
+    navToKey: () -> Unit = {},
+    navToAlarm: () -> Unit = {},
+    navToDailyReport: (id: String) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
@@ -119,15 +128,18 @@ private fun StatelessHomeScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
                 ) {
-                    // todo: navigate to key detail screen
                     IconWithCount(
                         modifier = Modifier.size(32.dp),
                         iconId = R.drawable.key,
                         count = state.keyCount,
+                        onClick = navToKey,
                     )
-                    // todo: navigate to alarm screen
                     Image(
-                        modifier = Modifier.size(30.dp),
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+                                navToAlarm()
+                            },
                         painter =
                             painterResource(
                                 id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
@@ -160,7 +172,9 @@ private fun StatelessHomeScreen(
 
             // home content
             Column(
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 193.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
@@ -244,7 +258,8 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
@@ -309,3 +324,22 @@ private fun HomeScreenPreview() {
         )
     }
 }
+
+@Preview
+@Composable
+private fun HomeScreenPreview2() {
+    MooiTheme {
+        StatelessHomeScreen(
+            state =
+                HomeState(
+                    nickname = "찡찡이",
+                    keyCount = 3,
+                    ticketCount = 5,
+                    newNotificationArrived = true,
+                    newTimeCapsuleArrived = false,
+                    newReportArrived = false,
+                ),
+        )
+    }
+}
+

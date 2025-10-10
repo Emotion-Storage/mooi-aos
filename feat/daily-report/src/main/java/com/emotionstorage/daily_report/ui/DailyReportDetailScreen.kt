@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -105,7 +106,8 @@ private fun StatelessDailyReportDetailScreen(
         ) {
             // todo: make screen ui
             Text(
-                state.dailyReport.toString()
+                state.dailyReport.toString(),
+                color = Color.White
             )
         }
     }
@@ -163,7 +165,6 @@ private fun DailyReportDetailScreenPreview() {
                     stressScore = 46,
                     happinessScore = 82,
                     emotionSummary = "하루종일 감정 기복은 있었지만, 하루의 끝은 안정감과 평온함으로 마무리 되었어요."
-
                 )
             )
         )
