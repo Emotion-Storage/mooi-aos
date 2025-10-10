@@ -218,10 +218,8 @@ private fun StatelessMyPageScreen(
                     topDescription = null,
                     bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
                     dismissLabel = "네, 로그아웃 할래요.",
-                    onConfirm = {
-                        onAction(MyPageAction.Logout)
-                    },
-                    onDismiss = { showLogoutModal = false },
+                    onDismiss = { onAction(MyPageAction.Logout) },
+                    onConfirm = { showLogoutModal = false },
                 )
             }
 

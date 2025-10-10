@@ -91,11 +91,11 @@ fun WithDrawNoticeContent(
                 if (showSuccessDialog) {
                     Modal(
                         title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
-                        confirmLabel = "서비스를 탈퇴할래요.",
-                        dismissLabel = "알림을 끄고 쉬어갈래요.",
+                        confirmLabel = "알림을 끄고 쉬어갈래요.",
+                        dismissLabel = "서비스를 탈퇴할래요.",
                         onDismissRequest = onDismiss,
-                        onConfirm = onWithDrawClick,
-                        onDismiss = onKeepClick,
+                        onConfirm = onKeepClick,
+                        onDismiss = onWithDrawClick,
                         topDescription = null,
                     )
                 }
@@ -104,8 +104,8 @@ fun WithDrawNoticeContent(
                     Modal(
                         title = "회원 탈퇴가\n완료되었습니다.",
                         confirmLabel = "확인",
-                        onConfirm = onFinalConfirmClick,
                         onDismiss = {},
+                        onConfirm = onFinalConfirmClick,
                         onDismissRequest = { },
                         topDescription = null,
                     )
@@ -121,6 +121,9 @@ fun WithDrawNoticeContent(
                 labelString = "MOOI 서비스 탈퇴하기",
                 onClick = onWithDrawButtonClick,
                 isDefaultWidth = false,
+                textStyle = MooiTheme.typography.body7.copy(
+                    color = Color(0xFF979797)
+                )
             )
         }
     }
@@ -173,10 +176,7 @@ private fun BulletItem(
         Text(
             text = text,
             style =
-                MooiTheme.typography.body8.copy(
-                    lineHeight = 22.sp,
-                    platformStyle = PlatformTextStyle(includeFontPadding = false),
-                ),
+                MooiTheme.typography.body8,
             color = MooiTheme.colorScheme.gray300,
             modifier = Modifier.weight(1f, fill = false),
         )
