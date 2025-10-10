@@ -213,11 +213,11 @@ private fun StatelessMyPageScreen(
             if (showLogoutModal) {
                 Modal(
                     title = "정말 로그아웃 하시겠어요?",
-                    confirmLabel = "네, 로그아웃 할래요.",
+                    confirmLabel = "아니요, 그냥 있을래요.",
                     onDismissRequest = { showLogoutModal = false },
                     topDescription = null,
-                    bottomDescription = "다시 돌아오실거죠? 기다리고있을게요",
-                    dismissLabel = "아니요, 그냥 있을래요.",
+                    bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
+                    dismissLabel = "네, 로그아웃 할래요.",
                     onConfirm = {
                         onAction(MyPageAction.Logout)
                     },
