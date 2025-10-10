@@ -59,18 +59,17 @@ fun TermsAndPrivacyScreen(
             TabRow(
                 selectedTabIndex = selectedTabIndex,
                 containerColor = MooiTheme.colorScheme.background,
-                divider =  {
+                divider = {
                     HorizontalDivider(
                         color = MooiTheme.colorScheme.gray800,
-                        thickness = 2.dp
+                        thickness = 2.dp,
                     )
-                }
-                ,
+                },
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
                         color = MooiTheme.colorScheme.primary,
-                        height = 2.dp
+                        height = 2.dp,
                     )
                 },
             ) {

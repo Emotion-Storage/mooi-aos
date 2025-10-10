@@ -18,7 +18,7 @@ fun NumberedListItem(
     color: Color = Color.White,
 ) {
     val label = "$index."
-    val textStyle= MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
+    val textStyle = MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
 
     HangingListItem(
         prefix = { Text(label, style = textStyle, color = color) },

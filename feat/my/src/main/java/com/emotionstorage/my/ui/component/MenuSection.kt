@@ -41,7 +41,7 @@ fun MenuSection(
                 .wrapContentSize()
                 .background(
                     color = MooiTheme.colorScheme.chatMessageColor,
-                    shape = RoundedCornerShape(10.dp)
+                    shape = RoundedCornerShape(10.dp),
                 ),
     ) {
         MenuItem(

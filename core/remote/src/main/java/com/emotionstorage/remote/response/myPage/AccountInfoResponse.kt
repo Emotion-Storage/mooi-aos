@@ -14,7 +14,6 @@ data class AccountInfoResponse(
 )
 
 fun AccountInfoResponse.toDomain(): AccountInfo {
-
     val date = LocalDate.parse(birthday, DateTimeFormatter.ISO_DATE)
 
     return AccountInfo(

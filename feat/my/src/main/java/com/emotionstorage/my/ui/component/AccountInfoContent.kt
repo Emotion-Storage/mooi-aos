@@ -58,7 +58,7 @@ fun AccountInfoContent(
                             Image(
                                 modifier = Modifier.size(20.dp),
                                 painter = painterResource(R.drawable.google_icon),
-                                contentDescription = "구글 로그인"
+                                contentDescription = "구글 로그인",
                             )
                         }
 
@@ -66,7 +66,7 @@ fun AccountInfoContent(
                             Image(
                                 modifier = Modifier.size(20.dp),
                                 painter = painterResource(R.drawable.kakao_icon),
-                                contentDescription = "카카오"
+                                contentDescription = "카카오",
                             )
                         }
                     }
@@ -168,7 +168,6 @@ fun Pill(
 @Composable
 fun AccountInfoContentPreview() {
     MooiTheme {
-
         Column {
             AccountInfoContent(
                 modifier = Modifier,

@@ -70,7 +70,7 @@ data class MooiBrushScheme(
                     Color(0x0DE86666),
                 ),
             angleInDegrees = 154f,
-            useAsCssAngle = true
+            useAsCssAngle = true,
         ),
     val errorRedButtonBorder: Brush =
         LinearGradient(
@@ -80,7 +80,7 @@ data class MooiBrushScheme(
                     Color(0x08E86666),
                 ),
             angleInDegrees = 154f,
-            useAsCssAngle = true
+            useAsCssAngle = true,
         ),
 )
 
@@ -116,8 +116,7 @@ private fun BrushPreview() {
                         .background(
                             MooiTheme.brushScheme.subButtonBackground,
                             RoundedCornerShape(10.dp),
-                        )
-                        .border(
+                        ).border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
                             shape = RoundedCornerShape(10.dp),

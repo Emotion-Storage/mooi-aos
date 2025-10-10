@@ -20,7 +20,7 @@ fun RichBody(
     text: String,
     color: Color = Color.White,
 ) {
-    val textStyle= MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
+    val textStyle = MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
 
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         text

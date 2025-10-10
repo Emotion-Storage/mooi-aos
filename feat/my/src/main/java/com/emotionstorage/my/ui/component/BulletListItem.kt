@@ -21,7 +21,7 @@ fun BulletListItem(
     color: Color = Color.White,
     bulletColor: Color = Color(0xFFDADADA),
 ) {
-    val textStyle= MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
+    val textStyle = MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
 
     val firstLineHeight = with(LocalDensity.current) { textStyle.lineHeight.toDp() }
 

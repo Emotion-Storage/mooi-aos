@@ -121,9 +121,10 @@ fun WithDrawNoticeContent(
                 labelString = "MOOI 서비스 탈퇴하기",
                 onClick = onWithDrawButtonClick,
                 isDefaultWidth = false,
-                textStyle = MooiTheme.typography.body7.copy(
-                    color = Color(0xFF979797)
-                )
+                textStyle =
+                    MooiTheme.typography.body7.copy(
+                        color = Color(0xFF979797),
+                    ),
             )
         }
     }
