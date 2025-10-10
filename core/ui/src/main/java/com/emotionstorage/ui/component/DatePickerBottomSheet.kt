@@ -68,9 +68,10 @@ fun DatePickerBottomSheet(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
     ) {
         Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(356.dp),
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .height(356.dp),
         ) {
             // year & month selection
             Box(
@@ -182,9 +183,8 @@ fun DatePickerBottomSheet(
                                             } else {
                                                 MooiTheme.colorScheme.secondary
                                             },
-                                            CircleShape
-                                        )
-                                        .clip(CircleShape)
+                                            CircleShape,
+                                        ).clip(CircleShape)
                                         .clickable {
                                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                                 if (!sheetState.isVisible) {

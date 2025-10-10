@@ -15,12 +15,11 @@ fun TimeCapsuleSavedModal(
     onConfirm: () -> Unit = {},
 ) {
     LaunchedEffect(isModalOpen) {
-        if (isModalOpen)
-            {
-                // confirm automatically after 5 seconds
-                delay(5000)
-                onConfirm()
-            }
+        if (isModalOpen) {
+            // confirm automatically after 5 seconds
+            delay(5000)
+            onConfirm()
+        }
     }
 
     if (isModalOpen) {
