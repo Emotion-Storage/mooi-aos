@@ -27,7 +27,6 @@ fun DeleteTimeCapsuleModal(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 private fun DeleteTimeCapsuleModalPreview() {
