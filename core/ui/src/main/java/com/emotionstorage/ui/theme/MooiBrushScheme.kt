@@ -66,19 +66,21 @@ data class MooiBrushScheme(
         LinearGradient(
             colors =
                 listOf(
-                    Color(0xFFE86666).copy(alpha = 0.1f),
-                    Color(0xFFE86666).copy(alpha = 0.05f),
+                    Color(0x1AE86666),
+                    Color(0x0DE86666),
                 ),
-            angleInDegrees = -11f,
+            angleInDegrees = 154f,
+            useAsCssAngle = true
         ),
     val errorRedButtonBorder: Brush =
         LinearGradient(
             colors =
                 listOf(
-                    Color(0xFFE86666).copy(alpha = 0.4f),
-                    Color(0xFFE86666).copy(alpha = 0.03f),
+                    Color(0x66E86666),
+                    Color(0x08E86666),
                 ),
-            angleInDegrees = -17f,
+            angleInDegrees = 154f,
+            useAsCssAngle = true
         ),
 )
 
