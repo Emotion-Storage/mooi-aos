@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,7 +32,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
@@ -155,7 +158,10 @@ private fun StatelessSaveTimeCapsuleScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.background)
+                .clickable {
+                    setShowToolTip(false)
+                },
         topBar = {
             TopAppBar(
                 showBackground = false,
@@ -185,9 +191,19 @@ private fun StatelessSaveTimeCapsuleScreen(
                     .padding(horizontal = 16.dp)
                     .padding(bottom = 39.67.dp),
         ) {
-            if (showToolTip) {
-                // todo: tool tip
-                // todo: handle background click
+            if (true) {
+                Image(
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .zIndex(20f)
+                        .offset(
+                            x = 18.dp,
+                            y = 73.dp
+                        )
+                        .size(310.dp, 144.dp),
+                    painter = painterResource(com.emotionstorage.time_capsule_detail.R.drawable.open_date_tooltip),
+                    contentDescription = "tooltip",
+                )
             }
 
             // title & selection grid
@@ -260,9 +276,8 @@ private fun LoadingScreen(
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
-        ) {
-            // todo: add loading ui
-        }
+                    .padding(innerPadding),
+        )
     }
 }
 
@@ -428,13 +443,14 @@ private fun RowScope.ArriveAfterGridItem(
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun SaveTimeCapsuleScreenPreview() {
     MooiTheme {
         StatelessSaveTimeCapsuleScreen(
             state =
                 SaveTimeCapsuleState(
+                    isLoading = false,
                     emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
                 ),
         )
