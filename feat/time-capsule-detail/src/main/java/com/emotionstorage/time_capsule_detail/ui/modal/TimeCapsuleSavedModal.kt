@@ -3,16 +3,25 @@ package com.emotionstorage.time_capsule_detail.ui.modal
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.Modal
+import kotlinx.coroutines.delay
 
 @Composable
 fun TimeCapsuleSavedModal(
     isModalOpen: Boolean = false,
     onConfirm: () -> Unit = {}
 ) {
-    // todo: confirm modal automatically after 4 secs
+    LaunchedEffect(isModalOpen) {
+        if(isModalOpen){
+            // confirm automatically after 5 seconds
+            delay(5000)
+            onConfirm()
+        }
+    }
+
     if (isModalOpen) {
         Modal(
             title =
