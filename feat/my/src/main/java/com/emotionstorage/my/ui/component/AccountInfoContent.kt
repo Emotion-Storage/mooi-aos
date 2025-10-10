@@ -1,5 +1,6 @@
 package com.emotionstorage.my.ui.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,16 +55,19 @@ fun AccountInfoContent(
                 trailing = {
                     when (socialType) {
                         AuthProvider.GOOGLE -> {
-                            // TODO : 아이콘 다시 요청
-                            Icon(
-                                painter = painterResource(id = R.drawable.google_icon),
-                                contentDescription = "구글 로그인",
-                                tint = Color.White
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(R.drawable.google_icon),
+                                contentDescription = "구글 로그인"
                             )
                         }
 
                         AuthProvider.KAKAO -> {
-                            // TODO : 아이콘 다시 요청해보기
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(R.drawable.kakao_icon),
+                                contentDescription = "카카오"
+                            )
                         }
                     }
                 },
@@ -165,14 +168,18 @@ fun Pill(
 @Composable
 fun AccountInfoContentPreview() {
     MooiTheme {
-        AccountInfoContent(
-            modifier = Modifier,
-            email = "mooi.reply@gmail.com",
-            socialType = AuthProvider.GOOGLE,
-            gender = "남성",
-            birthYear = 1999,
-            birthMonth = 7,
-            birthDay = 30,
-        )
+
+        Column {
+            AccountInfoContent(
+                modifier = Modifier,
+                email = "mooi.reply@gmail.com",
+                socialType = AuthProvider.KAKAO,
+                gender = "남성",
+                birthYear = 1999,
+                birthMonth = 7,
+                birthDay = 30,
+            )
+            Spacer(modifier = Modifier.size(24.dp))
+        }
     }
 }
