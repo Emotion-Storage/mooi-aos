@@ -12,6 +12,7 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.YearMonth
 import javax.inject.Inject
 
 data class SaveTimeCapsuleState(
@@ -24,6 +25,8 @@ data class SaveTimeCapsuleState(
     val saveAt: LocalDateTime = LocalDateTime.now(),
     val arriveAfter: ArriveAfter? = null,
     val arriveAt: LocalDateTime? = null,
+    // year month state for date picker bottom sheet
+    val calendarYearMonth: YearMonth = YearMonth.now(),
 ) {
     enum class ArriveAfter(
         val label: String,
@@ -54,6 +57,10 @@ sealed class SaveTimeCapsuleAction {
         val arriveAt: LocalDate,
     ) : SaveTimeCapsuleAction()
 
+    data class SelectCalendarYearMonth(
+        val yearMonth: YearMonth,
+    ) : SaveTimeCapsuleAction()
+
     object SaveTimeCapsule : SaveTimeCapsuleAction()
 }
 
@@ -61,15 +68,6 @@ sealed class SaveTimeCapsuleSideEffect {
     data class ShowToast(
         val toast: String = "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
     ) : SaveTimeCapsuleSideEffect()
-
-//    data class ShowDatePickerBottomSheet(
-//        val yearMonth: YearMonth,
-//        val minDate: LocalDate,
-//        val maxDate: LocalDate,
-//        val date: LocalDate? = null,
-//    ) : SaveTimeCapsuleSideEffect()
-
-    // todo: show year moth picker bottom sheet
 
     object SaveTimeCapsuleSuccess : SaveTimeCapsuleSideEffect()
 }
@@ -94,6 +92,10 @@ class SaveTimeCapsuleViewModel @Inject constructor(
 
             is SaveTimeCapsuleAction.SelectArriveAt -> {
                 handleSelectArriveAt(action.arriveAt)
+            }
+
+            is SaveTimeCapsuleAction.SelectCalendarYearMonth -> {
+                handleSelectCalendarYearMonth(action.yearMonth)
             }
 
             is SaveTimeCapsuleAction.SaveTimeCapsule -> {
@@ -209,21 +211,9 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                         state.copy(
                             arriveAfter = arriveAfter,
                             arriveAt = null,
+                            calendarYearMonth = YearMonth.now(),
                         )
                     }
-
-                    // trigger local date selection bottom sheet
-//                    postSideEffect(
-//                        ShowDatePickerBottomSheet(
-//                            yearMonth = if (state.arriveAt != null) YearMonth.of(
-//                                state.arriveAt!!.toLocalDate().year,
-//                                state.arriveAt!!.toLocalDate().month
-//                            ) else YearMonth.now(),
-//                            date = state.arriveAt?.toLocalDate(),
-//                            minDate = state.saveAt.toLocalDate().plusDays(1),
-//                            maxDate = state.saveAt.toLocalDate().plusYears(1)
-//                        )
-//                    )
                 }
             }
         }
@@ -243,9 +233,18 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                 state.copy(
                     arriveAfter = ArriveAfter.AFTER_CUSTOM,
                     arriveAt = LocalDateTime.of(arriveAt, state.saveAt.toLocalTime()),
+                    calendarYearMonth = YearMonth.from(arriveAt)
                 )
             }
         }
+
+    private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) = intent {
+        reduce {
+            state.copy(
+                calendarYearMonth = yearMonth
+            )
+        }
+    }
 
     private fun handleSaveTimeCapsule() =
         intent {
