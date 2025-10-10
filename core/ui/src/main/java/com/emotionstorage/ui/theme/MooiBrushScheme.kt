@@ -23,21 +23,24 @@ data class MooiBrushScheme(
         LinearGradient(
             colors =
                 listOf(
-                    Color(0xFFAFCBFA),
-                    Color(0xFF9BB4F2),
-                    Color(0xFF859CEA),
+                    Color(0xFFAECBFA),
+                    Color(0xFF9AB4F2),
+                    Color(0xFF849BEA),
                 ),
             stops = listOf(0.0f, 0.4f, 1.0f),
-            angleInDegrees = -75f,
+            angleInDegrees = 93f,
+            useAsCssAngle = true,
         ),
     val subButtonBackground: Brush =
         LinearGradient(
             colors =
                 listOf(
                     Color(0x1A849BEA),
-                    Color(0x0D849BEA),
+                    Color(0x0D4A5784),
                 ),
-            angleInDegrees = -9f,
+            stops = listOf(0.0f, 1.0f),
+            angleInDegrees = 153f,
+            useAsCssAngle = true,
         ),
     val subButtonBorder: Brush =
         LinearGradient(
@@ -46,7 +49,7 @@ data class MooiBrushScheme(
                     Color(0x66AECBFA),
                     Color(0x08AECBFA),
                 ),
-            angleInDegrees = -42f,
+            stops = listOf(0.0f, 1.0f),
         ),
     val commentBackground: Brush =
         LinearGradient(
@@ -55,7 +58,9 @@ data class MooiBrushScheme(
                     Color(0x80849BEA),
                     Color(0x14849BEA),
                 ),
-            angleInDegrees = -42f,
+            stops = listOf(0.0f, 1.0f),
+            angleInDegrees = 109f,
+            useAsCssAngle = true,
         ),
     val errorRedButtonBackground: Brush =
         LinearGradient(
@@ -74,16 +79,6 @@ data class MooiBrushScheme(
                     Color(0xFFE86666).copy(alpha = 0.03f),
                 ),
             angleInDegrees = -17f,
-        ),
-    val chatMessageBackground: Brush =
-        LinearGradient(
-            colors =
-                listOf(
-                    Color(0xFF000000),
-                    Color(0xFF26262C),
-                ),
-            stops = listOf(0.2f, 1.0f),
-            angleInDegrees = -9f,
         ),
 )
 
@@ -119,7 +114,8 @@ private fun BrushPreview() {
                         .background(
                             MooiTheme.brushScheme.subButtonBackground,
                             RoundedCornerShape(10.dp),
-                        ).border(
+                        )
+                        .border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
                             shape = RoundedCornerShape(10.dp),

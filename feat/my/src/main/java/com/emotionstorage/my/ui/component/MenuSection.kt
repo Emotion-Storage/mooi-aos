@@ -39,7 +39,7 @@ fun MenuSection(
                 .fillMaxWidth()
                 .wrapContentSize()
                 .background(
-                    brush = MooiTheme.brushScheme.chatMessageBackground,
+                    color = MooiTheme.colorScheme.chatMessageColor,
                 ),
     ) {
         MenuItem(
