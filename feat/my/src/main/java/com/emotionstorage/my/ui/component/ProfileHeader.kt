@@ -19,26 +19,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
-// TODO 상수 값 빼기
 @Composable
 fun ProfileHeader(
     profileImage: String,
-    nickname: String = "찡찡이",
-    signupDday: Int = 280,
+    nickname: String,
+    signupDday: Int,
     onProfileClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
     ) {
+        // TODO : 이미지는 추후 변경 예정
         Image(
             painterResource(R.drawable.success_filled),
             contentDescription = "프로필 이미지",
@@ -60,7 +62,7 @@ fun ProfileHeader(
             modifier =
                 Modifier
                     .size(
-                        width = 201.dp,
+                        width = 285.dp,
                         height = 60.dp,
                     ),
         ) {
@@ -118,7 +120,7 @@ fun ProfileHeader(
                         style =
                             MooiTheme
                                 .typography
-                                .caption4
+                                .body5
                                 .toSpanStyle()
                                 .copy(color = MooiTheme.colorScheme.gray500),
                     ) {
@@ -129,7 +131,7 @@ fun ProfileHeader(
                         style =
                             MooiTheme
                                 .typography
-                                .caption4
+                                .body5.copy(fontWeight = FontWeight(500))
                                 .toSpanStyle()
                                 .copy(color = MooiTheme.colorScheme.primary),
                     ) {
@@ -139,7 +141,7 @@ fun ProfileHeader(
                         style =
                             MooiTheme
                                 .typography
-                                .caption4
+                                .body5
                                 .toSpanStyle()
                                 .copy(color = MooiTheme.colorScheme.gray500),
                     ) {

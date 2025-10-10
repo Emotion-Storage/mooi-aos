@@ -30,7 +30,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 26.sp,
             letterSpacing = (-0.02).em,
-            lineHeight = 24.sp,
+            lineHeight = (26 * 1.4).sp,
         ),
     val head2: TextStyle =
         TextStyle(
@@ -38,7 +38,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 22.sp,
             letterSpacing = (-0.02).em,
-            lineHeight = 24.sp,
+            lineHeight = (26 * 1.4).sp,
         ),
     val head3: TextStyle =
         TextStyle(
