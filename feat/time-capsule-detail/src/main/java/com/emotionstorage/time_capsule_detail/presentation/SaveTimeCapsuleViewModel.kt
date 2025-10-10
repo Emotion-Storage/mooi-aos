@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 data class SaveTimeCapsuleState(
+    val isLoading: Boolean = true,
     val id: String = "",
     val isNewTimeCapsule: Boolean = false,
     val emotions: List<String> = emptyList(),
@@ -110,6 +111,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
             onSuccess = {
                 reduce {
                     state.copy(
+                        isLoading = false,
                         id = id,
                         isNewTimeCapsule = isNewTimeCapsule,
                         emotions = it.emotions.map { it.emoji + " " + it.label },

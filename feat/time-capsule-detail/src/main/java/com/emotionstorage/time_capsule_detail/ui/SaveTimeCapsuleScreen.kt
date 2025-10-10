@@ -35,6 +35,8 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
+import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess
+import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
@@ -42,6 +44,7 @@ import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
 import com.emotionstorage.time_capsule_detail.ui.modal.CheckArriveDateModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.Toast
@@ -62,29 +65,41 @@ fun SaveTimeCapsuleScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val snackState = remember { SnackbarHostState() }
+    val (showSavedModal, setShowSavedModal) = remember { mutableStateOf(false) }
 
     LaunchedEffect(id, isNewTimeCapsule) {
         viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule))
 
-        if (!isNewTimeCapsule) {
-            // dismiss current snackbar if exists
-            snackState.currentSnackbarData?.dismiss()
-            snackState.showSnackbar(
-                "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
-            )
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is SaveTimeCapsuleSuccess -> {
+                    setShowSavedModal(true)
+                }
+
+                is ShowToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackState.showSnackbar(sideEffect.toast)
+                }
+            }
+
         }
     }
 
-    // todo: nav to main on save open date success
-
-    StatelessSaveTimeCapsuleScreen(
-        modifier = modifier,
-        snackbarHostState = snackState,
-        state = state.value,
-        onAction = viewModel::onAction,
-        navToPrevious = navToPrevious,
-        navToBack = navToBack,
-    )
+    if (state.value.isLoading) {
+        LoadingScreen(modifier = modifier)
+    } else {
+        StatelessSaveTimeCapsuleScreen(
+            modifier = modifier,
+            snackbarHostState = snackState,
+            state = state.value,
+            onAction = viewModel::onAction,
+            showSavedModal = showSavedModal,
+            dismissSavedModal = { setShowSavedModal(false) },
+            navToMain = navToMain,
+            navToPrevious = navToPrevious,
+            navToBack = navToBack,
+        )
+    }
 }
 
 @Composable
@@ -93,6 +108,9 @@ private fun StatelessSaveTimeCapsuleScreen(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
+    showSavedModal: Boolean = false,
+    dismissSavedModal: () -> Unit = {},
+    navToMain: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
@@ -100,13 +118,24 @@ private fun StatelessSaveTimeCapsuleScreen(
     val (showExpiredModal, setShowExpiredModal) = remember { mutableStateOf(false) }
     val (showCheckOpenDateModal, setShowCheckOpenDateModal) = remember { mutableStateOf(false) }
 
-    TimeCapsuleExpiredModal(
-        isModalOpen = showExpiredModal,
+    TimeCapsuleSavedModal(
+        isModalOpen = showSavedModal,
         onConfirm = {
-            setShowExpiredModal(false)
-            navToPrevious()
-        },
+            dismissSavedModal()
+            navToMain()
+        }
     )
+
+    if (!showSavedModal) {
+        TimeCapsuleExpiredModal(
+            isModalOpen = showExpiredModal,
+            onConfirm = {
+                setShowExpiredModal(false)
+                navToPrevious()
+            },
+        )
+    }
+
 
     if (state.arriveAt != null) {
         CheckArriveDateModal(
@@ -216,6 +245,28 @@ private fun StatelessSaveTimeCapsuleScreen(
 }
 
 @Composable
+private fun LoadingScreen(
+    modifier: Modifier = Modifier
+) {
+    Scaffold(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
+
+        ) { innerPadding ->
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+        ) {
+            // todo: add loading ui
+        }
+    }
+}
+
+@Composable
 private fun SaveTimeCapsuleTitle(
     modifier: Modifier = Modifier,
     onToolTipClick: () -> Unit = {},
@@ -226,7 +277,10 @@ private fun SaveTimeCapsuleTitle(
             style = MooiTheme.typography.head1,
             color = Color.White,
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text =
                     buildAnnotatedString {
@@ -323,7 +377,8 @@ private fun RowScope.ArriveAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -343,7 +398,8 @@ private fun RowScope.ArriveAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
