@@ -156,7 +156,7 @@ fun EmailMenuItem(
         ) {
             Text(
                 text = title,
-                style = MooiTheme.typography.caption7,
+                style = MooiTheme.typography.body7,
                 color = MooiTheme.colorScheme.gray300,
             )
 
