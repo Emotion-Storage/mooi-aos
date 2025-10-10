@@ -12,7 +12,6 @@ data class DailyReport(
     val emotionSummary: String = "",
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime = LocalDateTime.now(),
-
     ) {
     data class EmotionLog(
         val emoji: String,

@@ -81,7 +81,6 @@ class DailyReportDetailViewModel @Inject constructor(
                     stressScore = 46,
                     happinessScore = 82,
                     emotionSummary = "하루종일 감정 기복은 있었지만, 하루의 끝은 안정감과 평온함으로 마무리 되었어요."
-
                 )
             )
         }
