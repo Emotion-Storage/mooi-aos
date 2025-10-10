@@ -25,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.common.getWeekDatesOfTargetMonth
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -57,6 +59,8 @@ fun DatePickerBottomSheet(
     minDate: LocalDate = CALENDER_MIN_DATE,
     maxDate: LocalDate = LocalDate.now().plusYears(1),
 ) {
+    val scope = rememberCoroutineScope()
+
     BottomSheet(
         hideDragHandle = true,
         sheetState = sheetState,
@@ -64,7 +68,9 @@ fun DatePickerBottomSheet(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
     ) {
         Column(
-            modifier = modifier.fillMaxWidth().height(356.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .height(356.dp),
         ) {
             // year & month selection
             Box(
@@ -113,7 +119,7 @@ fun DatePickerBottomSheet(
                     )
                 }
 
-                if (calendarYearMonth < YearMonth.now()) {
+                if (calendarYearMonth < YearMonth.from(maxDate)) {
                     Image(
                         modifier =
                             Modifier
@@ -159,10 +165,7 @@ fun DatePickerBottomSheet(
                         modifier =
                             Modifier
                                 .weight(1f)
-                                .clip(CircleShape)
-                                .clickable {
-                                    onDateSelect(date)
-                                }.padding(vertical = 8.dp),
+                                .padding(vertical = 8.dp),
                     ) {
                         if (date.year == calendarYearMonth.year && date.month == calendarYearMonth.month) {
                             Box(
@@ -179,8 +182,16 @@ fun DatePickerBottomSheet(
                                             } else {
                                                 MooiTheme.colorScheme.secondary
                                             },
-                                            CircleShape,
-                                        ),
+                                            CircleShape
+                                        )
+                                        .clip(CircleShape)
+                                        .clickable {
+                                            scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                                if (!sheetState.isVisible) {
+                                                    onDateSelect(date)
+                                                }
+                                            }
+                                        },
                             )
                             Text(
                                 modifier =

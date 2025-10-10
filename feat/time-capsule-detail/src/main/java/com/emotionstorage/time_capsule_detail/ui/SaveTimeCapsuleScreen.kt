@@ -23,8 +23,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -56,6 +58,7 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -126,7 +129,7 @@ private fun StatelessSaveTimeCapsuleScreen(
     val (showCheckOpenDateModal, setShowCheckOpenDateModal) = remember { mutableStateOf(false) }
 
     val (showYearMonthPicker, setShowYearMonthPicker) = remember { mutableStateOf(false) }
-    val (showDatePicker, setDatePicker) = remember { mutableStateOf(false) }
+    val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
 
     TimeCapsuleSavedModal(
         isModalOpen = showSavedModal,
@@ -206,7 +209,8 @@ private fun StatelessSaveTimeCapsuleScreen(
                             .offset(
                                 x = 18.dp,
                                 y = 73.dp,
-                            ).size(310.dp, 144.dp),
+                            )
+                            .size(310.dp, 144.dp),
                     painter =
                         painterResource(
                             com
@@ -235,7 +239,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                         onAction(SaveTimeCapsuleAction.SelectArriveAfter(it))
                     },
                     onOpenDatePicker = {
-                        setDatePicker(true)
+                        setShowDatePicker(true)
                     },
                 )
             }
@@ -260,7 +264,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                 SaveTimeCapsuleButton(
                     isNewTimeCapsule = state.isNewTimeCapsule,
                     expireAt = state.expireAt,
-                    enabled = state.arriveAfter != null,
+                    enabled = state.arriveAt != null,
                     onSave = {
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
@@ -279,21 +283,22 @@ private fun StatelessSaveTimeCapsuleScreen(
         if (showDatePicker && !showYearMonthPicker) {
             DatePickerBottomSheet(
                 onDismissRequest = {
-                    setDatePicker(false)
+                    setShowDatePicker(false)
                     // reset calendar year month to now
                     onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(YearMonth.now()))
                 },
                 selectedDate = state.arriveAt?.toLocalDate(),
                 onDateSelect = {
                     onAction(SaveTimeCapsuleAction.SelectArriveAt(it))
+                    setShowDatePicker(false)
                 },
                 calendarYearMonth = state.calendarYearMonth,
                 onYearMonthSelect = {
                     onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(it))
                 },
                 onYearMonthDropdownClick = {
-                    // close current bottom sheet & show year month picker
-                    setDatePicker(false)
+                    // close current bottom sheet & open year month picker
+                    setShowDatePicker(false)
                     setShowYearMonthPicker(true)
                 },
                 minDate = state.saveAt.toLocalDate(),
@@ -303,13 +308,16 @@ private fun StatelessSaveTimeCapsuleScreen(
         if (!showDatePicker && showYearMonthPicker) {
             YearMonthPickerBottomSheet(
                 onDismissRequest = {
-                    // reopen date picker bottom sheet
-                    setDatePicker(true)
+                    // close current bottom sheet & reopen date picker
                     setShowYearMonthPicker(false)
+                    setShowDatePicker(true)
                 },
                 selectedYearMonth = state.calendarYearMonth,
                 onYearMonthSelect = {
+                    // select year month & reopen date picker
                     onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(it))
+                    setShowYearMonthPicker(false)
+                    setShowDatePicker(true)
                 },
                 minYearMonth = YearMonth.from(state.saveAt),
                 maxYearMonth = YearMonth.from(state.saveAt).plusYears(1),
@@ -448,7 +456,8 @@ private fun RowScope.ArriveAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -468,7 +477,8 @@ private fun RowScope.ArriveAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
