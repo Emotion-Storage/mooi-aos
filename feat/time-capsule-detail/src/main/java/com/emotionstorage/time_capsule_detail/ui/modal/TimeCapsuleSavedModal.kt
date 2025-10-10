@@ -12,14 +12,15 @@ import kotlinx.coroutines.delay
 @Composable
 fun TimeCapsuleSavedModal(
     isModalOpen: Boolean = false,
-    onConfirm: () -> Unit = {}
+    onConfirm: () -> Unit = {},
 ) {
     LaunchedEffect(isModalOpen) {
-        if(isModalOpen){
-            // confirm automatically after 5 seconds
-            delay(5000)
-            onConfirm()
-        }
+        if (isModalOpen)
+            {
+                // confirm automatically after 5 seconds
+                delay(5000)
+                onConfirm()
+            }
     }
 
     if (isModalOpen) {
@@ -44,4 +45,3 @@ private fun TimeCapsuleSavedModalPreview() {
         isModalOpen = true,
     )
 }
-

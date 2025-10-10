@@ -134,7 +134,6 @@ fun DatePickerBottomSheet(
             LazyVerticalGrid(
                 columns = GridCells.Fixed(7),
                 modifier = Modifier.fillMaxWidth(),
-
             ) {
                 items(
                     items = listOf("일", "월", "화", "수", "목", "금", "토"),
@@ -163,22 +162,30 @@ fun DatePickerBottomSheet(
                                 .clip(CircleShape)
                                 .clickable {
                                     onDateSelect(date)
-                                }
-                                .padding(vertical = 8.dp)) {
+                                }.padding(vertical = 8.dp),
+                    ) {
                         if (date.year == calendarYearMonth.year && date.month == calendarYearMonth.month) {
                             Box(
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .size(29.dp)
-                                    .offset(y = -0.5.dp)
-                                    .background(
-                                        if (selectedDate != date) Color.Transparent else MooiTheme.colorScheme.secondary,
-                                        CircleShape
-                                    )
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.Center)
+                                        .size(29.dp)
+                                        .offset(y = -0.5.dp)
+                                        .background(
+                                            if (selectedDate !=
+                                                date
+                                            ) {
+                                                Color.Transparent
+                                            } else {
+                                                MooiTheme.colorScheme.secondary
+                                            },
+                                            CircleShape,
+                                        ),
                             )
                             Text(
-                                modifier = Modifier
-                                    .align(Alignment.Center),
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.Center),
                                 text = date.dayOfMonth.toString(),
                                 style = MooiTheme.typography.body8,
                                 color = Color.White,
@@ -190,7 +197,6 @@ fun DatePickerBottomSheet(
         }
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview

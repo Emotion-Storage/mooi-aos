@@ -32,7 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -88,7 +87,6 @@ fun SaveTimeCapsuleScreen(
                     snackState.showSnackbar(sideEffect.toast)
                 }
             }
-
         }
     }
 
@@ -135,7 +133,7 @@ private fun StatelessSaveTimeCapsuleScreen(
         onConfirm = {
             dismissSavedModal()
             navToMain()
-        }
+        },
     )
 
     if (!showSavedModal) {
@@ -147,7 +145,6 @@ private fun StatelessSaveTimeCapsuleScreen(
             },
         )
     }
-
 
     if (state.arriveAt != null) {
         CheckArriveDateModal(
@@ -202,15 +199,23 @@ private fun StatelessSaveTimeCapsuleScreen(
         ) {
             if (showToolTip) {
                 Image(
-                    modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .zIndex(20f)
-                        .offset(
-                            x = 18.dp,
-                            y = 73.dp
-                        )
-                        .size(310.dp, 144.dp),
-                    painter = painterResource(com.emotionstorage.time_capsule_detail.R.drawable.open_date_tooltip),
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .zIndex(20f)
+                            .offset(
+                                x = 18.dp,
+                                y = 73.dp,
+                            ).size(310.dp, 144.dp),
+                    painter =
+                        painterResource(
+                            com
+                                .emotionstorage
+                                .time_capsule_detail
+                                .R
+                                .drawable
+                                .open_date_tooltip,
+                        ),
                     contentDescription = "tooltip",
                 )
             }
@@ -231,7 +236,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                     },
                     onOpenDatePicker = {
                         setDatePicker(true)
-                    }
+                    },
                 )
             }
 
@@ -314,16 +319,13 @@ private fun StatelessSaveTimeCapsuleScreen(
 }
 
 @Composable
-private fun LoadingScreen(
-    modifier: Modifier = Modifier
-) {
+private fun LoadingScreen(modifier: Modifier = Modifier) {
     Scaffold(
         modifier =
             modifier
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
-
-        ) { innerPadding ->
+    ) { innerPadding ->
         Box(
             modifier =
                 Modifier
@@ -347,7 +349,7 @@ private fun SaveTimeCapsuleTitle(
         )
         Row(
             horizontalArrangement = Arrangement.spacedBy(3.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text =
@@ -446,8 +448,7 @@ private fun RowScope.ArriveAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                )
-                .clickable {
+                ).clickable {
                     onSelect()
                 },
     ) {
@@ -467,8 +468,7 @@ private fun RowScope.ArriveAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }
-                    .padding(
+                    }.padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),

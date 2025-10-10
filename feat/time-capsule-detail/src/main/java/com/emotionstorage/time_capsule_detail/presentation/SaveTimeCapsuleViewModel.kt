@@ -130,13 +130,13 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                 }
             },
             onError = { throwable, _ ->
-                Logger.e("Error getting time capsule by id, ${throwable}")
+                Logger.e("Error getting time capsule by id, $throwable")
                 reduce {
                     state.copy(
                         isLoading = true,
                     )
                 }
-            }
+            },
         )
     }
 
@@ -233,18 +233,19 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                 state.copy(
                     arriveAfter = ArriveAfter.AFTER_CUSTOM,
                     arriveAt = LocalDateTime.of(arriveAt, state.saveAt.toLocalTime()),
-                    calendarYearMonth = YearMonth.from(arriveAt)
+                    calendarYearMonth = YearMonth.from(arriveAt),
                 )
             }
         }
 
-    private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) = intent {
-        reduce {
-            state.copy(
-                calendarYearMonth = yearMonth
-            )
+    private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
+        intent {
+            reduce {
+                state.copy(
+                    calendarYearMonth = yearMonth,
+                )
+            }
         }
-    }
 
     private fun handleSaveTimeCapsule() =
         intent {
