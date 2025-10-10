@@ -118,7 +118,7 @@ private fun DailyReportDetailScreenPreview() {
         StatelessDailyReportDetailScreen(
             state = DailyReportDetailState(
                 dailyReport = DailyReport(
-                    id = id,
+                    id = "id",
                     summaries = listOf(
                         "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
                         "점심시간에는 동료와 업무 아이디어를 나누며 성취감을 느꼈고, 오후에는 팀 회의에서 의견이 무시당해 속상했어요.",
