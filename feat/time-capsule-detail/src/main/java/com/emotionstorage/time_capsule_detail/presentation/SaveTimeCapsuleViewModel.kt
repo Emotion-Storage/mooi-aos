@@ -127,6 +127,14 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                     postSideEffect(ShowToast())
                 }
             },
+            onError = { throwable, _ ->
+                Logger.e("Error getting time capsule by id, ${throwable}")
+                reduce {
+                    state.copy(
+                        isLoading = true,
+                    )
+                }
+            }
         )
     }
 
