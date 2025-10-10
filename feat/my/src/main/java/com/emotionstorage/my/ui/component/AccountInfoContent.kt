@@ -14,16 +14,19 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.presentation.AuthProvider
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.R
 
 enum class PillStyle { Start, Center }
 
@@ -52,9 +55,16 @@ fun AccountInfoContent(
                 trailing = {
                     when (socialType) {
                         AuthProvider.GOOGLE -> {
+                            // TODO : 아이콘 다시 요청
+                            Icon(
+                                painter = painterResource(id = R.drawable.google_icon),
+                                contentDescription = "구글 로그인",
+                                tint = Color.White
+                            )
                         }
 
                         AuthProvider.KAKAO -> {
+                            // TODO : 아이콘 다시 요청해보기
                         }
                     }
                 },
@@ -102,7 +112,7 @@ fun LabeledSection(
     Column(modifier) {
         Text(
             text = label,
-            style = MooiTheme.typography.body8,
+            style = MooiTheme.typography.body7,
             color = Color.White,
         )
         Spacer(modifier = Modifier.size(12.dp))
@@ -128,7 +138,7 @@ fun Pill(
                     Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 21.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text, style = MooiTheme.typography.body8, color = MooiTheme.colorScheme.gray500)

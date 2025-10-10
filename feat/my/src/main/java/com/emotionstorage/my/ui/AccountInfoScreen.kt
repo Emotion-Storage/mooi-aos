@@ -84,7 +84,7 @@ fun StatelessAccountInfoScreen(
                                 top = 16.dp,
                             ),
                         text = "가입 시 입력한 기본 정보는 변경할 수 없습니다.",
-                        style = MooiTheme.typography.caption3,
+                        style = MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.gray500,
                     )
                 }
