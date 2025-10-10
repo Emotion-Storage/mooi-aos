@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -30,6 +31,7 @@ import com.emotionstorage.common.getDaysBetween
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -46,17 +48,14 @@ fun TimeCapsuleUnlockModal(
     val canUnlock = keyCount >= requiredKeyCount
 
     if (isModalOpen) {
-        // custom modal
-        Dialog(onDismissRequest = {
-            // cannot dismiss unless confirm button clicked
-        }) {
+        Modal(
+            onDismissRequest = {
+                // cannot dismiss unless confirm button clicked
+            },
+            contentPadding = PaddingValues(top = 19.dp, bottom = 29.dp, start = 27.dp, end = 27.dp)
+        ) {
             Column(
-                modifier =
-                    Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(MooiTheme.colorScheme.background)
-                        .padding(top = 19.dp, bottom = 29.dp)
-                        .padding(horizontal = 27.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -132,7 +131,8 @@ fun TimeCapsuleUnlockModal(
                         Modifier
                             .height(
                                 if (canUnlock) 50.dp else 65.dp,
-                            ).fillMaxWidth(),
+                            )
+                            .fillMaxWidth(),
                     enabled = canUnlock,
                     onClick = {
                         onUnlock()

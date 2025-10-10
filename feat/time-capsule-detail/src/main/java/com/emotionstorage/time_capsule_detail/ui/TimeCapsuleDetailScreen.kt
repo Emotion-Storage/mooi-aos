@@ -49,8 +49,8 @@ import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleEmotionCom
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleNote
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
 import com.emotionstorage.time_capsule_detail.ui.modal.SaveChangesModal
-import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleDeleteModal
-import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExitModal
+import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
+import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.R
@@ -186,7 +186,7 @@ private fun StatelessTimeCapsuleDetailScreen(
 ) {
     val scrollState = rememberScrollState()
 
-    TimeCapsuleExitModal(
+    ExitTimeCapsuleModal(
         isModalOpen = isNewTimeCapsule && isExitModalOpen,
         onDismissRequest = dismissExitModal,
         onContinue = dismissExitModal,
@@ -205,7 +205,7 @@ private fun StatelessTimeCapsuleDetailScreen(
             dismissUnlockModal()
         },
     )
-    TimeCapsuleDeleteModal(
+    DeleteTimeCapsuleModal(
         isModalOpen = isDeleteModalOpen,
         onDismissRequest = dismissDeleteModal,
         onDelete = {

@@ -1,6 +1,10 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.Modal
 
 @Composable
@@ -21,4 +25,15 @@ fun TimeCapsuleExpiredModal(
             },
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TimeCapsuleExpiredModalPreview() {
+    // background ui
+    Box(modifier = Modifier.fillMaxSize())
+
+    TimeCapsuleExpiredModal(
+        isModalOpen = true,
+    )
 }
