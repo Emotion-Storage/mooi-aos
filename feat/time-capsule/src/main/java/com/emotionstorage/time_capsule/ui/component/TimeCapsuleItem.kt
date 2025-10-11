@@ -88,6 +88,7 @@ fun TimeCapsuleItem(
             )
         } else {
             // content box
+            Spacer(modifier = Modifier.size(10.dp))
             Box(
                 modifier =
                     Modifier
@@ -164,7 +165,7 @@ private fun TimeCapsuleItemInfo(
                     )
                 }
             }
-//            Spacer(modifier = Modifier.size(7.dp))
+            Spacer(modifier = Modifier.size(4.dp))
         }
 
         TimeCapsule.Status.LOCKED -> {
@@ -201,7 +202,7 @@ private fun TimeCapsuleItemInfo(
                         )
                         Text(
                             text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
-                            style = MooiTheme.typography.body5.copy(fontWeight = FontWeight.Medium),
+                            style = MooiTheme.typography.caption6,
                             color = MooiTheme.colorScheme.gray400,
                         )
                     }
@@ -440,7 +441,7 @@ private fun TimeCapsuleContent(
             }
             Text(
                 text = timeCapsule.title,
-                style = MooiTheme.typography.body4,
+                style = MooiTheme.typography.caption3,
                 color = MooiTheme.colorScheme.primary,
                 maxLines = 1,
             )

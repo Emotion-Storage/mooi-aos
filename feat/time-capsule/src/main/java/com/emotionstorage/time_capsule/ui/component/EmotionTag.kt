@@ -32,11 +32,11 @@ fun EmotionTag(
     ) {
         Text(
             text = emotion.emoji,
-            style = MooiTheme.typography.body4,
+            style = MooiTheme.typography.caption4,
         )
         Text(
             text = emotion.label,
-            style = MooiTheme.typography.body4,
+            style = MooiTheme.typography.caption4,
             color = MooiTheme.colorScheme.primary,
         )
     }
