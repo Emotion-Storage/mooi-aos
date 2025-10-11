@@ -76,7 +76,7 @@ fun Modal(
                 if (!bottomDescription.isNullOrEmpty()) {
                     Text(
                         text = bottomDescription,
-                        style = MooiTheme.typography.body5,
+                        style = MooiTheme.typography.body5.copy(lineHeight = 24.sp),
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
                     )

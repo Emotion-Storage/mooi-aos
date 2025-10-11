@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,13 +18,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.PlatformTextStyle
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.InputNicknameEvent
 import com.emotionstorage.my.presentation.NicknameChangeViewModel
@@ -59,11 +60,14 @@ private fun StatelessNicknameChangeScreen(
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 showBackButton = true,
+                showBackground = false,
                 handleBackPress = true,
                 onBackClick = navToBack,
                 onHandleBackPress = navToBack,
@@ -79,9 +83,7 @@ private fun StatelessNicknameChangeScreen(
             Column(
                 modifier =
                     Modifier
-                        .background(MooiTheme.colorScheme.background)
                         .padding(innerPadding)
-                        .imePadding()
                         .consumeWindowInsets(WindowInsets.navigationBars),
             ) {
                 NicknameChangeTitle()
@@ -97,6 +99,7 @@ private fun StatelessNicknameChangeScreen(
                         value = state.nickname,
                         onValueChange = event::onNicknameChange,
                         showCharCount = true,
+                        placeHolder = "최소 2글자 이상의 이름을 적어주세요",
                         maxCharCount = 8,
                         state =
                             when (state.inputState) {
@@ -119,7 +122,12 @@ private fun StatelessNicknameChangeScreen(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 40.dp),
+                            .padding(horizontal = 16.dp)
+                            .navigationBarsPadding()
+                            .imePadding()
+                            .padding(
+                                bottom = if (imeVisible) 24.dp else 40.dp,
+                            ),
                     labelString = "변경하기",
                     isDefaultWidth = false,
                     enabled = state.inputState == InputState.VALID && !state.submitting,
@@ -133,10 +141,7 @@ private fun StatelessNicknameChangeScreen(
 @Composable
 fun NicknameChangeTitle() {
     val base =
-        MooiTheme.typography.head1.copy(
-            lineHeight = 36.sp,
-            platformStyle = PlatformTextStyle(includeFontPadding = false),
-        )
+        MooiTheme.typography.head1
 
     val title =
         buildAnnotatedString {
