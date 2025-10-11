@@ -3,7 +3,9 @@ package com.emotionstorage.daily_report.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -21,6 +23,9 @@ import com.emotionstorage.common.toKorDate
 import com.emotionstorage.daily_report.presentation.DailyReportDetailAction
 import com.emotionstorage.daily_report.presentation.DailyReportDetailState
 import com.emotionstorage.daily_report.presentation.DailyReportDetailViewModel
+import com.emotionstorage.daily_report.ui.component.DailyReportEmotionLog
+import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
+import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
 import com.emotionstorage.ui.component.TopAppBar
@@ -101,14 +106,20 @@ private fun StatelessDailyReportDetailScreen(
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
-                    .padding(top = 31.dp, bottom = 55.dp)
+                    .padding(top = 31.dp, bottom = 43.dp)
                     .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState),
         ) {
-            // todo: make screen ui
-            Text(
-                state.dailyReport.toString(),
-                color = Color.White,
+            DailyReportSummaries(
+                summaries = state.dailyReport!!.summaries,
+            )
+            Spacer(modifier = Modifier.height(53.dp))
+            DailyReportKeywords(
+                keywords = state.dailyReport!!.keywords,
+            )
+            Spacer(modifier = Modifier.height(53.dp))
+            DailyReportEmotionLog(
+                emotionLogs = state.dailyReport!!.emotionLogs,
             )
         }
     }
