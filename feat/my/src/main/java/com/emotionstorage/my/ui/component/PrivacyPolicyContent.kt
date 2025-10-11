@@ -208,7 +208,6 @@ fun PrivacyPolicySection(
 
         RichBody(
             text = content,
-            style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
             color = Color.White,
         )
     }

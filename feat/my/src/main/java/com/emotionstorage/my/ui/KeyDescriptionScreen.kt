@@ -47,6 +47,7 @@ fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
         topBar = {
             TopAppBar(
                 showBackButton = true,
+                showBackground = false,
                 handleBackPress = true,
                 onBackClick = navToBack,
                 onHandleBackPress = navToBack,
@@ -133,7 +134,7 @@ fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
 
                     Text(
                         text = "열쇠는 언제 써야 좋을까요?",
-                        style = MooiTheme.typography.caption5,
+                        style = MooiTheme.typography.caption4,
                         color = MooiTheme.colorScheme.gray500,
                     )
                 }

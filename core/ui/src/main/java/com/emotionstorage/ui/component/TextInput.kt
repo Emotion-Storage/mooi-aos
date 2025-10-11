@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -62,7 +61,7 @@ fun TextInput(
                         Modifier
                             .align(Alignment.TopStart)
                             .padding(bottom = 18.dp),
-                    style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                    style = MooiTheme.typography.body6,
                     color = Color.White,
                     text = label,
                 )
@@ -75,12 +74,12 @@ fun TextInput(
                             .padding(bottom = 18.dp),
                 ) {
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        style = MooiTheme.typography.body6,
                         color = MooiTheme.colorScheme.primary,
                         text = if (value.length > maxCharCount) maxCharCount.toString() else value.length.toString(),
                     )
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        style = MooiTheme.typography.body6,
                         color = Color.White,
                         text = "/$maxCharCount",
                     )
@@ -93,7 +92,7 @@ fun TextInput(
                 Modifier
                     .fillMaxWidth()
                     .heightIn(min = 0.dp),
-            textStyle = MooiTheme.typography.body3.copy(fontSize = 15.sp, color = Color.White),
+            textStyle = MooiTheme.typography.body7.copy(color = Color.White),
             value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
             onValueChange = onValueChange,
             maxLines = 1,
@@ -104,7 +103,7 @@ fun TextInput(
             ) {
                 if (value.isEmpty()) {
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        style = MooiTheme.typography.body7,
                         color = MooiTheme.colorScheme.gray500,
                         text = placeHolder,
                     )
@@ -169,7 +168,7 @@ private fun TextInputMessage(
             contentDescription = null,
         )
         Text(
-            style = MooiTheme.typography.body3,
+            style = MooiTheme.typography.caption6,
             color =
                 if (state is TextInputState.Error) {
                     MooiTheme.colorScheme.errorRed

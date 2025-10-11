@@ -3,9 +3,13 @@ package com.emotionstorage.tutorial.ui.onBoarding
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -13,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
@@ -68,7 +73,11 @@ private fun StatelessNicknameScreen(
     )
 
     val focusManager = LocalFocusManager.current
+
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
@@ -90,8 +99,8 @@ private fun StatelessNicknameScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 16.dp)
-                    .imePadding(),
+                    .consumeWindowInsets(WindowInsets.navigationBars)
+                    .padding(horizontal = 16.dp),
         ) {
             OnBoardingTitle(
                 modifier = Modifier.fillMaxWidth(),
@@ -128,8 +137,11 @@ private fun StatelessNicknameScreen(
             CtaButton(
                 modifier =
                     Modifier
-                        .fillMaxWidth(),
-                //                    .padding(bottom = 39.dp),
+                        .fillMaxWidth()
+                        .imePadding()
+                        .padding(
+                            bottom = if (imeVisible) 24.dp else 40.dp,
+                        ),
                 labelString = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,
                 onClick = {

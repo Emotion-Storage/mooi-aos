@@ -6,8 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.PlatformTextStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -20,21 +18,17 @@ fun BulletListItem(
     bulletSize: Dp = 4.dp,
     gap: Dp = 8.dp,
     blockIndentStart: Dp = 16.dp,
-    style: TextStyle =
-        TextStyle(
-            fontSize = 13.sp,
-            lineHeight = 22.sp,
-            platformStyle = PlatformTextStyle(includeFontPadding = false),
-        ),
     color: Color = Color.White,
     bulletColor: Color = Color(0xFFDADADA),
 ) {
-    val firstLineHeight = with(LocalDensity.current) { style.lineHeight.toDp() }
+    val textStyle = MooiTheme.typography.caption3.copy(lineHeight = 22.sp)
+
+    val firstLineHeight = with(LocalDensity.current) { textStyle.lineHeight.toDp() }
 
     HangingListItem(
         prefix = { Canvas(Modifier.size(bulletSize)) { drawCircle(color = bulletColor) } },
         text = text,
-        textStyle = style,
+        textStyle = textStyle,
         textColor = color,
         blockIndentStart = blockIndentStart,
         gap = gap,

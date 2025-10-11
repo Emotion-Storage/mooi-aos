@@ -1,5 +1,6 @@
 package com.emotionstorage.my.ui.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,10 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.presentation.AuthProvider
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.R
 
 enum class PillStyle { Start, Center }
 
@@ -52,9 +55,19 @@ fun AccountInfoContent(
                 trailing = {
                     when (socialType) {
                         AuthProvider.GOOGLE -> {
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(R.drawable.google_icon),
+                                contentDescription = "구글 로그인",
+                            )
                         }
 
                         AuthProvider.KAKAO -> {
+                            Image(
+                                modifier = Modifier.size(20.dp),
+                                painter = painterResource(R.drawable.kakao_icon),
+                                contentDescription = "카카오",
+                            )
                         }
                     }
                 },
@@ -102,7 +115,7 @@ fun LabeledSection(
     Column(modifier) {
         Text(
             text = label,
-            style = MooiTheme.typography.body8,
+            style = MooiTheme.typography.body7,
             color = Color.White,
         )
         Spacer(modifier = Modifier.size(12.dp))
@@ -128,7 +141,7 @@ fun Pill(
                     Modifier
                         .fillMaxWidth()
                         .height(50.dp)
-                        .padding(horizontal = 16.dp),
+                        .padding(horizontal = 21.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(text, style = MooiTheme.typography.body8, color = MooiTheme.colorScheme.gray500)
@@ -155,14 +168,17 @@ fun Pill(
 @Composable
 fun AccountInfoContentPreview() {
     MooiTheme {
-        AccountInfoContent(
-            modifier = Modifier,
-            email = "mooi.reply@gmail.com",
-            socialType = AuthProvider.GOOGLE,
-            gender = "남성",
-            birthYear = 1999,
-            birthMonth = 7,
-            birthDay = 30,
-        )
+        Column {
+            AccountInfoContent(
+                modifier = Modifier,
+                email = "mooi.reply@gmail.com",
+                socialType = AuthProvider.KAKAO,
+                gender = "남성",
+                birthYear = 1999,
+                birthMonth = 7,
+                birthDay = 30,
+            )
+            Spacer(modifier = Modifier.size(24.dp))
+        }
     }
 }

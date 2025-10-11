@@ -38,6 +38,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 22.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = (26 * 1.4).sp,
         ),
     val head3: TextStyle =
         TextStyle(
@@ -45,7 +46,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 21.sp,
             letterSpacing = (-0.02).em,
-            lineHeight = (21 * 1.4).sp,
+            lineHeight = 24.sp,
         ),
     val body1: TextStyle =
         TextStyle(
@@ -53,6 +54,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body2: TextStyle =
         TextStyle(
@@ -60,6 +62,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Normal,
             fontSize = 18.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body3: TextStyle =
         TextStyle(
@@ -67,6 +70,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Light,
             fontSize = 17.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body4: TextStyle =
         TextStyle(
@@ -74,6 +78,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Medium,
             fontSize = 16.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body5: TextStyle =
         TextStyle(
@@ -81,6 +86,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Normal,
             fontSize = 16.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body6: TextStyle =
         TextStyle(
@@ -88,6 +94,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 15.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body7: TextStyle =
         TextStyle(
@@ -95,6 +102,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Medium,
             fontSize = 15.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val body8: TextStyle =
         TextStyle(
@@ -102,6 +110,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Normal,
             fontSize = 15.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption1: TextStyle =
         TextStyle(
@@ -109,6 +118,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 14.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption2: TextStyle =
         TextStyle(
@@ -116,6 +126,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Medium,
             fontSize = 14.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption3: TextStyle =
         TextStyle(
@@ -123,6 +134,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption4: TextStyle =
         TextStyle(
@@ -130,6 +142,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Light,
             fontSize = 14.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption5: TextStyle =
         TextStyle(
@@ -137,6 +150,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 13.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption6: TextStyle =
         TextStyle(
@@ -144,6 +158,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val caption7: TextStyle =
         TextStyle(
@@ -151,6 +166,7 @@ data class MooiTypography(
             fontWeight = FontWeight.Light,
             fontSize = 13.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val bottomBar: TextStyle =
         TextStyle(
@@ -158,6 +174,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 10.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val mainButton: TextStyle =
         TextStyle(
@@ -165,6 +182,7 @@ data class MooiTypography(
             fontWeight = FontWeight.SemiBold,
             fontSize = 16.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
     val error: TextStyle =
         TextStyle(
@@ -172,5 +190,6 @@ data class MooiTypography(
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
         ),
 )
