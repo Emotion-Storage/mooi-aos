@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -132,7 +133,8 @@ private fun StatelessCalendarScreen(
     navToDailyReportDetail: (id: String) -> Unit = {},
 ) {
     Scaffold(
-        modifier
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        modifier = modifier
             .fillMaxSize()
             .background(MooiTheme.colorScheme.background)
             .padding(horizontal = 16.dp),
@@ -373,7 +375,8 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
