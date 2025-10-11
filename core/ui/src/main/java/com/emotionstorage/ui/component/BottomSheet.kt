@@ -23,10 +23,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogWindowProvider
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -71,6 +73,9 @@ fun BottomSheet(
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
     ) {
+        // set dim amount to 0.8f
+        (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
+
         Column(
             modifier = Modifier.padding(contentPadding),
             verticalArrangement = Arrangement.Top,
