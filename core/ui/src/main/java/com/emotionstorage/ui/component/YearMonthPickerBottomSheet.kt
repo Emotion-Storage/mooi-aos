@@ -46,8 +46,7 @@ fun YearMonthPickerBottomSheet(
             Logger.d("set calendar year month to $spinnerYearMonth")
             onYearMonthSelect(spinnerYearMonth)
         },
-        // disable gesture to prevent sheet gesture while dragging wheel spinner
-        sheetGesturesEnabled = false,
+        hideDragHandle = true,
     ) {
         YearMonthWheelSpinner(
             yearMonthRange = minYearMonth to maxYearMonth,

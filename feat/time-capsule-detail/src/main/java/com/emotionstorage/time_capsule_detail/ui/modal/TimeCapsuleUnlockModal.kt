@@ -1,21 +1,19 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -25,11 +23,11 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
 import com.emotionstorage.common.getDaysBetween
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -46,17 +44,14 @@ fun TimeCapsuleUnlockModal(
     val canUnlock = keyCount >= requiredKeyCount
 
     if (isModalOpen) {
-        // custom modal
-        Dialog(onDismissRequest = {
-            // cannot dismiss unless confirm button clicked
-        }) {
+        Modal(
+            onDismissRequest = {
+                // cannot dismiss unless confirm button clicked
+            },
+            contentPadding = PaddingValues(top = 19.dp, bottom = 29.dp, start = 27.dp, end = 27.dp),
+        ) {
             Column(
-                modifier =
-                    Modifier
-                        .clip(RoundedCornerShape(15.dp))
-                        .background(MooiTheme.colorScheme.background)
-                        .padding(top = 19.dp, bottom = 29.dp)
-                        .padding(horizontal = 27.dp),
+                modifier = Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

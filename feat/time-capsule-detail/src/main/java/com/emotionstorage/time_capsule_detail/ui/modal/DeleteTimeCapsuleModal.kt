@@ -1,10 +1,14 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.Modal
 
 @Composable
-fun TimeCapsuleDeleteModal(
+fun DeleteTimeCapsuleModal(
     isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onDelete: () -> Unit = {},
@@ -21,4 +25,15 @@ fun TimeCapsuleDeleteModal(
             onDismiss = onDelete,
         )
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DeleteTimeCapsuleModalPreview() {
+    // background ui
+    Box(modifier = Modifier.fillMaxSize())
+
+    DeleteTimeCapsuleModal(
+        isModalOpen = true,
+    )
 }

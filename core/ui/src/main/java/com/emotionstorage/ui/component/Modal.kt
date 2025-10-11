@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,13 +26,13 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun Modal(
-    confirmLabel: String,
-    title: String? = null,
     onDismissRequest: () -> Unit,
     topDescription: String? = null,
+    title: String? = null,
     bottomDescription: String? = null,
-    dismissLabel: String? = null,
+    confirmLabel: String? = null,
     onConfirm: () -> Unit = {},
+    dismissLabel: String? = null,
     onDismiss: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
     content: @Composable (() -> Unit)? = null,
@@ -42,7 +43,8 @@ fun Modal(
                 Modifier
                     .clip(RoundedCornerShape(15.dp))
                     .background(MooiTheme.colorScheme.background)
-                    .padding(contentPadding),
+                    .padding(contentPadding)
+                    .widthIn(max = 293.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -55,7 +57,7 @@ fun Modal(
                 if (!topDescription.isNullOrEmpty()) {
                     Text(
                         text = topDescription,
-                        style = MooiTheme.typography.body2,
+                        style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
                     )
@@ -89,43 +91,34 @@ fun Modal(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                ModalButton(
-                    label = confirmLabel,
-                    onClick = {
-                        onConfirm()
-                        onDismissRequest()
-                    },
-                )
+                if (confirmLabel != null) {
+                    CtaButton(
+                        modifier = Modifier.height(50.dp),
+                        labelString = confirmLabel,
+                        onClick = {
+                            onConfirm()
+                            onDismissRequest()
+                        },
+                        radius = 10,
+                        textStyle = MooiTheme.typography.mainButton,
+                    )
+                }
                 if (dismissLabel != null) {
-                    ModalButton(
-                        label = dismissLabel,
+                    CtaButton(
+                        modifier = Modifier.height(50.dp),
+                        labelString = dismissLabel,
                         onClick = {
                             onDismiss()
                             onDismissRequest()
                         },
                         type = CtaButtonType.TONAL,
+                        radius = 10,
+                        textStyle = MooiTheme.typography.mainButton,
                     )
                 }
             }
         }
     }
-}
-
-@Composable
-private fun ModalButton(
-    label: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    type: CtaButtonType = CtaButtonType.FILLED,
-) {
-    CtaButton(
-        modifier = modifier.height(50.dp),
-        labelString = label,
-        onClick = onClick,
-        type = type,
-        radius = 10,
-        textStyle = MooiTheme.typography.body2,
-    )
 }
 
 @Preview(showBackground = true)
@@ -136,9 +129,9 @@ private fun ModalPreview() {
 
     Modal(
         topDescription = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
-        title = "그래도 메인 화면으로\n돌아갈까요?",
+        title = "그래도 로그인 화면으로\n돌아갈까요?",
         confirmLabel = "회원가입을 계속 할게요.",
-        dismissLabel = "메인 화면으로 나갈래요.",
+        dismissLabel = "로그인 화면으로 나갈래요.",
         onDismissRequest = { },
         onConfirm = { },
         onDismiss = { },
