@@ -131,22 +131,23 @@ private fun StatelessDailyReportDetailScreen(
             )
             Spacer(modifier = Modifier.height(53.dp))
             DailyReportEmotionScores(
-                scores = listOf(
-                    "스트레스 지수" to state.dailyReport!!.stressScore,
-                    "행복 지수" to state.dailyReport!!.happinessScore,
-                )
+                scores =
+                    listOf(
+                        "스트레스 지수" to state.dailyReport!!.stressScore,
+                        "행복 지수" to state.dailyReport!!.happinessScore,
+                    ),
             )
             Spacer(modifier = Modifier.height(53.dp))
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = Color(0xFF0E0C12).copy(alpha = 0.5f),
-                        shape = RoundedCornerShape(50),
-                    )
-                    .padding(vertical = 15.dp, horizontal = 38.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = Color(0xFF0E0C12).copy(alpha = 0.5f),
+                            shape = RoundedCornerShape(50),
+                        ).padding(vertical = 15.dp, horizontal = 38.dp),
                 verticalArrangement = Arrangement.spacedBy(2.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = "감정 요약",
@@ -157,17 +158,18 @@ private fun StatelessDailyReportDetailScreen(
                     text = state.dailyReport!!.emotionSummary,
                     style = MooiTheme.typography.body8.copy(lineHeight = 24.sp),
                     color = Color.White,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
             }
             Spacer(modifier = Modifier.height(42.dp))
             Text(
                 modifier = Modifier.fillMaxWidth(),
-                text = "하루의 대화를 바탕으로 작성된 일일리포트는\n" +
-                    "당일 마지막 감정 대화 기준 24시간 후 업데이트 됩니다.",
+                text =
+                    "하루의 대화를 바탕으로 작성된 일일리포트는\n" +
+                        "당일 마지막 감정 대화 기준 24시간 후 업데이트 됩니다.",
                 style = MooiTheme.typography.caption7.copy(fontWeight = FontWeight.Normal, lineHeight = 22.sp),
                 color = MooiTheme.colorScheme.gray400,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
@@ -240,7 +242,6 @@ private fun DailyReportDetailScreenPreview() {
     }
 }
 
-
 @Preview
 @Composable
 private fun DailyReportDetailScreenPreview2() {
@@ -277,4 +278,3 @@ private fun DailyReportDetailScreenPreview2() {
         )
     }
 }
-

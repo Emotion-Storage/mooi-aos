@@ -77,9 +77,10 @@ fun DailyReportSummaries(
 private fun DailyReportSummariesPreview() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .background(MooiTheme.colorScheme.background),
         )
         DailyReportSummaries(
             summaries =
@@ -91,4 +92,3 @@ private fun DailyReportSummariesPreview() {
         )
     }
 }
-

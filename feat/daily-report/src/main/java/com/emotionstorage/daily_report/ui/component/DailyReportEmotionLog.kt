@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,11 +24,9 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.common.formatToKorTime
-import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.LinearGradient
@@ -53,33 +50,35 @@ fun DailyReportEmotionLog(
             color = Color.White,
         )
 
-
         Box(modifier = Modifier.padding(start = 5.dp)) {
             // todo: add blur effect
             Box(
-                modifier = Modifier
-                    .align(Alignment.CenterStart)
-                    .offset(x = 15.dp)
-                    .height(logContentHeight)
-                    .width(2.dp)
-                    .padding(vertical = 15.dp)
-                    .background(MooiTheme.colorScheme.secondary)
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterStart)
+                        .offset(x = 15.dp)
+                        .height(logContentHeight)
+                        .width(2.dp)
+                        .padding(vertical = 15.dp)
+                        .background(MooiTheme.colorScheme.secondary),
             )
 
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .onGloballyPositioned {
-                        logContentHeight = with(density) {
-                            it.size.height.toDp()
-                        }
-                    },
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .onGloballyPositioned {
+                            logContentHeight =
+                                with(density) {
+                                    it.size.height.toDp()
+                                }
+                        },
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
                 emotionLogs.forEachIndexed { index, emotionLog ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
                             text = emotionLog.emoji,
@@ -93,21 +92,21 @@ fun DailyReportEmotionLog(
                             color = MooiTheme.colorScheme.gray500,
                         )
                         Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    LinearGradient(
-                                        colors =
-                                            listOf(
-                                                Color(0xFF849BEA).copy(alpha = 0.15f),
-                                                Color.Transparent,
-                                            ),
-                                    ),
-                                    RoundedCornerShape(10.dp)
-                                )
-                                .padding(vertical = 7.dp, horizontal = 10.dp),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(
+                                        LinearGradient(
+                                            colors =
+                                                listOf(
+                                                    Color(0xFF849BEA).copy(alpha = 0.15f),
+                                                    Color.Transparent,
+                                                ),
+                                        ),
+                                        RoundedCornerShape(10.dp),
+                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
                             Text(
                                 text = emotionLog.label,
@@ -132,9 +131,10 @@ fun DailyReportEmotionLog(
 private fun DailyReportEmotionLogPreview() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .background(MooiTheme.colorScheme.background),
         ) {
             DailyReportEmotionLog(
                 emotionLogs =
@@ -175,15 +175,15 @@ private fun DailyReportEmotionLogPreview() {
     }
 }
 
-
 @Preview
 @Composable
 private fun DailyReportEmotionLogPreview2() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .background(MooiTheme.colorScheme.background),
         ) {
             DailyReportEmotionLog(
                 emotionLogs =

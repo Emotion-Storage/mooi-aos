@@ -34,9 +34,10 @@ fun DailyReportEmotionScores(
         )
 
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .widthIn(max = 360.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .widthIn(max = 360.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             for ((label, score) in scores) {
@@ -66,28 +67,32 @@ private fun ScoreSteps(
     score: Int,
     stepsCnt: Int = 5,
 ) {
-    val stepSize = 100/stepsCnt
+    val stepSize = 100 / stepsCnt
 
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         (1..stepsCnt).toList().forEach {
             Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .height(12.dp)
-                    .background(
-                        // todo: confirm step dividing logic
-                        if (score / stepSize >= it) MooiTheme.colorScheme.secondary
-                        else Color(0xFFD9D9D9),
-                        RoundedCornerShape(
-                            topStart = if (it == 1) 50.dp else 0.dp,
-                            bottomStart = if (it == 1) 50.dp else 0.dp,
-                            topEnd = if (it == stepsCnt) 50.dp else 0.dp,
-                            bottomEnd = if (it == stepsCnt) 50.dp else 0.dp
-                        )
-                    )
+                modifier =
+                    Modifier
+                        .weight(1f)
+                        .height(12.dp)
+                        .background(
+                            // todo: confirm step dividing logic
+                            if (score / stepSize >= it) {
+                                MooiTheme.colorScheme.secondary
+                            } else {
+                                Color(0xFFD9D9D9)
+                            },
+                            RoundedCornerShape(
+                                topStart = if (it == 1) 50.dp else 0.dp,
+                                bottomStart = if (it == 1) 50.dp else 0.dp,
+                                topEnd = if (it == stepsCnt) 50.dp else 0.dp,
+                                bottomEnd = if (it == stepsCnt) 50.dp else 0.dp,
+                            ),
+                        ),
             )
         }
     }
@@ -97,11 +102,12 @@ private fun ScoreSteps(
 @Composable
 private fun ScoreStepsPreview() {
     MooiTheme {
-        Column (
-            modifier = Modifier
-                .padding(20.dp)
-                .background(MooiTheme.colorScheme.background),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+        Column(
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .background(MooiTheme.colorScheme.background),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ScoreSteps(score = 0)
             ScoreSteps(score = 19)
@@ -118,21 +124,22 @@ private fun ScoreStepsPreview() {
     }
 }
 
-
 @Preview
 @Composable
 private fun DailyReportEmotionScoresPreview() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .background(MooiTheme.colorScheme.background),
         ) {
             DailyReportEmotionScores(
-                scores = listOf(
-                    "스트레스 지수" to 46,
-                    "행복 지수" to 82,
-                )
+                scores =
+                    listOf(
+                        "스트레스 지수" to 46,
+                        "행복 지수" to 82,
+                    ),
             )
         }
     }

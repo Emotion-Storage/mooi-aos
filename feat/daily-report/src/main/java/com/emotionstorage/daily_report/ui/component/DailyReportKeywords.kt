@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -39,18 +38,18 @@ fun DailyReportKeywords(
         ) {
             for (keyword in keywords) {
                 Box(
-                    modifier = Modifier
-                        .background(
-                            Color(0xFFAECBFA).copy(alpha = 0.1f),
-                            RoundedCornerShape(10.dp)
-                        )
-                        .padding(vertical = 15.dp, horizontal = 20.dp)
+                    modifier =
+                        Modifier
+                            .background(
+                                Color(0xFFAECBFA).copy(alpha = 0.1f),
+                                RoundedCornerShape(10.dp),
+                            ).padding(vertical = 15.dp, horizontal = 20.dp),
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
                         text = keyword,
                         style = MooiTheme.typography.body8,
-                        color = MooiTheme.colorScheme.primary
+                        color = MooiTheme.colorScheme.primary,
                     )
                 }
             }
@@ -63,9 +62,10 @@ fun DailyReportKeywords(
 private fun DailyReportKeywordsPreview() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .padding(20.dp)
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .padding(20.dp)
+                    .background(MooiTheme.colorScheme.background),
         ) {
             DailyReportKeywords(
                 keywords =
@@ -80,4 +80,3 @@ private fun DailyReportKeywordsPreview() {
         }
     }
 }
-
