@@ -239,3 +239,42 @@ private fun DailyReportDetailScreenPreview() {
         )
     }
 }
+
+
+@Preview
+@Composable
+private fun DailyReportDetailScreenPreview2() {
+    MooiTheme {
+        StatelessDailyReportDetailScreen(
+            state =
+                DailyReportDetailState(
+                    dailyReport =
+                        DailyReport(
+                            id = "id",
+                            summaries =
+                                listOf(
+                                    "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
+                                ),
+                            keywords =
+                                listOf(
+                                    "친구의 지각",
+                                ),
+                            emotionLogs =
+                                listOf(
+                                    EmotionLog(
+                                        emoji = "\uD83D\uDE20",
+                                        label = "짜증남",
+                                        description = "친구의 지각",
+                                        time = LocalDateTime.now(),
+                                    ),
+                                ),
+                            createdAt = LocalDateTime.now(),
+                            stressScore = 75,
+                            happinessScore = 12,
+                            emotionSummary = "작은 일로 시작된 불편한 기분이 쉽게 풀리지 않아,\n마음이 지친 하루였습니다.",
+                        ),
+                ),
+        )
+    }
+}
+
