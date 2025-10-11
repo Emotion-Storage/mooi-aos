@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -19,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
@@ -51,17 +53,25 @@ fun DailyReportEmotionLog(
         )
 
         Box(modifier = Modifier.padding(start = 5.dp)) {
-            // todo: add blur effect
             Box(
                 modifier =
                     Modifier
                         .align(Alignment.CenterStart)
-                        .offset(x = 15.dp)
+                        .offset(x = 12.dp)
                         .height(logContentHeight)
-                        .width(2.dp)
+                        .width(10.dp)
                         .padding(vertical = 15.dp)
-                        .background(MooiTheme.colorScheme.secondary),
-            )
+                        .blur(2.5.dp)
+            ) {
+                Box(
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center)
+                            .fillMaxHeight()
+                            .width(2.dp)
+                            .background(MooiTheme.colorScheme.secondary.copy(alpha = 0.7f)),
+                )
+            }
 
             Column(
                 modifier =
@@ -104,7 +114,8 @@ fun DailyReportEmotionLog(
                                                 ),
                                         ),
                                         RoundedCornerShape(10.dp),
-                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
+                                    )
+                                    .padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
