@@ -114,8 +114,7 @@ fun DailyReportEmotionLog(
                                                 ),
                                         ),
                                         RoundedCornerShape(10.dp),
-                                    )
-                                    .padding(vertical = 7.dp, horizontal = 10.dp),
+                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {

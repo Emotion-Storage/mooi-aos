@@ -27,7 +27,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
 import com.emotionstorage.daily_report.presentation.DailyReportDetailAction
-import com.emotionstorage.daily_report.presentation.DailyReportDetailState
 import com.emotionstorage.daily_report.presentation.DailyReportDetailViewModel
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionLog
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionScores
@@ -79,10 +78,11 @@ private fun StatelessDailyReportDetailScreen(
                 .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
-                title = dailyReport
-                    .createdAt
-                    .toLocalDate()
-                    .toKorDate(),
+                title =
+                    dailyReport
+                        .createdAt
+                        .toLocalDate()
+                        .toKorDate(),
                 showBackButton = true,
                 onBackClick = navToBack,
             )
@@ -136,8 +136,7 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            )
-                            .padding(vertical = 15.dp, horizontal = 38.dp),
+                            ).padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -174,7 +173,6 @@ private fun StatelessDailyReportDetailScreen(
 private fun DailyReportDetailScreenPreview() {
     MooiTheme {
         StatelessDailyReportDetailScreen(
-
             dailyReport =
                 DailyReport(
                     id = "id",
@@ -230,8 +228,7 @@ private fun DailyReportDetailScreenPreview() {
                     happinessScore = 82,
                     emotionSummary = "하루종일 감정 기복은 있었지만, 하루의 끝은 안정감과 평온함으로 마무리 되었어요.",
                 ),
-
-            )
+        )
     }
 }
 
@@ -265,7 +262,6 @@ private fun DailyReportDetailScreenPreview2() {
                     happinessScore = 12,
                     emotionSummary = "작은 일로 시작된 불편한 기분이 쉽게 풀리지 않아,\n마음이 지친 하루였습니다.",
                 ),
-
-            )
+        )
     }
 }
