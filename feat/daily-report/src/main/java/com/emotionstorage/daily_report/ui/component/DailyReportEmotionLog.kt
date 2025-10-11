@@ -61,7 +61,7 @@ fun DailyReportEmotionLog(
                         .height(logContentHeight)
                         .width(10.dp)
                         .padding(vertical = 15.dp)
-                        .blur(2.5.dp)
+                        .blur(2.5.dp),
             ) {
                 Box(
                     modifier =
@@ -114,8 +114,7 @@ fun DailyReportEmotionLog(
                                                 ),
                                         ),
                                         RoundedCornerShape(10.dp),
-                                    )
-                                    .padding(vertical = 7.dp, horizontal = 10.dp),
+                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
