@@ -28,7 +28,7 @@ fun DailyReportEmotionScores(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Text(
-            text = "오늘의 감정",
+            text = "감정 수치 종합 분석",
             style = MooiTheme.typography.body2,
             color = Color.White,
         )
