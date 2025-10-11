@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -57,6 +60,8 @@ private fun StatelessNicknameChangeScreen(
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
@@ -79,7 +84,6 @@ private fun StatelessNicknameChangeScreen(
                 modifier =
                     Modifier
                         .padding(innerPadding)
-                        .imePadding()
                         .consumeWindowInsets(WindowInsets.navigationBars),
             ) {
                 NicknameChangeTitle()
@@ -118,7 +122,12 @@ private fun StatelessNicknameChangeScreen(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(start = 16.dp, end = 16.dp, bottom = 40.dp),
+                            .padding(horizontal = 16.dp)
+                            .navigationBarsPadding()
+                            .imePadding()
+                            .padding(
+                                bottom = if (imeVisible) 24.dp else 40.dp
+                            ),
                     labelString = "변경하기",
                     isDefaultWidth = false,
                     enabled = state.inputState == InputState.VALID && !state.submitting,
