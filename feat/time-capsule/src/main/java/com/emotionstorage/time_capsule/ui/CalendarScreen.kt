@@ -380,7 +380,7 @@ private fun CalendarTodayActionButton(
         ) {
             Text(
                 text = if (madeTimeCapsuleToday) "오늘 내 감정 보기" else "오늘 감정 기록하러가기",
-                style = MooiTheme.typography.body3.copy(lineHeight = 24.sp, color = Color.White),
+                style = MooiTheme.typography.body3.copy(color = Color.White),
             )
             Image(
                 modifier =

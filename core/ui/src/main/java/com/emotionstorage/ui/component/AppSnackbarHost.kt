@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
@@ -154,7 +153,7 @@ fun Toast(
 
         Text(
             text = message,
-            style = MooiTheme.typography.body7.copy(lineHeight = 24.sp),
+            style = MooiTheme.typography.body7,
             color = Color.White,
             textAlign = TextAlign.Center,
         )

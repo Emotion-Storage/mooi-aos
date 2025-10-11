@@ -67,7 +67,7 @@ fun ExitTimeCapsuleModal(
                 Text(
                     modifier = Modifier.padding(top = 9.dp, bottom = 15.dp),
                     text = "* 그 전까지는 언제든 다시 보관할 수 있어요.",
-                    style = MooiTheme.typography.body8.copy(lineHeight = 24.sp),
+                    style = MooiTheme.typography.body8,
                     color = MooiTheme.colorScheme.gray500,
                 )
                 Text(

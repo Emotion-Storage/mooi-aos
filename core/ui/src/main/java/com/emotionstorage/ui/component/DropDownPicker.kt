@@ -98,7 +98,6 @@ fun DropDownPicker(
                             style =
                                 MooiTheme.typography.body3.copy(
                                     fontSize = 14.sp,
-                                    lineHeight = 24.sp,
                                 ),
                             color = Color.White,
                             text = it,

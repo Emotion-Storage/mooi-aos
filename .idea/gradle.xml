@@ -36,6 +36,7 @@
             <option value="$PROJECT_DIR$/feat/ai-chat" />
             <option value="$PROJECT_DIR$/feat/alarm" />
             <option value="$PROJECT_DIR$/feat/auth" />
+            <option value="$PROJECT_DIR$/feat/daily-report" />
             <option value="$PROJECT_DIR$/feat/home" />
             <option value="$PROJECT_DIR$/feat/my" />
             <option value="$PROJECT_DIR$/feat/time-capsule" />

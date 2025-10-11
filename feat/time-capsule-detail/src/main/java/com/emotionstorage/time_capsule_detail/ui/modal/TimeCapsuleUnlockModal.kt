@@ -22,7 +22,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.common.getDaysBetween
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
@@ -83,7 +82,7 @@ fun TimeCapsuleUnlockModal(
                                 }
                                 append("가 필요해요!")
                             },
-                        style = MooiTheme.typography.body5.copy(lineHeight = 24.sp),
+                        style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
                     )

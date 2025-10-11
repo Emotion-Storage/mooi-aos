@@ -62,6 +62,7 @@ dependencies {
     implementation(projects.feat.aiChat)
     implementation(projects.feat.timeCapsuleDetail)
     implementation(projects.feat.timeCapsule)
+    implementation(projects.feat.dailyReport)
     implementation(projects.feat.weeklyReport)
     implementation(projects.feat.my)
     implementation(projects.feat.alarm)

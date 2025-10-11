@@ -31,7 +31,6 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.my.presentation.MyPageAction
@@ -233,7 +232,7 @@ private fun StatelessMyPageScreen(
                         .clickable { navToWithdraw() },
                 textAlign = TextAlign.End,
                 color = MooiTheme.colorScheme.gray600,
-                style = MooiTheme.typography.caption7.copy(lineHeight = 24.sp),
+                style = MooiTheme.typography.caption7,
             )
         }
     }

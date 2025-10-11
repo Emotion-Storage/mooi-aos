@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -40,7 +39,7 @@ fun TimeCapsuleSummary(
         ) {
             Text(
                 text = summary,
-                style = MooiTheme.typography.caption3.copy(lineHeight = 24.sp),
+                style = MooiTheme.typography.caption3,
                 color = Color.White,
             )
         }

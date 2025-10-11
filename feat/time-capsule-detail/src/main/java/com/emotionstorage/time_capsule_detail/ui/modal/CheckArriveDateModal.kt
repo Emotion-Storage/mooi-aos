@@ -20,7 +20,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
@@ -70,14 +69,14 @@ fun CheckArriveDateModal(
                                 append(arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                             }
                         },
-                    style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+                    style = MooiTheme.typography.body1,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.height(9.dp))
                 Text(
                     text = "* 임시저장 캡슐은 일일리포트에\n포함되지 않아요.",
-                    style = MooiTheme.typography.body8.copy(lineHeight = 24.sp),
+                    style = MooiTheme.typography.body8,
                     color = MooiTheme.colorScheme.gray500,
                     textAlign = TextAlign.Center,
                 )

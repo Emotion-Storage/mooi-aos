@@ -45,7 +45,7 @@ fun TimeCapsuleNote(
         ) {
             Text(
                 text = "나의 회고 일기",
-                style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+                style = MooiTheme.typography.body1,
                 color = Color.White,
             )
             Text(

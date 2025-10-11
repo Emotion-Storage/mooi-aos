@@ -37,7 +37,7 @@ fun TimeCapsuleEmotionComments(
     ) {
         Text(
             text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
-            style = MooiTheme.typography.body1.copy(lineHeight = 24.sp),
+            style = MooiTheme.typography.body1,
             textAlign = TextAlign.Center,
             color = MooiTheme.colorScheme.primary,
         )

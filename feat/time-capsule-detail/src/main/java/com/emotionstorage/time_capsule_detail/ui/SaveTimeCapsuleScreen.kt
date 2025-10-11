@@ -53,6 +53,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.DatePickerBottomSheet
+import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
@@ -93,7 +94,7 @@ fun SaveTimeCapsuleScreen(
     }
 
     if (state.value.isLoading) {
-        LoadingScreen(modifier = modifier)
+        FullLoadingScreen()
     } else {
         StatelessSaveTimeCapsuleScreen(
             modifier = modifier,
@@ -321,24 +322,6 @@ private fun StatelessSaveTimeCapsuleScreen(
                 maxYearMonth = YearMonth.from(state.saveAt).plusYears(1),
             )
         }
-    }
-}
-
-@Composable
-private fun LoadingScreen(modifier: Modifier = Modifier) {
-    Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
-    ) { innerPadding ->
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding),
-        )
     }
 }
 
