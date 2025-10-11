@@ -55,6 +55,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -234,7 +235,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     )
 
     if (state.timeCapsule == null) {
-        TimeCapsuleDetailLoadingScreen()
+        FullLoadingScreen()
     } else {
         Scaffold(
             modifier =
@@ -353,26 +354,6 @@ private fun StatelessTimeCapsuleDetailScreen(
                     },
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun TimeCapsuleDetailLoadingScreen(modifier: Modifier = Modifier) {
-    Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
-    ) { innerPadding ->
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding),
-        ) {
-            // empty screen
         }
     }
 }
