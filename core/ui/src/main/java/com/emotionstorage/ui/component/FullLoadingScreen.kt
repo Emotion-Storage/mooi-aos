@@ -24,7 +24,7 @@ fun FullLoadingScreen(modifier: Modifier = Modifier) {
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding),
-        ){
+        ) {
             // todo: add loading ui
         }
     }
