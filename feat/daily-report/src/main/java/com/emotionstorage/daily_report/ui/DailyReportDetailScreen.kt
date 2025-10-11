@@ -24,6 +24,7 @@ import com.emotionstorage.daily_report.presentation.DailyReportDetailAction
 import com.emotionstorage.daily_report.presentation.DailyReportDetailState
 import com.emotionstorage.daily_report.presentation.DailyReportDetailViewModel
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionLog
+import com.emotionstorage.daily_report.ui.component.DailyReportEmotionScores
 import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
@@ -120,6 +121,13 @@ private fun StatelessDailyReportDetailScreen(
             Spacer(modifier = Modifier.height(53.dp))
             DailyReportEmotionLog(
                 emotionLogs = state.dailyReport!!.emotionLogs,
+            )
+            Spacer(modifier = Modifier.height(53.dp))
+            DailyReportEmotionScores(
+                scores = listOf(
+                    "스트레스 지수" to state.dailyReport!!.stressScore,
+                    "행복 지수" to state.dailyReport!!.happinessScore,
+                )
             )
         }
     }
