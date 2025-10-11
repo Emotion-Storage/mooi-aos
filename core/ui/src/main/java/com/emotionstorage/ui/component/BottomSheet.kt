@@ -11,16 +11,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,7 +66,7 @@ fun BottomSheet(
                     )
                 }
             },
-        sheetGesturesEnabled = sheetGesturesEnabled,
+        sheetGesturesEnabled = !hideDragHandle && sheetGesturesEnabled,
         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
@@ -146,49 +144,53 @@ fun BottomSheet(
 @Preview
 @Composable
 private fun BottomSheetPreview() {
-    val (showBottomSheet, setShowBottomSheet) = remember { mutableStateOf(false) }
-
     MooiTheme {
-        Scaffold(
+        Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background),
-        ) { innerPadding ->
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(MooiTheme.colorScheme.background)
-                        .padding(innerPadding),
-            ) {
-                Button(
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    onClick = {
-                        setShowBottomSheet(true)
-                    },
-                ) {
-                    Text(text = "show bottom sheet")
-                }
-            }
-            if (showBottomSheet) {
-                BottomSheet(
-                    onDismissRequest = {
-                        setShowBottomSheet(false)
-                    },
-                    hideDragHandle = true,
-                    title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
-                    subTitle = "감정을 충분히 이야기했어요.",
-                    confirmLabel = "네, 종료할래요.",
-                    onConfirm = {
-                        setShowBottomSheet(false)
-                    },
-                    dismissLabel = "아니요, 더 이야기할래요.",
-                    onDismiss = {
-                        setShowBottomSheet(false)
-                    },
-                )
-            }
+        ) {
+            BottomSheet(
+                onDismissRequest = {},
+                // open sheet state for preview
+                sheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.Expanded,
+                    ),
+                title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
+                subTitle = "감정을 충분히 이야기했어요.",
+                confirmLabel = "네, 종료할래요.",
+                dismissLabel = "아니요, 더 이야기할래요.",
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+private fun BottomSheetPreview2() {
+    MooiTheme {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
+        ) {
+            BottomSheet(
+                onDismissRequest = {},
+                // open sheet state for preview
+                sheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.Expanded,
+                    ),
+                hideDragHandle = true,
+                title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
+                subTitle = "감정을 충분히 이야기했어요.",
+                confirmLabel = "네, 종료할래요.",
+                dismissLabel = "아니요, 더 이야기할래요.",
+            )
         }
     }
 }

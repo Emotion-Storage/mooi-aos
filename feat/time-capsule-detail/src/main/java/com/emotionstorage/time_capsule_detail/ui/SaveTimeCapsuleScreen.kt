@@ -12,17 +12,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,11 +34,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
+import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess
+import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
@@ -42,13 +49,17 @@ import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
 import com.emotionstorage.time_capsule_detail.ui.modal.CheckArriveDateModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
+import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.DatePickerBottomSheet
 import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
+import java.time.YearMonth
 
 @Composable
 fun SaveTimeCapsuleScreen(
@@ -62,51 +73,80 @@ fun SaveTimeCapsuleScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val snackState = remember { SnackbarHostState() }
+    val (showSavedModal, setShowSavedModal) = remember { mutableStateOf(false) }
 
     LaunchedEffect(id, isNewTimeCapsule) {
         viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule))
 
-        if (!isNewTimeCapsule) {
-            // dismiss current snackbar if exists
-            snackState.currentSnackbarData?.dismiss()
-            snackState.showSnackbar(
-                "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
-            )
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is SaveTimeCapsuleSuccess -> {
+                    setShowSavedModal(true)
+                }
+
+                is ShowToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackState.showSnackbar(sideEffect.toast)
+                }
+            }
         }
     }
 
-    // todo: nav to main on save open date success
-
-    StatelessSaveTimeCapsuleScreen(
-        modifier = modifier,
-        snackbarHostState = snackState,
-        state = state.value,
-        onAction = viewModel::onAction,
-        navToPrevious = navToPrevious,
-        navToBack = navToBack,
-    )
+    if (state.value.isLoading) {
+        LoadingScreen(modifier = modifier)
+    } else {
+        StatelessSaveTimeCapsuleScreen(
+            modifier = modifier,
+            snackbarHostState = snackState,
+            state = state.value,
+            onAction = viewModel::onAction,
+            showSavedModal = showSavedModal,
+            dismissSavedModal = { setShowSavedModal(false) },
+            navToMain = navToMain,
+            navToPrevious = navToPrevious,
+            navToBack = navToBack,
+        )
+    }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatelessSaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
+    showSavedModal: Boolean = false,
+    dismissSavedModal: () -> Unit = {},
+    navToMain: () -> Unit = {},
     navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
+
     val (showExpiredModal, setShowExpiredModal) = remember { mutableStateOf(false) }
     val (showCheckOpenDateModal, setShowCheckOpenDateModal) = remember { mutableStateOf(false) }
 
-    TimeCapsuleExpiredModal(
-        isModalOpen = showExpiredModal,
+    val (showYearMonthPicker, setShowYearMonthPicker) = remember { mutableStateOf(false) }
+    val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
+
+    TimeCapsuleSavedModal(
+        isModalOpen = showSavedModal,
         onConfirm = {
-            setShowExpiredModal(false)
-            navToPrevious()
+            dismissSavedModal()
+            navToMain()
         },
     )
+
+    if (!showSavedModal) {
+        TimeCapsuleExpiredModal(
+            isModalOpen = showExpiredModal,
+            onConfirm = {
+                setShowExpiredModal(false)
+                navToPrevious()
+            },
+        )
+    }
 
     if (state.arriveAt != null) {
         CheckArriveDateModal(
@@ -126,7 +166,10 @@ private fun StatelessSaveTimeCapsuleScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.background)
+                .clickable {
+                    setShowToolTip(false)
+                },
         topBar = {
             TopAppBar(
                 showBackground = false,
@@ -157,8 +200,26 @@ private fun StatelessSaveTimeCapsuleScreen(
                     .padding(bottom = 39.67.dp),
         ) {
             if (showToolTip) {
-                // todo: tool tip
-                // todo: handle background click
+                Image(
+                    modifier =
+                        Modifier
+                            .align(Alignment.TopStart)
+                            .zIndex(20f)
+                            .offset(
+                                x = 18.dp,
+                                y = 73.dp,
+                            ).size(310.dp, 144.dp),
+                    painter =
+                        painterResource(
+                            com
+                                .emotionstorage
+                                .time_capsule_detail
+                                .R
+                                .drawable
+                                .open_date_tooltip,
+                        ),
+                    contentDescription = "tooltip",
+                )
             }
 
             // title & selection grid
@@ -174,6 +235,9 @@ private fun StatelessSaveTimeCapsuleScreen(
                     arriveAfter = state.arriveAfter,
                     onSelectArriveAfter = {
                         onAction(SaveTimeCapsuleAction.SelectArriveAfter(it))
+                    },
+                    onOpenDatePicker = {
+                        setShowDatePicker(true)
                     },
                 )
             }
@@ -198,7 +262,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                 SaveTimeCapsuleButton(
                     isNewTimeCapsule = state.isNewTimeCapsule,
                     expireAt = state.expireAt,
-                    enabled = state.arriveAfter != null,
+                    enabled = state.arriveAt != null,
                     onSave = {
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
@@ -212,6 +276,69 @@ private fun StatelessSaveTimeCapsuleScreen(
                 )
             }
         }
+
+        // bottom sheets
+        if (showDatePicker && !showYearMonthPicker) {
+            DatePickerBottomSheet(
+                onDismissRequest = {
+                    setShowDatePicker(false)
+                    // reset calendar year month to now
+                    onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(YearMonth.now()))
+                },
+                selectedDate = state.arriveAt?.toLocalDate(),
+                onDateSelect = {
+                    onAction(SaveTimeCapsuleAction.SelectArriveAt(it))
+                    setShowDatePicker(false)
+                },
+                calendarYearMonth = state.calendarYearMonth,
+                onYearMonthSelect = {
+                    onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(it))
+                },
+                onYearMonthDropdownClick = {
+                    // close current bottom sheet & open year month picker
+                    setShowDatePicker(false)
+                    setShowYearMonthPicker(true)
+                },
+                minDate = state.saveAt.toLocalDate(),
+                maxDate = state.saveAt.plusYears(1).toLocalDate(),
+            )
+        }
+        if (!showDatePicker && showYearMonthPicker) {
+            YearMonthPickerBottomSheet(
+                onDismissRequest = {
+                    // close current bottom sheet & reopen date picker
+                    setShowYearMonthPicker(false)
+                    setShowDatePicker(true)
+                },
+                selectedYearMonth = state.calendarYearMonth,
+                onYearMonthSelect = {
+                    // select year month & reopen date picker
+                    onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(it))
+                    setShowYearMonthPicker(false)
+                    setShowDatePicker(true)
+                },
+                minYearMonth = YearMonth.from(state.saveAt),
+                maxYearMonth = YearMonth.from(state.saveAt).plusYears(1),
+            )
+        }
+    }
+}
+
+@Composable
+private fun LoadingScreen(modifier: Modifier = Modifier) {
+    Scaffold(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
+    ) { innerPadding ->
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
+        )
     }
 }
 
@@ -226,7 +353,10 @@ private fun SaveTimeCapsuleTitle(
             style = MooiTheme.typography.head1,
             color = Color.White,
         )
-        Row(horizontalArrangement = Arrangement.spacedBy(3.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(3.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Text(
                 text =
                     buildAnnotatedString {
@@ -258,6 +388,7 @@ fun SaveTimeCapsuleGrid(
     arriveAt: LocalDate? = null,
     arriveAfter: ArriveAfter? = null,
     onSelectArriveAfter: (ArriveAfter?) -> Unit = {},
+    onOpenDatePicker: () -> Unit = {},
 ) {
     Column(
         modifier = modifier,
@@ -296,7 +427,7 @@ fun SaveTimeCapsuleGrid(
                             },
                             arriveAt = arriveAt,
                             onDatePickerClick = {
-                                // todo: show date picker bottom sheet
+                                onOpenDatePicker()
                             },
                         )
                     }
@@ -372,13 +503,14 @@ private fun RowScope.ArriveAfterGridItem(
     }
 }
 
-@Preview
+@PreviewScreenSizes
 @Composable
 private fun SaveTimeCapsuleScreenPreview() {
     MooiTheme {
         StatelessSaveTimeCapsuleScreen(
             state =
                 SaveTimeCapsuleState(
+                    isLoading = false,
                     emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
                 ),
         )
