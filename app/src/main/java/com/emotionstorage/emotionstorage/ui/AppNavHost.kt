@@ -20,6 +20,7 @@ import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
+import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.home.ui.TestHomeScreen
@@ -33,6 +34,7 @@ import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
 import com.emotionstorage.time_capsule_detail.ui.SaveTimeCapsuleScreen
+import com.emotionstorage.time_capsule_detail.ui.TestTimeCapsuleDetailScreen
 import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
@@ -99,6 +101,12 @@ internal sealed class AppDestination {
     ) : AppDestination()
 
     @Serializable
+    data class TestTimeCapsuleDetail(
+        val status: String,
+        val isNewTimeCapsule: Boolean,
+    ) : AppDestination()
+
+    @Serializable
     data class SaveTimeCapsule(
         val id: String,
         val isNewTimeCapsule: Boolean,
@@ -148,11 +156,10 @@ internal fun AppNavHost(
         NavHost(
             navController,
             startDestination = AppDestination.Splash,
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background)
+                .padding(innerPadding),
         ) {
             composable<AppDestination.Splash> { backstackEntry ->
                 SplashScreen(
@@ -225,38 +232,19 @@ internal fun AppNavHost(
             }
 
             composable<AppDestination.Home> {
-                TestHomeScreen(
-                    navToChat = { roomId ->
-                        // DataStore 의 값에 따라 분기 처리
-                        val seen = introSeen.value
-                        if (seen) {
-                            navController.navigate(AppDestination.AIChat(roomId))
-                        } else {
-                            navController.navigate(AppDestination.AIChatDesc(roomId))
-                        }
-                    },
-                    navToArrivedTimeCapsules = {
-                        navController.navigate(AppDestination.ArrivedTimeCapsules)
-                    },
-                    navToTestTimeCapsuleDetail = { status ->
-
+                TestHomeScreen(navToChat = { roomId ->
+                    // DataStore 의 값에 따라 분기 처리
+                    val seen = introSeen.value
+                    if (seen) {
+                        navController.navigate(AppDestination.AIChat(roomId))
+                    } else {
+                        navController.navigate(AppDestination.AIChatDesc(roomId))
                     }
-                )
-
-//                HomeScreen(
-//                    navToChat = { roomId ->
-//                        // DataStore 의 값에 따라 분기 처리
-//                        val seen = introSeen.value
-//                        if (seen) {
-//                            navController.navigate(AppDestination.AIChat(roomId))
-//                        } else {
-//                            navController.navigate(AppDestination.AIChatDesc(roomId))
-//                        }
-//                    },
-//                    navToArrivedTimeCapsules = {
-//                        navController.navigate(AppDestination.ArrivedTimeCapsules)
-//                    },
-//                )
+                }, navToArrivedTimeCapsules = {
+                    navController.navigate(AppDestination.ArrivedTimeCapsules)
+                }, navToTestTimeCapsuleDetail = { status, isNew ->
+                    navController.navigate(AppDestination.TestTimeCapsuleDetail(status.toString(), isNew))
+                })
             }
             composable<AppDestination.TimeCapsuleCalendar> {
                 CalendarScreen(
@@ -363,6 +351,28 @@ internal fun AppNavHost(
                         navController.navigate(
                             AppDestination.SaveTimeCapsule(
                                 arguments.id,
+                                arguments.isNewTimeCapsule,
+                            ),
+                        )
+                    },
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.TestTimeCapsuleDetail> { navBackStackEntry ->
+                val arguments = navBackStackEntry.toRoute<AppDestination.TestTimeCapsuleDetail>()
+                TestTimeCapsuleDetailScreen(
+                    status = TimeCapsule.Status.valueOf(arguments.status),
+                    isNewTimeCapsule = arguments.isNewTimeCapsule,
+                    navToHome = {
+                        navController.navigateWithClearStack(AppDestination.Home)
+                    },
+                    navToSaveTimeCapsule = {
+                        navController.navigate(
+                            AppDestination.SaveTimeCapsule(
+                                " ",
                                 arguments.isNewTimeCapsule,
                             ),
                         )

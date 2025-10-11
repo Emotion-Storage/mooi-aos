@@ -57,7 +57,7 @@ fun TestHomeScreen(
     navToDailyReport: (id: String) -> Unit = {},
     navToChat: (roomId: String) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
-    navToTestTimeCapsuleDetail: (status: TimeCapsule.Status) -> Unit = {},
+    navToTestTimeCapsuleDetail: (status: TimeCapsule.Status, isNew: Boolean) -> Unit = { _, _ -> },
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
@@ -107,7 +107,7 @@ private fun StatelessHomeScreen(
     navToAlarm: () -> Unit = {},
     navToDailyReport: (id: String) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
-    navToTestTimeCapsuleDetail: (status: TimeCapsule.Status) -> Unit = {},
+    navToTestTimeCapsuleDetail: (status: TimeCapsule.Status, isNew: Boolean) -> Unit = { _, _ -> },
 ) {
     Scaffold(
         modifier =
@@ -252,10 +252,18 @@ private fun StatelessHomeScreen(
                 }
 
                 // test navigation buttons
-
                 Button(
                     onClick = {
-                        navToTestTimeCapsuleDetail(TimeCapsule.Status.TEMPORARY)
+                        navToTestTimeCapsuleDetail(TimeCapsule.Status.TEMPORARY, true)
+                    }
+                ) {
+                    Text(
+                        text = "따끈따끈 생성된 타임 캡슐"
+                    )
+                }
+                Button(
+                    onClick = {
+                        navToTestTimeCapsuleDetail(TimeCapsule.Status.TEMPORARY, false)
                     }
                 ) {
                     Text(
@@ -264,7 +272,7 @@ private fun StatelessHomeScreen(
                 }
                 Button(
                     onClick = {
-                        navToTestTimeCapsuleDetail(TimeCapsule.Status.LOCKED)
+                        navToTestTimeCapsuleDetail(TimeCapsule.Status.LOCKED, false)
                     }
                 ) {
                     Text(
@@ -273,7 +281,7 @@ private fun StatelessHomeScreen(
                 }
                 Button(
                     onClick = {
-                        navToTestTimeCapsuleDetail(TimeCapsule.Status.ARRIVED)
+                        navToTestTimeCapsuleDetail(TimeCapsule.Status.ARRIVED, false)
                     }
                 ) {
                     Text(
@@ -282,7 +290,7 @@ private fun StatelessHomeScreen(
                 }
                 Button(
                     onClick = {
-                        navToTestTimeCapsuleDetail(TimeCapsule.Status.OPENED)
+                        navToTestTimeCapsuleDetail(TimeCapsule.Status.OPENED, false)
                     }
                 ) {
                     Text(
