@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -177,7 +176,6 @@ private fun StatelessHomeScreen(
                 }
             }
 
-
             // home content
             Column(
                 modifier =
@@ -255,46 +253,37 @@ private fun StatelessHomeScreen(
                 Button(
                     onClick = {
                         navToTestTimeCapsuleDetail(TimeCapsule.Status.TEMPORARY, true)
-                    }
+                    },
                 ) {
                     Text(
-                        text = "따끈따끈 생성된 타임 캡슐"
+                        text = "따끈따끈 생성된 타임 캡슐",
                     )
                 }
                 Button(
                     onClick = {
                         navToTestTimeCapsuleDetail(TimeCapsule.Status.TEMPORARY, false)
-                    }
+                    },
                 ) {
                     Text(
-                        text = "임시저장 타임 캡슐"
+                        text = "임시저장 타임 캡슐",
                     )
                 }
                 Button(
                     onClick = {
                         navToTestTimeCapsuleDetail(TimeCapsule.Status.LOCKED, false)
-                    }
+                    },
                 ) {
                     Text(
-                        text = "잠김 타임 캡슐"
-                    )
-                }
-                Button(
-                    onClick = {
-                        navToTestTimeCapsuleDetail(TimeCapsule.Status.ARRIVED, false)
-                    }
-                ) {
-                    Text(
-                        text = "도착 타임 캡슐"
+                        text = "잠김 타임 캡슐",
                     )
                 }
                 Button(
                     onClick = {
                         navToTestTimeCapsuleDetail(TimeCapsule.Status.OPENED, false)
-                    }
+                    },
                 ) {
                     Text(
-                        text = "열림 타임 캡슐"
+                        text = "열림 타임 캡슐",
                     )
                 }
             }
@@ -313,8 +302,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
@@ -379,4 +367,3 @@ private fun HomeScreenPreview() {
         )
     }
 }
-

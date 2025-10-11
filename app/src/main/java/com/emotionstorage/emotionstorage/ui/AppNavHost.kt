@@ -22,7 +22,6 @@ import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.User.AuthProvider
-import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.home.ui.TestHomeScreen
 import com.emotionstorage.my.ui.AccountInfoScreen
 import com.emotionstorage.my.ui.KeyDescriptionScreen
@@ -156,10 +155,11 @@ internal fun AppNavHost(
         NavHost(
             navController,
             startDestination = AppDestination.Splash,
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(innerPadding),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
         ) {
             composable<AppDestination.Splash> { backstackEntry ->
                 SplashScreen(
