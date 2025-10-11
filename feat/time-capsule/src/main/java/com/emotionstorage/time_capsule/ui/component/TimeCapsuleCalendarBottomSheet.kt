@@ -70,11 +70,14 @@ fun TimeCapsuleCalendarBottomSheet(
         Text(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 17.dp),
+                    .fillMaxWidth(),
             text = date.toKorDate(),
+            style = MooiTheme.typography.body4,
             textAlign = TextAlign.Start,
         )
+
+        Spacer(modifier = Modifier.size(18.dp))
+
         Column(
             modifier =
                 Modifier

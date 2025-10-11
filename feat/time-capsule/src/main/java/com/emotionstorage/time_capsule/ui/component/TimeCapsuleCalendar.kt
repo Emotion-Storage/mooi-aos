@@ -167,7 +167,7 @@ fun TimeCapsuleCalendar(
                     modifier =
                         Modifier
                             .weight(1f)
-                            .padding(bottom = 12.dp),
+                            .padding(bottom = 6.dp),
                     date = date,
                     onClick = onDateSelect,
                     isShown = date.year == calendarYearMonth.year && date.month == calendarYearMonth.month,
@@ -203,7 +203,7 @@ private fun DateItem(
                             shape = RoundedCornerShape(20.dp),
                         ).clickable { onClick(date) }
                         .padding(horizontal = 3.5.dp)
-                        .padding(top = 6.dp, bottom = 4.dp),
+                        .padding(top = 4.dp, bottom = 2.dp),
                 verticalArrangement =
                     Arrangement.spacedBy(
                         9.dp,
