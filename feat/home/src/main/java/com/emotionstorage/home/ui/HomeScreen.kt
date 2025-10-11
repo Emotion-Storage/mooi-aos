@@ -23,14 +23,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -42,7 +40,6 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.theme.pretendard
 import com.orhanobut.logger.Logger
 
 @Composable

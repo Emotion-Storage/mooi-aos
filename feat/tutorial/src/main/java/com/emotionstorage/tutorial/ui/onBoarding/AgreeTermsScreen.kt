@@ -258,9 +258,10 @@ private fun TermItem(
         }
         if (onShowTermDetail != null) {
             Image(
-                modifier = Modifier
-                    .height(12.dp)
-                    .width(6.dp),
+                modifier =
+                    Modifier
+                        .height(12.dp)
+                        .width(6.dp),
                 painter = painterResource(R.drawable.arrow_right),
                 contentDescription = null,
             )
