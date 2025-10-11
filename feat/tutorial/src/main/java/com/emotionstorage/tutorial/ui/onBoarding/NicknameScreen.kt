@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -141,7 +140,7 @@ private fun StatelessNicknameScreen(
                         .fillMaxWidth()
                         .imePadding()
                         .padding(
-                            bottom = if (imeVisible) 24.dp else 40.dp
+                            bottom = if (imeVisible) 24.dp else 40.dp,
                         ),
                 labelString = "다음으로",
                 enabled = state.nicknameInputState == InputState.VALID,

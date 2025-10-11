@@ -126,7 +126,7 @@ private fun StatelessNicknameChangeScreen(
                             .navigationBarsPadding()
                             .imePadding()
                             .padding(
-                                bottom = if (imeVisible) 24.dp else 40.dp
+                                bottom = if (imeVisible) 24.dp else 40.dp,
                             ),
                     labelString = "변경하기",
                     isDefaultWidth = false,
