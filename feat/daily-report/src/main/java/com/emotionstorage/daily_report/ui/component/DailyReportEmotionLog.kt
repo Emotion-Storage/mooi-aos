@@ -85,7 +85,7 @@ fun DailyReportEmotionLog(
                         },
                 verticalArrangement = Arrangement.spacedBy(20.dp),
             ) {
-                emotionLogs.forEachIndexed { index, emotionLog ->
+                emotionLogs.forEach { emotionLog ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
@@ -114,7 +114,8 @@ fun DailyReportEmotionLog(
                                                 ),
                                         ),
                                         RoundedCornerShape(10.dp),
-                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
+                                    )
+                                    .padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
