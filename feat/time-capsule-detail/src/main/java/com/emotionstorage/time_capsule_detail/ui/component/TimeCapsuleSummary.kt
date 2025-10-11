@@ -40,7 +40,7 @@ fun TimeCapsuleSummary(
         ) {
             Text(
                 text = summary,
-                style = MooiTheme.typography.caption3.copy(lineHeight = 24.sp),
+                style = MooiTheme.typography.caption3,
                 color = Color.White,
             )
         }

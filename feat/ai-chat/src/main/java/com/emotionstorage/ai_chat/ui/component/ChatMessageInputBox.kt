@@ -76,7 +76,7 @@ fun ChatMessageInputBox(
                 maxLines = 1,
                 readOnly = readOnly,
                 enabled = enabled,
-                textStyle = MooiTheme.typography.caption3.copy(lineHeight = 24.sp, color = Color.White),
+                textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
                 interactionSource = interaction,
@@ -101,7 +101,6 @@ fun ChatMessageInputBox(
                                     text = "지금 떠오르는 감정을 적어보세요",
                                     style =
                                         MooiTheme.typography.caption3.copy(
-                                            lineHeight = 24.sp,
                                             color = MooiTheme.colorScheme.gray600,
                                         ),
                                 )

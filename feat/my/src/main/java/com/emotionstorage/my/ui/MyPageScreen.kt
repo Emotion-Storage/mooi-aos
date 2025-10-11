@@ -233,7 +233,7 @@ private fun StatelessMyPageScreen(
                         .clickable { navToWithdraw() },
                 textAlign = TextAlign.End,
                 color = MooiTheme.colorScheme.gray600,
-                style = MooiTheme.typography.caption7.copy(lineHeight = 24.sp),
+                style = MooiTheme.typography.caption7,
             )
         }
     }

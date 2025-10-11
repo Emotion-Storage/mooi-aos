@@ -134,12 +134,12 @@ private fun StatelessDailyReportDetailScreen(
             ) {
                 Text(
                     text = "감정 요약",
-                    style = MooiTheme.typography.body8.copy(lineHeight = 24.sp),
+                    style = MooiTheme.typography.body8,
                     color = MooiTheme.colorScheme.primary,
                 )
                 Text(
                     text = state.dailyReport!!.emotionSummary,
-                    style = MooiTheme.typography.body8.copy(lineHeight = 24.sp),
+                    style = MooiTheme.typography.body8,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                 )

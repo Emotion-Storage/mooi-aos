@@ -62,7 +62,7 @@ fun KeyCard(
             Text(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = "보유한 열쇠",
-                style = MooiTheme.typography.caption3.copy(lineHeight = 24.sp),
+                style = MooiTheme.typography.caption3,
                 color = Color.White,
             )
 

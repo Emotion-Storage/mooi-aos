@@ -83,7 +83,7 @@ fun TimeCapsuleUnlockModal(
                                 }
                                 append("가 필요해요!")
                             },
-                        style = MooiTheme.typography.body5.copy(lineHeight = 24.sp),
+                        style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
                     )

@@ -45,7 +45,7 @@ fun TempToast(
 
         Text(
             text = message,
-            style = MooiTheme.typography.body7.copy(lineHeight = 24.sp),
+            style = MooiTheme.typography.body7,
             color = Color.White,
             textAlign = TextAlign.Center,
         )

@@ -88,7 +88,6 @@ fun ProfileHeader(
                             .body4
                             .copy(
                                 fontSize = 12.sp,
-                                lineHeight = 24.sp,
                             ),
                     color = MooiTheme.colorScheme.secondary,
                     modifier =

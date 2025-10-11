@@ -408,7 +408,7 @@ private fun TimeCapsuleContent(
                 Text(
                     modifier = Modifier.padding(top = 3.dp),
                     text = "열림",
-                    style = MooiTheme.typography.body3.copy(fontSize = 11.sp, lineHeight = 24.sp),
+                    style = MooiTheme.typography.body3.copy(fontSize = 11.sp),
                     color = MooiTheme.colorScheme.secondary,
                 )
             }

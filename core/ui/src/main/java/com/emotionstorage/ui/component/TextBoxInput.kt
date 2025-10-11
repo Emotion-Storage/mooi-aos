@@ -43,7 +43,6 @@ fun TextBoxInput(
                 .padding(18.dp),
         textStyle =
             MooiTheme.typography.caption4.copy(
-                lineHeight = 24.sp,
                 color = Color.White,
             ),
         value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,

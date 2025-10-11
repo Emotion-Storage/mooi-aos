@@ -201,7 +201,6 @@ private fun StatelessHomeScreen(
                             fontFamily = pretendard,
                             fontWeight = FontWeight.Light,
                             fontSize = 17.sp,
-                            lineHeight = 24.sp,
                             letterSpacing = (-0.02).em,
                         ),
                     textAlign = TextAlign.Center,
