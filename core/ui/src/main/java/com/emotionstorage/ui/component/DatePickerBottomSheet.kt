@@ -68,27 +68,24 @@ fun DatePickerBottomSheet(
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
     ) {
         Column(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .height(356.dp),
+            modifier = modifier
+                .fillMaxWidth()
+                .height(356.dp),
         ) {
             // year & month selection
             Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 18.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 18.dp),
             ) {
                 if (YearMonth.from(minDate) < calendarYearMonth) {
                     Image(
-                        modifier =
-                            Modifier
-                                .align(Alignment.CenterStart)
-                                .size(width = 8.dp, height = 14.dp)
-                                .clickable {
-                                    onYearMonthSelect(calendarYearMonth.minusMonths(1))
-                                },
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(width = 8.dp, height = 14.dp)
+                            .clickable {
+                                onYearMonthSelect(calendarYearMonth.minusMonths(1))
+                            },
                         painter = painterResource(id = R.drawable.arrow_back),
                         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                         contentDescription = "",
@@ -96,13 +93,12 @@ fun DatePickerBottomSheet(
                 }
 
                 Row(
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center)
-                            .clickable(
-                                enabled = (calendarYearMonth < YearMonth.from(maxDate)),
-                                onClick = onYearMonthDropdownClick,
-                            ),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .clickable(
+                            enabled = (calendarYearMonth < YearMonth.from(maxDate)),
+                            onClick = onYearMonthDropdownClick,
+                        ),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
@@ -122,14 +118,13 @@ fun DatePickerBottomSheet(
 
                 if (calendarYearMonth < YearMonth.from(maxDate)) {
                     Image(
-                        modifier =
-                            Modifier
-                                .align(Alignment.CenterEnd)
-                                .size(width = 8.dp, height = 14.dp)
-                                .rotate(180f)
-                                .clickable {
-                                    onYearMonthSelect(calendarYearMonth.plusMonths(1))
-                                },
+                        modifier = Modifier
+                            .align(Alignment.CenterEnd)
+                            .size(width = 8.dp, height = 14.dp)
+                            .rotate(180f)
+                            .clickable {
+                                onYearMonthSelect(calendarYearMonth.plusMonths(1))
+                            },
                         painter = painterResource(id = R.drawable.arrow_back),
                         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                         contentDescription = "",
@@ -147,10 +142,9 @@ fun DatePickerBottomSheet(
                     key = { it },
                 ) { label ->
                     Text(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .padding(bottom = 11.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(bottom = 11.dp),
                         text = label,
                         style = MooiTheme.typography.caption5,
                         color = MooiTheme.colorScheme.gray400,
@@ -163,43 +157,42 @@ fun DatePickerBottomSheet(
                     key = { it.toString() },
                 ) { date ->
                     Box(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(vertical = 8.dp),
                     ) {
                         if (date.year == calendarYearMonth.year && date.month == calendarYearMonth.month) {
                             Box(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.Center)
-                                        .size(29.dp)
-                                        .offset(y = -0.5.dp)
-                                        .background(
-                                            if (selectedDate !=
-                                                date
-                                            ) {
-                                                Color.Transparent
-                                            } else {
-                                                MooiTheme.colorScheme.secondary
-                                            },
-                                            CircleShape,
-                                        ).clip(CircleShape)
-                                        .clickable {
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .size(29.dp)
+                                    .offset(y = -0.5.dp)
+                                    .background(
+                                        if (selectedDate != date) {
+                                            Color.Transparent
+                                        } else {
+                                            MooiTheme.colorScheme.secondary
+                                        },
+                                        CircleShape,
+                                    )
+                                    .clip(CircleShape)
+                                    .clickable(
+                                        enabled = date.isAfter(minDate) && date.isBefore(maxDate),
+                                        onClick = {
                                             scope.launch { sheetState.hide() }.invokeOnCompletion {
                                                 if (!sheetState.isVisible) {
                                                     onDateSelect(date)
                                                 }
                                             }
-                                        },
+                                        }),
                             )
                             Text(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.Center),
+                                modifier = Modifier.align(Alignment.Center),
                                 text = date.dayOfMonth.toString(),
                                 style = MooiTheme.typography.body8,
-                                color = Color.White,
+                                color = Color.White.copy(
+                                    alpha = if (date.isAfter(minDate) && date.isBefore(maxDate)) 1f else 0.13f
+                                ),
                             )
                         }
                     }
@@ -214,22 +207,20 @@ fun DatePickerBottomSheet(
 @Composable
 private fun DatePickerBottomSheetPreview() {
     MooiTheme {
-        MooiTheme {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(MooiTheme.colorScheme.background),
-            ) {
-                DatePickerBottomSheet(
-                    // open sheet state for preview
-                    sheetState =
-                        rememberStandardBottomSheetState(
-                            initialValue = SheetValue.Expanded,
-                        ),
-                    selectedDate = LocalDate.now(),
-                )
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
+        ) {
+            DatePickerBottomSheet(
+                // open sheet state for preview
+                sheetState = rememberStandardBottomSheetState(
+                    initialValue = SheetValue.Expanded,
+                ),
+                selectedDate = LocalDate.now(),
+                minDate = LocalDate.now().minusDays(7),
+                maxDate = LocalDate.now().plusDays(10),
+            )
         }
     }
 }
