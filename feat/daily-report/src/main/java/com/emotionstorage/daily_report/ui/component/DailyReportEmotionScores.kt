@@ -81,7 +81,7 @@ private fun ScoreSteps(
                         .height(12.dp)
                         .background(
                             // todo: confirm step dividing logic
-                            if (score / stepSize >= it) {
+                            if (score > 0 && score / stepSize >= it) {
                                 MooiTheme.colorScheme.secondary
                             } else {
                                 Color(0xFFD9D9D9)
