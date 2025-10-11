@@ -194,15 +194,9 @@ private fun StatelessHomeScreen(
                     color = Color.White,
                 )
                 Text(
-                    modifier = Modifier.padding(top = 12.dp),
+                    modifier = Modifier.padding(top = 2.dp),
                     text = "대화로 내 감정을 들여다보고\n타임캡슐로 저장해보세요",
-                    style =
-                        TextStyle(
-                            fontFamily = pretendard,
-                            fontWeight = FontWeight.Light,
-                            fontSize = 17.sp,
-                            letterSpacing = (-0.02).em,
-                        ),
+                    style = MooiTheme.typography.body3,
                     textAlign = TextAlign.Center,
                     color = MooiTheme.colorScheme.gray500,
                 )
@@ -213,7 +207,7 @@ private fun StatelessHomeScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     StartChatButton(
-                        modifier = Modifier.padding(top = 22.dp),
+                        modifier = Modifier.padding(top = 12.dp),
                         canStartChat = state.ticketCount > 0,
                         onChatStart = {
                             onAction(HomeAction.EnterChat)
@@ -232,7 +226,7 @@ private fun StatelessHomeScreen(
                         )
                         Text(
                             text = "감정 대화 티켓",
-                            style = MooiTheme.typography.body3,
+                            style = MooiTheme.typography.body7,
                             color = MooiTheme.colorScheme.secondary,
                         )
 
