@@ -36,6 +36,7 @@ import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
+import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
@@ -54,30 +55,12 @@ fun DailyReportDetailScreen(
     }
 
     if (state.value.dailyReport == null) {
-        LoadingScreen(modifier = modifier)
+        FullLoadingScreen()
     } else {
         StatelessDailyReportDetailScreen(
             modifier = modifier,
             state = state.value,
             navToBack = navToBack,
-        )
-    }
-}
-
-@Composable
-private fun LoadingScreen(modifier: Modifier) {
-    Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
-    ) { innerPadding ->
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding),
         )
     }
 }
