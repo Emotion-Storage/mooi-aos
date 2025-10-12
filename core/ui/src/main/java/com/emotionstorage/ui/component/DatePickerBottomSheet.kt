@@ -176,30 +176,32 @@ fun DatePickerBottomSheet(
                                         .size(29.dp)
                                         .offset(y = -0.5.dp)
                                         .background(
-                                            if (selectedDate !=
-                                                date
-                                            ) {
+                                            if (selectedDate != date) {
                                                 Color.Transparent
                                             } else {
                                                 MooiTheme.colorScheme.secondary
                                             },
                                             CircleShape,
                                         ).clip(CircleShape)
-                                        .clickable {
-                                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                                if (!sheetState.isVisible) {
-                                                    onDateSelect(date)
+                                        .clickable(
+                                            enabled = date.isAfter(minDate) && date.isBefore(maxDate),
+                                            onClick = {
+                                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                                    if (!sheetState.isVisible) {
+                                                        onDateSelect(date)
+                                                    }
                                                 }
-                                            }
-                                        },
+                                            },
+                                        ),
                             )
                             Text(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.Center),
+                                modifier = Modifier.align(Alignment.Center),
                                 text = date.dayOfMonth.toString(),
                                 style = MooiTheme.typography.body8,
-                                color = Color.White,
+                                color =
+                                    Color.White.copy(
+                                        alpha = if (date.isAfter(minDate) && date.isBefore(maxDate)) 1f else 0.13f,
+                                    ),
                             )
                         }
                     }
@@ -214,22 +216,22 @@ fun DatePickerBottomSheet(
 @Composable
 private fun DatePickerBottomSheetPreview() {
     MooiTheme {
-        MooiTheme {
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .background(MooiTheme.colorScheme.background),
-            ) {
-                DatePickerBottomSheet(
-                    // open sheet state for preview
-                    sheetState =
-                        rememberStandardBottomSheetState(
-                            initialValue = SheetValue.Expanded,
-                        ),
-                    selectedDate = LocalDate.now(),
-                )
-            }
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
+        ) {
+            DatePickerBottomSheet(
+                // open sheet state for preview
+                sheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.Expanded,
+                    ),
+                selectedDate = LocalDate.now(),
+                minDate = LocalDate.now().minusDays(7),
+                maxDate = LocalDate.now().plusDays(10),
+            )
         }
     }
 }
