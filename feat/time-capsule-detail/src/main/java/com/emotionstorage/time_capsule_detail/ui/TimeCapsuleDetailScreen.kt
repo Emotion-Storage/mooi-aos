@@ -2,6 +2,7 @@ package com.emotionstorage.time_capsule_detail.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -237,6 +238,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         FullLoadingScreen()
     } else {
         Scaffold(
+            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             modifier =
                 modifier
                     .fillMaxSize()
@@ -262,7 +264,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 }
 
                 TopAppBar(
-                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm")),
+                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd HH:mm")),
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = onTimeCapsuleExit,
                     showCloseButton = isNewTimeCapsule,
@@ -309,7 +311,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         .fillMaxSize()
                         .background(MooiTheme.colorScheme.background)
                         .padding(innerPadding)
-                        .padding(top = 31.dp, bottom = 55.dp)
+                        .padding(top = 31.dp)
                         .padding(horizontal = 16.dp)
                         .verticalScroll(scrollState),
             ) {
@@ -336,6 +338,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 }
 
                 TimeCapsuleDetailActionButtons(
+                    modifier = Modifier.padding(bottom = 55.dp),
                     expireAt = state.timeCapsule.expireAt,
                     status = state.timeCapsule.status,
                     isNewTimeCapsule = isNewTimeCapsule,

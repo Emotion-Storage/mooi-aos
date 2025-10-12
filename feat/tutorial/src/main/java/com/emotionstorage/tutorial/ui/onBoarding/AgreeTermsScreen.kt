@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -129,7 +130,7 @@ private fun StatelessAgreeTermsScreen(
                             onSelect = event::onToggleAllAgree,
                         )
                         Text(
-                            style = MooiTheme.typography.body2.copy(fontWeight = FontWeight.SemiBold),
+                            style = MooiTheme.typography.body4,
                             color = Color.White,
                             text = "약관 전체 동의",
                         )
@@ -186,6 +187,7 @@ private fun StatelessAgreeTermsScreen(
                         color = MooiTheme.colorScheme.primary,
                         text = "* 필수 약관에 동의하셔야만 서비스를 이용하실 수 있어요.",
                     )
+                    Spacer(modifier = Modifier.size(5.dp))
                     Text(
                         style =
                             MooiTheme.typography.body3.copy(
@@ -249,14 +251,17 @@ private fun TermItem(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Text(
-                style = MooiTheme.typography.body2,
+                style = MooiTheme.typography.body5,
                 color = Color.White,
                 text = term,
             )
         }
         if (onShowTermDetail != null) {
             Image(
-                modifier = Modifier.height(12.dp).width(6.dp),
+                modifier =
+                    Modifier
+                        .height(12.dp)
+                        .width(6.dp),
                 painter = painterResource(R.drawable.arrow_right),
                 contentDescription = null,
             )
