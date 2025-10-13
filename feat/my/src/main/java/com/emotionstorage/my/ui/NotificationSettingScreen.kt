@@ -27,6 +27,9 @@ import java.time.LocalTime
 
 @Composable
 fun NotificationSettingScreen(navToBack: () -> Unit) {
+    StatelessNotificationSettingScreen(
+        navToBack = navToBack,
+    )
 }
 
 @Composable
@@ -100,7 +103,7 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
                                 top = 10.dp,
                             ),
                         text = "원하는 요일을 모두 선택해주세요. 한 번 더 탭하면 해제돼요.",
-                        style = MooiTheme.typography.caption3,
+                        style = MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.gray500,
                     )
                 }
