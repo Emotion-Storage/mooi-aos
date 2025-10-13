@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
@@ -46,7 +47,7 @@ fun DayOfWeekSelector(
             DayOfWeek.SUNDAY,
         )
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.widthIn(331.dp),
         horizontalArrangement = Arrangement.spacedBy(4.5.dp, Alignment.CenterHorizontally),
         verticalAlignment = Alignment.CenterVertically
     ) {

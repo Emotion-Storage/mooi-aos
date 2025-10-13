@@ -5,14 +5,22 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.ui.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.component.ToggleRow
+import com.emotionstorage.ui.component.TimePickerBottomSheet
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.DayOfWeek
@@ -32,8 +41,18 @@ fun NotificationSettingScreen(navToBack: () -> Unit) {
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
+
+    var reminderTime by remember { mutableStateOf(LocalTime.of(21, 0)) }
+    // 알림이 허용 되었을 때 사용할 값
+    val timeSelectedEnabled = true
+
+    var showTimeSelectSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -110,15 +129,13 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
 
                 Spacer(modifier = Modifier.size(14.dp))
 
-                // TODO : UI 수정 필요
+                // TODO : 실 기기에서는 잘 보이는데 Preview에서는 가운데로 몰리는 것 같음
                 DayOfWeekSelector(
-                    modifier =
-                        Modifier
-                            .padding(horizontal = 16.dp)
-                            .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     selected = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
                     enabled = true,
                     onToggle = { dayOfWeek ->
+
                     },
                 )
 
@@ -128,7 +145,7 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
                     modifier = Modifier.padding(horizontal = 16.dp),
                     time = LocalTime.now(),
                     enabled = true,
-                    onClick = { },
+                    onClick = { if (timeSelectedEnabled) showTimeSelectSheet = true },
                 )
 
                 Spacer(modifier = Modifier.size(28.dp))
@@ -156,6 +173,21 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
                     onCheckedChange = { value -> },
                     enabled = true,
                 )
+
+                if (showTimeSelectSheet) {
+                    TimePickerBottomSheet(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .heightIn(120.dp),
+                        sheetState = sheetState,
+                        initialTime = reminderTime,
+                        onDismissRequest = { showTimeSelectSheet = false },
+                        onTimeSelected = { selectedTime ->
+                            reminderTime = selectedTime
+                            showTimeSelectSheet = false
+                        },
+                    )
+                }
             }
         }
     }
