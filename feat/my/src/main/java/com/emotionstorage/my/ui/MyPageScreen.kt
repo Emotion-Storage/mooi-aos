@@ -118,7 +118,6 @@ fun MyPageScreen(
     StatelessMyPageScreen(
         modifier = modifier,
         state = state.value,
-        showEmailCopiedToast = showEmailCopiedToast,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
@@ -126,7 +125,6 @@ fun MyPageScreen(
         navToAccountInfo = navToAccountInfo,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
         navToNotificationSetting = navToNotificationSetting,
-        onToastDismissed = { showEmailCopiedToast = false },
     )
 }
 
@@ -134,7 +132,6 @@ fun MyPageScreen(
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     state: MyPageState = MyPageState(),
-    showEmailCopiedToast: Boolean = false,
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
@@ -142,7 +139,6 @@ private fun StatelessMyPageScreen(
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
     navToNotificationSetting: () -> Unit = {},
-    onToastDismissed: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
     var showLogoutModal by remember { mutableStateOf(false) }
