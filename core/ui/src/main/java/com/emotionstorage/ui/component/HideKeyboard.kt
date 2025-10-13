@@ -17,12 +17,13 @@ fun HideKeyboard(
     val keyboard = LocalSoftwareKeyboardController.current
 
     Box(
-        modifier = modifier.pointerInput(Unit) {
-            detectTapGestures(onTap = {
-                focusManager.clearFocus(force = true)
-                keyboard?.hide()
-            })
-        }
+        modifier =
+            modifier.pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus(force = true)
+                    keyboard?.hide()
+                })
+            },
     ) {
         content()
     }

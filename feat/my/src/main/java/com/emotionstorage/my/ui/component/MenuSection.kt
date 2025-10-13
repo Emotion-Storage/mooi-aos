@@ -123,8 +123,6 @@ fun MenuItem(
                 Modifier.weight(1f)
             }
 
-
-
         Text(
             modifier = textModifier,
             text = title,
