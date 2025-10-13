@@ -29,6 +29,7 @@ import com.emotionstorage.my.presentation.InputNicknameEvent
 import com.emotionstorage.my.presentation.NicknameChangeViewModel
 import com.emotionstorage.my.presentation.NicknameChangeViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
 import com.emotionstorage.ui.component.TopAppBar
@@ -74,7 +75,7 @@ private fun StatelessNicknameChangeScreen(
             )
         },
     ) { innerPadding ->
-        Box(
+        HideKeyboard(
             modifier =
                 Modifier
                     .background(MooiTheme.colorScheme.background)
