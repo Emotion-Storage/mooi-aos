@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,8 +37,6 @@ import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.component.KeyCard
 import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
-import com.emotionstorage.my.ui.component.TempToast
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
@@ -59,7 +54,6 @@ fun MyPageScreen(
     navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-    var showEmailCopiedToast by remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("MyPageScreen: onResume triggered")
@@ -82,10 +76,6 @@ fun MyPageScreen(
 
                 is MyPageSideEffect.NavigateToKeyDescription -> {
                     navToKeyDescription()
-                }
-
-                is MyPageSideEffect.EmailCopied -> {
-                    showEmailCopiedToast = true
                 }
 
                 is MyPageSideEffect.ShowToast -> {
@@ -187,7 +177,6 @@ private fun StatelessMyPageScreen(
                 onAccountInfoClick = navToAccountInfo,
                 onEmailCopyClick = {
                     clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
-                    onAction(MyPageAction.CopyEmail)
                 },
                 onTermsAndPrivacyClick = navToTermsAndPrivacy,
                 onLogoutClick = { showLogoutModal = true },

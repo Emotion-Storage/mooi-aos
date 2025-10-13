@@ -32,8 +32,6 @@ sealed class MyPageAction {
 
     object TermsAndPrivacy : MyPageAction()
 
-    object CopyEmail : MyPageAction()
-
     object WithDrawConfirm : MyPageAction()
 
     object NotificationSetting : MyPageAction()
@@ -43,8 +41,6 @@ sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
     object NavigateToNicknameChange : MyPageSideEffect()
-
-    object EmailCopied : MyPageSideEffect()
 
     object NavigateToAccountInfo : MyPageSideEffect()
 
@@ -94,10 +90,6 @@ class MyPageViewModel @Inject constructor(
 
             is MyPageAction.AccountInfo -> {
                 handleAccountInfo()
-            }
-
-            is MyPageAction.CopyEmail -> {
-                handleCopyEmail()
             }
 
             is MyPageAction.TermsAndPrivacy -> {
@@ -159,10 +151,6 @@ class MyPageViewModel @Inject constructor(
             postSideEffect(MyPageSideEffect.NavigateToKeyDescription)
         }
 
-    private fun handleCopyEmail() =
-        intent {
-            postSideEffect(MyPageSideEffect.EmailCopied)
-        }
 
     private fun handleTermsAndPrivacy() =
         intent {
