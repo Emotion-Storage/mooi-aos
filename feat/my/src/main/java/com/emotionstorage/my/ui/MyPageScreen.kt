@@ -145,33 +145,12 @@ private fun StatelessMyPageScreen(
     onToastDismissed: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
-    val snackbarHostState = remember { SnackbarHostState() }
-
     var showLogoutModal by remember { mutableStateOf(false) }
-
-    LaunchedEffect(showEmailCopiedToast) {
-        if (showEmailCopiedToast) {
-            snackbarHostState.showSnackbar(
-                message = "",
-                duration = SnackbarDuration.Short,
-            )
-            onToastDismissed()
-        }
-    }
 
     Scaffold(
         modifier
             .fillMaxSize()
             .background(MooiTheme.colorScheme.background),
-        snackbarHost = {
-            SnackbarHost(snackbarHostState) {
-                TempToast(
-                    modifier = Modifier,
-                    message = "이메일이 복사되었습니다.",
-                    resId = R.drawable.mail,
-                )
-            }
-        },
     ) { innerPadding ->
         Column(
             modifier =
