@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -24,16 +25,15 @@ enum class ListStyle { Bulleted, Numbered }
 
 @Composable
 fun TermsOfServiceContent(
-    modifier: Modifier = Modifier,
-    contentPadding: PaddingValues = PaddingValues(16.dp),
+    modifier: Modifier = Modifier
 ) {
     val titles = stringArrayResource(id = R.array.terms_titles)
     val contents = stringArrayResource(id = R.array.terms_contents)
 
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
-        contentPadding = contentPadding,
-        verticalArrangement = Arrangement.spacedBy(20.dp),
+        modifier = modifier.fillMaxSize()
+            .padding(horizontal = 16.dp, vertical = 25.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp)
     ) {
         itemsIndexed(titles) { index, title ->
             val body = contents.getOrNull(index).orEmpty()
@@ -50,7 +50,6 @@ fun TermsOfServiceContent(
                 listStyle = ListStyle.Numbered,
             )
         }
-        item { Spacer(Modifier.size(40.dp)) }
     }
 }
 

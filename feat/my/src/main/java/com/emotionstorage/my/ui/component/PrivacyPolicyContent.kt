@@ -55,7 +55,7 @@ fun PrivacyPolicyContent() {
         modifier =
             Modifier
                 .fillMaxSize()
-                .padding(horizontal = 12.dp),
+                .padding(start = 16.dp, end = 16.dp, top = 9.dp, bottom = 25.dp),
         contentPadding = PaddingValues(vertical = 18.dp),
     ) {
         item {
@@ -80,7 +80,7 @@ fun PrivacyPolicyContent() {
                 header = tableHeaders,
                 rows = rows,
             )
-            Spacer(modifier = Modifier.size(18.dp))
+            Spacer(modifier = Modifier.size(30.dp))
         }
 
         itemsIndexed(titles) { index, title ->
