@@ -72,6 +72,7 @@ private fun TermSectionWithOptionalList(
         Spacer(Modifier.size(6.dp))
         RichList(items = listItems, style = listStyle)
     }
+    Spacer(Modifier.size(12.dp))
 }
 
 @Composable

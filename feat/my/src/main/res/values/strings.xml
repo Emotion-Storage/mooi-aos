@@ -65,7 +65,7 @@
     <string name="table_header_fourth">보유 및\n이용기간</string>
 
     <string name="table_1th_row_first">회원가입\n및 서비스\n제공</string>
-    <string name="table_1th_row_second">SNS 이메일(아이디), 이름(닉네임), 성별, 생년월일, 앱이용목적</string>
+    <string name="table_1th_row_second">SNS 이메일(아이\n디), 이름(닉네임),\n성별, 생년월일,\n앱이용목적</string>
     <string name="table_1th_row_third">없음</string>
     <string name="table_1th_row_fourth">회원탈퇴\n후 6개월\n까지</string>
 
@@ -75,7 +75,7 @@
     <string name="table_2th_row_fourth">회원탈퇴\n후 6개월\n까지</string>
 
     <string name="table_3th_row_first">문의 및 고충 처리</string>
-    <string name="table_3th_row_second">이름, 이메일(아이디)</string>
+    <string name="table_3th_row_second">이름,이메일(아\n이디)</string>
     <string name="table_3th_row_third">없음</string>
     <string name="table_3th_row_fourth">회원탈퇴\n후 1개월\n까지</string>
 
