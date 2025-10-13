@@ -143,7 +143,7 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
 
                 ReminderTimeComponent(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    time = LocalTime.now(),
+                    time = reminderTime,
                     enabled = true,
                     onClick = { if (timeSelectedEnabled) showTimeSelectSheet = true },
                 )
