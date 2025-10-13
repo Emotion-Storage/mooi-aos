@@ -144,8 +144,10 @@ private fun StatelessMyPageScreen(
     var showLogoutModal by remember { mutableStateOf(false) }
 
     Scaffold(
-        modifier
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        modifier = modifier
             .fillMaxSize()
+            .padding(top = 16.dp)
             .background(MooiTheme.colorScheme.background),
     ) { innerPadding ->
         Column(
