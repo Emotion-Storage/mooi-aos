@@ -11,4 +11,3 @@ data class NotificationSettings(
     val timeCapsuleReportNotify: Boolean,
     val marketingInfoNotify: Boolean,
 )
-

@@ -1,7 +1,6 @@
 package com.emotionstorage.my.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -24,16 +23,16 @@ import com.emotionstorage.ui.theme.MooiTheme
 enum class ListStyle { Bulleted, Numbered }
 
 @Composable
-fun TermsOfServiceContent(
-    modifier: Modifier = Modifier
-) {
+fun TermsOfServiceContent(modifier: Modifier = Modifier) {
     val titles = stringArrayResource(id = R.array.terms_titles)
     val contents = stringArrayResource(id = R.array.terms_contents)
 
     LazyColumn(
-        modifier = modifier.fillMaxSize()
-            .padding(horizontal = 16.dp, vertical = 25.dp),
-        verticalArrangement = Arrangement.spacedBy(18.dp)
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp, vertical = 25.dp),
+        verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
         itemsIndexed(titles) { index, title ->
             val body = contents.getOrNull(index).orEmpty()

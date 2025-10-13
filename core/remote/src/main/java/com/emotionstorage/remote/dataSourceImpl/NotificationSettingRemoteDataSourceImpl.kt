@@ -12,7 +12,7 @@ import com.emotionstorage.remote.response.toEmptyDataState
 import javax.inject.Inject
 
 class NotificationSettingRemoteDataSourceImpl @Inject constructor(
-    private val myPageApiService: MyPageApiService
+    private val myPageApiService: MyPageApiService,
 ) : NotificationSettingRemoteDataSource {
     override suspend fun getNotificationSettings(): DataState<NotificationSettings> =
         try {
@@ -22,7 +22,6 @@ class NotificationSettingRemoteDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             DataState.Error(e)
         }
-
 
     override suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): DataState<Unit> =
         try {

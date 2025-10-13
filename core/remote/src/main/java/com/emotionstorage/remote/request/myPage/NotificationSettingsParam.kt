@@ -28,6 +28,4 @@ fun NotificationSettings.toRequest(): NotificationSettingsParam =
         marketingInfoNotify = marketingInfoNotify,
     )
 
-fun NotificationSettingsParam.toBody(): RequestBody =
-    Json.encodeToString(this).toRequestBody()
-
+fun NotificationSettingsParam.toBody(): RequestBody = Json.encodeToString(this).toRequestBody()

@@ -36,7 +36,6 @@ import com.emotionstorage.ui.component.TimePickerBottomSheet
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.DayOfWeek
-import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +43,6 @@ fun NotificationSettingScreen(
     viewModel: NotificationSettingViewModel = hiltViewModel(),
     navToBack: () -> Unit,
 ) {
-
     val state = viewModel.state.collectAsState()
 
     var showTimeSelectSheet by remember { mutableStateOf(false) }
@@ -70,9 +68,10 @@ fun NotificationSettingScreen(
 
     if (showTimeSelectSheet) {
         TimePickerBottomSheet(
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(120.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .heightIn(120.dp),
             sheetState = sheetState,
             initialTime = state.value.emotionReminderTime,
             onDismissRequest = { showTimeSelectSheet = false },
@@ -94,7 +93,7 @@ private fun StatelessNotificationSettingScreen(
     onToggleMarketing: (Boolean) -> Unit = {},
     onDayClick: (DayOfWeek) -> Unit = {},
     onClickTime: () -> Unit = {},
-    navToBack: () -> Unit
+    navToBack: () -> Unit,
 ) {
     // 알림이 허용 되었을 때 사용할 값
     val timeSelectedEnabled = true
@@ -181,7 +180,7 @@ private fun StatelessNotificationSettingScreen(
                     modifier = Modifier.fillMaxWidth(),
                     selected = state.emotionReminderDays,
                     enabled = state.emotionReminderNotify,
-                    onToggle = onDayClick
+                    onToggle = onDayClick,
                 )
 
                 Spacer(modifier = Modifier.size(16.dp))
@@ -235,7 +234,7 @@ private fun NotificationSettingScreenPreview() {
             onToggleMarketing = {},
             onDayClick = {},
             onClickTime = {},
-            navToBack = {}
+            navToBack = {},
         )
     }
 }

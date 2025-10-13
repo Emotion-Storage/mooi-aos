@@ -151,7 +151,6 @@ class MyPageViewModel @Inject constructor(
             postSideEffect(MyPageSideEffect.NavigateToKeyDescription)
         }
 
-
     private fun handleTermsAndPrivacy() =
         intent {
             postSideEffect(MyPageSideEffect.NavigateToTermsAndPrivacy)

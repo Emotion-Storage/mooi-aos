@@ -1,6 +1,5 @@
 package com.emotionstorage.remote.api
 
-import com.emotionstorage.remote.request.myPage.NotificationSettingsParam
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.myPage.MyPageOverViewResponse
 import com.emotionstorage.remote.response.myPage.NotificationSettingsResponse
@@ -17,5 +16,7 @@ interface MyPageApiService {
     suspend fun getNotificationSettings(): ResponseDto<NotificationSettingsResponse>
 
     @PATCH("api/v1/mypage/notification-settings")
-    suspend fun updateNotificationSettings(@Body body: RequestBody): ResponseDto<Unit>
+    suspend fun updateNotificationSettings(
+        @Body body: RequestBody,
+    ): ResponseDto<Unit>
 }

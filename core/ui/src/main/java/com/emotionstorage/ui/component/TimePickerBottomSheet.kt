@@ -29,9 +29,10 @@ fun TimePickerBottomSheet(
     var spinnerTime by remember(initialTime) { mutableStateOf(initialTime) }
 
     BottomSheet(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(150.dp),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .heightIn(150.dp),
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,
         confirmLabel = "확인",
@@ -41,23 +42,19 @@ fun TimePickerBottomSheet(
         TimeWheelSpinner(
             selected = spinnerTime,
             onSelect = { spinnerTime = it },
-            modifier = Modifier.padding(top = 8.dp, bottom = 40.dp)
+            modifier = Modifier.padding(top = 8.dp, bottom = 40.dp),
         )
     }
 }
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 private fun TimePickerBottomSheetPreview() {
     MooiTheme {
-
         TimePickerBottomSheet(
             onTimeSelected = { selectedTime ->
-
             },
         )
     }
 }
-

@@ -43,7 +43,7 @@ fun ReminderTimeComponent(
                 .background(brush = MooiTheme.brushScheme.subButtonBackground)
                 .clickable(
                     enabled = enabled,
-                    onClick = onClick
+                    onClick = onClick,
                 ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,

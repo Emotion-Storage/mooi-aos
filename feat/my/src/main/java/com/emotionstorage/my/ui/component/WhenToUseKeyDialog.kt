@@ -160,44 +160,50 @@ private fun TipItem(
                 Text(
                     buildAnnotatedString {
                         withStyle(
-                            style = MooiTheme.typography.body4.toSpanStyle().copy(
-                                color = Color.White,
-                                fontWeight = FontWeight.SemiBold
-                            ), {
+                            style =
+                                MooiTheme.typography.body4.toSpanStyle().copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
+                            {
                                 append(boldTitle)
-                            }
+                            },
                         )
                         withStyle(
-                            style = MooiTheme.typography.body5.toSpanStyle().copy(
-                                color = Color.White
-                            ), {
+                            style =
+                                MooiTheme.typography.body5.toSpanStyle().copy(
+                                    color = Color.White,
+                                ),
+                            {
                                 append(title)
-                            }
+                            },
                         )
-
-                    }
+                    },
                 )
             } else {
                 Text(
                     buildAnnotatedString {
                         withStyle(
-                            style = MooiTheme.typography.body5.toSpanStyle().copy(
-                                color = Color.White
-                            ), {
+                            style =
+                                MooiTheme.typography.body5.toSpanStyle().copy(
+                                    color = Color.White,
+                                ),
+                            {
                                 append(title)
-                            }
+                            },
                         )
 
                         withStyle(
-                            style = MooiTheme.typography.body4.toSpanStyle().copy(
-                                color = Color.White,
-                                fontWeight = FontWeight.SemiBold
-                            ), {
+                            style =
+                                MooiTheme.typography.body4.toSpanStyle().copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
+                            {
                                 append(boldTitle)
-                            }
-
+                            },
                         )
-                    }
+                    },
                 )
             }
 

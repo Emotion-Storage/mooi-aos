@@ -287,7 +287,7 @@ internal fun AppNavHost(
                     },
                     navToNotificationSetting = {
                         navController.navigate(AppDestination.NotificationSetting)
-                    }
+                    },
                 )
             }
 
@@ -408,7 +408,7 @@ internal fun AppNavHost(
                     },
                     navToNotificationSetting = {
                         navController.navigateWithClearStack(AppDestination.NotificationSetting)
-                    }
+                    },
                 )
             }
 
@@ -438,9 +438,9 @@ internal fun AppNavHost(
 
             composable<AppDestination.NotificationSetting> {
                 NotificationSettingScreen(
-                    navToBack =  {
+                    navToBack = {
                         navController.popBackStack()
-                    }
+                    },
                 )
             }
         }

@@ -32,25 +32,28 @@ fun TimeWheelSpinner(
     val minuteItems = (0..55 step minuteStep).toList()
 
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Transparent)
-            .padding(horizontal = 20.dp)
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color.Transparent)
+                .padding(horizontal = 20.dp),
     ) {
         Box(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(38.dp)
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp))
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .height(38.dp)
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
         )
 
         Row(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .fillMaxWidth(),
             horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             WheelSpinner(
                 modifier = Modifier.width(68.dp),
@@ -58,8 +61,11 @@ fun TimeWheelSpinner(
                 selectedItem = if (isPm) "오후" else "오전",
                 onItemSelect = { ap ->
                     val newHour24 =
-                        if (ap == "오전") { if (hour12 == 12) 0 else hour12 % 12 }
-                        else { if (hour12 == 12) 12 else (hour12 % 12) + 12 }
+                        if (ap == "오전") {
+                            if (hour12 == 12) 0 else hour12 % 12
+                        } else {
+                            if (hour12 == 12) 12 else (hour12 % 12) + 12
+                        }
                     onSelect(selected.withHour(newHour24))
                 },
                 showCenterIndicator = false,
@@ -74,8 +80,11 @@ fun TimeWheelSpinner(
                 onItemSelect = { h12 ->
                     val h = h12.toInt()
                     val newHour24 =
-                        if (isPm) { if (h == 12) 12 else (h % 12) + 12 }
-                        else      { if (h == 12) 0  else h % 12 }
+                        if (isPm) {
+                            if (h == 12) 12 else (h % 12) + 12
+                        } else {
+                            if (h == 12) 0 else h % 12
+                        }
                     onSelect(selected.withHour(newHour24))
                 },
                 showCenterIndicator = false,
@@ -85,7 +94,7 @@ fun TimeWheelSpinner(
                 text = " : ",
                 style = MooiTheme.typography.body1,
                 color = MooiTheme.colorScheme.gray400,
-                modifier = Modifier.padding(horizontal = 4.dp)
+                modifier = Modifier.padding(horizontal = 4.dp),
             )
 
             val snappedMinute = (selected.minute / minuteStep) * minuteStep
@@ -107,7 +116,7 @@ private fun TimeWheelSpinnerPreview() {
         TimeWheelSpinner(
             selected = LocalTime.now(),
             onSelect = {},
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(10.dp),
         )
     }
 }

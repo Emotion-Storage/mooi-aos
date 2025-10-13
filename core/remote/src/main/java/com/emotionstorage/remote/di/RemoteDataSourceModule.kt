@@ -31,5 +31,7 @@ abstract class RemoteDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindNotificationSettingRemoteDataSource(impl: NotificationSettingRemoteDataSourceImpl): NotificationSettingRemoteDataSource
+    abstract fun bindNotificationSettingRemoteDataSource(
+        impl: NotificationSettingRemoteDataSourceImpl,
+    ): NotificationSettingRemoteDataSource
 }

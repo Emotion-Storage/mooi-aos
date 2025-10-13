@@ -5,15 +5,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,8 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
@@ -49,7 +43,7 @@ fun DayOfWeekSelector(
     Row(
         modifier = modifier.widthIn(331.dp),
         horizontalArrangement = Arrangement.spacedBy(4.5.dp, Alignment.CenterHorizontally),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         days.forEach { day ->
             val isSelected = day in selected
@@ -57,11 +51,10 @@ fun DayOfWeekSelector(
                 text = getDayOfWeekString(day),
                 selected = isSelected,
                 enabled = enabled,
-                onClick = { onToggle(day) }
+                onClick = { onToggle(day) },
             )
         }
     }
-
 }
 
 @Composable
@@ -80,22 +73,22 @@ private fun DayChip(
         if (selected) MooiTheme.colorScheme.primary else Color.White
 
     Box(
-        modifier = Modifier
-            .size(width = 43.dp, height = 43.dp)
-            .clip(shape)
-            .border(1.dp, brush = borderColor, shape)
-            .background(containerColor)
-            .clickable(enabled = enabled, onClick = onClick),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .size(width = 43.dp, height = 43.dp)
+                .clip(shape)
+                .border(1.dp, brush = borderColor, shape)
+                .background(containerColor)
+                .clickable(enabled = enabled, onClick = onClick),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
             style = MooiTheme.typography.body8,
-            color = labelColor
+            color = labelColor,
         )
     }
 }
-
 
 private fun getDayOfWeekString(dayOfWeek: DayOfWeek): String =
     when (dayOfWeek) {

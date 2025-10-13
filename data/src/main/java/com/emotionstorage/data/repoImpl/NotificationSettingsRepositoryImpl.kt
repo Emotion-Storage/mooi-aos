@@ -8,16 +8,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class NotificationSettingRepositoryImpl @Inject constructor(
-    private val dataSource: NotificationSettingRemoteDataSource
+class NotificationSettingsRepositoryImpl @Inject constructor(
+    private val dataSource: NotificationSettingRemoteDataSource,
 ) : NotificationSettingRepository {
-    override suspend fun getNotificationSettings(): Flow<DataState<NotificationSettings>> = flow {
-        emit(dataSource.getNotificationSettings())
-    }
+    override suspend fun getNotificationSettings(): Flow<DataState<NotificationSettings>> =
+        flow {
+            emit(dataSource.getNotificationSettings())
+        }
 
-    override suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): DataState<Unit> {
-        return dataSource.updateNotificationSettings(notificationSettings)
-    }
-
+    override suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): DataState<Unit> =
+        dataSource
+            .updateNotificationSettings(
+                notificationSettings,
+            )
 }
-

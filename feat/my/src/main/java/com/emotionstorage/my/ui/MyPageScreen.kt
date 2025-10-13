@@ -135,10 +135,11 @@ private fun StatelessMyPageScreen(
 
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 16.dp)
-            .background(MooiTheme.colorScheme.background),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp)
+                .background(MooiTheme.colorScheme.background),
     ) { innerPadding ->
         Column(
             modifier =
