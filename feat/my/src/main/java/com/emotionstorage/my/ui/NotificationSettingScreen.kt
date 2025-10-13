@@ -16,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,10 @@ fun NotificationSettingScreen(
 
     var showTimeSelectSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    LaunchedEffect(state.value.emotionReminderNotify) {
+        if (!state.value.emotionReminderNotify) showTimeSelectSheet = false
+    }
 
     StatelessNotificationSettingScreen(
         state = state.value,
