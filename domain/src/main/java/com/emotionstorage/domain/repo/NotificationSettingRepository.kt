@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface NotificationSettingRepository {
     suspend fun getNotificationSettings(): Flow<DataState<NotificationSettings>>
 
-    suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): Boolean
+    suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): DataState<Unit>
 }

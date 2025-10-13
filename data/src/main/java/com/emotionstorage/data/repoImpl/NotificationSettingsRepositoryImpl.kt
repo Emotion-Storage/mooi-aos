@@ -15,7 +15,7 @@ class NotificationSettingRepositoryImpl @Inject constructor(
         emit(dataSource.getNotificationSettings())
     }
 
-    override suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): Boolean {
+    override suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): DataState<Unit> {
         return dataSource.updateNotificationSettings(notificationSettings)
     }
 
