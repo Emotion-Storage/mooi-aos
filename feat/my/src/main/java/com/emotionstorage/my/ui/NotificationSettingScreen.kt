@@ -46,7 +46,6 @@ fun NotificationSettingScreen(
 
     val state = viewModel.state.collectAsState()
 
-    var reminderTime by remember { mutableStateOf(LocalTime.of(21, 0)) }
     var showTimeSelectSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
@@ -70,10 +69,10 @@ fun NotificationSettingScreen(
                 .fillMaxWidth()
                 .heightIn(120.dp),
             sheetState = sheetState,
-            initialTime = reminderTime,
+            initialTime = state.value.emotionReminderTime,
             onDismissRequest = { showTimeSelectSheet = false },
             onTimeSelected = { selectedTime ->
-                reminderTime = selectedTime
+                viewModel.setTime(selectedTime)
                 showTimeSelectSheet = false
             },
         )
@@ -176,7 +175,7 @@ private fun StatelessNotificationSettingScreen(
                 DayOfWeekSelector(
                     modifier = Modifier.fillMaxWidth(),
                     selected = state.emotionReminderDays,
-                    enabled = true,
+                    enabled = state.emotionReminderNotify,
                     onToggle = onDayClick
                 )
 
@@ -185,7 +184,7 @@ private fun StatelessNotificationSettingScreen(
                 ReminderTimeComponent(
                     modifier = Modifier.padding(horizontal = 16.dp),
                     time = state.emotionReminderTime,
-                    enabled = true,
+                    enabled = state.emotionReminderNotify,
                     onClick = onClickTime,
                 )
 

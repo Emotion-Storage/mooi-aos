@@ -23,6 +23,7 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 // TODO : 색상 확인하기
 @Composable
@@ -41,6 +42,7 @@ fun ReminderTimeComponent(
                 .clip(RoundedCornerShape(10.dp))
                 .background(brush = MooiTheme.brushScheme.subButtonBackground)
                 .clickable(
+                    enabled = enabled,
                     onClick = onClick
                 ),
         verticalAlignment = Alignment.CenterVertically,
@@ -63,7 +65,7 @@ fun ReminderTimeComponent(
 }
 
 private fun LocalTime.formatKoreanAmPm(): String {
-    val pattern = DateTimeFormatter.ofPattern("a h : mm")
+    val pattern = DateTimeFormatter.ofPattern("a h : mm", Locale.KOREAN)
     return format(pattern)
 }
 
