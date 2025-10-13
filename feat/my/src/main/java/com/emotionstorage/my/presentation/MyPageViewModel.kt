@@ -35,6 +35,8 @@ sealed class MyPageAction {
     object CopyEmail : MyPageAction()
 
     object WithDrawConfirm : MyPageAction()
+
+    object NotificationSetting : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
@@ -47,6 +49,8 @@ sealed class MyPageSideEffect {
     object NavigateToAccountInfo : MyPageSideEffect()
 
     object NavigateToKeyDescription : MyPageSideEffect()
+
+    object NavigateToNotificationSetting : MyPageSideEffect()
 
     object NavigateToTermsAndPrivacy : MyPageSideEffect()
 
@@ -102,6 +106,10 @@ class MyPageViewModel @Inject constructor(
 
             is MyPageAction.WithDrawConfirm -> {
                 handleWithDraw()
+            }
+
+            is MyPageAction.NotificationSetting -> {
+                handleNotificationSetting()
             }
         }
     }
@@ -175,5 +183,10 @@ class MyPageViewModel @Inject constructor(
     private fun handleAccountInfo() =
         intent {
             postSideEffect(MyPageSideEffect.NavigateToAccountInfo)
+        }
+
+    private fun handleNotificationSetting() =
+        intent {
+            postSideEffect(MyPageSideEffect.NavigateToNotificationSetting)
         }
 }

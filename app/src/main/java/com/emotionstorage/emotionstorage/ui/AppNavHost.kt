@@ -26,6 +26,7 @@ import com.emotionstorage.my.ui.AccountInfoScreen
 import com.emotionstorage.my.ui.KeyDescriptionScreen
 import com.emotionstorage.my.ui.MyPageScreen
 import com.emotionstorage.my.ui.NicknameChangeScreen
+import com.emotionstorage.my.ui.NotificationSettingScreen
 import com.emotionstorage.my.ui.TermsAndPrivacyScreen
 import com.emotionstorage.my.ui.WithDrawNoticeScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
@@ -122,6 +123,9 @@ internal sealed class AppDestination {
 
     @Serializable
     object KeyDescription : AppDestination()
+
+    @Serializable
+    object NotificationSetting : AppDestination()
 }
 
 @Composable
@@ -281,6 +285,9 @@ internal fun AppNavHost(
                     navToTermsAndPrivacy = {
                         navController.navigate(AppDestination.TermsAndPrivacy)
                     },
+                    navToNotificationSetting = {
+                        navController.navigate(AppDestination.NotificationSetting)
+                    }
                 )
             }
 
@@ -423,6 +430,14 @@ internal fun AppNavHost(
                     navToBack = {
                         navController.popBackStack()
                     },
+                )
+            }
+
+            composable<AppDestination.NotificationSetting> {
+                NotificationSettingScreen(
+                    navToBack =  {
+                        navController.popBackStack()
+                    }
                 )
             }
         }

@@ -56,6 +56,7 @@ fun MyPageScreen(
     navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     var showEmailCopiedToast by remember { mutableStateOf(false) }
@@ -103,6 +104,10 @@ fun MyPageScreen(
                     navToAccountInfo()
                 }
 
+                is MyPageSideEffect.NavigateToNotificationSetting -> {
+                    navToNotificationSetting()
+                }
+
                 else -> {
                     Unit
                 }
@@ -120,6 +125,7 @@ fun MyPageScreen(
         navToKeyDescription = navToKeyDescription,
         navToAccountInfo = navToAccountInfo,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
+        navToNotificationSetting = navToNotificationSetting,
         onToastDismissed = { showEmailCopiedToast = false },
     )
 }
@@ -135,6 +141,7 @@ private fun StatelessMyPageScreen(
     navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
     onToastDismissed: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
@@ -207,6 +214,7 @@ private fun StatelessMyPageScreen(
                 },
                 onTermsAndPrivacyClick = navToTermsAndPrivacy,
                 onLogoutClick = { showLogoutModal = true },
+                onNotificationClick = navToNotificationSetting,
             )
 
             if (showLogoutModal) {
