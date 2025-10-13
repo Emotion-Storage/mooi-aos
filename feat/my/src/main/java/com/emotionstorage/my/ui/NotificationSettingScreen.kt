@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -17,6 +16,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.my.presentation.NotificationSettingState
+import com.emotionstorage.my.presentation.NotificationSettingViewModel
 import com.emotionstorage.my.ui.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.component.ToggleRow
@@ -34,24 +37,63 @@ import com.emotionstorage.ui.theme.MooiTheme
 import java.time.DayOfWeek
 import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationSettingScreen(navToBack: () -> Unit) {
+fun NotificationSettingScreen(
+    viewModel: NotificationSettingViewModel = hiltViewModel(),
+    navToBack: () -> Unit,
+) {
+
+    val state = viewModel.state.collectAsState()
+
+    var reminderTime by remember { mutableStateOf(LocalTime.of(21, 0)) }
+    var showTimeSelectSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     StatelessNotificationSettingScreen(
-        navToBack = navToBack,
+        state = state.value,
+        onToggleAppPush = viewModel::setAppPush,
+        onToggleEmotionReminder = viewModel::setEmotionReminder,
+        onToggleTimeCapsuleAndReport = viewModel::setTimeCapsule,
+        onToggleMarketing = viewModel::setMarketing,
+        onDayClick = viewModel::toggleDay,
+        onClickTime = { if (state.value.emotionReminderNotify) showTimeSelectSheet = true },
+        navToBack = {
+            viewModel.save()
+            navToBack()
+        },
     )
+
+    if (showTimeSelectSheet) {
+        TimePickerBottomSheet(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(120.dp),
+            sheetState = sheetState,
+            initialTime = reminderTime,
+            onDismissRequest = { showTimeSelectSheet = false },
+            onTimeSelected = { selectedTime ->
+                reminderTime = selectedTime
+                showTimeSelectSheet = false
+            },
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
-
-    var reminderTime by remember { mutableStateOf(LocalTime.of(21, 0)) }
+private fun StatelessNotificationSettingScreen(
+    state: NotificationSettingState,
+    onToggleAppPush: (Boolean) -> Unit = {},
+    onToggleEmotionReminder: (Boolean) -> Unit = {},
+    onToggleTimeCapsuleAndReport: (Boolean) -> Unit = {},
+    onToggleMarketing: (Boolean) -> Unit = {},
+    onDayClick: (DayOfWeek) -> Unit = {},
+    onClickTime: () -> Unit = {},
+    navToBack: () -> Unit
+) {
     // 알림이 허용 되었을 때 사용할 값
     val timeSelectedEnabled = true
-
-    var showTimeSelectSheet by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
 
     Scaffold(
         topBar = {
@@ -60,6 +102,7 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
                 onBackClick = navToBack,
                 showBackButton = true,
                 handleBackPress = true,
+                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->
@@ -75,15 +118,15 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
                 ToggleRow(
                     modifier = Modifier.padding(vertical = 24.dp),
                     title = "MOOI 앱 푸시 알림",
-                    isChecked = true,
-                    onCheckedChange = { value -> },
+                    isChecked = state.appPushNotify,
+                    onCheckedChange = onToggleAppPush,
                     enabled = true,
                 )
 
                 ToggleRow(
                     title = "감정 기록 알림",
-                    isChecked = false,
-                    onCheckedChange = { value -> },
+                    isChecked = state.emotionReminderNotify,
+                    onCheckedChange = onToggleEmotionReminder,
                     enabled = true,
                 )
 
@@ -132,20 +175,18 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
                 // TODO : 실 기기에서는 잘 보이는데 Preview에서는 가운데로 몰리는 것 같음
                 DayOfWeekSelector(
                     modifier = Modifier.fillMaxWidth(),
-                    selected = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY),
+                    selected = state.emotionReminderDays,
                     enabled = true,
-                    onToggle = { dayOfWeek ->
-
-                    },
+                    onToggle = onDayClick
                 )
 
                 Spacer(modifier = Modifier.size(16.dp))
 
                 ReminderTimeComponent(
                     modifier = Modifier.padding(horizontal = 16.dp),
-                    time = reminderTime,
+                    time = state.emotionReminderTime,
                     enabled = true,
-                    onClick = { if (timeSelectedEnabled) showTimeSelectSheet = true },
+                    onClick = onClickTime,
                 )
 
                 Spacer(modifier = Modifier.size(28.dp))
@@ -160,8 +201,8 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
 
                 ToggleRow(
                     title = "타임캡슐 및 일일리포트\n업데이트 알림",
-                    isChecked = false,
-                    onCheckedChange = { value -> },
+                    isChecked = state.timeCapsuleReportNotify,
+                    onCheckedChange = onToggleTimeCapsuleAndReport,
                     enabled = true,
                 )
 
@@ -169,25 +210,10 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
 
                 ToggleRow(
                     title = "마케팅 정보 알림",
-                    isChecked = false,
-                    onCheckedChange = { value -> },
+                    isChecked = state.marketingInfoNotify,
+                    onCheckedChange = onToggleMarketing,
                     enabled = true,
                 )
-
-                if (showTimeSelectSheet) {
-                    TimePickerBottomSheet(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .heightIn(120.dp),
-                        sheetState = sheetState,
-                        initialTime = reminderTime,
-                        onDismissRequest = { showTimeSelectSheet = false },
-                        onTimeSelected = { selectedTime ->
-                            reminderTime = selectedTime
-                            showTimeSelectSheet = false
-                        },
-                    )
-                }
             }
         }
     }
@@ -198,7 +224,14 @@ private fun StatelessNotificationSettingScreen(navToBack: () -> Unit) {
 private fun NotificationSettingScreenPreview() {
     MooiTheme {
         StatelessNotificationSettingScreen(
-            navToBack = {},
+            state = NotificationSettingState(),
+            onToggleAppPush = { },
+            onToggleEmotionReminder = {},
+            onToggleTimeCapsuleAndReport = {},
+            onToggleMarketing = {},
+            onDayClick = {},
+            onClickTime = {},
+            navToBack = {}
         )
     }
 }
