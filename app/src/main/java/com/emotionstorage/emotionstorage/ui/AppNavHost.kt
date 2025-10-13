@@ -406,6 +406,9 @@ internal fun AppNavHost(
                     navToSplash = {
                         navController.navigateWithClearStack(AppDestination.Splash)
                     },
+                    navToNotificationSetting = {
+                        navController.navigateWithClearStack(AppDestination.NotificationSetting)
+                    }
                 )
             }
 

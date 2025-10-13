@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 fun WithDrawNoticeScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
     navToSplash: () -> Unit = {},
 ) {
     var showSuggestDialog by remember { mutableStateOf(false) }
@@ -62,7 +63,10 @@ fun WithDrawNoticeScreen(
         showFinalConfirmDialog = showDoneDialog,
         onBackClick = navToBack,
         onWithDrawButtonClick = { showSuggestDialog = true },
-        onKeepClick = { showSuggestDialog = false },
+        onKeepClick = {
+            showSuggestDialog = false
+            navToNotificationSetting()
+        },
         onWithDrawClick = {
             showSuggestDialog = false
             viewModel.onAction(MyPageAction.WithDrawConfirm)
@@ -100,6 +104,14 @@ fun StatelessWithDrawNoticeScreen(
 @Composable
 private fun WithDrawNoticeScreenPreview() {
     MooiTheme {
-        WithDrawNoticeScreen()
+        StatelessWithDrawNoticeScreen(
+            showSuggestDialog = true,
+            showFinalConfirmDialog = false,
+            onWithDrawButtonClick = {},
+            onBackClick = {},
+            onKeepClick = {},
+            onWithDrawClick = {},
+            onFinalConfirmClick = {},
+        )
     }
 }
