@@ -43,7 +43,18 @@ class NotificationSettingViewModel @Inject constructor(
     }
 
     fun setAppPush(on: Boolean) = _state.update { it.copy(appPushNotify = on) }
-    fun setEmotionReminder(on: Boolean) = _state.update { it.copy(emotionReminderNotify = on) }
+    fun setEmotionReminder(on: Boolean) = _state.update {
+        if (on) {
+            it.copy(emotionReminderNotify = true)
+        } else {
+            it.copy(
+                emotionReminderNotify = false,
+                emotionReminderDays = emptySet(),
+                emotionReminderTime = LocalTime.of(21, 0)
+            )
+        }
+    }
+
     fun setTimeCapsule(on: Boolean) = _state.update { it.copy(timeCapsuleReportNotify = on) }
     fun setMarketing(on: Boolean) = _state.update { it.copy(marketingInfoNotify = on) }
     fun setTime(time: LocalTime) = _state.update { it.copy(emotionReminderTime = time) }
