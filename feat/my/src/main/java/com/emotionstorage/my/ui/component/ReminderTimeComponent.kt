@@ -2,6 +2,7 @@ package com.emotionstorage.my.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -36,15 +37,18 @@ fun ReminderTimeComponent(
             modifier
                 .widthIn(126.dp)
                 .heightIn(50.dp)
-                .border(1.dp, color = MooiTheme.colorScheme.gray800, shape = RoundedCornerShape(10.dp))
+                .border(1.dp, brush = MooiTheme.brushScheme.subButtonBorder, shape = RoundedCornerShape(10.dp))
                 .clip(RoundedCornerShape(10.dp))
-                .background(MooiTheme.colorScheme.background),
+                .background(brush = MooiTheme.brushScheme.subButtonBackground)
+                .clickable(
+                    onClick = onClick
+                ),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
         Text(
             text = time.formatKoreanAmPm(),
-            style = MooiTheme.typography.caption2,
+            style = MooiTheme.typography.caption3,
             color = MooiTheme.colorScheme.primary,
         )
 
