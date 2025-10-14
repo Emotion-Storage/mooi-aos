@@ -70,7 +70,8 @@ fun TimeCapsuleCalendarBottomSheet(
         Text(
             modifier =
                 Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = 1.dp),
             text = date.toKorDate(),
             style = MooiTheme.typography.body4,
             textAlign = TextAlign.Start,
@@ -84,8 +85,9 @@ fun TimeCapsuleCalendarBottomSheet(
                     .fillMaxWidth()
                     .background(Color.Transparent)
                     .heightIn(max = (screenHeight / 2).dp)
+                    .padding(horizontal = 1.dp)
                     .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
+            verticalArrangement = Arrangement.spacedBy(18.dp),
         ) {
             timeCapsules.forEach {
                 TimeCapsuleItem(
@@ -95,7 +97,7 @@ fun TimeCapsuleCalendarBottomSheet(
                     onFavoriteClick = { onToggleFavorite(it.id) },
                 )
             }
-            Spacer(modifier = Modifier.height(21.dp))
+            Spacer(modifier = Modifier.height(51.dp))
         }
 
         DailyReportButton(

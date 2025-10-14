@@ -139,14 +139,6 @@ private fun StatelessCalendarScreen(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background)
                 .padding(horizontal = 16.dp),
-        topBar = {
-            CalendarTopBar(
-                modifier = Modifier.fillMaxWidth(),
-                calendarMonth = state.calendarYearMonth.monthValue,
-                keyCount = state.keyCount,
-                navToKey = navToKey,
-            )
-        },
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
                 Toast(
@@ -175,9 +167,41 @@ private fun StatelessCalendarScreen(
             ) {
                 Row(
                     modifier =
+                        modifier
+                            .fillMaxWidth()
+                            .padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text =
+                            buildAnnotatedString {
+                                withStyle(
+                                    SpanStyle(
+                                        color = MooiTheme.colorScheme.primary,
+                                    ),
+                                ) {
+                                    append("${state.calendarYearMonth.monthValue}월")
+                                }
+                                append("의 내 감정")
+                            },
+                        style = MooiTheme.typography.head3,
+                        color = Color.White,
+                    )
+
+                    IconWithCount(
+                        modifier = Modifier.size(32.dp),
+                        iconId = R.drawable.key,
+                        count = state.keyCount,
+                        onClick = navToKey,
+                    )
+                }
+
+                Row(
+                    modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 24.dp),
+                            .padding(vertical = 24.dp),
                     verticalAlignment = Alignment.Bottom,
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
@@ -275,46 +299,6 @@ private fun StatelessCalendarScreen(
 }
 
 @Composable
-private fun CalendarTopBar(
-    calendarMonth: Int,
-    keyCount: Int,
-    modifier: Modifier = Modifier,
-    navToKey: () -> Unit = {},
-) {
-    Row(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .height(91.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text =
-                buildAnnotatedString {
-                    withStyle(
-                        SpanStyle(
-                            color = MooiTheme.colorScheme.primary,
-                        ),
-                    ) {
-                        append("${calendarMonth}월")
-                    }
-                    append("의 내 감정")
-                },
-            style = MooiTheme.typography.head3,
-            color = Color.White,
-        )
-
-        IconWithCount(
-            modifier = Modifier.size(32.dp),
-            iconId = R.drawable.key,
-            count = keyCount,
-            onClick = navToKey,
-        )
-    }
-}
-
-@Composable
 private fun CalendarNavButton(
     modifier: Modifier = Modifier,
     label: String,
@@ -350,7 +334,7 @@ private fun CalendarNavButton(
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = label,
-            style = MooiTheme.typography.body4,
+            style = MooiTheme.typography.caption3,
             color = Color.White,
         )
     }
@@ -376,14 +360,15 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             Text(
                 text = if (madeTimeCapsuleToday) "오늘 내 감정 보기" else "오늘 감정 기록하러가기",
-                style = MooiTheme.typography.body3.copy(color = Color.White),
+                style = MooiTheme.typography.body6.copy(color = Color.White),
             )
             Image(
                 modifier =

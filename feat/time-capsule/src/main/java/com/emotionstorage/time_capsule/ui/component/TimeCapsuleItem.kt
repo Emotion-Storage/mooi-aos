@@ -93,11 +93,24 @@ fun TimeCapsuleItem(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .run {
+                            if (timeCapsule.status == TimeCapsule.Status.ARRIVED)
+                                this.dropShadow(
+                                    shape = RoundedCornerShape(15.dp),
+                                    color = Color(0xFF849BEA).copy(alpha = 0.15f),
+                                    offsetX = 0.dp,
+                                    offsetY = 0.dp,
+                                    blur = 5.dp,
+                                    spread = 2.dp,
+                                )
+                            else this
+                        }
                         .height(TimeCapsuleItemDesignToken.contentHeight)
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
-                        ).clip(RoundedCornerShape(15.dp))
+                        )
+                        .clip(RoundedCornerShape(15.dp))
                         .clickable(onClick = onClick),
             ) {
                 // overlay
@@ -159,7 +172,7 @@ private fun TimeCapsuleItemInfo(
                             "임시저장 보관기간이 " +
                                 (if (hours >= 1) "${hours}시간 " else "${minutes}분 ") +
                                 "남았어요.",
-                        style = MooiTheme.typography.caption7,
+                        style = MooiTheme.typography.caption6,
                         color = MooiTheme.colorScheme.errorRed,
                     )
                 }
@@ -198,6 +211,7 @@ private fun TimeCapsuleItemInfo(
                             modifier = Modifier.size(16.dp),
                             painter = painterResource(R.drawable.key),
                             contentDescription = "",
+                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600)
                         )
                         Text(
                             text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
@@ -245,13 +259,15 @@ private fun TemporaryContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                ).clip(RoundedCornerShape(15.dp))
+                )
+                .clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
             modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
                 modifier = Modifier.height(24.dp),
@@ -302,15 +318,18 @@ private fun LockedContentOverLay(
                 painter = painterResource(id = R.drawable.lock),
                 contentDescription = "lock",
             )
-
-            Spacer(modifier = Modifier.size(3.dp))
-
-            Text(
-                modifier = Modifier.height(24.dp),
-                text = "(D-${openDDay.absoluteValue})",
-                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                color = MooiTheme.colorScheme.secondary,
-            )
+            Box(
+                modifier = Modifier
+                    .height(24.dp)
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "(D-${openDDay.absoluteValue})",
+                    style = MooiTheme.typography.caption1,
+                    color = MooiTheme.colorScheme.secondary,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }
@@ -328,7 +347,8 @@ private fun ArrivedContentOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                ).border(
+                )
+                .border(
                     1.dp,
                     LinearGradient(
                         colors =
@@ -339,13 +359,6 @@ private fun ArrivedContentOverLay(
                         angleInDegrees = -17f,
                     ),
                     RoundedCornerShape(15.dp),
-                ).dropShadow(
-                    shape = RoundedCornerShape(15.dp),
-                    color = Color(0xFF849BEA).copy(alpha = 0.15f),
-                    offsetX = 0.dp,
-                    offsetY = 0.dp,
-                    blur = 5.dp,
-                    spread = 2.dp,
                 ),
     ) {
         Column(
@@ -357,13 +370,17 @@ private fun ArrivedContentOverLay(
                 painter = painterResource(id = R.drawable.lock),
                 contentDescription = "arrived",
             )
-            Spacer(modifier = Modifier.size(3.dp))
-            Text(
-                modifier = Modifier.height(24.dp),
-                text = "도착한지 D+${openDDay.absoluteValue}",
-                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                color = MooiTheme.colorScheme.secondary,
-            )
+            Box(
+                modifier = Modifier
+                    .height(24.dp)
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "도착한지 D+${openDDay.absoluteValue}",
+                    style = MooiTheme.typography.caption1,
+                    color = MooiTheme.colorScheme.secondary,
+                )
+            }
         }
     }
 }
@@ -382,14 +399,16 @@ private fun TimeCapsuleContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                ).run {
+                )
+                .run {
                     // blur content if not opened
                     if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }.padding(TimeCapsuleItemDesignToken.contentPadding),
+                }
+                .padding(TimeCapsuleItemDesignToken.contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
@@ -414,7 +433,7 @@ private fun TimeCapsuleContent(
                 Text(
                     modifier = Modifier.padding(top = 3.dp),
                     text = "열림",
-                    style = MooiTheme.typography.body3.copy(fontSize = 11.sp),
+                    style = MooiTheme.typography.caption6.copy(fontSize = 11.sp),
                     color = MooiTheme.colorScheme.secondary,
                 )
             }
@@ -435,7 +454,7 @@ private fun TimeCapsuleContent(
             }
             Text(
                 text = timeCapsule.title,
-                style = MooiTheme.typography.caption3,
+                style = MooiTheme.typography.caption2,
                 color = MooiTheme.colorScheme.primary,
                 maxLines = 1,
             )

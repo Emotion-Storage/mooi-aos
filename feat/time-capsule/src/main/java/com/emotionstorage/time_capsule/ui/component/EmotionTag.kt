@@ -36,7 +36,7 @@ fun EmotionTag(
         )
         Text(
             text = emotion.label,
-            style = MooiTheme.typography.caption4,
+            style = MooiTheme.typography.caption3,
             color = MooiTheme.colorScheme.primary,
         )
     }
