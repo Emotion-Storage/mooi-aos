@@ -4,6 +4,7 @@ import SpeechBubble
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
@@ -67,6 +68,7 @@ private fun StatelessSignupCompleteScreen(
     onLogin: () -> Unit = {},
 ) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
@@ -84,8 +86,7 @@ private fun StatelessSignupCompleteScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 15.dp)
-                    .imePadding(),
+                    .padding(horizontal = 15.dp),
             verticalArrangement = Arrangement.SpaceBetween,
         ) {
             Column(
@@ -129,7 +130,7 @@ private fun StatelessSignupCompleteScreen(
                         Modifier
                             .fillMaxWidth()
                             .padding(bottom = 39.dp),
-                    labelString = "메인화면으로 이동",
+                    labelString = "메인 화면으로 이동",
                     onClick = {
                         onLogin()
                     },

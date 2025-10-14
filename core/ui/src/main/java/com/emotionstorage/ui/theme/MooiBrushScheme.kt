@@ -13,6 +13,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.util.LinearGradient
@@ -55,8 +56,8 @@ data class MooiBrushScheme(
         LinearGradient(
             colors =
                 listOf(
-                    Color(0x80849BEA),
-                    Color(0x14849BEA),
+                    Color(0xFF849BEA).copy(alpha = 0.5f),
+                    Color(0xFF849BEA).copy(alpha = 0.08f),
                 ),
             stops = listOf(0.0f, 1.0f),
             angleInDegrees = 109f,
@@ -116,7 +117,8 @@ private fun BrushPreview() {
                         .background(
                             MooiTheme.brushScheme.subButtonBackground,
                             RoundedCornerShape(10.dp),
-                        ).border(
+                        )
+                        .border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
                             shape = RoundedCornerShape(10.dp),
@@ -128,12 +130,15 @@ private fun BrushPreview() {
                     Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .background(MooiTheme.brushScheme.commentBackground, RoundedCornerShape(10.dp))
                         .border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
                             shape = RoundedCornerShape(10.dp),
-                        ),
+                        )
+                        // set background brush opacity to 20%
+                        .graphicsLayer(alpha = 0.2f)
+                        .background(MooiTheme.brushScheme.commentBackground, RoundedCornerShape(10.dp)),
+
             )
             // errorRedButton
             Box(
