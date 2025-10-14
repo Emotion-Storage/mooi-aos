@@ -94,7 +94,7 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                     Spacer(modifier = Modifier.size(6.dp))
 
                     Text(
-                        text = "열쇠는 이럴때 쓰면 좋아요!",
+                        text = "열쇠는 이럴 때 쓰면 좋아요!",
                         style = MooiTheme.typography.head2,
                         color = MooiTheme.colorScheme.primary,
                         textAlign = TextAlign.Center,

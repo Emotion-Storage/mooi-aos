@@ -262,9 +262,8 @@ private fun StatelessTimeCapsuleDetailScreen(
                 val onNewTimeCapsuleExit = {
                     onAction(OnExitTrigger)
                 }
-
                 TopAppBar(
-                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd HH:mm")),
+                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd  HH:mm")),
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = onTimeCapsuleExit,
                     showCloseButton = isNewTimeCapsule,

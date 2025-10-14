@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.Expectation
 import com.emotionstorage.tutorial.R
@@ -85,14 +84,14 @@ private fun StatelessExpectationsScreen(
                 Modifier
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp),
+                    .padding(padding),
         ) {
             Column(
                 modifier =
                     Modifier
                         .fillMaxSize()
-                        .align(Alignment.TopCenter),
+                        .align(Alignment.TopCenter)
+                        .padding(horizontal = 16.dp),
             ) {
                 OnBoardingTitle(
                     modifier = Modifier.fillMaxWidth(),
@@ -113,14 +112,13 @@ private fun StatelessExpectationsScreen(
                 ) {
                     Text(
                         modifier = Modifier.height(24.dp),
-                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        style = MooiTheme.typography.body7,
                         color = Color.White,
                         text = "감정 기록 목적",
                     )
                     Text(
                         style =
-                            MooiTheme.typography.body3.copy(
-                                fontSize = 15.sp,
+                            MooiTheme.typography.body8.copy(
                                 fontWeight = FontWeight.Light,
                             ),
                         color = MooiTheme.colorScheme.primary,
@@ -146,6 +144,7 @@ private fun StatelessExpectationsScreen(
                     Modifier
                         .fillMaxWidth()
                         .align(Alignment.BottomCenter)
+                        .padding(horizontal = 15.dp)
                         .padding(bottom = 39.dp),
                 labelString = "다음으로",
                 enabled = state.isNextButtonEnabled,
@@ -153,6 +152,7 @@ private fun StatelessExpectationsScreen(
                     onExpectationsSelectComplete(state.selectedExpectations)
                     navToAgreeTerms()
                 },
+                isDefaultWidth = false,
             )
         }
     }
@@ -201,7 +201,7 @@ private fun ExpectationItem(
             )
 
             Text(
-                style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                style = MooiTheme.typography.body8,
                 color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
                 text = expectation.content,
             )

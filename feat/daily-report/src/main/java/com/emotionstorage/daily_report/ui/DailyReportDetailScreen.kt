@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -72,6 +73,7 @@ private fun StatelessDailyReportDetailScreen(
     val scrollState = rememberScrollState()
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
@@ -94,11 +96,11 @@ private fun StatelessDailyReportDetailScreen(
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
-                    .padding(top = 31.dp, bottom = 43.dp)
                     .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState),
         ) {
             if (!dailyReport.summaries.isEmpty()) {
+                Spacer(modifier = Modifier.height(31.dp))
                 DailyReportSummaries(
                     summaries = dailyReport.summaries,
                 )
@@ -164,6 +166,7 @@ private fun StatelessDailyReportDetailScreen(
                 color = MooiTheme.colorScheme.gray400,
                 textAlign = TextAlign.Center,
             )
+            Spacer(modifier = Modifier.height(43.dp))
         }
     }
 }

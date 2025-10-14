@@ -1,5 +1,6 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -28,6 +30,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TextInput
 import com.emotionstorage.ui.component.TextInputState
@@ -93,63 +96,76 @@ private fun StatelessNicknameScreen(
             )
         },
     ) { padding ->
-        Column(
-            modifier =
-                Modifier
-                    .background(MooiTheme.colorScheme.background)
-                    .fillMaxSize()
-                    .padding(padding)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
-                    .padding(horizontal = 16.dp),
-        ) {
-            OnBoardingTitle(
-                modifier = Modifier.fillMaxWidth(),
-                currentStep = 0,
-                title = stringResource(R.string.on_boarding_nickname_title),
-                titleHighlights =
-                    stringResource(R.string.on_boarding_nickname_title_highlights).split(
-                        ',',
-                    ),
-            )
-
-            Box(
+        HideKeyboard {
+            Column(
                 modifier =
                     Modifier
-                        .weight(1f)
-                        .padding(vertical = 30.dp),
+                        .background(MooiTheme.colorScheme.background)
+                        .fillMaxSize()
+                        .padding(padding)
+                        .consumeWindowInsets(WindowInsets.navigationBars),
             ) {
-                TextInput(
-                    label = "이름",
-                    value = state.nickname,
-                    onValueChange = event::onNicknameChange,
-                    showCharCount = true,
-                    maxCharCount = 8,
-                    state =
-                        when (state.nicknameInputState) {
-                            InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
-                            InputState.INVALID -> TextInputState.Error(errorMessage = state.nicknameHelperMessage)
-                            InputState.VALID -> TextInputState.Success(successMessage = state.nicknameHelperMessage)
-                        },
+                OnBoardingTitle(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
+                    currentStep = 0,
+                    title = stringResource(R.string.on_boarding_nickname_title),
+                    titleHighlights =
+                        stringResource(R.string.on_boarding_nickname_title_highlights).split(
+                            ',',
+                        ),
+                )
+
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .padding(vertical = 30.dp, horizontal = 16.dp),
+                ) {
+                    TextInput(
+                        label = "이름",
+                        value = state.nickname,
+                        onValueChange = event::onNicknameChange,
+                        showCharCount = true,
+                        maxCharCount = 8,
+                        state =
+                            when (state.nicknameInputState) {
+                                InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
+                                InputState.INVALID -> TextInputState.Error(errorMessage = state.nicknameHelperMessage)
+                                InputState.VALID -> TextInputState.Success(successMessage = state.nicknameHelperMessage)
+                            },
+                    )
+                }
+
+                val animatedPadding by animateDpAsState(
+                    if (imeVisible) {
+                        24.dp
+                    } else {
+                        39.dp
+                    },
+                    label = "padding",
+                )
+                CtaButton(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .imePadding()
+                            .padding(horizontal = 15.dp)
+                            .padding(
+                                bottom = animatedPadding,
+                            ),
+                    labelString = "다음으로",
+                    enabled = state.nicknameInputState == InputState.VALID,
+                    onClick = {
+                        focusManager.clearFocus()
+                        onNicknameInputComplete(state.nickname)
+                        navToGenderBirth()
+                    },
+                    isDefaultWidth = false,
                 )
             }
-
-            // todo: add bottom padding when keyboard is hidden
-            CtaButton(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .imePadding()
-                        .padding(
-                            bottom = if (imeVisible) 24.dp else 40.dp,
-                        ),
-                labelString = "다음으로",
-                enabled = state.nicknameInputState == InputState.VALID,
-                onClick = {
-                    focusManager.clearFocus()
-                    onNicknameInputComplete(state.nickname)
-                    navToGenderBirth()
-                },
-            )
         }
     }
 }

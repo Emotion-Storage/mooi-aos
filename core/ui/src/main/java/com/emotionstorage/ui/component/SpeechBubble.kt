@@ -19,6 +19,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -45,7 +46,7 @@ fun SpeechBubble(
     tailOffset: Dp = 14.dp,
     bgBrush: Brush = MooiTheme.brushScheme.commentBackground,
     borderBrush: Brush = MooiTheme.brushScheme.subButtonBorder,
-    textStyle: TextStyle = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+    textStyle: TextStyle = MooiTheme.typography.caption3.copy(lineHeight = 20.sp),
     textColor: Color = MooiTheme.colorScheme.gray300,
     contentText: String? = null,
     content: @Composable (() -> Unit)? = null,
@@ -72,7 +73,9 @@ fun SpeechBubble(
         Canvas(
             modifier =
                 Modifier
-                    .matchParentSize(),
+                    .matchParentSize()
+                    // set background brush opacity to 20%
+                    .graphicsLayer(alpha = 0.2f),
         ) {
             val w = size.width
             val h = size.height

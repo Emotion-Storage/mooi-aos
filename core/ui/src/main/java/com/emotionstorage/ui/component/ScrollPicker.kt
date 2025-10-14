@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
@@ -68,7 +67,7 @@ fun ScrollPicker(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
+                style = MooiTheme.typography.caption3,
                 color = if (selectedValue != null) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.gray600,
                 text = selectedValue ?: placeholder ?: "",
             )
@@ -112,7 +111,7 @@ fun ScrollPicker(
             ) {
                 range.forEach {
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
+                        style = MooiTheme.typography.caption3,
                         color = Color.White,
                         text = it,
                         modifier =

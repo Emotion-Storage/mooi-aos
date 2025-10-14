@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -164,6 +165,7 @@ private fun StatelessSaveTimeCapsuleScreen(
     }
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
@@ -197,7 +199,6 @@ private fun StatelessSaveTimeCapsuleScreen(
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
-                    .padding(horizontal = 16.dp)
                     .padding(bottom = 39.67.dp),
         ) {
             if (showToolTip) {
@@ -205,9 +206,9 @@ private fun StatelessSaveTimeCapsuleScreen(
                     modifier =
                         Modifier
                             .align(Alignment.TopStart)
-                            .zIndex(20f)
+                            .zIndex(10f)
                             .offset(
-                                x = 18.dp,
+                                x = 34.dp,
                                 y = 73.dp,
                             ).size(310.dp, 144.dp),
                     painter =
@@ -225,7 +226,10 @@ private fun StatelessSaveTimeCapsuleScreen(
 
             // title & selection grid
             Column(
-                modifier = Modifier.align(Alignment.TopStart),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopStart)
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(17.dp),
             ) {
                 SaveTimeCapsuleTitle(
@@ -248,7 +252,8 @@ private fun StatelessSaveTimeCapsuleScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .align(Alignment.BottomCenter),
+                        .align(Alignment.BottomCenter)
+                        .padding(horizontal = 15.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(11.dp),
             ) {

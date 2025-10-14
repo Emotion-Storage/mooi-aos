@@ -3,6 +3,7 @@ package com.emotionstorage.auth.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -74,9 +75,11 @@ private fun StatelessLoginScreen(
     val scrollState = rememberScrollState()
 
     Scaffold(
-        modifier
-            .background(MooiTheme.colorScheme.background)
-            .fillMaxSize(),
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        modifier =
+            modifier
+                .background(MooiTheme.colorScheme.background)
+                .fillMaxSize(),
     ) { padding ->
         Column(
             modifier =
@@ -84,17 +87,26 @@ private fun StatelessLoginScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
+                    .padding(horizontal = 16.dp)
                     .padding(top = 67.dp, bottom = 36.dp)
                     .verticalScroll(scrollState),
             verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(
-                modifier = Modifier.height(37.dp),
-                style = MooiTheme.typography.body2,
-                color = MooiTheme.colorScheme.primary,
-                text = stringResource(id = R.string.login_title),
-            )
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Text(
+                    modifier = Modifier.height(37.dp),
+                    style = MooiTheme.typography.body2,
+                    color = MooiTheme.colorScheme.primary,
+                    text = stringResource(id = R.string.login_title),
+                )
+            }
+
             Column(
                 modifier =
                     Modifier

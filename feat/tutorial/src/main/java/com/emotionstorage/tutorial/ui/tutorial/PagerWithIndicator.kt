@@ -98,7 +98,7 @@ fun PagerWithIndicator(
                             ),
                     color = MooiTheme.colorScheme.gray600,
                     text = stringResource(R.string.pager_btn_skip),
-                    style = MooiTheme.typography.body3.copy(fontSize = 14.sp, lineHeight = 22.sp),
+                    style = MooiTheme.typography.caption2.copy(lineHeight = 22.sp),
                 )
             }
         }
@@ -139,7 +139,7 @@ private fun PagerIndicatorDot(
             modifier
                 .height(10.dp)
                 .width(animatedWidth)
-                .mainBackground(isSelected, RoundedCornerShape(50.dp), MooiTheme.colorScheme.gray50)
+                .mainBackground(isSelected, RoundedCornerShape(50.dp), MooiTheme.colorScheme.gray300)
                 .clickable(onClick = onClick),
     )
 }

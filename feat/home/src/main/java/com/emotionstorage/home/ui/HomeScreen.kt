@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -24,7 +26,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -101,6 +102,7 @@ private fun StatelessHomeScreen(
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
@@ -116,7 +118,10 @@ private fun StatelessHomeScreen(
         ) {
             // icons
             Column(
-                modifier = Modifier.align(Alignment.TopEnd),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
                 horizontalAlignment = Alignment.End,
             ) {
@@ -175,7 +180,6 @@ private fun StatelessHomeScreen(
                         .align(Alignment.TopCenter)
                         .padding(top = 193.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 Text(
                     text =
@@ -186,10 +190,11 @@ private fun StatelessHomeScreen(
                             }
                             append("은 어떤가요?")
                         },
-                    style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
+                    style = MooiTheme.typography.head1,
                     textAlign = TextAlign.Center,
                     color = Color.White,
                 )
+                Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     modifier = Modifier.padding(top = 2.dp),
                     text = "대화로 내 감정을 들여다보고\n타임캡슐로 저장해보세요",
@@ -198,8 +203,8 @@ private fun StatelessHomeScreen(
                     color = MooiTheme.colorScheme.gray500,
                 )
 
+                Spacer(modifier = Modifier.height(22.dp))
                 Column(
-                    modifier = modifier,
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
@@ -226,10 +231,9 @@ private fun StatelessHomeScreen(
                             style = MooiTheme.typography.body7,
                             color = MooiTheme.colorScheme.secondary,
                         )
-
                         Text(
                             text = "${state.ticketCount}/10",
-                            style = MooiTheme.typography.body3,
+                            style = MooiTheme.typography.body7,
                             color = MooiTheme.colorScheme.secondary,
                         )
                     }

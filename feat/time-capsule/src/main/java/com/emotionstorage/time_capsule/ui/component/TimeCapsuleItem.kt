@@ -28,7 +28,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,6 +59,7 @@ fun TimeCapsuleItem(
     timeCapsule: TimeCapsuleItemState,
     showDate: Boolean = false,
     showInfoText: Boolean = true,
+    showFavorite: Boolean = false,
     onFavoriteClick: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
@@ -77,6 +77,7 @@ fun TimeCapsuleItem(
             expireAt = timeCapsule.expireAt,
             showDate = showDate,
             showInfoText = showInfoText,
+            showFavorite = showFavorite,
             isFavorite = timeCapsule.isFavorite,
             onFavoriteClick = onFavoriteClick,
         )
@@ -93,7 +94,20 @@ fun TimeCapsuleItem(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .height(TimeCapsuleItemDesignToken.contentHeight)
+                        .run {
+                            if (timeCapsule.status == TimeCapsule.Status.ARRIVED) {
+                                this.dropShadow(
+                                    shape = RoundedCornerShape(15.dp),
+                                    color = Color(0xFF849BEA).copy(alpha = 0.15f),
+                                    offsetX = 0.dp,
+                                    offsetY = 0.dp,
+                                    blur = 5.dp,
+                                    spread = 2.dp,
+                                )
+                            } else {
+                                this
+                            }
+                        }.height(TimeCapsuleItemDesignToken.contentHeight)
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
@@ -132,6 +146,7 @@ private fun TimeCapsuleItemInfo(
     modifier: Modifier = Modifier,
     showDate: Boolean = false,
     showInfoText: Boolean = true,
+    showFavorite: Boolean = false,
     isFavorite: Boolean = false,
     onFavoriteClick: () -> Unit = {},
 ) {
@@ -159,7 +174,7 @@ private fun TimeCapsuleItemInfo(
                             "임시저장 보관기간이 " +
                                 (if (hours >= 1) "${hours}시간 " else "${minutes}분 ") +
                                 "남았어요.",
-                        style = MooiTheme.typography.caption7,
+                        style = MooiTheme.typography.caption6,
                         color = MooiTheme.colorScheme.errorRed,
                     )
                 }
@@ -178,19 +193,33 @@ private fun TimeCapsuleItemInfo(
         }
 
         TimeCapsule.Status.ARRIVED -> {
-            // createdAt & open info text
+            // createdAt & (favorite button) & open info text
             Column(
-                modifier = modifier.padding(bottom = (10.5).dp),
                 verticalArrangement = Arrangement.spacedBy((10.5).dp),
             ) {
-                Text(
-                    text = if (showDate) createdAt.formatToKorDateTime() else createdAt.formatToKorTime(),
-                    style = MooiTheme.typography.caption4,
-                    color = MooiTheme.colorScheme.gray300,
-                )
+                Row(
+                    modifier =
+                        modifier
+                            .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = if (showDate) createdAt.formatToKorDateTime() else createdAt.formatToKorTime(),
+                        style = MooiTheme.typography.caption4,
+                        color = MooiTheme.colorScheme.gray300,
+                    )
+                    if (showFavorite) {
+                        RoundedToggleButton(
+                            modifier = Modifier.size(36.dp),
+                            isSelected = isFavorite,
+                            onSelect = onFavoriteClick,
+                        )
+                    }
+                }
                 if (showInfoText) {
                     Row(
-//
+                        modifier = modifier.padding(bottom = (10.5).dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(7.dp),
                     ) {
@@ -198,6 +227,7 @@ private fun TimeCapsuleItemInfo(
                             modifier = Modifier.size(16.dp),
                             painter = painterResource(R.drawable.key),
                             contentDescription = "",
+                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                         )
                         Text(
                             text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
@@ -252,6 +282,7 @@ private fun TemporaryContent(
     ) {
         Column(
             modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
                 modifier = Modifier.height(24.dp),
@@ -302,15 +333,19 @@ private fun LockedContentOverLay(
                 painter = painterResource(id = R.drawable.lock),
                 contentDescription = "lock",
             )
-
-            Spacer(modifier = Modifier.size(3.dp))
-
-            Text(
-                modifier = Modifier.height(24.dp),
-                text = "(D-${openDDay.absoluteValue})",
-                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                color = MooiTheme.colorScheme.secondary,
-            )
+            Box(
+                modifier =
+                    Modifier
+                        .height(24.dp),
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "(D-${openDDay.absoluteValue})",
+                    style = MooiTheme.typography.caption1,
+                    color = MooiTheme.colorScheme.secondary,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }
@@ -339,13 +374,6 @@ private fun ArrivedContentOverLay(
                         angleInDegrees = -17f,
                     ),
                     RoundedCornerShape(15.dp),
-                ).dropShadow(
-                    shape = RoundedCornerShape(15.dp),
-                    color = Color(0xFF849BEA).copy(alpha = 0.15f),
-                    offsetX = 0.dp,
-                    offsetY = 0.dp,
-                    blur = 5.dp,
-                    spread = 2.dp,
                 ),
     ) {
         Column(
@@ -357,13 +385,18 @@ private fun ArrivedContentOverLay(
                 painter = painterResource(id = R.drawable.lock),
                 contentDescription = "arrived",
             )
-            Spacer(modifier = Modifier.size(3.dp))
-            Text(
-                modifier = Modifier.height(24.dp),
-                text = "도착한지 D+${openDDay.absoluteValue}",
-                style = MooiTheme.typography.body4.copy(fontWeight = FontWeight.SemiBold),
-                color = MooiTheme.colorScheme.secondary,
-            )
+            Box(
+                modifier =
+                    Modifier
+                        .height(24.dp),
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = "도착한지 D+${openDDay.absoluteValue}",
+                    style = MooiTheme.typography.caption1,
+                    color = MooiTheme.colorScheme.secondary,
+                )
+            }
         }
     }
 }
@@ -414,7 +447,7 @@ private fun TimeCapsuleContent(
                 Text(
                     modifier = Modifier.padding(top = 3.dp),
                     text = "열림",
-                    style = MooiTheme.typography.body3.copy(fontSize = 11.sp),
+                    style = MooiTheme.typography.caption6.copy(fontSize = 11.sp),
                     color = MooiTheme.colorScheme.secondary,
                 )
             }
@@ -426,7 +459,7 @@ private fun TimeCapsuleContent(
             verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 for (emotion in timeCapsule.emotions) {
@@ -435,7 +468,7 @@ private fun TimeCapsuleContent(
             }
             Text(
                 text = timeCapsule.title,
-                style = MooiTheme.typography.caption3,
+                style = MooiTheme.typography.caption2,
                 color = MooiTheme.colorScheme.primary,
                 maxLines = 1,
             )
@@ -504,6 +537,16 @@ private fun TimeCapsuleItemPreview() {
                         status = TimeCapsule.Status.ARRIVED,
                         openDDay = 20,
                     ),
+            )
+            TimeCapsuleItem(
+                timeCapsule =
+                    dummyTimeCapsule.copy(
+                        status = TimeCapsule.Status.ARRIVED,
+                        openDDay = 20,
+                    ),
+                showDate = true,
+                showInfoText = false,
+                showFavorite = true,
             )
             TimeCapsuleItem(
                 timeCapsule =

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -45,7 +46,8 @@ fun TutorialScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(top = 78.dp, bottom = 41.dp),
+                    .padding(horizontal = 15.dp)
+                    .padding(top = 78.dp, bottom = 35.dp),
             pageCount = TUTORIAL_PAGE_COUNT,
             pageContent =
                 { page ->
@@ -93,9 +95,10 @@ fun TutorialScreen(
                                     ),
                                 content = {
                                     CtaButton(
+                                        modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
                                         labelString = stringResource(R.string.tutorial_btn_start),
                                         onClick = navToLogin,
-                                        modifier = Modifier.align(Alignment.BottomCenter),
+                                        isDefaultWidth = false,
                                     )
                                 },
                             )
@@ -132,7 +135,7 @@ private fun ColumnScope.TutorialPage(
         ) {
             Text(
                 modifier = Modifier.height(37.dp),
-                style = MooiTheme.typography.body1,
+                style = MooiTheme.typography.body2,
                 color = MooiTheme.colorScheme.gray500,
                 text = description,
             )

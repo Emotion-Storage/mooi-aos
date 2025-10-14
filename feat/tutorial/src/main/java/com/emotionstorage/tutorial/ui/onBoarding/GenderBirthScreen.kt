@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.SignupForm.GENDER
 import com.emotionstorage.tutorial.R
@@ -88,11 +87,13 @@ private fun StatelessGenderBirthScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 16.dp)
                     .imePadding(),
         ) {
             OnBoardingTitle(
-                modifier = Modifier.fillMaxWidth(),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                 currentStep = 1,
                 title =
                     stringResource(
@@ -112,7 +113,8 @@ private fun StatelessGenderBirthScreen(
                 modifier =
                     Modifier
                         .weight(1f)
-                        .padding(top = 30.dp),
+                        .padding(top = 30.dp)
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(37.dp),
             ) {
                 GenderInput(
@@ -141,6 +143,7 @@ private fun StatelessGenderBirthScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 15.dp)
                         .padding(bottom = 39.dp),
                 labelString = "다음으로",
                 enabled = state.isNextButtonEnabled,
@@ -164,6 +167,7 @@ private fun StatelessGenderBirthScreen(
                     )
                     navToExpectations()
                 },
+                isDefaultWidth = false,
             )
         }
     }
@@ -183,7 +187,7 @@ private fun GenderInput(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text(
-            style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+            style = MooiTheme.typography.body7,
             color = Color.White,
             text = "성별",
             modifier = Modifier.height(24.dp),
@@ -202,7 +206,7 @@ private fun GenderInput(
                             }.padding(14.dp),
                 ) {
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        style = MooiTheme.typography.body8,
                         color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
                         text =
                             when (it) {
@@ -243,7 +247,7 @@ private fun BirthInput(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text(
-            style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+            style = MooiTheme.typography.body7,
             color = Color.White,
             text = "생년월일",
             modifier = Modifier.height(24.dp),

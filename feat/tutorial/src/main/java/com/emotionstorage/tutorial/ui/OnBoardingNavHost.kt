@@ -69,6 +69,7 @@ fun OnBoardingNavHost(
         state = state.value,
         onAction = sharedViewModel::onAction,
         navToBack = navToBack,
+        navToSignupComplete = navToSignupComplete,
     )
 }
 
@@ -79,6 +80,8 @@ private fun StatelessOnBoardingNavHost(
     state: OnBoardingState = OnBoardingState(),
     onAction: (OnBoardingAction) -> Unit = {},
     navToBack: () -> Unit = {},
+    // todo: delete test navigation
+    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     NavHost(
         navController,
@@ -151,6 +154,9 @@ private fun StatelessOnBoardingNavHost(
                             },
                             navToBack = {
                                 navController.popBackStack()
+                            },
+                            navToSignupComplete = {
+                                navToSignupComplete(AuthProvider.KAKAO, "")
                             },
                         )
                     }

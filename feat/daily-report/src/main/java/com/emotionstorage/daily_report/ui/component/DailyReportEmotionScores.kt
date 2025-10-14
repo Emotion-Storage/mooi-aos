@@ -65,32 +65,35 @@ fun DailyReportEmotionScores(
 private fun ScoreSteps(
     modifier: Modifier = Modifier,
     score: Int,
-    stepsCnt: Int = 5,
 ) {
-    val stepSize = 100 / stepsCnt
+    //    0칸 : 0
+    //    1칸 : 1~20
+    //    2칸 : 21~40
+    //    3칸 : 41~60
+    //    4칸 : 61~80
+    //    5칸 : 81~100
 
     Row(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        (1..stepsCnt).toList().forEach {
+        (0..4).toList().forEach {
             Box(
                 modifier =
                     Modifier
                         .weight(1f)
                         .height(12.dp)
                         .background(
-                            // todo: confirm step dividing logic
-                            if (score > 0 && score / stepSize >= it) {
+                            if (score > 0 && score > it * 20) {
                                 MooiTheme.colorScheme.secondary
                             } else {
-                                Color(0xFFD9D9D9)
+                                MooiTheme.colorScheme.gray300
                             },
                             RoundedCornerShape(
-                                topStart = if (it == 1) 50.dp else 0.dp,
-                                bottomStart = if (it == 1) 50.dp else 0.dp,
-                                topEnd = if (it == stepsCnt) 50.dp else 0.dp,
-                                bottomEnd = if (it == stepsCnt) 50.dp else 0.dp,
+                                topStart = if (it == 0) 50.dp else 0.dp,
+                                bottomStart = if (it == 0) 50.dp else 0.dp,
+                                topEnd = if (it == 4) 50.dp else 0.dp,
+                                bottomEnd = if (it == 4) 50.dp else 0.dp,
                             ),
                         ),
             )
@@ -110,15 +113,14 @@ private fun ScoreStepsPreview() {
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ScoreSteps(score = 0)
-            ScoreSteps(score = 19)
-            ScoreSteps(score = 29)
-            ScoreSteps(score = 39)
-            ScoreSteps(score = 49)
-            ScoreSteps(score = 59)
-            ScoreSteps(score = 69)
-            ScoreSteps(score = 79)
-            ScoreSteps(score = 89)
-            ScoreSteps(score = 99)
+            ScoreSteps(score = 20)
+            ScoreSteps(score = 21)
+            ScoreSteps(score = 40)
+            ScoreSteps(score = 41)
+            ScoreSteps(score = 60)
+            ScoreSteps(score = 61)
+            ScoreSteps(score = 80)
+            ScoreSteps(score = 81)
             ScoreSteps(score = 100)
         }
     }
