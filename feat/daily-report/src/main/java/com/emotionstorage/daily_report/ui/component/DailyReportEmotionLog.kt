@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
@@ -32,6 +33,7 @@ import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.LinearGradient
+import com.emotionstorage.ui.util.dropShadow
 import java.time.LocalDateTime
 
 @Composable
@@ -53,25 +55,14 @@ fun DailyReportEmotionLog(
         )
 
         Box(modifier = Modifier.padding(start = 5.dp)) {
-            Box(
+            LogLine(
                 modifier =
                     Modifier
                         .align(Alignment.CenterStart)
-                        .offset(x = 12.dp)
+                        .offset(x = 15.dp)
                         .height(logContentHeight)
-                        .width(10.dp)
                         .padding(vertical = 15.dp)
-                        .blur(2.5.dp),
-            ) {
-                Box(
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center)
-                            .fillMaxHeight()
-                            .width(2.dp)
-                            .background(MooiTheme.colorScheme.secondary.copy(alpha = 0.7f)),
-                )
-            }
+            )
 
             Column(
                 modifier =
@@ -114,7 +105,8 @@ fun DailyReportEmotionLog(
                                                 ),
                                         ),
                                         RoundedCornerShape(10.dp),
-                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
+                                    )
+                                    .padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
@@ -133,6 +125,47 @@ fun DailyReportEmotionLog(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LogLine(modifier: Modifier = Modifier) {
+    Box(modifier = modifier) {
+        // line 1 with blur effect
+        Box(
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .fillMaxHeight()
+                    .width(3.dp)
+                    .offset(x = (-1.5).dp)
+                    .dropShadow(
+                        color = Color(0xFF849BEA).copy(alpha = 0.7f),
+                        blur = 5.dp,
+                        shape = RectangleShape,
+                        offsetX = 0.dp,
+                        offsetY = 0.dp,
+                        spread = 3.dp
+                    ),
+        )
+        // line2
+        Box(
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .fillMaxHeight()
+                    .width(3.dp)
+                    .background(
+                        LinearGradient(
+                            colors =
+                                listOf(
+                                    Color(0xFFAECBFA).copy(alpha = 0.1f),
+                                    MooiTheme.colorScheme.secondary,
+                                ),
+                            angleInDegrees = -90f
+                        )
+                    )
+        )
     }
 }
 
