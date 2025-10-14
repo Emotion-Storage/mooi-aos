@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -84,6 +85,7 @@ private fun StatelessAgreeTermsScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
@@ -91,18 +93,18 @@ private fun StatelessAgreeTermsScreen(
         topBar = {
             TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack)
         },
-    ) { padding ->
+    ) { innerPadding ->
         Column(
             modifier =
                 Modifier
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-                    .imePadding(),
+                    .padding(innerPadding)
         ) {
             OnBoardingTitle(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 currentStep = 3,
                 title = stringResource(R.string.on_boarding_terms_title),
                 titleHighlights =
@@ -115,6 +117,7 @@ private fun StatelessAgreeTermsScreen(
                 modifier =
                     Modifier
                         .weight(1f)
+                        .padding(horizontal = 16.dp)
                         .padding(top = 46.dp),
                 verticalArrangement = Arrangement.spacedBy(19.dp),
             ) {
@@ -130,7 +133,9 @@ private fun StatelessAgreeTermsScreen(
                             onSelect = event::onToggleAllAgree,
                         )
                         Text(
-                            style = MooiTheme.typography.body4,
+                            style = MooiTheme.typography.body4.copy(
+                                fontWeight = FontWeight.SemiBold
+                            ),
                             color = Color.White,
                             text = "약관 전체 동의",
                         )
@@ -148,6 +153,7 @@ private fun StatelessAgreeTermsScreen(
                         term = "[필수] 이용 약관 동의",
                         isSelected = state.isTermAgree,
                         onSelect = event::onToggleTermAgree,
+                        showTermDetail = true,
                         onShowTermDetail = {
                             // todo: nav to term detail screen
                         },
@@ -156,6 +162,7 @@ private fun StatelessAgreeTermsScreen(
                         term = "[필수] 개인정보 수집 및 이용 동의",
                         isSelected = state.isPrivacyAgree,
                         onSelect = event::onTogglePrivacyAgree,
+                        showTermDetail = true,
                         onShowTermDetail = {
                             // todo: nav to term detail screen
                         },
@@ -164,6 +171,7 @@ private fun StatelessAgreeTermsScreen(
                         term = "[선택] 마케팅 활용 및 수신 동의",
                         isSelected = state.isMarketingAgree,
                         onSelect = event::onToggleMarketingAgree,
+                        showTermDetail = true,
                         onShowTermDetail = {
                             // todo: nav to marketing term detail screen
                         },
@@ -180,32 +188,26 @@ private fun StatelessAgreeTermsScreen(
                 ) {
                     Text(
                         style =
-                            MooiTheme.typography.body3.copy(
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Light,
-                            ),
+                            MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.primary,
                         text = "* 필수 약관에 동의하셔야만 서비스를 이용하실 수 있어요.",
                     )
                     Spacer(modifier = Modifier.size(5.dp))
                     Text(
                         style =
-                            MooiTheme.typography.body3.copy(
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Light,
-                            ),
+                            MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.primary,
                         text = "* 선택 약관은 원하실 경우에만 동의하셔도 괜찮아요.",
                     )
                 }
             }
 
-            // todo: add bottom padding when keyboard is hidden
             CtaButton(
                 modifier =
                     Modifier
-                        .fillMaxWidth(),
-                //                    .padding(bottom = 39.dp),
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp)
+                        .padding(bottom = 39.dp),
                 labelString = "가입 완료하기",
                 enabled = state.isSignupCompleteButtonEnabled,
                 onClick = {
@@ -218,6 +220,7 @@ private fun StatelessAgreeTermsScreen(
                         onSignup()
                     }
                 },
+                isDefaultWidth = false,
             )
         }
     }
@@ -229,9 +232,10 @@ private fun TermItem(
     modifier: Modifier = Modifier,
     isSelected: Boolean = false,
     onSelect: () -> Unit = {},
-    onShowTermDetail: (() -> Unit)? = null,
+    showTermDetail: Boolean = false,
+    onShowTermDetail: () -> Unit = { },
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.fillMaxWidth()) {
         ToggleButton(
             isSelected = isSelected,
             onSelect = onSelect,
@@ -239,14 +243,8 @@ private fun TermItem(
         Row(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .padding(start = 11.dp)
-                    .clickable(
-                        enabled = onShowTermDetail != null,
-                        onClick = {
-                            onShowTermDetail?.invoke()
-                        },
-                    ),
+                    .weight(1f)
+                    .padding(start = 11.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
@@ -256,14 +254,17 @@ private fun TermItem(
                 text = term,
             )
         }
-        if (onShowTermDetail != null) {
+        if (showTermDetail) {
             Image(
                 modifier =
                     Modifier
-                        .height(12.dp)
-                        .width(6.dp),
+                        .height(14.dp)
+                        .width(8.dp)
+                        .clickable {
+                            onShowTermDetail()
+                        },
                 painter = painterResource(R.drawable.arrow_right),
-                contentDescription = null,
+                contentDescription = "show term detail",
             )
         }
     }
