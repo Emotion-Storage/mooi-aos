@@ -36,7 +36,7 @@ fun PushAlarmCard(
     id: String,
     title: String,
     timeText: String,
-    onClick: (Int) -> Unit
+    onClick: () -> Unit
 ) {
     Card(
         modifier = modifier
@@ -48,7 +48,7 @@ fun PushAlarmCard(
     ) {
         Row(
             modifier = Modifier
-                .padding(start = 16.dp, end = 16.dp, top = 18.dp),
+                .padding(start = 17.dp, end = 17.dp, top = 18.dp),
         ) {
             Icon(
                 modifier = Modifier

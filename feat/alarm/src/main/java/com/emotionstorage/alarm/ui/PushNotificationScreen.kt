@@ -13,29 +13,48 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.alarm.presentation.PushNotificationState
+import com.emotionstorage.alarm.presentation.PushNotificationViewModel
+import com.emotionstorage.alarm.ui.component.EmptyPushHolder
+import com.emotionstorage.alarm.ui.component.PushAlarmCard
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.R
+
 @Composable
 fun PushNotificationScreen(
+    viewModel: PushNotificationViewModel = hiltViewModel(),
+    onClick: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val state = viewModel.state.collectAsState()
 
+    StatelessPushNotificationScreen(
+        navToBack = navToBack,
+        value = state.value,
+        onClick = onClick,
+    )
 }
 
 @Composable
 private fun StatelessPushNotificationScreen(
     navToBack: () -> Unit,
+    value: List<PushNotificationState> = emptyList(),
+    onClick: () -> Unit = {},
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -50,6 +69,7 @@ private fun StatelessPushNotificationScreen(
             )
         }
     ) { innerPadding ->
+
         Box(
             modifier =
                 Modifier
@@ -63,7 +83,6 @@ private fun StatelessPushNotificationScreen(
             ) {
                 Row(
                     modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
                         .height(24.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -83,9 +102,26 @@ private fun StatelessPushNotificationScreen(
                         color = MooiTheme.colorScheme.gray500,
                     )
                 }
+
+                if (value.isEmpty()) {
+                    EmptyPushHolder()
+                } else {
+                    LazyColumn(
+                        modifier = Modifier.padding(top = 22.dp)
+                    ) {
+                        itemsIndexed(value) { index, item ->
+                            PushAlarmCard(
+                                id = item.id,
+                                title = item.title,
+                                timeText = item.timeText,
+                                onClick = onClick
+                            )
+                            if (index < value.size - 1) Spacer(modifier = Modifier.size(12.dp))
+                        }
+                    }
+                }
             }
         }
-
     }
 }
 
@@ -95,6 +131,7 @@ fun PushNotificationScreenPreview() {
     MooiTheme {
         StatelessPushNotificationScreen(
             navToBack = {},
+            onClick = {},
         )
     }
 }
