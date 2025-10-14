@@ -17,6 +17,7 @@ import androidx.navigation.toRoute
 import com.emotionstorage.ai_chat.presentation.AiChatIntroViewModel
 import com.emotionstorage.ai_chat.ui.AIChatDescriptionScreen
 import com.emotionstorage.ai_chat.ui.AIChatScreen
+import com.emotionstorage.alarm.ui.PushNotificationScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
@@ -126,6 +127,9 @@ internal sealed class AppDestination {
 
     @Serializable
     object NotificationSetting : AppDestination()
+
+    @Serializable
+    object PushNotification : AppDestination()
 }
 
 @Composable
@@ -240,6 +244,9 @@ internal fun AppNavHost(
                     },
                     navToArrivedTimeCapsules = {
                         navController.navigate(AppDestination.ArrivedTimeCapsules)
+                    },
+                    navToAlarm = {
+                        navController.navigate(AppDestination.PushNotification)
                     },
                 )
             }
@@ -438,6 +445,14 @@ internal fun AppNavHost(
 
             composable<AppDestination.NotificationSetting> {
                 NotificationSettingScreen(
+                    navToBack = {
+                        navController.popBackStack()
+                    },
+                )
+            }
+
+            composable<AppDestination.PushNotification> {
+                PushNotificationScreen(
                     navToBack = {
                         navController.popBackStack()
                     },
