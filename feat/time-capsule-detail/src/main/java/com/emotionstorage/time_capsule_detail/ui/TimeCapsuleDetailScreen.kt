@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -262,9 +263,8 @@ private fun StatelessTimeCapsuleDetailScreen(
                 val onNewTimeCapsuleExit = {
                     onAction(OnExitTrigger)
                 }
-
                 TopAppBar(
-                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd HH:mm")),
+                    title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd  HH:mm")),
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = onTimeCapsuleExit,
                     showCloseButton = isNewTimeCapsule,
