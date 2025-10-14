@@ -60,6 +60,7 @@ fun TimeCapsuleItem(
     timeCapsule: TimeCapsuleItemState,
     showDate: Boolean = false,
     showInfoText: Boolean = true,
+    showFavorite: Boolean = false,
     onFavoriteClick: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
@@ -77,6 +78,7 @@ fun TimeCapsuleItem(
             expireAt = timeCapsule.expireAt,
             showDate = showDate,
             showInfoText = showInfoText,
+            showFavorite = showFavorite,
             isFavorite = timeCapsule.isFavorite,
             onFavoriteClick = onFavoriteClick,
         )
@@ -145,6 +147,7 @@ private fun TimeCapsuleItemInfo(
     modifier: Modifier = Modifier,
     showDate: Boolean = false,
     showInfoText: Boolean = true,
+    showFavorite: Boolean = false,
     isFavorite: Boolean = false,
     onFavoriteClick: () -> Unit = {},
 ) {
@@ -191,19 +194,33 @@ private fun TimeCapsuleItemInfo(
         }
 
         TimeCapsule.Status.ARRIVED -> {
-            // createdAt & open info text
+            // createdAt & (favorite button) & open info text
             Column(
-                modifier = modifier.padding(bottom = (10.5).dp),
                 verticalArrangement = Arrangement.spacedBy((10.5).dp),
             ) {
-                Text(
-                    text = if (showDate) createdAt.formatToKorDateTime() else createdAt.formatToKorTime(),
-                    style = MooiTheme.typography.caption4,
-                    color = MooiTheme.colorScheme.gray300,
-                )
+                Row(
+                    modifier =
+                        modifier
+                            .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(
+                        text = if (showDate) createdAt.formatToKorDateTime() else createdAt.formatToKorTime(),
+                        style = MooiTheme.typography.caption4,
+                        color = MooiTheme.colorScheme.gray300,
+                    )
+                    if (showFavorite) {
+                        RoundedToggleButton(
+                            modifier = Modifier.size(36.dp),
+                            isSelected = isFavorite,
+                            onSelect = onFavoriteClick,
+                        )
+                    }
+                }
                 if (showInfoText) {
                     Row(
-//
+                        modifier = modifier.padding(bottom = (10.5).dp),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.spacedBy(7.dp),
                     ) {
@@ -523,6 +540,16 @@ private fun TimeCapsuleItemPreview() {
                         status = TimeCapsule.Status.ARRIVED,
                         openDDay = 20,
                     ),
+            )
+            TimeCapsuleItem(
+                timeCapsule =
+                    dummyTimeCapsule.copy(
+                        status = TimeCapsule.Status.ARRIVED,
+                        openDDay = 20,
+                    ),
+                showDate = true,
+                showInfoText = false,
+                showFavorite = true,
             )
             TimeCapsuleItem(
                 timeCapsule =

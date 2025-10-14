@@ -157,6 +157,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                             timeCapsule = it,
                             showDate = true,
                             showInfoText = false,
+                            showFavorite = true,
                             onClick = { navToTimeCapsuleDetail(it.id) },
                         )
                     }
