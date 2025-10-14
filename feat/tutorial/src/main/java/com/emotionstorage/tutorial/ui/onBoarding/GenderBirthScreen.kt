@@ -88,11 +88,12 @@ private fun StatelessGenderBirthScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(padding)
-                    .padding(horizontal = 16.dp)
                     .imePadding(),
         ) {
             OnBoardingTitle(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 currentStep = 1,
                 title =
                     stringResource(
@@ -112,7 +113,8 @@ private fun StatelessGenderBirthScreen(
                 modifier =
                     Modifier
                         .weight(1f)
-                        .padding(top = 30.dp),
+                        .padding(top = 30.dp)
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(37.dp),
             ) {
                 GenderInput(
@@ -141,6 +143,7 @@ private fun StatelessGenderBirthScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 15.dp)
                         .padding(bottom = 39.dp),
                 labelString = "다음으로",
                 enabled = state.isNextButtonEnabled,
@@ -164,6 +167,7 @@ private fun StatelessGenderBirthScreen(
                     )
                     navToExpectations()
                 },
+                isDefaultWidth = false
             )
         }
     }
@@ -199,7 +203,8 @@ private fun GenderInput(
                             .subBackground(isSelected, defaultBackground = Color.Black)
                             .clickable {
                                 if (isSelected) onGenderSelect(null) else onGenderSelect(it)
-                            }.padding(14.dp),
+                            }
+                            .padding(14.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
