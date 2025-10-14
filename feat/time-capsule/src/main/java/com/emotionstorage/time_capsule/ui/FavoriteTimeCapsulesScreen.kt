@@ -127,8 +127,6 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val scrollState = rememberScrollState()
-
     Scaffold(
         modifier =
             modifier
@@ -153,29 +151,17 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             }
         },
     ) { innerPadding ->
-        Box(
+        LazyColumn(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (state.timeCapsules.isEmpty()) {
-                Text(
-                    modifier = Modifier.align(Alignment.Center),
-                    text = "아직 즐겨찾기한 타임캡슐이 없어요.",
-                    style = MooiTheme.typography.caption2,
-                    color = MooiTheme.colorScheme.gray400,
-                )
-            }
-            Column(
-                modifier =
-                    Modifier
-                        .align(Alignment.TopCenter)
-                        .fillMaxWidth(),
-            ) {
-                // info text
+            // info text
+            item {
                 Row(
                     modifier =
                         Modifier
@@ -192,7 +178,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                                 .width(11.dp)
                                 .height(12.dp),
                         contentDescription = "open",
-                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray500),
+                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     )
                     Text(
                         text = "오래 기억하고싶은 타임캡슐을 즐겨찾기 해보세요.\n최대 30개까지 저장할 수 있습니다.",
@@ -200,8 +186,10 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         color = MooiTheme.colorScheme.gray500,
                     )
                 }
-
-                if (!state.timeCapsules.isEmpty()) {
+            }
+            // sort drom dowm menu
+            if (!state.timeCapsules.isEmpty()) {
+                item {
                     Box(modifier = Modifier.fillMaxWidth()) {
                         DropDownPicker(
                             modifier =
@@ -219,29 +207,34 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         )
                     }
                 }
-
-                LazyColumn(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .scrollable(scrollState, orientation = Orientation.Vertical),
-                    verticalArrangement = Arrangement.spacedBy(32.dp),
-                ) {
-                    items(items = state.timeCapsules, key = { it.id }) {
-                        TimeCapsuleItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            timeCapsule = it,
-                            showDate = true,
-                            onClick = { navToTimeCapsuleDetail(it.id) },
-                            onFavoriteClick = {
-                                onAction(
-                                    FavoriteTimeCapsulesAction.ToggleFavorite(it.id),
-                                )
-                            },
-                        )
-                    }
+            }
+            if (state.timeCapsules.isEmpty()) {
+                item {
+                    Text(
+                        modifier = Modifier.padding(top = 224.dp),
+                        text = "아직 즐겨찾기한 타임캡슐이 없어요.",
+                        style = MooiTheme.typography.caption2,
+                        color = MooiTheme.colorScheme.gray400,
+                    )
                 }
             }
+            items(items = state.timeCapsules, key = { it.id }) {
+                TimeCapsuleItem(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 26.dp),
+                    timeCapsule = it,
+                    showDate = true,
+                    showFavorite = true,
+                    onClick = { navToTimeCapsuleDetail(it.id) },
+                    onFavoriteClick = {
+                        onAction(
+                            FavoriteTimeCapsulesAction.ToggleFavorite(it.id),
+                        )
+                    },
+                )
+            }
+
         }
     }
 }
