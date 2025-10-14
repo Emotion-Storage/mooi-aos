@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -29,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsEvent
@@ -69,7 +67,7 @@ fun AgreeTermsScreen(
         onSignup = onSignup,
         onAgreeTermsInputComplete = onAgreeTermsInputComplete,
         navToBack = navToBack,
-        navToSignupComplete = navToSignupComplete
+        navToSignupComplete = navToSignupComplete,
     )
 }
 
@@ -86,7 +84,7 @@ private fun StatelessAgreeTermsScreen(
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
     // todo: delete test navigations
-    navToSignupComplete: () -> Unit = {}
+    navToSignupComplete: () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -105,12 +103,13 @@ private fun StatelessAgreeTermsScreen(
                 Modifier
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(innerPadding),
         ) {
             OnBoardingTitle(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                 currentStep = 3,
                 title = stringResource(R.string.on_boarding_terms_title),
                 titleHighlights =
@@ -139,9 +138,10 @@ private fun StatelessAgreeTermsScreen(
                             onSelect = event::onToggleAllAgree,
                         )
                         Text(
-                            style = MooiTheme.typography.body4.copy(
-                                fontWeight = FontWeight.SemiBold
-                            ),
+                            style =
+                                MooiTheme.typography.body4.copy(
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
                             color = Color.White,
                             text = "약관 전체 동의",
                         )
@@ -211,7 +211,7 @@ private fun StatelessAgreeTermsScreen(
                 Button(
                     onClick = {
                         navToSignupComplete()
-                    }
+                    },
                 ) {
                     Text("회원가입 성공 화면 이동")
                 }

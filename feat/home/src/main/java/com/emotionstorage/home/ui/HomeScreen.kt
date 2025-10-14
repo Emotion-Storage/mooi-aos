@@ -26,7 +26,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -119,9 +118,10 @@ private fun StatelessHomeScreen(
         ) {
             // icons
             Column(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(top = 14.dp),
+                modifier =
+                    Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(top = 14.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
                 horizontalAlignment = Alignment.End,
             ) {
@@ -254,8 +254,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,

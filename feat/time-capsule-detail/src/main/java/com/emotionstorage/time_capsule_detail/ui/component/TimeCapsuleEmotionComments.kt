@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -73,8 +71,7 @@ private fun Emotions(
                                 angleInDegrees = -18f,
                             ),
                             RoundedCornerShape(10.dp),
-                        )
-                        .padding(vertical = 17.dp, horizontal = 18.dp),
+                        ).padding(vertical = 17.dp, horizontal = 18.dp),
             ) {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
@@ -106,44 +103,45 @@ private fun Emotions(
     }
 }
 
-
 @Preview
 @Composable
 private fun EmotionsPreview() {
-    val emotions = listOf(
-        TimeCapsule.Emotion(
-            emoji = "\uD83D\uDE14",
-            label = "서운함",
-            percentage = 30.0f,
-        ),
-        TimeCapsule.Emotion(
-            emoji = "\uD83D\uDE0A",
-            label = "고마움",
-            percentage = 30.0f,
-        ),
-        TimeCapsule.Emotion(
-            emoji = "\uD83E\uDD70",
-            label = "안정감",
-            percentage = 80.0f,
-        ),
-    )
+    val emotions =
+        listOf(
+            TimeCapsule.Emotion(
+                emoji = "\uD83D\uDE14",
+                label = "서운함",
+                percentage = 30.0f,
+            ),
+            TimeCapsule.Emotion(
+                emoji = "\uD83D\uDE0A",
+                label = "고마움",
+                percentage = 30.0f,
+            ),
+            TimeCapsule.Emotion(
+                emoji = "\uD83E\uDD70",
+                label = "안정감",
+                percentage = 80.0f,
+            ),
+        )
 
     MooiTheme {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Emotions(
-                emotions = emotions
+                emotions = emotions,
             )
             Emotions(
-                emotions = emotions.subList(0, 2)
+                emotions = emotions.subList(0, 2),
             )
             Emotions(
-                emotions = emotions.subList(0, 1)
+                emotions = emotions.subList(0, 1),
             )
         }
     }

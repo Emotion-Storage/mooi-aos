@@ -103,12 +103,13 @@ private fun StatelessNicknameScreen(
                         .background(MooiTheme.colorScheme.background)
                         .fillMaxSize()
                         .padding(padding)
-                        .consumeWindowInsets(WindowInsets.navigationBars)
+                        .consumeWindowInsets(WindowInsets.navigationBars),
             ) {
                 OnBoardingTitle(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp),
                     currentStep = 0,
                     title = stringResource(R.string.on_boarding_nickname_title),
                     titleHighlights =
@@ -144,7 +145,7 @@ private fun StatelessNicknameScreen(
                     } else {
                         39.dp
                     },
-                    label = "padding"
+                    label = "padding",
                 )
                 CtaButton(
                     modifier =
@@ -162,7 +163,7 @@ private fun StatelessNicknameScreen(
                         onNicknameInputComplete(state.nickname)
                         navToGenderBirth()
                     },
-                    isDefaultWidth = false
+                    isDefaultWidth = false,
                 )
             }
         }

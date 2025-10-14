@@ -157,7 +157,7 @@ private fun StatelessOnBoardingNavHost(
                             },
                             navToSignupComplete = {
                                 navToSignupComplete(AuthProvider.KAKAO, "")
-                            }
+                            },
                         )
                     }
                 }

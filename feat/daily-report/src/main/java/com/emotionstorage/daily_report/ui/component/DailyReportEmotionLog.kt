@@ -61,7 +61,7 @@ fun DailyReportEmotionLog(
                         .align(Alignment.CenterStart)
                         .offset(x = 15.dp)
                         .height(logContentHeight)
-                        .padding(vertical = 15.dp)
+                        .padding(vertical = 15.dp),
             )
 
             Column(
@@ -105,8 +105,7 @@ fun DailyReportEmotionLog(
                                                 ),
                                         ),
                                         RoundedCornerShape(10.dp),
-                                    )
-                                    .padding(vertical = 7.dp, horizontal = 10.dp),
+                                    ).padding(vertical = 7.dp, horizontal = 10.dp),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.spacedBy(12.dp),
                         ) {
@@ -145,7 +144,7 @@ private fun LogLine(modifier: Modifier = Modifier) {
                         shape = RectangleShape,
                         offsetX = 0.dp,
                         offsetY = 0.dp,
-                        spread = 3.dp
+                        spread = 3.dp,
                     ),
         )
         // line2
@@ -162,9 +161,9 @@ private fun LogLine(modifier: Modifier = Modifier) {
                                     Color(0xFFAECBFA).copy(alpha = 0.1f),
                                     MooiTheme.colorScheme.secondary,
                                 ),
-                            angleInDegrees = -90f
-                        )
-                    )
+                            angleInDegrees = -90f,
+                        ),
+                    ),
         )
     }
 }

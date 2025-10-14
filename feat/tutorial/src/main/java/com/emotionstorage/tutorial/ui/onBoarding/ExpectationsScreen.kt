@@ -27,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.Expectation
 import com.emotionstorage.tutorial.R
@@ -174,8 +173,7 @@ private fun ExpectationItem(
                 .subBackground(isSelected, defaultBackground = Color.Black)
                 .clickable(
                     onClick = onClick,
-                )
-                .padding(20.dp),
+                ).padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

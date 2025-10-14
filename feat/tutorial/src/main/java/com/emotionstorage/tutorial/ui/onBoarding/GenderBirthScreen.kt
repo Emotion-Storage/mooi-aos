@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.SignupForm.GENDER
 import com.emotionstorage.tutorial.R
@@ -91,9 +90,10 @@ private fun StatelessGenderBirthScreen(
                     .imePadding(),
         ) {
             OnBoardingTitle(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
                 currentStep = 1,
                 title =
                     stringResource(
@@ -167,7 +167,7 @@ private fun StatelessGenderBirthScreen(
                     )
                     navToExpectations()
                 },
-                isDefaultWidth = false
+                isDefaultWidth = false,
             )
         }
     }
@@ -203,8 +203,7 @@ private fun GenderInput(
                             .subBackground(isSelected, defaultBackground = Color.Black)
                             .clickable {
                                 if (isSelected) onGenderSelect(null) else onGenderSelect(it)
-                            }
-                            .padding(14.dp),
+                            }.padding(14.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body8,

@@ -28,7 +28,6 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -96,7 +95,7 @@ fun TimeCapsuleItem(
                     Modifier
                         .fillMaxWidth()
                         .run {
-                            if (timeCapsule.status == TimeCapsule.Status.ARRIVED)
+                            if (timeCapsule.status == TimeCapsule.Status.ARRIVED) {
                                 this.dropShadow(
                                     shape = RoundedCornerShape(15.dp),
                                     color = Color(0xFF849BEA).copy(alpha = 0.15f),
@@ -105,14 +104,14 @@ fun TimeCapsuleItem(
                                     blur = 5.dp,
                                     spread = 2.dp,
                                 )
-                            else this
-                        }
-                        .height(TimeCapsuleItemDesignToken.contentHeight)
+                            } else {
+                                this
+                            }
+                        }.height(TimeCapsuleItemDesignToken.contentHeight)
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
-                        )
-                        .clip(RoundedCornerShape(15.dp))
+                        ).clip(RoundedCornerShape(15.dp))
                         .clickable(onClick = onClick),
             ) {
                 // overlay
@@ -228,7 +227,7 @@ private fun TimeCapsuleItemInfo(
                             modifier = Modifier.size(16.dp),
                             painter = painterResource(R.drawable.key),
                             contentDescription = "",
-                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600)
+                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                         )
                         Text(
                             text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
@@ -276,8 +275,7 @@ private fun TemporaryContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                )
-                .clip(RoundedCornerShape(15.dp))
+                ).clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -336,8 +334,9 @@ private fun LockedContentOverLay(
                 contentDescription = "lock",
             )
             Box(
-                modifier = Modifier
-                    .height(24.dp)
+                modifier =
+                    Modifier
+                        .height(24.dp),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
@@ -364,8 +363,7 @@ private fun ArrivedContentOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     LinearGradient(
                         colors =
@@ -388,8 +386,9 @@ private fun ArrivedContentOverLay(
                 contentDescription = "arrived",
             )
             Box(
-                modifier = Modifier
-                    .height(24.dp)
+                modifier =
+                    Modifier
+                        .height(24.dp),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
@@ -416,16 +415,14 @@ private fun TimeCapsuleContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                )
-                .run {
+                ).run {
                     // blur content if not opened
                     if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }
-                .padding(TimeCapsuleItemDesignToken.contentPadding),
+                }.padding(TimeCapsuleItemDesignToken.contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {

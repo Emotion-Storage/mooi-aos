@@ -32,7 +32,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
@@ -63,8 +62,7 @@ fun ScrollPicker(
                     .clickable(enabled = enabled) {
                         // toggle scroll picker open/close
                         setScrollPickerOpen(!isScrollPickerOpen)
-                    }
-                    .padding(14.dp),
+                    }.padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {

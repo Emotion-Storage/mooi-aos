@@ -47,7 +47,7 @@ fun TextBoxInput(
             ),
         value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
         onValueChange = onValueChange,
-        cursorBrush = SolidColor(MooiTheme.colorScheme.primary)
+        cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
     ) {
         Column(
             modifier =

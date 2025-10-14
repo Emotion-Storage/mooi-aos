@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.dpToPixel
@@ -68,7 +67,7 @@ fun SpeechBubble(
     Box(
         modifier =
             modifier
-                .then(Modifier.size(sizeParam))
+                .then(Modifier.size(sizeParam)),
     ) {
         Canvas(
             modifier =

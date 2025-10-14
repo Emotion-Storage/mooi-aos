@@ -117,8 +117,7 @@ private fun BrushPreview() {
                         .background(
                             MooiTheme.brushScheme.subButtonBackground,
                             RoundedCornerShape(10.dp),
-                        )
-                        .border(
+                        ).border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
                             shape = RoundedCornerShape(10.dp),
@@ -138,7 +137,6 @@ private fun BrushPreview() {
                         // set background brush opacity to 20%
                         .graphicsLayer(alpha = 0.2f)
                         .background(MooiTheme.brushScheme.commentBackground, RoundedCornerShape(10.dp)),
-
             )
             // errorRedButton
             Box(
