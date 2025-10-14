@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
-
 @Composable
 fun PushNotificationScreen(
     navToBack: () -> Unit = {},
