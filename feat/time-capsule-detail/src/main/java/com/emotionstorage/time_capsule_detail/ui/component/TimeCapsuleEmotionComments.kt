@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -18,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
@@ -52,15 +54,14 @@ private fun Emotions(
     emotions: List<TimeCapsule.Emotion> = emptyList(),
 ) {
     Row(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         for (emotion in emotions) {
             Box(
                 modifier =
                     Modifier
-                        .height(92.dp)
-                        .weight(1f)
                         .background(
                             LinearGradient(
                                 listOf(
@@ -72,7 +73,8 @@ private fun Emotions(
                                 angleInDegrees = -18f,
                             ),
                             RoundedCornerShape(10.dp),
-                        ),
+                        )
+                        .padding(vertical = 17.dp, horizontal = 18.dp),
             ) {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
@@ -100,6 +102,49 @@ private fun Emotions(
                     )
                 }
             }
+        }
+    }
+}
+
+
+@Preview
+@Composable
+private fun EmotionsPreview() {
+    val emotions = listOf(
+        TimeCapsule.Emotion(
+            emoji = "\uD83D\uDE14",
+            label = "서운함",
+            percentage = 30.0f,
+        ),
+        TimeCapsule.Emotion(
+            emoji = "\uD83D\uDE0A",
+            label = "고마움",
+            percentage = 30.0f,
+        ),
+        TimeCapsule.Emotion(
+            emoji = "\uD83E\uDD70",
+            label = "안정감",
+            percentage = 80.0f,
+        ),
+    )
+
+    MooiTheme {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.background),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Emotions(
+                emotions = emotions
+            )
+            Emotions(
+                emotions = emotions.subList(0, 2)
+            )
+            Emotions(
+                emotions = emotions.subList(0, 1)
+            )
         }
     }
 }
