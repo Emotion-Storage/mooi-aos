@@ -11,7 +11,7 @@ import javax.inject.Inject
 class NotificationSettingsRepositoryImpl @Inject constructor(
     private val dataSource: NotificationSettingRemoteDataSource,
 ) : NotificationSettingRepository {
-    override suspend fun getNotificationSettings(): Flow<DataState<NotificationSettings>> =
+    override fun getNotificationSettings(): Flow<DataState<NotificationSettings>> =
         flow {
             emit(dataSource.getNotificationSettings())
         }

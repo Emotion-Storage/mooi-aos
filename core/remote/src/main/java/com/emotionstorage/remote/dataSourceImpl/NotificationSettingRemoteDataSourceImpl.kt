@@ -9,6 +9,7 @@ import com.emotionstorage.remote.request.myPage.toRequest
 import com.emotionstorage.remote.response.myPage.toDomain
 import com.emotionstorage.remote.response.toDataState
 import com.emotionstorage.remote.response.toEmptyDataState
+import kotlinx.coroutines.CancellationException
 import javax.inject.Inject
 
 class NotificationSettingRemoteDataSourceImpl @Inject constructor(
@@ -19,6 +20,8 @@ class NotificationSettingRemoteDataSourceImpl @Inject constructor(
             myPageApiService.getNotificationSettings().toDataState { dto ->
                 dto.toDomain()
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             DataState.Error(e)
         }
@@ -27,6 +30,8 @@ class NotificationSettingRemoteDataSourceImpl @Inject constructor(
         try {
             val dto = myPageApiService.updateNotificationSettings(notificationSettings.toRequest().toBody())
             dto.toEmptyDataState()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             DataState.Error(e)
         }

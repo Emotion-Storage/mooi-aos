@@ -5,7 +5,7 @@ import com.emotionstorage.domain.model.NotificationSettings
 import kotlinx.coroutines.flow.Flow
 
 interface NotificationSettingRepository {
-    suspend fun getNotificationSettings(): Flow<DataState<NotificationSettings>>
+    fun getNotificationSettings(): Flow<DataState<NotificationSettings>>
 
     suspend fun updateNotificationSettings(notificationSettings: NotificationSettings): DataState<Unit>
 }
