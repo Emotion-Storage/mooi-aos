@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.dpToPixel
@@ -45,7 +46,7 @@ fun SpeechBubble(
     tailOffset: Dp = 14.dp,
     bgBrush: Brush = MooiTheme.brushScheme.commentBackground,
     borderBrush: Brush = MooiTheme.brushScheme.subButtonBorder,
-    textStyle: TextStyle = MooiTheme.typography.caption3,
+    textStyle: TextStyle = MooiTheme.typography.caption3.copy(lineHeight = 20.sp),
     textColor: Color = MooiTheme.colorScheme.gray300,
     contentText: String? = null,
     content: @Composable (() -> Unit)? = null,
