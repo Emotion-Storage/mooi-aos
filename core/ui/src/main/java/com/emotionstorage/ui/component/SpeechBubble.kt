@@ -46,7 +46,7 @@ fun SpeechBubble(
     tailOffset: Dp = 14.dp,
     bgBrush: Brush = MooiTheme.brushScheme.commentBackground,
     borderBrush: Brush = MooiTheme.brushScheme.subButtonBorder,
-    textStyle: TextStyle = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+    textStyle: TextStyle = MooiTheme.typography.caption3,
     textColor: Color = MooiTheme.colorScheme.gray300,
     contentText: String? = null,
     content: @Composable (() -> Unit)? = null,
