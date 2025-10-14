@@ -63,12 +63,13 @@ fun ScrollPicker(
                     .clickable(enabled = enabled) {
                         // toggle scroll picker open/close
                         setScrollPickerOpen(!isScrollPickerOpen)
-                    }.padding(14.dp),
+                    }
+                    .padding(14.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
+                style = MooiTheme.typography.caption3,
                 color = if (selectedValue != null) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.gray600,
                 text = selectedValue ?: placeholder ?: "",
             )
@@ -112,18 +113,19 @@ fun ScrollPicker(
             ) {
                 range.forEach {
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 14.sp),
-                        color = Color.White,
-                        text = it,
-                        modifier =
-                            Modifier
-                                .height(24.dp)
-                                .clickable(
-                                    onClick = {
-                                        onValueChange(it)
-                                        setScrollPickerOpen(false)
-                                    },
-                                ),
+                        style = MooiTheme.typography.caption3
+                    ),
+                    color = Color.White,
+                    text = it,
+                    modifier =
+                        Modifier
+                            .height(24.dp)
+                            .clickable(
+                                onClick = {
+                                    onValueChange(it)
+                                    setScrollPickerOpen(false)
+                                },
+                            ),
                     )
                 }
             }

@@ -187,7 +187,7 @@ private fun GenderInput(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text(
-            style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+            style = MooiTheme.typography.body7,
             color = Color.White,
             text = "성별",
             modifier = Modifier.height(24.dp),
@@ -207,7 +207,7 @@ private fun GenderInput(
                             .padding(14.dp),
                 ) {
                     Text(
-                        style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+                        style = MooiTheme.typography.body8,
                         color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
                         text =
                             when (it) {
@@ -248,7 +248,7 @@ private fun BirthInput(
         verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         Text(
-            style = MooiTheme.typography.body3.copy(fontSize = 15.sp),
+            style = MooiTheme.typography.body7,
             color = Color.White,
             text = "생년월일",
             modifier = Modifier.height(24.dp),
