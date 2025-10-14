@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -46,11 +47,13 @@ fun MenuSection(
     ) {
         MenuItem(
             title = "계정 정보",
+            clickArea = ClickArea.Row,
             onClick = onAccountInfoClick,
         )
 
         MenuItem(
             title = "알림 설정",
+            clickArea = ClickArea.Row,
             onClick = onNotificationClick,
         )
 
@@ -68,6 +71,7 @@ fun MenuSection(
 
         MenuItem(
             title = "이용약관 및 개인정보처리방침",
+            clickArea = ClickArea.Row,
             onClick = onTermsAndPrivacyClick,
         )
 
@@ -104,16 +108,23 @@ fun MenuItem(
         modifier =
             Modifier
                 .padding(horizontal = 18.dp, vertical = 16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .let {
+                    if (clickArea == ClickArea.Row) it.clickable { onClick() } else it
+                },
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            modifier =
+        val textModifier =
+            if (clickArea == ClickArea.Text) {
                 Modifier
-                    .weight(1f)
-                    .let {
-                        if (clickArea == ClickArea.Text) it.clickable { onClick() } else it
-                    },
+                    .wrapContentWidth()
+                    .clickable { onClick() }
+            } else {
+                Modifier.weight(1f)
+            }
+
+        Text(
+            modifier = textModifier,
             text = title,
             style = MooiTheme.typography.body7,
             color = MooiTheme.colorScheme.gray300,
@@ -131,10 +142,6 @@ fun MenuItem(
             Image(
                 painter = painterResource(R.drawable.arrow_front),
                 contentDescription = "상세 보기",
-                modifier =
-                    Modifier.clickable {
-                        onClick()
-                    },
             )
         }
     }

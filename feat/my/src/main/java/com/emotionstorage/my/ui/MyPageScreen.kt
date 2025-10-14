@@ -13,9 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,8 +37,6 @@ import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.component.KeyCard
 import com.emotionstorage.my.ui.component.MenuSection
 import com.emotionstorage.my.ui.component.ProfileHeader
-import com.emotionstorage.my.ui.component.TempToast
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
@@ -56,9 +51,9 @@ fun MyPageScreen(
     navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-    var showEmailCopiedToast by remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("MyPageScreen: onResume triggered")
@@ -83,10 +78,6 @@ fun MyPageScreen(
                     navToKeyDescription()
                 }
 
-                is MyPageSideEffect.EmailCopied -> {
-                    showEmailCopiedToast = true
-                }
-
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
                 }
@@ -103,6 +94,10 @@ fun MyPageScreen(
                     navToAccountInfo()
                 }
 
+                is MyPageSideEffect.NavigateToNotificationSetting -> {
+                    navToNotificationSetting()
+                }
+
                 else -> {
                     Unit
                 }
@@ -113,14 +108,13 @@ fun MyPageScreen(
     StatelessMyPageScreen(
         modifier = modifier,
         state = state.value,
-        showEmailCopiedToast = showEmailCopiedToast,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
         navToAccountInfo = navToAccountInfo,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
-        onToastDismissed = { showEmailCopiedToast = false },
+        navToNotificationSetting = navToNotificationSetting,
     )
 }
 
@@ -128,43 +122,24 @@ fun MyPageScreen(
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     state: MyPageState = MyPageState(),
-    showEmailCopiedToast: Boolean = false,
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
-    onToastDismissed: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
-    val snackbarHostState = remember { SnackbarHostState() }
-
     var showLogoutModal by remember { mutableStateOf(false) }
 
-    LaunchedEffect(showEmailCopiedToast) {
-        if (showEmailCopiedToast) {
-            snackbarHostState.showSnackbar(
-                message = "",
-                duration = SnackbarDuration.Short,
-            )
-            onToastDismissed()
-        }
-    }
-
     Scaffold(
-        modifier
-            .fillMaxSize()
-            .background(MooiTheme.colorScheme.background),
-        snackbarHost = {
-            SnackbarHost(snackbarHostState) {
-                TempToast(
-                    modifier = Modifier,
-                    message = "이메일이 복사되었습니다.",
-                    resId = R.drawable.mail,
-                )
-            }
-        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp)
+                .background(MooiTheme.colorScheme.background),
     ) { innerPadding ->
         Column(
             modifier =
@@ -203,10 +178,10 @@ private fun StatelessMyPageScreen(
                 onAccountInfoClick = navToAccountInfo,
                 onEmailCopyClick = {
                     clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
-                    onAction(MyPageAction.CopyEmail)
                 },
                 onTermsAndPrivacyClick = navToTermsAndPrivacy,
                 onLogoutClick = { showLogoutModal = true },
+                onNotificationClick = navToNotificationSetting,
             )
 
             if (showLogoutModal) {

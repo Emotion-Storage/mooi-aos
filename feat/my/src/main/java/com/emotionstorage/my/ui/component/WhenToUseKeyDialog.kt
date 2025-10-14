@@ -21,7 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -102,22 +105,30 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                     // TODO : 이모지 확인 필요
                     TipItem(
                         emoji = "\uD83D\uDE22",
-                        title = "불안하고 지쳐, 위로가 필요할 때",
+                        title = "불안하고 지쳐, ",
+                        boldTitle = "위로가 필요할 때",
+                        reverse = false,
                         content = "감정이 벅차오를 땐, 과거의 나 또는\n모이의 말이 위로가 될 수 있어요.",
                     )
                     TipItem(
                         emoji = "\uD83E\uDD14",
-                        title = "호기심 폭발! 지금 당장 알고 싶을 때",
+                        title = "호기심 폭발! ",
+                        boldTitle = "지금 당장 알고 싶을 때",
+                        reverse = false,
                         content = "어떤 감정을 적었는지 너무 궁금해서,\n하루도 기다리기 힘든 순간이 있죠.",
                     )
                     TipItem(
                         emoji = "\uD83D\uDC91",
-                        title = "소중한 사람과의 감정이 달라졌을 때",
+                        title = "이 달라졌을 때",
+                        boldTitle = "소중한 사람과의 감정",
+                        reverse = true,
                         content = "상황이 바뀌면, 과거의 내가 남긴\n감정을 다시 꺼내보고 싶어져요.",
                     )
                     TipItem(
                         emoji = "\uD83D\uDD51",
-                        title = "지금의 나와 과거의 나를 비교하고 싶을 때",
+                        title = "를 비교하고 싶을 때",
+                        boldTitle = "지금의 나와 과거의 나",
+                        reverse = true,
                         content = "지금의 나는 그때와 어떻게 달라졌고,\n얼마나 성장했을까요?",
                     )
                 }
@@ -130,6 +141,8 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
 private fun TipItem(
     emoji: String,
     title: String,
+    boldTitle: String,
+    reverse: Boolean,
     content: String,
 ) {
     Row(
@@ -143,11 +156,56 @@ private fun TipItem(
         Column(
             modifier = Modifier.weight(1f),
         ) {
-            Text(
-                text = title,
-                style = MooiTheme.typography.body4,
-                color = Color.White,
-            )
+            if (reverse) {
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style =
+                                MooiTheme.typography.body4.toSpanStyle().copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
+                            {
+                                append(boldTitle)
+                            },
+                        )
+                        withStyle(
+                            style =
+                                MooiTheme.typography.body5.toSpanStyle().copy(
+                                    color = Color.White,
+                                ),
+                            {
+                                append(title)
+                            },
+                        )
+                    },
+                )
+            } else {
+                Text(
+                    buildAnnotatedString {
+                        withStyle(
+                            style =
+                                MooiTheme.typography.body5.toSpanStyle().copy(
+                                    color = Color.White,
+                                ),
+                            {
+                                append(title)
+                            },
+                        )
+
+                        withStyle(
+                            style =
+                                MooiTheme.typography.body4.toSpanStyle().copy(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold,
+                                ),
+                            {
+                                append(boldTitle)
+                            },
+                        )
+                    },
+                )
+            }
 
             Spacer(modifier = Modifier.size(6.dp))
 
@@ -167,6 +225,8 @@ fun TipItemPreview() {
         TipItem(
             emoji = "😀",
             title = "제목",
+            boldTitle = "입니다",
+            reverse = false,
             content = "내용",
         )
     }

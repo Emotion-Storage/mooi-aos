@@ -1,10 +1,12 @@
 package com.emotionstorage.data.di
 
 import com.emotionstorage.data.repoImpl.MyPageRepositoryImpl
+import com.emotionstorage.data.repoImpl.NotificationSettingsRepositoryImpl
 import com.emotionstorage.data.repoImpl.SessionRepositoryImpl
 import com.emotionstorage.data.repoImpl.TimeCapsuleRepositoryImpl
 import com.emotionstorage.data.repoImpl.UserRepositoryImpl
 import com.emotionstorage.domain.repo.MyPageRepository
+import com.emotionstorage.domain.repo.NotificationSettingRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import com.emotionstorage.domain.repo.UserRepository
@@ -32,4 +34,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindMyPageRepository(impl: MyPageRepositoryImpl): MyPageRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationSettingRepository(
+        impl: NotificationSettingsRepositoryImpl,
+    ): NotificationSettingRepository
 }
