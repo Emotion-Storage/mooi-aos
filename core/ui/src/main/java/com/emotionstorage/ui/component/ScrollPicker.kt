@@ -113,19 +113,18 @@ fun ScrollPicker(
             ) {
                 range.forEach {
                     Text(
-                        style = MooiTheme.typography.caption3
-                    ),
-                    color = Color.White,
-                    text = it,
-                    modifier =
-                        Modifier
-                            .height(24.dp)
-                            .clickable(
-                                onClick = {
-                                    onValueChange(it)
-                                    setScrollPickerOpen(false)
-                                },
-                            ),
+                        style = MooiTheme.typography.caption3,
+                        color = Color.White,
+                        text = it,
+                        modifier =
+                            Modifier
+                                .height(24.dp)
+                                .clickable(
+                                    onClick = {
+                                        onValueChange(it)
+                                        setScrollPickerOpen(false)
+                                    },
+                                ),
                     )
                 }
             }
