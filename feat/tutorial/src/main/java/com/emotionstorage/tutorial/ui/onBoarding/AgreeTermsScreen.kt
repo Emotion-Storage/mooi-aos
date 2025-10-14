@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,6 +57,8 @@ fun AgreeTermsScreen(
     ) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
+    // todo: delete test navigations
+    navToSignupComplete: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -66,6 +69,7 @@ fun AgreeTermsScreen(
         onSignup = onSignup,
         onAgreeTermsInputComplete = onAgreeTermsInputComplete,
         navToBack = navToBack,
+        navToSignupComplete = navToSignupComplete
     )
 }
 
@@ -81,6 +85,8 @@ private fun StatelessAgreeTermsScreen(
     ) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
+    // todo: delete test navigations
+    navToSignupComplete: () -> Unit = {}
 ) {
     val coroutineScope = rememberCoroutineScope()
 
@@ -199,6 +205,15 @@ private fun StatelessAgreeTermsScreen(
                         color = MooiTheme.colorScheme.primary,
                         text = "* 선택 약관은 원하실 경우에만 동의하셔도 괜찮아요.",
                     )
+                }
+
+                // todo: delete test navigatyion button
+                Button(
+                    onClick = {
+                        navToSignupComplete()
+                    }
+                ) {
+                    Text("회원가입 성공 화면 이동")
                 }
             }
 
