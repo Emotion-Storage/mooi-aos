@@ -20,7 +20,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -67,7 +66,7 @@ private fun StatelessPushNotificationScreen(
                 onBackClick = navToBack,
                 onHandleBackPress = navToBack,
             )
-        }
+        },
     ) { innerPadding ->
 
         Box(
@@ -76,19 +75,21 @@ private fun StatelessPushNotificationScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .background(color = MooiTheme.colorScheme.background)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
+                    .consumeWindowInsets(WindowInsets.navigationBars),
         ) {
             Column(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp)
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
             ) {
                 Row(
-                    modifier = Modifier
-                        .height(24.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier =
+                        Modifier
+                            .height(24.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        modifier = Modifier
-                            .size(18.dp),
+                        modifier =
+                            Modifier
+                                .size(18.dp),
                         painter = painterResource(R.drawable.alarm),
                         contentDescription = "알림 아이콘",
                         tint = MooiTheme.colorScheme.gray600,
@@ -107,14 +108,14 @@ private fun StatelessPushNotificationScreen(
                     EmptyPushHolder()
                 } else {
                     LazyColumn(
-                        modifier = Modifier.padding(top = 22.dp)
+                        modifier = Modifier.padding(top = 22.dp),
                     ) {
                         itemsIndexed(value) { index, item ->
                             PushAlarmCard(
                                 id = item.id,
                                 title = item.title,
                                 timeText = item.timeText,
-                                onClick = onClick
+                                onClick = onClick,
                             )
                             if (index < value.size - 1) Spacer(modifier = Modifier.size(12.dp))
                         }

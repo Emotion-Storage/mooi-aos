@@ -13,14 +13,16 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun EmptyPushHolder() {
     Box(
-        modifier = Modifier.fillMaxSize()
-            .background(color = MooiTheme.colorScheme.background),
-        contentAlignment = Alignment.Center
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(color = MooiTheme.colorScheme.background),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "아직 도착한 알림이 없어요.",
             style = MooiTheme.typography.caption2,
-            color = MooiTheme.colorScheme.gray400
+            color = MooiTheme.colorScheme.gray400,
         )
     }
 }

@@ -247,7 +247,7 @@ internal fun AppNavHost(
                     },
                     navToAlarm = {
                         navController.navigate(AppDestination.PushNotification)
-                    }
+                    },
                 )
             }
             composable<AppDestination.TimeCapsuleCalendar> {
