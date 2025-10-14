@@ -445,7 +445,7 @@ private fun TimeCapsuleContent(
             verticalArrangement = Arrangement.spacedBy(5.dp),
         ) {
             Row(
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 for (emotion in timeCapsule.emotions) {
