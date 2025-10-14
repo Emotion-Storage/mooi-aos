@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -95,6 +96,7 @@ fun TextInput(
             textStyle = MooiTheme.typography.body7.copy(color = Color.White),
             value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
             onValueChange = onValueChange,
+            cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
             maxLines = 1,
         ) {
             Column(
