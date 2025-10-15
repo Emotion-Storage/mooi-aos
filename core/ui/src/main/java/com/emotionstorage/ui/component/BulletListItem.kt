@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.size
