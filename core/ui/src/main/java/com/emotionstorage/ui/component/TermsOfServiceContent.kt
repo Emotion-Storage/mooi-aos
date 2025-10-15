@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Spacer
@@ -17,8 +17,8 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.my.R
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.R
 
 enum class ListStyle { Bulleted, Numbered }
 
@@ -34,6 +34,16 @@ fun TermsOfServiceContent(modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp, vertical = 25.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
+        item {
+            Text(
+                text = "MOOI 이용 약관",
+                style = MooiTheme.typography.head1,
+                color = Color.White,
+            )
+
+            Spacer(modifier = Modifier.size(4.dp))
+        }
+
         itemsIndexed(titles) { index, title ->
             val body = contents.getOrNull(index).orEmpty()
 

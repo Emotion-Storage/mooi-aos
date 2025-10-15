@@ -22,8 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.my.ui.component.PrivacyPolicyContent
-import com.emotionstorage.my.ui.component.TermsOfServiceContent
+import com.emotionstorage.ui.component.PrivacyPolicyContent
+import com.emotionstorage.ui.component.TermsOfServiceContent
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 

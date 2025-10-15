@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.ui.component
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.my.R
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -57,6 +57,15 @@ fun PrivacyPolicyContent() {
                 .padding(start = 16.dp, end = 16.dp, top = 9.dp, bottom = 25.dp),
         contentPadding = PaddingValues(vertical = 18.dp),
     ) {
+        item {
+            Text(
+                text = "MOOI 개인정보처리방침",
+                style = MooiTheme.typography.head1,
+                color = Color.White,
+            )
+            Spacer(modifier = Modifier.size(22.dp))
+        }
+
         item {
             Text(
                 text = stringResource(id = R.string.privacy_main),
