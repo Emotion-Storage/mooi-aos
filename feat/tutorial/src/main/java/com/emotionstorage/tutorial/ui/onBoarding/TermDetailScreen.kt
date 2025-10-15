@@ -42,16 +42,7 @@ fun TermDetailScreen(
                 .consumeWindowInsets(WindowInsets.navigationBars)
                 .background(MooiTheme.colorScheme.background),
         ) {
-            Column {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, top = 24.dp),
-                    text = "MOOI 이용 약관",
-                    style = MooiTheme.typography.head1,
-                    color = Color.White,
-                )
-
                 TermsOfServiceContent()
-            }
         }
     }
 }

@@ -42,16 +42,7 @@ fun PrivacyPolicyDetailScreen(
                 .consumeWindowInsets(WindowInsets.navigationBars)
                 .background(MooiTheme.colorScheme.background),
         ) {
-            Column {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, top = 24.dp),
-                    text = "MOOI 개인정보처리방침",
-                    style = MooiTheme.typography.head1,
-                    color = Color.White,
-                )
-
                 PrivacyPolicyContent()
-            }
         }
     }
 }

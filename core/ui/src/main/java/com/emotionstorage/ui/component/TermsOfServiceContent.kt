@@ -34,6 +34,17 @@ fun TermsOfServiceContent(modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp, vertical = 25.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
+
+        item {
+            Text(
+                text = "MOOI 이용 약관",
+                style = MooiTheme.typography.head1,
+                color = Color.White,
+            )
+
+            Spacer(modifier = Modifier.size(4.dp))
+        }
+
         itemsIndexed(titles) { index, title ->
             val body = contents.getOrNull(index).orEmpty()
 

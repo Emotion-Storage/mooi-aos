@@ -42,16 +42,7 @@ fun MarketingUsageDetailScreen(
                 .consumeWindowInsets(WindowInsets.navigationBars)
                 .background(MooiTheme.colorScheme.background),
         ) {
-            Column {
-                Text(
-                    modifier = Modifier.padding(start = 16.dp, top = 24.dp),
-                    text = "MOOI 마케팅 활용 및 수신동의",
-                    style = MooiTheme.typography.head1,
-                    color = Color.White,
-                )
-
                 MarketingUsageContent()
-            }
         }
     }
 }

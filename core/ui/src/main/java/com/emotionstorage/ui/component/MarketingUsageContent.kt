@@ -47,6 +47,15 @@ fun MarketingUsageContent() {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 22.dp),
     ) {
         Text(
+            text = "MOOI 마케팅 활용 및 수신동의",
+            style = MooiTheme.typography.head1,
+            color = Color.White,
+        )
+
+        Spacer(modifier = Modifier.size(22.dp))
+
+
+        Text(
             text = stringResource(R.string.marketing_main),
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
             color = Color.White
