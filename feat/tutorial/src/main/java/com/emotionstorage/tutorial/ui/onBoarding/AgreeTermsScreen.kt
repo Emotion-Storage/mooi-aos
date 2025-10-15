@@ -55,6 +55,9 @@ fun AgreeTermsScreen(
     ) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
+    navToTermDetail: () -> Unit = {},
+    navToPrivacyDetail: () -> Unit = {},
+    navToMarketingDetail: () -> Unit = {},
     // todo: delete test navigations
     navToSignupComplete: () -> Unit = {},
 ) {
@@ -67,6 +70,9 @@ fun AgreeTermsScreen(
         onSignup = onSignup,
         onAgreeTermsInputComplete = onAgreeTermsInputComplete,
         navToBack = navToBack,
+        navToTermDetail = navToTermDetail,
+        navToPrivacyDetail = navToPrivacyDetail,
+        navToMarketingDetail = navToMarketingDetail,
         navToSignupComplete = navToSignupComplete,
     )
 }
@@ -83,6 +89,9 @@ private fun StatelessAgreeTermsScreen(
     ) -> Unit = { _, _, _ -> },
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
+    navToTermDetail: () -> Unit = {},
+    navToPrivacyDetail: () -> Unit = {},
+    navToMarketingDetail: () -> Unit = {},
     // todo: delete test navigations
     navToSignupComplete: () -> Unit = {},
 ) {
@@ -160,8 +169,8 @@ private fun StatelessAgreeTermsScreen(
                         isSelected = state.isTermAgree,
                         onSelect = event::onToggleTermAgree,
                         showTermDetail = true,
-                        onShowTermDetail = {
-                            // todo: nav to term detail screen
+                        onShowDetail = {
+                            navToTermDetail()
                         },
                     )
                     TermItem(
@@ -169,8 +178,8 @@ private fun StatelessAgreeTermsScreen(
                         isSelected = state.isPrivacyAgree,
                         onSelect = event::onTogglePrivacyAgree,
                         showTermDetail = true,
-                        onShowTermDetail = {
-                            // todo: nav to term detail screen
+                        onShowDetail = {
+                            navToPrivacyDetail()
                         },
                     )
                     TermItem(
@@ -178,8 +187,8 @@ private fun StatelessAgreeTermsScreen(
                         isSelected = state.isMarketingAgree,
                         onSelect = event::onToggleMarketingAgree,
                         showTermDetail = true,
-                        onShowTermDetail = {
-                            // todo: nav to marketing term detail screen
+                        onShowDetail = {
+                            navToMarketingDetail()
                         },
                     )
                     TermItem(
@@ -248,7 +257,7 @@ private fun TermItem(
     isSelected: Boolean = false,
     onSelect: () -> Unit = {},
     showTermDetail: Boolean = false,
-    onShowTermDetail: () -> Unit = { },
+    onShowDetail: () -> Unit = { },
 ) {
     Row(modifier = modifier.fillMaxWidth()) {
         ToggleButton(
@@ -276,7 +285,7 @@ private fun TermItem(
                         .height(14.dp)
                         .width(8.dp)
                         .clickable {
-                            onShowTermDetail()
+                            onShowDetail()
                         },
                 painter = painterResource(R.drawable.arrow_right),
                 contentDescription = "show term detail",
