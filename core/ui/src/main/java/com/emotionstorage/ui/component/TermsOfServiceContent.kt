@@ -34,7 +34,6 @@ fun TermsOfServiceContent(modifier: Modifier = Modifier) {
                 .padding(horizontal = 16.dp, vertical = 25.dp),
         verticalArrangement = Arrangement.spacedBy(18.dp),
     ) {
-
         item {
             Text(
                 text = "MOOI 이용 약관",

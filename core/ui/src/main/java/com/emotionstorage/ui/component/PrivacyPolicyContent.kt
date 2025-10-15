@@ -57,7 +57,6 @@ fun PrivacyPolicyContent() {
                 .padding(start = 16.dp, end = 16.dp, top = 9.dp, bottom = 25.dp),
         contentPadding = PaddingValues(vertical = 18.dp),
     ) {
-
         item {
             Text(
                 text = "MOOI 개인정보처리방침",

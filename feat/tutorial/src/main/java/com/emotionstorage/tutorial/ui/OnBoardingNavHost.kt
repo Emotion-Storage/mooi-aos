@@ -184,7 +184,7 @@ private fun StatelessOnBoardingNavHost(
                             },
                             navToMarketingDetail = {
                                 onAction(OnBoardingAction.MarketingDetail)
-                            }
+                            },
                         )
                     }
 
@@ -192,7 +192,7 @@ private fun StatelessOnBoardingNavHost(
                         TermDetailScreen(
                             navToBack = {
                                 navController.popBackStack()
-                            }
+                            },
                         )
                     }
 
@@ -200,7 +200,7 @@ private fun StatelessOnBoardingNavHost(
                         PrivacyPolicyDetailScreen(
                             navToBack = {
                                 navController.popBackStack()
-                            }
+                            },
                         )
                     }
 
@@ -208,7 +208,7 @@ private fun StatelessOnBoardingNavHost(
                         MarketingUsageDetailScreen(
                             navToBack = {
                                 navController.popBackStack()
-                            }
+                            },
                         )
                     }
                 }

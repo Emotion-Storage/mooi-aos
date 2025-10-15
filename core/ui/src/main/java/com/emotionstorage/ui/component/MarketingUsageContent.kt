@@ -54,11 +54,10 @@ fun MarketingUsageContent() {
 
         Spacer(modifier = Modifier.size(22.dp))
 
-
         Text(
             text = stringResource(R.string.marketing_main),
             style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
-            color = Color.White
+            color = Color.White,
         )
 
         Spacer(modifier = Modifier.size(32.dp))
@@ -66,7 +65,6 @@ fun MarketingUsageContent() {
         MarketingTable(tableHeaders, rows)
     }
 }
-
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
@@ -110,6 +108,7 @@ fun MarketingTable(
         }
     }
 }
+
 @Composable
 private fun TableRow(
     items: List<String>,
