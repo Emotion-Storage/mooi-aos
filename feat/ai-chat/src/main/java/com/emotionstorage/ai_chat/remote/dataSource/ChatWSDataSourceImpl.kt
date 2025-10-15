@@ -72,7 +72,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
             session.send(
                 headers =
                     StompSendHeaders(
-                        destination = "/pub/v1/test",
+                        destination = "/pub/v1/chat",
                     ),
                 body = FrameBody.Text(messageJson),
             )
