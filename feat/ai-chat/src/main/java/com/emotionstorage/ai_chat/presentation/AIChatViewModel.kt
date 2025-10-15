@@ -21,7 +21,7 @@ data class AIChatState(
     val roomId: String = "",
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
-    val chatProgress: Float = 0f,
+    val chatProgress: Float = 0.03f,
 ) {
     val isEmpty: Boolean get() = messages.isEmpty()
     val hasTodayHistory: Boolean
