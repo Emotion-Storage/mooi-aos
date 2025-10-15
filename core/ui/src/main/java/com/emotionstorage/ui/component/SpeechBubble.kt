@@ -16,9 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Fill
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -71,76 +74,106 @@ fun SpeechBubble(
                 .then(Modifier.size(sizeParam)),
     ) {
         Canvas(
-            modifier =
-                Modifier
-                    .matchParentSize()
-                    // set background brush opacity to 20%
-                    .graphicsLayer(alpha = 0.2f),
+            modifier = Modifier
+                .matchParentSize()
+                .graphicsLayer(alpha = 0.2f) // 배경 투명도 유지
         ) {
             val w = size.width
             val h = size.height
 
-            val path =
-                Path().apply {
-                    when (tail) {
-                        BubbleTail.BottomCenter -> {
-                            val rectBottom = h - tailHeightPx
-                            addRoundRect(
-                                RoundRect(
-                                    left = 0f,
-                                    top = 0f,
-                                    right = w,
-                                    bottom = rectBottom,
-                                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
-                                ),
-                            )
-                            // 하단 가운데 말풍선 꼬리
-                            moveTo(w / 2 - tailWidthPx / 2, rectBottom)
-                            lineTo(w / 2, h)
-                            lineTo(w / 2 + tailWidthPx / 2, rectBottom)
-                            close()
-                        }
-
-                        BubbleTail.TopCenter -> {
-                            val rectTop = tailHeightPx
-                            addRoundRect(
-                                RoundRect(
-                                    left = 0f,
-                                    top = rectTop,
-                                    right = w,
-                                    bottom = h,
-                                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
-                                ),
-                            )
-                            // 상단 가운데 말풍선 꼬리
-                            moveTo(w / 2 - tailWidthPx / 2, rectTop)
-                            lineTo(w / 2, 0f)
-                            lineTo(w / 2 + tailWidthPx / 2, rectTop)
-                            close()
-                        }
-
-                        BubbleTail.TopLeft -> {
-                            val rectTop = tailHeightPx
-                            addRoundRect(
-                                RoundRect(
-                                    left = 0f,
-                                    top = rectTop,
-                                    right = w,
-                                    bottom = h,
-                                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
-                                ),
-                            )
-                            // 좌상단 말풍선 꼬리
-                            moveTo(tailOffsetPx - tailWidthPx / 2, rectTop)
-                            lineTo(tailOffsetPx, 0f)
-                            lineTo(tailOffsetPx + tailWidthPx / 2, rectTop)
-                            close()
-                        }
+            val rect = when (tail) {
+                BubbleTail.BottomCenter -> RoundRect(
+                    left = 0f, top = 0f, right = w, bottom = h - tailHeightPx,
+                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
+                )
+                BubbleTail.TopCenter, BubbleTail.TopLeft -> RoundRect(
+                    left = 0f, top = tailHeightPx, right = w, bottom = h,
+                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
+                )
+            }
+            val fillPath = Path().apply {
+                addRoundRect(rect)
+                when (tail) {
+                    BubbleTail.BottomCenter -> {
+                        moveTo(w/2 - tailWidthPx/2, rect.bottom)
+                        lineTo(w/2, h)
+                        lineTo(w/2 + tailWidthPx/2, rect.bottom)
+                        close()
+                    }
+                    BubbleTail.TopCenter -> {
+                        moveTo(w/2 - tailWidthPx/2, rect.top)
+                        lineTo(w/2, 0f)
+                        lineTo(w/2 + tailWidthPx/2, rect.top)
+                        close()
+                    }
+                    BubbleTail.TopLeft -> {
+                        moveTo(tailOffsetPx - tailWidthPx/2, rect.top)
+                        lineTo(tailOffsetPx, 0f)
+                        lineTo(tailOffsetPx + tailWidthPx/2, rect.top)
+                        close()
                     }
                 }
-            drawPath(path = path, brush = bgBrush, style = Fill)
-            // todo: fix border
-            // drawPath(path = path, brush = borderBrush, style = Stroke(borderWidth))
+            }
+            drawPath(path = fillPath, brush = bgBrush, style = Fill)
+
+            val gapHalf = tailWidthPx / 2f
+            val gapThickness = borderWidth * 1.0f
+            when (tail) {
+                BubbleTail.BottomCenter -> {
+                    clipRect(
+                        left = (w/2 - gapHalf) - gapThickness,
+                        top = rect.bottom - gapThickness,
+                        right = (w/2 + gapHalf) + gapThickness,
+                        bottom = rect.bottom + gapThickness,
+                        clipOp = ClipOp.Difference
+                    ) {
+                        val rectPath = Path().apply { addRoundRect(rect) }
+                        drawPath(rectPath, brush = borderBrush, style = Stroke(borderWidth))
+                    }
+                    val sidePath = Path().apply {
+                        moveTo(w/2, h); lineTo(w/2 - gapHalf, rect.bottom)
+                        moveTo(w/2, h); lineTo(w/2 + gapHalf, rect.bottom)
+                    }
+                    drawPath(sidePath, brush = borderBrush, style = Stroke(borderWidth))
+                }
+
+                BubbleTail.TopCenter -> {
+                    clipRect(
+                        left = (w/2 - gapHalf) - gapThickness,
+                        top = rect.top - gapThickness,
+                        right = (w/2 + gapHalf) + gapThickness,
+                        bottom = rect.top + gapThickness,
+                        clipOp = ClipOp.Difference
+                    ) {
+                        val rectPath = Path().apply { addRoundRect(rect) }
+                        drawPath(rectPath, brush = borderBrush, style = Stroke(borderWidth))
+                    }
+                    val sidePath = Path().apply {
+                        moveTo(w/2, 0f); lineTo(w/2 - gapHalf, rect.top)
+                        moveTo(w/2, 0f); lineTo(w/2 + gapHalf, rect.top)
+                    }
+                    drawPath(sidePath, brush = borderBrush, style = Stroke(borderWidth))
+                }
+
+                BubbleTail.TopLeft -> {
+                    val baseX = tailOffsetPx
+                    clipRect(
+                        left = (baseX - gapHalf) - gapThickness,
+                        top = rect.top - gapThickness,
+                        right = (baseX + gapHalf) + gapThickness,
+                        bottom = rect.top + gapThickness,
+                        clipOp = ClipOp.Difference
+                    ) {
+                        val rectPath = Path().apply { addRoundRect(rect) }
+                        drawPath(rectPath, brush = borderBrush, style = Stroke(borderWidth))
+                    }
+                    val sidePath = Path().apply {
+                        moveTo(baseX, 0f); lineTo(baseX - gapHalf, rect.top)
+                        moveTo(baseX, 0f); lineTo(baseX + gapHalf, rect.top)
+                    }
+                    drawPath(sidePath, brush = borderBrush, style = Stroke(borderWidth))
+                }
+            }
         }
 
         Column(

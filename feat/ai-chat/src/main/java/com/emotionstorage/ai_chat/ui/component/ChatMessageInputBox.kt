@@ -59,7 +59,6 @@ fun ChatMessageInputBox(
         shadowElevation = 0.dp,
         color = MooiTheme.colorScheme.background,
     ) {
-        // 바 높이 78dp
         Box(
             modifier =
                 Modifier
@@ -67,7 +66,6 @@ fun ChatMessageInputBox(
                     .height(78.dp)
                     .padding(16.dp),
         ) {
-            // 입력 캡슐
             BasicTextField(
                 value = text,
                 onValueChange = { if (enabled && !readOnly) onTextChange(it) },
@@ -85,15 +83,14 @@ fun ChatMessageInputBox(
                             Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-                                .background(MooiTheme.colorScheme.gray800, shape)
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
+                                .background(Color(0xFF26262C), shape)
+                                .padding(start = 19.dp, top = 12.dp, bottom = 12.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Box(
                             modifier =
                                 Modifier
-                                    .weight(1f)
-                                    .padding(start = 6.dp),
+                                    .weight(1f),
                         ) {
                             if (text.isEmpty()) {
                                 Text(
@@ -111,7 +108,7 @@ fun ChatMessageInputBox(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight()
+                        .height(46.dp)
                         .focusRequester(focusRequester)
                         .onFocusChanged { onFocusChanged(it.isFocused) },
             )
