@@ -116,6 +116,26 @@
     <string name="thirteenth_privacy_title">제13조 (개인정보 처리방침 시행 및 변경)</string>
     <string name="thirteenth_privacy_content">이 개인정보 처리방침은 2025년 9월 30일부터 적용됩니다. 개인정보 처리방침의 내용이 변경될 경우, 변경사항은 사전에 고지됩니다.</string>
 
+    <string name="marketing_main">서비스와 관련된 신규 소식, 이벤트 안내, 고객 혜택 등 다양한 정보를 제공합니다. 마케팅 활용 및 수신 동의는 사용자의 선택사항이며, 정보통신망법 제50조 제8항에 따라 해당 동의는 2년에 한 번 갱신됩니다.</string>
+
+    <string name="marketing_table_header_first">수신 정보 및 목적</string>
+    <string name="marketing_table_header_second">필수 항목</string>
+    <string name="marketing_table_header_third">선택 항목</string>
+    <string name="marketing_table_header_fourth">보유 및 이용 기간</string>
+    <string name="marketing_table_header_fifth">수신\n방법</string>
+
+    <string name="marketing_table_1th_row_first">전체 공지: 서비스 관련 소식, 이벤트 안내,</string>
+    <string name="marketing_table_1th_row_second">이름(닉네임), 이메일</string>
+    <string name="marketing_table_1th_row_third">없음</string>
+    <string name="marketing_table_1th_row_fourth">2년 주기로 재확인, 회원탈퇴 후 6개월까지</string>
+    <string name="marketing_table_1th_row_fifth">앱 푸시 알림, 이메일</string>
+
+    <string name="marketing_table_2th_row_first">이벤트 공지: 타겟 광고, 할인 혜택, 연령대별·성별별  광고 제공</string>
+    <string name="marketing_table_2th_row_second">이름(닉네임), 이메일</string>
+    <string name="marketing_table_2th_row_third">성별,생년월일,연령대</string>
+    <string name="marketing_table_2th_row_fourth">2년 주기로 재확인, 회원탈퇴 후 6개월까지</string>
+    <string name="marketing_table_2th_row_fifth">앱 푸시 알림, 이메일</string>
+
     <string-array name="terms_titles">
         <item>@string/first_terms_title</item>
         <item>@string/second_terms_title</item>
@@ -213,4 +233,29 @@
         <item>@string/table_3th_row_third</item>
         <item>@string/table_3th_row_fourth</item>
     </string-array>
+
+    <string-array name="marketing_table_headers">
+        <item>@string/marketing_table_header_first</item>
+        <item>@string/marketing_table_header_second</item>
+        <item>@string/marketing_table_header_third</item>
+        <item>@string/marketing_table_header_fourth</item>
+        <item>@string/marketing_table_header_fifth</item>
+    </string-array>
+
+    <string-array name="marketing_table_1th_row">
+        <item>@string/marketing_table_1th_row_first</item>
+        <item>@string/marketing_table_1th_row_second</item>
+        <item>@string/marketing_table_1th_row_third</item>
+        <item>@string/marketing_table_1th_row_fourth</item>
+        <item>@string/marketing_table_1th_row_fifth</item>
+    </string-array>
+
+    <string-array name="marketing_table_2th_row">
+        <item>@string/marketing_table_2th_row_first</item>
+        <item>@string/marketing_table_2th_row_second</item>
+        <item>@string/marketing_table_2th_row_third</item>
+        <item>@string/marketing_table_2th_row_fourth</item>
+        <item>@string/marketing_table_2th_row_fifth</item>
+    </string-array>
+
 </resources>
