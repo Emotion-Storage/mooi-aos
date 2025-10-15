@@ -1,15 +1,16 @@
 package com.emotionstorage.ai_chat.ui.component
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -26,9 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.common.toKorDate
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.model.ChatMessage.MessageSource
-import com.emotionstorage.common.toKorDate
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -40,8 +41,6 @@ fun ChatMessageList(
 ) {
     LazyColumn(
         modifier = modifier.fillMaxSize(),
-        contentPadding = PaddingValues(vertical = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
@@ -49,7 +48,16 @@ fun ChatMessageList(
                     date = item.timestamp.toLocalDate(),
                     modifier = Modifier.padding(vertical = if (index != 0) 16.dp else 0.dp),
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(24.dp))
+            } else {
+                val previousChat = chatMessages[index - 1]
+                val topPadding = when {
+                    previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 22.dp
+                    previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 13.dp
+                    previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 7.dp
+                    else -> 0.dp
+                }
+                Spacer(Modifier.size(topPadding))
             }
 
             val showProfile =
@@ -57,10 +65,11 @@ fun ChatMessageList(
                     chatMessages[index - 1].source != item.source ||
                     chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()
 
+
             ChatMessageItem(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 chatMessage = item,
-                showProfile = showProfile,
+                showProfile = showProfile && item.source == MessageSource.SERVER,
             )
         }
     }
@@ -83,24 +92,27 @@ private fun DateDivider(
             modifier =
                 Modifier
                     .weight(1f)
-                    .height(1.dp)
-                    .background(Color.Gray),
+                    .padding(horizontal = 16.dp)
+                    .height(1.5.dp)
+                    .background(MooiTheme.colorScheme.gray800.copy(alpha = 0.5f)),
         )
         Text(
             text = date.toKorDate(),
-            style = MooiTheme.typography.body3,
-            color = Color.Gray,
+            style = MooiTheme.typography.caption2,
+            color = MooiTheme.colorScheme.gray600,
         )
         Box(
             modifier =
                 Modifier
                     .weight(1f)
-                    .height(1.dp)
-                    .background(Color.Gray),
+                    .padding(horizontal = 16.dp)
+                    .height(1.5.dp)
+                    .background(MooiTheme.colorScheme.gray800.copy(alpha = 0.5f)),
         )
     }
 }
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 private fun ChatMessageItem(
     chatMessage: ChatMessage,
@@ -111,7 +123,6 @@ private fun ChatMessageItem(
 
     Column(
         modifier = modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = if (chatMessage.source == MessageSource.CLIENT) Alignment.End else Alignment.Start,
     ) {
         if (showProfile) {
@@ -119,30 +130,46 @@ private fun ChatMessageItem(
                 Box(
                     modifier =
                         Modifier
-                            .size(26.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
                             .background(Color.Gray),
                 )
             }
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.size(10.dp))
         }
-        Box(
-            modifier =
-                Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .widthIn(max = (screenWidth * 0.8).dp)
+
+        if (chatMessage.source == MessageSource.SERVER) {
+            Box(
+                modifier = Modifier
+                    // TODO : 너비 제한을 얼마나 두는게 좋을지 논의 필요
+                    .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.7f)
+                    .heightIn(42.dp)
                     .background(
-                        if (chatMessage.source == MessageSource.CLIENT) {
-                            MooiTheme.colorScheme.primary
-                        } else {
-                            MooiTheme.colorScheme.gray500
-                        },
-                    ).padding(8.dp),
-        ) {
-            Text(
-                text = chatMessage.content,
-                style = MooiTheme.typography.body3,
-            )
+                        color = MooiTheme.colorScheme.blueGrayBackground,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Text(
+                    modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
+                    text = chatMessage.content,
+                    style = MooiTheme.typography.caption3,
+                    color = Color.White
+                )
+            }
+
+        } else {
+            Box(
+                modifier = Modifier.height(24.dp)
+                    .widthIn(LocalConfiguration.current.screenWidthDp.dp * 0.6f),
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = chatMessage.content,
+                    style = MooiTheme.typography.caption3,
+                    color = Color.White,
+                )
+            }
         }
     }
 }
