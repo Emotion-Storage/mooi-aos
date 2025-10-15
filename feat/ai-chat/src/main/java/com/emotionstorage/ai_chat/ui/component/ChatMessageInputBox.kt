@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -73,6 +74,7 @@ fun ChatMessageInputBox(
                 maxLines = 1,
                 readOnly = readOnly,
                 enabled = enabled,
+                cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
                 textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
