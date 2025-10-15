@@ -40,7 +40,9 @@ fun ChatMessageList(
     chatMessages: List<ChatMessage> = listOf(),
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .padding(top = 16.dp),
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
@@ -160,7 +162,8 @@ private fun ChatMessageItem(
 
         } else {
             Box(
-                modifier = Modifier.height(24.dp)
+                modifier = Modifier
+                    .height(24.dp)
                     .widthIn(LocalConfiguration.current.screenWidthDp.dp * 0.6f),
             ) {
                 Text(
