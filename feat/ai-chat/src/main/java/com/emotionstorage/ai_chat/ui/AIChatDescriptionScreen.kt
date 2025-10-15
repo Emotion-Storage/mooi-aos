@@ -39,7 +39,7 @@ fun AIChatDescriptionScreen(
 
     StatelessAIChatDescriptionScreen(
         modifier = modifier,
-        progress = 0.1f,
+        progress = 0.03f,
         showDescription = showDescription,
         progressBarBounds = progressRect,
         inputBoxBounds = inputRect,
@@ -74,13 +74,12 @@ private fun StatelessAIChatDescriptionScreen(
     ) { innerPadding ->
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
                     .imePadding(),
         ) {
-            // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
                 modifier =
                     Modifier.onGloballyPositioned {
@@ -95,7 +94,6 @@ private fun StatelessAIChatDescriptionScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        // ProgressBar 위치 추적
                         .onGloballyPositioned {
                             onProgressRect(it.boundsInParent())
                         },
