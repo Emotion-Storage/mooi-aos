@@ -164,7 +164,7 @@ private fun ChatMessageItem(
                     .widthIn(LocalConfiguration.current.screenWidthDp.dp * 0.6f),
             ) {
                 Text(
-                    modifier = Modifier.align(Alignment.Center),
+                    modifier = Modifier.align(Alignment.CenterEnd),
                     text = chatMessage.content,
                     style = MooiTheme.typography.caption3,
                     color = Color.White,
