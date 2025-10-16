@@ -42,7 +42,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AIChatScreen(
-    roomId: String,
+    roomId: Long,
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},

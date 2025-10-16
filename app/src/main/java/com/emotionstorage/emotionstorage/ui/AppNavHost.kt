@@ -79,12 +79,12 @@ internal sealed class AppDestination {
 
     @Serializable
     data class AIChat(
-        val roomId: String,
+        val roomId: Long,
     ) : AppDestination()
 
     @Serializable
     data class AIChatDesc(
-        val roomId: String,
+        val roomId: Long,
     ) : AppDestination()
 
     @Serializable

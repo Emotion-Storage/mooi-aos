@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Serializable
 data class ChatMessageRequestBody(
     val messageId: String,
-    val roomId: String,
+    val roomId: Long,
     val content: String,
     val messageType: String = "user_message",
     @Serializable(with = LocalDateTimeSerializer::class)

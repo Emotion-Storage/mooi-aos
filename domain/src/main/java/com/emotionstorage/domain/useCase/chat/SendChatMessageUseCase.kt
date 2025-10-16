@@ -12,7 +12,7 @@ class SendChatMessageUseCase
         private val chatRepository: ChatRepository,
     ) {
         suspend operator fun invoke(
-            roomId: String,
+            roomId: Long,
             chatMessage: ChatMessage,
         ): Flow<DataState<Boolean>> = chatRepository.sendChatMessage(roomId, chatMessage)
     }

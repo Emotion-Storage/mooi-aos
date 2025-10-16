@@ -77,7 +77,7 @@ sealed class CalendarSideEffect {
     }
 
     data class EnterCharRoomSuccess(
-        val roomId: String,
+        val roomId: Long,
     ) : CalendarSideEffect()
 }
 

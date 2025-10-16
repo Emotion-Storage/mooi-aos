@@ -183,7 +183,7 @@ private fun ChatMessageListPreview() {
     val chatMessages =
         List(6, init = { it }).map { it ->
             ChatMessage(
-                roomId = "",
+                roomId = 1L,
                 source = if (it % 3 == 0) MessageSource.CLIENT else MessageSource.SERVER,
                 content = "안녕하세요",
                 timestamp = LocalDateTime.of(2025, 9, 2, 17, it, 1, 1),
@@ -191,13 +191,13 @@ private fun ChatMessageListPreview() {
         } +
             listOf(
                 ChatMessage(
-                    roomId = "",
+                    roomId = 1L,
                     source = MessageSource.SERVER,
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
                 ),
                 ChatMessage(
-                    roomId = "",
+                    roomId = 1L,
                     source = MessageSource.CLIENT,
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
@@ -205,7 +205,7 @@ private fun ChatMessageListPreview() {
             ) +
             List(6, init = { it }).map { it ->
                 ChatMessage(
-                    roomId = "",
+                    roomId = 1L,
                     source = if (it % 3 == 0) MessageSource.SERVER else MessageSource.CLIENT,
                     content = "안녕하세요",
                     timestamp = LocalDateTime.of(2025, 9, 4, 17, it, 1, 1),

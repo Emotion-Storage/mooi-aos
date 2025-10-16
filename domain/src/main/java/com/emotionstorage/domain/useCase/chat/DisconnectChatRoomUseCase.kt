@@ -10,6 +10,6 @@ class DisconnectChatRoomUseCase
     constructor(
         private val chatRepository: ChatRepository,
     ) {
-        suspend operator fun invoke(roomId: String): Flow<DataState<Boolean>> =
+        suspend operator fun invoke(roomId: Long): Flow<DataState<Boolean>> =
             chatRepository.disconnectChatRoom(roomId)
     }

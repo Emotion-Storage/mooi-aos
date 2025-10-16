@@ -54,7 +54,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
         }
     }
 
-    override suspend fun observeChatMessages(roomId: String): Flow<String> =
+    override suspend fun observeChatMessages(roomId: Long): Flow<String> =
         session.subscribeText("/sub/chatroom/$roomId").map {
             Logger.d("observeChatMessages() it: $it")
             it

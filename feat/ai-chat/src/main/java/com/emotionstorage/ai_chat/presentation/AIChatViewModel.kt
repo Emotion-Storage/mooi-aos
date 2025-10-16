@@ -18,7 +18,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 data class AIChatState(
-    val roomId: String = "",
+    val roomId: Long = 0L,
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
     val chatProgress: Float = 0.03f,
@@ -32,7 +32,7 @@ data class AIChatState(
 
 sealed class AIChatAction {
     data class ConnectChatRoom(
-        val roomId: String,
+        val roomId: Long,
     ) : AIChatAction()
 
     data class SendChatMessage(
@@ -88,7 +88,7 @@ class AIChatViewModel @Inject constructor(
         }
     }
 
-    private fun handleConnectChatRoom(roomId: String) =
+    private fun handleConnectChatRoom(roomId: Long) =
         intent {
             // update room id
             reduce {
@@ -120,7 +120,7 @@ class AIChatViewModel @Inject constructor(
             }
         }
 
-    private fun launchChatMessageObserver(roomId: String): Job =
+    private fun launchChatMessageObserver(roomId: Long): Job =
         intent {
             // cancel previous message observer job, if exists
             chatMessageObserverJob?.cancel()

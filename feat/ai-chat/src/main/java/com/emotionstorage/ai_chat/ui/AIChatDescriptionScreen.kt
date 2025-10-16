@@ -27,10 +27,10 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AIChatDescriptionScreen(
-    roomId: String,
+    roomId: Long,
     modifier: Modifier = Modifier,
     onCheckboxChanged: (Boolean) -> Unit = {},
-    onStartChat: (String) -> Unit = {},
+    onStartChat: (Long) -> Unit = {},
 ) {
     var progressRect by remember { mutableStateOf(Rect.Zero) }
     var inputRect by remember { mutableStateOf(Rect.Zero) }
