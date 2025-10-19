@@ -4,6 +4,7 @@ import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
+import com.emotionstorage.domain.useCase.auth.GetTokenUseCase
 import com.emotionstorage.remote.BuildConfig
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +22,11 @@ import javax.inject.Inject
 
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
-class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
+class ChatWSDataSourceImpl @Inject constructor(
+    private val getTokenUseCase: GetTokenUseCase
+) : ChatWSDataSource {
     private val json = Json { ignoreUnknownKeys = true }
+
     private val client =
         StompClient(
             webSocketClient =
@@ -38,7 +42,10 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
 
     override suspend fun connectChatRoom(): Boolean {
         try {
-            session = client.connect(WS_URL)
+            val token = getTokenUseCase() ?: ""
+            val connectHeaders = mapOf("Authorization" to "Bearer $token")
+
+            session = client.connect(url = WS_URL, customStompConnectHeaders = connectHeaders)
             return true
         } catch (e: Exception) {
             throw Throwable("connectChatRoom() failed", e)
@@ -62,6 +69,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
+            val token = getTokenUseCase() ?: ""
             val messageJson =
                 json.encodeToString(
                     ChatMessageRequestBody.serializer(),
@@ -73,6 +81,7 @@ class ChatWSDataSourceImpl @Inject constructor() : ChatWSDataSource {
                 headers =
                     StompSendHeaders(
                         destination = "/pub/v1/chat",
+                        customHeaders = mapOf("Authorization" to "Bearer $token"),
                     ),
                 body = FrameBody.Text(messageJson),
             )
