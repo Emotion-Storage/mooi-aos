@@ -34,7 +34,10 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
+fun WhenToUseKeyDialog(
+    modifier : Modifier = Modifier,
+    onDismiss: () -> Unit
+) {
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -45,8 +48,7 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
             shadowElevation = 12.dp,
             color = MooiTheme.colorScheme.background,
             modifier =
-                Modifier
-                    .padding(16.dp)
+                modifier
                     .widthIn(328.dp)
                     .heightIn(451.dp),
         ) {
@@ -58,7 +60,7 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 20.dp, vertical = 16.dp),
+                            .padding(top = 17.dp, start = 20.dp, end = 20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Box(
@@ -94,13 +96,14 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                     Spacer(modifier = Modifier.size(6.dp))
 
                     Text(
+                        modifier = Modifier.fillMaxWidth(),
                         text = "열쇠는 이럴 때 쓰면 좋아요!",
-                        style = MooiTheme.typography.head2,
+                        style = MooiTheme.typography.head2.copy(lineHeight = 30.sp),
                         color = MooiTheme.colorScheme.primary,
                         textAlign = TextAlign.Center,
                     )
 
-                    Spacer(Modifier.size(8.dp))
+                    Spacer(Modifier.size(19.dp))
 
                     // TODO : 이모지 확인 필요
                     TipItem(
@@ -110,6 +113,9 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                         reverse = false,
                         content = "감정이 벅차오를 땐, 과거의 나 또는\n모이의 말이 위로가 될 수 있어요.",
                     )
+
+                    Spacer(modifier = Modifier.size(15.dp))
+
                     TipItem(
                         emoji = "\uD83E\uDD14",
                         title = "호기심 폭발! ",
@@ -117,6 +123,9 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                         reverse = false,
                         content = "어떤 감정을 적었는지 너무 궁금해서,\n하루도 기다리기 힘든 순간이 있죠.",
                     )
+
+                    Spacer(modifier = Modifier.size(15.dp))
+
                     TipItem(
                         emoji = "\uD83D\uDC91",
                         title = "이 달라졌을 때",
@@ -124,6 +133,9 @@ fun WhenToUseKeyDialog(onDismiss: () -> Unit) {
                         reverse = true,
                         content = "상황이 바뀌면, 과거의 내가 남긴\n감정을 다시 꺼내보고 싶어져요.",
                     )
+
+                    Spacer(modifier = Modifier.size(15.dp))
+
                     TipItem(
                         emoji = "\uD83D\uDD51",
                         title = "를 비교하고 싶을 때",
@@ -146,7 +158,7 @@ private fun TipItem(
     content: String,
 ) {
     Row(
-        modifier = Modifier.padding(vertical = 10.dp),
+        modifier = Modifier.padding(horizontal = 5.dp)
     ) {
         Text(
             text = emoji,
@@ -207,7 +219,7 @@ private fun TipItem(
                 )
             }
 
-            Spacer(modifier = Modifier.size(6.dp))
+            Spacer(modifier = Modifier.size(5.dp))
 
             Text(
                 text = content,
