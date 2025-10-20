@@ -130,6 +130,7 @@ private fun StatelessNicknameScreen(
                         onValueChange = event::onNicknameChange,
                         showCharCount = true,
                         maxCharCount = 8,
+                        placeHolder = "최소 2글자 이상의 이름을 적어주세요",
                         state =
                             when (state.nicknameInputState) {
                                 InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
