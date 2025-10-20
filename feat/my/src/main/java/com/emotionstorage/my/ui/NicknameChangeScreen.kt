@@ -1,5 +1,8 @@
 package com.emotionstorage.my.ui
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -119,6 +123,19 @@ private fun StatelessNicknameChangeScreen(
                     )
                 }
 
+                val animatedPadding by animateDpAsState(
+                    if (imeVisible) {
+                        24.dp
+                    } else {
+                        39.dp
+                    },
+                    label = "padding",
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessVeryLow,
+                    )
+                )
+
                 CtaButton(
                     modifier =
                         Modifier
@@ -127,7 +144,7 @@ private fun StatelessNicknameChangeScreen(
                             .navigationBarsPadding()
                             .imePadding()
                             .padding(
-                                bottom = if (imeVisible) 24.dp else 40.dp,
+                                bottom = animatedPadding
                             ),
                     labelString = "변경하기",
                     isDefaultWidth = false,
