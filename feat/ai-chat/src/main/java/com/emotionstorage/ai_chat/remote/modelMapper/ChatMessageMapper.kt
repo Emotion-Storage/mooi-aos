@@ -5,8 +5,8 @@ import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
 import java.time.format.DateTimeFormatter
 
 object ChatMessageMapper {
-
     private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS")
+
     fun toRemote(chatMessage: ChatMessage): ChatMessageRequestBody =
         ChatMessageRequestBody(
             messageId = chatMessage.id,

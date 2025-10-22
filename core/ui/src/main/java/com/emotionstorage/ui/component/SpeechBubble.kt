@@ -74,46 +74,60 @@ fun SpeechBubble(
                 .then(Modifier.size(sizeParam)),
     ) {
         Canvas(
-            modifier = Modifier
-                .matchParentSize()
-                .graphicsLayer(alpha = 0.2f) // 배경 투명도 유지
+            modifier =
+                Modifier
+                    .matchParentSize()
+                    .graphicsLayer(alpha = 0.2f),
         ) {
             val w = size.width
             val h = size.height
 
-            val rect = when (tail) {
-                BubbleTail.BottomCenter -> RoundRect(
-                    left = 0f, top = 0f, right = w, bottom = h - tailHeightPx,
-                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
-                )
-                BubbleTail.TopCenter, BubbleTail.TopLeft -> RoundRect(
-                    left = 0f, top = tailHeightPx, right = w, bottom = h,
-                    cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx)
-                )
-            }
-            val fillPath = Path().apply {
-                addRoundRect(rect)
+            val rect =
                 when (tail) {
-                    BubbleTail.BottomCenter -> {
-                        moveTo(w/2 - tailWidthPx/2, rect.bottom)
-                        lineTo(w/2, h)
-                        lineTo(w/2 + tailWidthPx/2, rect.bottom)
-                        close()
-                    }
-                    BubbleTail.TopCenter -> {
-                        moveTo(w/2 - tailWidthPx/2, rect.top)
-                        lineTo(w/2, 0f)
-                        lineTo(w/2 + tailWidthPx/2, rect.top)
-                        close()
-                    }
-                    BubbleTail.TopLeft -> {
-                        moveTo(tailOffsetPx - tailWidthPx/2, rect.top)
-                        lineTo(tailOffsetPx, 0f)
-                        lineTo(tailOffsetPx + tailWidthPx/2, rect.top)
-                        close()
+                    BubbleTail.BottomCenter ->
+                        RoundRect(
+                            left = 0f,
+                            top = 0f,
+                            right = w,
+                            bottom = h - tailHeightPx,
+                            cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                        )
+
+                    BubbleTail.TopCenter, BubbleTail.TopLeft ->
+                        RoundRect(
+                            left = 0f,
+                            top = tailHeightPx,
+                            right = w,
+                            bottom = h,
+                            cornerRadius = CornerRadius(cornerRadiusPx, cornerRadiusPx),
+                        )
+                }
+            val fillPath =
+                Path().apply {
+                    addRoundRect(rect)
+                    when (tail) {
+                        BubbleTail.BottomCenter -> {
+                            moveTo(w / 2 - tailWidthPx / 2, rect.bottom)
+                            lineTo(w / 2, h)
+                            lineTo(w / 2 + tailWidthPx / 2, rect.bottom)
+                            close()
+                        }
+
+                        BubbleTail.TopCenter -> {
+                            moveTo(w / 2 - tailWidthPx / 2, rect.top)
+                            lineTo(w / 2, 0f)
+                            lineTo(w / 2 + tailWidthPx / 2, rect.top)
+                            close()
+                        }
+
+                        BubbleTail.TopLeft -> {
+                            moveTo(tailOffsetPx - tailWidthPx / 2, rect.top)
+                            lineTo(tailOffsetPx, 0f)
+                            lineTo(tailOffsetPx + tailWidthPx / 2, rect.top)
+                            close()
+                        }
                     }
                 }
-            }
             drawPath(path = fillPath, brush = bgBrush, style = Fill)
 
             val gapHalf = tailWidthPx / 2f
@@ -121,37 +135,43 @@ fun SpeechBubble(
             when (tail) {
                 BubbleTail.BottomCenter -> {
                     clipRect(
-                        left = (w/2 - gapHalf) - gapThickness,
+                        left = (w / 2 - gapHalf) - gapThickness,
                         top = rect.bottom - gapThickness,
-                        right = (w/2 + gapHalf) + gapThickness,
+                        right = (w / 2 + gapHalf) + gapThickness,
                         bottom = rect.bottom + gapThickness,
-                        clipOp = ClipOp.Difference
+                        clipOp = ClipOp.Difference,
                     ) {
                         val rectPath = Path().apply { addRoundRect(rect) }
                         drawPath(rectPath, brush = borderBrush, style = Stroke(borderWidth))
                     }
-                    val sidePath = Path().apply {
-                        moveTo(w/2, h); lineTo(w/2 - gapHalf, rect.bottom)
-                        moveTo(w/2, h); lineTo(w/2 + gapHalf, rect.bottom)
-                    }
+                    val sidePath =
+                        Path().apply {
+                            moveTo(w / 2, h)
+                            lineTo(w / 2 - gapHalf, rect.bottom)
+                            moveTo(w / 2, h)
+                            lineTo(w / 2 + gapHalf, rect.bottom)
+                        }
                     drawPath(sidePath, brush = borderBrush, style = Stroke(borderWidth))
                 }
 
                 BubbleTail.TopCenter -> {
                     clipRect(
-                        left = (w/2 - gapHalf) - gapThickness,
+                        left = (w / 2 - gapHalf) - gapThickness,
                         top = rect.top - gapThickness,
-                        right = (w/2 + gapHalf) + gapThickness,
+                        right = (w / 2 + gapHalf) + gapThickness,
                         bottom = rect.top + gapThickness,
-                        clipOp = ClipOp.Difference
+                        clipOp = ClipOp.Difference,
                     ) {
                         val rectPath = Path().apply { addRoundRect(rect) }
                         drawPath(rectPath, brush = borderBrush, style = Stroke(borderWidth))
                     }
-                    val sidePath = Path().apply {
-                        moveTo(w/2, 0f); lineTo(w/2 - gapHalf, rect.top)
-                        moveTo(w/2, 0f); lineTo(w/2 + gapHalf, rect.top)
-                    }
+                    val sidePath =
+                        Path().apply {
+                            moveTo(w / 2, 0f)
+                            lineTo(w / 2 - gapHalf, rect.top)
+                            moveTo(w / 2, 0f)
+                            lineTo(w / 2 + gapHalf, rect.top)
+                        }
                     drawPath(sidePath, brush = borderBrush, style = Stroke(borderWidth))
                 }
 
@@ -162,15 +182,18 @@ fun SpeechBubble(
                         top = rect.top - gapThickness,
                         right = (baseX + gapHalf) + gapThickness,
                         bottom = rect.top + gapThickness,
-                        clipOp = ClipOp.Difference
+                        clipOp = ClipOp.Difference,
                     ) {
                         val rectPath = Path().apply { addRoundRect(rect) }
                         drawPath(rectPath, brush = borderBrush, style = Stroke(borderWidth))
                     }
-                    val sidePath = Path().apply {
-                        moveTo(baseX, 0f); lineTo(baseX - gapHalf, rect.top)
-                        moveTo(baseX, 0f); lineTo(baseX + gapHalf, rect.top)
-                    }
+                    val sidePath =
+                        Path().apply {
+                            moveTo(baseX, 0f)
+                            lineTo(baseX - gapHalf, rect.top)
+                            moveTo(baseX, 0f)
+                            lineTo(baseX + gapHalf, rect.top)
+                        }
                     drawPath(sidePath, brush = borderBrush, style = Stroke(borderWidth))
                 }
             }

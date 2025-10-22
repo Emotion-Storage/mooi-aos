@@ -40,9 +40,10 @@ fun ChatMessageList(
     chatMessages: List<ChatMessage> = listOf(),
 ) {
     LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 16.dp),
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp),
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
@@ -53,12 +54,13 @@ fun ChatMessageList(
                 Spacer(modifier = Modifier.height(24.dp))
             } else {
                 val previousChat = chatMessages[index - 1]
-                val topPadding = when {
-                    previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 22.dp
-                    previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 13.dp
-                    previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 7.dp
-                    else -> 0.dp
-                }
+                val topPadding =
+                    when {
+                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 22.dp
+                        previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 13.dp
+                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 7.dp
+                        else -> 0.dp
+                    }
                 Spacer(Modifier.size(topPadding))
             }
 
@@ -66,7 +68,6 @@ fun ChatMessageList(
                 index == 0 ||
                     chatMessages[index - 1].source != item.source ||
                     chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()
-
 
             ChatMessageItem(
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -142,29 +143,30 @@ private fun ChatMessageItem(
 
         if (chatMessage.source == MessageSource.SERVER) {
             Box(
-                modifier = Modifier
-                    // TODO : 너비 제한을 얼마나 두는게 좋을지 논의 필요
-                    .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.7f)
-                    .heightIn(42.dp)
-                    .background(
-                        color = MooiTheme.colorScheme.blueGrayBackground,
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                contentAlignment = Alignment.CenterStart
+                modifier =
+                    Modifier
+                        // TODO : 너비 제한을 얼마나 두는게 좋을지 논의 필요
+                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.7f)
+                        .heightIn(42.dp)
+                        .background(
+                            color = MooiTheme.colorScheme.blueGrayBackground,
+                            shape = RoundedCornerShape(20.dp),
+                        ),
+                contentAlignment = Alignment.CenterStart,
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
                     text = chatMessage.content,
                     style = MooiTheme.typography.caption3,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
-
         } else {
             Box(
-                modifier = Modifier
-                    .height(24.dp)
-                    .widthIn(LocalConfiguration.current.screenWidthDp.dp * 0.6f),
+                modifier =
+                    Modifier
+                        .height(24.dp)
+                        .widthIn(LocalConfiguration.current.screenWidthDp.dp * 0.6f),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterEnd),

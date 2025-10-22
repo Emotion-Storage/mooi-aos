@@ -121,7 +121,7 @@ private fun StatelessAIChatScreen(
                 handleBackPress = true,
                 onHandleBackPress = {
                     setExitModalOpen(true)
-                }
+                },
             )
 
             ChatProgressBar(

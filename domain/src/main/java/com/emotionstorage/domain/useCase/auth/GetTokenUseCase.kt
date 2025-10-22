@@ -6,6 +6,5 @@ import javax.inject.Inject
 class GetTokenUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
 ) {
-    suspend operator fun invoke(): String? =
-        sessionRepository.getSession()?.accessToken
+    suspend operator fun invoke(): String? = sessionRepository.getSession()?.accessToken
 }

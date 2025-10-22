@@ -8,5 +8,5 @@ data class ChatMessageRequestBody(
     val roomId: Long,
     val content: String,
     val messageType: String,
-    val timestamp: String
+    val timestamp: String,
 )

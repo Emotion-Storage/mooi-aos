@@ -23,7 +23,7 @@ import javax.inject.Inject
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
 class ChatWSDataSourceImpl @Inject constructor(
-    private val getTokenUseCase: GetTokenUseCase
+    private val getTokenUseCase: GetTokenUseCase,
 ) : ChatWSDataSource {
     private val json = Json { ignoreUnknownKeys = true }
 
