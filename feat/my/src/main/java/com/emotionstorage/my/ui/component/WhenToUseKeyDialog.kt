@@ -35,8 +35,8 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun WhenToUseKeyDialog(
-    modifier : Modifier = Modifier,
-    onDismiss: () -> Unit
+    modifier: Modifier = Modifier,
+    onDismiss: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -158,7 +158,7 @@ private fun TipItem(
     content: String,
 ) {
     Row(
-        modifier = Modifier.padding(horizontal = 5.dp)
+        modifier = Modifier.padding(horizontal = 5.dp),
     ) {
         Text(
             text = emoji,

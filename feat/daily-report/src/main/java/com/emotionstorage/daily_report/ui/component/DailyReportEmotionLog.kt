@@ -152,7 +152,7 @@ private fun LogLine(modifier: Modifier = Modifier) {
             modifier =
                 Modifier
                     .align(Alignment.Center)
-                    .offset(x=0.25.dp)
+                    .offset(x = 0.25.dp)
                     .fillMaxHeight()
                     .width(3.dp)
                     .background(

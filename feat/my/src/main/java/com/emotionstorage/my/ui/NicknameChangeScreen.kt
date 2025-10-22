@@ -130,10 +130,11 @@ private fun StatelessNicknameChangeScreen(
                         39.dp
                     },
                     label = "padding",
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessVeryLow,
-                    )
+                    animationSpec =
+                        spring(
+                            dampingRatio = Spring.DampingRatioNoBouncy,
+                            stiffness = Spring.StiffnessVeryLow,
+                        ),
                 )
 
                 CtaButton(
@@ -144,7 +145,7 @@ private fun StatelessNicknameChangeScreen(
                             .navigationBarsPadding()
                             .imePadding()
                             .padding(
-                                bottom = animatedPadding
+                                bottom = animatedPadding,
                             ),
                     labelString = "변경하기",
                     isDefaultWidth = false,
