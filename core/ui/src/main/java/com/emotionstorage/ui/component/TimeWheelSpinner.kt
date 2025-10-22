@@ -38,15 +38,6 @@ fun TimeWheelSpinner(
                 .background(Color.Transparent)
                 .padding(horizontal = 20.dp),
     ) {
-        Box(
-            modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .height(38.dp)
-                    .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
-        )
-
         Row(
             modifier =
                 Modifier
