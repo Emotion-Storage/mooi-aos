@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule.presentation
 
-import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
@@ -37,7 +36,7 @@ sealed class ArrivedTimeCapsulesAction {
 
 sealed class ArrivedTimeCapsulesSideEffect {
     data class ShowToast(
-        @StringRes val toastId: Int,
+        @StringRes val stringResId: Int,
     ) : ArrivedTimeCapsulesSideEffect()
 }
 
@@ -125,16 +124,16 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
                     flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
                         if (it == SetFavoriteResult.ADDED) {
-                            postSideEffect(ShowToast(toastId = R.string.toast_favorite_added))
+                            postSideEffect(ShowToast(stringResId = R.string.toast_favorite_added))
                             updateFavorite(id, true)
                         } else if (it == SetFavoriteResult.REMOVED) {
-                            postSideEffect(ShowToast(toastId = R.string.toast_favorite_removed))
+                            postSideEffect(ShowToast(stringResId = R.string.toast_favorite_removed))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
                         if (data == SetFavoriteResult.FULL) {
-                            postSideEffect(ShowToast(toastId = R.string.toast_favorite_full))
+                            postSideEffect(ShowToast(stringResId = R.string.toast_favorite_full))
                         }
                     },
                 )

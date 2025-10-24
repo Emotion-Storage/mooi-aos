@@ -34,7 +34,6 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
-import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast.CalendarToast
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
@@ -62,7 +61,7 @@ fun ArrivedTimeCapsulesScreen(
             when (it) {
                 is ArrivedTimeCapsulesSideEffect.ShowToast -> {
                     snackState.currentSnackbarData?.dismiss()
-                    snackState.showSnackbar(getString(context, it.toastId))
+                    snackState.showSnackbar(getString(context, it.stringResId))
                 }
             }
         }
