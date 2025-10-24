@@ -45,13 +45,15 @@ fun ChatMessageInputBox(
     text: String,
     readOnly: Boolean = false,
     enabled: Boolean = true,
+    sendEnabled: Boolean = true,
+    showStop: Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onTextChange: (String) -> Unit,
     onSendMessage: () -> Unit = {},
     onFocusChanged: (Boolean) -> Unit = {},
 ) {
     val interaction = remember { MutableInteractionSource() }
-    val canSend = text.isNotBlank() && enabled && !readOnly
+    val canSend = text.isNotBlank() && enabled && !readOnly && sendEnabled
     val shape = RoundedCornerShape(100.dp)
 
     Row(
@@ -108,7 +110,7 @@ fun ChatMessageInputBox(
             },
         )
 
-        if (canSend || readOnly) {
+        if (canSend || readOnly || showStop) {
             Box(
                 modifier =
                     Modifier
@@ -123,12 +125,21 @@ fun ChatMessageInputBox(
                         ),
                 contentAlignment = Alignment.Center,
             ) {
-                Image(
-                    painterResource(R.drawable.send),
-                    contentDescription = "전송",
-                    modifier = Modifier.size(33.dp),
-                    contentScale = ContentScale.Fit,
-                )
+                if (showStop) {
+                    Image(
+                        painterResource(R.drawable.stop),
+                        contentDescription = "전송",
+                        modifier = Modifier.size(33.dp),
+                        contentScale = ContentScale.Fit,
+                    )
+                } else {
+                    Image(
+                        painterResource(R.drawable.send),
+                        contentDescription = "전송",
+                        modifier = Modifier.size(33.dp),
+                        contentScale = ContentScale.Fit,
+                    )
+                }
             }
         }
     }

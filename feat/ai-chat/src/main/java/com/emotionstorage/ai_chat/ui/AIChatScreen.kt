@@ -154,6 +154,7 @@ private fun StatelessAIChatScreen(
                     modifier = Modifier.fillMaxSize(),
                     chatMessages = state.messages,
                     listState = listState,
+                    isMooiTyping = state.isMooiTyping,
                 )
 
                 if (showEmptyScreen) {
@@ -172,6 +173,9 @@ private fun StatelessAIChatScreen(
                 onFocusChanged = { focused -> isInputFocused = focused },
                 onTextChange = { draft = it },
                 focusRequester = focusRequester,
+                enabled = true,
+                sendEnabled = !state.isWaitingReply,
+                showStop = state.isMooiTyping && isInputFocused && draft.isNotBlank(),
                 onSendMessage = {
                     val msg = draft.trim()
                     if (msg.isNotEmpty()) {

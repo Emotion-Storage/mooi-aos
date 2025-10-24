@@ -40,6 +40,7 @@ fun ChatMessageList(
     modifier: Modifier = Modifier,
     chatMessages: List<ChatMessage> = listOf(),
     listState: LazyListState,
+    isMooiTyping: Boolean = false,
 ) {
     LazyColumn(
         modifier =
@@ -77,6 +78,38 @@ fun ChatMessageList(
                 chatMessage = item,
                 showProfile = showProfile && item.source == MessageSource.SERVER,
             )
+        }
+
+        if (isMooiTyping) {
+            item {
+                Column(
+                    modifier = Modifier.padding(horizontal = 16.dp),
+                ) {
+                    Box(
+                        modifier =
+                            Modifier
+                                .size(30.dp)
+                                .clip(CircleShape)
+                                .background(Color.Gray),
+                    )
+                    Spacer(modifier = Modifier.size(10.dp))
+
+
+                    Box(
+                        modifier =
+                            Modifier
+                                .widthIn(max = 64.dp)
+                                .heightIn(max = 42.dp)
+                                .background(
+                                    color = MooiTheme.colorScheme.blueGrayBackground,
+                                    shape = RoundedCornerShape(20.dp),
+                                ),
+                        contentAlignment = Alignment.CenterStart
+                    ) {
+                        MessageIncomeLoading()
+                    }
+                }
+            }
         }
     }
 }
