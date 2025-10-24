@@ -13,26 +13,33 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
+import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast.CalendarToast
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
@@ -46,13 +53,16 @@ fun ArrivedTimeCapsulesScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
 
+    val context = LocalContext.current
+    val snackState = remember { SnackbarHostState() }
     LaunchedEffect("init") {
         viewModel.onAction(ArrivedTimeCapsulesAction.Init)
 
         viewModel.container.sideEffectFlow.collect {
-            when(it){
+            when (it) {
                 is ArrivedTimeCapsulesSideEffect.ShowToast -> {
-                    // todo: show toast
+                    snackState.currentSnackbarData?.dismiss()
+                    snackState.showSnackbar(getString(context, it.toastId))
                 }
             }
         }
@@ -60,7 +70,9 @@ fun ArrivedTimeCapsulesScreen(
 
     StatelessArrivedTimeCapsulesScreen(
         modifier = modifier,
+        snackState = snackState,
         timeCapsules = state.value.timeCapsules,
+        onAction = viewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack,
     )
@@ -69,7 +81,9 @@ fun ArrivedTimeCapsulesScreen(
 @Composable
 private fun StatelessArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = remember { SnackbarHostState() },
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
+    onAction: (ArrivedTimeCapsulesAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: String) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
@@ -82,6 +96,26 @@ private fun StatelessArrivedTimeCapsulesScreen(
         topBar = {
             TopAppBar(title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
         },
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackState,
+            ) {
+                Toast(
+                    message = it.visuals.message,
+                    iconId =
+                        if (it.visuals.message !=
+                            getString(
+                                LocalContext.current,
+                                R.string.toast_favorite_full,
+                            )
+                        ) {
+                            R.drawable.success_filled
+                        } else {
+                            null
+                        },
+                )
+            }
+        }
     ) { innerPadding ->
         // todo: pull down to refresh
         // todo: load more on scroll end
@@ -142,6 +176,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     showInfoText = false,
                     showFavorite = true,
                     onClick = { navToTimeCapsuleDetail(it.id) },
+                    onFavoriteClick = { onAction(ArrivedTimeCapsulesAction.ToggleFavorite(it.id)) }
                 )
             }
         }
