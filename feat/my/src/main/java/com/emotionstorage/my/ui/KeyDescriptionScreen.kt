@@ -141,7 +141,9 @@ fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
             }
         }
         if (showWhenToUseDialog) {
-            WhenToUseKeyDialog { showWhenToUseDialog = false }
+            WhenToUseKeyDialog(
+                modifier = Modifier.padding(horizontal = 16.dp),
+            ) { showWhenToUseDialog = false }
         }
     }
 }
