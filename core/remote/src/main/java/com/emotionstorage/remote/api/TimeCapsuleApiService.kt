@@ -1,9 +1,10 @@
 package com.emotionstorage.remote.api
 
+import android.R
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.response.ResponseDto
-import com.emotionstorage.remote.response.timeCapsule.GetFavoriteTimeCapsulesResponse
+import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDatesReponse
 import com.emotionstorage.remote.response.timeCapsule.PatchTimeCapsuleFavoriteResponse
 import retrofit2.http.Body
@@ -30,7 +31,16 @@ interface TimeCapsuleApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("sort") sortBy: String,
-    ): ResponseDto<GetFavoriteTimeCapsulesResponse>
+    ): ResponseDto<GetTimeCapsulesResponse>
+
+    @GET("api/v1/time-capsule")
+    suspend fun getTimeCapsules(
+        @Query("startDate") startDate: R.string,
+        @Query("endDate") endDate: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("status") status: String,
+    ): ResponseDto<GetTimeCapsulesResponse>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/favorite")
     suspend fun patchTimeCapsuleFavorite(

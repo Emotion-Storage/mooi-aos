@@ -1,10 +1,10 @@
 package com.emotionstorage.remote.modelMapper
 
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import com.emotionstorage.remote.response.timeCapsule.GetFavoriteTimeCapsulesResponse
+import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 
 internal object TimeCapsuleResponseMapper {
-    fun toData(response: GetFavoriteTimeCapsulesResponse): List<TimeCapsuleEntity> =
+    fun toData(response: GetTimeCapsulesResponse): List<TimeCapsuleEntity> =
         response.timeCapsules.map { it ->
             TimeCapsuleEntity(
                 id = it.id,
