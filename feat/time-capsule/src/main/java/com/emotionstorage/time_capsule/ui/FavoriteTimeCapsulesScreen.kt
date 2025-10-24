@@ -217,35 +217,39 @@ private fun StatelessFavoriteTimeCapsulesScreen(
 private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessFavoriteTimeCapsulesScreen(
-            state = FavoriteTimeCapsulesState(timeCapsules = (1..15).toList().map { it ->
-                TimeCapsuleItemState(
-                    id = it.toString(),
-                    status = TimeCapsule.Status.OPENED,
-                    title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                    emotions =
-                        listOf(
-                            Emotion(
-                                emoji = "\uD83D\uDE14",
-                                label = "서운함",
-                                percentage = 30.0f,
-                            ),
-                            Emotion(
-                                emoji = "\uD83D\uDE0A",
-                                label = "고마움",
-                                percentage = 30.0f,
-                            ),
-                            Emotion(
-                                emoji = "\uD83E\uDD70",
-                                label = "안정감",
-                                percentage = 80.0f,
-                            ),
-                        ),
-                    isFavorite = true,
-                    isFavoriteAt = LocalDateTime.now(),
-                    createdAt = LocalDateTime.now(),
-                    expireAt = LocalDateTime.now().plusHours(5),
-                )
-            }),
+            state =
+                FavoriteTimeCapsulesState(
+                    timeCapsules =
+                        (1..15).toList().map { it ->
+                            TimeCapsuleItemState(
+                                id = it.toString(),
+                                status = TimeCapsule.Status.OPENED,
+                                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                emotions =
+                                    listOf(
+                                        Emotion(
+                                            emoji = "\uD83D\uDE14",
+                                            label = "서운함",
+                                            percentage = 30.0f,
+                                        ),
+                                        Emotion(
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f,
+                                        ),
+                                        Emotion(
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f,
+                                        ),
+                                    ),
+                                isFavorite = true,
+                                isFavoriteAt = LocalDateTime.now(),
+                                createdAt = LocalDateTime.now(),
+                                expireAt = LocalDateTime.now().plusHours(5),
+                            )
+                        },
+                ),
         )
     }
 }

@@ -20,7 +20,7 @@ interface TimeCapsuleRemoteDataSource {
     suspend fun getFavoriteTimeCapsules(
         page: Int,
         limit: Int,
-        sortBy: String
+        sortBy: String,
     ): List<TimeCapsuleEntity>
 
     suspend fun getTimeCapsules(
@@ -28,7 +28,7 @@ interface TimeCapsuleRemoteDataSource {
         endDate: LocalDate,
         page: Int,
         limit: Int,
-        status: String
+        status: String,
     ): List<TimeCapsuleEntity>
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>

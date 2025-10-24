@@ -94,25 +94,26 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         startDate: LocalDate,
         endDate: LocalDate,
         page: Int,
-        status: String
-    ): Flow<DataState<List<TimeCapsule>>> = flow {
-        emit(DataState.Loading(isLoading = true))
-        try {
-            val result =
-                timeCapsuleRemoteDataSource.getTimeCapsules(
-                    startDate = startDate,
-                    endDate = endDate,
-                    page = page,
-                    limit = PAGE_LIMIT,
-                    status = status
-                )
-            emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        } finally {
-            emit(DataState.Loading(isLoading = false))
+        status: String,
+    ): Flow<DataState<List<TimeCapsule>>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                val result =
+                    timeCapsuleRemoteDataSource.getTimeCapsules(
+                        startDate = startDate,
+                        endDate = endDate,
+                        page = page,
+                        limit = PAGE_LIMIT,
+                        status = status,
+                    )
+                emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
         }
-    }
 
     override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>> =
         flow {

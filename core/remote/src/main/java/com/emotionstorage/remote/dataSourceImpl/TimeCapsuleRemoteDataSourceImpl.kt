@@ -60,7 +60,11 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFavoriteTimeCapsules(page: Int, limit: Int, sortBy: String): List<TimeCapsuleEntity> {
+    override suspend fun getFavoriteTimeCapsules(
+        page: Int,
+        limit: Int,
+        sortBy: String,
+    ): List<TimeCapsuleEntity> {
         try {
             val response =
                 timeCapsuleApiService.getFavoriteTimeCapsules(
@@ -83,7 +87,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         endDate: LocalDate,
         page: Int,
         limit: Int,
-        status: String
+        status: String,
     ): List<TimeCapsuleEntity> {
         try {
             val response =
@@ -92,7 +96,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                     endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     page = page,
                     limit = limit,
-                    status = status
+                    status = status,
                 )
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)

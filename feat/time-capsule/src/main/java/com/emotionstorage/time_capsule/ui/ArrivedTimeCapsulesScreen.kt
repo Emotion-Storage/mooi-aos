@@ -113,7 +113,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                         },
                 )
             }
-        }
+        },
     ) { innerPadding ->
         // todo: pull down to refresh
         // todo: load more on scroll end
@@ -174,7 +174,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     showInfoText = false,
                     showFavorite = true,
                     onClick = { navToTimeCapsuleDetail(it.id) },
-                    onFavoriteClick = { onAction(ArrivedTimeCapsulesAction.ToggleFavorite(it.id)) }
+                    onFavoriteClick = { onAction(ArrivedTimeCapsulesAction.ToggleFavorite(it.id)) },
                 )
             }
         }
@@ -186,36 +186,37 @@ private fun StatelessArrivedTimeCapsulesScreen(
 private fun ArrivedTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessArrivedTimeCapsulesScreen(
-            timeCapsules = (1..15).toList().map { it ->
-                TimeCapsuleItemState(
-                    id = it.toString(),
-                    status = TimeCapsule.Status.ARRIVED,
-                    title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                    emotions =
-                        listOf(
-                            TimeCapsule.Emotion(
-                                emoji = "\uD83D\uDE14",
-                                label = "서운함",
-                                percentage = 30.0f,
+            timeCapsules =
+                (1..15).toList().map { it ->
+                    TimeCapsuleItemState(
+                        id = it.toString(),
+                        status = TimeCapsule.Status.ARRIVED,
+                        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                        emotions =
+                            listOf(
+                                TimeCapsule.Emotion(
+                                    emoji = "\uD83D\uDE14",
+                                    label = "서운함",
+                                    percentage = 30.0f,
+                                ),
+                                TimeCapsule.Emotion(
+                                    emoji = "\uD83D\uDE0A",
+                                    label = "고마움",
+                                    percentage = 30.0f,
+                                ),
+                                TimeCapsule.Emotion(
+                                    emoji = "\uD83E\uDD70",
+                                    label = "안정감",
+                                    percentage = 80.0f,
+                                ),
                             ),
-                            TimeCapsule.Emotion(
-                                emoji = "\uD83D\uDE0A",
-                                label = "고마움",
-                                percentage = 30.0f,
-                            ),
-                            TimeCapsule.Emotion(
-                                emoji = "\uD83E\uDD70",
-                                label = "안정감",
-                                percentage = 80.0f,
-                            ),
-                        ),
-                    isFavorite = true,
-                    isFavoriteAt = LocalDateTime.now(),
-                    createdAt = LocalDateTime.now(),
-                    expireAt = LocalDateTime.now().plusHours(5),
-                    openDDay = it,
-                )
-            }
+                        isFavorite = true,
+                        isFavoriteAt = LocalDateTime.now(),
+                        createdAt = LocalDateTime.now(),
+                        expireAt = LocalDateTime.now().plusHours(5),
+                        openDDay = it,
+                    )
+                },
         )
     }
 }

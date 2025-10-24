@@ -25,7 +25,7 @@ interface TimeCapsuleRepository {
         startDate: LocalDate,
         endDate: LocalDate,
         page: Int,
-        status: String
+        status: String,
     ): Flow<DataState<List<TimeCapsule>>>
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>

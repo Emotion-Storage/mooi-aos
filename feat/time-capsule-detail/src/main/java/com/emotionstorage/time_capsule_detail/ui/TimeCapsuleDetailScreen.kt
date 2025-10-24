@@ -137,7 +137,7 @@ fun TimeCapsuleDetailScreen(
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
                     snackState.showSnackbar(
-                        context.getString(sideEffect.stringResId)
+                        context.getString(sideEffect.stringResId),
                     )
                 }
             }

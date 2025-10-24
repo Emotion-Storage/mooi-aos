@@ -28,7 +28,6 @@ sealed class ArrivedTimeCapsulesAction {
 
     object LoadMore : ArrivedTimeCapsulesAction()
 
-
     data class ToggleFavorite(
         val id: String,
     ) : ArrivedTimeCapsulesAction()
@@ -68,31 +67,33 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
         }
     }
 
-    private fun handleInit() = intent {
-        handleGetArrivedTimeCapsules()
-    }
+    private fun handleInit() =
+        intent {
+            handleGetArrivedTimeCapsules()
+        }
 
-    private fun handleLoadMore() = intent {
-        handleGetArrivedTimeCapsules(state.pageNum)
-    }
+    private fun handleLoadMore() =
+        intent {
+            handleGetArrivedTimeCapsules(state.pageNum)
+        }
 
-
-    private suspend fun handleGetArrivedTimeCapsules(page: Int = 0) = subIntent {
-        collectDataState(
-            flow = getArrivedTimeCapsules(page = page + 1),
-            onSuccess = { timeCapsules ->
-                reduce {
-                    state.copy(
-                        pageNum = page + 1,
-                        timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
-                    )
-                }
-            },
-            onError = { throwable, _ ->
-                Logger.e("Failed to get arrived time capsules, $throwable")
-            },
-        )
-    }
+    private suspend fun handleGetArrivedTimeCapsules(page: Int = 0) =
+        subIntent {
+            collectDataState(
+                flow = getArrivedTimeCapsules(page = page + 1),
+                onSuccess = { timeCapsules ->
+                    reduce {
+                        state.copy(
+                            pageNum = page + 1,
+                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
+                        )
+                    }
+                },
+                onError = { throwable, _ ->
+                    Logger.e("Failed to get arrived time capsules, $throwable")
+                },
+            )
+        }
 
     private fun handleToggleFavorite(id: String) =
         intent {
