@@ -4,12 +4,15 @@ import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
+import com.emotionstorage.ai_chat.remote.response.ChatMessageResponse
 import com.emotionstorage.domain.useCase.auth.GetTokenUseCase
 import com.emotionstorage.remote.BuildConfig
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
 import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
@@ -61,10 +64,18 @@ class ChatWSDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun observeChatMessages(roomId: Long): Flow<String> =
-        session.subscribeText("/sub/chatroom/$roomId").map {
-            Logger.d("observeChatMessages() it: $it")
-            it
+    override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
+        session.subscribeText("/sub/chatroom/$roomId").mapNotNull { message ->
+            Logger.d("observeChatMessages() it: $message")
+            runCatching {
+                val dto = json.decodeFromString<ChatMessageResponse>(message)
+                ChatMessage(
+                    roomId = roomId,
+                    source = ChatMessage.MessageSource.SERVER,
+                    content = dto.content ?: "",
+                    gaugeScore = dto.gauge?.gaugeScore,
+                )
+            }.getOrElse { null }
         }
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {

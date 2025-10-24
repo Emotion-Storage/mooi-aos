@@ -56,13 +56,7 @@ class ChatRepositoryImpl
             }
 
         override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
-            chatWSDataSource.observeChatMessages(roomId).map {
-                ChatMessage(
-                    roomId = roomId,
-                    source = ChatMessage.MessageSource.SERVER,
-                    content = it,
-                )
-            }
+            chatWSDataSource.observeChatMessages(roomId)
 
         override suspend fun sendChatMessage(
             roomId: Long,
