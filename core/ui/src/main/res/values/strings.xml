@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    // 공통 토스트 문구
+    <string name="toast_favorite_added">즐겨찾기가 설정되었습니다.</string>
+    <string name="toast_favorite_removed">즐겨찾기가 해제되었습니다.</string>
+    <string name="toast_favorite_full">내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요.</string>
+    // 이용 약관
     <string name="first_terms_title">제1조 목적</string>
     <string name="first_terms_content">본 이용약관은 MOOI(이하 "MOOI")의 서비스 이용에 관한 제반 사항을 규정하여, 서비스 이용자가 MOOI의 서비스를 원활하게 이용할 수 있도록 합니다.</string>
     <string name="second_terms_title">제2조 용어의 정의</string>
