@@ -61,7 +61,7 @@ fun ArrivedTimeCapsulesScreen(
             when (it) {
                 is ArrivedTimeCapsulesSideEffect.ShowToast -> {
                     snackState.currentSnackbarData?.dismiss()
-                    snackState.showSnackbar(getString(context, it.stringResId))
+                    snackState.showSnackbar(context.getString(it.stringResId))
                 }
             }
         }
@@ -103,8 +103,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     message = it.visuals.message,
                     iconId =
                         if (it.visuals.message !=
-                            getString(
-                                LocalContext.current,
+                            LocalContext.current.getString(
                                 R.string.toast_favorite_full,
                             )
                         ) {

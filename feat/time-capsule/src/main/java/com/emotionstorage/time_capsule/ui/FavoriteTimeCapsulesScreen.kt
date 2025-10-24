@@ -71,7 +71,7 @@ fun FavoriteTimeCapsulesScreen(
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
                     snackState.showSnackbar(
-                        getString(context, sideEffect.stringResId),
+                        context.getString(sideEffect.stringResId),
                     )
                 }
             }
@@ -112,8 +112,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     message = snackbarData.visuals.message,
                     iconId =
                         if (snackbarData.visuals.message !=
-                            getString(
-                                LocalContext.current,
+                            LocalContext.current.getString(
                                 R.string.toast_favorite_full,
                             )
                         ) {

@@ -137,7 +137,7 @@ fun TimeCapsuleDetailScreen(
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
                     snackState.showSnackbar(
-                        getString(context, sideEffect.stringResId)
+                        context.getString(sideEffect.stringResId)
                     )
                 }
             }
@@ -300,8 +300,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                         message = snackbarData.visuals.message,
                         iconId =
                             if (snackbarData.visuals.message !=
-                                getString(
-                                    LocalContext.current,
+                                LocalContext.current.getString(
                                     R.string.toast_favorite_full,
                                 )
                             ) {
