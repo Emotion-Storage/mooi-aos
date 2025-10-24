@@ -2,6 +2,7 @@ package com.emotionstorage.ai_chat.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -85,7 +86,8 @@ fun ChatMessageInputBox(
                             Modifier
                                 .fillMaxWidth()
                                 .fillMaxHeight()
-                                .background(MooiTheme.colorScheme.gray800, shape)
+                                .border(width = 1.dp, color = MooiTheme.colorScheme.gray800, shape)
+                                .background(Color(0xFF26262C), shape)
                                 .padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {

@@ -137,7 +137,7 @@ private fun LogLine(modifier: Modifier = Modifier) {
                     .align(Alignment.Center)
                     .fillMaxHeight()
                     .width(3.dp)
-                    .offset(x = (-1.5).dp)
+                    .offset(x = (-0.75).dp)
                     .dropShadow(
                         color = Color(0xFF849BEA).copy(alpha = 0.7f),
                         blur = 5.dp,
@@ -152,6 +152,7 @@ private fun LogLine(modifier: Modifier = Modifier) {
             modifier =
                 Modifier
                     .align(Alignment.Center)
+                    .offset(x = 0.25.dp)
                     .fillMaxHeight()
                     .width(3.dp)
                     .background(

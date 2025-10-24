@@ -1,6 +1,8 @@
 package com.emotionstorage.tutorial.ui.onBoarding
 
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -130,6 +132,7 @@ private fun StatelessNicknameScreen(
                         onValueChange = event::onNicknameChange,
                         showCharCount = true,
                         maxCharCount = 8,
+                        placeHolder = "최소 2글자 이상의 이름을 적어주세요",
                         state =
                             when (state.nicknameInputState) {
                                 InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
@@ -146,7 +149,13 @@ private fun StatelessNicknameScreen(
                         39.dp
                     },
                     label = "padding",
+                    animationSpec =
+                        spring(
+                            dampingRatio = Spring.DampingRatioNoBouncy,
+                            stiffness = Spring.StiffnessVeryLow,
+                        ),
                 )
+
                 CtaButton(
                     modifier =
                         Modifier
