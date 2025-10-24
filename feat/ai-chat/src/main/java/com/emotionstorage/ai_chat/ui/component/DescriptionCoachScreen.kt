@@ -71,12 +71,14 @@ fun DescriptionCoachScreen(
         ) {
             if (checked) {
                 Icon(
+                    modifier = Modifier.size(16.dp),
                     painter = painterResource(R.drawable.checkbox_on),
                     contentDescription = "체크상태",
                     tint = MooiTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
+                    modifier = Modifier.size(16.dp),
                     painter = painterResource(R.drawable.checkbox_off),
                     contentDescription = "체크상태",
                     tint = MooiTheme.colorScheme.gray700,
