@@ -146,13 +146,13 @@ private fun ChatMessageItem(
                 modifier =
                     Modifier
                         // TODO : 너비 제한을 얼마나 두는게 좋을지 논의 필요
-                        .widthIn(max = LocalConfiguration.current.screenWidthDp.dp * 0.7f)
+                        .widthIn(max = screenWidth.dp * 0.7f)
                         .heightIn(42.dp)
                         .background(
                             color = MooiTheme.colorScheme.blueGrayBackground,
                             shape = RoundedCornerShape(20.dp),
                         ),
-                contentAlignment = Alignment.CenterStart,
+                contentAlignment = Alignment.CenterStart
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
@@ -165,8 +165,9 @@ private fun ChatMessageItem(
             Box(
                 modifier =
                     Modifier
-                        .height(24.dp)
-                        .widthIn(LocalConfiguration.current.screenWidthDp.dp * 0.6f),
+                        .heightIn(42.dp)
+                        .widthIn(max = screenWidth.dp * 0.7f),
+                contentAlignment = Alignment.CenterEnd
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterEnd),
