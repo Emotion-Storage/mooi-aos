@@ -168,7 +168,7 @@ private fun StatelessAIChatScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+                        .padding(all = 16.dp),
                 onFocusChanged = { focused -> isInputFocused = focused },
                 onTextChange = { draft = it },
                 focusRequester = focusRequester,

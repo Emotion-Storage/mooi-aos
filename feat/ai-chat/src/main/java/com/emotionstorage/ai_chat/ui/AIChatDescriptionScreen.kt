@@ -109,7 +109,7 @@ private fun StatelessAIChatDescriptionScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                        .padding(all = 16.dp)
                         .onGloballyPositioned {
                             onInputBoxRect(it.boundsInParent())
                         },
