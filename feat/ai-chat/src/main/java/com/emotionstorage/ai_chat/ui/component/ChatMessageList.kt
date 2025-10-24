@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -38,12 +39,14 @@ import java.time.LocalDateTime
 fun ChatMessageList(
     modifier: Modifier = Modifier,
     chatMessages: List<ChatMessage> = listOf(),
+    listState: LazyListState,
 ) {
     LazyColumn(
         modifier =
             modifier
                 .fillMaxSize()
                 .padding(top = 16.dp),
+        state = listState,
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
@@ -222,6 +225,7 @@ private fun ChatMessageListPreview() {
                     .fillMaxWidth()
                     .background(MooiTheme.colorScheme.background),
             chatMessages = chatMessages,
+            listState = LazyListState(),
         )
     }
 }

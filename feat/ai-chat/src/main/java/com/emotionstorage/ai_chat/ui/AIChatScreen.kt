@@ -2,6 +2,7 @@ package com.emotionstorage.ai_chat.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -96,6 +98,15 @@ private fun StatelessAIChatScreen(
 
     val showEmptyScreen = state.messages.isEmpty() && !isInputFocused
 
+    val listState = remember { LazyListState() }
+
+    LaunchedEffect(state.messages.size) {
+        val last = state.messages.lastIndex
+        if (last >= 0) {
+            listState.animateScrollToItem(last)
+        }
+    }
+
     AIChatExitModal(
         isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
@@ -142,6 +153,7 @@ private fun StatelessAIChatScreen(
                 ChatMessageList(
                     modifier = Modifier.fillMaxSize(),
                     chatMessages = state.messages,
+                    listState = listState,
                 )
 
                 if (showEmptyScreen) {
