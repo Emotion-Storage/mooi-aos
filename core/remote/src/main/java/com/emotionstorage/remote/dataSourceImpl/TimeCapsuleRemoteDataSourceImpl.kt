@@ -8,6 +8,7 @@ import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteReq
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
@@ -59,13 +60,12 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getFavoriteTimeCapsules(sortBy: String): List<TimeCapsuleEntity> {
+    override suspend fun getFavoriteTimeCapsules(page: Int, limit: Int, sortBy: String): List<TimeCapsuleEntity> {
         try {
-            // todo: implement pagination
             val response =
                 timeCapsuleApiService.getFavoriteTimeCapsules(
-                    page = 1,
-                    limit = 30,
+                    page = page,
+                    limit = limit,
                     sortBy = sortBy,
                 )
             if (response.data != null) {
@@ -75,6 +75,32 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: Exception) {
             throw Exception("getFavoriteTimeCapsules api fail, $e")
+        }
+    }
+
+    override suspend fun getTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        page: Int,
+        limit: Int,
+        status: String
+    ): List<TimeCapsuleEntity> {
+        try {
+            val response =
+                timeCapsuleApiService.getTimeCapsules(
+                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    page = page,
+                    limit = limit,
+                    status = status
+                )
+            if (response.data != null) {
+                return TimeCapsuleResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getFavoriteTimeCapsules reponse data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("getTimeCapsules api fail, $e")
         }
     }
 

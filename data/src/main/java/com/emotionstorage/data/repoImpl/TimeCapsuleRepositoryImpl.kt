@@ -72,10 +72,13 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             try {
                 val result =
                     timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(
-                        when (sortBy) {
-                            FavoriteSortBy.FAVORITE_AT -> "favorite"
-                            FavoriteSortBy.NEWEST -> "latest"
-                        },
+                        page = 1,
+                        limit = 30,
+                        sortBy =
+                            when (sortBy) {
+                                FavoriteSortBy.FAVORITE_AT -> "favorite"
+                                FavoriteSortBy.NEWEST -> "latest"
+                            },
                     )
                 emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
             } catch (e: Exception) {
@@ -84,6 +87,30 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 emit(DataState.Loading(isLoading = false))
             }
         }
+
+    override suspend fun getTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        status: String
+    ): Flow<DataState<List<TimeCapsule>>> = flow {
+        emit(DataState.Loading(isLoading = true))
+        try {
+            // todo: implement pagination
+            val result =
+                timeCapsuleRemoteDataSource.getTimeCapsules(
+                    startDate = startDate,
+                    endDate = endDate,
+                    page = 1,
+                    limit = 30,
+                    status = status
+                )
+            emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
+        } catch (e: Exception) {
+            emit(DataState.Error(e))
+        } finally {
+            emit(DataState.Loading(isLoading = false))
+        }
+    }
 
     override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>> =
         flow {

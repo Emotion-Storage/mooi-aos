@@ -21,6 +21,12 @@ interface TimeCapsuleRepository {
 
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
 
+    suspend fun getTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        status: String
+    ): Flow<DataState<List<TimeCapsule>>>
+
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>
 
     suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>>

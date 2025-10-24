@@ -35,11 +35,11 @@ interface TimeCapsuleApiService {
 
     @GET("api/v1/time-capsule")
     suspend fun getTimeCapsules(
-        @Query("startDate") startDate: R.string,
+        @Query("startDate") startDate: String,
         @Query("endDate") endDate: String,
         @Query("page") page: Int,
         @Query("limit") limit: Int,
-        @Query("status") status: String,
+        @Query("status") status: String = "all",
     ): ResponseDto<GetTimeCapsulesResponse>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/favorite")

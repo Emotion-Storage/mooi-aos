@@ -17,7 +17,19 @@ interface TimeCapsuleRemoteDataSource {
         isFavorite: Boolean,
     ): Boolean
 
-    suspend fun getFavoriteTimeCapsules(sortBy: String): List<TimeCapsuleEntity>
+    suspend fun getFavoriteTimeCapsules(
+        page: Int = 1,
+        limit: Int = 30,
+        sortBy: String
+    ): List<TimeCapsuleEntity>
+
+    suspend fun getTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        page: Int,
+        limit: Int,
+        status: String
+    ): List<TimeCapsuleEntity>
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>
 
