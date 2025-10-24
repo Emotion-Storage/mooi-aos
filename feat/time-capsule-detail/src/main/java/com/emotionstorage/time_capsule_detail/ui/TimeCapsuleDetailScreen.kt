@@ -18,8 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
@@ -41,7 +43,6 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
@@ -92,6 +93,7 @@ fun TimeCapsuleDetailScreen(
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
     val (isSaveChangesModalOpen, setSaveChangesModalOpen) = remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -134,7 +136,9 @@ fun TimeCapsuleDetailScreen(
                 is ShowToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
-                    snackState.showSnackbar(sideEffect.toast.message)
+                    snackState.showSnackbar(
+                        getString(context, sideEffect.stringResId)
+                    )
                 }
             }
         }
@@ -295,8 +299,11 @@ private fun StatelessTimeCapsuleDetailScreen(
                     Toast(
                         message = snackbarData.visuals.message,
                         iconId =
-                            if (snackbarData.visuals.message ==
-                                TimeCapsuleDetailToast.FAVORITE_FULL.message
+                            if (snackbarData.visuals.message !=
+                                getString(
+                                    LocalContext.current,
+                                    R.string.toast_favorite_full,
+                                )
                             ) {
                                 R.drawable.success_filled
                             } else {
