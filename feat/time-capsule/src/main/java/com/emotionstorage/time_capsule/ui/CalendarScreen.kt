@@ -144,7 +144,7 @@ private fun StatelessCalendarScreen(
                 Toast(
                     message = snackbarData.visuals.message,
                     iconId =
-                        if (snackbarData.visuals.message ==
+                        if (snackbarData.visuals.message !=
                             CalendarToast.FAVORITE_FULL.message
                         ) {
                             R.drawable.success_filled
