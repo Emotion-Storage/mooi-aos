@@ -24,6 +24,7 @@ interface TimeCapsuleRepository {
     suspend fun getTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
+        page: Int,
         status: String
     ): Flow<DataState<List<TimeCapsule>>>
 

@@ -18,8 +18,8 @@ interface TimeCapsuleRemoteDataSource {
     ): Boolean
 
     suspend fun getFavoriteTimeCapsules(
-        page: Int = 1,
-        limit: Int = 30,
+        page: Int,
+        limit: Int,
         sortBy: String
     ): List<TimeCapsuleEntity>
 

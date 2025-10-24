@@ -13,6 +13,8 @@ import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
+private const val PAGE_LIMIT: Int = 30
+
 class TimeCapsuleRepositoryImpl @Inject constructor(
     private val timeCapsuleRemoteDataSource: TimeCapsuleRemoteDataSource,
 ) : TimeCapsuleRepository {
@@ -53,7 +55,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             try {
                 val result = timeCapsuleRemoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
 
-                // todo: handle time capsule favorite fail - list is full
+                // todo: handle time capsule favorite failure - list is full
                 emit(
                     DataState.Success(
                         if (result) SetFavoriteResult.ADDED else SetFavoriteResult.REMOVED,
@@ -73,7 +75,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 val result =
                     timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(
                         page = 1,
-                        limit = 30,
+                        limit = PAGE_LIMIT,
                         sortBy =
                             when (sortBy) {
                                 FavoriteSortBy.FAVORITE_AT -> "favorite"
@@ -91,17 +93,17 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     override suspend fun getTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
+        page: Int,
         status: String
     ): Flow<DataState<List<TimeCapsule>>> = flow {
         emit(DataState.Loading(isLoading = true))
         try {
-            // todo: implement pagination
             val result =
                 timeCapsuleRemoteDataSource.getTimeCapsules(
                     startDate = startDate,
                     endDate = endDate,
-                    page = 1,
-                    limit = 30,
+                    page = page,
+                    limit = PAGE_LIMIT,
                     status = status
                 )
             emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
