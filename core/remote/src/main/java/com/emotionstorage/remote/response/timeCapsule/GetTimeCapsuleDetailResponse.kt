@@ -19,7 +19,7 @@ data class GetTimeCapsuleDetailResponse (
     val title: String,
     val summary: String,
     val emotionDetails: List<EmotionDetail>,
-    val comments: String,
+    val comments: List<String>,
     val note: String,
 ){
     @Serializable
