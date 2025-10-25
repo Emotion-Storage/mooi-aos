@@ -12,11 +12,11 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
-    private val timeCapsuleApiService: TimeCapsuleApiService,
+    private val apiService: TimeCapsuleApiService,
 ) : TimeCapsuleRemoteDataSource {
     override suspend fun patchTimeCapsuleOpen(id: String): Boolean {
         try {
-            timeCapsuleApiService.patchTimeCapsuleOpen(id)
+            apiService.patchTimeCapsuleOpen(id)
             return true
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleOpen api fail, $e")
@@ -28,7 +28,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         note: String,
     ): Boolean {
         try {
-            timeCapsuleApiService.patchTimeCapsuleNote(
+            apiService.patchTimeCapsuleNote(
                 id,
                 PatchTimeCapsuleNoteRequest(note),
             )
@@ -44,7 +44,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     ): Boolean {
         try {
             val response =
-                timeCapsuleApiService.patchTimeCapsuleFavorite(
+                apiService.patchTimeCapsuleFavorite(
                     id,
                     PatchTimeCapsuleFavoriteRequest(isFavorite),
                 )
@@ -67,7 +67,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     ): List<TimeCapsuleEntity> {
         try {
             val response =
-                timeCapsuleApiService.getFavoriteTimeCapsules(
+                apiService.getFavoriteTimeCapsules(
                     page = page,
                     limit = limit,
                     sortBy = sortBy,
@@ -91,7 +91,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     ): List<TimeCapsuleEntity> {
         try {
             val response =
-                timeCapsuleApiService.getTimeCapsules(
+                apiService.getTimeCapsules(
                     startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                     page = page,
@@ -108,10 +108,23 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getTimeCapsuleDetail(id: String): TimeCapsuleEntity {
+        try {
+            val response = apiService.getTimeCapsuleDetail(id)
+            if (response.data != null) {
+                return TimeCapsuleResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getTimeCapsuleDetail reponse data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("getTimeCapsuleDetail api fail, $e")
+        }
+    }
+
     override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate> {
         try {
             val response =
-                timeCapsuleApiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
+                apiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
             if (response.data != null) {
                 return response.data!!.dates.map { LocalDate.parse(it) }
             } else {
@@ -124,7 +137,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteTimeCapsule(id: String): Boolean {
         try {
-            timeCapsuleApiService.deleteTimeCapsule(id)
+            apiService.deleteTimeCapsule(id)
             return true
         } catch (e: Exception) {
             throw Exception("deleteTimeCapsule api fail, $e")

@@ -23,6 +23,10 @@ interface TimeCapsuleRemoteDataSource {
         sortBy: String,
     ): List<TimeCapsuleEntity>
 
+    suspend fun getTimeCapsuleDetail(
+        id: String,
+    ): TimeCapsuleEntity
+
     suspend fun getTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
