@@ -75,10 +75,20 @@ fun TutorialScreen(
                                     ),
                             ) {
                                 Image(
-                                    modifier = Modifier.align(Alignment.BottomCenter)
-                                    .padding(bottom = 78.dp),
-                                    painter = painterResource(com.emotionstorage.ui.R.drawable.luna),
-                                    contentDescription = "효과"
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.BottomCenter)
+                                            .padding(bottom = 78.dp),
+                                    painter =
+                                        painterResource(
+                                            com
+                                                .emotionstorage
+                                                .ui
+                                                .R
+                                                .drawable
+                                                .luna,
+                                        ),
+                                    contentDescription = "효과",
                                 )
                             }
                         }
