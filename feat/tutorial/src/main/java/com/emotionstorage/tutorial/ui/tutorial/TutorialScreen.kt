@@ -1,5 +1,6 @@
 package com.emotionstorage.tutorial.ui.tutorial
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -16,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -71,7 +73,14 @@ fun TutorialScreen(
                                     stringResource(R.string.tutorial_p1_title_highlights).split(
                                         ',',
                                     ),
-                            )
+                            ) {
+                                Image(
+                                    modifier = Modifier.align(Alignment.BottomCenter)
+                                    .padding(bottom = 78.dp),
+                                    painter = painterResource(com.emotionstorage.ui.R.drawable.luna),
+                                    contentDescription = "효과"
+                                )
+                            }
                         }
 
                         2 -> {
@@ -89,10 +98,6 @@ fun TutorialScreen(
                             TutorialPage(
                                 description = stringResource(R.string.tutorial_p3_desc),
                                 title = stringResource(R.string.tutorial_p3_title),
-                                titleHighlights =
-                                    stringResource(R.string.tutorial_p3_title_highlights).split(
-                                        ',',
-                                    ),
                                 content = {
                                     CtaButton(
                                         modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
