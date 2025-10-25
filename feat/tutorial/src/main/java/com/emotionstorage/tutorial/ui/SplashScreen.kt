@@ -3,7 +3,10 @@ package com.emotionstorage.tutorial.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
@@ -45,6 +48,7 @@ fun SplashScreen(
 @Composable
 private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
     Scaffold(
+        contentWindowInsets = WindowInsets(0,0,0,0),
         modifier =
             modifier
                 .fillMaxSize(),
@@ -60,8 +64,9 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
                 modifier =
                     Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 215.dp)
-                        .width(235.dp),
+                        .padding(top = 316.dp)
+                        .width(209.dp)
+                        .height(104.dp),
                 painter = painterResource(R.drawable.splash_logo),
                 contentDescription = "Mooi",
             )
