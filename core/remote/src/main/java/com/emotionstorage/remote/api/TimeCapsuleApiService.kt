@@ -5,6 +5,7 @@ import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDatesReponse
+import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDetailResponse
 import com.emotionstorage.remote.response.timeCapsule.PatchTimeCapsuleFavoriteResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -40,6 +41,11 @@ interface TimeCapsuleApiService {
         @Query("limit") limit: Int,
         @Query("status") status: String = "all",
     ): ResponseDto<GetTimeCapsulesResponse>
+
+    @GET("api/v1/time-capsule/{capsuleId}")
+    suspend fun getTimeCapsuleDetail(
+        @Path(value = "capsuleId") id: String,
+    ): ResponseDto<GetTimeCapsuleDetailResponse>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/favorite")
     suspend fun patchTimeCapsuleFavorite(
