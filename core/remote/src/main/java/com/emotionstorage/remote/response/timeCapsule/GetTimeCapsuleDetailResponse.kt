@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class GetTimeCapsuleDetailResponse (
+data class GetTimeCapsuleDetailResponse(
     val id: Int,
     @Serializable(with = LocalDateTimeSerializer::class)
     val historyDate: LocalDateTime,
@@ -21,10 +21,10 @@ data class GetTimeCapsuleDetailResponse (
     val emotionDetails: List<EmotionDetail>,
     val comments: List<String>,
     val note: String,
-){
+) {
     @Serializable
     data class EmotionDetail(
         val label: String,
-        val ratio: Int
+        val ratio: Int,
     )
 }

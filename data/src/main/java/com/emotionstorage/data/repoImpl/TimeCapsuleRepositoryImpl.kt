@@ -115,17 +115,18 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getTimeCapsuleById(id: String): Flow<DataState<TimeCapsule>> = flow {
-        emit(DataState.Loading(isLoading = true))
-        try {
-            val result = remoteDataSource.getTimeCapsuleDetail(id)
-            emit(DataState.Success(TimeCapsuleMapper.toDomain(result)))
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        } finally {
-            emit(DataState.Loading(isLoading = false))
+    override suspend fun getTimeCapsuleById(id: String): Flow<DataState<TimeCapsule>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                val result = remoteDataSource.getTimeCapsuleDetail(id)
+                emit(DataState.Success(TimeCapsuleMapper.toDomain(result)))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
         }
-    }
 
     override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>> =
         flow {
