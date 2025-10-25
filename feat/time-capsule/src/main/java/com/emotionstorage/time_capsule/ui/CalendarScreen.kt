@@ -50,7 +50,6 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.IconWithCount
-import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
@@ -354,8 +353,7 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }
-                    .height(44.dp)
+                    }.height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

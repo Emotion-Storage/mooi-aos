@@ -1,6 +1,5 @@
 package com.emotionstorage.ui.component
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -38,8 +37,7 @@ fun Toast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(paddingValues),
+                ).padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -62,9 +60,7 @@ fun Toast(
 }
 
 @Composable
-fun FavoriteToast(
-    message: String
-) {
+fun FavoriteToast(message: String) {
     Toast(
         message = message,
         iconId =
@@ -95,10 +91,10 @@ private fun ToastPreview() {
                 paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
             )
             FavoriteToast(
-                LocalContext.current.getString(R.string.toast_favorite_added)
+                LocalContext.current.getString(R.string.toast_favorite_added),
             )
             FavoriteToast(
-                LocalContext.current.getString(R.string.toast_favorite_full)
+                LocalContext.current.getString(R.string.toast_favorite_full),
             )
         }
     }
