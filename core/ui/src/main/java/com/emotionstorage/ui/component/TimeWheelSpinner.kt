@@ -57,14 +57,13 @@ fun TimeWheelSpinner(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-
             PeriodWheel(
                 modifier = Modifier.weight(1f),
                 selected = period,
                 onSelected = { newPeriod ->
                     val newHour24 = toHour24(newPeriod, hour12)
                     onSelect(selected.withHour(newHour24))
-                }
+                },
             )
 
             Spacer(Modifier.width(12.dp))
@@ -77,7 +76,7 @@ fun TimeWheelSpinner(
                     val newHour24 = toHour24(period, newHour12)
                     onSelect(selected.withHour(newHour24))
                 },
-                formatter = { it.toString() }
+                formatter = { it.toString() },
             )
 
             Text(
@@ -96,10 +95,10 @@ fun TimeWheelSpinner(
                         selected
                             .withMinute(newMinute)
                             .withSecond(0)
-                            .withNano(0)
+                            .withNano(0),
                     )
                 },
-                formatter = { it.toString().padStart(2, '0') }
+                formatter = { it.toString().padStart(2, '0') },
             )
         }
     }
@@ -136,31 +135,34 @@ private fun WheelList(
 
     Box(modifier = modifier) {
         LazyColumn(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .height(totalHeight)
-                .fillMaxWidth(),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .height(totalHeight)
+                    .fillMaxWidth(),
             state = listState,
-            verticalArrangement = Arrangement.spacedBy(itemSpacing)
+            verticalArrangement = Arrangement.spacedBy(itemSpacing),
         ) {
             itemsIndexed(items) { index, item ->
                 val isCenter = listState.firstVisibleItemIndex + centerIndex == index
-                val isAdjacent = listState.firstVisibleItemIndex + centerIndex - 1 == index ||
-                    listState.firstVisibleItemIndex + centerIndex + 1 == index
+                val isAdjacent =
+                    listState.firstVisibleItemIndex + centerIndex - 1 == index ||
+                        listState.firstVisibleItemIndex + centerIndex + 1 == index
                 val animatedColor by animateColorAsState(
-                    targetValue = when {
-                        isCenter -> Color.White
-                        isAdjacent -> MooiTheme.colorScheme.gray500
-                        else -> MooiTheme.colorScheme.gray500
-                    },
-                    label = "wheelColor"
+                    targetValue =
+                        when {
+                            isCenter -> Color.White
+                            isAdjacent -> MooiTheme.colorScheme.gray500
+                            else -> MooiTheme.colorScheme.gray500
+                        },
+                    label = "wheelColor",
                 )
 
                 Box(
                     Modifier
                         .height(itemHeight)
                         .fillMaxWidth(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(text = item, color = animatedColor, style = MooiTheme.typography.body1)
                 }
@@ -181,10 +183,11 @@ fun PeriodWheel(
     val centerIndex = visible / 2
     val wheelItems = remember(periods) { listOf("") + periods + listOf("") }
 
-    val initial = remember(selected, periods) {
-        val idx = periods.indexOf(selected).coerceAtLeast(0)
-        idx + 1
-    }
+    val initial =
+        remember(selected, periods) {
+            val idx = periods.indexOf(selected).coerceAtLeast(0)
+            idx + 1
+        }
     val listState = rememberLazyListState(initial)
 
     LaunchedEffect(selected) {
@@ -224,9 +227,10 @@ fun NumberWheel(
     val repeated = remember(values) { List(repeat) { values }.flatten() }
 
     val pad = visibleItemsCount / 2
-    val wheelItems = remember(repeated, formatter) {
-        List(pad) { "" } + repeated.map(formatter) + List(pad) { "" }
-    }
+    val wheelItems =
+        remember(repeated, formatter) {
+            List(pad) { "" } + repeated.map(formatter) + List(pad) { "" }
+        }
 
     val base = (repeated.size / 2 / values.size) * values.size
     val selectedIdxInValues = values.indexOf(selected).coerceAtLeast(0)
@@ -252,11 +256,14 @@ fun NumberWheel(
                 val v = repeated[real]
                 if (v != selected) onSelected(v)
             }
-        }
+        },
     )
 }
 
-private fun toHour24(period: String, hour12: Int): Int {
+private fun toHour24(
+    period: String,
+    hour12: Int,
+): Int {
     val h = hour12 % 12
     return if (period == "오전") {
         if (h == 0) 0 else h
@@ -264,7 +271,6 @@ private fun toHour24(period: String, hour12: Int): Int {
         if (h == 0) 12 else h + 12
     }
 }
-
 
 @Preview
 @Composable
