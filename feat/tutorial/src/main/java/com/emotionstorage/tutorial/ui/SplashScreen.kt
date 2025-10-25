@@ -62,7 +62,7 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
                         .align(Alignment.TopCenter)
                         .padding(top = 215.dp)
                         .width(235.dp),
-                painter = painterResource(R.drawable.splash_graphic),
+                painter = painterResource(R.drawable.splash_logo),
                 contentDescription = "Mooi",
             )
         }
