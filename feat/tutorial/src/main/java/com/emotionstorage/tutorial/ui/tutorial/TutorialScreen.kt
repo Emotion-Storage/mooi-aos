@@ -98,6 +98,10 @@ fun TutorialScreen(
                             TutorialPage(
                                 description = stringResource(R.string.tutorial_p3_desc),
                                 title = stringResource(R.string.tutorial_p3_title),
+                                titleHighlights =
+                                    stringResource(R.string.tutorial_p3_title_highlights).split(
+                                        ',',
+                                    ),
                                 content = {
                                     CtaButton(
                                         modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
