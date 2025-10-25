@@ -48,6 +48,7 @@ import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.theme.MooiTheme
@@ -144,17 +145,7 @@ private fun StatelessCalendarScreen(
                 .padding(horizontal = 16.dp),
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
-                Toast(
-                    message = snackbarData.visuals.message,
-                    iconId =
-                        if (snackbarData.visuals.message !=
-                            LocalContext.current.getString(R.string.toast_favorite_full)
-                        ) {
-                            R.drawable.success_filled
-                        } else {
-                            null
-                        },
-                )
+                FavoriteToast(snackbarData.visuals.message)
             }
         },
     ) { innerPadding ->
@@ -363,7 +354,8 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

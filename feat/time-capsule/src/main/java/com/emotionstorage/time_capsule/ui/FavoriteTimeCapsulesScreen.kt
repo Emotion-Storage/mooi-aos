@@ -45,6 +45,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.DropDownPicker
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.Toast
 import java.time.LocalDateTime
 
@@ -108,19 +109,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         },
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
-                Toast(
-                    message = snackbarData.visuals.message,
-                    iconId =
-                        if (snackbarData.visuals.message !=
-                            LocalContext.current.getString(
-                                R.string.toast_favorite_full,
-                            )
-                        ) {
-                            R.drawable.success_filled
-                        } else {
-                            null
-                        },
-                )
+                FavoriteToast(snackbarData.visuals.message)
             }
         },
     ) { innerPadding ->

@@ -58,6 +58,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
@@ -296,19 +297,7 @@ private fun StatelessTimeCapsuleDetailScreen(
             },
             snackbarHost = {
                 AppSnackbarHost(hostState = snackState) { snackbarData ->
-                    Toast(
-                        message = snackbarData.visuals.message,
-                        iconId =
-                            if (snackbarData.visuals.message !=
-                                LocalContext.current.getString(
-                                    R.string.toast_favorite_full,
-                                )
-                            ) {
-                                R.drawable.success_filled
-                            } else {
-                                null
-                            },
-                    )
+                    FavoriteToast(snackbarData.visuals.message)
                 }
             },
         ) { innerPadding ->

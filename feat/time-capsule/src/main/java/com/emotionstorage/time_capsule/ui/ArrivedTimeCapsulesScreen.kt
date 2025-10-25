@@ -38,6 +38,7 @@ import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -99,19 +100,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
             AppSnackbarHost(
                 hostState = snackState,
             ) {
-                Toast(
-                    message = it.visuals.message,
-                    iconId =
-                        if (it.visuals.message !=
-                            LocalContext.current.getString(
-                                R.string.toast_favorite_full,
-                            )
-                        ) {
-                            R.drawable.success_filled
-                        } else {
-                            null
-                        },
-                )
+                FavoriteToast(it.visuals.message)
             }
         },
     ) { innerPadding ->
