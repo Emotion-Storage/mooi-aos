@@ -1,6 +1,6 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
