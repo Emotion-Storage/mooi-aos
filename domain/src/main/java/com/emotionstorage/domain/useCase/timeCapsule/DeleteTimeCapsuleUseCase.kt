@@ -6,5 +6,5 @@ import javax.inject.Inject
 class DeleteTimeCapsuleUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    suspend operator fun invoke(id: String) = timeCapsuleRepository.deleteTimeCapsule(id)
+    suspend operator fun invoke(id: Long) = timeCapsuleRepository.deleteTimeCapsule(id)
 }

@@ -3,8 +3,9 @@ package com.emotionstorage.remote.api
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.response.ResponseDto
-import com.emotionstorage.remote.response.timeCapsule.GetFavoriteTimeCapsulesResponse
+import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDatesReponse
+import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDetailResponse
 import com.emotionstorage.remote.response.timeCapsule.PatchTimeCapsuleFavoriteResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -16,12 +17,12 @@ import retrofit2.http.Query
 interface TimeCapsuleApiService {
     @PATCH("api/v1/time-capsule/{capsuleId}/open")
     suspend fun patchTimeCapsuleOpen(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
     ): ResponseDto<Unit>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/note")
     suspend fun patchTimeCapsuleNote(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
         @Body requestBody: PatchTimeCapsuleNoteRequest,
     ): ResponseDto<Unit>
 
@@ -30,11 +31,25 @@ interface TimeCapsuleApiService {
         @Query("page") page: Int,
         @Query("limit") limit: Int,
         @Query("sort") sortBy: String,
-    ): ResponseDto<GetFavoriteTimeCapsulesResponse>
+    ): ResponseDto<GetTimeCapsulesResponse>
+
+    @GET("api/v1/time-capsule")
+    suspend fun getTimeCapsules(
+        @Query("startDate") startDate: String,
+        @Query("endDate") endDate: String,
+        @Query("page") page: Int,
+        @Query("limit") limit: Int,
+        @Query("status") status: String = "all",
+    ): ResponseDto<GetTimeCapsulesResponse>
+
+    @GET("api/v1/time-capsule/{capsuleId}")
+    suspend fun getTimeCapsuleDetail(
+        @Path(value = "capsuleId") id: Long,
+    ): ResponseDto<GetTimeCapsuleDetailResponse>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/favorite")
     suspend fun patchTimeCapsuleFavorite(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
         @Body requestBody: PatchTimeCapsuleFavoriteRequest,
     ): ResponseDto<PatchTimeCapsuleFavoriteResponse>
 
@@ -46,6 +61,6 @@ interface TimeCapsuleApiService {
 
     @DELETE("api/v1/time-capsule/{capsuleId}")
     suspend fun deleteTimeCapsule(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
     ): ResponseDto<Unit>
 }

@@ -481,7 +481,7 @@ private fun TimeCapsuleContent(
 private fun TimeCapsuleItemPreview() {
     val dummyTimeCapsule =
         TimeCapsuleItemState(
-            id = "",
+            id = 123L,
             status = TimeCapsule.Status.OPENED,
             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
             emotions =

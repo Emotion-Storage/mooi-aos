@@ -3,7 +3,7 @@ package com.emotionstorage.domain.model
 import java.time.LocalDateTime
 
 data class DailyReport(
-    val id: String,
+    val id: Long,
     // 일일 리포트 열람 여부
     val isOpen: Boolean = false,
     val summaries: List<String> = emptyList(),

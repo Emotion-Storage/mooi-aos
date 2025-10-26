@@ -13,67 +13,65 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
+import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect
+import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 
-private val DUMMY_TIME_CAPSULES =
-    (1..15).toList().map { it ->
-        TimeCapsuleItemState(
-            id = it.toString(),
-            status = TimeCapsule.Status.ARRIVED,
-            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-            emotions =
-                listOf(
-                    TimeCapsule.Emotion(
-                        emoji = "\uD83D\uDE14",
-                        label = "서운함",
-                        percentage = 30.0f,
-                    ),
-                    TimeCapsule.Emotion(
-                        emoji = "\uD83D\uDE0A",
-                        label = "고마움",
-                        percentage = 30.0f,
-                    ),
-                    TimeCapsule.Emotion(
-                        emoji = "\uD83E\uDD70",
-                        label = "안정감",
-                        percentage = 80.0f,
-                    ),
-                ),
-            isFavorite = true,
-            isFavoriteAt = LocalDateTime.now(),
-            createdAt = LocalDateTime.now(),
-            expireAt = LocalDateTime.now().plusHours(5),
-            openDDay = it,
-        )
-    }
-
 @Composable
 fun ArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    viewModel: ArrivedTimeCapsulesViewModel = hiltViewModel(),
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    // todo: add favorite toggle functionality?
+    val state = viewModel.container.stateFlow.collectAsState()
+
+    val context = LocalContext.current
+    val snackState = remember { SnackbarHostState() }
+    LaunchedEffect("init") {
+        viewModel.onAction(ArrivedTimeCapsulesAction.Init)
+
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is ArrivedTimeCapsulesSideEffect.ShowToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackState.showSnackbar(context.getString(it.stringResId))
+                }
+            }
+        }
+    }
 
     StatelessArrivedTimeCapsulesScreen(
         modifier = modifier,
-        timeCapsules = DUMMY_TIME_CAPSULES,
+        snackState = snackState,
+        timeCapsules = state.value.timeCapsules,
+        onAction = viewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack,
     )
@@ -82,8 +80,10 @@ fun ArrivedTimeCapsulesScreen(
 @Composable
 private fun StatelessArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = remember { SnackbarHostState() },
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    onAction: (ArrivedTimeCapsulesAction) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -95,7 +95,16 @@ private fun StatelessArrivedTimeCapsulesScreen(
         topBar = {
             TopAppBar(title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
         },
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackState,
+            ) {
+                FavoriteToast(it.visuals.message)
+            }
+        },
     ) { innerPadding ->
+        // todo: pull down to refresh
+        // todo: load more on scroll end
         LazyColumn(
             modifier =
                 Modifier
@@ -153,6 +162,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     showInfoText = false,
                     showFavorite = true,
                     onClick = { navToTimeCapsuleDetail(it.id) },
+                    onFavoriteClick = { onAction(ArrivedTimeCapsulesAction.ToggleFavorite(it.id)) },
                 )
             }
         }
@@ -164,7 +174,37 @@ private fun StatelessArrivedTimeCapsulesScreen(
 private fun ArrivedTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessArrivedTimeCapsulesScreen(
-            timeCapsules = DUMMY_TIME_CAPSULES,
+            timeCapsules =
+                (1..15).toList().map { it ->
+                    TimeCapsuleItemState(
+                        id = it.toLong(),
+                        status = TimeCapsule.Status.ARRIVED,
+                        title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                        emotions =
+                            listOf(
+                                TimeCapsule.Emotion(
+                                    emoji = "\uD83D\uDE14",
+                                    label = "서운함",
+                                    percentage = 30.0f,
+                                ),
+                                TimeCapsule.Emotion(
+                                    emoji = "\uD83D\uDE0A",
+                                    label = "고마움",
+                                    percentage = 30.0f,
+                                ),
+                                TimeCapsule.Emotion(
+                                    emoji = "\uD83E\uDD70",
+                                    label = "안정감",
+                                    percentage = 80.0f,
+                                ),
+                            ),
+                        isFavorite = true,
+                        isFavoriteAt = LocalDateTime.now(),
+                        createdAt = LocalDateTime.now(),
+                        expireAt = LocalDateTime.now().plusHours(5),
+                        openDDay = it,
+                    )
+                },
         )
     }
 }

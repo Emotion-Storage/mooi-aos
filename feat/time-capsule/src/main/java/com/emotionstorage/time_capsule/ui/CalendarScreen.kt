@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -40,7 +41,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
-import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast.CalendarToast
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
@@ -48,8 +48,8 @@ import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.IconWithCount
-import com.emotionstorage.ui.component.Toast
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
@@ -63,8 +63,8 @@ fun CalendarScreen(
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
-    navToDailyReportDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = {},
     navToAIChat: (roomId: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -77,6 +77,7 @@ fun CalendarScreen(
     val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
     val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -88,7 +89,9 @@ fun CalendarScreen(
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
-                    snackState.showSnackbar(sideEffect.toast.message)
+                    snackState.showSnackbar(
+                        context.getString(sideEffect.stringResId),
+                    )
                 }
 
                 is CalendarSideEffect.EnterCharRoomSuccess -> {
@@ -129,8 +132,8 @@ private fun StatelessCalendarScreen(
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
-    navToDailyReportDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = {},
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
@@ -141,17 +144,7 @@ private fun StatelessCalendarScreen(
                 .padding(horizontal = 16.dp),
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
-                Toast(
-                    message = snackbarData.visuals.message,
-                    iconId =
-                        if (snackbarData.visuals.message ==
-                            CalendarToast.FAVORITE_FULL.message
-                        ) {
-                            R.drawable.success_filled
-                        } else {
-                            null
-                        },
-                )
+                FavoriteToast(snackbarData.visuals.message)
             }
         },
     ) { innerPadding ->

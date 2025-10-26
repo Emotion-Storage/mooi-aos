@@ -16,8 +16,8 @@ import java.time.YearMonth
 import javax.inject.Inject
 
 data class SaveTimeCapsuleState(
+    val id: Long = 0L,
     val isLoading: Boolean = true,
-    val id: String = "",
     val isNewTimeCapsule: Boolean = false,
     val emotions: List<String> = emptyList(),
     val createdAt: LocalDateTime = LocalDateTime.now(),
@@ -43,7 +43,7 @@ data class SaveTimeCapsuleState(
 
 sealed class SaveTimeCapsuleAction {
     data class Init(
-        val id: String,
+        val id: Long,
         val isNewTimeCapsule: Boolean,
     ) : SaveTimeCapsuleAction()
 
@@ -105,7 +105,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
     }
 
     private fun handleInit(
-        id: String,
+        id: Long,
         isNewTimeCapsule: Boolean,
     ) = intent {
         collectDataState(

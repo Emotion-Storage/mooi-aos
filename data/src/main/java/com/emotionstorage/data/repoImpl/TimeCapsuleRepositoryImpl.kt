@@ -13,14 +13,16 @@ import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
+private const val PAGE_LIMIT: Int = 30
+
 class TimeCapsuleRepositoryImpl @Inject constructor(
-    private val timeCapsuleRemoteDataSource: TimeCapsuleRemoteDataSource,
+    private val remoteDataSource: TimeCapsuleRemoteDataSource,
 ) : TimeCapsuleRepository {
-    override suspend fun openArrivedTimeCapsule(id: String): Flow<DataState<Unit>> =
+    override suspend fun openArrivedTimeCapsule(id: Long): Flow<DataState<Unit>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                timeCapsuleRemoteDataSource.patchTimeCapsuleOpen(id)
+                remoteDataSource.patchTimeCapsuleOpen(id)
                 emit(DataState.Success(Unit))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
@@ -30,13 +32,13 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
 
     override suspend fun saveTimeCapsuleNote(
-        id: String,
+        id: Long,
         note: String,
     ): Flow<DataState<Boolean>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                emit(DataState.Success(timeCapsuleRemoteDataSource.patchTimeCapsuleNote(id, note)))
+                emit(DataState.Success(remoteDataSource.patchTimeCapsuleNote(id, note)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
@@ -45,15 +47,15 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
 
     override suspend fun setFavoriteTimeCapsule(
-        id: String,
+        id: Long,
         isFavorite: Boolean,
     ): Flow<DataState<SetFavoriteResult>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                val result = timeCapsuleRemoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
+                val result = remoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
 
-                // todo: handle time capsule favorite fail - list is full
+                // todo: handle time capsule favorite failure - list is full
                 emit(
                     DataState.Success(
                         if (result) SetFavoriteResult.ADDED else SetFavoriteResult.REMOVED,
@@ -71,13 +73,54 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             emit(DataState.Loading(isLoading = true))
             try {
                 val result =
-                    timeCapsuleRemoteDataSource.getFavoriteTimeCapsules(
-                        when (sortBy) {
-                            FavoriteSortBy.FAVORITE_AT -> "favorite"
-                            FavoriteSortBy.NEWEST -> "latest"
-                        },
+                    remoteDataSource.getFavoriteTimeCapsules(
+                        page = 1,
+                        limit = PAGE_LIMIT,
+                        sortBy =
+                            when (sortBy) {
+                                FavoriteSortBy.FAVORITE_AT -> "favorite"
+                                FavoriteSortBy.NEWEST -> "latest"
+                            },
                     )
                 emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
+        }
+
+    override suspend fun getTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        page: Int,
+        status: String,
+    ): Flow<DataState<List<TimeCapsule>>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                val result =
+                    remoteDataSource.getTimeCapsules(
+                        startDate = startDate,
+                        endDate = endDate,
+                        page = page,
+                        limit = PAGE_LIMIT,
+                        status = status,
+                    )
+                emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
+        }
+
+    override suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                val result = remoteDataSource.getTimeCapsuleDetail(id)
+                emit(DataState.Success(TimeCapsuleMapper.toDomain(result)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
@@ -89,7 +132,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                emit(DataState.Success(timeCapsuleRemoteDataSource.getTimeCapsuleDates(yearMonth)))
+                emit(DataState.Success(remoteDataSource.getTimeCapsuleDates(yearMonth)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
@@ -97,11 +140,11 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>> =
+    override suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                emit(DataState.Success(timeCapsuleRemoteDataSource.deleteTimeCapsule(id)))
+                emit(DataState.Success(remoteDataSource.deleteTimeCapsule(id)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {

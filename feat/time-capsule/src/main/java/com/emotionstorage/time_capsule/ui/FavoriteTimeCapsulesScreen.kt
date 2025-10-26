@@ -24,17 +24,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast
-import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowToast.FavoriteToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
@@ -44,45 +45,14 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
 import com.emotionstorage.ui.component.DropDownPicker
-import com.emotionstorage.ui.component.Toast
+import com.emotionstorage.ui.component.FavoriteToast
 import java.time.LocalDateTime
-
-private val DUMMY_TIME_CAPSULES =
-    (1..15).toList().map { it ->
-        TimeCapsuleItemState(
-            id = it.toString(),
-            status = TimeCapsule.Status.OPENED,
-            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-            emotions =
-                listOf(
-                    Emotion(
-                        emoji = "\uD83D\uDE14",
-                        label = "서운함",
-                        percentage = 30.0f,
-                    ),
-                    Emotion(
-                        emoji = "\uD83D\uDE0A",
-                        label = "고마움",
-                        percentage = 30.0f,
-                    ),
-                    Emotion(
-                        emoji = "\uD83E\uDD70",
-                        label = "안정감",
-                        percentage = 80.0f,
-                    ),
-                ),
-            isFavorite = true,
-            isFavoriteAt = LocalDateTime.now(),
-            createdAt = LocalDateTime.now(),
-            expireAt = LocalDateTime.now().plusHours(5),
-        )
-    }
 
 @Composable
 fun FavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: FavoriteTimeCapsulesViewModel = hiltViewModel(),
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -92,6 +62,7 @@ fun FavoriteTimeCapsulesScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -99,7 +70,9 @@ fun FavoriteTimeCapsulesScreen(
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
-                    snackState.showSnackbar(sideEffect.toast.message)
+                    snackState.showSnackbar(
+                        context.getString(sideEffect.stringResId),
+                    )
                 }
             }
         }
@@ -121,7 +94,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     snackState: SnackbarHostState = SnackbarHostState(),
     state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
     onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -135,17 +108,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         },
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
-                Toast(
-                    message = snackbarData.visuals.message,
-                    iconId =
-                        if (snackbarData.visuals.message ==
-                            FavoriteToast.FAVORITE_FULL.message
-                        ) {
-                            R.drawable.success_filled
-                        } else {
-                            null
-                        },
-                )
+                FavoriteToast(snackbarData.visuals.message)
             }
         },
     ) { innerPadding ->
@@ -242,7 +205,39 @@ private fun StatelessFavoriteTimeCapsulesScreen(
 private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
         StatelessFavoriteTimeCapsulesScreen(
-            state = FavoriteTimeCapsulesState(timeCapsules = DUMMY_TIME_CAPSULES),
+            state =
+                FavoriteTimeCapsulesState(
+                    timeCapsules =
+                        (1..15).toList().map { it ->
+                            TimeCapsuleItemState(
+                                id = it.toLong(),
+                                status = TimeCapsule.Status.OPENED,
+                                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                                emotions =
+                                    listOf(
+                                        Emotion(
+                                            emoji = "\uD83D\uDE14",
+                                            label = "서운함",
+                                            percentage = 30.0f,
+                                        ),
+                                        Emotion(
+                                            emoji = "\uD83D\uDE0A",
+                                            label = "고마움",
+                                            percentage = 30.0f,
+                                        ),
+                                        Emotion(
+                                            emoji = "\uD83E\uDD70",
+                                            label = "안정감",
+                                            percentage = 80.0f,
+                                        ),
+                                    ),
+                                isFavorite = true,
+                                isFavoriteAt = LocalDateTime.now(),
+                                createdAt = LocalDateTime.now(),
+                                expireAt = LocalDateTime.now().plusHours(5),
+                            )
+                        },
+                ),
         )
     }
 }
