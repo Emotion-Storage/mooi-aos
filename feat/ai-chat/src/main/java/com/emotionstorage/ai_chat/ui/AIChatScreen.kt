@@ -2,7 +2,6 @@ package com.emotionstorage.ai_chat.ui
 
 import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -26,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,10 +35,13 @@ import com.emotionstorage.ai_chat.presentation.AIChatViewModel
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
+import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
+import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun AIChatScreen(
@@ -100,10 +100,21 @@ private fun StatelessAIChatScreen(
 
     val listState = remember { LazyListState() }
 
+    val canMakeTimeCapsule = state.chatProgress == 100f
+    var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
+
     LaunchedEffect(state.messages.size) {
         val last = state.messages.lastIndex
         if (last >= 0) {
             listState.animateScrollToItem(last)
+        }
+    }
+
+    LaunchedEffect(state.chatProgress) {
+        if (canMakeTimeCapsule) {
+            showTimeCapsuleCreateAlert = true
+            delay(3000L)
+            showTimeCapsuleCreateAlert = false
         }
     }
 
@@ -143,6 +154,12 @@ private fun StatelessAIChatScreen(
                         .fillMaxWidth(),
             )
 
+            if (showTimeCapsuleCreateAlert) {
+                TimeCapsuleCreateAlert(
+                    modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp)
+                )
+            }
+
             Box(
                 modifier =
                     Modifier
@@ -160,6 +177,15 @@ private fun StatelessAIChatScreen(
                 if (showEmptyScreen) {
                     EmptyChatScreen(
                         modifier = Modifier.offset(y = (-60).dp),
+                    )
+                }
+
+                if (canMakeTimeCapsule) {
+                    ChattingFinishButton(
+                        modifier = Modifier.padding(bottom = 13.dp),
+                        onClick = {
+                            // TODO : Bottom Sheet 등장시키기
+                        }
                     )
                 }
             }
