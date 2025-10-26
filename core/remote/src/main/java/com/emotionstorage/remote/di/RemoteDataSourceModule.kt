@@ -27,7 +27,6 @@ abstract class RemoteDataSourceModule {
     @Singleton
     abstract fun bindDailyReportRemoteDataSource(impl: DailyReportRemoteDataSourceImpl): DailyReportRemoteDataSource
 
-
     @Binds
     @Singleton
     abstract fun bindUserRemoteDataSource(impl: UserRemoteDataSourceImpl): UserRemoteDataSource

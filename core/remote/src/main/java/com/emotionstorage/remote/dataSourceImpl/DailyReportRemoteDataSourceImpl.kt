@@ -9,19 +9,22 @@ import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class DailyReportRemoteDataSourceImpl @Inject constructor(
-    private val apiService: DailyReportApiService
-): DailyReportRemoteDataSource{
+    private val apiService: DailyReportApiService,
+) : DailyReportRemoteDataSource {
     override suspend fun getDailyReport(date: LocalDate): DailyReportEntity {
-        try{
-            val response = apiService.getDailyReport(
-                date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-            )
-            if(response.data != null){
-                return DailyReportResponseMapper.toData(response.data!!)
-            }else{
-                throw Exception("getDailyReport response data is empty, $response")
-            }
-        }catch(e: Exception){
+        try {
+            val response =
+                apiService.getDailyReport(
+                    date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                )
+            if (response.data != null)
+                {
+                    return DailyReportResponseMapper.toData(response.data!!)
+                } else
+                {
+                    throw Exception("getDailyReport response data is empty, $response")
+                }
+        } catch (e: Exception) {
             throw Exception("getDailyReport api fail, $e")
         }
     }

@@ -33,11 +33,9 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindTimeCapsuleRepository(impl: TimeCapsuleRepositoryImpl): TimeCapsuleRepository
 
-
     @Binds
     @Singleton
     abstract fun bindDailyReportRepository(impl: DailyReportRepositoryImpl): DailyReportRepository
-
 
     @Binds
     @Singleton

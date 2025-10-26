@@ -32,7 +32,3 @@ internal object DailyReportMapper {
             updatedAt = entity.updatedAt,
         )
 }
-
-
-
-

@@ -4,8 +4,8 @@ import com.emotionstorage.data.model.DailyReportEntity
 import com.emotionstorage.remote.response.dailyReport.GetDailyReportResponse
 
 internal object DailyReportResponseMapper {
-    fun toData(response: GetDailyReportResponse): DailyReportEntity {
-        return DailyReportEntity(
+    fun toData(response: GetDailyReportResponse): DailyReportEntity =
+        DailyReportEntity(
             id = response.id,
             isOpen = response.isOpen,
             summaries = response.summaries,
@@ -17,7 +17,7 @@ internal object DailyReportResponseMapper {
                     DailyReportEntity.EmotionLog(
                         emotion = it.label,
                         description = it.description,
-                        time = response.createdAt.withHour(h.toInt()).withMinute(m.toInt())
+                        time = response.createdAt.withHour(h.toInt()).withMinute(m.toInt()),
                     )
                 },
             stressScore = response.stressIndex,
@@ -26,5 +26,4 @@ internal object DailyReportResponseMapper {
             createdAt = response.createdAt,
             updatedAt = response.updatedAt,
         )
-    }
 }

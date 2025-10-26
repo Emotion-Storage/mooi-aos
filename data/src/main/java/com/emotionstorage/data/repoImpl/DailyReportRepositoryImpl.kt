@@ -11,22 +11,23 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class DailyReportRepositoryImpl @Inject constructor(
-    private val remoteDataSource: DailyReportRemoteDataSource
+    private val remoteDataSource: DailyReportRemoteDataSource,
 ) : DailyReportRepository {
-    override suspend fun getDailyReport(date: LocalDate): Flow<DataState<DailyReport>> = flow {
-        emit(DataState.Loading(isLoading = true))
-        try {
-            emit(
-                remoteDataSource.getDailyReport(date).run {
-                    DataState.Success(
-                        DailyReportMapper.toDomain(this)
-                    )
-                }
-            )
-        } catch (e: Exception) {
-            emit(DataState.Error(e))
-        } finally {
-            emit(DataState.Loading(isLoading = false))
+    override suspend fun getDailyReport(date: LocalDate): Flow<DataState<DailyReport>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                emit(
+                    remoteDataSource.getDailyReport(date).run {
+                        DataState.Success(
+                            DailyReportMapper.toDomain(this),
+                        )
+                    },
+                )
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
+            }
         }
-    }
 }

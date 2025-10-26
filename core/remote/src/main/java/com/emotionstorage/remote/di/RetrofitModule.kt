@@ -65,7 +65,6 @@ object RetrofitModule {
     fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
         RequestHeaderInterceptor(sessionLocalDataSource)
 
-
     @Singleton
     @Provides
     fun provideTimeCapsuleApiService(retrofit: Retrofit): TimeCapsuleApiService =
