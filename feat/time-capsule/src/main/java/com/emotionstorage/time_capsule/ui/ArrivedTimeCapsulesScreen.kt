@@ -177,7 +177,7 @@ private fun ArrivedTimeCapsulesScreenPreview() {
             timeCapsules =
                 (1..15).toList().map { it ->
                     TimeCapsuleItemState(
-                        id = it.toString(),
+                        id = it.toLong(),
                         status = TimeCapsule.Status.ARRIVED,
                         title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                         emotions =
