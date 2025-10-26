@@ -87,8 +87,9 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             page = page,
-                            timeCapsules = (if (isInit) emptyList() else state.timeCapsules) +
-                                timeCapsules.map { TimeCapsuleMapper.toUi(it) },
+                            timeCapsules =
+                                (if (isInit) emptyList() else state.timeCapsules) +
+                                    timeCapsules.map { TimeCapsuleMapper.toUi(it) },
                         )
                     }
                 },
