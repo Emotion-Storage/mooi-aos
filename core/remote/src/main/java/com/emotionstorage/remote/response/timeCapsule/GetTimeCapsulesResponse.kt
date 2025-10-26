@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class GetFavoriteTimeCapsulesResponse(
+data class GetTimeCapsulesResponse(
     val pagination: PaginationInfo,
     val totalCapsules: Int,
     val timeCapsules: List<TimeCapsule>,

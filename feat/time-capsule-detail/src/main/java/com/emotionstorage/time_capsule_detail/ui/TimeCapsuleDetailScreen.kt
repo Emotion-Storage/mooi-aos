@@ -18,8 +18,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
@@ -41,7 +43,6 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
@@ -55,15 +56,14 @@ import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.AppSnackbarHost
+import com.emotionstorage.ui.component.FavoriteToast
 import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import com.emotionstorage.ui.component.Toast
 
 @Composable
 fun TimeCapsuleDetailScreen(
@@ -92,6 +92,7 @@ fun TimeCapsuleDetailScreen(
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
     val (isSaveChangesModalOpen, setSaveChangesModalOpen) = remember { mutableStateOf(false) }
 
+    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -134,7 +135,9 @@ fun TimeCapsuleDetailScreen(
                 is ShowToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
-                    snackState.showSnackbar(sideEffect.toast.message)
+                    snackState.showSnackbar(
+                        context.getString(sideEffect.stringResId),
+                    )
                 }
             }
         }
@@ -292,17 +295,7 @@ private fun StatelessTimeCapsuleDetailScreen(
             },
             snackbarHost = {
                 AppSnackbarHost(hostState = snackState) { snackbarData ->
-                    Toast(
-                        message = snackbarData.visuals.message,
-                        iconId =
-                            if (snackbarData.visuals.message ==
-                                TimeCapsuleDetailToast.FAVORITE_FULL.message
-                            ) {
-                                R.drawable.success_filled
-                            } else {
-                                null
-                            },
-                    )
+                    FavoriteToast(snackbarData.visuals.message)
                 }
             },
         ) { innerPadding ->
