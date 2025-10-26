@@ -100,7 +100,7 @@ private fun StatelessAIChatScreen(
 
     val listState = remember { LazyListState() }
 
-    val canMakeTimeCapsule = state.chatProgress == 100f
+    val canMakeTimeCapsule = state.chatProgress == 1f
     var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.messages.size) {
@@ -182,7 +182,8 @@ private fun StatelessAIChatScreen(
 
                 if (canMakeTimeCapsule) {
                     ChattingFinishButton(
-                        modifier = Modifier.padding(bottom = 13.dp),
+                        modifier = Modifier.padding(bottom = 13.dp)
+                            .align(Alignment.BottomCenter),
                         onClick = {
                             // TODO : Bottom Sheet 등장시키기
                         }
