@@ -60,5 +60,4 @@ object RetrofitModule {
     @Provides
     fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
         RequestHeaderInterceptor(sessionLocalDataSource)
-
 }

@@ -1,11 +1,9 @@
 package com.emotionstorage.remote.di
 
-import com.emotionstorage.data.dataSource.SessionLocalDataSource
 import com.emotionstorage.remote.api.DailyReportApiService
 import com.emotionstorage.remote.api.MyPageApiService
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.api.UserApiService
-import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,5 +31,4 @@ object ApiServiceModule {
     @Provides
     @Singleton
     fun provideMyPageApiService(retrofit: Retrofit): MyPageApiService = retrofit.create(MyPageApiService::class.java)
-
 }

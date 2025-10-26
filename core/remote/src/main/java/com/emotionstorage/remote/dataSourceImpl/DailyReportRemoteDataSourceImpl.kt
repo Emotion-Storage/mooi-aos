@@ -17,13 +17,11 @@ class DailyReportRemoteDataSourceImpl @Inject constructor(
                 apiService.getDailyReport(
                     date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 )
-            if (response.data != null)
-                {
-                    return DailyReportResponseMapper.toData(response.data!!)
-                } else
-                {
-                    throw Exception("getDailyReport response data is empty, $response")
-                }
+            if (response.data != null) {
+                return DailyReportResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getDailyReport response data is empty, $response")
+            }
         } catch (e: Exception) {
             throw Exception("getDailyReport api fail, $e")
         }
