@@ -69,23 +69,26 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
 
     private fun handleInit() =
         intent {
-            handleGetArrivedTimeCapsules()
+            handleGetArrivedTimeCapsules(isInit = true)
         }
 
     private fun handleLoadMore() =
         intent {
-            handleGetArrivedTimeCapsules(state.pageNum)
+            handleGetArrivedTimeCapsules(isInit = false)
         }
 
-    private suspend fun handleGetArrivedTimeCapsules(page: Int = 0) =
+    private suspend fun handleGetArrivedTimeCapsules(isInit: Boolean) =
         subIntent {
+            val page: Int = if (isInit) 1 else state.page + 1
+
             collectDataState(
-                flow = getArrivedTimeCapsules(page = page + 1),
+                flow = getArrivedTimeCapsules(page = page),
                 onSuccess = { timeCapsules ->
                     reduce {
                         state.copy(
-                            pageNum = page + 1,
-                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
+                            pageNum = page,
+                            timeCapsules = (if (isInit) emptyList() else state.timeCapsules) +
+                                timeCapsules.map { TimeCapsuleMapper.toUi(it) },
                         )
                     }
                 },
