@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 @Serializable
 data class GetTimeCapsuleDetailResponse(
-    val id: Int,
+    val id: Long,
     @Serializable(with = LocalDateTimeSerializer::class)
     val historyDate: LocalDateTime,
     @Serializable(with = LocalDateTimeSerializer::class)

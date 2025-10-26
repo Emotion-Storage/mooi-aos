@@ -19,7 +19,7 @@ data class GetTimeCapsulesResponse(
 
     @Serializable
     data class TimeCapsule(
-        val id: String,
+        val id: Long,
         @Serializable(with = LocalDateTimeSerializer::class)
         val historyDate: LocalDateTime,
         @Serializable(with = LocalDateTimeSerializer::class)
