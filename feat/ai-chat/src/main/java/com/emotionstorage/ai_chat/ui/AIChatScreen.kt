@@ -13,13 +13,16 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +41,7 @@ import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
+import com.emotionstorage.ui.component.BottomSheet
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -84,6 +88,7 @@ fun AIChatScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatelessAIChatScreen(
     modifier: Modifier = Modifier,
@@ -102,6 +107,8 @@ private fun StatelessAIChatScreen(
 
     val canMakeTimeCapsule = state.chatProgress == 1f
     var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
+    var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
+
 
     LaunchedEffect(state.messages.size) {
         val last = state.messages.lastIndex
@@ -182,13 +189,31 @@ private fun StatelessAIChatScreen(
 
                 if (canMakeTimeCapsule) {
                     ChattingFinishButton(
-                        modifier = Modifier.padding(bottom = 13.dp)
+                        modifier = Modifier
+                            .padding(bottom = 13.dp)
                             .align(Alignment.BottomCenter),
                         onClick = {
-                            // TODO : Bottom Sheet 등장시키기
+                            showFinishBottomSheet = true
                         }
                     )
                 }
+            }
+
+            if (canMakeTimeCapsule && showFinishBottomSheet) {
+                val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                BottomSheet(
+                    onDismissRequest = { showFinishBottomSheet = false },
+                    sheetState = sheetState,
+                    hideDragHandle = true,
+                    subTitle = "감정을 충분히 이야기했어요.",
+                    title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
+                    confirmLabel = "네, 종료할래요.",
+                    dismissLabel = "아니요, 더 이야기할래요.",
+                    onDismiss = { showFinishBottomSheet = false },
+                    onConfirm = {
+                        onAction(AIChatAction.CreateTimeCapsule)
+                    }
+                )
             }
 
             ChatMessageInputBox(
