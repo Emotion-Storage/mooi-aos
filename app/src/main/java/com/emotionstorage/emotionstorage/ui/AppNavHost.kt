@@ -95,13 +95,13 @@ internal sealed class AppDestination {
 
     @Serializable
     data class TimeCapsuleDetail(
-        val id: String,
+        val id: Long,
         val isNewTimeCapsule: Boolean,
     ) : AppDestination()
 
     @Serializable
     data class SaveTimeCapsule(
-        val id: String,
+        val id: Long,
         val isNewTimeCapsule: Boolean,
     ) : AppDestination()
 

@@ -63,7 +63,7 @@ fun CalendarScreen(
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
     navToAIChat: (roomId: String) -> Unit = {},
 ) {
@@ -132,7 +132,7 @@ private fun StatelessCalendarScreen(
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToDailyReportDetail: (id: String) -> Unit = {},
 ) {
     Scaffold(

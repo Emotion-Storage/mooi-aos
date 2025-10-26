@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +45,7 @@ fun AIChatScreen(
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {},
+    navToTimeCapsuleDetail: (capsuleId: Long) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(roomId) {

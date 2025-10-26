@@ -47,7 +47,7 @@ import java.time.LocalDateTime
 fun ArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: ArrivedTimeCapsulesViewModel = hiltViewModel(),
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -83,7 +83,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
     snackState: SnackbarHostState = remember { SnackbarHostState() },
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
     onAction: (ArrivedTimeCapsulesAction) -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
