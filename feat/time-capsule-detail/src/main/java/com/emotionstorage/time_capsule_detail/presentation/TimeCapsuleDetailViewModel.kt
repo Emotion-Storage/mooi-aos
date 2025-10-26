@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -27,9 +28,9 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast.TimeCapsuleDetailToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
+import com.emotionstorage.ui.R
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -105,16 +106,8 @@ sealed class TimeCapsuleDetailSideEffect {
     object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
 
     data class ShowToast(
-        val toast: TimeCapsuleDetailToast,
-    ) : TimeCapsuleDetailSideEffect() {
-        enum class TimeCapsuleDetailToast(
-            val message: String,
-        ) {
-            FAVORITE_ADDED("즐겨찾기가 설정되었습니다."),
-            FAVORITE_REMOVED("즐겨찾기가 해제되었습니다."),
-            FAVORITE_FULL("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요."),
-        }
-    }
+        @StringRes val stringResId: Int,
+    ) : TimeCapsuleDetailSideEffect()
 }
 
 @HiltViewModel
@@ -280,12 +273,12 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
                 onSuccess = {
                     if (it == SetFavoriteResult.ADDED) {
-                        postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_ADDED))
+                        postSideEffect(ShowToast(R.string.toast_favorite_added))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
                         }
                     } else if (it == SetFavoriteResult.REMOVED) {
-                        postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_REMOVED))
+                        postSideEffect(ShowToast(R.string.toast_favorite_removed))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
                         }
@@ -293,7 +286,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, data ->
                     if (data == SetFavoriteResult.FULL) {
-                        postSideEffect(ShowToast(TimeCapsuleDetailToast.FAVORITE_FULL))
+                        postSideEffect(ShowToast(R.string.toast_favorite_full))
                     }
                 },
             )

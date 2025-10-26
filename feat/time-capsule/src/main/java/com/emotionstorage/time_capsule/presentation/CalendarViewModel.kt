@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule.presentation
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
@@ -12,6 +13,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCa
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
+import com.emotionstorage.ui.R
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -65,16 +67,8 @@ sealed class CalendarSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
 
     data class ShowToast(
-        val toast: CalendarToast,
-    ) : CalendarSideEffect() {
-        enum class CalendarToast(
-            val message: String,
-        ) {
-            FAVORITE_ADDED("즐겨찾기가 설정되었습니다."),
-            FAVORITE_REMOVED("즐겨찾기가 해제되었습니다."),
-            FAVORITE_FULL("내 마음 서랍이 꽉 찼어요. 😢\n즐겨찾기 중 일부를 해제해주세요."),
-        }
-    }
+        @StringRes val stringResId: Int,
+    ) : CalendarSideEffect()
 
     data class EnterCharRoomSuccess(
         val roomId: Long,
@@ -297,16 +291,16 @@ class CalendarViewModel @Inject constructor(
                     flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
                         if (it == SetFavoriteResult.ADDED) {
-                            postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_ADDED))
+                            postSideEffect(ShowToast(R.string.toast_favorite_added))
                             updateFavorite(id, true)
                         } else if (it == SetFavoriteResult.REMOVED) {
-                            postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_REMOVED))
+                            postSideEffect(ShowToast(R.string.toast_favorite_removed))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
                         if (data == SetFavoriteResult.FULL) {
-                            postSideEffect(ShowToast(ShowToast.CalendarToast.FAVORITE_FULL))
+                            postSideEffect(ShowToast(R.string.toast_favorite_full))
                         }
                     },
                 )

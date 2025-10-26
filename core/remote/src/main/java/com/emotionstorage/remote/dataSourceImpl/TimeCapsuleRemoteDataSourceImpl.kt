@@ -8,14 +8,15 @@ import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteReq
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
-    private val timeCapsuleApiService: TimeCapsuleApiService,
+    private val apiService: TimeCapsuleApiService,
 ) : TimeCapsuleRemoteDataSource {
     override suspend fun patchTimeCapsuleOpen(id: String): Boolean {
         try {
-            timeCapsuleApiService.patchTimeCapsuleOpen(id)
+            apiService.patchTimeCapsuleOpen(id)
             return true
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleOpen api fail, $e")
@@ -27,7 +28,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         note: String,
     ): Boolean {
         try {
-            timeCapsuleApiService.patchTimeCapsuleNote(
+            apiService.patchTimeCapsuleNote(
                 id,
                 PatchTimeCapsuleNoteRequest(note),
             )
@@ -43,7 +44,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     ): Boolean {
         try {
             val response =
-                timeCapsuleApiService.patchTimeCapsuleFavorite(
+                apiService.patchTimeCapsuleFavorite(
                     id,
                     PatchTimeCapsuleFavoriteRequest(isFavorite),
                 )
@@ -52,40 +53,82 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.data != null) {
                 return response.data!!.isFavorite
             } else {
-                throw Exception("patchTimeCapsuleFavorite reponse data is empty, $response")
+                throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleFavorite api fail, $e")
         }
     }
 
-    override suspend fun getFavoriteTimeCapsules(sortBy: String): List<TimeCapsuleEntity> {
+    override suspend fun getFavoriteTimeCapsules(
+        page: Int,
+        limit: Int,
+        sortBy: String,
+    ): List<TimeCapsuleEntity> {
         try {
-            // todo: implement pagination
             val response =
-                timeCapsuleApiService.getFavoriteTimeCapsules(
-                    page = 1,
-                    limit = 30,
+                apiService.getFavoriteTimeCapsules(
+                    page = page,
+                    limit = limit,
                     sortBy = sortBy,
                 )
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)
             } else {
-                throw Exception("getFavoriteTimeCapsules reponse data is empty, $response")
+                throw Exception("getFavoriteTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getFavoriteTimeCapsules api fail, $e")
         }
     }
 
+    override suspend fun getTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        page: Int,
+        limit: Int,
+        status: String,
+    ): List<TimeCapsuleEntity> {
+        try {
+            val response =
+                apiService.getTimeCapsules(
+                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    page = page,
+                    limit = limit,
+                    status = status,
+                )
+            if (response.data != null) {
+                return TimeCapsuleResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getTimeCapsules response data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("getTimeCapsules api fail, $e")
+        }
+    }
+
+    override suspend fun getTimeCapsuleDetail(id: String): TimeCapsuleEntity {
+        try {
+            val response = apiService.getTimeCapsuleDetail(id)
+            if (response.data != null) {
+                return TimeCapsuleResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getTimeCapsuleDetail response data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("getTimeCapsuleDetail api fail, $e")
+        }
+    }
+
     override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate> {
         try {
             val response =
-                timeCapsuleApiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
+                apiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
             if (response.data != null) {
                 return response.data!!.dates.map { LocalDate.parse(it) }
             } else {
-                throw Exception("getTimeCapsuleDates reponse data is empty, $response")
+                throw Exception("getTimeCapsuleDates response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getTimeCapsuleDates api fail, $e")
@@ -94,7 +137,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun deleteTimeCapsule(id: String): Boolean {
         try {
-            timeCapsuleApiService.deleteTimeCapsule(id)
+            apiService.deleteTimeCapsule(id)
             return true
         } catch (e: Exception) {
             throw Exception("deleteTimeCapsule api fail, $e")
