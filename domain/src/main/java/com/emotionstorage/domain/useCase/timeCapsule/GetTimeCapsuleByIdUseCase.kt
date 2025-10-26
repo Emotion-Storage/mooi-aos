@@ -9,5 +9,5 @@ import javax.inject.Inject
 class GetTimeCapsuleByIdUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    suspend operator fun invoke(id: String): Flow<DataState<TimeCapsule>> = timeCapsuleRepository.getTimeCapsuleById(id)
+    suspend operator fun invoke(id: Long): Flow<DataState<TimeCapsule>> = timeCapsuleRepository.getTimeCapsuleById(id)
 }

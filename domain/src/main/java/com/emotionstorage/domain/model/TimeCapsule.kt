@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 const val TIME_CAPSULE_TEMPORARY_HOURS = 24
 
 data class TimeCapsule(
-    val id: String,
+    val id: Long,
     val status: Status,
     val title: String,
     val summary: String,

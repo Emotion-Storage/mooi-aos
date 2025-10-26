@@ -7,15 +7,15 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 interface TimeCapsuleRepository {
-    suspend fun openArrivedTimeCapsule(id: String): Flow<DataState<Unit>>
+    suspend fun openArrivedTimeCapsule(id: Long): Flow<DataState<Unit>>
 
     suspend fun saveTimeCapsuleNote(
-        id: String,
+        id: Long,
         note: String,
     ): Flow<DataState<Boolean>>
 
     suspend fun setFavoriteTimeCapsule(
-        id: String,
+        id: Long,
         isFavorite: Boolean,
     ): Flow<DataState<SetFavoriteResult>>
 
@@ -28,11 +28,11 @@ interface TimeCapsuleRepository {
         status: String,
     ): Flow<DataState<List<TimeCapsule>>>
 
-    suspend fun getTimeCapsuleById(id: String): Flow<DataState<TimeCapsule>>
+    suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>>
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>
 
-    suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>>
+    suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>>
 }
 
 enum class SetFavoriteResult {
