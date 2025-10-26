@@ -18,7 +18,7 @@ private const val PAGE_LIMIT: Int = 30
 class TimeCapsuleRepositoryImpl @Inject constructor(
     private val remoteDataSource: TimeCapsuleRemoteDataSource,
 ) : TimeCapsuleRepository {
-    override suspend fun openArrivedTimeCapsule(id: String): Flow<DataState<Unit>> =
+    override suspend fun openArrivedTimeCapsule(id: Long): Flow<DataState<Unit>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
@@ -32,7 +32,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
 
     override suspend fun saveTimeCapsuleNote(
-        id: String,
+        id: Long,
         note: String,
     ): Flow<DataState<Boolean>> =
         flow {
@@ -47,7 +47,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
 
     override suspend fun setFavoriteTimeCapsule(
-        id: String,
+        id: Long,
         isFavorite: Boolean,
     ): Flow<DataState<SetFavoriteResult>> =
         flow {
@@ -115,7 +115,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getTimeCapsuleById(id: String): Flow<DataState<TimeCapsule>> =
+    override suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
@@ -140,7 +140,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun deleteTimeCapsule(id: String): Flow<DataState<Boolean>> =
+    override suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {

@@ -5,15 +5,15 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 interface TimeCapsuleRemoteDataSource {
-    suspend fun patchTimeCapsuleOpen(id: String): Boolean
+    suspend fun patchTimeCapsuleOpen(id: Long): Boolean
 
     suspend fun patchTimeCapsuleNote(
-        id: String,
+        id: Long,
         note: String,
     ): Boolean
 
     suspend fun patchTimeCapsuleFavorite(
-        id: String,
+        id: Long,
         isFavorite: Boolean,
     ): Boolean
 
@@ -23,7 +23,7 @@ interface TimeCapsuleRemoteDataSource {
         sortBy: String,
     ): List<TimeCapsuleEntity>
 
-    suspend fun getTimeCapsuleDetail(id: String): TimeCapsuleEntity
+    suspend fun getTimeCapsuleDetail(id: Long): TimeCapsuleEntity
 
     suspend fun getTimeCapsules(
         startDate: LocalDate,
@@ -35,5 +35,5 @@ interface TimeCapsuleRemoteDataSource {
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>
 
-    suspend fun deleteTimeCapsule(id: String): Boolean
+    suspend fun deleteTimeCapsule(id: Long): Boolean
 }
