@@ -59,27 +59,4 @@ object RetrofitModule {
         HttpLoggingInterceptor().apply {
             level = HttpLoggingInterceptor.Level.BODY
         }
-
-    @Singleton
-    @Provides
-    fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
-        RequestHeaderInterceptor(sessionLocalDataSource)
-
-    @Singleton
-    @Provides
-    fun provideTimeCapsuleApiService(retrofit: Retrofit): TimeCapsuleApiService =
-        retrofit.create(TimeCapsuleApiService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideDailyReportApiService(retrofit: Retrofit): DailyReportApiService =
-        retrofit.create(DailyReportApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideUserApiService(retrofit: Retrofit): UserApiService = retrofit.create(UserApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideMyPageApiService(retrofit: Retrofit): MyPageApiService = retrofit.create(MyPageApiService::class.java)
 }
