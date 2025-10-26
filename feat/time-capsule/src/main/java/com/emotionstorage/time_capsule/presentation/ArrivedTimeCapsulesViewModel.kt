@@ -19,7 +19,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class ArrivedTimeCapsulesState(
-    val pageNum: Int = 1,
+    val page: Int = 1,
     val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
 )
 
@@ -86,7 +86,7 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
                 onSuccess = { timeCapsules ->
                     reduce {
                         state.copy(
-                            pageNum = page,
+                            page = page,
                             timeCapsules = (if (isInit) emptyList() else state.timeCapsules) +
                                 timeCapsules.map { TimeCapsuleMapper.toUi(it) },
                         )
