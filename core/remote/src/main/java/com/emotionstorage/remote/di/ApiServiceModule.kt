@@ -18,11 +18,6 @@ import javax.inject.Singleton
 object ApiServiceModule {
     @Singleton
     @Provides
-    fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
-        RequestHeaderInterceptor(sessionLocalDataSource)
-
-    @Singleton
-    @Provides
     fun provideTimeCapsuleApiService(retrofit: Retrofit): TimeCapsuleApiService =
         retrofit.create(TimeCapsuleApiService::class.java)
 
