@@ -107,7 +107,7 @@ internal sealed class AppDestination {
 
     @Serializable
     data class DailyReportDetail(
-        val id: String,
+        val id: Long,
     ) : AppDestination()
 
     @Serializable

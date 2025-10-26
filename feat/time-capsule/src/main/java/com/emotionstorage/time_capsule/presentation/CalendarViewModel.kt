@@ -34,7 +34,7 @@ data class CalendarState(
     val calendarDate: LocalDate? = null,
     // bottom sheet states
     val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-    val dailyReportId: String? = null,
+    val dailyReportId: Long? = null,
     val isNewDailyReport: Boolean = false,
 )
 

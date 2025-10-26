@@ -42,7 +42,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun DailyReportDetailScreen(
-    id: String,
+    id: Long,
     modifier: Modifier = Modifier,
     viewModel: DailyReportDetailViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
@@ -138,7 +138,8 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            ).padding(vertical = 15.dp, horizontal = 38.dp),
+                            )
+                            .padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -178,7 +179,7 @@ private fun DailyReportDetailScreenPreview() {
         StatelessDailyReportDetailScreen(
             dailyReport =
                 DailyReport(
-                    id = "id",
+                    id = 123L,
                     summaries =
                         listOf(
                             "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
@@ -242,7 +243,7 @@ private fun DailyReportDetailScreenPreview2() {
         StatelessDailyReportDetailScreen(
             dailyReport =
                 DailyReport(
-                    id = "id",
+                    id = 123L,
                     summaries =
                         listOf(
                             "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",

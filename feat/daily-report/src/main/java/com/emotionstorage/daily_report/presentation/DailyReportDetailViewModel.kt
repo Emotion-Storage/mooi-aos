@@ -16,7 +16,7 @@ data class DailyReportDetailState(
 
 sealed class DailyReportDetailAction {
     data class Init(
-        val id: String,
+        val id: Long,
     ) : DailyReportDetailAction()
 }
 
@@ -34,7 +34,7 @@ class DailyReportDetailViewModel @Inject constructor() :
             }
         }
 
-        private fun handleInit(id: String) =
+        private fun handleInit(id: Long) =
             intent {
                 // todo: call use case
                 reduce {

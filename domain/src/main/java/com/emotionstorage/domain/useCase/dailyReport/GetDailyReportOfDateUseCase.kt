@@ -16,7 +16,7 @@ class GetDailyReportOfDateUseCase @Inject constructor() {
             emit(
                 DataState.Success(
                     GetDailyReportOfDateResponse(
-                        dailyReportId = "dummy-id",
+                        dailyReportId = 123L,
                         isNewDailyReport = true,
                     ),
                 ),
@@ -26,7 +26,7 @@ class GetDailyReportOfDateUseCase @Inject constructor() {
         }
 
     data class GetDailyReportOfDateResponse(
-        val dailyReportId: String? = null,
+        val dailyReportId: Long? = null,
         val isNewDailyReport: Boolean = false,
     )
 }
