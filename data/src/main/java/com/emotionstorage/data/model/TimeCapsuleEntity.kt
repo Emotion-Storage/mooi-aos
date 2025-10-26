@@ -3,7 +3,7 @@ package com.emotionstorage.data.model
 import java.time.LocalDateTime
 
 data class TimeCapsuleEntity(
-    val id: String,
+    val id: Long,
     val status: String,
     val title: String,
     val summary: String = "",

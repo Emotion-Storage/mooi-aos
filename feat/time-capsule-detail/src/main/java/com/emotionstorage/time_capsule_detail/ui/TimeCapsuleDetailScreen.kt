@@ -67,7 +67,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun TimeCapsuleDetailScreen(
-    id: String,
+    id: Long,
     modifier: Modifier = Modifier,
     viewModel: TimeCapsuleDetailViewModel = hiltViewModel(),
     // is new, if navigated from ai chat
@@ -169,7 +169,7 @@ fun TimeCapsuleDetailScreen(
 
 @Composable
 private fun StatelessTimeCapsuleDetailScreen(
-    id: String,
+    id: Long,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
     isNewTimeCapsule: Boolean = false,
@@ -361,12 +361,12 @@ private fun StatelessTimeCapsuleDetailScreen(
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
         StatelessTimeCapsuleDetailScreen(
-            id = "id",
+            id = 123L,
             state =
                 TimeCapsuleDetailState(
                     timeCapsule =
                         TimeCapsule(
-                            id = "id",
+                            id = 123L,
                             status = TimeCapsule.Status.LOCKED,
                             title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                             summary =

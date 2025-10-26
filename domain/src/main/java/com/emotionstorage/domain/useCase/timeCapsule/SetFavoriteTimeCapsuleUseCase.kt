@@ -10,7 +10,7 @@ class SetFavoriteTimeCapsuleUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
     suspend operator fun invoke(
-        id: String,
+        id: Long,
         isFavorite: Boolean,
     ): Flow<DataState<SetFavoriteResult>> = timeCapsuleRepository.setFavoriteTimeCapsule(id, isFavorite)
 }

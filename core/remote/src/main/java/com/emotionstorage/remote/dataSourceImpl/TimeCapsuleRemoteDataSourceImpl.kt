@@ -14,7 +14,7 @@ import javax.inject.Inject
 class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     private val apiService: TimeCapsuleApiService,
 ) : TimeCapsuleRemoteDataSource {
-    override suspend fun patchTimeCapsuleOpen(id: String): Boolean {
+    override suspend fun patchTimeCapsuleOpen(id: Long): Boolean {
         try {
             apiService.patchTimeCapsuleOpen(id)
             return true
@@ -24,7 +24,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun patchTimeCapsuleNote(
-        id: String,
+        id: Long,
         note: String,
     ): Boolean {
         try {
@@ -39,7 +39,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun patchTimeCapsuleFavorite(
-        id: String,
+        id: Long,
         isFavorite: Boolean,
     ): Boolean {
         try {
@@ -108,7 +108,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getTimeCapsuleDetail(id: String): TimeCapsuleEntity {
+    override suspend fun getTimeCapsuleDetail(id: Long): TimeCapsuleEntity {
         try {
             val response = apiService.getTimeCapsuleDetail(id)
             if (response.data != null) {
@@ -135,7 +135,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteTimeCapsule(id: String): Boolean {
+    override suspend fun deleteTimeCapsule(id: Long): Boolean {
         try {
             apiService.deleteTimeCapsule(id)
             return true

@@ -26,7 +26,7 @@ internal object TimeCapsuleResponseMapper {
 
     fun toData(response: GetTimeCapsuleDetailResponse): TimeCapsuleEntity =
         TimeCapsuleEntity(
-            id = response.id.toString(),
+            id = response.id,
             status = response.status,
             title = response.title,
             summary = response.summary,

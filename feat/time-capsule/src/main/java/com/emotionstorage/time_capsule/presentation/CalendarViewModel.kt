@@ -34,7 +34,7 @@ data class CalendarState(
     val calendarDate: LocalDate? = null,
     // bottom sheet states
     val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-    val dailyReportId: String? = null,
+    val dailyReportId: Long? = null,
     val isNewDailyReport: Boolean = false,
 )
 
@@ -53,7 +53,7 @@ sealed class CalendarAction {
     ) : CalendarAction()
 
     data class ToggleTimeCapsuleFavorite(
-        val id: String,
+        val id: Long,
     ) : CalendarAction()
 
     // reset bottom sheet states
@@ -262,7 +262,7 @@ class CalendarViewModel @Inject constructor(
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
         }
 
-    private fun handleToggleFavorite(id: String) =
+    private fun handleToggleFavorite(id: Long) =
         intent {
             if (state.timeCapsules.find { it.id == id } == null) {
                 Logger.e("Cannot find time capsule of id $id")
@@ -271,7 +271,7 @@ class CalendarViewModel @Inject constructor(
             val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
 
             suspend fun updateFavorite(
-                id: String,
+                id: Long,
                 isFavorite: Boolean,
             ) = reduce {
                 state.copy(
