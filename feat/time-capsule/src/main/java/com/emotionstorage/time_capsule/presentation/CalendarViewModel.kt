@@ -247,8 +247,8 @@ class CalendarViewModel @Inject constructor(
                         onSuccess = { data ->
                             reduce {
                                 state.copy(
-                                    dailyReportId = data.dailyReportId,
-                                    isNewDailyReport = data.isNewDailyReport,
+                                    dailyReportId = data.id,
+                                    isNewDailyReport = !data.isOpen,
                                 )
                             }
                         },

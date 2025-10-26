@@ -4,6 +4,8 @@ import java.time.LocalDateTime
 
 data class DailyReport(
     val id: String,
+    // 일일 리포트 열람 여부
+    val isOpen: Boolean,
     val summaries: List<String> = emptyList(),
     val keywords: List<String> = emptyList(),
     val emotionLogs: List<EmotionLog> = emptyList(),
