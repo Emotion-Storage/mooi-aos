@@ -74,6 +74,7 @@ class ChatWSDataSourceImpl @Inject constructor(
                     source = ChatMessage.MessageSource.SERVER,
                     content = dto.content ?: "",
                     gaugeScore = dto.gauge?.gaugeScore,
+                    turnCountScore = dto.gauge?.turnCountScore ?: 0,
                 )
             }.getOrElse { null }
         }

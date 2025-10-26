@@ -16,4 +16,6 @@ data class GaugeDto(
     val summary: String? = null,
     @SerialName("gauge_score")
     val gaugeScore: Int? = null,
+    @SerialName("turn_count_score")
+    val turnCountScore: Int? = null,
 )

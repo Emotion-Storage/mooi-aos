@@ -8,7 +8,8 @@ data class ChatMessage(
     val roomId: Long,
     val source: MessageSource,
     val content: String,
-    val gaugeScore: Int?= null,
+    val gaugeScore: Int? = null,
+    val turnCountScore: Int? = null,
     val timestamp: LocalDateTime = LocalDateTime.now(),
 ) {
     enum class MessageSource {

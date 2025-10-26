@@ -28,6 +28,7 @@ data class AIChatState(
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
     val chatProgress: Float = 0.03f,
+    val turnScore: Int = 0,
     val isWaitingReply: Boolean = false,
     val isMooiTyping: Boolean = false,
 ) {

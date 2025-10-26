@@ -226,6 +226,8 @@ private fun ChatMessageListPreview() {
                 source = if (it % 3 == 0) MessageSource.CLIENT else MessageSource.SERVER,
                 content = "안녕하세요",
                 timestamp = LocalDateTime.of(2025, 9, 2, 17, it, 1, 1),
+                gaugeScore = 5,
+                turnCountScore = 2
             )
         } +
             listOf(
@@ -234,12 +236,16 @@ private fun ChatMessageListPreview() {
                     source = MessageSource.SERVER,
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
+                    gaugeScore = 20,
+                    turnCountScore = 4
                 ),
                 ChatMessage(
                     roomId = 1L,
                     source = MessageSource.CLIENT,
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
+                    gaugeScore = 40,
+                    turnCountScore = 6
                 ),
             ) +
             List(6, init = { it }).map { it ->
@@ -248,6 +254,8 @@ private fun ChatMessageListPreview() {
                     source = if (it % 3 == 0) MessageSource.SERVER else MessageSource.CLIENT,
                     content = "안녕하세요",
                     timestamp = LocalDateTime.of(2025, 9, 4, 17, it, 1, 1),
+                    gaugeScore = 60,
+                    turnCountScore = 8
                 )
             }
 
