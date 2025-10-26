@@ -53,7 +53,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.data != null) {
                 return response.data!!.isFavorite
             } else {
-                throw Exception("patchTimeCapsuleFavorite reponse data is empty, $response")
+                throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleFavorite api fail, $e")
@@ -75,7 +75,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)
             } else {
-                throw Exception("getFavoriteTimeCapsules reponse data is empty, $response")
+                throw Exception("getFavoriteTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getFavoriteTimeCapsules api fail, $e")
@@ -101,7 +101,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)
             } else {
-                throw Exception("getFavoriteTimeCapsules reponse data is empty, $response")
+                throw Exception("getTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getTimeCapsules api fail, $e")
@@ -114,7 +114,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data!!)
             } else {
-                throw Exception("getTimeCapsuleDetail reponse data is empty, $response")
+                throw Exception("getTimeCapsuleDetail response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getTimeCapsuleDetail api fail, $e")
@@ -128,7 +128,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             if (response.data != null) {
                 return response.data!!.dates.map { LocalDate.parse(it) }
             } else {
-                throw Exception("getTimeCapsuleDates reponse data is empty, $response")
+                throw Exception("getTimeCapsuleDates response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getTimeCapsuleDates api fail, $e")
