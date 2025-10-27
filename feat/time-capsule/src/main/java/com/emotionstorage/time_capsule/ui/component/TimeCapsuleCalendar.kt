@@ -9,9 +9,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -112,8 +110,7 @@ private fun DateItem(
                         .background(
                             if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
                             shape = RoundedCornerShape(20.dp),
-                        )
-                        .clickable { onClick(date) }
+                        ).clickable { onClick(date) }
                         .padding(horizontal = 3.5.dp)
                         .padding(top = 4.dp, bottom = 2.dp),
                 verticalArrangement =
@@ -136,8 +133,7 @@ private fun DateItem(
                             .background(
                                 if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                                 shape = CircleShape,
-                            )
-                            .border(
+                            ).border(
                                 width = 1.5.dp,
                                 color =
                                     if (isFilled) {
