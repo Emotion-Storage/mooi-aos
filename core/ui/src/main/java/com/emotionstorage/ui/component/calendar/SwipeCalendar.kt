@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
@@ -91,7 +90,7 @@ fun SwipeCalendar(
         )
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             listOf("일", "월", "화", "수", "목", "금", "토").forEach {
                 weekDateItem(Modifier.weight(1f), it)
@@ -100,7 +99,7 @@ fun SwipeCalendar(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) { page ->
             val yearMonth = minYearMonth.plusMonths(page.toLong())
             BaseCalendar(
@@ -110,12 +109,11 @@ fun SwipeCalendar(
                 onCalendarYearMonthSelect = onCalendarYearMonthSelect,
                 showYearMonthIndicator = false,
                 showWeekDates = false,
-                dateItem = dateItem
+                dateItem = dateItem,
             )
         }
     }
 }
-
 
 @Preview
 @Composable
