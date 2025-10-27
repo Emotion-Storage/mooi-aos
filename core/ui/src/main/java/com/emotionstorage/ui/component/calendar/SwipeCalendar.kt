@@ -100,6 +100,7 @@ fun SwipeCalendar(
         HorizontalPager(
             state = pagerState,
             modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
         ) { page ->
             val yearMonth = minYearMonth.plusMonths(page.toLong())
             BaseCalendar(
