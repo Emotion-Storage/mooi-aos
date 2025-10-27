@@ -47,8 +47,9 @@ fun CalendarYearMonthIndicator(
     ) {
         if (YearMonth.from(minYearMonth) < calendarYearMonth) {
             ArrowIcon(
-                modifier = Modifier
-                    .align(Alignment.CenterStart),
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterStart),
                 onClick = {
                     onCalendarYearMonthSelect(calendarYearMonth.minusMonths(1))
                 },
@@ -120,11 +121,12 @@ private fun CalendarYearMonthIndicatorPreview() {
 
     MooiTheme {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             CalendarYearMonthIndicator(
                 calendarYearMonth = calendarYearMonth,
@@ -137,7 +139,7 @@ private fun CalendarYearMonthIndicatorPreview() {
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),
                 onCalendarYearMonthSelect = setCalendarYearMonth,
-                showYearMonthDropDownIcon = true
+                showYearMonthDropDownIcon = true,
             )
         }
     }

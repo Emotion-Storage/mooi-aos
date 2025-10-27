@@ -34,7 +34,6 @@ fun SwipeCalendar(
             color = MooiTheme.colorScheme.gray400,
             textAlign = TextAlign.Center,
         )
-
     },
     dateItem: @Composable (modifier: Modifier, date: LocalDate) -> Unit = { modifier, date ->
         Text(
@@ -44,9 +43,9 @@ fun SwipeCalendar(
             color = Color.White,
             textAlign = TextAlign.Center,
         )
-    }
+    },
 ) {
-    Column(modifier = modifier){
+    Column(modifier = modifier) {
         CalendarYearMonthIndicator(
             calendarYearMonth = calendarYearMonth,
             minYearMonth = minYearMonth,
