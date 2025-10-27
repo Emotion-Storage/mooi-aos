@@ -7,6 +7,10 @@ import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
+import com.emotionstorage.remote.response.ResponseDto
+import com.orhanobut.logger.Logger
+import kotlinx.serialization.json.Json
+import retrofit2.HttpException
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -42,24 +46,38 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     override suspend fun patchTimeCapsuleFavorite(
         id: Long,
         isFavorite: Boolean,
-    ): FavoriteResultEntity {
+    ): FavoriteResultEntity =
         try {
             val response =
                 apiService.patchTimeCapsuleFavorite(
                     id,
                     PatchTimeCapsuleFavoriteRequest(isFavorite),
                 )
-            return if (response.status == 400 && response.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED") {
-                FavoriteResultEntity.FULL
-            } else if (response.data != null) {
+            if (response.data != null) {
                 if (isFavorite) FavoriteResultEntity.ADDED else FavoriteResultEntity.REMOVED
             } else {
                 throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }
+        } catch (e: HttpException) {
+            // parse error response body
+            val errorResponse = try {
+                e.response()?.errorBody()?.string()?.let {
+                    Json.decodeFromString<ResponseDto<Nothing>>(it)
+                }
+            } catch (parseError: Exception) {
+                Logger.e("patchTimeCapsuleFavorite error body parse fail: $parseError")
+                null
+            }
+
+            if (errorResponse?.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED") {
+                FavoriteResultEntity.FULL
+            } else {
+                throw e
+            }
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleFavorite api fail, $e")
         }
-    }
+
 
     override suspend fun getFavoriteTimeCapsules(
         page: Int,
