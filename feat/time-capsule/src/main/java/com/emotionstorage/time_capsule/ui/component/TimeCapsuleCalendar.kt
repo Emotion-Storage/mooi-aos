@@ -160,7 +160,8 @@ private fun TimeCapsuleCalendarPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(horizontal = 16.dp, vertical = 30.dp),
         ) {
             TimeCapsuleCalendar(
                 modifier = Modifier.align(Alignment.TopCenter),
