@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.calendar.BaseCalendar
+import com.emotionstorage.ui.component.calendar.SwipeCalendar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.YearMonth
@@ -55,7 +56,7 @@ fun TimeCapsuleCalendar(
     timeCapsuleDates: List<LocalDate> = emptyList(),
     onDateSelect: (LocalDate) -> Unit = {},
 ) {
-    BaseCalendar(
+    SwipeCalendar(
         modifier =
             modifier
                 .width(TimeCapsuleCalendarDesignToken.calendarWidth.dp),
