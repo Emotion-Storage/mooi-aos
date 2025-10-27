@@ -68,7 +68,7 @@ fun BaseCalendar(
                 .background(MooiTheme.colorScheme.background),
     ) {
         // year & month selection
-        CalendarYearDateBox(
+        CalendarYearMonthIndicator(
             calendarYearMonth = calendarYearMonth,
             minYearMonth = minYearMonth,
             maxYearMonth = maxYearMonth,
@@ -96,83 +96,6 @@ fun BaseCalendar(
             ) { date ->
                 dateItem(Modifier.weight(1f), date)
             }
-        }
-    }
-}
-
-@Composable
-private fun CalendarYearDateBox(
-    modifier: Modifier = Modifier,
-    calendarYearMonth: YearMonth = YearMonth.now(),
-    minYearMonth: YearMonth = YearMonth.now(),
-    maxYearMonth: YearMonth = YearMonth.now(),
-    onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    showYearMonthDropDownIcon: Boolean = false,
-    onYearMonthDropDownIconClick: () -> Unit = {},
-    calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
-) {
-    Box(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .padding(horizontal = 1.dp),
-    ) {
-        if (YearMonth.from(minYearMonth) < calendarYearMonth) {
-            Image(
-                modifier =
-                    Modifier
-                        .align(Alignment.CenterStart)
-                        .size(width = 8.dp, height = 14.dp)
-                        .clickable {
-                            onCalendarYearMonthSelect(calendarYearMonth.minusMonths(1))
-                        },
-                painter = painterResource(id = R.drawable.arrow_back),
-                colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                contentDescription = "",
-            )
-        }
-
-        Row(
-            modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .clickable(
-                        enabled = showYearMonthDropDownIcon,
-                        onClick = onYearMonthDropDownIconClick,
-                    ),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            Text(
-                text = "${calendarYearMonth.year}년 ${calendarYearMonth.monthValue}월",
-                style = calendarYearMonthTextStyle,
-                color = Color.White,
-                textAlign = TextAlign.Center,
-            )
-
-            if (showYearMonthDropDownIcon) {
-                Image(
-                    modifier = Modifier.size(10.dp, 9.dp),
-                    painter = painterResource(id = R.drawable.toggle_down),
-                    contentDescription = "calendar year month picker",
-                )
-            }
-        }
-
-        if (calendarYearMonth < maxYearMonth) {
-            Image(
-                modifier =
-                    Modifier
-                        .align(Alignment.CenterEnd)
-                        .size(width = 8.dp, height = 14.dp)
-                        .rotate(180f)
-                        .clickable {
-                            onCalendarYearMonthSelect(calendarYearMonth.plusMonths(1))
-                        },
-                painter = painterResource(id = R.drawable.arrow_back),
-                colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                contentDescription = "",
-            )
         }
     }
 }
