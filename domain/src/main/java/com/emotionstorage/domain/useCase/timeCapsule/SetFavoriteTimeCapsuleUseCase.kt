@@ -2,7 +2,7 @@ package com.emotionstorage.domain.useCase.timeCapsule
 
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
-import com.emotionstorage.domain.repo.SetFavoriteResult
+import com.emotionstorage.domain.repo.FavoriteResult
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -12,5 +12,5 @@ class SetFavoriteTimeCapsuleUseCase @Inject constructor(
     suspend operator fun invoke(
         id: Long,
         isFavorite: Boolean,
-    ): Flow<DataState<SetFavoriteResult>> = timeCapsuleRepository.setFavoriteTimeCapsule(id, isFavorite)
+    ): Flow<DataState<FavoriteResult>> = timeCapsuleRepository.setFavoriteTimeCapsule(id, isFavorite)
 }

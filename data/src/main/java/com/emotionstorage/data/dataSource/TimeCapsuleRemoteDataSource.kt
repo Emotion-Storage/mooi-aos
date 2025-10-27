@@ -15,7 +15,7 @@ interface TimeCapsuleRemoteDataSource {
     suspend fun patchTimeCapsuleFavorite(
         id: Long,
         isFavorite: Boolean,
-    ): Boolean
+    ): FavoriteResultEntity
 
     suspend fun getFavoriteTimeCapsules(
         page: Int,
@@ -36,4 +36,10 @@ interface TimeCapsuleRemoteDataSource {
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>
 
     suspend fun deleteTimeCapsule(id: Long): Boolean
+}
+
+enum class FavoriteResultEntity{
+    ADDED,
+    REMOVED,
+    FULL,
 }

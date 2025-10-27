@@ -1,5 +1,6 @@
 package com.emotionstorage.remote.dataSourceImpl
 
+import com.emotionstorage.data.dataSource.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.remote.api.TimeCapsuleApiService
@@ -41,17 +42,17 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     override suspend fun patchTimeCapsuleFavorite(
         id: Long,
         isFavorite: Boolean,
-    ): Boolean {
+    ): FavoriteResultEntity {
         try {
             val response =
                 apiService.patchTimeCapsuleFavorite(
                     id,
                     PatchTimeCapsuleFavoriteRequest(isFavorite),
                 )
-
-            // todo: handle time capsule favorite fail - list is full
-            if (response.data != null) {
-                return response.data!!.isFavorite
+            return if (response.status == 400 && response.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED") {
+                FavoriteResultEntity.FULL
+            } else if (response.data != null) {
+                if (isFavorite) FavoriteResultEntity.ADDED else FavoriteResultEntity.REMOVED
             } else {
                 throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }

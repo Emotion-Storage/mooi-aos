@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.repo.SetFavoriteResult
+import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
@@ -272,12 +272,12 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             collectDataState(
                 flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
                 onSuccess = {
-                    if (it == SetFavoriteResult.ADDED) {
+                    if (it == FavoriteResult.ADDED) {
                         postSideEffect(ShowToast(R.string.toast_favorite_added))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
                         }
-                    } else if (it == SetFavoriteResult.REMOVED) {
+                    } else if (it == FavoriteResult.REMOVED) {
                         postSideEffect(ShowToast(R.string.toast_favorite_removed))
                         reduce {
                             state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
@@ -285,7 +285,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     }
                 },
                 onError = { throwable, data ->
-                    if (data == SetFavoriteResult.FULL) {
+                    if (data == FavoriteResult.FULL) {
                         postSideEffect(ShowToast(R.string.toast_favorite_full))
                     }
                 },

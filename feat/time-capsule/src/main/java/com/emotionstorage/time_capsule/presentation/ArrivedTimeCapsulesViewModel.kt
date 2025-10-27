@@ -3,7 +3,7 @@ package com.emotionstorage.time_capsule.presentation
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
-import com.emotionstorage.domain.repo.SetFavoriteResult
+import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.timeCapsule.GetArrivedTimeCapsulesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect.ShowToast
@@ -128,16 +128,16 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
                 collectDataState(
                     flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
-                        if (it == SetFavoriteResult.ADDED) {
+                        if (it == FavoriteResult.ADDED) {
                             postSideEffect(ShowToast(stringResId = R.string.toast_favorite_added))
                             updateFavorite(id, true)
-                        } else if (it == SetFavoriteResult.REMOVED) {
+                        } else if (it == FavoriteResult.REMOVED) {
                             postSideEffect(ShowToast(stringResId = R.string.toast_favorite_removed))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
-                        if (data == SetFavoriteResult.FULL) {
+                        if (data == FavoriteResult.FULL) {
                             postSideEffect(ShowToast(stringResId = R.string.toast_favorite_full))
                         }
                     },

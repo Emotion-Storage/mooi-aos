@@ -4,7 +4,7 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
-import com.emotionstorage.domain.repo.SetFavoriteResult
+import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
@@ -290,16 +290,16 @@ class CalendarViewModel @Inject constructor(
                 collectDataState(
                     flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
-                        if (it == SetFavoriteResult.ADDED) {
+                        if (it == FavoriteResult.ADDED) {
                             postSideEffect(ShowToast(R.string.toast_favorite_added))
                             updateFavorite(id, true)
-                        } else if (it == SetFavoriteResult.REMOVED) {
+                        } else if (it == FavoriteResult.REMOVED) {
                             postSideEffect(ShowToast(R.string.toast_favorite_removed))
                             updateFavorite(id, false)
                         }
                     },
                     onError = { throwable, data ->
-                        if (data == SetFavoriteResult.FULL) {
+                        if (data == FavoriteResult.FULL) {
                             postSideEffect(ShowToast(R.string.toast_favorite_full))
                         }
                     },
