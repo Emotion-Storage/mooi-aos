@@ -1,10 +1,9 @@
-package com.emotionstorage.domain.model
+package com.emotionstorage.data.model
 
 import java.time.LocalDateTime
 
-data class DailyReport(
+data class DailyReportEntity(
     val id: Long,
-    // 일일 리포트 열람 여부
     val isOpen: Boolean = false,
     val summaries: List<String> = emptyList(),
     val keywords: List<String> = emptyList(),
@@ -16,8 +15,7 @@ data class DailyReport(
     val updatedAt: LocalDateTime = LocalDateTime.now(),
 ) {
     data class EmotionLog(
-        val emoji: String,
-        val label: String,
+        val emotion: String,
         val description: String,
         val time: LocalDateTime,
     )

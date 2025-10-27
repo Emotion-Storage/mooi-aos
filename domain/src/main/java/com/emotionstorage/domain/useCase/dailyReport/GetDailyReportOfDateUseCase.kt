@@ -1,32 +1,15 @@
 package com.emotionstorage.domain.useCase.dailyReport
 
 import com.emotionstorage.domain.common.DataState
-import kotlinx.coroutines.delay
+import com.emotionstorage.domain.model.DailyReport
+import com.emotionstorage.domain.repo.DailyReportRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
 import javax.inject.Inject
 
-class GetDailyReportOfDateUseCase @Inject constructor() {
-    suspend operator fun invoke(date: LocalDate): Flow<DataState<GetDailyReportOfDateResponse>> =
-        flow {
-            // stub logic for test
-            emit(DataState.Loading(isLoading = true))
-            delay(1500)
-            emit(
-                DataState.Success(
-                    GetDailyReportOfDateResponse(
-                        dailyReportId = 123L,
-                        isNewDailyReport = true,
-                    ),
-                ),
-            )
-            delay(1500)
-            emit(DataState.Loading(isLoading = false))
-        }
-
-    data class GetDailyReportOfDateResponse(
-        val dailyReportId: Long? = null,
-        val isNewDailyReport: Boolean = false,
-    )
+class GetDailyReportOfDateUseCase @Inject constructor(
+    private val dailyReportRepository: DailyReportRepository,
+) {
+    suspend operator fun invoke(date: LocalDate): Flow<DataState<DailyReport>> =
+        dailyReportRepository.getDailyReport(date)
 }

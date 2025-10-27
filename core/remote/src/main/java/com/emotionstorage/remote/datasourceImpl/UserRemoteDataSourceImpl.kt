@@ -1,4 +1,4 @@
-package com.emotionstorage.remote.datasourceImpl
+package com.emotionstorage.remote.dataSourceImpl
 
 import com.emotionstorage.data.dataSource.UserRemoteDataSource
 import com.emotionstorage.domain.common.DataState
