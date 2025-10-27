@@ -33,36 +33,38 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(
-        requestHeaderInterceptor: RequestHeaderInterceptor,
-    ): Retrofit {
-        val cloneErrorBodyInterceptor = Interceptor { chain ->
-            val request = chain.request()
-            val response = chain.proceed(request)
+    fun provideRetrofit(requestHeaderInterceptor: RequestHeaderInterceptor): Retrofit {
+        val cloneErrorBodyInterceptor =
+            Interceptor { chain ->
+                val request = chain.request()
+                val response = chain.proceed(request)
 
-            if (response.isSuccessful) return@Interceptor response
+                if (response.isSuccessful) return@Interceptor response
 
-            // get error body
-            val sourceBody = response.body
-            if (sourceBody == null) {
-                return@Interceptor response
+                // get error body
+                val sourceBody = response.body
+                if (sourceBody == null) {
+                    return@Interceptor response
+                }
+
+                // clone error body stream to byte array input stream
+                val bytes = sourceBody.bytes()
+                val contentType = sourceBody.contentType()
+                val newResponseBody =
+                    bytes.inputStream().use {
+                        ResponseBody.create(contentType, bytes)
+                    }
+
+                response
+                    .newBuilder()
+                    .body(newResponseBody)
+                    .build()
             }
 
-            // clone error body stream to byte array input stream
-            val bytes = sourceBody.bytes()
-            val contentType = sourceBody.contentType()
-            val newResponseBody = bytes.inputStream().use {
-                ResponseBody.create(contentType, bytes)
+        val loggingInterceptor =
+            HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
             }
-
-            response.newBuilder()
-                .body(newResponseBody)
-                .build()
-        }
-
-        val loggingInterceptor = HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
 
         return Retrofit
             .Builder()

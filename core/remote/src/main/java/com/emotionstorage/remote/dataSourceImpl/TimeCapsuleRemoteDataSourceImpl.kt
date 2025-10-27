@@ -60,14 +60,15 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             }
         } catch (e: HttpException) {
             // parse error response body
-            val errorResponse = try {
-                e.response()?.errorBody()?.string()?.let {
-                    Json.decodeFromString<ResponseDto<Nothing>>(it)
+            val errorResponse =
+                try {
+                    e.response()?.errorBody()?.string()?.let {
+                        Json.decodeFromString<ResponseDto<Nothing>>(it)
+                    }
+                } catch (parseError: Exception) {
+                    Logger.e("patchTimeCapsuleFavorite error body parse fail: $parseError")
+                    null
                 }
-            } catch (parseError: Exception) {
-                Logger.e("patchTimeCapsuleFavorite error body parse fail: $parseError")
-                null
-            }
 
             if (errorResponse?.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED") {
                 FavoriteResultEntity.FULL
@@ -77,7 +78,6 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleFavorite api fail, $e")
         }
-
 
     override suspend fun getFavoriteTimeCapsules(
         page: Int,
