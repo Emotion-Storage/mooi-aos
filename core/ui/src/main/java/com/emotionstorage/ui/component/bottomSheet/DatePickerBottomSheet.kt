@@ -186,7 +186,8 @@ fun DatePickerBottomSheet(
                                         .clickable(
                                             enabled = date.isAfter(minDate) && date.isBefore(maxDate),
                                             onClick = {
-                                                scope.launch { sheetState.hide() }
+                                                scope
+                                                    .launch { sheetState.hide() }
                                                     .invokeOnCompletion {
                                                         if (!sheetState.isVisible) {
                                                             onDateSelect(date)
