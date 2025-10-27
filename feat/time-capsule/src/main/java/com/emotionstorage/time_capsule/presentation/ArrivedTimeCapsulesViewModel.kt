@@ -130,9 +130,11 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
                             FavoriteResult.ADDED -> {
                                 updateFavorite(id, true)
                             }
+
                             FavoriteResult.REMOVED -> {
                                 updateFavorite(id, false)
                             }
+
                             FavoriteResult.FULL -> {
                                 // do nothing
                             }

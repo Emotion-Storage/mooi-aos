@@ -27,16 +27,13 @@ fun FavoriteToast(favoriteResultVal: String) {
     if (favoriteResult != null) {
         Toast(
             message =
-                when (favoriteResult) {
-                    FavoriteResult.ADDED ->
-                        LocalContext.current.getString(R.string.toast_favorite_added)
-
-                    FavoriteResult.REMOVED ->
-                        LocalContext.current.getString(R.string.toast_favorite_removed)
-
-                    FavoriteResult.FULL ->
-                        LocalContext.current.getString(R.string.toast_favorite_full)
-                },
+                LocalContext.current.getString(
+                    when (favoriteResult) {
+                        FavoriteResult.ADDED -> R.string.toast_favorite_added
+                        FavoriteResult.REMOVED -> R.string.toast_favorite_removed
+                        FavoriteResult.FULL -> R.string.toast_favorite_full
+                    },
+                ),
             iconId =
                 if (favoriteResult != FavoriteResult.FULL) {
                     R.drawable.success_filled
