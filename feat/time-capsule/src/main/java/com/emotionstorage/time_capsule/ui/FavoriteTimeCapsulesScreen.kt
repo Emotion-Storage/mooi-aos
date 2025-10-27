@@ -29,11 +29,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
-import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowFavoriteToast
@@ -72,7 +70,7 @@ fun FavoriteTimeCapsulesScreen(
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
                     snackState.showSnackbar(
-                        sideEffect.favoriteResult.name
+                        sideEffect.favoriteResult.name,
                     )
                 }
             }

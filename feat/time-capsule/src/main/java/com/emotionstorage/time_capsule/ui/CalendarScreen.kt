@@ -90,7 +90,7 @@ fun CalendarScreen(
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
                     snackState.showSnackbar(
-                        sideEffect.favoriteResult.name
+                        sideEffect.favoriteResult.name,
                     )
                 }
 

@@ -61,7 +61,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                             FavoriteResultEntity.ADDED -> FavoriteResult.ADDED
                             FavoriteResultEntity.REMOVED -> FavoriteResult.REMOVED
                             FavoriteResultEntity.FULL -> FavoriteResult.FULL
-                        }
+                        },
                     ),
                 )
             } catch (e: Exception) {

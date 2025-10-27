@@ -16,15 +16,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.domain.repo.FavoriteResult
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
-import com.orhanobut.logger.Logger
 
 @Composable
 fun Toast(
@@ -39,8 +35,7 @@ fun Toast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                )
-                .padding(paddingValues),
+                ).padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {

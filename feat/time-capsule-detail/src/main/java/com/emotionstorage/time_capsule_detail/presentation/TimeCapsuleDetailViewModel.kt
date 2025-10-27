@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -30,7 +29,6 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
-import com.emotionstorage.ui.R
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container

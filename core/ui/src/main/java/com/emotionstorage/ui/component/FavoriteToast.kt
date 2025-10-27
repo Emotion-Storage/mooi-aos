@@ -18,25 +18,25 @@ import com.orhanobut.logger.Logger
 @Composable
 fun FavoriteToast(favoriteResultVal: String) {
     var favoriteResult: FavoriteResult? = null
-    try{
+    try {
         favoriteResult = FavoriteResult.valueOf(favoriteResultVal)
-    }catch (e: IllegalArgumentException){
+    } catch (e: IllegalArgumentException) {
         Logger.e("Invalid favorite result: $favoriteResultVal")
     }
 
-    if(favoriteResult != null) {
+    if (favoriteResult != null) {
         Toast(
-            message = when (favoriteResult) {
-                FavoriteResult.ADDED ->
-                    LocalContext.current.getString(R.string.toast_favorite_added)
+            message =
+                when (favoriteResult) {
+                    FavoriteResult.ADDED ->
+                        LocalContext.current.getString(R.string.toast_favorite_added)
 
-                FavoriteResult.REMOVED ->
-                    LocalContext.current.getString(R.string.toast_favorite_removed)
+                    FavoriteResult.REMOVED ->
+                        LocalContext.current.getString(R.string.toast_favorite_removed)
 
-                FavoriteResult.FULL ->
-                    LocalContext.current.getString(R.string.toast_favorite_full)
-
-            },
+                    FavoriteResult.FULL ->
+                        LocalContext.current.getString(R.string.toast_favorite_full)
+                },
             iconId =
                 if (favoriteResult != FavoriteResult.FULL) {
                     R.drawable.success_filled
@@ -65,5 +65,3 @@ private fun FavoriteToastPreview() {
         }
     }
 }
-
-

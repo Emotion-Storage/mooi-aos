@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule.presentation
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteSortBy
@@ -10,7 +9,6 @@ import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCa
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
-import com.emotionstorage.ui.R
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
@@ -37,9 +35,8 @@ sealed class FavoriteTimeCapsulesAction {
 
 sealed class FavoriteTimeCapsulesSideEffect {
     data class ShowFavoriteToast(
-        val favoriteResult: FavoriteResult
+        val favoriteResult: FavoriteResult,
     ) : FavoriteTimeCapsulesSideEffect()
-
 }
 
 @HiltViewModel
