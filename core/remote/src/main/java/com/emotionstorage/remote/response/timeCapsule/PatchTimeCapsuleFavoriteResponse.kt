@@ -8,6 +8,6 @@ import java.time.LocalDateTime
 data class PatchTimeCapsuleFavoriteResponse(
     val isFavorite: Boolean,
     @Serializable(with = LocalDateTimeSerializer::class)
-    val favoriteAt: LocalDateTime,
+    val favoriteAt: LocalDateTime? = null,
     val favoritesCnt: Int,
 )
