@@ -10,7 +10,7 @@ import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsulesOfDateUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
-import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowToast
+import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.ui.R
@@ -66,8 +66,8 @@ sealed class CalendarAction {
 sealed class CalendarSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
 
-    data class ShowToast(
-        @StringRes val stringResId: Int,
+    data class ShowFavoriteToast(
+        val favoriteResult: FavoriteResult
     ) : CalendarSideEffect()
 
     data class EnterCharRoomSuccess(
@@ -290,18 +290,23 @@ class CalendarViewModel @Inject constructor(
                 collectDataState(
                     flow = setFavorite(id, newIsFavorite),
                     onSuccess = {
-                        if (it == FavoriteResult.ADDED) {
-                            postSideEffect(ShowToast(R.string.toast_favorite_added))
-                            updateFavorite(id, true)
-                        } else if (it == FavoriteResult.REMOVED) {
-                            postSideEffect(ShowToast(R.string.toast_favorite_removed))
-                            updateFavorite(id, false)
+                        when (it) {
+                            FavoriteResult.ADDED -> {
+                                updateFavorite(id, true)
+                            }
+
+                            FavoriteResult.REMOVED -> {
+                                updateFavorite(id, false)
+                            }
+
+                            FavoriteResult.FULL -> {
+                                // do nothing
+                            }
                         }
+                        postSideEffect(ShowFavoriteToast(it))
                     },
                     onError = { throwable, data ->
-                        if (data == FavoriteResult.FULL) {
-                            postSideEffect(ShowToast(R.string.toast_favorite_full))
-                        }
+                        Logger.e("Failed to toggle favorite, $throwable")
                     },
                 )
             }

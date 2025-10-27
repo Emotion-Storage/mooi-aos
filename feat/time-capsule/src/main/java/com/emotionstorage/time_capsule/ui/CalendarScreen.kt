@@ -85,12 +85,12 @@ fun CalendarScreen(
                     setShowTimeCapsuleBottomSheet(true)
                 }
 
-                is CalendarSideEffect.ShowToast -> {
+                is CalendarSideEffect.ShowFavoriteToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
                     snackState.showSnackbar(
-                        context.getString(sideEffect.stringResId),
+                        sideEffect.favoriteResult.name
                     )
                 }
 

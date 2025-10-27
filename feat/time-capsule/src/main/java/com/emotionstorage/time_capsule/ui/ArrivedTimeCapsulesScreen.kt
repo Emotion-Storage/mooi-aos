@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
@@ -59,9 +58,9 @@ fun ArrivedTimeCapsulesScreen(
 
         viewModel.container.sideEffectFlow.collect {
             when (it) {
-                is ArrivedTimeCapsulesSideEffect.ShowToast -> {
+                is ArrivedTimeCapsulesSideEffect.ShowFavoriteToast -> {
                     snackState.currentSnackbarData?.dismiss()
-                    snackState.showSnackbar(context.getString(it.stringResId))
+                    snackState.showSnackbar(it.favoriteResult.name)
                 }
             }
         }

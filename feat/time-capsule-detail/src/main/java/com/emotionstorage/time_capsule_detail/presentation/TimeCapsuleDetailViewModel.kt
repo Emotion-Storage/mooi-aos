@@ -27,7 +27,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.ui.R
@@ -105,8 +105,8 @@ sealed class TimeCapsuleDetailSideEffect {
 
     object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
 
-    data class ShowToast(
-        @StringRes val stringResId: Int,
+    data class ShowFavoriteToast(
+        val favoriteResult: FavoriteResult,
     ) : TimeCapsuleDetailSideEffect()
 }
 
@@ -272,22 +272,27 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             collectDataState(
                 flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
                 onSuccess = {
-                    if (it == FavoriteResult.ADDED) {
-                        postSideEffect(ShowToast(R.string.toast_favorite_added))
-                        reduce {
-                            state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
+                    when (it) {
+                        FavoriteResult.ADDED -> {
+                            reduce {
+                                state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
+                            }
                         }
-                    } else if (it == FavoriteResult.REMOVED) {
-                        postSideEffect(ShowToast(R.string.toast_favorite_removed))
-                        reduce {
-                            state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
+
+                        FavoriteResult.REMOVED -> {
+                            reduce {
+                                state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
+                            }
+                        }
+
+                        FavoriteResult.FULL -> {
+                            // do nothing
                         }
                     }
+                    postSideEffect(ShowFavoriteToast(it))
                 },
                 onError = { throwable, data ->
-                    if (data == FavoriteResult.FULL) {
-                        postSideEffect(ShowToast(R.string.toast_favorite_full))
-                    }
+                    Logger.e("setFavorite error: $throwable")
                 },
             )
         }

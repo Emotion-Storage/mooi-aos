@@ -21,8 +21,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
+import com.orhanobut.logger.Logger
 
 @Composable
 fun Toast(
@@ -37,7 +39,8 @@ fun Toast(
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                ).padding(paddingValues),
+                )
+                .padding(paddingValues),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -59,21 +62,6 @@ fun Toast(
     }
 }
 
-@Composable
-fun FavoriteToast(message: String) {
-    Toast(
-        message = message,
-        iconId =
-            if (message !=
-                LocalContext.current.getString(R.string.toast_favorite_full)
-            ) {
-                R.drawable.success_filled
-            } else {
-                null
-            },
-    )
-}
-
 @Preview
 @Composable
 private fun ToastPreview() {
@@ -89,12 +77,6 @@ private fun ToastPreview() {
             Toast(
                 "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
                 paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
-            )
-            FavoriteToast(
-                LocalContext.current.getString(R.string.toast_favorite_added),
-            )
-            FavoriteToast(
-                LocalContext.current.getString(R.string.toast_favorite_full),
             )
         }
     }
