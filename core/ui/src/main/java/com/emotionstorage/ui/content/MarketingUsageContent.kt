@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.content
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -7,19 +7,15 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -36,87 +32,54 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.R
 
 @Composable
-fun PrivacyPolicyContent() {
+fun MarketingUsageContent() {
     val context = LocalContext.current
-    val titles = context.resources.getStringArray(R.array.privacy_titles)
-    val contents = context.resources.getStringArray(R.array.privacy_contents)
-    val tableHeaders = context.resources.getStringArray(R.array.privacy_table_headers).toList()
-    val tableRow1 = context.resources.getStringArray(R.array.privacy_table_1th_row).toList()
-    val tableRow2 = context.resources.getStringArray(R.array.privacy_table_2th_row).toList()
-    val tableRow3 = context.resources.getStringArray(R.array.privacy_table_3th_row).toList()
-    val rows = listOf(tableRow1, tableRow2, tableRow3)
+    val tableHeaders = context.resources.getStringArray(R.array.marketing_table_headers).toList()
+    val row1 = context.resources.getStringArray(R.array.marketing_table_1th_row).toList()
+    val row2 = context.resources.getStringArray(R.array.marketing_table_2th_row).toList()
+    val rows = listOf(row1, row2)
 
-    LazyColumn(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 9.dp, bottom = 25.dp),
-        contentPadding = PaddingValues(vertical = 18.dp),
+    Column(
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 22.dp),
     ) {
-        item {
-            Text(
-                text = "MOOI 개인정보처리방침",
-                style = MooiTheme.typography.head1,
-                color = Color.White,
-            )
-            Spacer(modifier = Modifier.size(22.dp))
-        }
+        Text(
+            text = "MOOI 마케팅 활용 및 수신동의",
+            style = MooiTheme.typography.head1,
+            color = Color.White,
+        )
 
-        item {
-            Text(
-                text = stringResource(id = R.string.privacy_main),
-                style = MooiTheme.typography.caption1.copy(lineHeight = 22.sp),
-                color = Color.White,
-            )
-        }
+        Spacer(modifier = Modifier.size(22.dp))
 
-        item {
-            Spacer(modifier = Modifier.size(32.dp))
-            PrivacyPolicySection(
-                title = stringResource(id = R.string.first_privacy_title),
-                content = stringResource(id = R.string.first_privacy_content),
-            )
-        }
+        Text(
+            text = stringResource(R.string.marketing_main),
+            style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
+            color = Color.White,
+        )
 
-        item {
-            Spacer(modifier = Modifier.size(18.dp))
-            PrivacyTable(
-                header = tableHeaders,
-                rows = rows,
-            )
-            Spacer(modifier = Modifier.size(30.dp))
-        }
+        Spacer(modifier = Modifier.size(32.dp))
 
-        itemsIndexed(titles) { index, title ->
-            PrivacyPolicySection(
-                title = title,
-                content = contents[index],
-            )
-
-            if (index < titles.size - 1) Spacer(modifier = Modifier.size(32.dp))
-        }
+        MarketingTable(tableHeaders, rows)
     }
 }
 
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
-fun PrivacyTable(
+fun MarketingTable(
     header: List<String>,
     rows: List<List<String>>,
 ) {
     val baseTableW = 328f
-    val baseColDp = listOf(76.5f, 108f, 67f, 76.6f)
-    val baseRowDp = listOf(56f, 84f, 68f, 68f)
+    val baseColDp = listOf(84.5f, 53f, 51f, 84.5f, 55f)
+    val baseRowDp = listOf(56f, 100f, 116f)
 
     val weights = baseColDp.map { it / baseTableW }
 
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val tableW = maxWidth
-        // 화면 별 비율 측정
         val scale = tableW / baseTableW.dp
 
         val border = 1.dp
@@ -142,8 +105,6 @@ fun PrivacyTable(
             TableRow(items = rows[0], weights = weights, height = rowHeights[1])
             HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
             TableRow(items = rows[1], weights = weights, height = rowHeights[2])
-            HorizontalDivider(color = MooiTheme.colorScheme.gray700, thickness = divider)
-            TableRow(items = rows[2], weights = weights, height = rowHeights[3])
         }
     }
 }
@@ -203,31 +164,10 @@ private fun TableRow(
     }
 }
 
-@Composable
-fun PrivacyPolicySection(
-    title: String,
-    content: String,
-) {
-    Column {
-        Text(
-            text = title,
-            style = MooiTheme.typography.caption1.copy(lineHeight = 22.sp),
-            color = Color.White,
-        )
-
-        Spacer(modifier = Modifier.size(8.dp))
-
-        RichBody(
-            text = content,
-            color = Color.White,
-        )
-    }
-}
-
 @Preview
 @Composable
-fun PrivacyPolicyContentPreview() {
+private fun MarketingUsageContentPreview() {
     MooiTheme {
-        PrivacyPolicyContent()
+        MarketingUsageContent()
     }
 }

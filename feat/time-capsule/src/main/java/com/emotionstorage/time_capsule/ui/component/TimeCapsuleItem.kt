@@ -40,7 +40,7 @@ import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
-import com.emotionstorage.ui.component.RoundedToggleButton
+import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.LinearGradient
 import com.emotionstorage.ui.util.dropShadow

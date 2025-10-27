@@ -1,11 +1,16 @@
 package com.emotionstorage.remote.dataSourceImpl
 
+import com.emotionstorage.data.dataSource.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
+import com.emotionstorage.remote.response.ResponseDto
+import com.orhanobut.logger.Logger
+import kotlinx.serialization.json.Json
+import retrofit2.HttpException
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
@@ -19,7 +24,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             apiService.patchTimeCapsuleOpen(id)
             return true
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleOpen api fail, $e")
+            throw Exception("patchTimeCapsuleOpen api fail", e)
         }
     }
 
@@ -34,31 +39,45 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             )
             return true
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleNote api fail, $e")
+            throw Exception("patchTimeCapsuleNote api fail", e)
         }
     }
 
     override suspend fun patchTimeCapsuleFavorite(
         id: Long,
         isFavorite: Boolean,
-    ): Boolean {
+    ): FavoriteResultEntity =
         try {
             val response =
                 apiService.patchTimeCapsuleFavorite(
                     id,
                     PatchTimeCapsuleFavoriteRequest(isFavorite),
                 )
-
-            // todo: handle time capsule favorite fail - list is full
             if (response.data != null) {
-                return response.data!!.isFavorite
+                if (isFavorite) FavoriteResultEntity.ADDED else FavoriteResultEntity.REMOVED
             } else {
                 throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }
+        } catch (e: HttpException) {
+            // parse error response body
+            val errorResponse =
+                try {
+                    e.response()?.errorBody()?.string()?.let {
+                        Json.decodeFromString<ResponseDto<Nothing>>(it)
+                    }
+                } catch (parseError: Exception) {
+                    Logger.e("patchTimeCapsuleFavorite error body parse fail: $parseError")
+                    null
+                }
+
+            if (errorResponse?.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED") {
+                FavoriteResultEntity.FULL
+            } else {
+                throw e
+            }
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleFavorite api fail, $e")
+            throw Exception("patchTimeCapsuleFavorite api fail", e)
         }
-    }
 
     override suspend fun getFavoriteTimeCapsules(
         page: Int,
@@ -78,7 +97,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getFavoriteTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getFavoriteTimeCapsules api fail, $e")
+            throw Exception("getFavoriteTimeCapsules api fail", e)
         }
     }
 
@@ -104,7 +123,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getTimeCapsules api fail, $e")
+            throw Exception("getTimeCapsules api fail", e)
         }
     }
 
@@ -117,7 +136,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getTimeCapsuleDetail response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getTimeCapsuleDetail api fail, $e")
+            throw Exception("getTimeCapsuleDetail api fail", e)
         }
     }
 
@@ -131,7 +150,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getTimeCapsuleDates response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getTimeCapsuleDates api fail, $e")
+            throw Exception("getTimeCapsuleDates api fail", e)
         }
     }
 
@@ -140,7 +159,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             apiService.deleteTimeCapsule(id)
             return true
         } catch (e: Exception) {
-            throw Exception("deleteTimeCapsule api fail, $e")
+            throw Exception("deleteTimeCapsule api fail", e)
         }
     }
 }

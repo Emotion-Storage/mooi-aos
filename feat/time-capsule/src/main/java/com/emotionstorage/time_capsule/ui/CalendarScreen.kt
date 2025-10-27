@@ -43,12 +43,12 @@ import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
-import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
+import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.AppSnackbarHost
-import com.emotionstorage.ui.component.FavoriteToast
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.toast.FavoriteToast
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
@@ -85,12 +85,12 @@ fun CalendarScreen(
                     setShowTimeCapsuleBottomSheet(true)
                 }
 
-                is CalendarSideEffect.ShowToast -> {
+                is CalendarSideEffect.ShowFavoriteToast -> {
                     // dismiss current snackbar if exists
                     snackState.currentSnackbarData?.dismiss()
                     // show new snackbar
                     snackState.showSnackbar(
-                        context.getString(sideEffect.stringResId),
+                        sideEffect.favoriteResult.name,
                     )
                 }
 

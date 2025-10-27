@@ -32,7 +32,7 @@ import com.emotionstorage.my.presentation.NotificationSettingViewModel
 import com.emotionstorage.my.ui.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.component.ToggleRow
-import com.emotionstorage.ui.component.TimePickerBottomSheet
+import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.DayOfWeek

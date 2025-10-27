@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.picker
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

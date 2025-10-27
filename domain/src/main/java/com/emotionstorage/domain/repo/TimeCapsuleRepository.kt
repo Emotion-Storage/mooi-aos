@@ -17,7 +17,7 @@ interface TimeCapsuleRepository {
     suspend fun setFavoriteTimeCapsule(
         id: Long,
         isFavorite: Boolean,
-    ): Flow<DataState<SetFavoriteResult>>
+    ): Flow<DataState<FavoriteResult>>
 
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
 
@@ -35,7 +35,7 @@ interface TimeCapsuleRepository {
     suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>>
 }
 
-enum class SetFavoriteResult {
+enum class FavoriteResult {
     ADDED,
     REMOVED,
     FULL,

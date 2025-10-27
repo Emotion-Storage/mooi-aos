@@ -31,11 +31,11 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.Modal
-import com.emotionstorage.ui.component.TextInput
-import com.emotionstorage.ui.component.TextInputState
+import com.emotionstorage.ui.component.text.TextInput
+import com.emotionstorage.ui.component.text.TextInputState
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 

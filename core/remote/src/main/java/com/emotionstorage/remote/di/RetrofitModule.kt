@@ -9,8 +9,10 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
@@ -31,30 +33,60 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(
-        loggingInterceptor: HttpLoggingInterceptor,
-        requestHeaderInterceptor: RequestHeaderInterceptor,
-    ) = Retrofit
-        .Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-        .client(
-            OkHttpClient
-                .Builder()
-                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
-                .addInterceptor(loggingInterceptor)
-                .addInterceptor(requestHeaderInterceptor)
-                .build(),
-        ).build()
+    fun provideRetrofit(requestHeaderInterceptor: RequestHeaderInterceptor): Retrofit {
+        val cloneErrorBodyInterceptor =
+            Interceptor { chain ->
+                val request = chain.request()
+                val response = chain.proceed(request)
 
-    @Singleton
-    @Provides
-    fun provideLoggingInterceptor() =
-        HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+                if (response.isSuccessful) return@Interceptor response
+
+                // get error body
+                val sourceBody = response.body
+                if (sourceBody == null) {
+                    return@Interceptor response
+                }
+
+                // clone error body stream to byte array input stream
+                val bytes = sourceBody.bytes()
+                val contentType = sourceBody.contentType()
+                val newResponseBody =
+                    bytes.inputStream().use {
+                        ResponseBody.create(contentType, bytes)
+                    }
+
+                response
+                    .newBuilder()
+                    .body(newResponseBody)
+                    .build()
+            }
+
+        val loggingInterceptor =
+            HttpLoggingInterceptor().apply {
+                level =
+                    if (BuildConfig.DEBUG) {
+                        HttpLoggingInterceptor.Level.BODY
+                    } else {
+                        HttpLoggingInterceptor.Level.NONE
+                    }
+            }
+
+        return Retrofit
+            .Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .client(
+                OkHttpClient
+                    .Builder()
+                    .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                    .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                    .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                    .addInterceptor(requestHeaderInterceptor)
+                    .addInterceptor(cloneErrorBodyInterceptor)
+                    .addInterceptor(loggingInterceptor)
+                    .build(),
+            ).build()
+    }
 
     @Singleton
     @Provides

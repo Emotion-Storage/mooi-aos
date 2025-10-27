@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 

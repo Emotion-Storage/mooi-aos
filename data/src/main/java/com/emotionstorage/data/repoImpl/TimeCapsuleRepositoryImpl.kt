@@ -1,11 +1,12 @@
 package com.emotionstorage.data.repoImpl
 
+import com.emotionstorage.data.dataSource.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
-import com.emotionstorage.domain.repo.SetFavoriteResult
+import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -49,16 +50,18 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     override suspend fun setFavoriteTimeCapsule(
         id: Long,
         isFavorite: Boolean,
-    ): Flow<DataState<SetFavoriteResult>> =
+    ): Flow<DataState<FavoriteResult>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
                 val result = remoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
-
-                // todo: handle time capsule favorite failure - list is full
                 emit(
                     DataState.Success(
-                        if (result) SetFavoriteResult.ADDED else SetFavoriteResult.REMOVED,
+                        when (result) {
+                            FavoriteResultEntity.ADDED -> FavoriteResult.ADDED
+                            FavoriteResultEntity.REMOVED -> FavoriteResult.REMOVED
+                            FavoriteResultEntity.FULL -> FavoriteResult.FULL
+                        },
                     ),
                 )
             } catch (e: Exception) {

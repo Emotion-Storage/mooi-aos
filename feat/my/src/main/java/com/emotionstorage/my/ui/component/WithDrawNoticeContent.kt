@@ -29,8 +29,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.ui.component.CtaButton
-import com.emotionstorage.ui.component.CtaButtonType
+import com.emotionstorage.ui.component.button.CtaButton
+import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
