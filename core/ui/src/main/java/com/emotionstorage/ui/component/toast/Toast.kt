@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.toast
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

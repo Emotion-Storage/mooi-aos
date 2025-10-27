@@ -55,10 +55,10 @@ import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
-import com.emotionstorage.ui.component.AppSnackbarHost
-import com.emotionstorage.ui.component.FavoriteToast
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.toast.FavoriteToast
 import com.emotionstorage.ui.component.FullLoadingScreen
-import com.emotionstorage.ui.component.RoundedToggleButton
+import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime

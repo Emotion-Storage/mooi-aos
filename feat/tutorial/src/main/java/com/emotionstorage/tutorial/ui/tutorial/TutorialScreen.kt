@@ -24,7 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.R
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 

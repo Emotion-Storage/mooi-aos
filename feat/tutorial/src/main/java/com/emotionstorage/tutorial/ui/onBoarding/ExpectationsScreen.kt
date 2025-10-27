@@ -33,7 +33,7 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel.State
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground

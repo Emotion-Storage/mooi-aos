@@ -37,8 +37,8 @@ import com.emotionstorage.common.toKorDate
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Status
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
-import com.emotionstorage.ui.component.BottomSheet
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.bottomSheet.BottomSheet
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import java.time.LocalDate
