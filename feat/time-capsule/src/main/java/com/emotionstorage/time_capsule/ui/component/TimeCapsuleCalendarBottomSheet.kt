@@ -43,7 +43,6 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.String
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,8 +52,8 @@ fun TimeCapsuleCalendarBottomSheet(
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     timeCapsules: List<TimeCapsuleItemState> = emptyList(),
-    onToggleFavorite: (id: String) -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    onToggleFavorite: (id: Long) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToDailyReport: (() -> Unit)? = null,
     isNewDailyReport: Boolean = false,
 ) {
@@ -188,7 +187,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
     val timeCapsules =
         (0..3).map { i ->
             TimeCapsuleItemState(
-                id = i.toString(),
+                id = i.toLong(),
                 status = Status.entries.get(i),
                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                 emotions =

@@ -53,7 +53,7 @@ fun AIChatScreen(
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: String) -> Unit = {},
+    navToTimeCapsuleDetail: (capsuleId: Long) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(roomId) {

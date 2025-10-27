@@ -7,7 +7,7 @@ class SaveTimeCapsuleNoteUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
     suspend operator fun invoke(
-        id: String,
+        id: Long,
         note: String,
     ) = timeCapsuleRepository.saveTimeCapsuleNote(id, note)
 }

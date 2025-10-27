@@ -48,19 +48,19 @@ data class TimeCapsuleDetailState(
 
 sealed class TimeCapsuleDetailAction {
     data class Init(
-        val id: String,
+        val id: Long,
     ) : TimeCapsuleDetailAction()
 
     data class OnToggleFavorite(
-        val id: String,
+        val id: Long,
     ) : TimeCapsuleDetailAction()
 
     data class OnDeleteTimeCapsule(
-        val id: String,
+        val id: Long,
     ) : TimeCapsuleDetailAction()
 
     data class OnUnlockTimeCapsule(
-        val id: String,
+        val id: Long,
     ) : TimeCapsuleDetailAction()
 
     data class OnNoteChanged(
@@ -68,7 +68,7 @@ sealed class TimeCapsuleDetailAction {
     ) : TimeCapsuleDetailAction()
 
     data class OnSaveNote(
-        val id: String,
+        val id: Long,
     ) : TimeCapsuleDetailAction()
 
     object OnDeleteTrigger : TimeCapsuleDetailAction()
@@ -180,7 +180,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         }
     }
 
-    private fun handleInit(id: String) =
+    private fun handleInit(id: Long) =
         intent {
             collectDataState(
                 flow = getTimeCapsuleById(id),
@@ -263,7 +263,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             )
         }
 
-    private fun handleToggleFavorite(id: String) =
+    private fun handleToggleFavorite(id: Long) =
         intent {
             if (state.timeCapsule == null) {
                 return@intent
@@ -292,7 +292,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             )
         }
 
-    private fun handleDeleteTimeCapsule(id: String) =
+    private fun handleDeleteTimeCapsule(id: Long) =
         intent {
             collectDataState(
                 flow = deleteTimeCapsule(id),
@@ -305,7 +305,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             )
         }
 
-    private fun handleUnlockTimeCapsule(id: String) =
+    private fun handleUnlockTimeCapsule(id: Long) =
         intent {
             // todo: unlock time capsule
             reduce {
@@ -328,7 +328,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
         }
 
-    private fun handleSaveNote(id: String) =
+    private fun handleSaveNote(id: Long) =
         intent {
             if (!state.isNoteChanged) return@intent
 

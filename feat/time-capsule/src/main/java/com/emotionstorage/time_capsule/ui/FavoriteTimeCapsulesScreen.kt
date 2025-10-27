@@ -52,7 +52,7 @@ import java.time.LocalDateTime
 fun FavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: FavoriteTimeCapsulesViewModel = hiltViewModel(),
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -94,7 +94,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     snackState: SnackbarHostState = SnackbarHostState(),
     state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
     onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
@@ -210,7 +210,7 @@ private fun FavoriteTimeCapsulesScreenPreview() {
                     timeCapsules =
                         (1..15).toList().map { it ->
                             TimeCapsuleItemState(
-                                id = it.toString(),
+                                id = it.toLong(),
                                 status = TimeCapsule.Status.OPENED,
                                 title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
                                 emotions =

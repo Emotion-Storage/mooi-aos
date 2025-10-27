@@ -63,9 +63,9 @@ fun CalendarScreen(
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
-    navToDailyReportDetail: (id: String) -> Unit = {},
-    navToAIChat: (roomId: Long) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = {},
+    navToAIChat: (roomId: String) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LifecycleResumeEffect(Unit) {
@@ -132,8 +132,8 @@ private fun StatelessCalendarScreen(
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: String) -> Unit = {},
-    navToDailyReportDetail: (id: String) -> Unit = {},
+    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = {},
 ) {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),

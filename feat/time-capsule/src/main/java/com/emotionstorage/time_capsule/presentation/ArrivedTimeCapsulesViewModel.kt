@@ -29,7 +29,7 @@ sealed class ArrivedTimeCapsulesAction {
     object LoadMore : ArrivedTimeCapsulesAction()
 
     data class ToggleFavorite(
-        val id: String,
+        val id: Long,
     ) : ArrivedTimeCapsulesAction()
 }
 
@@ -99,7 +99,7 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
             )
         }
 
-    private fun handleToggleFavorite(id: String) =
+    private fun handleToggleFavorite(id: Long) =
         intent {
             if (state.timeCapsules.find { it.id == id } == null) {
                 Logger.e("Cannot find time capsule of id $id")
@@ -109,7 +109,7 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
             val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
 
             suspend fun updateFavorite(
-                id: String,
+                id: Long,
                 isFavorite: Boolean,
             ) = reduce {
                 state.copy(

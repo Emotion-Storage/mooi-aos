@@ -65,7 +65,7 @@ import java.time.YearMonth
 
 @Composable
 fun SaveTimeCapsuleScreen(
-    id: String,
+    id: Long,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = true,
     viewModel: SaveTimeCapsuleViewModel = hiltViewModel(),

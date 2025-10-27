@@ -61,7 +61,7 @@ sealed class AIChatSideEffect {
     object CanCreateTimesCapsule : AIChatSideEffect()
 
     data class CreateTimeCapsuleSuccess(
-        val capsuleId: String,
+        val capsuleId: Long,
     ) : AIChatSideEffect()
 }
 
@@ -257,7 +257,7 @@ class AIChatViewModel @Inject constructor(
             handleExitChatRoom()
 
             // todo: get time capsule id from server
-            postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess("123"))
+            postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess(123L))
         }
 
     // TODO : 메세지 진행률 업데이트 관련 로직

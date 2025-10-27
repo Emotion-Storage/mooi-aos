@@ -5,7 +5,7 @@ import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import java.time.LocalDateTime
 
 data class TimeCapsuleItemState(
-    val id: String,
+    val id: Long,
     val status: TimeCapsule.Status,
     val title: String,
     val emotions: List<Emotion> = emptyList(),

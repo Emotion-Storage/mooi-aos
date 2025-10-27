@@ -17,12 +17,12 @@ import retrofit2.http.Query
 interface TimeCapsuleApiService {
     @PATCH("api/v1/time-capsule/{capsuleId}/open")
     suspend fun patchTimeCapsuleOpen(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
     ): ResponseDto<Unit>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/note")
     suspend fun patchTimeCapsuleNote(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
         @Body requestBody: PatchTimeCapsuleNoteRequest,
     ): ResponseDto<Unit>
 
@@ -44,12 +44,12 @@ interface TimeCapsuleApiService {
 
     @GET("api/v1/time-capsule/{capsuleId}")
     suspend fun getTimeCapsuleDetail(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
     ): ResponseDto<GetTimeCapsuleDetailResponse>
 
     @PATCH("api/v1/time-capsule/{capsuleId}/favorite")
     suspend fun patchTimeCapsuleFavorite(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
         @Body requestBody: PatchTimeCapsuleFavoriteRequest,
     ): ResponseDto<PatchTimeCapsuleFavoriteResponse>
 
@@ -61,6 +61,6 @@ interface TimeCapsuleApiService {
 
     @DELETE("api/v1/time-capsule/{capsuleId}")
     suspend fun deleteTimeCapsule(
-        @Path(value = "capsuleId") id: String,
+        @Path(value = "capsuleId") id: Long,
     ): ResponseDto<Unit>
 }
