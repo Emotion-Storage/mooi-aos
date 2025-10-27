@@ -24,7 +24,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             apiService.patchTimeCapsuleOpen(id)
             return true
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleOpen api fail, $e")
+            throw Exception("patchTimeCapsuleOpen api fail", e)
         }
     }
 
@@ -39,7 +39,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             )
             return true
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleNote api fail, $e")
+            throw Exception("patchTimeCapsuleNote api fail", e)
         }
     }
 
@@ -76,7 +76,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw e
             }
         } catch (e: Exception) {
-            throw Exception("patchTimeCapsuleFavorite api fail, $e")
+            throw Exception("patchTimeCapsuleFavorite api fail", e)
         }
 
     override suspend fun getFavoriteTimeCapsules(
@@ -97,7 +97,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getFavoriteTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getFavoriteTimeCapsules api fail, $e")
+            throw Exception("getFavoriteTimeCapsules api fail", e)
         }
     }
 
@@ -123,7 +123,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getTimeCapsules api fail, $e")
+            throw Exception("getTimeCapsules api fail", e)
         }
     }
 
@@ -136,7 +136,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getTimeCapsuleDetail response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getTimeCapsuleDetail api fail, $e")
+            throw Exception("getTimeCapsuleDetail api fail", e)
         }
     }
 
@@ -150,7 +150,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getTimeCapsuleDates response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getTimeCapsuleDates api fail, $e")
+            throw Exception("getTimeCapsuleDates api fail", e)
         }
     }
 
@@ -159,7 +159,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             apiService.deleteTimeCapsule(id)
             return true
         } catch (e: Exception) {
-            throw Exception("deleteTimeCapsule api fail, $e")
+            throw Exception("deleteTimeCapsule api fail", e)
         }
     }
 }
