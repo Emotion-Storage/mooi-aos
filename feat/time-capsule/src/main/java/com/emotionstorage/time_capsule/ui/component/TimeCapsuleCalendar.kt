@@ -1,5 +1,8 @@
 package com.emotionstorage.time_capsule.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -96,11 +99,11 @@ private fun DateItem(
     isFilled: Boolean = false,
     isToday: Boolean = false,
 ) {
-    if (!isShown) {
-        Spacer(
-            modifier.fillMaxWidth(),
-        )
-    } else {
+    AnimatedVisibility(
+        visible = isShown,
+        enter = fadeIn(),
+        exit = fadeOut(),
+    ) {
         Box(modifier = modifier) {
             Column(
                 modifier =
@@ -109,7 +112,8 @@ private fun DateItem(
                         .background(
                             if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
                             shape = RoundedCornerShape(20.dp),
-                        ).clickable { onClick(date) }
+                        )
+                        .clickable { onClick(date) }
                         .padding(horizontal = 3.5.dp)
                         .padding(top = 4.dp, bottom = 2.dp),
                 verticalArrangement =
@@ -132,7 +136,8 @@ private fun DateItem(
                             .background(
                                 if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
                                 shape = CircleShape,
-                            ).border(
+                            )
+                            .border(
                                 width = 1.5.dp,
                                 color =
                                     if (isFilled) {
