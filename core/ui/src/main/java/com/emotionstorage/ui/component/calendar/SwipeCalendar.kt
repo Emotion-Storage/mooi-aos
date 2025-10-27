@@ -3,8 +3,10 @@ package com.emotionstorage.ui.component.calendar
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
@@ -78,7 +80,7 @@ fun SwipeCalendar(
             minYearMonth = minYearMonth,
             maxYearMonth = maxYearMonth,
             onCalendarYearMonthSelect = {
-                coroutineScope.launch{
+                coroutineScope.launch {
                     val targetIndex = ChronoUnit.MONTHS.between(minYearMonth, it).toInt()
                     pagerState.animateScrollToPage(targetIndex.coerceIn(0, totalMonths - 1))
                 }
@@ -87,6 +89,14 @@ fun SwipeCalendar(
             onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
             calendarYearMonthTextStyle = calendarYearMonthTextStyle,
         )
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            listOf("일", "월", "화", "수", "목", "금", "토").forEach {
+                weekDateItem(Modifier.weight(1f), it)
+            }
+        }
 
         HorizontalPager(
             state = pagerState,
@@ -99,7 +109,7 @@ fun SwipeCalendar(
                 calendarYearMonth = yearMonth,
                 onCalendarYearMonthSelect = onCalendarYearMonthSelect,
                 showYearMonthIndicator = false,
-                weekDateItem = weekDateItem,
+                showWeekDates = false,
                 dateItem = dateItem
             )
         }

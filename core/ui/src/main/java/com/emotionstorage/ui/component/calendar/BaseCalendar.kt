@@ -33,6 +33,7 @@ fun BaseCalendar(
     showYearMonthDropDownIcon: Boolean = false,
     onYearMonthDropDownIconClick: () -> Unit = {},
     calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
+    showWeekDates: Boolean = true,
     weekDateItem: @Composable (modifier: Modifier, label: String) -> Unit = { modifier, label ->
         Text(
             modifier = modifier.padding(vertical = 16.dp),
@@ -75,11 +76,13 @@ fun BaseCalendar(
             columns = GridCells.Fixed(7),
             modifier = Modifier.fillMaxWidth(),
         ) {
-            items(
-                items = listOf("일", "월", "화", "수", "목", "금", "토"),
-                key = { it },
-            ) { label ->
-                weekDateItem(Modifier.weight(1f), label)
+            if (showWeekDates) {
+                items(
+                    items = listOf("일", "월", "화", "수", "목", "금", "토"),
+                    key = { it },
+                ) { label ->
+                    weekDateItem(Modifier.weight(1f), label)
+                }
             }
 
             items(
