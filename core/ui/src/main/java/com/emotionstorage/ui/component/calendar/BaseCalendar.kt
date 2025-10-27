@@ -29,6 +29,7 @@ fun BaseCalendar(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
+    showYearMonthIndicator: Boolean = true,
     showYearMonthDropDownIcon: Boolean = false,
     onYearMonthDropDownIconClick: () -> Unit = {},
     calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
@@ -56,16 +57,18 @@ fun BaseCalendar(
             modifier
                 .background(MooiTheme.colorScheme.background),
     ) {
-        // year & month selection
-        CalendarYearMonthIndicator(
-            calendarYearMonth = calendarYearMonth,
-            minYearMonth = minYearMonth,
-            maxYearMonth = maxYearMonth,
-            onCalendarYearMonthSelect = onCalendarYearMonthSelect,
-            showYearMonthDropDownIcon = showYearMonthDropDownIcon,
-            onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
-            calendarYearMonthTextStyle = calendarYearMonthTextStyle,
-        )
+        if (showYearMonthIndicator) {
+            // year & month selection
+            CalendarYearMonthIndicator(
+                calendarYearMonth = calendarYearMonth,
+                minYearMonth = minYearMonth,
+                maxYearMonth = maxYearMonth,
+                onCalendarYearMonthSelect = onCalendarYearMonthSelect,
+                showYearMonthDropDownIcon = showYearMonthDropDownIcon,
+                onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
+                calendarYearMonthTextStyle = calendarYearMonthTextStyle,
+            )
+        }
 
         // calendar dates
         LazyVerticalGrid(
