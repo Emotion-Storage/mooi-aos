@@ -219,7 +219,6 @@ private fun StatelessCalendarScreen(
                     onCalendarYearMonthSelect = {
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
-                    showYearMonthDropDownIcon = true,
                     onYearMonthDropDownIconClick = {
                         setShowYearMonthBottomSheet(true)
                     },
