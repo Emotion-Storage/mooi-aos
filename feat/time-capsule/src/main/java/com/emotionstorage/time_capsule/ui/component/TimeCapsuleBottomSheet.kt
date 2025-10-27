@@ -46,7 +46,7 @@ import java.time.LocalDateTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimeCapsuleCalendarBottomSheet(
+fun TimeCapsuleBottomSheet(
     date: LocalDate,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
@@ -223,7 +223,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background),
         ) {
-            TimeCapsuleCalendarBottomSheet(
+            TimeCapsuleBottomSheet(
                 // open sheet state for preview
                 sheetState =
                     rememberStandardBottomSheetState(
