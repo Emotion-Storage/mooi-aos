@@ -67,9 +67,16 @@ fun SwipeCalendar(
 
     // calendar pager state
     val totalMonths = ChronoUnit.MONTHS.between(minYearMonth, maxYearMonth).toInt() + 1
+    fun clampToRange(target: YearMonth): YearMonth =
+        when {
+            target.isBefore(minYearMonth) -> minYearMonth
+            target.isAfter(maxYearMonth) -> maxYearMonth
+            else -> target
+        }
+
     val initialPageIndex =
         remember(calendarYearMonth) {
-            ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
+            ChronoUnit.MONTHS.between(minYearMonth, clampToRange(calendarYearMonth)).toInt()
         }
     val pagerState = rememberPagerState(initialPage = initialPageIndex, pageCount = { totalMonths })
 
@@ -84,12 +91,13 @@ fun SwipeCalendar(
         onCalendarYearMonthSelect(currentYearMonth)
     }
     LaunchedEffect(calendarYearMonth, currentYearMonth) {
-        // scroll to target page on calendar year month change
+        // scroll to target on calendar year month change
         // this is needed when calendar year month is changed outside swiper calendar component
-        if(calendarYearMonth != currentYearMonth) {
+        val target =  clampToRange(calendarYearMonth)
+        if (target != currentYearMonth) {
             coroutineScope.launch {
                 pagerState.animateScrollToPage(
-                    ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt(),
+                    ChronoUnit.MONTHS.between(minYearMonth, target).toInt(),
                 )
             }
         }
@@ -103,7 +111,7 @@ fun SwipeCalendar(
             onCalendarYearMonthSelect = {
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(
-                        ChronoUnit.MONTHS.between(minYearMonth, it).toInt(),
+                        ChronoUnit.MONTHS.between(minYearMonth, clampToRange(it)).toInt(),
                     )
                 }
             },
