@@ -36,11 +36,14 @@ private object TimeCapsuleCalendarDesignToken {
     val dateWidth = 30
 }
 
-private val DUMMY_TIME_CAPSULE_DATES = (1..31).toList().filter {
-    it % 3 == 0
-}.map {
-    LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
-}
+private val DUMMY_TIME_CAPSULE_DATES =
+    (1..31)
+        .toList()
+        .filter {
+            it % 3 == 0
+        }.map {
+            LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
+        }
 
 @Composable
 fun TimeCapsuleCalendar(
@@ -90,30 +93,31 @@ private fun DateItem(
     isFilled: Boolean = false,
     isToday: Boolean = false,
 ) {
-
     Box(
-        modifier = modifier
-            .alpha(if (isShown) 1f else 0f)
-            .clickable(
-                enabled = isShown && isFilled,
-                onClick = {
-                    onDateClick(date)
-                }
-            )
+        modifier =
+            modifier
+                .alpha(if (isShown) 1f else 0f)
+                .clickable(
+                    enabled = isShown && isFilled,
+                    onClick = {
+                        onDateClick(date)
+                    },
+                ),
     ) {
         Column(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .background(
-                    if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
-                    shape = RoundedCornerShape(20.dp),
-                )
-                .padding(horizontal = 3.5.dp)
-                .padding(top = 4.dp, bottom = 2.dp),
-            verticalArrangement = Arrangement.spacedBy(
-                9.dp,
-                alignment = Alignment.CenterVertically,
-            ),
+            modifier =
+                Modifier
+                    .align(Alignment.Center)
+                    .background(
+                        if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
+                        shape = RoundedCornerShape(20.dp),
+                    ).padding(horizontal = 3.5.dp)
+                    .padding(top = 4.dp, bottom = 2.dp),
+            verticalArrangement =
+                Arrangement.spacedBy(
+                    9.dp,
+                    alignment = Alignment.CenterVertically,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
@@ -123,23 +127,24 @@ private fun DateItem(
                 color = Color.White,
             )
             Box(
-                modifier = Modifier
-                    .size(TimeCapsuleCalendarDesignToken.dateWidth.dp)
-                    .background(
-                        if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
-                        shape = CircleShape,
-                    )
-                    .border(
-                        width = 1.5.dp,
-                        color = if (isFilled) {
-                            Color.Transparent
-                        } else {
-                            Color(0xFFAECBFA).copy(
-                                alpha = 0.2f,
-                            )
-                        },
-                        shape = CircleShape,
-                    ),
+                modifier =
+                    Modifier
+                        .size(TimeCapsuleCalendarDesignToken.dateWidth.dp)
+                        .background(
+                            if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
+                            shape = CircleShape,
+                        ).border(
+                            width = 1.5.dp,
+                            color =
+                                if (isFilled) {
+                                    Color.Transparent
+                                } else {
+                                    Color(0xFFAECBFA).copy(
+                                        alpha = 0.2f,
+                                    )
+                                },
+                            shape = CircleShape,
+                        ),
             )
         }
     }
@@ -151,10 +156,11 @@ private fun TimeCapsuleCalendarPreview() {
     val (calendarYearMonth, setCalendarYearMonth) = remember { mutableStateOf(YearMonth.now()) }
     MooiTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(horizontal = 16.dp, vertical = 30.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(horizontal = 16.dp, vertical = 30.dp),
         ) {
             TimeCapsuleCalendar(
                 modifier = Modifier.align(Alignment.TopCenter),
