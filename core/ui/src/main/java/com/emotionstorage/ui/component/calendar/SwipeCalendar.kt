@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
-import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
@@ -50,7 +49,11 @@ fun SwipeCalendar(
             textAlign = TextAlign.Center,
         )
     },
-    dateItem: @Composable (modifier: Modifier, pageYearMonth: YearMonth, date: LocalDate) -> Unit = { modifier, pageYearMonth, date ->
+    dateItem: @Composable (
+        modifier: Modifier,
+        pageYearMonth: YearMonth,
+        date: LocalDate,
+    ) -> Unit = { modifier, pageYearMonth, date ->
         Text(
             modifier = modifier.padding(bottom = 6.dp),
             text = date.dayOfMonth.toString(),
@@ -64,9 +67,10 @@ fun SwipeCalendar(
 
     // calendar pager state
     val totalMonths = ChronoUnit.MONTHS.between(minYearMonth, maxYearMonth).toInt() + 1
-    val initialPageIndex = remember(calendarYearMonth) {
-        ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
-    }
+    val initialPageIndex =
+        remember(calendarYearMonth) {
+            ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
+        }
     val pagerState = rememberPagerState(initialPage = initialPageIndex, pageCount = { totalMonths })
 
     // year month of current page
@@ -84,7 +88,7 @@ fun SwipeCalendar(
         // this is needed when calendar year month is changed outside swiper calendar component
         coroutineScope.launch {
             pagerState.animateScrollToPage(
-                ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
+                ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt(),
             )
         }
     }
@@ -97,7 +101,7 @@ fun SwipeCalendar(
             onCalendarYearMonthSelect = {
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(
-                        ChronoUnit.MONTHS.between(minYearMonth, it).toInt()
+                        ChronoUnit.MONTHS.between(minYearMonth, it).toInt(),
                     )
                 }
             },
@@ -157,9 +161,9 @@ private fun SwipeCalendarPreview() {
                     Text(
                         modifier = modifier.padding(bottom = 6.dp),
                         text = date.format(DateTimeFormatter.ofPattern("MM/dd")),
-                        color = if (date.monthValue == pageYearMonth.monthValue) Color.White else Color.Gray
+                        color = if (date.monthValue == pageYearMonth.monthValue) Color.White else Color.Gray,
                     )
-                }
+                },
             )
         }
     }
