@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
+import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
@@ -61,12 +62,14 @@ fun SwipeCalendar(
 ) {
     val coroutineScope = rememberCoroutineScope()
 
+    // calendar pager state
     val totalMonths = ChronoUnit.MONTHS.between(minYearMonth, maxYearMonth).toInt() + 1
     val initialPageIndex = remember(calendarYearMonth) {
         ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
     }
     val pagerState = rememberPagerState(initialPage = initialPageIndex, pageCount = { totalMonths })
 
+    // year month of current page
     val currentYearMonth by remember {
         derivedStateOf {
             minYearMonth.plusMonths(pagerState.currentPage.toLong())
@@ -75,6 +78,15 @@ fun SwipeCalendar(
     LaunchedEffect(pagerState.currentPage) {
         // update calendar year month on page change
         onCalendarYearMonthSelect(currentYearMonth)
+    }
+    LaunchedEffect(calendarYearMonth) {
+        // scroll to target page on calendar year month change
+        // this is needed when calendar year month is changed outside swiper calendar component
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(
+                ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
+            )
+        }
     }
 
     Column(modifier = modifier) {
