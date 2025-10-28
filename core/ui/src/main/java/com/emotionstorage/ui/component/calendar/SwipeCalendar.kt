@@ -83,15 +83,13 @@ fun SwipeCalendar(
         // update calendar year month on page change
         onCalendarYearMonthSelect(currentYearMonth)
     }
-    LaunchedEffect(calendarYearMonth, currentYearMonth) {
+    LaunchedEffect(calendarYearMonth) {
         // scroll to target page on calendar year month change
         // this is needed when calendar year month is changed outside swiper calendar component
-        if (calendarYearMonth != currentYearMonth) {
-            coroutineScope.launch {
-                pagerState.animateScrollToPage(
-                    ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt(),
-                )
-            }
+        coroutineScope.launch {
+            pagerState.animateScrollToPage(
+                ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt(),
+            )
         }
     }
 
