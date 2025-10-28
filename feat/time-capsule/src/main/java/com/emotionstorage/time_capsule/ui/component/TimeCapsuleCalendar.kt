@@ -75,12 +75,12 @@ fun TimeCapsuleCalendar(
                 textAlign = TextAlign.Center,
             )
         },
-        dateItem = { modifier, date ->
+        dateItem = { modifier, pageYearMonth, date ->
             DateItem(
                 modifier = modifier.padding(bottom = 6.dp),
                 date = date,
                 onClick = onDateSelect,
-                isShown = date.year == calendarYearMonth.year && date.month == calendarYearMonth.month,
+                isShown = date.year == pageYearMonth.year && date.month == pageYearMonth.month,
                 isFilled = date in timeCapsuleDates,
                 isToday = date == LocalDate.now(),
             )

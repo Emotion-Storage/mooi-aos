@@ -27,6 +27,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 @Composable
@@ -48,7 +49,7 @@ fun SwipeCalendar(
             textAlign = TextAlign.Center,
         )
     },
-    dateItem: @Composable (modifier: Modifier, date: LocalDate) -> Unit = { modifier, date ->
+    dateItem: @Composable (modifier: Modifier, pageYearMonth: YearMonth, date: LocalDate) -> Unit = { modifier, pageYearMonth, date ->
         Text(
             modifier = modifier.padding(bottom = 6.dp),
             text = date.dayOfMonth.toString(),
@@ -58,8 +59,12 @@ fun SwipeCalendar(
         )
     },
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     val totalMonths = ChronoUnit.MONTHS.between(minYearMonth, maxYearMonth).toInt() + 1
-    val initialPageIndex = ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
+    val initialPageIndex = remember(calendarYearMonth) {
+        ChronoUnit.MONTHS.between(minYearMonth, calendarYearMonth).toInt()
+    }
     val pagerState = rememberPagerState(initialPage = initialPageIndex, pageCount = { totalMonths })
 
     val currentYearMonth by remember {
@@ -72,7 +77,6 @@ fun SwipeCalendar(
         onCalendarYearMonthSelect(currentYearMonth)
     }
 
-    val coroutineScope = rememberCoroutineScope()
     Column(modifier = modifier) {
         CalendarYearMonthIndicator(
             calendarYearMonth = currentYearMonth,
@@ -80,8 +84,9 @@ fun SwipeCalendar(
             maxYearMonth = maxYearMonth,
             onCalendarYearMonthSelect = {
                 coroutineScope.launch {
-                    val targetIndex = ChronoUnit.MONTHS.between(minYearMonth, it).toInt()
-                    pagerState.animateScrollToPage(targetIndex.coerceIn(0, totalMonths - 1))
+                    pagerState.animateScrollToPage(
+                        ChronoUnit.MONTHS.between(minYearMonth, it).toInt()
+                    )
                 }
             },
             showYearMonthDropDownIcon = showYearMonthDropDownIcon,
@@ -99,18 +104,19 @@ fun SwipeCalendar(
 
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             verticalAlignment = Alignment.Top,
         ) { page ->
-            val yearMonth = minYearMonth.plusMonths(page.toLong())
+            val pageYearMonth = minYearMonth.plusMonths(page.toLong())
             BaseCalendar(
                 minYearMonth = minYearMonth,
                 maxYearMonth = maxYearMonth,
-                calendarYearMonth = yearMonth,
-                onCalendarYearMonthSelect = onCalendarYearMonthSelect,
+                calendarYearMonth = pageYearMonth,
                 showYearMonthIndicator = false,
                 showWeekDates = false,
-                dateItem = dateItem,
+                dateItem = { modifier, date ->
+                    dateItem(modifier, pageYearMonth, date)
+                },
             )
         }
     }
@@ -135,6 +141,13 @@ private fun SwipeCalendarPreview() {
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),
                 onCalendarYearMonthSelect = setCalendarYearMonth,
+                dateItem = { modifier, pageYearMonth, date ->
+                    Text(
+                        modifier = modifier.padding(bottom = 6.dp),
+                        text = date.format(DateTimeFormatter.ofPattern("MM/dd")),
+                        color = if (date.monthValue == pageYearMonth.monthValue) Color.White else Color.Gray
+                    )
+                }
             )
         }
     }
