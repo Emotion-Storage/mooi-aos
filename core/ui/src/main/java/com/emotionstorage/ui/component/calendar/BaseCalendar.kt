@@ -1,12 +1,11 @@
 package com.emotionstorage.ui.component.calendar
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +16,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.common.getWeekDatesOfTargetMonth
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.YearMonth
@@ -28,12 +26,10 @@ fun BaseCalendar(
     maxYearMonth: YearMonth,
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
-    showYearMonthIndicator: Boolean = true,
     onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    showYearMonthDropDownIcon: Boolean = false,
+    showYearMonthDropDownIcon: Boolean = true,
     onYearMonthDropDownIconClick: () -> Unit = {},
     calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
-    showWeekDates: Boolean = true,
     weekDateItem: @Composable (modifier: Modifier, label: String) -> Unit = { modifier, label ->
         Text(
             modifier = modifier.padding(vertical = 16.dp),
@@ -58,40 +54,28 @@ fun BaseCalendar(
             modifier
                 .background(MooiTheme.colorScheme.background),
     ) {
-        if (showYearMonthIndicator) {
-            // year & month selection
-            CalendarYearMonthIndicator(
-                calendarYearMonth = calendarYearMonth,
-                minYearMonth = minYearMonth,
-                maxYearMonth = maxYearMonth,
-                onCalendarYearMonthSelect = onCalendarYearMonthSelect,
-                showYearMonthDropDownIcon = showYearMonthDropDownIcon,
-                onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
-                calendarYearMonthTextStyle = calendarYearMonthTextStyle,
-            )
-        }
+        CalendarYearMonthSelector(
+            calendarYearMonth = calendarYearMonth,
+            minYearMonth = minYearMonth,
+            maxYearMonth = maxYearMonth,
+            onCalendarYearMonthSelect = onCalendarYearMonthSelect,
+            showYearMonthDropDownIcon = showYearMonthDropDownIcon,
+            onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
+            calendarYearMonthTextStyle = calendarYearMonthTextStyle,
+        )
 
-        // calendar dates
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(7),
+        Row(
             modifier = Modifier.fillMaxWidth(),
         ) {
-            if (showWeekDates) {
-                items(
-                    items = listOf("일", "월", "화", "수", "목", "금", "토"),
-                    key = { it },
-                ) { label ->
-                    weekDateItem(Modifier.weight(1f), label)
-                }
-            }
-
-            items(
-                items = calendarYearMonth.getWeekDatesOfTargetMonth(),
-                key = { it.toString() },
-            ) { date ->
-                dateItem(Modifier.weight(1f), date)
+            listOf("일", "월", "화", "수", "목", "금", "토").forEach {
+                weekDateItem(Modifier.weight(1f), it)
             }
         }
+
+        CalendarDates(
+            calendarYearMonth = calendarYearMonth,
+            dateItem = dateItem,
+        )
     }
 }
 
@@ -101,11 +85,22 @@ private fun BaseCalendarPreview() {
     val (calendarYearMonth, setCalendarYearMonth) = remember { mutableStateOf(YearMonth.now()) }
 
     MooiTheme {
-        BaseCalendar(
-            calendarYearMonth = calendarYearMonth,
-            minYearMonth = YearMonth.now().minusYears(1),
-            maxYearMonth = YearMonth.now().plusYears(1),
-            onCalendarYearMonthSelect = setCalendarYearMonth,
-        )
+        Column(
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            BaseCalendar(
+                calendarYearMonth = calendarYearMonth,
+                minYearMonth = YearMonth.now().minusYears(1),
+                maxYearMonth = YearMonth.now().plusYears(1),
+                onCalendarYearMonthSelect = setCalendarYearMonth,
+            )
+
+            BaseCalendar(
+                calendarYearMonth = calendarYearMonth,
+                minYearMonth = YearMonth.now().minusYears(1),
+                maxYearMonth = YearMonth.now().plusYears(1),
+                showYearMonthDropDownIcon = false,
+            )
+        }
     }
 }

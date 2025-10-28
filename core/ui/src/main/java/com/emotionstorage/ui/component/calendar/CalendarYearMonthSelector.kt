@@ -29,7 +29,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import java.time.YearMonth
 
 @Composable
-fun CalendarYearMonthIndicator(
+fun CalendarYearMonthSelector(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     minYearMonth: YearMonth = YearMonth.now(),
@@ -128,13 +128,13 @@ private fun CalendarYearMonthIndicatorPreview() {
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            CalendarYearMonthIndicator(
+            CalendarYearMonthSelector(
                 calendarYearMonth = calendarYearMonth,
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),
                 onCalendarYearMonthSelect = setCalendarYearMonth,
             )
-            CalendarYearMonthIndicator(
+            CalendarYearMonthSelector(
                 calendarYearMonth = calendarYearMonth,
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),

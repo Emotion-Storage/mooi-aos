@@ -37,7 +37,7 @@ fun SwipeCalendar(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    showYearMonthDropDownIcon: Boolean = false,
+    showYearMonthDropDownIcon: Boolean = true,
     onYearMonthDropDownIconClick: () -> Unit = {},
     calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
     weekDateItem: @Composable (modifier: Modifier, label: String) -> Unit = { modifier, label ->
@@ -94,7 +94,7 @@ fun SwipeCalendar(
     }
 
     Column(modifier = modifier) {
-        CalendarYearMonthIndicator(
+        CalendarYearMonthSelector(
             calendarYearMonth = currentYearMonth,
             minYearMonth = minYearMonth,
             maxYearMonth = maxYearMonth,
@@ -124,12 +124,8 @@ fun SwipeCalendar(
             verticalAlignment = Alignment.Top,
         ) { page ->
             val pageYearMonth = minYearMonth.plusMonths(page.toLong())
-            BaseCalendar(
-                minYearMonth = minYearMonth,
-                maxYearMonth = maxYearMonth,
+            CalendarDates(
                 calendarYearMonth = pageYearMonth,
-                showYearMonthIndicator = false,
-                showWeekDates = false,
                 dateItem = { modifier, date ->
                     dateItem(modifier, pageYearMonth, date)
                 },
