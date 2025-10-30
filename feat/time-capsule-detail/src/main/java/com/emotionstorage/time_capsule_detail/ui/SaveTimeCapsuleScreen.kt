@@ -42,11 +42,11 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState
-import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
+import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.OpenAfter
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleViewModel
 import com.emotionstorage.time_capsule_detail.ui.component.SaveTimeCapsuleButton
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSpeechBubble
-import com.emotionstorage.time_capsule_detail.ui.modal.CheckArriveDateModal
+import com.emotionstorage.time_capsule_detail.ui.modal.CheckOpenDateModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
@@ -97,7 +97,7 @@ fun SaveTimeCapsuleScreen(
     } else {
         StatelessSaveTimeCapsuleScreen(
             modifier = modifier,
-            snackbarHostState = snackState,
+            snackbarState = snackState,
             state = state.value,
             onAction = viewModel::onAction,
             showSavedModal = showSavedModal,
@@ -113,7 +113,7 @@ fun SaveTimeCapsuleScreen(
 @Composable
 private fun StatelessSaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    snackbarState: SnackbarHostState = remember { SnackbarHostState() },
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
     showSavedModal: Boolean = false,
@@ -148,10 +148,10 @@ private fun StatelessSaveTimeCapsuleScreen(
         )
     }
 
-    if (state.arriveAt != null) {
-        CheckArriveDateModal(
+    if (state.openDateTime != null) {
+        CheckOpenDateModal(
             createdAt = state.createdAt.toLocalDate(),
-            arriveAt = state.arriveAt.toLocalDate(),
+            openAt = state.openDateTime.toLocalDate(),
             isModalOpen = showCheckOpenDateModal,
             onDismissRequest = {
                 setShowCheckOpenDateModal(false)
@@ -180,7 +180,7 @@ private fun StatelessSaveTimeCapsuleScreen(
         },
         snackbarHost = {
             AppSnackbarHost(
-                hostState = snackbarHostState,
+                hostState = snackbarState,
                 gravity = Gravity.TOP,
             ) { snackbarData ->
                 // todo: change toast duration to 4s
@@ -234,10 +234,10 @@ private fun StatelessSaveTimeCapsuleScreen(
                     onToolTipClick = { setShowToolTip(true) },
                 )
                 SaveTimeCapsuleGrid(
-                    arriveAt = state.arriveAt?.toLocalDate(),
-                    arriveAfter = state.arriveAfter,
-                    onSelectArriveAfter = {
-                        onAction(SaveTimeCapsuleAction.SelectArriveAfter(it))
+                    openAt = state.openDateTime?.toLocalDate(),
+                    openAfter = state.openAfter,
+                    onSelectOpenAfter = {
+                        onAction(SaveTimeCapsuleAction.SelectOpenAfter(it))
                     },
                     onOpenDatePicker = {
                         setShowDatePicker(true)
@@ -259,14 +259,14 @@ private fun StatelessSaveTimeCapsuleScreen(
                     isNewTimeCapsule = state.isNewTimeCapsule,
                     createdAt = state.createdAt,
                     saveAt = state.saveAt,
-                    arriveAt = state.arriveAt,
+                    openAt = state.openDateTime,
                     emotions = state.emotions,
                 )
 
                 SaveTimeCapsuleButton(
                     isNewTimeCapsule = state.isNewTimeCapsule,
                     expireAt = state.expireAt,
-                    enabled = state.arriveAt != null,
+                    enabled = state.openDateTime != null,
                     onSave = {
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
@@ -289,9 +289,9 @@ private fun StatelessSaveTimeCapsuleScreen(
                     // reset calendar year month to now
                     onAction(SaveTimeCapsuleAction.SelectCalendarYearMonth(YearMonth.now()))
                 },
-                selectedDate = state.arriveAt?.toLocalDate(),
+                selectedDate = state.openDateTime?.toLocalDate(),
                 onDateSelect = {
-                    onAction(SaveTimeCapsuleAction.SelectArriveAt(it))
+                    onAction(SaveTimeCapsuleAction.SelectOpenDate(it))
                     setShowDatePicker(false)
                 },
                 calendarYearMonth = state.calendarYearMonth,
@@ -371,9 +371,9 @@ private fun SaveTimeCapsuleTitle(
 @Composable
 fun SaveTimeCapsuleGrid(
     modifier: Modifier = Modifier,
-    arriveAt: LocalDate? = null,
-    arriveAfter: ArriveAfter? = null,
-    onSelectArriveAfter: (ArriveAfter?) -> Unit = {},
+    openAt: LocalDate? = null,
+    openAfter: OpenAfter? = null,
+    onSelectOpenAfter: (OpenAfter?) -> Unit = {},
     onOpenDatePicker: () -> Unit = {},
 ) {
     Column(
@@ -395,23 +395,23 @@ fun SaveTimeCapsuleGrid(
         Column(
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            for (arriveAfters in ArriveAfter.entries.chunked(3)) {
+            for (arriveAfters in OpenAfter.entries.chunked(3)) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     for (it in arriveAfters) {
-                        ArriveAfterGridItem(
-                            arriveAfter = it,
-                            isSelected = it == arriveAfter,
+                        OpenAfterGridItem(
+                            openAfter = it,
+                            isSelected = it == openAfter,
                             onSelect = {
-                                if (it == arriveAfter) {
+                                if (it == openAfter) {
                                     // remove selection on double click
-                                    onSelectArriveAfter(null)
+                                    onSelectOpenAfter(null)
                                 } else {
-                                    onSelectArriveAfter(it)
+                                    onSelectOpenAfter(it)
                                 }
                             },
-                            arriveAt = arriveAt,
+                            openAt = openAt,
                             onDatePickerClick = {
                                 onOpenDatePicker()
                             },
@@ -424,12 +424,12 @@ fun SaveTimeCapsuleGrid(
 }
 
 @Composable
-private fun RowScope.ArriveAfterGridItem(
-    arriveAfter: ArriveAfter,
+private fun RowScope.OpenAfterGridItem(
+    openAfter: OpenAfter,
     modifier: Modifier = Modifier,
     onSelect: () -> Unit = {},
     isSelected: Boolean = false,
-    arriveAt: LocalDate? = null,
+    openAt: LocalDate? = null,
     onDatePickerClick: (() -> Unit)? = null,
 ) {
     Box(
@@ -446,13 +446,13 @@ private fun RowScope.ArriveAfterGridItem(
     ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
-            text = arriveAfter.label,
+            text = openAfter.label,
             style = MooiTheme.typography.body8,
             color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
         )
     }
 
-    if (arriveAfter == ArriveAfter.AFTER_CUSTOM && isSelected) {
+    if (openAfter == OpenAfter.AFTER_CUSTOM && isSelected) {
         Row(
             modifier =
                 Modifier
@@ -467,7 +467,7 @@ private fun RowScope.ArriveAfterGridItem(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            if (arriveAt == null) {
+            if (openAt == null) {
                 Text(
                     "날짜를 선택해주세요",
                     style = MooiTheme.typography.body8,
@@ -475,7 +475,7 @@ private fun RowScope.ArriveAfterGridItem(
                 )
             } else {
                 Text(
-                    arriveAt.toKorDate(),
+                    openAt.toKorDate(),
                     style = MooiTheme.typography.body8,
                     color = Color.White,
                 )

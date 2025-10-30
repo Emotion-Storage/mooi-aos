@@ -32,11 +32,11 @@ fun TimeCapsuleSpeechBubble(
     saveAt: LocalDateTime,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = false,
-    arriveAt: LocalDateTime? = null,
+    openAt: LocalDateTime? = null,
     emotions: List<String> = emptyList(),
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        if (arriveAt != null) {
+        if (openAt != null) {
             Row(
                 modifier = Modifier.height(40.dp),
                 verticalAlignment = Alignment.CenterVertically,
@@ -49,7 +49,7 @@ fun TimeCapsuleSpeechBubble(
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary),
                 )
                 Text(
-                    text = "${arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))} 에 열릴 예정이에요!",
+                    text = "${openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))} 에 열릴 예정이에요!",
                     style = MooiTheme.typography.body6,
                     color = MooiTheme.colorScheme.primary,
                 )
@@ -154,7 +154,7 @@ private fun TimeCapsuleSpeeckBubblePreview() {
                 isNewTimeCapsule = true,
                 createdAt = LocalDateTime.now(),
                 saveAt = LocalDateTime.now(),
-                arriveAt = LocalDateTime.now(),
+                openAt = LocalDateTime.now(),
                 emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
             )
             TimeCapsuleSpeechBubble(
@@ -165,7 +165,7 @@ private fun TimeCapsuleSpeeckBubblePreview() {
             TimeCapsuleSpeechBubble(
                 createdAt = LocalDateTime.now().minusHours(3),
                 saveAt = LocalDateTime.now(),
-                arriveAt = LocalDateTime.now(),
+                openAt = LocalDateTime.now(),
                 emotions = listOf("\uD83D\uDE14 서운함", "\uD83D\uDE0A 고마움", "\uD83E\uDD70 안정감"),
             )
         }
