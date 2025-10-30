@@ -22,6 +22,8 @@ import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
+private const val PAGE_SIZE = 15
+
 class TimeCapsuleRepositoryImpl @Inject constructor(
     private val remoteDataSource: TimeCapsuleRemoteDataSource,
     private val localDataSource: TimeCapsuleLocalDataSource,
@@ -135,7 +137,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         status: String,
     ): Flow<PagingData<TimeCapsule>> {
         return Pager(
-            config = PagingConfig(pageSize = 20),
+            config = PagingConfig(pageSize = PAGE_SIZE),
             remoteMediator = GetTimeCapsulesRemoteMediator(
                 remoteDataSource = remoteDataSource,
                 localDataSource = localDataSource,
