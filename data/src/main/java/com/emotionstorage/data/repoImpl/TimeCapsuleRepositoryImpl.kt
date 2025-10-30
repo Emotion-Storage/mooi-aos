@@ -1,5 +1,12 @@
 package com.emotionstorage.data.repoImpl
 
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.PagingSource
+import androidx.paging.map
+import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
@@ -10,14 +17,14 @@ import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.YearMonth
 import javax.inject.Inject
 
-private const val PAGE_LIMIT: Int = 30
-
 class TimeCapsuleRepositoryImpl @Inject constructor(
     private val remoteDataSource: TimeCapsuleRemoteDataSource,
+    private val localDataSource: TimeCapsuleLocalDataSource,
 ) : TimeCapsuleRepository {
     override suspend fun openArrivedTimeCapsule(id: Long): Flow<DataState<Unit>> =
         flow {
@@ -75,10 +82,11 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
+                // get favorite time capsules without pagination
                 val result =
                     remoteDataSource.getFavoriteTimeCapsules(
                         page = 1,
-                        limit = PAGE_LIMIT,
+                        limit = 30,
                         sortBy =
                             when (sortBy) {
                                 FavoriteSortBy.FAVORITE_AT -> "favorite"
@@ -93,6 +101,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
+    @Deprecated("Use getPagedTimeCapsules instead")
     override suspend fun getTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
@@ -107,7 +116,8 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                         startDate = startDate,
                         endDate = endDate,
                         page = page,
-                        limit = PAGE_LIMIT,
+                        // todo: implement pagination
+                        limit = 30,
                         status = status,
                     )
                 emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
@@ -117,6 +127,29 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 emit(DataState.Loading(isLoading = false))
             }
         }
+
+    @OptIn(ExperimentalPagingApi::class)
+    override suspend fun getPagedTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        status: String,
+    ): Flow<PagingData<TimeCapsule>> {
+        return Pager(
+            config = PagingConfig(pageSize = 20),
+            remoteMediator = GetTimeCapsulesRemoteMediator(
+                remoteDataSource = remoteDataSource,
+                localDataSource = localDataSource,
+                startDate = startDate,
+                endDate = endDate,
+                status = status,
+            ),
+            pagingSourceFactory = { localDataSource.pagingSource }
+        ).flow.map {
+            it.map { entity ->
+                TimeCapsuleMapper.toDomain(entity)
+            }
+        }
+    }
 
     override suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>> =
         flow {
