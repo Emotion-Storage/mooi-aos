@@ -1,21 +1,19 @@
 package com.emotionstorage.domain.useCase.timeCapsule
 
-import com.emotionstorage.domain.common.DataState
+import androidx.paging.PagingData
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import javax.inject.Inject
 
-@Deprecated("Use GetPagedTimeCapsulesOfDate instead")
-class GetTimeCapsulesOfDateUseCase @Inject constructor(
+class GetPagedTimeCapsulesOfDateUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    suspend operator fun invoke(date: LocalDate): Flow<DataState<List<TimeCapsule>>> =
-        timeCapsuleRepository.getTimeCapsules(
+    suspend operator fun invoke(date: LocalDate): Flow<PagingData<TimeCapsule>> =
+        timeCapsuleRepository.getPagedTimeCapsules(
             startDate = date,
             endDate = date,
-            page = 1,
             status = "arrived",
         )
 }
