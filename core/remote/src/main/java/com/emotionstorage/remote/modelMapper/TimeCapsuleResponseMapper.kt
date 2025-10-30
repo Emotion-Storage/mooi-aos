@@ -18,8 +18,9 @@ internal object TimeCapsuleResponseMapper {
                             emotion = emotion,
                         )
                     },
+                historyDate = it.historyDate,
                 createdAt = it.createdAt,
-                arriveAt = it.openAt,
+                openAt = it.openAt,
                 updatedAt = it.updatedAt,
             )
         }
@@ -40,8 +41,9 @@ internal object TimeCapsuleResponseMapper {
                 },
             comments = response.comments,
             note = response.note,
+            historyDate = response.historyDate,
             createdAt = response.createdAt,
-            arriveAt = response.openAt,
+            openAt = response.openAt,
             updatedAt = response.updatedAt,
         )
 }

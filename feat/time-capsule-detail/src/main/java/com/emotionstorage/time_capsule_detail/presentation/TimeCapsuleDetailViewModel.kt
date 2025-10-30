@@ -186,7 +186,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             timeCapsule = it,
-                            note = it.note ?: "",
+                            note = it.note,
                             isNoteChanged = false,
                         )
                     }
@@ -229,14 +229,14 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     @OptIn(OrbitExperimental::class)
     private suspend fun triggerUnlockModal() =
         subIntent {
-            if (state.timeCapsule == null || state.timeCapsule?.arriveAt == null) {
+            if (state.timeCapsule == null || state.timeCapsule?.openAt == null) {
                 Logger.e("invalid time capsule, ${state.timeCapsule}")
                 return@subIntent
             }
 
             // get required key count
             collectDataState(
-                flow = getRequiredKeyCount(state.timeCapsule?.arriveAt!!.toLocalDate()),
+                flow = getRequiredKeyCount(state.timeCapsule?.openAt!!.toLocalDate()),
                 onSuccess = { requiredKeyCount ->
                     // get key count
                     collectDataState(
@@ -247,7 +247,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                                     UnlockModalState(
                                         keyCount = keyCount,
                                         requiredKeyCount = requiredKeyCount,
-                                        arriveAt = state.timeCapsule?.arriveAt!!,
+                                        arriveAt = state.timeCapsule?.openAt!!,
                                     ),
                                 ),
                             )
