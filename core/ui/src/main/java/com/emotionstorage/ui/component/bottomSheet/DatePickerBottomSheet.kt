@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.common.getWeekDatesOfTargetMonth
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.calendar.SwipeCalendar
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -59,156 +60,98 @@ fun DatePickerBottomSheet(
     minDate: LocalDate = CALENDER_MIN_DATE,
     maxDate: LocalDate = LocalDate.now().plusYears(1),
 ) {
-    val scope = rememberCoroutineScope()
-
     BottomSheet(
         hideDragHandle = true,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 20.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp),
     ) {
-        Column(
+        val coroutineScope = rememberCoroutineScope()
+
+        SwipeCalendar(
             modifier =
-                modifier
-                    .fillMaxWidth()
-                    .height(356.dp),
-        ) {
-            // year & month selection
+                modifier.fillMaxWidth(),
+            calendarYearMonth = calendarYearMonth,
+            minYearMonth = YearMonth.from(minDate),
+            maxYearMonth = YearMonth.from(maxDate),
+            onCalendarYearMonthSelect = onYearMonthSelect,
+            showYearMonthDropDownIcon = true,
+            onYearMonthDropDownIconClick = onYearMonthDropdownClick,
+            weekDateItem = { modifier, label ->
+                Text(
+                    modifier = modifier.padding(bottom = 11.dp),
+                    text = label,
+                    style = MooiTheme.typography.caption5,
+                    color = MooiTheme.colorScheme.gray400,
+                    textAlign = TextAlign.Center,
+                )
+            },
+            dateItem = { modifier, pageYearMonth, date ->
+                DateItem(
+                    date = date,
+                    calendarYearMonth = pageYearMonth,
+                    minDate = minDate,
+                    maxDate = maxDate,
+                    selectedDate = selectedDate,
+                    modifier = modifier,
+                    onClick = {
+                        coroutineScope
+                            .launch { sheetState.hide() }
+                            .invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    onDateSelect(date)
+                                }
+                            }
+                    }
+                )
+            }
+        )
+    }
+}
+
+@Composable
+private fun DateItem(
+    date: LocalDate,
+    calendarYearMonth: YearMonth,
+    minDate: LocalDate,
+    maxDate: LocalDate,
+    modifier: Modifier = Modifier,
+    selectedDate: LocalDate? = null,
+    onClick: () -> Unit = {},
+) {
+    Box(
+        modifier = modifier.padding(vertical = 8.dp),
+    ) {
+        if (date.year == calendarYearMonth.year && date.month == calendarYearMonth.month) {
             Box(
                 modifier =
                     Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 18.dp),
-            ) {
-                if (YearMonth.from(minDate) < calendarYearMonth) {
-                    Image(
-                        modifier =
-                            Modifier
-                                .align(Alignment.CenterStart)
-                                .size(width = 8.dp, height = 14.dp)
-                                .clickable {
-                                    onYearMonthSelect(calendarYearMonth.minusMonths(1))
-                                },
-                        painter = painterResource(id = R.drawable.arrow_back),
-                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                        contentDescription = "",
-                    )
-                }
-
-                Row(
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center)
-                            .clickable(
-                                enabled = (calendarYearMonth < YearMonth.from(maxDate)),
-                                onClick = onYearMonthDropdownClick,
-                            ),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                ) {
-                    Text(
-                        text = "${calendarYearMonth.year}년 ${calendarYearMonth.monthValue}월",
-                        style = MooiTheme.typography.body8,
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                    )
-
-                    Image(
-                        modifier = Modifier.size(10.dp, 9.dp),
-                        painter = painterResource(id = R.drawable.toggle_down),
-                        contentDescription = "calendar year month picker",
-                    )
-                }
-
-                if (calendarYearMonth < YearMonth.from(maxDate)) {
-                    Image(
-                        modifier =
-                            Modifier
-                                .align(Alignment.CenterEnd)
-                                .size(width = 8.dp, height = 14.dp)
-                                .rotate(180f)
-                                .clickable {
-                                    onYearMonthSelect(calendarYearMonth.plusMonths(1))
-                                },
-                        painter = painterResource(id = R.drawable.arrow_back),
-                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                        contentDescription = "",
-                    )
-                }
-            }
-
-            // calendar dates
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(7),
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                items(
-                    items = listOf("일", "월", "화", "수", "목", "금", "토"),
-                    key = { it },
-                ) { label ->
-                    Text(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .padding(bottom = 11.dp),
-                        text = label,
-                        style = MooiTheme.typography.caption5,
-                        color = MooiTheme.colorScheme.gray400,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-
-                items(
-                    items = calendarYearMonth.getWeekDatesOfTargetMonth(),
-                    key = { it.toString() },
-                ) { date ->
-                    Box(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .padding(vertical = 8.dp),
-                    ) {
-                        if (date.year == calendarYearMonth.year && date.month == calendarYearMonth.month) {
-                            Box(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.Center)
-                                        .size(29.dp)
-                                        .offset(y = -0.5.dp)
-                                        .background(
-                                            if (selectedDate != date) {
-                                                Color.Transparent
-                                            } else {
-                                                MooiTheme.colorScheme.secondary
-                                            },
-                                            CircleShape,
-                                        ).clip(CircleShape)
-                                        .clickable(
-                                            enabled = date.isAfter(minDate) && date.isBefore(maxDate),
-                                            onClick = {
-                                                scope
-                                                    .launch { sheetState.hide() }
-                                                    .invokeOnCompletion {
-                                                        if (!sheetState.isVisible) {
-                                                            onDateSelect(date)
-                                                        }
-                                                    }
-                                            },
-                                        ),
-                            )
-                            Text(
-                                modifier = Modifier.align(Alignment.Center),
-                                text = date.dayOfMonth.toString(),
-                                style = MooiTheme.typography.body8,
-                                color =
-                                    Color.White.copy(
-                                        alpha = if (date.isAfter(minDate) && date.isBefore(maxDate)) 1f else 0.13f,
-                                    ),
-                            )
-                        }
-                    }
-                }
-            }
+                        .align(Alignment.Center)
+                        .size(29.dp)
+                        .offset(y = -0.5.dp)
+                        .background(
+                            if (selectedDate != date) {
+                                Color.Transparent
+                            } else {
+                                MooiTheme.colorScheme.secondary
+                            },
+                            CircleShape,
+                        )
+                        .clip(CircleShape)
+                        .clickable(
+                            enabled = date.isAfter(minDate) && date.isBefore(maxDate),
+                            onClick = onClick,
+                        ),
+            )
+            Text(
+                modifier = Modifier.align(Alignment.Center),
+                text = date.dayOfMonth.toString(),
+                style = MooiTheme.typography.body8,
+                color =
+                    Color.White.copy(
+                        alpha = if (date.isAfter(minDate) && date.isBefore(maxDate)) 1f else 0.13f,
+                    ),
+            )
         }
     }
 }
