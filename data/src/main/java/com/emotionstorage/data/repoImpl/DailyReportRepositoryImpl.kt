@@ -1,6 +1,6 @@
 package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.data.dataSource.DailyReportRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.modelMapper.DailyReportMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.DailyReport

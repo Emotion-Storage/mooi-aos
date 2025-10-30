@@ -1,7 +1,7 @@
 package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.data.dataSource.UserLocalDataSource
-import com.emotionstorage.data.dataSource.UserRemoteDataSource
+import com.emotionstorage.data.dataSource.local.UserLocalDataSource
+import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User

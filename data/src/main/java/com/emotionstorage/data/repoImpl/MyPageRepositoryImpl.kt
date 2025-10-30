@@ -1,7 +1,7 @@
 package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.data.dataSource.MyPageRemoteDataSource
-import com.emotionstorage.data.dataSource.UserRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.MyPageRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.MyPage

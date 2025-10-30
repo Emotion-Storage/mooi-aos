@@ -1,6 +1,6 @@
 package com.emotionstorage.local.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.data.dataSource.local.UserLocalDataSource
 import com.emotionstorage.data.model.UserEntity
 import com.emotionstorage.local.modelMapper.UserMapper
 import com.emotionstorage.local.room.dao.UserDao

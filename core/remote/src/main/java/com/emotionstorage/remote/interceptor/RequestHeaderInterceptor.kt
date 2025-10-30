@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.interceptor
 
-import com.emotionstorage.data.dataSource.SessionLocalDataSource
+import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

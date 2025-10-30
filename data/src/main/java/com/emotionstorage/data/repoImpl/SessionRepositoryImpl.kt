@@ -1,6 +1,6 @@
 package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.data.dataSource.SessionLocalDataSource
+import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.modelMapper.SessionMapper
 import com.emotionstorage.domain.model.Session
 import com.emotionstorage.domain.repo.SessionRepository

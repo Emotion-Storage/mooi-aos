@@ -1,7 +1,7 @@
 package com.emotionstorage.local.di
 
-import com.emotionstorage.data.dataSource.SessionLocalDataSource
-import com.emotionstorage.data.dataSource.UserLocalDataSource
+import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
+import com.emotionstorage.data.dataSource.local.UserLocalDataSource
 import com.emotionstorage.local.dataSourceImpl.SessionLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.UserLocalDataSourceImpl
 import dagger.Binds

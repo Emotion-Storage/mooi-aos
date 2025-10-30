@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.NotificationSettingRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.NotificationSettingRemoteDataSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.NotificationSettings
 import com.emotionstorage.remote.api.MyPageApiService
