@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -96,9 +95,9 @@ fun DatePickerBottomSheet(
                                     onDateSelect(date)
                                 }
                             }
-                    }
+                    },
                 )
-            }
+            },
         )
     }
 }
@@ -130,8 +129,7 @@ private fun DateItem(
                                 MooiTheme.colorScheme.secondary
                             },
                             CircleShape,
-                        )
-                        .clip(CircleShape)
+                        ).clip(CircleShape)
                         .clickable(
                             enabled = date.isAfter(minDate) && date.isBefore(maxDate),
                             onClick = onClick,
