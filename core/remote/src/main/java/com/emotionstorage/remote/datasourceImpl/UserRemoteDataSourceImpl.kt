@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.UserRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.remote.api.UserApiService

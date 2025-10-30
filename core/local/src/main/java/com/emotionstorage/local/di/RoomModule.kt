@@ -34,4 +34,8 @@ internal object RoomModule {
     @Provides
     @Singleton
     fun provideSessionDao(appDatabase: AppDatabase) = appDatabase.sessionDao()
+
+    @Provides
+    @Singleton
+    fun provideTimeCapsuleDao(appDatabase: AppDatabase) = appDatabase.timeCapsuleDao()
 }
