@@ -7,6 +7,7 @@ import com.emotionstorage.local.model.SessionLocal
 import com.emotionstorage.local.model.TimeCapsuleLocal
 import com.emotionstorage.local.model.UserLocal
 import com.emotionstorage.local.room.dao.SessionDao
+import com.emotionstorage.local.room.dao.TimeCapsuleDao
 import com.emotionstorage.local.room.dao.UserDao
 
 object AppDatabaseConstant {
@@ -32,5 +33,5 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun sessionDao(): SessionDao
 
-//    abstract fun timeCapsuleDao(): TimeCapsuleDao
+    abstract fun timeCapsuleDao(): TimeCapsuleDao
 }
