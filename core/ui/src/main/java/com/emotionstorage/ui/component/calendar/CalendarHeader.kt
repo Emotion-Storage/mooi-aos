@@ -29,15 +29,15 @@ import com.emotionstorage.ui.theme.MooiTheme
 import java.time.YearMonth
 
 @Composable
-fun CalendarYearMonthSelector(
+fun CalendarHeader(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     minYearMonth: YearMonth = YearMonth.now(),
     maxYearMonth: YearMonth = YearMonth.now(),
-    onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    showYearMonthDropDownIcon: Boolean = false,
-    onYearMonthDropDownIconClick: () -> Unit = {},
-    calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
+    onYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
+    showDropDownIcon: Boolean = false,
+    onDropDownIconClick: () -> Unit = {},
+    headerTextStyle: TextStyle = MooiTheme.typography.mainButton,
 ) {
     Box(
         modifier =
@@ -51,7 +51,7 @@ fun CalendarYearMonthSelector(
                     Modifier
                         .align(Alignment.CenterStart),
                 onClick = {
-                    onCalendarYearMonthSelect(calendarYearMonth.minusMonths(1))
+                    onYearMonthSelect(calendarYearMonth.minusMonths(1))
                 },
             )
         }
@@ -61,20 +61,20 @@ fun CalendarYearMonthSelector(
                 Modifier
                     .align(Alignment.Center)
                     .clickable(
-                        enabled = showYearMonthDropDownIcon,
-                        onClick = onYearMonthDropDownIconClick,
+                        enabled = showDropDownIcon,
+                        onClick = onDropDownIconClick,
                     ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             Text(
                 text = "${calendarYearMonth.year}년 ${calendarYearMonth.monthValue}월",
-                style = calendarYearMonthTextStyle,
+                style = headerTextStyle,
                 color = Color.White,
                 textAlign = TextAlign.Center,
             )
 
-            if (showYearMonthDropDownIcon) {
+            if (showDropDownIcon) {
                 Image(
                     modifier = Modifier.size(10.dp, 9.dp),
                     painter = painterResource(id = R.drawable.toggle_down),
@@ -89,7 +89,7 @@ fun CalendarYearMonthSelector(
                     .align(Alignment.CenterEnd)
                     .rotate(180f),
                 onClick = {
-                    onCalendarYearMonthSelect(calendarYearMonth.plusMonths(1))
+                    onYearMonthSelect(calendarYearMonth.plusMonths(1))
                 },
             )
         }
@@ -128,18 +128,18 @@ private fun CalendarYearMonthIndicatorPreview() {
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            CalendarYearMonthSelector(
+            CalendarHeader(
                 calendarYearMonth = calendarYearMonth,
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),
-                onCalendarYearMonthSelect = setCalendarYearMonth,
+                onYearMonthSelect = setCalendarYearMonth,
             )
-            CalendarYearMonthSelector(
+            CalendarHeader(
                 calendarYearMonth = calendarYearMonth,
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),
-                onCalendarYearMonthSelect = setCalendarYearMonth,
-                showYearMonthDropDownIcon = true,
+                onYearMonthSelect = setCalendarYearMonth,
+                showDropDownIcon = true,
             )
         }
     }

@@ -50,7 +50,7 @@ fun TimeCapsuleCalendar(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    onYearMonthDropDownIconClick: () -> Unit = {},
+    onDropDownIconClick: () -> Unit = {},
     timeCapsuleDates: List<LocalDate> = emptyList(),
     onDateSelect: (LocalDate) -> Unit = {},
 ) {
@@ -60,8 +60,8 @@ fun TimeCapsuleCalendar(
         minYearMonth = CALENDAR_MIN_YEAR_MONTH,
         maxYearMonth = YearMonth.now(),
         onCalendarYearMonthSelect = onCalendarYearMonthSelect,
-        showYearMonthDropDownIcon = true,
-        onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
+        showDropDownIcon = true,
+        onDropDownIconClick = onDropDownIconClick,
         weekDateItem = { modifier, label ->
             Text(
                 modifier = modifier.padding(top = 17.dp, bottom = 16.dp),

@@ -303,7 +303,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                     setShowDatePicker(false)
                     setShowYearMonthPicker(true)
                 },
-                minDate = state.saveAt.toLocalDate(),
+                minDate = state.saveAt.toLocalDate().plusDays(1),
                 maxDate = state.saveAt.plusYears(1).toLocalDate(),
             )
         }

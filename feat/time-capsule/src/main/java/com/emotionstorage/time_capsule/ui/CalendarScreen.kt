@@ -219,7 +219,7 @@ private fun StatelessCalendarScreen(
                     onCalendarYearMonthSelect = {
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
-                    onYearMonthDropDownIconClick = {
+                    onDropDownIconClick = {
                         setShowYearMonthBottomSheet(true)
                     },
                     timeCapsuleDates = state.timeCapsuleDates,

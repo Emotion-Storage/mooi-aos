@@ -27,9 +27,9 @@ fun BaseCalendar(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    showYearMonthDropDownIcon: Boolean = true,
-    onYearMonthDropDownIconClick: () -> Unit = {},
-    calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
+    showDropDownIcon: Boolean = true,
+    onDropDownIconClick: () -> Unit = {},
+    headerTextStyle: TextStyle = MooiTheme.typography.mainButton,
     weekDateItem: @Composable (modifier: Modifier, label: String) -> Unit = { modifier, label ->
         Text(
             modifier = modifier.padding(vertical = 16.dp),
@@ -54,14 +54,14 @@ fun BaseCalendar(
             modifier
                 .background(MooiTheme.colorScheme.background),
     ) {
-        CalendarYearMonthSelector(
+        CalendarHeader(
             calendarYearMonth = calendarYearMonth,
             minYearMonth = minYearMonth,
             maxYearMonth = maxYearMonth,
-            onCalendarYearMonthSelect = onCalendarYearMonthSelect,
-            showYearMonthDropDownIcon = showYearMonthDropDownIcon,
-            onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
-            calendarYearMonthTextStyle = calendarYearMonthTextStyle,
+            onYearMonthSelect = onCalendarYearMonthSelect,
+            showDropDownIcon = showDropDownIcon,
+            onDropDownIconClick = onDropDownIconClick,
+            headerTextStyle = headerTextStyle,
         )
 
         Row(
@@ -99,7 +99,7 @@ private fun BaseCalendarPreview() {
                 calendarYearMonth = calendarYearMonth,
                 minYearMonth = YearMonth.now().minusYears(1),
                 maxYearMonth = YearMonth.now().plusYears(1),
-                showYearMonthDropDownIcon = false,
+                showDropDownIcon = false,
             )
         }
     }
