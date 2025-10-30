@@ -1,22 +1,16 @@
 package com.emotionstorage.ui.component.bottomSheet
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
@@ -29,15 +23,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.common.getWeekDatesOfTargetMonth
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.calendar.SwipeCalendar
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
@@ -64,24 +53,29 @@ fun DatePickerBottomSheet(
         hideDragHandle = true,
         sheetState = sheetState,
         onDismissRequest = onDismissRequest,
-        contentPadding = PaddingValues(horizontal = 16.dp),
+        contentPadding = PaddingValues(start = 16.dp, end = 16.dp),
     ) {
         val coroutineScope = rememberCoroutineScope()
 
         SwipeCalendar(
             modifier =
-                modifier.fillMaxWidth(),
+                modifier
+                    .fillMaxWidth()
+                    // fixed calendar height
+                    .heightIn(min = 353.dp)
+                    .padding(top = 20.dp, bottom = 35.dp),
             calendarYearMonth = calendarYearMonth,
             minYearMonth = YearMonth.from(minDate),
             maxYearMonth = YearMonth.from(maxDate),
             onCalendarYearMonthSelect = onYearMonthSelect,
-            showYearMonthDropDownIcon = true,
-            onYearMonthDropDownIconClick = onYearMonthDropdownClick,
+            showDropDownIcon = true,
+            onDropDownIconClick = onYearMonthDropdownClick,
+            headerTextStyle = MooiTheme.typography.body7.copy(color = Color.White),
             weekDateItem = { modifier, label ->
                 Text(
-                    modifier = modifier.padding(bottom = 11.dp),
+                    modifier = modifier.padding(top = 17.dp, bottom = 14.dp),
                     text = label,
-                    style = MooiTheme.typography.caption5,
+                    style = MooiTheme.typography.caption6,
                     color = MooiTheme.colorScheme.gray400,
                     textAlign = TextAlign.Center,
                 )
@@ -146,7 +140,7 @@ private fun DateItem(
             Text(
                 modifier = Modifier.align(Alignment.Center),
                 text = date.dayOfMonth.toString(),
-                style = MooiTheme.typography.body8,
+                style = MooiTheme.typography.body7,
                 color =
                     Color.White.copy(
                         alpha = if (date.isAfter(minDate) && date.isBefore(maxDate)) 1f else 0.13f,
@@ -157,7 +151,7 @@ private fun DateItem(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
+@Preview(showBackground = true)
 @Composable
 private fun DatePickerBottomSheetPreview() {
     MooiTheme {
@@ -173,7 +167,7 @@ private fun DatePickerBottomSheetPreview() {
                     rememberStandardBottomSheetState(
                         initialValue = SheetValue.Expanded,
                     ),
-                selectedDate = LocalDate.now(),
+                selectedDate = LocalDate.of(2025, 11, 3),
                 minDate = LocalDate.now().minusDays(7),
                 maxDate = LocalDate.now().plusDays(10),
             )
