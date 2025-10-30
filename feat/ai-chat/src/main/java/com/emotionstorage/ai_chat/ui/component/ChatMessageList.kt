@@ -28,7 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.model.ChatMessage.MessageSource
-import com.emotionstorage.common.toKorDate
+import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -87,7 +87,7 @@ private fun DateDivider(
                     .background(Color.Gray),
         )
         Text(
-            text = date.toKorDate(),
+            text = date.toKorDateWithWeekDay(),
             style = MooiTheme.typography.body3,
             color = Color.Gray,
         )

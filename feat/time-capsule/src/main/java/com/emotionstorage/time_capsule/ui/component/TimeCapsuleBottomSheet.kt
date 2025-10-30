@@ -33,7 +33,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.common.toKorDate
+import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Status
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
@@ -71,7 +71,7 @@ fun TimeCapsuleBottomSheet(
                 Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 1.dp),
-            text = date.toKorDate(),
+            text = date.toKorDateWithWeekDay(),
             style = MooiTheme.typography.body4,
             textAlign = TextAlign.Start,
         )

@@ -6,7 +6,8 @@ import java.time.temporal.ChronoUnit
 
 fun LocalDate.getDaysBetween(other: LocalDate): Int = ChronoUnit.DAYS.between(this, other).toInt()
 
-fun LocalDate.toKorDate(): String = "${this.year}년 ${this.monthValue}월 ${this.dayOfMonth}일 ${this.getKorDayOfWeek()}"
+fun LocalDate.toKorDate(): String = "${this.year}년 ${this.monthValue}월 ${this.dayOfMonth}일"
+fun LocalDate.toKorDateWithWeekDay(): String = "${this.year}년 ${this.monthValue}월 ${this.dayOfMonth}일 ${this.getKorDayOfWeek()}"
 
 fun LocalDate.getKorDayOfWeek(): String =
     when (this.getDayOfWeek()) {
