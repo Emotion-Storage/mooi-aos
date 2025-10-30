@@ -4,6 +4,7 @@ import com.emotionstorage.data.dataSource.SessionLocalDataSource
 import com.emotionstorage.data.model.SessionEntity
 import com.emotionstorage.local.modelMapper.SessionMapper
 import com.emotionstorage.local.room.dao.SessionDao
+import com.orhanobut.logger.Logger
 import javax.inject.Inject
 
 class SessionLocalDataSourceImpl
@@ -16,6 +17,7 @@ class SessionLocalDataSourceImpl
                 sessionDao.insertSession(SessionMapper.toLocal(session))
                 true
             } catch (e: Exception) {
+                Logger.e("saveSession error: $e")
                 false
             }
 
@@ -25,6 +27,7 @@ class SessionLocalDataSourceImpl
                     SessionMapper.toEntity(it)
                 }
             } catch (e: Exception) {
+                Logger.e("getSession error: $e")
                 null
             }
 
@@ -33,6 +36,7 @@ class SessionLocalDataSourceImpl
                 sessionDao.deleteSession()
                 true
             } catch (e: Exception) {
+                Logger.e("deleteSession error: $e")
                 false
             }
     }

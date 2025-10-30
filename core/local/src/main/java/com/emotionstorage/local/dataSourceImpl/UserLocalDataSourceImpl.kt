@@ -4,6 +4,7 @@ import com.emotionstorage.data.dataSource.UserLocalDataSource
 import com.emotionstorage.data.model.UserEntity
 import com.emotionstorage.local.modelMapper.UserMapper
 import com.emotionstorage.local.room.dao.UserDao
+import com.orhanobut.logger.Logger
 import javax.inject.Inject
 
 class UserLocalDataSourceImpl @Inject constructor(
@@ -14,6 +15,7 @@ class UserLocalDataSourceImpl @Inject constructor(
             userDao.insertUser(UserMapper.toLocal(user))
             return true
         } catch (e: Exception) {
+            Logger.e("saveUser error: $e")
             return false
         }
     }
@@ -24,6 +26,7 @@ class UserLocalDataSourceImpl @Inject constructor(
                 UserMapper.toEntity(this)
             }
         } catch (e: Exception) {
+            Logger.e("getUser error: $e")
             throw e
         }
     }
@@ -33,6 +36,7 @@ class UserLocalDataSourceImpl @Inject constructor(
             userDao.deleteUser()
             return true
         } catch (e: Exception) {
+            Logger.e("deleteUser error: $e")
             return false
         }
     }
