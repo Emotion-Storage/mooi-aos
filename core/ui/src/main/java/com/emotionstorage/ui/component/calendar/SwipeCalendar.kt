@@ -37,9 +37,9 @@ fun SwipeCalendar(
     modifier: Modifier = Modifier,
     calendarYearMonth: YearMonth = YearMonth.now(),
     onCalendarYearMonthSelect: (yearMonth: YearMonth) -> Unit = {},
-    showYearMonthDropDownIcon: Boolean = true,
-    onYearMonthDropDownIconClick: () -> Unit = {},
-    calendarYearMonthTextStyle: TextStyle = MooiTheme.typography.mainButton,
+    showDropDownIcon: Boolean = true,
+    onDropDownIconClick: () -> Unit = {},
+    headerTextStyle: TextStyle = MooiTheme.typography.mainButton,
     weekDateItem: @Composable (modifier: Modifier, label: String) -> Unit = { modifier, label ->
         Text(
             modifier = modifier.padding(vertical = 16.dp),
@@ -94,20 +94,20 @@ fun SwipeCalendar(
     }
 
     Column(modifier = modifier) {
-        CalendarYearMonthSelector(
+        CalendarHeader(
             calendarYearMonth = currentYearMonth,
             minYearMonth = minYearMonth,
             maxYearMonth = maxYearMonth,
-            onCalendarYearMonthSelect = {
+            onYearMonthSelect = {
                 coroutineScope.launch {
                     pagerState.animateScrollToPage(
                         ChronoUnit.MONTHS.between(minYearMonth, it).toInt(),
                     )
                 }
             },
-            showYearMonthDropDownIcon = showYearMonthDropDownIcon,
-            onYearMonthDropDownIconClick = onYearMonthDropDownIconClick,
-            calendarYearMonthTextStyle = calendarYearMonthTextStyle,
+            showDropDownIcon = showDropDownIcon,
+            onDropDownIconClick = onDropDownIconClick,
+            headerTextStyle = headerTextStyle,
         )
 
         Row(
