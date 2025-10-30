@@ -45,7 +45,7 @@ import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
-import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendarBottomSheet
+import com.emotionstorage.time_capsule.ui.component.TimeCapsuleBottomSheet
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.toast.FavoriteToast
@@ -219,7 +219,6 @@ private fun StatelessCalendarScreen(
                     onCalendarYearMonthSelect = {
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
-                    showYearMonthDropDownIcon = true,
                     onYearMonthDropDownIconClick = {
                         setShowYearMonthBottomSheet(true)
                     },
@@ -263,7 +262,7 @@ private fun StatelessCalendarScreen(
 
             // calendar date's time capsule bottom sheet
             if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
-                TimeCapsuleCalendarBottomSheet(
+                TimeCapsuleBottomSheet(
                     date = state.calendarDate,
                     onDismissRequest = {
                         setShowTimeCapsuleBottomSheet(false)
