@@ -116,6 +116,8 @@ private fun DateItem(
         modifier = modifier.padding(vertical = 8.dp),
     ) {
         if (date.year == calendarYearMonth.year && date.month == calendarYearMonth.month) {
+            val isValidDate = (!date.isBefore(minDate) && !date.isAfter(maxDate))
+
             Box(
                 modifier =
                     Modifier
@@ -129,9 +131,10 @@ private fun DateItem(
                                 MooiTheme.colorScheme.secondary
                             },
                             CircleShape,
-                        ).clip(CircleShape)
+                        )
+                        .clip(CircleShape)
                         .clickable(
-                            enabled = date.isAfter(minDate) && date.isBefore(maxDate),
+                            enabled = isValidDate,
                             onClick = onClick,
                         ),
             )
@@ -141,7 +144,7 @@ private fun DateItem(
                 style = MooiTheme.typography.body7,
                 color =
                     Color.White.copy(
-                        alpha = if (date.isAfter(minDate) && date.isBefore(maxDate)) 1f else 0.13f,
+                        alpha = if (isValidDate) 1f else 0.13f,
                     ),
             )
         }
