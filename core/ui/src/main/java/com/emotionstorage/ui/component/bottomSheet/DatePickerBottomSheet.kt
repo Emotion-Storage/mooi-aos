@@ -131,8 +131,7 @@ private fun DateItem(
                                 MooiTheme.colorScheme.secondary
                             },
                             CircleShape,
-                        )
-                        .clip(CircleShape)
+                        ).clip(CircleShape)
                         .clickable(
                             enabled = isValidDate,
                             onClick = onClick,
