@@ -227,7 +227,7 @@ private fun StatelessAIChatScreen(
                 focusRequester = focusRequester,
                 enabled = true,
                 sendEnabled = !state.isWaitingReply,
-                showStop = state.isMooiTyping && isInputFocused && draft.isNotBlank(),
+                showStop = state.isMooiTyping,
                 onSendMessage = {
                     val msg = draft.trim()
                     if (msg.isNotEmpty()) {
