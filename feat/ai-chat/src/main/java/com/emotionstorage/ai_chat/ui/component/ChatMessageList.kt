@@ -137,8 +137,8 @@ private fun DateDivider(
         )
         Text(
             text = date.toKorDateWithWeekDay(),
-            style = MooiTheme.typography.body3,
-            color = Color.Gray,
+            style = MooiTheme.typography.caption2,
+            color = MooiTheme.colorScheme.gray600,
         )
         Box(
             modifier =
