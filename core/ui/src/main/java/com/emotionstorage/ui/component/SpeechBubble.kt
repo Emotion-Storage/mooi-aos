@@ -121,6 +121,7 @@ fun SpeechBubble(
                         }
 
                         BubbleTail.TopLeft -> {
+                            // TODO : Check Various Device Bubble Triangle Position
                             moveTo(tailOffsetPx - tailWidthPx / 2, rect.top)
                             lineTo(tailOffsetPx, 0f)
                             lineTo(tailOffsetPx + tailWidthPx / 2, rect.top)
@@ -176,6 +177,7 @@ fun SpeechBubble(
                 }
 
                 BubbleTail.TopLeft -> {
+                    // TODO : Check Various Device Bubble Triangle Position
                     val baseX = tailOffsetPx
                     clipRect(
                         left = (baseX - gapHalf) - gapThickness,
