@@ -109,7 +109,6 @@ private fun StatelessAIChatScreen(
     var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
     var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
 
-
     LaunchedEffect(state.messages.size) {
         val last = state.messages.lastIndex
         if (last >= 0) {
@@ -163,7 +162,7 @@ private fun StatelessAIChatScreen(
 
             if (showTimeCapsuleCreateAlert) {
                 TimeCapsuleCreateAlert(
-                    modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp)
+                    modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
                 )
             }
 
@@ -189,12 +188,13 @@ private fun StatelessAIChatScreen(
 
                 if (canMakeTimeCapsule) {
                     ChattingFinishButton(
-                        modifier = Modifier
-                            .padding(bottom = 13.dp)
-                            .align(Alignment.BottomCenter),
+                        modifier =
+                            Modifier
+                                .padding(bottom = 13.dp)
+                                .align(Alignment.BottomCenter),
                         onClick = {
                             showFinishBottomSheet = true
-                        }
+                        },
                     )
                 }
             }
@@ -212,7 +212,7 @@ private fun StatelessAIChatScreen(
                     onDismiss = { showFinishBottomSheet = false },
                     onConfirm = {
                         onAction(AIChatAction.CreateTimeCapsule)
-                    }
+                    },
                 )
             }
 

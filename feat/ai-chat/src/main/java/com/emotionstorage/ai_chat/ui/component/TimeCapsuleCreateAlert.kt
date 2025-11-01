@@ -16,24 +16,23 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun TimeCapsuleCreateAlert(
-    modifier: Modifier = Modifier
-) {
+fun TimeCapsuleCreateAlert(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .heightIn(min = 50.dp)
-            .background(
-                color = MooiTheme.colorScheme.bottomBarBackground.copy(alpha = 0.8f),
-                shape = RoundedCornerShape(100.dp)
-            ),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .heightIn(min = 50.dp)
+                .background(
+                    color = MooiTheme.colorScheme.bottomBarBackground.copy(alpha = 0.8f),
+                    shape = RoundedCornerShape(100.dp),
+                ),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
             style = MooiTheme.typography.body7,
             color = Color.White,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }

@@ -26,32 +26,41 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun MessageIncomeLoading() {
     val transition = rememberInfiniteTransition(label = "typing")
     val a1 by transition.animateFloat(
-        initialValue = 0.5f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(500), RepeatMode.Reverse), label = "1"
+        initialValue = 0.5f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(500), RepeatMode.Reverse),
+        label = "1",
     )
     val a2 by transition.animateFloat(
-        initialValue = 0.5f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(500, delayMillis = 150), RepeatMode.Reverse), label = "2"
+        initialValue = 0.5f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(500, delayMillis = 150), RepeatMode.Reverse),
+        label = "2",
     )
     val a3 by transition.animateFloat(
-        initialValue = 0.5f, targetValue = 1f,
-        animationSpec = infiniteRepeatable(tween(500, delayMillis = 300), RepeatMode.Reverse), label = "3"
+        initialValue = 0.5f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(tween(500, delayMillis = 300), RepeatMode.Reverse),
+        label = "3",
     )
 
     Row(
         Modifier
             .padding(horizontal = 19.5.dp, vertical = 18.5.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         repeat(3) { idx ->
-            val alpha = when (idx) {
-                0 -> a1; 1 -> a2; else -> a3
-            }
+            val alpha =
+                when (idx) {
+                    0 -> a1
+                    1 -> a2
+                    else -> a3
+                }
             Box(
                 Modifier
                     .size(5.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFFD9D9D9).copy(alpha = alpha))
+                    .background(Color(0xFFD9D9D9).copy(alpha = alpha)),
             )
             if (idx != 2) Spacer(Modifier.size(5.dp))
         }

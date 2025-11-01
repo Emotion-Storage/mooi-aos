@@ -136,39 +136,41 @@ class AIChatViewModel @Inject constructor(
 
             chatMessageObserverJob =
                 viewModelScope.launch {
-                    observeChatMessages(roomId).onEach { message ->
-                        if (state.isWaitingReply) {
+                    observeChatMessages(roomId)
+                        .onEach { message ->
+                            if (state.isWaitingReply) {
+                                reduce {
+                                    state.copy(
+                                        isMooiTyping = false,
+                                        isWaitingReply = false,
+                                    )
+                                }
+                            }
+
                             reduce {
                                 state.copy(
-                                    isMooiTyping = false,
-                                    isWaitingReply = false,
+                                    messages = state.messages + message,
+                                    chatProgress =
+                                        message.gaugeScore?.let { score ->
+                                            (score / 100f).coerceIn(0f, 1f)
+                                        } ?: state.chatProgress,
                                 )
                             }
-                        }
-
-                        reduce {
-                            state.copy(
-                                messages = state.messages + message,
-                                chatProgress = message.gaugeScore?.let { score ->
-                                    (score / 100f).coerceIn(0f, 1f)
-                                } ?: state.chatProgress
-                            )
-                        }
-                    }.catch {
-                        intent {
-                            reduce {
-                                state.copy(isWaitingReply = false, isMooiTyping = false)
-                            }
-                        }
-                    }.onCompletion {
-                        intent {
+                        }.catch {
                             intent {
                                 reduce {
                                     state.copy(isWaitingReply = false, isMooiTyping = false)
                                 }
                             }
-                        }
-                    }.collect()
+                        }.onCompletion {
+                            intent {
+                                intent {
+                                    reduce {
+                                        state.copy(isWaitingReply = false, isMooiTyping = false)
+                                    }
+                                }
+                            }
+                        }.collect()
                 }
         }
 

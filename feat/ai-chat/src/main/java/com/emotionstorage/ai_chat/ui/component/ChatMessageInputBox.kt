@@ -63,8 +63,7 @@ fun ChatMessageInputBox(
                 .background(Color(0xFF26262C), shape)
                 .border(1.dp, MooiTheme.colorScheme.gray800, shape)
                 .animateContentSize(),
-        verticalAlignment = Alignment.Bottom
-
+        verticalAlignment = Alignment.Bottom,
     ) {
         BasicTextField(
             modifier =
@@ -88,16 +87,18 @@ fun ChatMessageInputBox(
             cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
             decorationBox = { inner ->
                 Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 19.dp, top = 11.dp, bottom = 11.dp),
-                    contentAlignment = Alignment.CenterStart
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(start = 19.dp, top = 11.dp, bottom = 11.dp),
+                    contentAlignment = Alignment.CenterStart,
                 ) {
                     if (text.isEmpty()) {
                         Text(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.Center),
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center),
                             text = "지금 떠오르는 감정을 적어보세요",
                             style =
                                 MooiTheme.typography.caption3.copy(
@@ -144,7 +145,6 @@ fun ChatMessageInputBox(
         }
     }
 }
-
 
 @Preview
 @Composable

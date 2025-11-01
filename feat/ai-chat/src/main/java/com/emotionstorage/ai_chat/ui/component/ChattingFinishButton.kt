@@ -42,8 +42,7 @@ fun ChattingFinishButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         onClick()
-                    }
-                    .height(44.dp)
+                    }.height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

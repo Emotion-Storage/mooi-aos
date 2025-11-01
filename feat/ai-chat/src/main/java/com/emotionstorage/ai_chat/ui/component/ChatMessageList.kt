@@ -94,7 +94,6 @@ fun ChatMessageList(
                     )
                     Spacer(modifier = Modifier.size(10.dp))
 
-
                     Box(
                         modifier =
                             Modifier
@@ -104,7 +103,7 @@ fun ChatMessageList(
                                     color = MooiTheme.colorScheme.blueGrayBackground,
                                     shape = RoundedCornerShape(20.dp),
                                 ),
-                        contentAlignment = Alignment.CenterStart
+                        contentAlignment = Alignment.CenterStart,
                     ) {
                         MessageIncomeLoading()
                     }
@@ -188,7 +187,7 @@ private fun ChatMessageItem(
                             color = MooiTheme.colorScheme.blueGrayBackground,
                             shape = RoundedCornerShape(20.dp),
                         ),
-                contentAlignment = Alignment.CenterStart
+                contentAlignment = Alignment.CenterStart,
             ) {
                 Text(
                     modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
@@ -203,7 +202,7 @@ private fun ChatMessageItem(
                     Modifier
                         .heightIn(42.dp)
                         .widthIn(max = screenWidth.dp * 0.7f),
-                contentAlignment = Alignment.CenterEnd
+                contentAlignment = Alignment.CenterEnd,
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterEnd),
@@ -227,7 +226,7 @@ private fun ChatMessageListPreview() {
                 content = "안녕하세요",
                 timestamp = LocalDateTime.of(2025, 9, 2, 17, it, 1, 1),
                 gaugeScore = 5,
-                turnCountScore = 2
+                turnCountScore = 2,
             )
         } +
             listOf(
@@ -237,7 +236,7 @@ private fun ChatMessageListPreview() {
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
                     gaugeScore = 20,
-                    turnCountScore = 4
+                    turnCountScore = 4,
                 ),
                 ChatMessage(
                     roomId = 1L,
@@ -245,7 +244,7 @@ private fun ChatMessageListPreview() {
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
                     gaugeScore = 40,
-                    turnCountScore = 6
+                    turnCountScore = 6,
                 ),
             ) +
             List(6, init = { it }).map { it ->
@@ -255,7 +254,7 @@ private fun ChatMessageListPreview() {
                     content = "안녕하세요",
                     timestamp = LocalDateTime.of(2025, 9, 4, 17, it, 1, 1),
                     gaugeScore = 60,
-                    turnCountScore = 8
+                    turnCountScore = 8,
                 )
             }
 
