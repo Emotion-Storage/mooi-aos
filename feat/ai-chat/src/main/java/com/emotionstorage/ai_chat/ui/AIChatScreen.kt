@@ -211,6 +211,7 @@ private fun StatelessAIChatScreen(
                     dismissLabel = "아니요, 더 이야기할래요.",
                     onDismiss = { showFinishBottomSheet = false },
                     onConfirm = {
+                        showFinishBottomSheet = false
                         onAction(AIChatAction.CreateTimeCapsule)
                     },
                 )
