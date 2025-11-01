@@ -32,10 +32,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.InputNicknameEvent
 import com.emotionstorage.my.presentation.NicknameChangeViewModel
 import com.emotionstorage.my.presentation.NicknameChangeViewModel.State.InputState
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
-import com.emotionstorage.ui.component.TextInput
-import com.emotionstorage.ui.component.TextInputState
+import com.emotionstorage.ui.component.text.TextInput
+import com.emotionstorage.ui.component.text.TextInputState
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 

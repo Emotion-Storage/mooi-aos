@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.text
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

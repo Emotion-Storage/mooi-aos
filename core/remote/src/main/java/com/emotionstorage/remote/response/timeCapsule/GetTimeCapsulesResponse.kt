@@ -27,7 +27,7 @@ data class GetTimeCapsulesResponse(
         @Serializable(with = LocalDateTimeSerializer::class)
         val updatedAt: LocalDateTime,
         @Serializable(with = LocalDateTimeSerializer::class)
-        val openAt: LocalDateTime,
+        val openAt: LocalDateTime? = null,
         val isFavorite: Boolean,
         val emotions: List<String>,
         val title: String,

@@ -23,7 +23,7 @@ class DailyReportRemoteDataSourceImpl @Inject constructor(
                 throw Exception("getDailyReport response data is empty, $response")
             }
         } catch (e: Exception) {
-            throw Exception("getDailyReport api fail, $e")
+            throw Exception("getDailyReport api fail", e)
         }
     }
 }

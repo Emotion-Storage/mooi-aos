@@ -24,10 +24,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -52,12 +50,12 @@ import com.emotionstorage.time_capsule_detail.ui.modal.CheckArriveDateModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.AppSnackbarHost
-import com.emotionstorage.ui.component.DatePickerBottomSheet
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.bottomSheet.DatePickerBottomSheet
 import com.emotionstorage.ui.component.FullLoadingScreen
-import com.emotionstorage.ui.component.Toast
+import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.component.TopAppBar
-import com.emotionstorage.ui.component.YearMonthPickerBottomSheet
+import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
@@ -305,7 +303,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                     setShowDatePicker(false)
                     setShowYearMonthPicker(true)
                 },
-                minDate = state.saveAt.toLocalDate(),
+                minDate = state.saveAt.toLocalDate().plusDays(1),
                 maxDate = state.saveAt.plusYears(1).toLocalDate(),
             )
         }

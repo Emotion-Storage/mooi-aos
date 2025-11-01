@@ -28,9 +28,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.common.toKorDate
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.model.ChatMessage.MessageSource
+import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -136,9 +136,9 @@ private fun DateDivider(
                     .background(MooiTheme.colorScheme.gray800.copy(alpha = 0.5f)),
         )
         Text(
-            text = date.toKorDate(),
-            style = MooiTheme.typography.caption2,
-            color = MooiTheme.colorScheme.gray600,
+            text = date.toKorDateWithWeekDay(),
+            style = MooiTheme.typography.body3,
+            color = Color.Gray,
         )
         Box(
             modifier =

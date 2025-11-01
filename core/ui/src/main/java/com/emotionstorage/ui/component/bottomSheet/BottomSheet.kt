@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.bottomSheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -6,9 +6,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,12 +25,15 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.DialogWindowProvider
+import com.emotionstorage.ui.component.button.CtaButton
+import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -46,7 +51,7 @@ fun BottomSheet(
     onDismiss: (() -> Unit)? = null,
     hideDragHandle: Boolean = false,
     sheetGesturesEnabled: Boolean = true,
-    contentPadding: PaddingValues = PaddingValues(horizontal = 15.dp, vertical = 20.dp),
+    contentPadding: PaddingValues = PaddingValues(top = 23.dp, bottom = 54.dp, start = 15.dp, end = 15.dp),
     content: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     val scope = rememberCoroutineScope()
@@ -70,6 +75,7 @@ fun BottomSheet(
             },
         sheetGesturesEnabled = !hideDragHandle && sheetGesturesEnabled,
         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
+        contentWindowInsets = { WindowInsets(0, 0, 0, WindowInsets.systemBars.getBottom(LocalDensity.current)) },
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
     ) {
@@ -149,33 +155,6 @@ fun BottomSheet(
 @Preview
 @Composable
 private fun BottomSheetPreview() {
-    MooiTheme {
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
-        ) {
-            BottomSheet(
-                onDismissRequest = {},
-                // open sheet state for preview
-                sheetState =
-                    rememberStandardBottomSheetState(
-                        initialValue = SheetValue.Expanded,
-                    ),
-                title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
-                subTitle = "감정을 충분히 이야기했어요.",
-                confirmLabel = "네, 종료할래요.",
-                dismissLabel = "아니요, 더 이야기할래요.",
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview
-@Composable
-private fun BottomSheetPreview2() {
     MooiTheme {
         Box(
             modifier =

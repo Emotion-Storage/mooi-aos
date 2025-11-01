@@ -38,7 +38,7 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger

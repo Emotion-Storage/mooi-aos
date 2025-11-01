@@ -28,7 +28,7 @@ import com.emotionstorage.auth.presentation.SignupCompleteAction
 import com.emotionstorage.auth.presentation.SignupCompleteSideEffect
 import com.emotionstorage.auth.presentation.SignupCompleteViewModel
 import com.emotionstorage.domain.model.User.AuthProvider
-import com.emotionstorage.ui.component.CtaButton
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
