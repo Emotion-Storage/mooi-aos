@@ -164,10 +164,8 @@ class AIChatViewModel @Inject constructor(
                             }
                         }.onCompletion {
                             intent {
-                                intent {
-                                    reduce {
-                                        state.copy(isWaitingReply = false, isMooiTyping = false)
-                                    }
+                                reduce {
+                                    state.copy(isWaitingReply = false, isMooiTyping = false)
                                 }
                             }
                         }.collect()
