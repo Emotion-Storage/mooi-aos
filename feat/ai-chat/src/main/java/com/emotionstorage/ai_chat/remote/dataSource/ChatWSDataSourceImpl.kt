@@ -43,7 +43,7 @@ class ChatWSDataSourceImpl @Inject constructor(
 
     override suspend fun connectChatRoom(): Boolean {
         try {
-            val token = getTokenUseCase() ?: ""
+            val token = getTokenUseCase() ?: throw IllegalStateException("토큰이 없어 연결이 불가능합니다.")
             val connectHeaders = mapOf("Authorization" to "Bearer $token")
 
             session = client.connect(url = WS_URL, customStompConnectHeaders = connectHeaders)
@@ -79,14 +79,13 @@ class ChatWSDataSourceImpl @Inject constructor(
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
-            val token = getTokenUseCase() ?: ""
+            val token = getTokenUseCase() ?: throw IllegalStateException("토큰이 없어 메세지 전송이 불가능 합니다.")
             val messageJson =
                 json.encodeToString(
                     ChatMessageRequestBody.serializer(),
                     ChatMessageMapper.toRemote(chatMessage),
                 )
             Logger.d("sendChatMessage() messageJson: $messageJson")
-
             session.send(
                 headers =
                     StompSendHeaders(
