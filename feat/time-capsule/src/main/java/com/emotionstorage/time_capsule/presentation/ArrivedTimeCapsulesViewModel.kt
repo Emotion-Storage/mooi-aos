@@ -4,18 +4,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.map
-import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedArrivedTimeCapsulesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
-import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
-import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
 import org.orbitmvi.orbit.ContainerHost
@@ -48,14 +43,14 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
 
     // paging data flow should not be managed by orbit!
     val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
-        getArrivedTimeCapsules().transform { pagingData ->
-            emit(
-                pagingData.map {
-                    TimeCapsuleMapper.toUi(it)
-                }
-            )
-        }.cachedIn(viewModelScope)
-
+        getArrivedTimeCapsules()
+            .transform { pagingData ->
+                emit(
+                    pagingData.map {
+                        TimeCapsuleMapper.toUi(it)
+                    },
+                )
+            }.cachedIn(viewModelScope)
 
     fun onAction(action: ArrivedTimeCapsulesAction) {
         when (action) {

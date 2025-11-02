@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.emotionstorage.emotionstorage.ui.AppNavHost
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.MooiTheme

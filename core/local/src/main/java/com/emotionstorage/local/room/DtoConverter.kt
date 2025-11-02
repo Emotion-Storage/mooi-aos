@@ -28,14 +28,12 @@ class DtoConverter {
     fun toLocalDateTime(value: String?): LocalDateTime? = value?.let { LocalDateTime.parse(it) }
 
     @TypeConverter
-    fun fromStringList(value: List<String>): String {
-        return json.encodeToString(
-            ListSerializer(String.serializer()), value
+    fun fromStringList(value: List<String>): String =
+        json.encodeToString(
+            ListSerializer(String.serializer()),
+            value,
         )
-    }
 
     @TypeConverter
-    fun toStringList(value: String): List<String> {
-        return json.decodeFromString(value)
-    }
+    fun toStringList(value: String): List<String> = json.decodeFromString(value)
 }

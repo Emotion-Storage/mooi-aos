@@ -4,14 +4,12 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import androidx.paging.map
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.data.pagingSource.GetTimeCapsulesPagingSource
-import com.emotionstorage.data.remoteMediator.GetTimeCapsulesRemoteMediator
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
@@ -141,13 +139,14 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     ): Flow<PagingData<TimeCapsule>> {
         Napier.d("getPagedTimeCapsules: startDate: $startDate, endDate: $endDate, status: $status")
         return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                enablePlaceholders = false,
-                prefetchDistance = PAGE_SIZE / 2,
-                initialLoadSize = PAGE_SIZE,
-                maxSize = PAGE_SIZE * 3,
-            ),
+            config =
+                PagingConfig(
+                    pageSize = PAGE_SIZE,
+                    enablePlaceholders = false,
+                    prefetchDistance = PAGE_SIZE / 2,
+                    initialLoadSize = PAGE_SIZE,
+                    maxSize = PAGE_SIZE * 3,
+                ),
             pagingSourceFactory = {
                 GetTimeCapsulesPagingSource(
                     remoteDataSource = remoteDataSource,
@@ -155,7 +154,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                     endDate = endDate,
                     status = status,
                 )
-            }
+            },
 //            remoteMediator = GetTimeCapsulesRemoteMediator(
 //                remoteDataSource = remoteDataSource,
 //                localDataSource = localDataSource,

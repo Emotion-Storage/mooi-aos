@@ -20,32 +20,33 @@ class GetTimeCapsulesPagingSource @Inject constructor(
         val pageIndex = params.key ?: 1
         val pageSize = params.loadSize
         return try {
-            val timeCapsules = remoteDataSource.getTimeCapsules(
-                startDate = startDate,
-                endDate = endDate,
-                page = pageIndex,
-                limit = pageSize,
-                status = status
-            )
+            val timeCapsules =
+                remoteDataSource.getTimeCapsules(
+                    startDate = startDate,
+                    endDate = endDate,
+                    page = pageIndex,
+                    limit = pageSize,
+                    status = status,
+                )
 
             LoadResult.Page(
                 data = timeCapsules,
                 // only load page forwards
                 prevKey = null,
-                nextKey = timeCapsules.last().pageData?.let {
-                    if (it.hasNextPage) it.page + 1 else null
-                }
+                nextKey =
+                    timeCapsules.last().pageData?.let {
+                        if (it.hasNextPage) it.page + 1 else null
+                    },
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, TimeCapsuleEntity>): Int? {
-        return state.anchorPosition?.let { anchor ->
+    override fun getRefreshKey(state: PagingState<Int, TimeCapsuleEntity>): Int? =
+        state.anchorPosition?.let { anchor ->
             Napier.d("getRefreshKey anchor: $anchor")
             val page = state.closestPageToPosition(anchor)
             page?.prevKey?.plus(1) ?: page?.nextKey?.minus(1)
         }
-    }
 }
