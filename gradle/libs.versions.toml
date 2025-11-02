@@ -26,6 +26,7 @@ retrofit = "2.11.0"
 serialization = "1.7.3"
 serializationConverter = "1.0.0"
 logger = "2.2.0"
+napier = "2.7.1"
 orbitMvi = "10.0.0"
 kakao = "2.21.4"
 kotlinxCoroutines = "1.10.2"
@@ -73,7 +74,7 @@ androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", 
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-androidx-room-paging= {group = "androidx.room", name = "room-paging", version.ref = "room"}
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
 
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
@@ -95,6 +96,9 @@ kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "serializationConverter" }
 
 android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
+napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
+
+
 
 orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
 orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
