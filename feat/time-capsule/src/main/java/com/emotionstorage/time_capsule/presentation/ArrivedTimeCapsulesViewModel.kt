@@ -5,11 +5,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedArrivedTimeCapsulesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
+import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
@@ -42,7 +45,7 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
         container<Unit, ArrivedTimeCapsulesSideEffect>(Unit)
 
     // paging data flow should not be managed by orbit!
-    val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
+    var arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
         getArrivedTimeCapsules()
             .transform { pagingData ->
                 emit(
@@ -64,47 +67,16 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
         id: Long,
         prevIsFavorite: Boolean,
     ) = intent {
-//        suspend fun updateFavorite(
-//            id: Long,
-//            isFavorite: Boolean,
-//        ) = reduce {
-//            state.copy(
-//                timeCapsules =
-//                    state.timeCapsules?.transform { pagingData ->
-//                        pagingData.map {
-//                            if (it.id == id) {
-//                                it.copy(isFavorite = isFavorite)
-//                            } else {
-//                                it
-//                            }
-//                        }
-//                    },
-//            )
-//        }
-
-//        coroutineScope {
-//            collectDataState(
-//                flow = setFavorite(id, !prevIsFavorite),
-//                onSuccess = {
-//                    when (it) {
-//                        FavoriteResult.ADDED -> {
-//                            updateFavorite(id, true)
-//                        }
-//
-//                        FavoriteResult.REMOVED -> {
-//                            updateFavorite(id, false)
-//                        }
-//
-//                        FavoriteResult.FULL -> {
-//                            // do nothing
-//                        }
-//                    }
-//                    postSideEffect(ShowFavoriteToast(it))
-//                },
-//                onError = { throwable, data ->
-//                    Logger.e("Failed to toggle favorite, $throwable")
-//                },
-//            )
-//        }
+        collectDataState(
+            flow = setFavorite(id, !prevIsFavorite),
+            onSuccess = {
+                // todo: integrate room paging using remote mediator
+                // ui will update automatically, on room entity change
+                postSideEffect(ShowFavoriteToast(it))
+            },
+            onError = { throwable, data ->
+                Logger.e("Failed to toggle favorite, $throwable")
+            },
+        )
     }
 }
