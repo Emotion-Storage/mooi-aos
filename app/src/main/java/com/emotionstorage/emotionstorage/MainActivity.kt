@@ -7,6 +7,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.emotionstorage.emotionstorage.ui.AppNavHost
+import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -19,7 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         setContent {
             MooiTheme {
-                AppNavHost()
+//                AppNavHost()
+                ArrivedTimeCapsulesScreen()
             }
         }
     }

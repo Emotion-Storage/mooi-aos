@@ -10,6 +10,7 @@ import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
+import com.emotionstorage.data.pagingSource.GetTimeCapsulesPagingSource
 import com.emotionstorage.data.remoteMediator.GetTimeCapsulesRemoteMediator
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -142,16 +143,27 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
-                enablePlaceholders = false
+                enablePlaceholders = false,
+                prefetchDistance = PAGE_SIZE / 2,
+                initialLoadSize = PAGE_SIZE,
+                maxSize = PAGE_SIZE * 3,
             ),
-            remoteMediator = GetTimeCapsulesRemoteMediator(
-                remoteDataSource = remoteDataSource,
-                localDataSource = localDataSource,
-                startDate = startDate,
-                endDate = endDate,
-                status = status,
-            ),
-            pagingSourceFactory = localDataSource::getPagingSource
+            pagingSourceFactory = {
+                GetTimeCapsulesPagingSource(
+                    remoteDataSource = remoteDataSource,
+                    startDate = startDate,
+                    endDate = endDate,
+                    status = status,
+                )
+            }
+//            remoteMediator = GetTimeCapsulesRemoteMediator(
+//                remoteDataSource = remoteDataSource,
+//                localDataSource = localDataSource,
+//                startDate = startDate,
+//                endDate = endDate,
+//                status = status,
+//            ),
+//            pagingSourceFactory = localDataSource::getPagingSource
         ).flow.map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)

@@ -10,6 +10,7 @@ import com.emotionstorage.data.model.TimeCapsuleEntity
 import io.github.aakira.napier.Napier
 import java.time.LocalDate
 
+// room integration with remote paging - work in progress
 @OptIn(ExperimentalPagingApi::class)
 class GetTimeCapsulesRemoteMediator(
     private val remoteDataSource: TimeCapsuleRemoteDataSource,
@@ -39,22 +40,24 @@ class GetTimeCapsulesRemoteMediator(
 
                 LoadType.APPEND -> {
                     val lastPage = state.lastItemOrNull()
-                    if (lastPage == null) {
+                    if (lastPage == null || lastPage.pageData == null) {
                         // no pages were loaded before, can load more
                         Napier.d("LoadType.APPEND; no pages were loaded before & can load more, Success(endOfPaginationReached = false)")
                         return MediatorResult.Success(endOfPaginationReached = false)
                     }
 
                     val pageData = lastPage.pageData
-                    if (pageData == null || !pageData.hasNextPage) {
+                    Napier.d("lastPage.pageData: $pageData")
+                    if (!pageData.hasNextPage) {
                         // no more pages, return end of page
                         Napier.d("LoadType.APPEND; end of page, Success(endOfPaginationReached = true)")
                         return MediatorResult.Success(endOfPaginationReached = true)
-                    } else {
-                        // load next page
-                        Napier.d("LoadType.APPEND; load next page, page: ${pageData.page + 1}")
-                        pageData.page + 1
                     }
+
+                    // load next page
+                    Napier.d("LoadType.APPEND; load next page, page: ${pageData.page + 1}")
+                    pageData.page + 1
+
                 }
             }
 
