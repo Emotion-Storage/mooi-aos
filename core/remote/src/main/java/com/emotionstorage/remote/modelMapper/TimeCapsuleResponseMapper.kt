@@ -23,10 +23,11 @@ internal object TimeCapsuleResponseMapper {
                 createdAt = it.createdAt,
                 openAt = it.openAt,
                 updatedAt = it.updatedAt,
-                pageData = PageData(
-                    page = response.pagination.page,
-                    hasNextPage = response.pagination.page < response.pagination.totalPage,
-                )
+                pageData =
+                    PageData(
+                        page = response.pagination.page,
+                        hasNextPage = response.pagination.page < response.pagination.totalPage,
+                    ),
             )
         }
 

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.emotionstorage.domain.common.collectDataState
-import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedArrivedTimeCapsulesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
@@ -19,11 +18,10 @@ import kotlinx.coroutines.flow.transform
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
-import java.time.LocalDate
 import javax.inject.Inject
 
 data class ArrivedTimeCapsulesState(
-    val timeCapsules: Flow<PagingData<TimeCapsuleItemState>>? = null
+    val timeCapsules: Flow<PagingData<TimeCapsuleItemState>>? = null,
 )
 
 sealed class ArrivedTimeCapsulesAction {
@@ -81,50 +79,51 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
             }
         }
 
-
-    private fun handleToggleFavorite(id: Long, prevIsFavorite: Boolean) =
-        intent {
-            suspend fun updateFavorite(
-                id: Long,
-                isFavorite: Boolean,
-            ) = reduce {
-                state.copy(
-                    timeCapsules =
-                        state.timeCapsules?.transform { pagingData ->
-                            pagingData.map {
-                                if (it.id == id) {
-                                    it.copy(isFavorite = isFavorite)
-                                } else {
-                                    it
-                                }
-                            }
-                        },
-                )
-            }
-
-            coroutineScope {
-                collectDataState(
-                    flow = setFavorite(id, !prevIsFavorite),
-                    onSuccess = {
-                        when (it) {
-                            FavoriteResult.ADDED -> {
-                                updateFavorite(id, true)
-                            }
-
-                            FavoriteResult.REMOVED -> {
-                                updateFavorite(id, false)
-                            }
-
-                            FavoriteResult.FULL -> {
-                                // do nothing
+    private fun handleToggleFavorite(
+        id: Long,
+        prevIsFavorite: Boolean,
+    ) = intent {
+        suspend fun updateFavorite(
+            id: Long,
+            isFavorite: Boolean,
+        ) = reduce {
+            state.copy(
+                timeCapsules =
+                    state.timeCapsules?.transform { pagingData ->
+                        pagingData.map {
+                            if (it.id == id) {
+                                it.copy(isFavorite = isFavorite)
+                            } else {
+                                it
                             }
                         }
-                        postSideEffect(ShowFavoriteToast(it))
                     },
-                    onError = { throwable, data ->
-                        Logger.e("Failed to toggle favorite, $throwable")
-                    },
-                )
-            }
+            )
         }
+
+        coroutineScope {
+            collectDataState(
+                flow = setFavorite(id, !prevIsFavorite),
+                onSuccess = {
+                    when (it) {
+                        FavoriteResult.ADDED -> {
+                            updateFavorite(id, true)
+                        }
+
+                        FavoriteResult.REMOVED -> {
+                            updateFavorite(id, false)
+                        }
+
+                        FavoriteResult.FULL -> {
+                            // do nothing
+                        }
+                    }
+                    postSideEffect(ShowFavoriteToast(it))
+                },
+                onError = { throwable, data ->
+                    Logger.e("Failed to toggle favorite, $throwable")
+                },
+            )
+        }
+    }
 }

@@ -29,4 +29,3 @@ data class TimeCapsuleLocal(
     @Serializable(with = LocalDateTimeSerializer::class)
     val favoriteAt: LocalDateTime? = null,
 )
-

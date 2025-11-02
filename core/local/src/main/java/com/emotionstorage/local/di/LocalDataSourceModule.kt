@@ -21,13 +21,9 @@ abstract class LocalDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindSessionLocalDataSource(
-        impl: SessionLocalDataSourceImpl,
-    ): SessionLocalDataSource
+    abstract fun bindSessionLocalDataSource(impl: SessionLocalDataSourceImpl): SessionLocalDataSource
 
     @Binds
     @Singleton
-    abstract fun bindTimeCapsuleLocalDataSource(
-        impl: TimeCapsuleLocalDataSourceImpl,
-    ): TimeCapsuleLocalDataSource
+    abstract fun bindTimeCapsuleLocalDataSource(impl: TimeCapsuleLocalDataSourceImpl): TimeCapsuleLocalDataSource
 }

@@ -9,7 +9,7 @@ import com.orhanobut.logger.Logger
 import javax.inject.Inject
 
 class TimeCapsuleLocalDataSourceImpl @Inject constructor(
-    private val timeCapsuleDao: TimeCapsuleDao
+    private val timeCapsuleDao: TimeCapsuleDao,
 ) : TimeCapsuleLocalDataSource {
     override suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean {
         try {
@@ -21,9 +21,10 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override val pagingSource = timeCapsuleDao.pagingSource().mapValue {
-        TimeCapsuleMapper.toData(it)
-    }
+    override val pagingSource =
+        timeCapsuleDao.pagingSource().mapValue {
+            TimeCapsuleMapper.toData(it)
+        }
 
     override suspend fun clearAll(): Boolean {
         try {

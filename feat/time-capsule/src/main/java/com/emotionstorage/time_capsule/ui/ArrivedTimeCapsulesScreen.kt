@@ -161,8 +161,8 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                 onAction(
                                     ArrivedTimeCapsulesAction.ToggleFavorite(
                                         this.id,
-                                        this.isFavorite
-                                    )
+                                        this.isFavorite,
+                                    ),
                                 )
                             },
                         )

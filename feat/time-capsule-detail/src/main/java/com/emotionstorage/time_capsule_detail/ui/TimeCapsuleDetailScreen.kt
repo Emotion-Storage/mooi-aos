@@ -397,9 +397,6 @@ private fun TimeCapsuleDetailScreenPreview() {
                             note =
                                 "아침엔 기분이 좀 꿀꿀했는데, 가족이랑 저녁 먹으면서 마음이 따뜻하게 풀려버렸다. " +
                                     "사소한 일에 흔들렸지만 결국 웃으면서 하루를 마무리할 수 있어서 다행이야.",
-
-
-
                             historyDate = LocalDateTime.now(),
                             createdAt = LocalDateTime.now(),
                             updatedAt = LocalDateTime.now(),
