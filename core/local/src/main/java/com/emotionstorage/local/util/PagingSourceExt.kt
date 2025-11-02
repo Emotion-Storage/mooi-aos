@@ -29,13 +29,8 @@ fun <Key : Any, Value1 : Any, Value2 : Any> PagingSource<Key, Value1>.mapValue(
                         )
                     }
 
-                    is Error -> {
-                        result
-                    }
-
-                    else -> {
-                        throw IllegalStateException("Invalid LoadResult type")
-                    }
+                    is LoadResult.Error -> result
+                    is LoadResult.Invalid -> result
                 } as LoadResult<Key, Value2>
             } catch (e: Exception) {
                 throw e
