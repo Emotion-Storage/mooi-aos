@@ -8,7 +8,7 @@ interface ChatWSDataSource {
 
     suspend fun disconnectChatRoom(): Boolean
 
-    suspend fun observeChatMessages(roomId: String): Flow<String>
+    suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage>
 
     suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean
 }

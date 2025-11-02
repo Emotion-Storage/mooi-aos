@@ -65,7 +65,7 @@ fun CalendarScreen(
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToDailyReportDetail: (id: Long) -> Unit = {},
-    navToAIChat: (roomId: String) -> Unit = {},
+    navToAIChat: (roomId: Long) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     LifecycleResumeEffect(Unit) {

@@ -10,5 +10,5 @@ class ObserveChatMessagesUseCase
     constructor(
         private val chatRepository: ChatRepository,
     ) {
-        suspend operator fun invoke(roomId: String): Flow<ChatMessage> = chatRepository.observeChatMessages(roomId)
+        suspend operator fun invoke(roomId: Long): Flow<ChatMessage> = chatRepository.observeChatMessages(roomId)
     }

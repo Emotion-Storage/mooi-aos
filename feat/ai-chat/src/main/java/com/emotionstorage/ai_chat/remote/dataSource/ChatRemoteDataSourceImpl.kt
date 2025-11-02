@@ -9,7 +9,7 @@ class ChatRemoteDataSourceImpl
     constructor(
         private val chatApiService: ChatApiService,
     ) : ChatRemoteDataSource {
-        override suspend fun getChatRoomId(): String {
+        override suspend fun getChatRoomId(): Long {
             val response = chatApiService.postEmotionConversationStart()
             response.data?.roomId?.run {
                 return this

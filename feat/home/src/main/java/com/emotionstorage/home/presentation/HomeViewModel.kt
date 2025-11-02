@@ -30,7 +30,7 @@ sealed class HomeAction {
 
 sealed class HomeSideEffect {
     data class EnterCharRoomSuccess(
-        val roomId: String,
+        val roomId: Long,
     ) : HomeSideEffect()
 }
 
@@ -118,10 +118,8 @@ class HomeViewModel
                     if (it is DataState.Success) {
                         postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it.data))
                     }
-                    // 에러 발생 하는 경우 화면 넘기는 용 (추후 삭제)
                     if (it is DataState.Error) {
                         Logger.e("HomeViewModel: handleEnterChat error: $it")
-                        postSideEffect(HomeSideEffect.EnterCharRoomSuccess("123"))
                     }
                 }
             }

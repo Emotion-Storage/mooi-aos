@@ -1,5 +1,6 @@
 package com.emotionstorage.ai_chat.ui.component
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -7,9 +8,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,6 +30,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
@@ -45,95 +45,95 @@ fun ChatMessageInputBox(
     text: String,
     readOnly: Boolean = false,
     enabled: Boolean = true,
+    sendEnabled: Boolean = true,
+    showStop: Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onTextChange: (String) -> Unit,
     onSendMessage: () -> Unit = {},
     onFocusChanged: (Boolean) -> Unit = {},
 ) {
     val interaction = remember { MutableInteractionSource() }
-    val canSend = text.isNotBlank() && enabled && !readOnly
+    val canSend = text.isNotBlank() && enabled && !readOnly && sendEnabled
     val shape = RoundedCornerShape(100.dp)
 
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        tonalElevation = 0.dp,
-        shadowElevation = 0.dp,
-        color = MooiTheme.colorScheme.background,
+    Row(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(Color(0xFF26262C), shape)
+                .border(1.dp, MooiTheme.colorScheme.gray800, shape)
+                .animateContentSize(),
+        verticalAlignment = Alignment.Bottom,
     ) {
-        // 바 높이 78dp
-        Box(
+        BasicTextField(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .height(78.dp)
-                    .padding(16.dp),
-        ) {
-            // 입력 캡슐
-            BasicTextField(
-                value = text,
-                onValueChange = { if (enabled && !readOnly) onTextChange(it) },
-                singleLine = true,
-                maxLines = 1,
-                readOnly = readOnly,
-                enabled = enabled,
-                textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-                keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
-                interactionSource = interaction,
-                decorationBox = { inner ->
-                    Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                                .border(width = 1.dp, color = MooiTheme.colorScheme.gray800, shape)
-                                .background(Color(0xFF26262C), shape)
-                                .padding(horizontal = 12.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Box(
-                            modifier =
-                                Modifier
-                                    .weight(1f)
-                                    .padding(start = 6.dp),
-                        ) {
-                            if (text.isEmpty()) {
-                                Text(
-                                    text = "지금 떠오르는 감정을 적어보세요",
-                                    style =
-                                        MooiTheme.typography.caption3.copy(
-                                            color = MooiTheme.colorScheme.gray600,
-                                        ),
-                                )
-                            }
-                            inner()
-                        }
-                    }
-                },
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .focusRequester(focusRequester)
-                        .onFocusChanged { onFocusChanged(it.isFocused) },
-            )
-
-            if (canSend || readOnly) {
+                    .weight(1f)
+                    .heightIn(min = 46.dp, max = 100.dp)
+                    .focusRequester(focusRequester)
+                    .background(color = Color.Transparent, shape)
+                    .onFocusChanged { onFocusChanged(it.isFocused) },
+            value = text,
+            onValueChange = { if (enabled && !readOnly) onTextChange(it) },
+            singleLine = false,
+            maxLines = 6,
+            readOnly = readOnly,
+            enabled = enabled,
+            textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+            keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
+            interactionSource = interaction,
+            cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
+            decorationBox = { inner ->
                 Box(
                     modifier =
                         Modifier
-                            .align(Alignment.CenterEnd)
-                            .padding(end = 7.dp)
-                            .size(33.dp)
-                            .clip(CircleShape)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = null,
-                                enabled = canSend,
-                                onClick = onSendMessage,
-                            ),
-                    contentAlignment = Alignment.Center,
+                            .fillMaxWidth()
+                            .padding(start = 19.dp, top = 11.dp, bottom = 11.dp),
+                    contentAlignment = Alignment.CenterStart,
                 ) {
+                    if (text.isEmpty()) {
+                        Text(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.Center),
+                            text = "지금 떠오르는 감정을 적어보세요",
+                            style =
+                                MooiTheme.typography.caption3.copy(
+                                    color = MooiTheme.colorScheme.gray600,
+                                ),
+                        )
+                    }
+                    inner()
+                }
+            },
+        )
+
+        if (canSend || readOnly || showStop) {
+            Box(
+                modifier =
+                    Modifier
+                        .padding(end = 7.dp, bottom = 7.dp, top = 6.dp)
+                        .size(33.dp)
+                        .clip(CircleShape)
+                        .clickable(
+                            interactionSource = remember { MutableInteractionSource() },
+                            indication = null,
+                            enabled = canSend,
+                            onClick = onSendMessage,
+                        ),
+                contentAlignment = Alignment.Center,
+            ) {
+                if (showStop) {
+                    Image(
+                        painterResource(R.drawable.stop),
+                        contentDescription = "전송",
+                        modifier = Modifier.size(33.dp),
+                        contentScale = ContentScale.Fit,
+                    )
+                } else {
                     Image(
                         painterResource(R.drawable.send),
                         contentDescription = "전송",
@@ -163,7 +163,7 @@ private fun ChatInputEmptyPreview() {
 @Composable
 private fun ChatInputPreview() {
     MooiTheme {
-        var text by remember { mutableStateOf("테스트") }
+        var text by remember { mutableStateOf("테스트\n안녕하세요") }
         ChatMessageInputBox(
             text = text,
             onTextChange = { text = it },

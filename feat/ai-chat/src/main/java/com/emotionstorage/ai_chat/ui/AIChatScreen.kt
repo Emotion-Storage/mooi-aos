@@ -12,13 +12,17 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,14 +38,18 @@ import com.emotionstorage.ai_chat.presentation.AIChatViewModel
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
+import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
+import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.delay
 
 @Composable
 fun AIChatScreen(
-    roomId: String,
+    roomId: Long,
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
@@ -80,6 +88,7 @@ fun AIChatScreen(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatelessAIChatScreen(
     modifier: Modifier = Modifier,
@@ -93,6 +102,27 @@ private fun StatelessAIChatScreen(
     val focusRequester = remember { FocusRequester() }
 
     val showEmptyScreen = state.messages.isEmpty() && !isInputFocused
+
+    val listState = remember { LazyListState() }
+
+    val canMakeTimeCapsule = state.chatProgress == 1f
+    var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
+    var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(state.messages.size) {
+        val last = state.messages.lastIndex
+        if (last >= 0) {
+            listState.animateScrollToItem(last)
+        }
+    }
+
+    LaunchedEffect(state.chatProgress) {
+        if (canMakeTimeCapsule) {
+            showTimeCapsuleCreateAlert = true
+            delay(3000L)
+            showTimeCapsuleCreateAlert = false
+        }
+    }
 
     AIChatExitModal(
         isModalOpen = isExitModalOpen,
@@ -117,6 +147,10 @@ private fun StatelessAIChatScreen(
                 onBackClick = {
                     setExitModalOpen(true)
                 },
+                handleBackPress = true,
+                onHandleBackPress = {
+                    setExitModalOpen(true)
+                },
             )
 
             ChatProgressBar(
@@ -125,6 +159,12 @@ private fun StatelessAIChatScreen(
                     Modifier
                         .fillMaxWidth(),
             )
+
+            if (showTimeCapsuleCreateAlert) {
+                TimeCapsuleCreateAlert(
+                    modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
+                )
+            }
 
             Box(
                 modifier =
@@ -136,6 +176,8 @@ private fun StatelessAIChatScreen(
                 ChatMessageList(
                     modifier = Modifier.fillMaxSize(),
                     chatMessages = state.messages,
+                    listState = listState,
+                    isMooiTyping = state.isMooiTyping,
                 )
 
                 if (showEmptyScreen) {
@@ -143,15 +185,50 @@ private fun StatelessAIChatScreen(
                         modifier = Modifier.offset(y = (-60).dp),
                     )
                 }
+
+                if (canMakeTimeCapsule) {
+                    ChattingFinishButton(
+                        modifier =
+                            Modifier
+                                .padding(bottom = 13.dp)
+                                .align(Alignment.BottomCenter),
+                        onClick = {
+                            showFinishBottomSheet = true
+                        },
+                    )
+                }
+            }
+
+            if (canMakeTimeCapsule && showFinishBottomSheet) {
+                val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                BottomSheet(
+                    onDismissRequest = { showFinishBottomSheet = false },
+                    sheetState = sheetState,
+                    hideDragHandle = true,
+                    subTitle = "감정을 충분히 이야기했어요.",
+                    title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
+                    confirmLabel = "네, 종료할래요.",
+                    dismissLabel = "아니요, 더 이야기할래요.",
+                    onDismiss = { showFinishBottomSheet = false },
+                    onConfirm = {
+                        showFinishBottomSheet = false
+                        onAction(AIChatAction.CreateTimeCapsule)
+                    },
+                )
             }
 
             ChatMessageInputBox(
                 text = draft,
                 modifier =
-                    Modifier.fillMaxWidth(),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(all = 16.dp),
                 onFocusChanged = { focused -> isInputFocused = focused },
                 onTextChange = { draft = it },
                 focusRequester = focusRequester,
+                enabled = true,
+                sendEnabled = !state.isWaitingReply,
+                showStop = state.isMooiTyping,
                 onSendMessage = {
                     val msg = draft.trim()
                     if (msg.isNotEmpty()) {

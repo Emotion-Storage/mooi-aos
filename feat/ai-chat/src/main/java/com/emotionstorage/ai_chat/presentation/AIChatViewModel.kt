@@ -2,26 +2,35 @@ package com.emotionstorage.ai_chat.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
-import com.emotionstorage.domain.common.DataState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import javax.inject.Inject
 
+enum class SendButtonMode { SEND, STOP }
+
 data class AIChatState(
-    val roomId: String = "",
+    val roomId: Long = 0L,
     val messages: List<ChatMessage> = emptyList(),
     val canCreateTimesCapsule: Boolean = false,
-    val chatProgress: Float = 0f,
+    val chatProgress: Float = 0.03f,
+    val turnScore: Int = 0,
+    val isWaitingReply: Boolean = false,
+    val isMooiTyping: Boolean = false,
 ) {
     val isEmpty: Boolean get() = messages.isEmpty()
     val hasTodayHistory: Boolean
@@ -32,7 +41,7 @@ data class AIChatState(
 
 sealed class AIChatAction {
     data class ConnectChatRoom(
-        val roomId: String,
+        val roomId: Long,
     ) : AIChatAction()
 
     data class SendChatMessage(
@@ -88,7 +97,7 @@ class AIChatViewModel @Inject constructor(
         }
     }
 
-    private fun handleConnectChatRoom(roomId: String) =
+    private fun handleConnectChatRoom(roomId: Long) =
         intent {
             // update room id
             reduce {
@@ -120,35 +129,64 @@ class AIChatViewModel @Inject constructor(
             }
         }
 
-    private fun launchChatMessageObserver(roomId: String): Job =
+    private fun launchChatMessageObserver(roomId: Long): Job =
         intent {
             // cancel previous message observer job, if exists
             chatMessageObserverJob?.cancel()
 
             chatMessageObserverJob =
                 viewModelScope.launch {
-                    observeChatMessages(roomId).collect { message ->
-                        reduce {
-                            state.copy(
-                                messages = state.messages + message,
-                            )
-                        }
-                    }
+                    observeChatMessages(roomId)
+                        .onEach { message ->
+                            if (state.isWaitingReply) {
+                                reduce {
+                                    state.copy(
+                                        isMooiTyping = false,
+                                        isWaitingReply = false,
+                                    )
+                                }
+                            }
+
+                            reduce {
+                                state.copy(
+                                    messages = state.messages + message,
+                                    chatProgress =
+                                        message.gaugeScore?.let { score ->
+                                            (score / 100f).coerceIn(0f, 1f)
+                                        } ?: state.chatProgress,
+                                )
+                            }
+                        }.catch {
+                            intent {
+                                reduce {
+                                    state.copy(isWaitingReply = false, isMooiTyping = false)
+                                }
+                            }
+                        }.onCompletion {
+                            intent {
+                                reduce {
+                                    state.copy(isWaitingReply = false, isMooiTyping = false)
+                                }
+                            }
+                        }.collect()
                 }
         }
 
     private fun handleSendMessage(message: String) =
         intent {
+            if (message.isBlank() || state.isWaitingReply) return@intent
             val newMessage =
                 ChatMessage(
                     roomId = state.roomId,
                     source = ChatMessage.MessageSource.CLIENT,
                     content = message,
                 )
-            // optimistic state update
+
             reduce {
                 state.copy(
                     messages = state.messages + newMessage,
+                    isWaitingReply = true,
+                    isMooiTyping = true,
                 )
             }
 

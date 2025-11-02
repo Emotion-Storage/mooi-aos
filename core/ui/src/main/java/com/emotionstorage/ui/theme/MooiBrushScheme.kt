@@ -51,6 +51,8 @@ data class MooiBrushScheme(
                     Color(0x08AECBFA),
                 ),
             stops = listOf(0.0f, 1.0f),
+            angleInDegrees = 109f,
+            useAsCssAngle = true,
         ),
     val commentBackground: Brush =
         LinearGradient(

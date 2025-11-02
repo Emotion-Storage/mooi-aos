@@ -7,7 +7,6 @@ import com.emotionstorage.domain.repo.ChatRepository
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ChatRepositoryImpl
@@ -16,7 +15,7 @@ class ChatRepositoryImpl
         private val chatRemoteDataSource: ChatRemoteDataSource,
         private val chatWSDataSource: ChatWSDataSource,
     ) : ChatRepository {
-        override suspend fun getChatRoomId(): Flow<DataState<String>> =
+        override suspend fun getChatRoomId(): Flow<DataState<Long>> =
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
@@ -29,7 +28,7 @@ class ChatRepositoryImpl
                 }
             }
 
-        override suspend fun connectChatRoom(roomId: String): Flow<DataState<Boolean>> =
+        override suspend fun connectChatRoom(roomId: Long): Flow<DataState<Boolean>> =
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
@@ -42,7 +41,7 @@ class ChatRepositoryImpl
                 }
             }
 
-        override suspend fun disconnectChatRoom(roomId: String): Flow<DataState<Boolean>> =
+        override suspend fun disconnectChatRoom(roomId: Long): Flow<DataState<Boolean>> =
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
@@ -55,17 +54,11 @@ class ChatRepositoryImpl
                 }
             }
 
-        override suspend fun observeChatMessages(roomId: String): Flow<ChatMessage> =
-            chatWSDataSource.observeChatMessages(roomId).map {
-                ChatMessage(
-                    roomId = roomId,
-                    source = ChatMessage.MessageSource.SERVER,
-                    content = it,
-                )
-            }
+        override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
+            chatWSDataSource.observeChatMessages(roomId)
 
         override suspend fun sendChatMessage(
-            roomId: String,
+            roomId: Long,
             chatMessage: ChatMessage,
         ): Flow<DataState<Boolean>> =
             flow {

@@ -19,6 +19,7 @@ import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.DescriptionOverlayScreen
@@ -27,10 +28,10 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AIChatDescriptionScreen(
-    roomId: String,
+    roomId: Long,
     modifier: Modifier = Modifier,
     onCheckboxChanged: (Boolean) -> Unit = {},
-    onStartChat: (String) -> Unit = {},
+    onStartChat: (Long) -> Unit = {},
 ) {
     var progressRect by remember { mutableStateOf(Rect.Zero) }
     var inputRect by remember { mutableStateOf(Rect.Zero) }
@@ -39,7 +40,7 @@ fun AIChatDescriptionScreen(
 
     StatelessAIChatDescriptionScreen(
         modifier = modifier,
-        progress = 0.1f,
+        progress = 0.03f,
         showDescription = showDescription,
         progressBarBounds = progressRect,
         inputBoxBounds = inputRect,
@@ -74,13 +75,12 @@ private fun StatelessAIChatDescriptionScreen(
     ) { innerPadding ->
         Column(
             modifier =
-                Modifier
+                modifier
                     .fillMaxWidth()
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding)
                     .imePadding(),
         ) {
-            // TopAppbar 을 UI 컴포넌트로
             TopAppBar(
                 modifier =
                     Modifier.onGloballyPositioned {
@@ -95,7 +95,6 @@ private fun StatelessAIChatDescriptionScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        // ProgressBar 위치 추적
                         .onGloballyPositioned {
                             onProgressRect(it.boundsInParent())
                         },
@@ -110,6 +109,7 @@ private fun StatelessAIChatDescriptionScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
+                        .padding(all = 16.dp)
                         .onGloballyPositioned {
                             onInputBoxRect(it.boundsInParent())
                         },

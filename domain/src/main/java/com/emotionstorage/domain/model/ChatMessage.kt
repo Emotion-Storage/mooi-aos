@@ -5,9 +5,11 @@ import java.util.UUID
 
 data class ChatMessage(
     val id: String = UUID.randomUUID().toString(),
-    val roomId: String,
+    val roomId: Long,
     val source: MessageSource,
     val content: String,
+    val gaugeScore: Int? = null,
+    val turnCountScore: Int? = null,
     val timestamp: LocalDateTime = LocalDateTime.now(),
 ) {
     enum class MessageSource {

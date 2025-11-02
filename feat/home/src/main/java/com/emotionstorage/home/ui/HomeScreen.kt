@@ -50,7 +50,7 @@ fun HomeScreen(
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
     navToDailyReport: (id: String) -> Unit = {},
-    navToChat: (roomId: String) -> Unit = {},
+    navToChat: (roomId: Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
