@@ -2,7 +2,7 @@ package com.emotionstorage.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.emotionstorage.local.room.AppDatabaseConstant
+import com.emotionstorage.local.room.database.AppDatabaseConstant
 import java.time.LocalDateTime
 
 // only one user can exist in the database (= currently logged in user)

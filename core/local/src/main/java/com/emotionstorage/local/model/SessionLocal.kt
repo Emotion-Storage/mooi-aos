@@ -2,7 +2,7 @@ package com.emotionstorage.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.emotionstorage.local.room.AppDatabaseConstant
+import com.emotionstorage.local.room.database.AppDatabaseConstant
 
 // only one session can exist in the database (= current session)
 // set primary key to fixed value, 0

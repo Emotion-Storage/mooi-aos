@@ -1,11 +1,14 @@
-package com.emotionstorage.local.room
+package com.emotionstorage.local.room.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.emotionstorage.local.model.SessionLocal
 import com.emotionstorage.local.model.TimeCapsuleLocal
 import com.emotionstorage.local.model.UserLocal
+import com.emotionstorage.local.room.DtoConverter
 import com.emotionstorage.local.room.dao.SessionDao
 import com.emotionstorage.local.room.dao.TimeCapsuleDao
 import com.emotionstorage.local.room.dao.UserDao
