@@ -25,8 +25,7 @@ internal object RoomModule {
                 context,
                 AppDatabase::class.java,
                 AppDatabaseConstant.NAME,
-            )
-            .fallbackToDestructiveMigration(false)
+            ).fallbackToDestructiveMigration(false)
             .addMigrations(MIGRATION_2_3)
             .build()
 

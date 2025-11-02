@@ -3,8 +3,6 @@ package com.emotionstorage.local.room.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.emotionstorage.local.model.SessionLocal
 import com.emotionstorage.local.model.TimeCapsuleLocal
 import com.emotionstorage.local.model.UserLocal

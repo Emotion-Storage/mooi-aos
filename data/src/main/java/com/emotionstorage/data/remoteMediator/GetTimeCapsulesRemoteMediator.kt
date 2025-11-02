@@ -44,7 +44,7 @@ class GetTimeCapsulesRemoteMediator(
                             // no pages were loaded before, can load more
                             Napier.d(
                                 "LoadType.APPEND; no pages were loaded before & can load more, " +
-                                        "Success(endOfPaginationReached = false)",
+                                    "Success(endOfPaginationReached = false)",
                             )
                             return MediatorResult.Success(endOfPaginationReached = false)
                         }
