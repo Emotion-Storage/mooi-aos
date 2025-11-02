@@ -44,7 +44,7 @@ class GetTimeCapsulesRemoteMediator(
                             // no pages were loaded before, can load more
                             Napier.d(
                                 "LoadType.APPEND; no pages were loaded before & can load more, " +
-                                    "Success(endOfPaginationReached = false)",
+                                        "Success(endOfPaginationReached = false)",
                             )
                             return MediatorResult.Success(endOfPaginationReached = false)
                         }
@@ -74,8 +74,8 @@ class GetTimeCapsulesRemoteMediator(
                 )
             val endOfPaginationReached =
                 timeCapsules
-                    .last()
-                    .pageData
+                    .lastOrNull()
+                    ?.pageData
                     ?.hasNextPage
                     ?.not() ?: true
             Napier.d("new timeCapsules.size: ${timeCapsules.size}, endOfPaginationReached: $endOfPaginationReached")
