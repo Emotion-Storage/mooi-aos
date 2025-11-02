@@ -109,36 +109,19 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         status: String,
     ): List<TimeCapsuleEntity> {
         try {
-            // dummy response for pagination test
-            // todo: delete code
-            return ((page * limit)..(page * limit) + limit).toList().map {
-                TimeCapsuleEntity(
-                    id = it * 10L,
-                    status = "arrived",
-                    title = "title_${page}_${it}",
-                    isFavorite = false,
-                    historyDate = LocalDate.now().atStartOfDay(),
-                    createdAt = LocalDate.now().atStartOfDay(),
-                    updatedAt = LocalDate.now().atStartOfDay(),
-                    pageData = TimeCapsuleEntity.PageData(
-                        page = page,
-                        hasNextPage = true
-                    )
+            val response =
+                apiService.getTimeCapsules(
+                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    page = page,
+                    limit = limit,
+                    status = status,
                 )
+            if (response.data != null) {
+                return TimeCapsuleResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getTimeCapsules response data is empty, $response")
             }
-//            val response =
-//                apiService.getTimeCapsules(
-//                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-//                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-//                    page = page,
-//                    limit = limit,
-//                    status = status,
-//                )
-//            if (response.data != null) {
-//                return TimeCapsuleResponseMapper.toData(response.data!!)
-//            } else {
-//                throw Exception("getTimeCapsules response data is empty, $response")
-//            }
         } catch (e: Exception) {
             throw Exception("getTimeCapsules api fail, ${e.message}", e)
         }
