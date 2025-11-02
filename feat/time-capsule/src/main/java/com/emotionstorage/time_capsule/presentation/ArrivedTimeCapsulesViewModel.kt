@@ -46,6 +46,7 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
     override val container =
         container<Unit, ArrivedTimeCapsulesSideEffect>(Unit)
 
+    // paging data flow should not be managed by orbit!
     val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
         getArrivedTimeCapsules().transform { pagingData ->
             emit(
