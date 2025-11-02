@@ -34,7 +34,7 @@ class GetTimeCapsulesPagingSource @Inject constructor(
                 // only load page forwards
                 prevKey = null,
                 nextKey =
-                    timeCapsules.last().pageData?.let {
+                    timeCapsules.lastOrNull()?.pageData?.let {
                         if (it.hasNextPage) it.page + 1 else null
                     },
             )
