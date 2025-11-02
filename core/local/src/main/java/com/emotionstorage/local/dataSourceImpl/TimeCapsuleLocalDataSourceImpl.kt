@@ -1,5 +1,6 @@
 package com.emotionstorage.local.dataSourceImpl
 
+import androidx.paging.PagingSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.local.modelMapper.TimeCapsuleMapper
@@ -21,10 +22,12 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override val pagingSource =
-        timeCapsuleDao.pagingSource().mapValue {
+    override fun getPagingSource(): PagingSource<Int, TimeCapsuleEntity> {
+        Logger.d("getPagingSource called")
+        return timeCapsuleDao.pagingSource().mapValue {
             TimeCapsuleMapper.toData(it)
         }
+    }
 
     override suspend fun clearAll(): Boolean {
         try {

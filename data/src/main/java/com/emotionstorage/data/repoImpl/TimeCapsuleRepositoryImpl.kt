@@ -133,14 +133,17 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
 
     @OptIn(ExperimentalPagingApi::class)
-    override suspend fun getPagedTimeCapsules(
+    override fun getPagedTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
         status: String,
     ): Flow<PagingData<TimeCapsule>> {
         Napier.d("getPagedTimeCapsules: startDate: $startDate, endDate: $endDate, status: $status")
         return Pager(
-            config = PagingConfig(pageSize = PAGE_SIZE),
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
             remoteMediator = GetTimeCapsulesRemoteMediator(
                 remoteDataSource = remoteDataSource,
                 localDataSource = localDataSource,
@@ -148,7 +151,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 endDate = endDate,
                 status = status,
             ),
-            pagingSourceFactory = { localDataSource.pagingSource }
+            pagingSourceFactory = localDataSource::getPagingSource
         ).flow.map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)
