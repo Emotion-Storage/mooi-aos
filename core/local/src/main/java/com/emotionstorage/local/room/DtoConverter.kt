@@ -35,5 +35,9 @@ class DtoConverter {
         )
 
     @TypeConverter
-    fun toStringList(value: String): List<String> = json.decodeFromString(value)
+    fun toStringList(value: String): List<String> =
+        json.decodeFromString(
+            ListSerializer(String.serializer()),
+            value,
+        )
 }
