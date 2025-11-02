@@ -13,7 +13,7 @@ internal object TimeCapsuleMapper {
             isFavorite = entity.isFavorite,
             emotions =
                 entity.emotions.map {
-                    it.emotion to it.percentage
+                    "${it.emotion}:${it.percentage ?: "null"}"
                 },
             comments = entity.comments,
             note = entity.note,
@@ -32,10 +32,11 @@ internal object TimeCapsuleMapper {
             summary = local.summary,
             isFavorite = local.isFavorite,
             emotions =
-                local.emotions.map { (emotion, percentage) ->
+                local.emotions.map {
+                    val split = it.split(":")
                     TimeCapsuleEntity.Emotion(
-                        emotion = emotion,
-                        percentage = percentage,
+                        emotion = split[0],
+                        percentage = if (split[1] == "null") null else split[1].toFloat(),
                     )
                 },
             comments = local.comments,

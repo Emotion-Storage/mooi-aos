@@ -15,7 +15,8 @@ data class TimeCapsuleLocal(
     val title: String,
     val summary: String = "",
     val isFavorite: Boolean = false,
-    val emotions: List<Pair<String, Float?>> = emptyList(),
+    // emotion string = "emotion:percentage"
+    val emotions: List<String> = emptyList(),
     val comments: List<String> = emptyList(),
     val note: String = "",
     @Serializable(with = LocalDateTimeSerializer::class)
