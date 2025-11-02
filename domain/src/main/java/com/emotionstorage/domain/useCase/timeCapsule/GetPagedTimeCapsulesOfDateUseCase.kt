@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetPagedTimeCapsulesOfDateUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    suspend operator fun invoke(date: LocalDate): Flow<PagingData<TimeCapsule>> =
+    operator fun invoke(date: LocalDate): Flow<PagingData<TimeCapsule>> =
         timeCapsuleRepository.getPagedTimeCapsules(
             startDate = date,
             endDate = date,
