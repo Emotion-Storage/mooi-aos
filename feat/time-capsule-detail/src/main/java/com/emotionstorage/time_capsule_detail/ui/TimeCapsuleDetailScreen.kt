@@ -201,7 +201,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     TimeCapsuleUnlockModal(
         keyCount = unlockModalState.keyCount,
         requiredKeyCount = unlockModalState.requiredKeyCount,
-        arriveAt = unlockModalState.arriveAt,
+        openAt = unlockModalState.openAt,
         isModalOpen = isUnlockModalOpen,
         onUnlock = {
             onAction(OnUnlockTimeCapsule(id))

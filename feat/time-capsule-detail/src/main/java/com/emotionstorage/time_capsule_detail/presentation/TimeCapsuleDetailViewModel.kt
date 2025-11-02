@@ -91,7 +91,7 @@ sealed class TimeCapsuleDetailSideEffect {
         data class UnlockModalState(
             val keyCount: Int = 0,
             val requiredKeyCount: Int = 0,
-            val arriveAt: LocalDateTime = LocalDateTime.now(),
+            val openAt: LocalDateTime = LocalDateTime.now(),
         )
     }
 
@@ -247,7 +247,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                                     UnlockModalState(
                                         keyCount = keyCount,
                                         requiredKeyCount = requiredKeyCount,
-                                        arriveAt = state.timeCapsule?.openAt!!,
+                                        openAt = state.timeCapsule?.openAt!!,
                                     ),
                                 ),
                             )
