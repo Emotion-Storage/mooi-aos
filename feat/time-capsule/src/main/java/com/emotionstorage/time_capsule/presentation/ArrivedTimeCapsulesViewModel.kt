@@ -1,7 +1,10 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.map
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteResult
@@ -20,13 +23,7 @@ import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
-data class ArrivedTimeCapsulesState(
-    val timeCapsules: Flow<PagingData<TimeCapsuleItemState>>? = null,
-)
-
 sealed class ArrivedTimeCapsulesAction {
-    object Init : ArrivedTimeCapsulesAction()
-
     data class ToggleFavorite(
         val id: Long,
         val prevIsFavorite: Boolean,
@@ -42,89 +39,76 @@ sealed class ArrivedTimeCapsulesSideEffect {
 @OptIn(OrbitExperimental::class)
 @HiltViewModel
 class ArrivedTimeCapsulesViewModel @Inject constructor(
-    private val getArrivedTimeCapsules: GetPagedArrivedTimeCapsulesUseCase,
+    getArrivedTimeCapsules: GetPagedArrivedTimeCapsulesUseCase,
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
 ) : ViewModel(),
-    ContainerHost<ArrivedTimeCapsulesState, ArrivedTimeCapsulesSideEffect> {
+    ContainerHost<Unit, ArrivedTimeCapsulesSideEffect> {
     override val container =
-        container<ArrivedTimeCapsulesState, ArrivedTimeCapsulesSideEffect>(
-            ArrivedTimeCapsulesState(),
-        )
+        container<Unit, ArrivedTimeCapsulesSideEffect>(Unit)
+
+    val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
+        getArrivedTimeCapsules().transform { pagingData ->
+            emit(
+                pagingData.map {
+                    TimeCapsuleMapper.toUi(it)
+                }
+            )
+        }.cachedIn(viewModelScope)
+
 
     fun onAction(action: ArrivedTimeCapsulesAction) {
         when (action) {
-            is ArrivedTimeCapsulesAction.Init -> {
-                Logger.d("ArrivedTimeCapsulesViewModel: Init")
-                handleInit()
-            }
-
             is ArrivedTimeCapsulesAction.ToggleFavorite -> {
                 handleToggleFavorite(action.id, action.prevIsFavorite)
             }
         }
     }
 
-    private fun handleInit() =
-        intent {
-            try {
-                val timeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
-                    getArrivedTimeCapsules().transform { pagingData ->
-                        pagingData.map {
-                            TimeCapsuleMapper.toUi(it)
-                        }
-                    }
-                reduce { state.copy(timeCapsules = timeCapsules) }
-            } catch (e: Exception) {
-                Logger.e("Failed to get arrived time capsules, $e")
-                // todo: handle error
-            }
-        }
-
     private fun handleToggleFavorite(
         id: Long,
         prevIsFavorite: Boolean,
     ) = intent {
-        suspend fun updateFavorite(
-            id: Long,
-            isFavorite: Boolean,
-        ) = reduce {
-            state.copy(
-                timeCapsules =
-                    state.timeCapsules?.transform { pagingData ->
-                        pagingData.map {
-                            if (it.id == id) {
-                                it.copy(isFavorite = isFavorite)
-                            } else {
-                                it
-                            }
-                        }
-                    },
-            )
-        }
+//        suspend fun updateFavorite(
+//            id: Long,
+//            isFavorite: Boolean,
+//        ) = reduce {
+//            state.copy(
+//                timeCapsules =
+//                    state.timeCapsules?.transform { pagingData ->
+//                        pagingData.map {
+//                            if (it.id == id) {
+//                                it.copy(isFavorite = isFavorite)
+//                            } else {
+//                                it
+//                            }
+//                        }
+//                    },
+//            )
+//        }
 
-        coroutineScope {
-            collectDataState(
-                flow = setFavorite(id, !prevIsFavorite),
-                onSuccess = {
-                    when (it) {
-                        FavoriteResult.ADDED -> {
-                            updateFavorite(id, true)
-                        }
-
-                        FavoriteResult.REMOVED -> {
-                            updateFavorite(id, false)
-                        }
-
-                        FavoriteResult.FULL -> {
-                            // do nothing
-                        }
-                    }
-                    postSideEffect(ShowFavoriteToast(it))
-                },
-                onError = { throwable, data ->
-                    Logger.e("Failed to toggle favorite, $throwable")
-                },
-            )
-        }
+//        coroutineScope {
+//            collectDataState(
+//                flow = setFavorite(id, !prevIsFavorite),
+//                onSuccess = {
+//                    when (it) {
+//                        FavoriteResult.ADDED -> {
+//                            updateFavorite(id, true)
+//                        }
+//
+//                        FavoriteResult.REMOVED -> {
+//                            updateFavorite(id, false)
+//                        }
+//
+//                        FavoriteResult.FULL -> {
+//                            // do nothing
+//                        }
+//                    }
+//                    postSideEffect(ShowFavoriteToast(it))
+//                },
+//                onError = { throwable, data ->
+//                    Logger.e("Failed to toggle favorite, $throwable")
+//                },
+//            )
+//        }
     }
 }

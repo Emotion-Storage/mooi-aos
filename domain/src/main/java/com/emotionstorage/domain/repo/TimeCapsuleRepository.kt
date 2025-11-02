@@ -30,7 +30,7 @@ interface TimeCapsuleRepository {
         status: String,
     ): Flow<DataState<List<TimeCapsule>>>
 
-    suspend fun getPagedTimeCapsules(
+    fun getPagedTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
         status: String,

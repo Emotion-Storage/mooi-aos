@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
@@ -46,13 +48,10 @@ fun ArrivedTimeCapsulesScreen(
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val state = viewModel.container.stateFlow.collectAsState()
-    val timeCapsulesState = state.value.timeCapsules?.collectAsLazyPagingItems()
+    val timeCapsulesState = viewModel.arrivedTimeCapsules.collectAsLazyPagingItems()
 
     val snackState = remember { SnackbarHostState() }
     LaunchedEffect("init") {
-        viewModel.onAction(ArrivedTimeCapsulesAction.Init)
-
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is ArrivedTimeCapsulesSideEffect.ShowFavoriteToast -> {
@@ -134,38 +133,41 @@ private fun StatelessArrivedTimeCapsulesScreen(
                 }
             }
 
-            if (timeCapsules == null || timeCapsules.itemCount == 0) {
-                item {
-                    Text(
-                        modifier = Modifier.padding(top = 244.dp),
-                        text = "최근 도착한 타임캡슐이 없어요.",
-                        style = MooiTheme.typography.caption2,
-                        color = MooiTheme.colorScheme.gray400,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            } else {
-                items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                    timeCapsules[it]?.run {
-                        TimeCapsuleItem(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 26.dp),
-                            timeCapsule = this,
-                            showDate = true,
-                            showInfoText = false,
-                            showFavorite = true,
-                            onClick = { navToTimeCapsuleDetail(this.id) },
-                            onFavoriteClick = {
-                                onAction(
-                                    ArrivedTimeCapsulesAction.ToggleFavorite(
-                                        this.id,
-                                        this.isFavorite,
-                                    ),
-                                )
-                            },
+            // update ui when load state is not loading
+            if (timeCapsules?.loadState?.refresh is LoadState.NotLoading) {
+                if (timeCapsules.itemCount == 0) {
+                    item {
+                        Text(
+                            modifier = Modifier.padding(top = 244.dp),
+                            text = "최근 도착한 타임캡슐이 없어요.",
+                            style = MooiTheme.typography.caption2,
+                            color = MooiTheme.colorScheme.gray400,
+                            textAlign = TextAlign.Center,
                         )
+                    }
+                } else {
+                    items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
+                        timeCapsules[it]?.run {
+                            TimeCapsuleItem(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 26.dp),
+                                timeCapsule = this,
+                                showDate = true,
+                                showInfoText = false,
+                                showFavorite = true,
+                                onClick = { navToTimeCapsuleDetail(this.id) },
+                                onFavoriteClick = {
+                                    onAction(
+                                        ArrivedTimeCapsulesAction.ToggleFavorite(
+                                            this.id,
+                                            this.isFavorite,
+                                        ),
+                                    )
+                                },
+                            )
+                        }
                     }
                 }
             }

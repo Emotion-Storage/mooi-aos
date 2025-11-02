@@ -67,6 +67,7 @@ class GetTimeCapsulesRemoteMediator(
                 status = status
             )
             val endOfPaginationReached = timeCapsules.last().pageData?.hasNextPage?.not() ?: true
+            Napier.d("new timeCapsules.size: ${timeCapsules.size}, endOfPaginationReached: $endOfPaginationReached")
 
             // save to local
             if (loadType == LoadType.REFRESH) {
