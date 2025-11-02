@@ -54,6 +54,7 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
     fun onAction(action: ArrivedTimeCapsulesAction) {
         when (action) {
             is ArrivedTimeCapsulesAction.Init -> {
+                Logger.d("ArrivedTimeCapsulesViewModel: Init")
                 handleInit()
             }
 

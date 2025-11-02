@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
+import io.github.aakira.napier.Napier
 import java.time.LocalDate
 
 @OptIn(ExperimentalPagingApi::class)
@@ -26,25 +27,32 @@ class GetTimeCapsulesRemoteMediator(
             val page = when (loadType) {
                 LoadType.REFRESH -> {
                     // load first page
+                    Napier.d("LoadType.REFRESH, page: 1")
                     1
                 }
 
                 LoadType.PREPEND -> {
                     // prepend not supported, return end of page
+                    Napier.d("LoadType.PREPEND, Success(endOfPaginationReached = true)")
                     return MediatorResult.Success(endOfPaginationReached = true)
                 }
 
                 LoadType.APPEND -> {
-                    // if null, no pages were loaded before, can load more
                     val lastPage = state.lastItemOrNull()
-                        ?: return MediatorResult.Success(endOfPaginationReached = false)
+                    if (lastPage == null) {
+                        // no pages were loaded before, can load more
+                        Napier.d("LoadType.APPEND; no pages were loaded before & can load more, Success(endOfPaginationReached = false)")
+                        return MediatorResult.Success(endOfPaginationReached = false)
+                    }
 
                     val pageData = lastPage.pageData
                     if (pageData == null || !pageData.hasNextPage) {
                         // no more pages, return end of page
+                        Napier.d("LoadType.APPEND; end of page, Success(endOfPaginationReached = true)")
                         return MediatorResult.Success(endOfPaginationReached = true)
                     } else {
                         // load next page
+                        Napier.d("LoadType.APPEND; load next page, page: ${pageData.page + 1}")
                         pageData.page + 1
                     }
                 }

@@ -16,6 +16,7 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -137,6 +138,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         endDate: LocalDate,
         status: String,
     ): Flow<PagingData<TimeCapsule>> {
+        Napier.d("getPagedTimeCapsules: startDate: $startDate, endDate: $endDate, status: $status")
         return Pager(
             config = PagingConfig(pageSize = PAGE_SIZE),
             remoteMediator = GetTimeCapsulesRemoteMediator(
