@@ -11,9 +11,10 @@ fun <Key : Any, Value1 : Any, Value2 : Any> PagingSource<Key, Value1>.mapValue(
     object : PagingSource<Key, Value2>() {
         override fun getRefreshKey(state: PagingState<Key, Value2>): Key? {
             Logger.d("getRefreshKey called, state: $state")
-            return this@mapValue.getRefreshKey(
-                state as PagingState<Key, Value1>,
-            )
+            return state.anchorPosition?.let { anchorPosition ->
+                val anchorPage = state.closestPageToPosition(anchorPosition)
+                anchorPage?.prevKey ?: anchorPage?.nextKey
+            }
         }
 
         override suspend fun load(params: LoadParams<Key>): LoadResult<Key, Value2> {
