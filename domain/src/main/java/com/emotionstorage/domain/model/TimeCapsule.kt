@@ -12,15 +12,16 @@ data class TimeCapsule(
     val isFavorite: Boolean = false,
     val emotions: List<Emotion> = emptyList(),
     val comments: List<String> = emptyList(),
-    val note: String? = null,
-    val logs: List<OpenLog> = emptyList(),
-    // 생성 시각
+    val note: String = "",
+    // 타임캡슐 소스 대화 시작 시각
+    val historyDate: LocalDateTime,
+    // 타임캡슐 생성/갱신 시각
     val createdAt: LocalDateTime,
-    // 도착 시각
-    val arriveAt: LocalDateTime? = null,
+    val updatedAt: LocalDateTime,
+    // 타임캡슐 오픈 시각
+    val openAt: LocalDateTime? = null,
     // 즐겨찾기 설정 시각
     val favoriteAt: LocalDateTime? = null,
-    val updatedAt: LocalDateTime? = null,
 ) {
     // 임시저장 만료 시각
     val expireAt: LocalDateTime = createdAt.plusHours(TIME_CAPSULE_TEMPORARY_HOURS.toLong())
@@ -43,12 +44,5 @@ data class TimeCapsule(
         val emoji: String,
         val label: String,
         val percentage: Float? = null,
-    )
-
-    data class OpenLog(
-        // 열람 시각
-        val openedAt: LocalDateTime,
-        // 최초 열람 여부
-        val isFirst: Boolean,
     )
 }

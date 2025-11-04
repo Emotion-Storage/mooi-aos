@@ -9,15 +9,15 @@ import javax.inject.Inject
 import kotlin.math.absoluteValue
 
 class GetRequiredKeyCountUseCase @Inject constructor() {
-    operator fun invoke(arriveAt: LocalDate): Flow<DataState<Int>> =
+    operator fun invoke(openAt: LocalDate): Flow<DataState<Int>> =
         flow {
-            when (LocalDate.now().getDaysBetween(arriveAt).absoluteValue) {
+            when (LocalDate.now().getDaysBetween(openAt).absoluteValue) {
                 in 0..7 -> emit(DataState.Success(1))
                 in 8..30 -> emit(DataState.Success(3))
                 in 31..90 -> emit(DataState.Success(7))
                 in 91..180 -> emit(DataState.Success(11))
                 in 181..365 -> emit(DataState.Success(15))
-                else -> emit(DataState.Error(throwable = Throwable("invalid arriveAt")))
+                else -> emit(DataState.Error(throwable = Throwable("invalid openAt: $openAt")))
             }
         }
 }

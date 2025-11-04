@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
-import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.ArriveAfter
+import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.OpenAfter
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
@@ -23,12 +23,12 @@ data class SaveTimeCapsuleState(
     val createdAt: LocalDateTime = LocalDateTime.now(),
     val expireAt: LocalDateTime? = null,
     val saveAt: LocalDateTime = LocalDateTime.now(),
-    val arriveAfter: ArriveAfter? = null,
-    val arriveAt: LocalDateTime? = null,
+    val openAfter: OpenAfter? = null,
+    val openDateTime: LocalDateTime? = null,
     // year month state for date picker bottom sheet
     val calendarYearMonth: YearMonth = YearMonth.now(),
 ) {
-    enum class ArriveAfter(
+    enum class OpenAfter(
         val label: String,
     ) {
         AFTER_24HOURS("24시간 후"),
@@ -48,13 +48,13 @@ sealed class SaveTimeCapsuleAction {
     ) : SaveTimeCapsuleAction()
 
     // select open date from grid item
-    data class SelectArriveAfter(
-        val arriveAfter: ArriveAfter?,
+    data class SelectOpenAfter(
+        val openAfter: OpenAfter?,
     ) : SaveTimeCapsuleAction()
 
     // select open date from calendar bottom sheet
-    data class SelectArriveAt(
-        val arriveAt: LocalDate,
+    data class SelectOpenDate(
+        val openDate: LocalDate,
     ) : SaveTimeCapsuleAction()
 
     data class SelectCalendarYearMonth(
@@ -86,12 +86,12 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                 handleInit(action.id, action.isNewTimeCapsule)
             }
 
-            is SaveTimeCapsuleAction.SelectArriveAfter -> {
-                handleSelectArriveAfter(action.arriveAfter)
+            is SaveTimeCapsuleAction.SelectOpenAfter -> {
+                handleSelectOpenAfter(action.openAfter)
             }
 
-            is SaveTimeCapsuleAction.SelectArriveAt -> {
-                handleSelectArriveAt(action.arriveAt)
+            is SaveTimeCapsuleAction.SelectOpenDate -> {
+                handleSelectOpenDate(action.openDate)
             }
 
             is SaveTimeCapsuleAction.SelectCalendarYearMonth -> {
@@ -120,8 +120,8 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                         createdAt = it.createdAt,
                         saveAt = if (isNewTimeCapsule) it.createdAt else LocalDateTime.now(),
                         expireAt = it.expireAt,
-                        arriveAfter = null,
-                        arriveAt = null,
+                        openAfter = null,
+                        openDateTime = null,
                     )
                 }
 
@@ -140,77 +140,77 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         )
     }
 
-    private fun handleSelectArriveAfter(arriveAfter: ArriveAfter?) =
+    private fun handleSelectOpenAfter(openAfter: OpenAfter?) =
         intent {
-            when (arriveAfter) {
+            when (openAfter) {
                 null -> {
                     reduce {
                         state.copy(
-                            arriveAfter = null,
-                            arriveAt = null,
+                            openAfter = null,
+                            openDateTime = null,
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_24HOURS -> {
+                OpenAfter.AFTER_24HOURS -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = state.saveAt.plusHours(24),
+                            openAfter = openAfter,
+                            openDateTime = state.saveAt.plusHours(24),
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_3DAYS -> {
+                OpenAfter.AFTER_3DAYS -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = state.saveAt.plusDays(3),
+                            openAfter = openAfter,
+                            openDateTime = state.saveAt.plusDays(3),
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_1WEEK -> {
+                OpenAfter.AFTER_1WEEK -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = state.saveAt.plusDays(7),
+                            openAfter = openAfter,
+                            openDateTime = state.saveAt.plusDays(7),
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_15DAYS -> {
+                OpenAfter.AFTER_15DAYS -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = state.saveAt.plusDays(15),
+                            openAfter = openAfter,
+                            openDateTime = state.saveAt.plusDays(15),
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_30DAYS -> {
+                OpenAfter.AFTER_30DAYS -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = state.saveAt.plusDays(30),
+                            openAfter = openAfter,
+                            openDateTime = state.saveAt.plusDays(30),
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_1YEAR -> {
+                OpenAfter.AFTER_1YEAR -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = state.saveAt.plusYears(1),
+                            openAfter = openAfter,
+                            openDateTime = state.saveAt.plusYears(1),
                         )
                     }
                 }
 
-                ArriveAfter.AFTER_CUSTOM -> {
+                OpenAfter.AFTER_CUSTOM -> {
                     reduce {
                         state.copy(
-                            arriveAfter = arriveAfter,
-                            arriveAt = null,
+                            openAfter = openAfter,
+                            openDateTime = null,
                             calendarYearMonth = YearMonth.now(),
                         )
                     }
@@ -218,22 +218,22 @@ class SaveTimeCapsuleViewModel @Inject constructor(
             }
         }
 
-    private fun handleSelectArriveAt(arriveAt: LocalDate) =
+    private fun handleSelectOpenDate(openDate: LocalDate) =
         intent {
-            if (arriveAt.isBefore(state.saveAt.toLocalDate())) {
+            if (openDate.isBefore(state.saveAt.toLocalDate())) {
                 Logger.e("Timecapsule open date can not be before save date")
                 return@intent
             }
-            if (arriveAt.isAfter(state.saveAt.toLocalDate().plusYears(1))) {
+            if (openDate.isAfter(state.saveAt.toLocalDate().plusYears(1))) {
                 Logger.e("Timecapsule open date can not be after 1 year from save date")
                 return@intent
             }
 
             reduce {
                 state.copy(
-                    arriveAfter = ArriveAfter.AFTER_CUSTOM,
-                    arriveAt = LocalDateTime.of(arriveAt, state.saveAt.toLocalTime()),
-                    calendarYearMonth = YearMonth.from(arriveAt),
+                    openAfter = OpenAfter.AFTER_CUSTOM,
+                    openDateTime = LocalDateTime.of(openDate, state.saveAt.toLocalTime()),
+                    calendarYearMonth = YearMonth.from(openDate),
                 )
             }
         }

@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.DailyReportRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.model.DailyReportEntity
 import com.emotionstorage.remote.api.DailyReportApiService
 import com.emotionstorage.remote.modelMapper.DailyReportResponseMapper

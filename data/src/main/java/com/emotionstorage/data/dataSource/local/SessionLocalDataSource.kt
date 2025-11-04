@@ -1,4 +1,4 @@
-package com.emotionstorage.data.dataSource
+package com.emotionstorage.data.dataSource.local
 
 import com.emotionstorage.data.model.SessionEntity
 

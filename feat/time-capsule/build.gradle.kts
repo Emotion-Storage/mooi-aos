@@ -27,4 +27,6 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
     implementation(projects.core.ui)
+
+    implementation(libs.androidx.paging.compose)
 }

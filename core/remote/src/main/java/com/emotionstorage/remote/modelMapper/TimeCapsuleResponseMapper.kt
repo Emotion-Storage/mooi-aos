@@ -1,6 +1,7 @@
 package com.emotionstorage.remote.modelMapper
 
 import com.emotionstorage.data.model.TimeCapsuleEntity
+import com.emotionstorage.data.model.TimeCapsuleEntity.PageData
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDetailResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 
@@ -18,9 +19,15 @@ internal object TimeCapsuleResponseMapper {
                             emotion = emotion,
                         )
                     },
+                historyDate = it.historyDate,
                 createdAt = it.createdAt,
-                arriveAt = it.openAt,
+                openAt = it.openAt,
                 updatedAt = it.updatedAt,
+                pageData =
+                    PageData(
+                        page = response.pagination.page,
+                        hasNextPage = response.pagination.page < response.pagination.totalPage,
+                    ),
             )
         }
 
@@ -40,8 +47,9 @@ internal object TimeCapsuleResponseMapper {
                 },
             comments = response.comments,
             note = response.note,
+            historyDate = response.historyDate,
             createdAt = response.createdAt,
-            arriveAt = response.openAt,
+            openAt = response.openAt,
             updatedAt = response.updatedAt,
         )
 }

@@ -5,8 +5,10 @@ import com.emotionstorage.helper.ApplicationConfig
 import com.emotionstorage.helper.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
-
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.getByType
 
 
 class AndroidApplicationConventionPlugin : Plugin<Project> {
@@ -20,6 +22,11 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.serialization")
                 apply("com.google.gms.google-services")
                 apply("org.jlleitschuh.gradle.ktlint")
+            }
+
+            val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+            dependencies {
+                add("implementation", libs.findLibrary("napier").get())
             }
 
             extensions.configure<ApplicationExtension> {

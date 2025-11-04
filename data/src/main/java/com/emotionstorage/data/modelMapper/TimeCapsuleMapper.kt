@@ -38,8 +38,9 @@ internal object TimeCapsuleMapper {
                     },
             comments = entity.comments,
             note = entity.note,
+            historyDate = entity.historyDate,
             createdAt = entity.createdAt,
-            arriveAt = entity.arriveAt,
+            openAt = entity.openAt,
             favoriteAt = entity.favoriteAt,
             updatedAt = entity.updatedAt,
         )

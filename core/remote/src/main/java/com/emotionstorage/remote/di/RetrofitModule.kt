@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.di
 
-import com.emotionstorage.data.dataSource.SessionLocalDataSource
+import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.remote.BuildConfig
 import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory

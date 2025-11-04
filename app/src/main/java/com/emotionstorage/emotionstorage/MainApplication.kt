@@ -6,16 +6,20 @@ import com.kakao.sdk.common.util.Utility
 import dagger.hilt.android.HiltAndroidApp
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger
+import io.github.aakira.napier.DebugAntilog
+import io.github.aakira.napier.Napier
 
 @HiltAndroidApp
 class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
+        initNapier()
         initKakaoSDK()
     }
 
     private fun initLogger() {
+        // init Logger library for android module logging
         Logger.addLogAdapter(
             object : AndroidLogAdapter() {
                 override fun isLoggable(
@@ -24,6 +28,11 @@ class MainApplication : Application() {
                 ): Boolean = BuildConfig.DEBUG
             },
         )
+    }
+
+    private fun initNapier() {
+        // init napier library for kotlin module logging
+        Napier.base(DebugAntilog())
     }
 
     private fun initKakaoSDK() {

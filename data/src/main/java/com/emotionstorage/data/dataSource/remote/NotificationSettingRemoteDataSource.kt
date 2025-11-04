@@ -1,4 +1,4 @@
-package com.emotionstorage.data.dataSource
+package com.emotionstorage.data.dataSource.remote
 
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.NotificationSettings

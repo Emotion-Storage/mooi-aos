@@ -1,7 +1,7 @@
 package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.FavoriteResultEntity
-import com.emotionstorage.data.dataSource.TimeCapsuleRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
+import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper

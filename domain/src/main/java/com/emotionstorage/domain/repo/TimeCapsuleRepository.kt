@@ -1,5 +1,6 @@
 package com.emotionstorage.domain.repo
 
+import androidx.paging.PagingData
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import kotlinx.coroutines.flow.Flow
@@ -21,12 +22,19 @@ interface TimeCapsuleRepository {
 
     suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
 
+    @Deprecated("Use getPagedTimeCapsules instead")
     suspend fun getTimeCapsules(
         startDate: LocalDate,
         endDate: LocalDate,
         page: Int,
         status: String,
     ): Flow<DataState<List<TimeCapsule>>>
+
+    fun getPagedTimeCapsules(
+        startDate: LocalDate,
+        endDate: LocalDate,
+        status: String,
+    ): Flow<PagingData<TimeCapsule>>
 
     suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>>
 

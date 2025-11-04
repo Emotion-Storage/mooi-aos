@@ -36,7 +36,7 @@ import kotlin.math.absoluteValue
 fun TimeCapsuleUnlockModal(
     keyCount: Int,
     requiredKeyCount: Int,
-    arriveAt: LocalDateTime,
+    openAt: LocalDateTime,
     isModalOpen: Boolean = false,
     onUnlock: () -> Unit = {},
 ) {
@@ -86,10 +86,10 @@ fun TimeCapsuleUnlockModal(
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
                     )
-                    if (arriveAt.toLocalDate() == LocalDate.now()) {
-                        // run countdown timer, if arriveAt is within an day
+                    if (openAt.toLocalDate() == LocalDate.now()) {
+                        // run countdown timer, if openAt is within an day
                         CountDownTimer(
-                            deadline = arriveAt,
+                            deadline = openAt,
                             optimizeMinuteTick = true,
                             optimizeSecondTick = true,
                         ) { hours, minutes, seconds ->
@@ -107,7 +107,7 @@ fun TimeCapsuleUnlockModal(
                         Text(
                             modifier = Modifier.height(30.dp),
                             text = "남은 기간 : ${
-                                LocalDate.now().getDaysBetween(arriveAt.toLocalDate()).absoluteValue
+                                LocalDate.now().getDaysBetween(openAt.toLocalDate()).absoluteValue
                             }일",
                             style = MooiTheme.typography.head2,
                             color = Color.White,
@@ -164,7 +164,7 @@ private fun TimeCapsuleUnlockModalPreview() {
     TimeCapsuleUnlockModal(
         keyCount = 1,
         requiredKeyCount = 5,
-        arriveAt = LocalDateTime.now().plusMinutes(1),
+        openAt = LocalDateTime.now().plusMinutes(1),
         isModalOpen = true,
     )
 }

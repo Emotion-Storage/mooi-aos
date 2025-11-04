@@ -26,9 +26,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun CheckArriveDateModal(
+fun CheckOpenDateModal(
     createdAt: LocalDate,
-    arriveAt: LocalDate,
+    openAt: LocalDate,
     isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onSaveOpenDate: () -> Unit = {},
@@ -66,7 +66,7 @@ fun CheckArriveDateModal(
                                     color = MooiTheme.colorScheme.primary,
                                 ),
                             ) {
-                                append(arriveAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                                append(openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
                             }
                         },
                     style = MooiTheme.typography.body1,
@@ -93,13 +93,13 @@ fun CheckArriveDateModal(
 
 @Preview(showBackground = true)
 @Composable
-private fun CheckArriveDateModalPreview() {
+private fun CheckOpenDateModalPreview() {
     // background ui
     Box(modifier = Modifier.fillMaxSize())
 
-    CheckArriveDateModal(
+    CheckOpenDateModal(
         createdAt = LocalDate.now(),
-        arriveAt = LocalDate.now().plusDays(3),
+        openAt = LocalDate.now().plusDays(3),
         isModalOpen = true,
     )
 }

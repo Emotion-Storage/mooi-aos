@@ -26,9 +26,11 @@ retrofit = "2.11.0"
 serialization = "1.7.3"
 serializationConverter = "1.0.0"
 logger = "2.2.0"
+napier = "2.7.1"
 orbitMvi = "10.0.0"
 kakao = "2.21.4"
 kotlinxCoroutines = "1.10.2"
+paging = "3.3.6"
 
 ksp = "2.0.21-1.0.27"
 dependencyGraphGenerator = "0.7.0"
@@ -56,33 +58,50 @@ androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-ui-tooling-preview-android = { group = "androidx.compose.ui", name = "ui-tooling-preview-android", version.ref = "uiToolingPreviewAndroid" }
 androidx-compose-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
+
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
 google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 google-dagger-hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "daggerHilt" }
 google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+
+androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "paging" }
+androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging" }
+
 androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room" }
+
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
 androidx-credentials-play-services = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentials" }
 google-android-identity-googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleId" }
+
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil" }
 coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+
 krossbow-stomp-kxserialization = { module = "org.hildan.krossbow:krossbow-stomp-kxserialization", version.ref = "krossbow" }
 krossbow-websocket-builtin = { module = "org.hildan.krossbow:krossbow-websocket-builtin", version.ref = "krossbow" }
 krossbow-websocket-okhttp = { module = "org.hildan.krossbow:krossbow-websocket-okhttp", version.ref = "krossbow" }
 krossbow-stomp-core = { module = "org.hildan.krossbow:krossbow-stomp-core", version.ref = "krossbow" }
+
 okhttp3-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp" }
 okhttp3-urlconnection = { group = "com.squareup.okhttp3", name = "okhttp-urlconnection", version.ref = "okHttp" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okHttp" }
 squareup-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "serializationConverter" }
+
 android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logger" }
+napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
+
+
+
 orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
 orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
 kakao-sdk-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -121,7 +140,8 @@ hilt-core = [
 ]
 room = [
     "androidx-room-ktx",
-    "androidx-room-runtime"
+    "androidx-room-runtime",
+    "androidx-room-paging"
 ]
 credentials = [
     "androidx-credentials",
@@ -134,7 +154,8 @@ retrofit = [
     "okhttp3-logging-interceptor",
     "squareup-retrofit",
     "kotlinx-serialization-json",
-    "kotlinx-serialization-converter"
+    "kotlinx-serialization-converter",
+    "androidx-paging-runtime"
 ]
 krossbow = [
     "krossbow-stomp-kxserialization",

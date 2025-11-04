@@ -2,8 +2,9 @@ package com.emotionstorage.local.di
 
 import android.content.Context
 import androidx.room.Room
-import com.emotionstorage.local.room.AppDatabase
-import com.emotionstorage.local.room.AppDatabaseConstant
+import com.emotionstorage.local.room.database.AppDatabase
+import com.emotionstorage.local.room.database.AppDatabaseConstant
+import com.emotionstorage.local.room.database.MIGRATION_2_3
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,6 +26,7 @@ internal object RoomModule {
                 AppDatabase::class.java,
                 AppDatabaseConstant.NAME,
             ).fallbackToDestructiveMigration(false)
+            .addMigrations(MIGRATION_2_3)
             .build()
 
     @Provides
@@ -34,4 +36,8 @@ internal object RoomModule {
     @Provides
     @Singleton
     fun provideSessionDao(appDatabase: AppDatabase) = appDatabase.sessionDao()
+
+    @Provides
+    @Singleton
+    fun provideTimeCapsuleDao(appDatabase: AppDatabase) = appDatabase.timeCapsuleDao()
 }

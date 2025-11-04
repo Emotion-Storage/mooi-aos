@@ -17,7 +17,7 @@ object TimeCapsuleMapper {
             createdAt = domain.createdAt,
             expireAt = domain.expireAt,
             openDDay =
-                domain.arriveAt?.run {
+                domain.openAt?.run {
                     LocalDate.now().getDaysBetween(this.toLocalDate())
                 },
         )

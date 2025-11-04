@@ -1,4 +1,4 @@
-package com.emotionstorage.data.dataSource
+package com.emotionstorage.data.dataSource.remote
 
 import com.emotionstorage.data.model.DailyReportEntity
 import java.time.LocalDate
