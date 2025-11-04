@@ -10,7 +10,7 @@ internal val MIGRATION_2_3 =
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `time_capsule` " +
                     "(" +
-                    "`id` LONG PRIMARY KEY NOT NULL," +
+                    "`id` INTEGER PRIMARY KEY NOT NULL," +
                     "`status` TEXT NOT NULL," +
                     "`title` TEXT NOT NULL," +
                     "`summary` TEXT NOT NULL," +
