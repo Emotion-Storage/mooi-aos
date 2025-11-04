@@ -15,7 +15,7 @@ import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
@@ -47,12 +47,10 @@ class ArrivedTimeCapsulesViewModel @Inject constructor(
     // paging data flow should not be managed by orbit!
     val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
         getArrivedTimeCapsules()
-            .transform { pagingData ->
-                emit(
-                    pagingData.map {
-                        TimeCapsuleMapper.toUi(it)
-                    },
-                )
+            .map { pagingData ->
+                pagingData.map {
+                    TimeCapsuleMapper.toUi(it)
+                }
             }.cachedIn(viewModelScope)
 
     fun onAction(action: ArrivedTimeCapsulesAction) {
