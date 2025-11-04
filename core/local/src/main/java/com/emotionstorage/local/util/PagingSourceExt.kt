@@ -17,29 +17,26 @@ fun <Key : Any, Value1 : Any, Value2 : Any> PagingSource<Key, Value1>.mapValue(
             }
         }
 
+        @Suppress("UNCHECKED_CAST")
         override suspend fun load(params: LoadParams<Key>): LoadResult<Key, Value2> {
             val result = this@mapValue.load(params)
             Logger.d("load called, result: $result")
-            try {
-                return when (result) {
-                    is Page -> {
-                        Page(
-                            data = result.data.map(mapper),
-                            prevKey = result.prevKey,
-                            nextKey = result.nextKey,
-                        )
-                    }
+            return when (result) {
+                is Page -> {
+                    Page(
+                        data = result.data.map(mapper),
+                        prevKey = result.prevKey,
+                        nextKey = result.nextKey,
+                    )
+                }
 
-                    is LoadResult.Error -> {
-                        result
-                    }
+                is LoadResult.Error -> {
+                    result
+                }
 
-                    is LoadResult.Invalid -> {
-                        result
-                    }
-                } as LoadResult<Key, Value2>
-            } catch (e: Exception) {
-                throw e
-            }
+                is LoadResult.Invalid -> {
+                    result
+                }
+            } as LoadResult<Key, Value2>
         }
     }
