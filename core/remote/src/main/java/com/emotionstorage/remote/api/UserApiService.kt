@@ -2,6 +2,7 @@ package com.emotionstorage.remote.api
 
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.myPage.AccountInfoResponse
+import com.emotionstorage.remote.response.myPage.GetKeysResponse
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -15,4 +16,8 @@ interface UserApiService {
 
     @GET("/api/v1/mypage/profile")
     suspend fun getAccountInfo(): ResponseDto<AccountInfoResponse>
+
+    @GET("/api/v1/mypage/keys")
+    suspend fun getKeys(): ResponseDto<GetKeysResponse>
+
 }

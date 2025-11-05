@@ -7,4 +7,6 @@ interface UserRemoteDataSource {
     suspend fun updateUserNickname(nickname: String): DataState<Unit?>
 
     suspend fun getUserAccountInfo(): DataState<AccountInfo>
+
+    suspend fun getKeyCount(): DataState<Int>
 }
