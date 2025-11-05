@@ -33,6 +33,7 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
+import com.emotionstorage.tutorial.ui.component.OnBoardingTitle
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.ToggleButton
