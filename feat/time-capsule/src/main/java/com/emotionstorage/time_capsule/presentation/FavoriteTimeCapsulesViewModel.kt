@@ -1,7 +1,9 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteSortBy
@@ -82,11 +84,13 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                     state.copy(
                         sortOrder = sortOrder,
                         timeCapsulesFlow =
-                            getFavoriteTimeCapsules(sortOrder).map { pagingData ->
-                                pagingData.map {
-                                    TimeCapsuleMapper.toUi(it)
-                                }
-                            },
+                            getFavoriteTimeCapsules(sortOrder)
+                                .cachedIn(viewModelScope)
+                                .map { pagingData ->
+                                    pagingData.map {
+                                        TimeCapsuleMapper.toUi(it)
+                                    }
+                                },
                     )
                 }
             } catch (e: Exception) {

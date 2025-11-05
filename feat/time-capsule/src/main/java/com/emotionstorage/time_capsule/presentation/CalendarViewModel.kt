@@ -1,7 +1,9 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
@@ -161,7 +163,6 @@ class CalendarViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         madeTimeCapsuleToday = false,
-                        timeCapsulesFlow = null,
                     )
                 }
             }
@@ -213,11 +214,13 @@ class CalendarViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         timeCapsulesFlow =
-                            getTimeCapsulesOfDate(date).map {
-                                it.map { timeCapsule ->
-                                    TimeCapsuleMapper.toUi(timeCapsule)
-                                }
-                            },
+                            getTimeCapsulesOfDate(date)
+                                .cachedIn(viewModelScope)
+                                .map {
+                                    it.map { timeCapsule ->
+                                        TimeCapsuleMapper.toUi(timeCapsule)
+                                    }
+                                },
                     )
                 }
             } catch (e: Exception) {
