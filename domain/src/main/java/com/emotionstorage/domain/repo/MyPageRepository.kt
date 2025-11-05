@@ -7,6 +7,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface MyPageRepository {
     suspend fun getMyPageOverview(): Flow<DataState<MyPage>>
-
-    suspend fun getAccountInfo(): Flow<DataState<AccountInfo>>
 }
