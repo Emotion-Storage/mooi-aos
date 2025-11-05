@@ -105,8 +105,7 @@ private fun ArrivedContentOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     LinearGradient(
                         colors =
