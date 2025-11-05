@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,12 +46,19 @@ import com.emotionstorage.ui.util.subBackground
 @Composable
 fun ExpectationsScreen(
     modifier: Modifier = Modifier,
+    expectations: List<Expectation>? = null,
     viewModel: ExpectationsViewModel = hiltViewModel(),
     onExpectationsSelectComplete: (expectations: List<Expectation>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect("init") {
+        if (expectations != null) {
+            viewModel.onSelectExpectations(expectations)
+        }
+    }
 
     StatelessExpectationsScreen(
         state = state,
@@ -173,7 +181,8 @@ private fun ExpectationItem(
                 .subBackground(isSelected, defaultBackground = Color.Black)
                 .clickable(
                     onClick = onClick,
-                ).padding(20.dp),
+                )
+                .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -229,6 +238,7 @@ private fun ExpectationsScreenPreview() {
             event =
                 object : ExpectationsEvent {
                     override fun onToggleExpectation(index: Int) {}
+                    override fun onSelectExpectations(expectations: List<Expectation>) {}
                 },
         )
     }
