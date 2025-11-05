@@ -1,10 +1,12 @@
 package com.emotionstorage.time_capsule.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagingData
+import androidx.paging.map
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.repo.FavoriteResult
-import com.emotionstorage.domain.useCase.timeCapsule.GetFavoriteTimeCapsulesUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.GetPagedFavoriteTimeCapsulesUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
@@ -12,13 +14,15 @@ import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class FavoriteTimeCapsulesState(
     val sortOrder: FavoriteSortBy = FavoriteSortBy.NEWEST,
-    val timeCapsules: List<TimeCapsuleItemState> = emptyList(),
+    val timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
 )
 
 sealed class FavoriteTimeCapsulesAction {
@@ -30,6 +34,7 @@ sealed class FavoriteTimeCapsulesAction {
 
     data class ToggleFavorite(
         val id: Long,
+        val prevIsFavorite: Boolean,
     ) : FavoriteTimeCapsulesAction()
 }
 
@@ -41,7 +46,7 @@ sealed class FavoriteTimeCapsulesSideEffect {
 
 @HiltViewModel
 class FavoriteTimeCapsulesViewModel @Inject constructor(
-    private val getFavoriteTimeCapsules: GetFavoriteTimeCapsulesUseCase,
+    private val getFavoriteTimeCapsules: GetPagedFavoriteTimeCapsulesUseCase,
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<FavoriteTimeCapsulesState, FavoriteTimeCapsulesSideEffect> {
@@ -61,90 +66,40 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
             }
 
             is FavoriteTimeCapsulesAction.ToggleFavorite -> {
-                handleToggleFavorite(action.id)
+                handleToggleFavorite(action.id, action.prevIsFavorite)
             }
         }
     }
 
-    private fun handleInit() =
-        intent {
-            collectDataState(
-                flow = getFavoriteTimeCapsules(state.sortOrder),
-                onSuccess = { timeCapsules ->
-                    reduce {
-                        state.copy(
-                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
-                        )
-                    }
-                },
-                onError = { throwable, _ ->
-                    Logger.e("Failed to get favorite time capsules, $throwable")
-                },
-            )
-        }
+    private fun handleInit() = setSortOrder(FavoriteSortBy.NEWEST)
 
     private fun handleSetSortOrder(sortOrderLabel: String) =
-        intent {
-            val sortOrder = FavoriteSortBy.getByLabel(sortOrderLabel)
+        setSortOrder(FavoriteSortBy.getByLabel(sortOrderLabel))
 
-            collectDataState(
-                flow = getFavoriteTimeCapsules(sortOrder),
-                onSuccess = { timeCapsules ->
-                    reduce {
-                        state.copy(
-                            sortOrder = sortOrder,
-                            timeCapsules = timeCapsules.map { TimeCapsuleMapper.toUi(it) },
-                        )
-                    }
-                },
-                onError = { throwable, _ ->
-                    Logger.e("Failed to get favorite time capsules, $throwable")
-                },
-            )
-        }
 
-    private fun handleToggleFavorite(id: Long) =
-        intent {
-            if (state.timeCapsules.find { it.id == id } == null) {
-                Logger.e("Cannot find time capsule of id $id")
-                return@intent
-            }
-
-            val newIsFavorite = !state.timeCapsules.find { it.id == id }!!.isFavorite
-
-            suspend fun updateFavorite(
-                id: Long,
-                isFavorite: Boolean,
-            ) = reduce {
+    private fun setSortOrder(sortOrder: FavoriteSortBy) = intent {
+        try {
+            reduce {
                 state.copy(
-                    timeCapsules =
-                        state.timeCapsules.map {
-                            if (it.id == id) {
-                                it.copy(isFavorite = isFavorite)
-                            } else {
-                                it
-                            }
-                        },
+                    sortOrder = sortOrder,
+                    timeCapsulesFlow = getFavoriteTimeCapsules(sortOrder).map { pagingData ->
+                        pagingData.map {
+                            TimeCapsuleMapper.toUi(it)
+                        }
+                    }
                 )
             }
+        } catch (e: Exception) {
+            Logger.e("Failed to get favorite time capsules, $e")
+        }
+    }
 
+    private fun handleToggleFavorite(id: Long, prevIsFavorite: Boolean) =
+        intent {
             coroutineScope {
                 collectDataState(
-                    flow = setFavorite(id, newIsFavorite),
+                    flow = setFavorite(id, !prevIsFavorite),
                     onSuccess = {
-                        when (it) {
-                            FavoriteResult.ADDED -> {
-                                updateFavorite(id, true)
-                            }
-
-                            FavoriteResult.REMOVED -> {
-                                updateFavorite(id, false)
-                            }
-
-                            FavoriteResult.FULL -> {
-                                // do nothing
-                            }
-                        }
                         postSideEffect(ShowFavoriteToast(it))
                     },
                     onError = { throwable, data ->

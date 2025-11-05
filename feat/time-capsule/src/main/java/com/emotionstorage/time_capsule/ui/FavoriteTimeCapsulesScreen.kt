@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -30,9 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.repo.FavoriteSortBy
+import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
@@ -61,7 +65,6 @@ fun FavoriteTimeCapsulesScreen(
     }
 
     val snackState = remember { SnackbarHostState() }
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -96,6 +99,8 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val timeCapsules = state.timeCapsulesFlow?.collectAsLazyPagingItems()
+
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
@@ -147,53 +152,67 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     )
                 }
             }
-            // sort drom dowm menu
-            if (!state.timeCapsules.isEmpty()) {
-                item {
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        DropDownPicker(
-                            modifier =
-                                Modifier
-                                    .align(Alignment.CenterEnd)
-                                    .width(102.dp)
-                                    .padding(top = 7.dp, bottom = 22.dp),
-                            selectedValue = state.sortOrder.label,
-                            options = FavoriteSortBy.entries.map { it.label },
-                            onSelect = { label ->
-                                onAction(
-                                    FavoriteTimeCapsulesAction.SetSortOrder(label),
+            when (timeCapsules?.loadState?.refresh) {
+                is LoadState.NotLoading -> {
+                    if (timeCapsules.itemCount == 0) {
+                        item {
+                            Text(
+                                modifier = Modifier.padding(top = 224.dp),
+                                text = "아직 즐겨찾기한 타임캡슐이 없어요.",
+                                style = MooiTheme.typography.caption2,
+                                color = MooiTheme.colorScheme.gray400,
+                            )
+                        }
+                    } else {
+                        item {
+                            Box(modifier = Modifier.fillMaxWidth()) {
+                                DropDownPicker(
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.CenterEnd)
+                                            .width(102.dp)
+                                            .padding(top = 7.dp, bottom = 22.dp),
+                                    selectedValue = state.sortOrder.label,
+                                    options = FavoriteSortBy.entries.map { it.label },
+                                    onSelect = { label ->
+                                        onAction(
+                                            FavoriteTimeCapsulesAction.SetSortOrder(label),
+                                        )
+                                    },
                                 )
-                            },
-                        )
+                            }
+                        }
+                        items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
+                            timeCapsules[it]?.run {
+                                TimeCapsuleItem(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 26.dp),
+                                    timeCapsule = this,
+                                    showDate = true,
+                                    showFavorite = true,
+                                    onClick = { navToTimeCapsuleDetail(this.id) },
+                                    onFavoriteClick = {
+                                        onAction(
+                                            FavoriteTimeCapsulesAction.ToggleFavorite(this.id, this.isFavorite),
+                                        )
+                                    },
+                                )
+                            }
+                        }
                     }
                 }
-            }
-            if (state.timeCapsules.isEmpty()) {
-                item {
-                    Text(
-                        modifier = Modifier.padding(top = 224.dp),
-                        text = "아직 즐겨찾기한 타임캡슐이 없어요.",
-                        style = MooiTheme.typography.caption2,
-                        color = MooiTheme.colorScheme.gray400,
-                    )
-                }
-            }
-            items(items = state.timeCapsules, key = { it.id }) {
-                TimeCapsuleItem(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 26.dp),
-                    timeCapsule = it,
-                    showDate = true,
-                    showFavorite = true,
-                    onClick = { navToTimeCapsuleDetail(it.id) },
-                    onFavoriteClick = {
-                        onAction(
-                            FavoriteTimeCapsulesAction.ToggleFavorite(it.id),
+
+                else -> {
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(top = 244.dp),
+                            color = MooiTheme.colorScheme.primary
                         )
-                    },
-                )
+                    }
+                    // todo: add error ui
+                }
             }
         }
     }
@@ -203,50 +222,6 @@ private fun StatelessFavoriteTimeCapsulesScreen(
 @Composable
 private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
-        StatelessFavoriteTimeCapsulesScreen(
-            state =
-                FavoriteTimeCapsulesState(
-                    timeCapsules =
-                        (1..15).toList().map { it ->
-                            TimeCapsuleItemState(
-                                id = it.toLong(),
-                                status = TimeCapsule.Status.OPENED,
-                                title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-                                emotions =
-                                    listOf(
-                                        Emotion(
-                                            emoji = "\uD83D\uDE14",
-                                            label = "서운함",
-                                            percentage = 30.0f,
-                                        ),
-                                        Emotion(
-                                            emoji = "\uD83D\uDE0A",
-                                            label = "고마움",
-                                            percentage = 30.0f,
-                                        ),
-                                        Emotion(
-                                            emoji = "\uD83E\uDD70",
-                                            label = "안정감",
-                                            percentage = 80.0f,
-                                        ),
-                                    ),
-                                isFavorite = true,
-                                isFavoriteAt = LocalDateTime.now(),
-                                createdAt = LocalDateTime.now(),
-                                expireAt = LocalDateTime.now().plusHours(5),
-                            )
-                        },
-                ),
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun EmptyFavoriteTimeCapsulesScreenPreview() {
-    MooiTheme {
-        StatelessFavoriteTimeCapsulesScreen(
-            state = FavoriteTimeCapsulesState(timeCapsules = emptyList()),
-        )
+        StatelessFavoriteTimeCapsulesScreen()
     }
 }
