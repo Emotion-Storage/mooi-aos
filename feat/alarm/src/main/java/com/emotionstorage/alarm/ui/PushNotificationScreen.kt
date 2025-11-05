@@ -56,15 +56,13 @@ private fun StatelessPushNotificationScreen(
     onClick: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 title = "알림 내역",
                 showBackButton = true,
                 showBackground = true,
-                handleBackPress = true,
+                fillStatusBar = true,
                 onBackClick = navToBack,
-                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->

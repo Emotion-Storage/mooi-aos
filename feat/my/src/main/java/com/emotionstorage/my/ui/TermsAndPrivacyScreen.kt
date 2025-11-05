@@ -36,13 +36,17 @@ fun TermsAndPrivacyScreen(
     val tabs = listOf("이용약관", "개인정보처리방침")
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
         topBar = {
-            TopAppBar(title = "이용 약관 및 개인정보처리방침", showBackButton = true, onBackClick = navToBack)
+            TopAppBar(
+                title = "이용 약관 및 개인정보처리방침",
+                fillStatusBar = true,
+                showBackButton = true,
+                onBackClick = navToBack
+            )
         },
     ) { innerPadding ->
 
@@ -50,11 +54,8 @@ fun TermsAndPrivacyScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
-                    .background(
-                        color = MooiTheme.colorScheme.background,
-                    ),
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
         ) {
             TabRow(
                 selectedTabIndex = selectedTabIndex,

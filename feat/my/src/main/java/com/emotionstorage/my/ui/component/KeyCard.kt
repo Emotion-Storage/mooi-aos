@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,8 +33,11 @@ fun KeyCard(
         modifier =
             Modifier
                 .fillMaxWidth()
-                .heightIn(61.dp),
-        shape = RoundedCornerShape(10.dp),
+                .heightIn(61.dp)
+                .clip(RoundedCornerShape(10.dp))
+                .clickable {
+                    onCardClick(keyCount)
+                },
         color = Color.Transparent,
     ) {
         Row(
@@ -41,11 +45,13 @@ fun KeyCard(
                 Modifier
                     .background(
                         brush = MooiTheme.brushScheme.subButtonBackground,
-                    ).border(
+                    )
+                    .border(
                         width = 1.dp,
                         brush = MooiTheme.brushScheme.subButtonBorder,
                         shape = RoundedCornerShape(10.dp),
-                    ).padding(start = 16.dp, end = 16.dp),
+                    )
+                    .padding(start = 16.dp, end = 16.dp),
         ) {
             Image(
                 painter = painterResource(R.drawable.key_white),
@@ -83,9 +89,6 @@ fun KeyCard(
                     Modifier
                         .size(13.dp)
                         .align(Alignment.CenterVertically)
-                        .clickable {
-                            onCardClick(keyCount)
-                        },
             )
         }
     }

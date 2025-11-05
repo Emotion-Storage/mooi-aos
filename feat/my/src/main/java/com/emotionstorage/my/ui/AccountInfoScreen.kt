@@ -43,14 +43,13 @@ fun StatelessAccountInfoScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 showBackButton = true,
+                showBackground = true,
+                fillStatusBar = true,
                 title = "계정 정보",
-                handleBackPress = true,
                 onBackClick = navToBack,
-                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->

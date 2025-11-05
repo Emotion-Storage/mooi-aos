@@ -136,7 +136,6 @@ private fun StatelessMyPageScreen(
     var showLogoutModal by remember { mutableStateOf(false) }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
@@ -155,7 +154,7 @@ private fun StatelessMyPageScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             ProfileHeader(
-                profileImage = "Glide or Coil이 필요해 보인다",
+                profileImage = "고정 이미지",
                 nickname = state.nickname,
                 signupDday = state.signupDday,
                 onEditClick = {

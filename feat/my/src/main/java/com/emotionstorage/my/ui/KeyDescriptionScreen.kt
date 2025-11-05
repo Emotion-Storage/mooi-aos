@@ -33,37 +33,44 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun KeyDescriptionScreen(navToBack: () -> Unit) {
+fun KeyDescriptionScreen(
+    modifier: Modifier = Modifier,
+    navToBack: () -> Unit
+) {
     StatelessKeyDescriptionScreen(
+        modifier = modifier,
         navToBack = navToBack,
     )
 }
 
 @Composable
-fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
+fun StatelessKeyDescriptionScreen(
+    modifier: Modifier = Modifier,
+    navToBack: () -> Unit = {}
+) {
     var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 showBackButton = true,
                 showBackground = false,
-                handleBackPress = true,
+                fillStatusBar = true,
                 onBackClick = navToBack,
-                onHandleBackPress = navToBack,
             )
         },
+        containerColor = MooiTheme.colorScheme.background,
     ) { innerPadding ->
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(color = MooiTheme.colorScheme.background),
+                    .padding(innerPadding),
         ) {
             Column(
                 modifier =
                     Modifier
-                        .padding(innerPadding)
                         .align(Alignment.TopCenter),
             ) {
                 Text(

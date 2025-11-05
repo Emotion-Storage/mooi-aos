@@ -24,8 +24,6 @@ fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
                 fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack,
-                handleBackPress = true,
-                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->
