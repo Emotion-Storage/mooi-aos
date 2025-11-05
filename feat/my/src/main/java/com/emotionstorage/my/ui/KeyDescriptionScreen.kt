@@ -18,9 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,7 +47,8 @@ fun KeyDescriptionScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
     LaunchedEffect(lifecycleOwner) {
-        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+        // TODO : 화면에 들어갈 때마다 API 호출 시 잔여 열쇠 나타나는 부분 api가 재호출되어 UI 랜더링 시간이 일부 걸림
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             viewModel.refreshKeyCount()
         }
     }
@@ -166,13 +164,14 @@ fun StatelessKeyDescriptionScreen(
                 }
             }
 
-            when(state.dialog) {
+            when (state.dialog) {
                 KeyDescriptionDialog.WhenToUse -> {
                     WhenToUseKeyDialog(
                         modifier = Modifier.padding(horizontal = 16.dp),
                         onDismiss = onDismissDialog,
                     )
                 }
+
                 null -> Unit
             }
         }
