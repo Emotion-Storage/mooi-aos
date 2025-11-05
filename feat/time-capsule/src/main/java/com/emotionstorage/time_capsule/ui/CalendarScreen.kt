@@ -261,16 +261,16 @@ private fun StatelessCalendarScreen(
             }
 
             // calendar date's time capsule bottom sheet
-            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
+            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsulesFlow != null) {
                 TimeCapsuleBottomSheet(
                     date = state.calendarDate,
                     onDismissRequest = {
                         setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
                     },
-                    timeCapsules = state.timeCapsules,
-                    onToggleFavorite = {
-                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(it))
+                    timeCapsulesFlow = state.timeCapsulesFlow,
+                    onToggleFavorite = { id, prevFavorite ->
+                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(id, prevFavorite))
                     },
                     navToTimeCapsuleDetail = {
                         setShowTimeCapsuleBottomSheet(false)

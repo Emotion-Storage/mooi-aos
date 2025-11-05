@@ -9,10 +9,11 @@ data class TimeCapsuleItemState(
     val status: TimeCapsule.Status,
     val title: String,
     val emotions: List<Emotion> = emptyList(),
-    val isFavorite: Boolean,
+    val isFavorite: Boolean = false,
     val isFavoriteAt: LocalDateTime? = null,
     val createdAt: LocalDateTime,
-    val expireAt: LocalDateTime,
+    // expireAt null if not TEMPORARY
+    val expireAt: LocalDateTime? = null,
     // open d-day null if TEMPORARY
     val openDDay: Int? = null,
 )

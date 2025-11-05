@@ -32,7 +32,7 @@ fun IconWithCount(
     modifier: Modifier = Modifier,
     @DrawableRes
     iconId: Int,
-    count: Int,
+    count: Int? = null,
     iconSizeDp: Int = 22,
     onClick: (() -> Unit)? = null,
 ) {
@@ -56,28 +56,30 @@ fun IconWithCount(
             contentDescription = null,
         )
 
-        Box(
-            modifier =
-                Modifier
-                    .align(Alignment.BottomEnd)
-                    .background(MooiTheme.colorScheme.secondary, CircleShape)
-                    .sizeIn(minWidth = 16.dp, minHeight = 16.dp)
-                    .padding(vertical = 0.5.dp, horizontal = 2.dp),
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = if (count > 99) "99+" else count.toString(),
-                style =
-                    TextStyle(
-                        fontFamily = pretendard,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 10.sp,
-                        lineHeight = 20.sp,
-                        letterSpacing = (-0.02).em,
-                        color = Color.White,
-                    ),
-                maxLines = 1,
-            )
+        if (count != null) {
+            Box(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .background(MooiTheme.colorScheme.secondary, CircleShape)
+                        .sizeIn(minWidth = 16.dp, minHeight = 16.dp)
+                        .padding(vertical = 0.5.dp, horizontal = 2.dp),
+            ) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = if (count > 99) "99+" else count.toString(),
+                    style =
+                        TextStyle(
+                            fontFamily = pretendard,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 10.sp,
+                            lineHeight = 20.sp,
+                            letterSpacing = (-0.02).em,
+                            color = Color.White,
+                        ),
+                    maxLines = 1,
+                )
+            }
         }
     }
 }
@@ -90,6 +92,12 @@ private fun IconWithCountPreview() {
             modifier = Modifier.background(MooiTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
+            IconWithCount(
+                modifier = Modifier.size(32.dp),
+                iconId = R.drawable.key,
+                count = null,
+            )
+
             IconWithCount(
                 modifier = Modifier.size(32.dp),
                 iconId = R.drawable.key,
