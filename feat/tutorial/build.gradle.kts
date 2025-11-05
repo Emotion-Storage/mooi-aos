@@ -28,4 +28,6 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.ui)
     testImplementation(kotlin("test"))
+
+    implementation(libs.accompanist.permissions)
 }

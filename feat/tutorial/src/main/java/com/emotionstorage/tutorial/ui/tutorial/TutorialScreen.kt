@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,18 +23,50 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
+import com.orhanobut.logger.Logger
 
 private const val TUTORIAL_PAGE_COUNT = 4
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TutorialScreen(
     modifier: Modifier = Modifier,
     navToLogin: () -> Unit = {},
 ) {
+    val permissionState =
+        rememberPermissionState(
+            permission = android.Manifest.permission.POST_NOTIFICATIONS,
+        )
+
+    LifecycleStartEffect(Unit) {
+        permissionState.launchPermissionRequest()
+        onStopOrDispose {}
+    }
+
+    LaunchedEffect(permissionState.status) {
+        when (permissionState.status) {
+            is PermissionStatus.Granted -> {
+                Logger.d("Permission granted")
+            }
+
+            is PermissionStatus.Denied -> {
+                Logger.d(
+                    "Permission denied, should show rationale: " +
+                        "${(permissionState.status as PermissionStatus.Denied).shouldShowRationale}",
+                )
+            }
+        }
+    }
+
     Scaffold(
         modifier =
             modifier
@@ -112,7 +145,10 @@ fun TutorialScreen(
                                     ),
                                 content = {
                                     CtaButton(
-                                        modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+                                        modifier =
+                                            Modifier
+                                                .align(Alignment.BottomCenter)
+                                                .fillMaxWidth(),
                                         labelString = stringResource(R.string.tutorial_btn_start),
                                         onClick = navToLogin,
                                         isDefaultWidth = false,
