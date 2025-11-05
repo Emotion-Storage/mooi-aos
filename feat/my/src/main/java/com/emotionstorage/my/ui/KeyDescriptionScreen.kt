@@ -14,8 +14,6 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,9 +23,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LocalLifecycleOwner
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.compose.LifecycleStartEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.emotionstorage.my.presentation.KeyBalanceViewModel
 import com.emotionstorage.my.presentation.KeyCountState
 import com.emotionstorage.my.presentation.KeyDescriptionDialog
@@ -43,13 +40,12 @@ fun KeyDescriptionScreen(
     viewModel: KeyBalanceViewModel = hiltViewModel(),
     navToBack: () -> Unit,
 ) {
-    val state by viewModel.keyCountState.collectAsState()
+    val state by viewModel.keyCountState.collectAsStateWithLifecycle()
 
-    val lifecycleOwner = LocalLifecycleOwner.current
-    LaunchedEffect(lifecycleOwner) {
-        // TODO : 화면에 들어갈 때마다 API 호출 시 잔여 열쇠 나타나는 부분 api가 재호출되어 UI 랜더링 시간이 일부 걸림
-        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            viewModel.refreshKeyCount()
+    LifecycleStartEffect(Unit) {
+        viewModel.refreshKeyCount()
+        onStopOrDispose {
+            //
         }
     }
 
