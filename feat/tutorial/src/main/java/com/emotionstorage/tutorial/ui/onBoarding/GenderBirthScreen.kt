@@ -30,7 +30,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.picker.ScrollPicker
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate

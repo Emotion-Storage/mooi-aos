@@ -58,7 +58,7 @@ import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.toast.FavoriteToast
 import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.button.RoundedToggleButton
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter

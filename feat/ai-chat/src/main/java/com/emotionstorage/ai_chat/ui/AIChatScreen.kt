@@ -42,7 +42,7 @@ import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ui.component.Modal
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.delay

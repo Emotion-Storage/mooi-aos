@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.AccountInfoState
 import com.emotionstorage.my.presentation.AccountInfoViewModel
 import com.emotionstorage.my.ui.component.AccountInfoContent
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable

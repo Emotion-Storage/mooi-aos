@@ -36,7 +36,7 @@ import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffe
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost

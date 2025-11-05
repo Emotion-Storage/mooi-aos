@@ -36,7 +36,7 @@ import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.text.TextInput
 import com.emotionstorage.ui.component.text.TextInputState
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**

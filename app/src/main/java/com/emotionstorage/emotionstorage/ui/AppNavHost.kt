@@ -35,8 +35,8 @@ import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
 import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
-import com.emotionstorage.ui.component.AppBottomNavBar
-import com.emotionstorage.ui.component.BottomNavDest
+import com.emotionstorage.ui.component.appBar.BottomAppNavBar
+import com.emotionstorage.ui.component.appBar.BottomNavDest
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.navigateWithClearStack
 import com.emotionstorage.ui.R
@@ -141,7 +141,7 @@ internal fun AppNavHost(
     val introSeen = aiChatIntroViewModel.introSeen.collectAsState()
 
     val bottomAppBar: @Composable () -> Unit = {
-        AppBottomNavBar(
+        BottomAppNavBar(
             navController = navController,
             currentDestination = navController.currentBackStackEntry?.destination,
             bottomNavDestinations =

@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.appBar
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -33,7 +33,7 @@ data class BottomNavDest(
 )
 
 @Composable
-fun AppBottomNavBar(
+fun BottomAppNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     currentDestination: NavDestination? = null,
@@ -54,7 +54,7 @@ fun AppBottomNavBar(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             bottomNavDestinations.forEach {
-                BottomNavBarItem(
+                NavBarItem(
                     iconId = it.icon,
                     label = it.label,
                     isSelected = (currentDestination?.route == it.route),
@@ -75,7 +75,7 @@ fun AppBottomNavBar(
 }
 
 @Composable
-private fun BottomNavBarItem(
+private fun NavBarItem(
     iconId: Int,
     label: String,
     modifier: Modifier = Modifier,

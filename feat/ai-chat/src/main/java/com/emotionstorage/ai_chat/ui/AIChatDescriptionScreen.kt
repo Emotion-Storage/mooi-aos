@@ -27,7 +27,7 @@ import androidx.compose.ui.zIndex
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.DescriptionOverlay
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable

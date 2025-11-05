@@ -1,7 +1,6 @@
 package com.emotionstorage.my.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.ui.component.CountRow
 import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable

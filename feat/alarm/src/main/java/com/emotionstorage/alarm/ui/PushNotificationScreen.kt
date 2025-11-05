@@ -31,7 +31,7 @@ import com.emotionstorage.alarm.presentation.PushNotificationViewModel
 import com.emotionstorage.alarm.ui.component.EmptyPushHolder
 import com.emotionstorage.alarm.ui.component.PushAlarmCard
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
