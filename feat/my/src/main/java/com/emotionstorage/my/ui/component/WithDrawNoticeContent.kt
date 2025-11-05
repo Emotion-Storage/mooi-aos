@@ -37,98 +37,31 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun WithDrawNoticeContent(
-    showSuccessDialog: Boolean,
-    showFinalConfirmDialog: Boolean,
-    onWithDrawButtonClick: () -> Unit,
-    onBackClick: () -> Unit,
-    onKeepClick: () -> Unit,
-    onWithDrawClick: () -> Unit,
-    onDismiss: () -> Unit,
-    onFinalConfirmClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    Column(
         modifier =
-            Modifier
-                .fillMaxSize()
+            modifier
+                .fillMaxWidth()
                 .background(MooiTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                showBackButton = true,
-                title = "회원탈퇴",
-                handleBackPress = true,
-                onBackClick = onBackClick,
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            Modifier
-                .fillMaxSize(),
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .padding(innerPadding)
-                        .consumeWindowInsets(WindowInsets.navigationBars)
-                        .background(MooiTheme.colorScheme.background),
-            ) {
-                WithDrawTitle()
+    ) {
+        WithDrawTitle()
 
-                Spacer(modifier = Modifier.size(28.dp))
+        Spacer(modifier = Modifier.size(28.dp))
 
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = "탈퇴 시 안내사항",
-                    style = MooiTheme.typography.body7,
-                    color = MooiTheme.colorScheme.gray400,
-                )
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = "탈퇴 시 안내사항",
+            style = MooiTheme.typography.body7,
+            color = MooiTheme.colorScheme.gray400,
+        )
 
-                Spacer(modifier = Modifier.size(12.dp))
+        Spacer(modifier = Modifier.size(12.dp))
 
-                WithdrawBullets()
-
-                if (showSuccessDialog) {
-                    Modal(
-                        title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
-                        confirmLabel = "알림을 끄고 쉬어갈래요.",
-                        dismissLabel = "서비스를 탈퇴할래요.",
-                        onDismissRequest = onDismiss,
-                        onConfirm = onKeepClick,
-                        onDismiss = onWithDrawClick,
-                        topDescription = null,
-                    )
-                }
-
-                if (showFinalConfirmDialog) {
-                    Modal(
-                        title = "회원 탈퇴가\n완료되었습니다.",
-                        confirmLabel = "확인",
-                        onDismiss = {},
-                        onConfirm = onFinalConfirmClick,
-                        onDismissRequest = { },
-                        topDescription = null,
-                    )
-                }
-            }
-
-            CtaButton(
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(start = 16.dp, end = 16.dp, bottom = 28.dp),
-                type = CtaButtonType.OUTLINED,
-                labelString = "MOOI 서비스 탈퇴하기",
-                onClick = onWithDrawButtonClick,
-                isDefaultWidth = false,
-                textStyle =
-                    MooiTheme.typography.body7.copy(
-                        color = Color(0xFF979797),
-                    ),
-            )
-        }
+        WithdrawBullets()
     }
 }
+
 
 @Composable
 private fun WithDrawTitle() {
@@ -211,14 +144,9 @@ private fun WithDrawTitlePreview() {
 private fun WithDrawNoticeContentPreview() {
     MooiTheme {
         WithDrawNoticeContent(
-            showSuccessDialog = false,
-            showFinalConfirmDialog = false,
-            onWithDrawButtonClick = {},
-            onBackClick = {},
-            onKeepClick = {},
-            onWithDrawClick = {},
-            onDismiss = {},
-            onFinalConfirmClick = {},
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background),
         )
     }
 }

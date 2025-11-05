@@ -1,17 +1,37 @@
 package com.emotionstorage.my.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.component.WithDrawNoticeContent
+import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.button.CtaButton
+import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.delay
 
@@ -62,6 +82,7 @@ fun WithDrawNoticeScreen(
         showSuggestDialog = showSuggestDialog,
         showFinalConfirmDialog = showDoneDialog,
         onBackClick = navToBack,
+        onSuggestDismiss = { showSuggestDialog = false },
         onWithDrawButtonClick = { showSuggestDialog = true },
         onKeepClick = {
             showSuggestDialog = false
@@ -82,22 +103,77 @@ fun WithDrawNoticeScreen(
 fun StatelessWithDrawNoticeScreen(
     showSuggestDialog: Boolean,
     showFinalConfirmDialog: Boolean,
+    onSuggestDismiss: () -> Unit,
     onWithDrawButtonClick: () -> Unit,
     onBackClick: () -> Unit,
     onKeepClick: () -> Unit,
     onWithDrawClick: () -> Unit,
     onFinalConfirmClick: () -> Unit,
 ) {
-    WithDrawNoticeContent(
-        showSuccessDialog = showSuggestDialog,
-        showFinalConfirmDialog = showFinalConfirmDialog,
-        onWithDrawButtonClick = onWithDrawButtonClick,
-        onKeepClick = onKeepClick,
-        onBackClick = onBackClick,
-        onWithDrawClick = onWithDrawClick,
-        onFinalConfirmClick = onFinalConfirmClick,
-        onDismiss = {},
-    )
+    Scaffold(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background),
+        topBar = {
+            TopAppBar(
+                showBackButton = true,
+                fillStatusBar = true,
+                title = "회원탈퇴",
+                onBackClick = onBackClick,
+            )
+        },
+    ) { innerPadding ->
+        if (showSuggestDialog) {
+            Modal(
+                title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
+                confirmLabel = "알림을 끄고 쉬어갈래요.",
+                dismissLabel = "서비스를 탈퇴할래요.",
+                onDismissRequest = onSuggestDismiss,
+                onConfirm = onKeepClick,
+                onDismiss = onWithDrawClick,
+                topDescription = null,
+            )
+        }
+
+        if (showFinalConfirmDialog) {
+            Modal(
+                title = "회원 탈퇴가\n완료되었습니다.",
+                confirmLabel = "확인",
+                onDismissRequest = {
+                    // cannot dismiss manually
+                },
+                onConfirm = onFinalConfirmClick,
+                topDescription = null,
+            )
+        }
+
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background)
+                .padding(innerPadding),
+        ) {
+            WithDrawNoticeContent(
+                modifier = Modifier.align(Alignment.TopCenter)
+            )
+
+            CtaButton(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(start = 16.dp, end = 16.dp, bottom = 28.dp),
+                type = CtaButtonType.OUTLINED,
+                labelString = "MOOI 서비스 탈퇴하기",
+                onClick = onWithDrawButtonClick,
+                isDefaultWidth = false,
+                textStyle =
+                    MooiTheme.typography.body7.copy(
+                        color = Color(0xFF979797),
+                    ),
+            )
+        }
+    }
 }
 
 @Preview
@@ -107,6 +183,7 @@ private fun WithDrawNoticeScreenPreview() {
         StatelessWithDrawNoticeScreen(
             showSuggestDialog = true,
             showFinalConfirmDialog = false,
+            onSuggestDismiss = {},
             onWithDrawButtonClick = {},
             onBackClick = {},
             onKeepClick = {},
