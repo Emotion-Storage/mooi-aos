@@ -20,15 +20,9 @@ interface TimeCapsuleRepository {
         isFavorite: Boolean,
     ): Flow<DataState<FavoriteResult>>
 
-    suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>>
-
-    @Deprecated("Use getPagedTimeCapsules instead")
-    suspend fun getTimeCapsules(
-        startDate: LocalDate,
-        endDate: LocalDate,
-        page: Int,
-        status: String,
-    ): Flow<DataState<List<TimeCapsule>>>
+    fun getPagedFavoriteTimeCapsules(
+        sortBy: FavoriteSortBy
+    ): Flow<PagingData<TimeCapsule>>
 
     fun getPagedTimeCapsules(
         startDate: LocalDate,
