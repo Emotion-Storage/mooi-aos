@@ -142,7 +142,7 @@ private fun StatelessAIChatScreen(
                     setExitModalOpen(true)
                 },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier =

@@ -26,20 +26,18 @@ import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import com.emotionstorage.ui.theme.MooiTheme
 
-
-data class BottomNavDest (
+data class BottomNavDest(
     val route: String,
     val icon: Int,
     val label: String,
 )
-
 
 @Composable
 fun AppBottomNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     currentDestination: NavDestination? = null,
-    bottomNavDestinations: List<BottomNavDest> = emptyList<BottomNavDest>()
+    bottomNavDestinations: List<BottomNavDest> = emptyList<BottomNavDest>(),
 ) {
     BottomAppBar(
         modifier =

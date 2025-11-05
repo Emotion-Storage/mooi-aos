@@ -52,16 +52,17 @@ fun TopAppBar(
         modifier =
             modifier
                 .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
-                .fillMaxWidth()
+                .fillMaxWidth(),
     ) {
         if (fillStatusBar) {
             Spacer(modifier = Modifier.height(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
         }
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(62.dp)
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(62.dp)
+                    .padding(horizontal = 16.dp),
         ) {
             if (showBackButton) {
                 Image(

@@ -35,7 +35,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun KeyDescriptionScreen(
     modifier: Modifier = Modifier,
-    navToBack: () -> Unit
+    navToBack: () -> Unit,
 ) {
     StatelessKeyDescriptionScreen(
         modifier = modifier,
@@ -46,7 +46,7 @@ fun KeyDescriptionScreen(
 @Composable
 fun StatelessKeyDescriptionScreen(
     modifier: Modifier = Modifier,
-    navToBack: () -> Unit = {}
+    navToBack: () -> Unit = {},
 ) {
     var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
 

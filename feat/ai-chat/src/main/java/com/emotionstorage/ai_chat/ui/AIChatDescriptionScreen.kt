@@ -75,15 +75,17 @@ private fun StatelessAIChatDescriptionScreen(
     onTopbarRect: (Rect) -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets.safeDrawing.only(
-            WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom
-        )
+        contentWindowInsets =
+            WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom,
+            ),
     ) { innerPadding ->
         if (showDescription) {
             DescriptionOverlay(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .zIndex(10f),
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .zIndex(10f),
                 progressBarBounds = progressBarBounds,
                 inputBoxBounds = inputBoxBounds,
                 topbarBounds = topbarBounds,

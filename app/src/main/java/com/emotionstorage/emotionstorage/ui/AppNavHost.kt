@@ -132,7 +132,6 @@ internal sealed class AppDestination {
     object PushNotification : AppDestination()
 }
 
-
 @Composable
 internal fun AppNavHost(
     modifier: Modifier = Modifier,
@@ -145,15 +144,16 @@ internal fun AppNavHost(
         AppBottomNavBar(
             navController = navController,
             currentDestination = navController.currentBackStackEntry?.destination,
-            bottomNavDestinations = listOf(
-                BottomNavDest(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
-                BottomNavDest(
-                    AppDestination.TimeCapsuleCalendar::class.qualifiedName!!,
-                    R.drawable.ic_calendar,
-                    "감정 보관함"
+            bottomNavDestinations =
+                listOf(
+                    BottomNavDest(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
+                    BottomNavDest(
+                        AppDestination.TimeCapsuleCalendar::class.qualifiedName!!,
+                        R.drawable.ic_calendar,
+                        "감정 보관함",
+                    ),
+                    BottomNavDest(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
                 ),
-                BottomNavDest(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
-            )
         )
     }
 

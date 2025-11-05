@@ -44,9 +44,10 @@ fun MarketingUsageContent() {
     val rows = listOf(row1, row2)
 
     Column(
-        modifier = Modifier
-            .padding(start = 16.dp, end = 16.dp)
-            .padding(vertical = 25.dp),
+        modifier =
+            Modifier
+                .padding(start = 16.dp, end = 16.dp)
+                .padding(vertical = 25.dp),
     ) {
         Text(
             text = "MOOI 마케팅 활용 및 수신동의",

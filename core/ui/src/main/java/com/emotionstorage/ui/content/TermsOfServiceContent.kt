@@ -26,9 +26,7 @@ import com.emotionstorage.ui.component.text.RichList
 enum class ListStyle { Bulleted, Numbered }
 
 @Composable
-fun TermsOfServiceContent(
-    modifier: Modifier = Modifier
-) {
+fun TermsOfServiceContent(modifier: Modifier = Modifier) {
     val titles = stringArrayResource(id = R.array.terms_titles)
     val contents = stringArrayResource(id = R.array.terms_contents)
 

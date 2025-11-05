@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -82,7 +81,7 @@ private fun StatelessGenderBirthScreen(
             TopAppBar(
                 showBackground = false,
                 showBackButton = true,
-                onBackClick = navToBack
+                onBackClick = navToBack,
             )
         },
     ) { padding ->
@@ -208,8 +207,7 @@ private fun GenderInput(
                             .subBackground(isSelected, defaultBackground = Color.Black)
                             .clickable {
                                 if (isSelected) onGenderSelect(null) else onGenderSelect(it)
-                            }
-                            .padding(14.dp),
+                            }.padding(14.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body8,

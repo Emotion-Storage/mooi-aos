@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -86,7 +85,10 @@ private fun StatelessArrivedTimeCapsulesScreen(
                 .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(
-                title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
+                title = "도착한 타임캡슐",
+                showBackButton = true,
+                onBackClick = navToBack,
+            )
         },
         snackbarHost = {
             AppSnackbarHost(
