@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,11 +23,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.LifecycleStartEffect
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 import com.emotionstorage.ui.component.button.CtaButton
@@ -47,9 +42,10 @@ fun TutorialScreen(
     modifier: Modifier = Modifier,
     navToLogin: () -> Unit = {},
 ) {
-    val permissionState = rememberPermissionState(
-        permission = android.Manifest.permission.POST_NOTIFICATIONS,
-    )
+    val permissionState =
+        rememberPermissionState(
+            permission = android.Manifest.permission.POST_NOTIFICATIONS,
+        )
 
     LifecycleStartEffect(Unit) {
         permissionState.launchPermissionRequest()
@@ -65,12 +61,11 @@ fun TutorialScreen(
             is PermissionStatus.Denied -> {
                 Logger.d(
                     "Permission denied, should show rationale: " +
-                        "${(permissionState.status as PermissionStatus.Denied).shouldShowRationale}"
+                        "${(permissionState.status as PermissionStatus.Denied).shouldShowRationale}",
                 )
             }
         }
     }
-
 
     Scaffold(
         modifier =
@@ -150,9 +145,10 @@ fun TutorialScreen(
                                     ),
                                 content = {
                                     CtaButton(
-                                        modifier = Modifier
-                                            .align(Alignment.BottomCenter)
-                                            .fillMaxWidth(),
+                                        modifier =
+                                            Modifier
+                                                .align(Alignment.BottomCenter)
+                                                .fillMaxWidth(),
                                         labelString = stringResource(R.string.tutorial_btn_start),
                                         onClick = navToLogin,
                                         isDefaultWidth = false,
