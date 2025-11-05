@@ -114,6 +114,7 @@ private fun StatelessOnBoardingNavHost(
                 when (destination) {
                     OnBoardingRoute.NICKNAME -> {
                         NicknameScreen(
+                            nickname = state.signupForm.nickname,
                             onNicknameInputComplete = { nickname ->
                                 onAction(OnBoardingAction.InputNickname(nickname))
                             },
@@ -129,7 +130,9 @@ private fun StatelessOnBoardingNavHost(
 
                     OnBoardingRoute.GENDER_BIRTH -> {
                         GenderBirthScreen(
-                            nickname = state.signupForm.nickname ?: "",
+                            nickname = state.signupForm.nickname!!,
+                            gender = state.signupForm.gender,
+                            birth = state.signupForm.birthday,
                             onGenderBirthInputComplete = { gender, birth ->
                                 onAction(OnBoardingAction.InputGenderAndBirth(gender, birth))
                             },
@@ -144,6 +147,7 @@ private fun StatelessOnBoardingNavHost(
 
                     OnBoardingRoute.EXPECTATIONS -> {
                         ExpectationsScreen(
+                            expectations = state.signupForm.expectations,
                             onExpectationsSelectComplete = { expectations ->
                                 onAction(OnBoardingAction.InputExpectations(expectations))
                             },
@@ -158,12 +162,25 @@ private fun StatelessOnBoardingNavHost(
 
                     OnBoardingRoute.AGREE_TERMS -> {
                         AgreeTermsScreen(
-                            onAgreeTermsInputComplete = { isTermAgreed, isPrivacyAgreed, isMarketingAgreed ->
+                            isAllAgreed = state.isAllAgreed,
+                            isTermAgreed = state.signupForm.isTermAgreed,
+                            isPrivacyAgreed = state.signupForm.isPrivacyAgreed,
+                            isMarketingAgreed = state.signupForm.isMarketingAgreed,
+                            isAgeAgreed = state.isAgeAgreed,
+                            onAgreeTermsInputComplete = {
+                                    isAllAgreed,
+                                    isTermAgreed,
+                                    isPrivacyAgreed,
+                                    isMarketingAgreed,
+                                    isAgeAgreed,
+                                ->
                                 onAction(
                                     OnBoardingAction.InputAgreedTerms(
+                                        isAllAgreed,
                                         isTermAgreed,
                                         isPrivacyAgreed,
                                         isMarketingAgreed,
+                                        isAgeAgreed,
                                     ),
                                 )
                             },

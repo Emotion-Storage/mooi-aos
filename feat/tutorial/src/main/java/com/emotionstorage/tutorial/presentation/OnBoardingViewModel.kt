@@ -16,6 +16,9 @@ import javax.inject.Inject
 
 data class OnBoardingState(
     val signupForm: SignupForm = SignupForm(),
+    // states not included in signup form
+    val isAllAgreed: Boolean? = null,
+    val isAgeAgreed: Boolean? = null,
 )
 
 sealed class OnBoardingAction {
@@ -38,9 +41,11 @@ sealed class OnBoardingAction {
     ) : OnBoardingAction()
 
     data class InputAgreedTerms(
+        val isAllAgreed: Boolean,
         val isTermAgreed: Boolean,
         val isPrivacyAgreed: Boolean,
         val isMarketingAgreed: Boolean,
+        val isAgeAgreed: Boolean,
     ) : OnBoardingAction()
 
     object TermDetail : OnBoardingAction()
@@ -96,9 +101,11 @@ class OnBoardingViewModel
 
                 is OnBoardingAction.InputAgreedTerms -> {
                     handleInputAgreedTerms(
+                        action.isAllAgreed,
                         action.isTermAgreed,
                         action.isPrivacyAgreed,
                         action.isMarketingAgreed,
+                        action.isAgeAgreed,
                     )
                 }
 
@@ -153,9 +160,11 @@ class OnBoardingViewModel
             }
 
         private fun handleInputAgreedTerms(
+            isAllAgreed: Boolean,
             isTermAgreed: Boolean,
             isPrivacyAgreed: Boolean,
             isMarketingAgreed: Boolean,
+            isAgeAgreed: Boolean,
         ) = intent {
             reduce {
                 state.copy(
@@ -165,6 +174,8 @@ class OnBoardingViewModel
                             isPrivacyAgreed = isPrivacyAgreed,
                             isMarketingAgreed = isMarketingAgreed,
                         ),
+                    isAllAgreed = isAllAgreed,
+                    isAgeAgreed = isAgeAgreed,
                 )
             }
         }
