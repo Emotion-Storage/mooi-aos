@@ -72,8 +72,9 @@ fun AgreeTermsScreen(
 
     LaunchedEffect("init") {
         viewModel.event.resetAgreedTerms()
-        if (isAllAgreed == true) viewModel.event.onToggleAllAgreed()
-        else {
+        if (isAllAgreed == true) {
+            viewModel.event.onToggleAllAgreed()
+        } else {
             if (isTermAgreed == true) viewModel.event.onToggleTermAgreed()
             if (isPrivacyAgreed == true) viewModel.event.onTogglePrivacyAgreed()
             if (isMarketingAgreed == true) viewModel.event.onToggleMarketingAgreed()

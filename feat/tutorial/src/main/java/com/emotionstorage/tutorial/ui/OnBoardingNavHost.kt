@@ -167,7 +167,13 @@ private fun StatelessOnBoardingNavHost(
                             isPrivacyAgreed = state.signupForm.isPrivacyAgreed,
                             isMarketingAgreed = state.signupForm.isMarketingAgreed,
                             isAgeAgreed = state.isAgeAgreed,
-                            onAgreeTermsInputComplete = { isAllAgreed, isTermAgreed, isPrivacyAgreed, isMarketingAgreed, isAgeAgreed ->
+                            onAgreeTermsInputComplete = {
+                                    isAllAgreed,
+                                    isTermAgreed,
+                                    isPrivacyAgreed,
+                                    isMarketingAgreed,
+                                    isAgeAgreed,
+                                ->
                                 onAction(
                                     OnBoardingAction.InputAgreedTerms(
                                         isAllAgreed,

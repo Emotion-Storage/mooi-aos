@@ -181,8 +181,7 @@ private fun ExpectationItem(
                 .subBackground(isSelected, defaultBackground = Color.Black)
                 .clickable(
                     onClick = onClick,
-                )
-                .padding(20.dp),
+                ).padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -238,6 +237,7 @@ private fun ExpectationsScreenPreview() {
             event =
                 object : ExpectationsEvent {
                     override fun onToggleExpectation(index: Int) {}
+
                     override fun onSelectExpectations(expectations: List<Expectation>) {}
                 },
         )
