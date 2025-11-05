@@ -37,7 +37,7 @@ import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.text.TextInput
 import com.emotionstorage.ui.component.text.TextInputState
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**
@@ -85,11 +85,9 @@ private fun StatelessNicknameScreen(
     )
 
     val focusManager = LocalFocusManager.current
-
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)

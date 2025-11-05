@@ -36,7 +36,8 @@ import kotlin.math.roundToInt
 enum class HighlightType { PROGRESS_BAR, INPUT_BOX, TOPBAR }
 
 @Composable
-fun DescriptionOverlayScreen(
+fun DescriptionOverlay(
+    modifier: Modifier = Modifier,
     isVisible: Boolean = true,
     progressBarBounds: Rect = Rect.Zero,
     inputBoxBounds: Rect = Rect.Zero,
@@ -60,7 +61,7 @@ fun DescriptionOverlayScreen(
 
     Box(
         modifier =
-            Modifier
+            modifier
                 .fillMaxSize()
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -112,7 +113,7 @@ fun DescriptionOverlayScreen(
 
         PositionedBubble(type = type, area = area)
 
-        DescriptionCoachScreen(
+        DescriptionCoach(
             modifier =
                 Modifier
                     .align(Alignment.Center)
@@ -181,6 +182,6 @@ private fun BoxScope.PositionedBubble(
 @Composable
 fun DescriptionOverlayScreenPreview() {
     MooiTheme {
-        DescriptionOverlayScreen()
+        DescriptionOverlay()
     }
 }

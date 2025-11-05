@@ -42,7 +42,7 @@ import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ui.component.Modal
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.delay
@@ -131,17 +131,7 @@ private fun StatelessAIChatScreen(
     )
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-    ) { innerPadding ->
-        Column(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
-                    .imePadding(),
-        ) {
+        topBar = {
             TopAppBar(
                 showBackButton = true,
                 onBackClick = {
@@ -152,7 +142,17 @@ private fun StatelessAIChatScreen(
                     setExitModalOpen(true)
                 },
             )
-
+        },
+    ) { innerPadding ->
+        Column(
+            modifier =
+                modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .consumeWindowInsets(WindowInsets.navigationBars)
+                    .imePadding(),
+        ) {
             ChatProgressBar(
                 progress = state.chatProgress,
                 modifier =

@@ -33,7 +33,7 @@ import com.emotionstorage.my.ui.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.component.ToggleRow
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.DayOfWeek
 
@@ -104,8 +104,6 @@ private fun StatelessNotificationSettingScreen(
                 title = "알림 설정",
                 onBackClick = navToBack,
                 showBackButton = true,
-                handleBackPress = true,
-                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->

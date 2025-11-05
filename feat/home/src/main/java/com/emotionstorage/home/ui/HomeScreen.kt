@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -47,6 +46,7 @@ import com.orhanobut.logger.Logger
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    bottomAppBar: @Composable () -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
     navToDailyReport: (id: String) -> Unit = {},
@@ -82,6 +82,7 @@ fun HomeScreen(
 
     StatelessHomeScreen(
         modifier = modifier,
+        bottomAppBar = bottomAppBar,
         state = state.value,
         onAction = viewModel::onAction,
         navToKey = navToKey,
@@ -94,6 +95,7 @@ fun HomeScreen(
 @Composable
 private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
@@ -102,11 +104,11 @@ private fun StatelessHomeScreen(
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
+        bottomBar = bottomAppBar,
     ) { innerPadding ->
         Box(
             modifier =

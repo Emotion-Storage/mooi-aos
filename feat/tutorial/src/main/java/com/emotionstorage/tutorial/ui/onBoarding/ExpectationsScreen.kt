@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,7 +34,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel.State
 import com.emotionstorage.ui.component.button.CtaButton
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 
@@ -80,12 +79,17 @@ private fun StatelessExpectationsScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
-        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) },
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                showBackButton = true,
+                onBackClick = navToBack,
+            )
+        },
     ) { padding ->
         Box(
             modifier =

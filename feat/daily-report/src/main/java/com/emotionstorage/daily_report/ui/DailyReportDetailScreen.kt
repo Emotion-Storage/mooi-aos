@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -36,7 +35,7 @@ import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
 import com.emotionstorage.ui.component.FullLoadingScreen
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 
@@ -73,7 +72,6 @@ private fun StatelessDailyReportDetailScreen(
     val scrollState = rememberScrollState()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()

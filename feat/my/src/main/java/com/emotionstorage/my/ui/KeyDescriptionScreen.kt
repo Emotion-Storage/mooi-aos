@@ -1,7 +1,6 @@
 package com.emotionstorage.my.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,41 +28,47 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.my.ui.component.CountRow
 import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun KeyDescriptionScreen(navToBack: () -> Unit) {
+fun KeyDescriptionScreen(
+    modifier: Modifier = Modifier,
+    navToBack: () -> Unit,
+) {
     StatelessKeyDescriptionScreen(
+        modifier = modifier,
         navToBack = navToBack,
     )
 }
 
 @Composable
-fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
+fun StatelessKeyDescriptionScreen(
+    modifier: Modifier = Modifier,
+    navToBack: () -> Unit = {},
+) {
     var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 showBackButton = true,
                 showBackground = false,
-                handleBackPress = true,
                 onBackClick = navToBack,
-                onHandleBackPress = navToBack,
             )
         },
+        containerColor = MooiTheme.colorScheme.background,
     ) { innerPadding ->
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(color = MooiTheme.colorScheme.background),
+                    .padding(innerPadding),
         ) {
             Column(
                 modifier =
                     Modifier
-                        .padding(innerPadding)
                         .align(Alignment.TopCenter),
             ) {
                 Text(

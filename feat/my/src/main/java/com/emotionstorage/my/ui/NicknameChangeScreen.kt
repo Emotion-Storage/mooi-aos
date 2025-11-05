@@ -36,7 +36,7 @@ import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.text.TextInput
 import com.emotionstorage.ui.component.text.TextInputState
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -68,14 +68,11 @@ private fun StatelessNicknameChangeScreen(
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 showBackButton = true,
                 showBackground = false,
-                handleBackPress = true,
                 onBackClick = navToBack,
-                onHandleBackPress = navToBack,
             )
         },
     ) { innerPadding ->
@@ -211,19 +208,19 @@ private val PreviewEmpty =
     NicknameChangeViewModel.State(
         nickname = "",
         inputState = InputState.EMPTY,
-        helperMessage = "닉네임을 입력해 주세요",
+        helperMessage = "2~8자리의 한글 또는 영문을 사용해주세요",
     )
 
 private val PreviewInvalid =
     NicknameChangeViewModel.State(
         nickname = "??",
         inputState = InputState.INVALID,
-        helperMessage = "허용되지 않는 문자예요",
+        helperMessage = "이름은 한글 또는 영문만 사용해주세요",
     )
 
 private val PreviewValid =
     NicknameChangeViewModel.State(
         nickname = "모이",
         inputState = InputState.VALID,
-        helperMessage = "멋진 닉네임이네요!",
+        helperMessage = "사용 가능한 이름입니다.",
     )

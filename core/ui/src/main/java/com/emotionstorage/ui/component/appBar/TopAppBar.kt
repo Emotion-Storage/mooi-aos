@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.appBar
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -7,10 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +32,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun TopAppBar(
     modifier: Modifier = Modifier,
     showBackground: Boolean = true,
+    fillStatusBar: Boolean = true,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {},
     showCloseButton: Boolean = false,
@@ -43,53 +48,61 @@ fun TopAppBar(
         }
     }
 
-    Box(
+    Column(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
                 .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
-                .fillMaxWidth()
-                .height(62.dp)
-                .padding(horizontal = 16.dp),
+                .fillMaxWidth(),
     ) {
-        if (showBackButton) {
-            Image(
-                modifier =
-                    Modifier
-                        .width(11.dp)
-                        .height(24.dp)
-                        .align(Alignment.CenterStart)
-                        .clickable {
-                            onBackClick()
-                        },
-                painter = painterResource(id = R.drawable.arrow_back),
-                contentDescription = "back",
-            )
+        if (fillStatusBar) {
+            Spacer(modifier = Modifier.height(WindowInsets.statusBars.asPaddingValues().calculateTopPadding()))
         }
-        if (title != null) {
-            Text(
-                modifier = Modifier.align(Alignment.Center),
-                text = title,
-                style = MooiTheme.typography.body3,
-                color = Color.White,
-            )
-        }
-        if (showCloseButton) {
-            Image(
-                modifier =
-                    Modifier
-                        .size(16.dp)
-                        .align(Alignment.CenterEnd)
-                        .clickable {
-                            onCloseClick()
-                        },
-                painter = painterResource(id = R.drawable.close),
-                contentDescription = "close",
-            )
-        } else {
-            if (rightComponent != null) {
-                Box(modifier = Modifier.align(Alignment.CenterEnd)) {
-                    rightComponent()
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(62.dp)
+                    .padding(horizontal = 16.dp),
+        ) {
+            if (showBackButton) {
+                Image(
+                    modifier =
+                        Modifier
+                            .width(11.dp)
+                            .height(24.dp)
+                            .align(Alignment.CenterStart)
+                            .clickable {
+                                onBackClick()
+                            },
+                    painter = painterResource(id = R.drawable.arrow_back),
+                    contentDescription = "back",
+                )
+            }
+            if (title != null) {
+                Text(
+                    modifier = Modifier.align(Alignment.Center),
+                    text = title,
+                    style = MooiTheme.typography.body3,
+                    color = Color.White,
+                )
+            }
+            if (showCloseButton) {
+                Image(
+                    modifier =
+                        Modifier
+                            .size(16.dp)
+                            .align(Alignment.CenterEnd)
+                            .clickable {
+                                onCloseClick()
+                            },
+                    painter = painterResource(id = R.drawable.close),
+                    contentDescription = "close",
+                )
+            } else {
+                if (rightComponent != null) {
+                    Box(modifier = Modifier.align(Alignment.CenterEnd)) {
+                        rightComponent()
+                    }
                 }
             }
         }

@@ -55,8 +55,8 @@ fun PrivacyPolicyContent() {
         modifier =
             Modifier
                 .fillMaxSize()
-                .padding(start = 16.dp, end = 16.dp, top = 9.dp, bottom = 25.dp),
-        contentPadding = PaddingValues(vertical = 18.dp),
+                .padding(start = 16.dp, end = 16.dp),
+        contentPadding = PaddingValues(vertical = 25.dp),
     ) {
         item {
             Text(
