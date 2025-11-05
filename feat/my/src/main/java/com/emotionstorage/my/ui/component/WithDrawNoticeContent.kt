@@ -7,18 +7,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.PlatformTextStyle
@@ -29,104 +23,30 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.ui.component.button.CtaButton
-import com.emotionstorage.ui.component.button.CtaButtonType
-import com.emotionstorage.ui.component.Modal
-import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun WithDrawNoticeContent(
-    showSuccessDialog: Boolean,
-    showFinalConfirmDialog: Boolean,
-    onWithDrawButtonClick: () -> Unit,
-    onBackClick: () -> Unit,
-    onKeepClick: () -> Unit,
-    onWithDrawClick: () -> Unit,
-    onDismiss: () -> Unit,
-    onFinalConfirmClick: () -> Unit,
-) {
-    Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+fun WithDrawNoticeContent(modifier: Modifier = Modifier) {
+    Column(
         modifier =
-            Modifier
-                .fillMaxSize()
+            modifier
+                .fillMaxWidth()
                 .background(MooiTheme.colorScheme.background),
-        topBar = {
-            TopAppBar(
-                showBackButton = true,
-                title = "회원탈퇴",
-                handleBackPress = true,
-                onBackClick = onBackClick,
-            )
-        },
-    ) { innerPadding ->
-        Box(
-            Modifier
-                .fillMaxSize(),
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .matchParentSize()
-                        .padding(innerPadding)
-                        .consumeWindowInsets(WindowInsets.navigationBars)
-                        .background(MooiTheme.colorScheme.background),
-            ) {
-                WithDrawTitle()
+    ) {
+        WithDrawTitle()
 
-                Spacer(modifier = Modifier.size(28.dp))
+        Spacer(modifier = Modifier.size(28.dp))
 
-                Text(
-                    modifier = Modifier.padding(start = 16.dp),
-                    text = "탈퇴 시 안내사항",
-                    style = MooiTheme.typography.body7,
-                    color = MooiTheme.colorScheme.gray400,
-                )
+        Text(
+            modifier = Modifier.padding(start = 16.dp),
+            text = "탈퇴 시 안내사항",
+            style = MooiTheme.typography.body7,
+            color = MooiTheme.colorScheme.gray400,
+        )
 
-                Spacer(modifier = Modifier.size(12.dp))
+        Spacer(modifier = Modifier.size(12.dp))
 
-                WithdrawBullets()
-
-                if (showSuccessDialog) {
-                    Modal(
-                        title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
-                        confirmLabel = "알림을 끄고 쉬어갈래요.",
-                        dismissLabel = "서비스를 탈퇴할래요.",
-                        onDismissRequest = onDismiss,
-                        onConfirm = onKeepClick,
-                        onDismiss = onWithDrawClick,
-                        topDescription = null,
-                    )
-                }
-
-                if (showFinalConfirmDialog) {
-                    Modal(
-                        title = "회원 탈퇴가\n완료되었습니다.",
-                        confirmLabel = "확인",
-                        onDismiss = {},
-                        onConfirm = onFinalConfirmClick,
-                        onDismissRequest = { },
-                        topDescription = null,
-                    )
-                }
-            }
-
-            CtaButton(
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(start = 16.dp, end = 16.dp, bottom = 28.dp),
-                type = CtaButtonType.OUTLINED,
-                labelString = "MOOI 서비스 탈퇴하기",
-                onClick = onWithDrawButtonClick,
-                isDefaultWidth = false,
-                textStyle =
-                    MooiTheme.typography.body7.copy(
-                        color = Color(0xFF979797),
-                    ),
-            )
-        }
+        WithdrawBullets()
     }
 }
 
@@ -211,14 +131,9 @@ private fun WithDrawTitlePreview() {
 private fun WithDrawNoticeContentPreview() {
     MooiTheme {
         WithDrawNoticeContent(
-            showSuccessDialog = false,
-            showFinalConfirmDialog = false,
-            onWithDrawButtonClick = {},
-            onBackClick = {},
-            onKeepClick = {},
-            onWithDrawClick = {},
-            onDismiss = {},
-            onFinalConfirmClick = {},
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background),
         )
     }
 }

@@ -4,7 +4,6 @@ import SpeechBubble
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,7 +28,7 @@ import com.emotionstorage.auth.presentation.SignupCompleteSideEffect
 import com.emotionstorage.auth.presentation.SignupCompleteViewModel
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.button.CtaButton
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -67,7 +66,6 @@ private fun StatelessSignupCompleteScreen(
     onLogin: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
@@ -75,7 +73,6 @@ private fun StatelessSignupCompleteScreen(
         topBar = {
             TopAppBar(
                 showBackground = false,
-                showBackButton = false,
             )
         },
     ) { padding ->

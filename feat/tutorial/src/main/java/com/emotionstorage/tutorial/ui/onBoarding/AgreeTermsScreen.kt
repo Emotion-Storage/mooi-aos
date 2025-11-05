@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -35,7 +34,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.ToggleButton
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -98,13 +97,16 @@ private fun StatelessAgreeTermsScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack)
+            TopAppBar(
+                showBackground = false,
+                showBackButton = true,
+                onBackClick = navToBack,
+            )
         },
     ) { innerPadding ->
         Column(

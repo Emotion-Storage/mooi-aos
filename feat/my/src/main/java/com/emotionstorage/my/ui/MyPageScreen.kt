@@ -44,6 +44,7 @@ import com.orhanobut.logger.Logger
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
     navToWithdrawNotice: () -> Unit = {},
@@ -107,6 +108,7 @@ fun MyPageScreen(
 
     StatelessMyPageScreen(
         modifier = modifier,
+        bottomAppBar = bottomAppBar,
         state = state.value,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdrawNotice,
@@ -121,6 +123,7 @@ fun MyPageScreen(
 @Composable
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     state: MyPageState = MyPageState(),
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
@@ -134,12 +137,12 @@ private fun StatelessMyPageScreen(
     var showLogoutModal by remember { mutableStateOf(false) }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
                 .padding(top = 16.dp)
                 .background(MooiTheme.colorScheme.background),
+        bottomBar = bottomAppBar,
     ) { innerPadding ->
         Column(
             modifier =
@@ -152,7 +155,7 @@ private fun StatelessMyPageScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             ProfileHeader(
-                profileImage = "Glide or Coil이 필요해 보인다",
+                profileImage = "고정 이미지",
                 nickname = state.nickname,
                 signupDday = state.signupDday,
                 onEditClick = {
