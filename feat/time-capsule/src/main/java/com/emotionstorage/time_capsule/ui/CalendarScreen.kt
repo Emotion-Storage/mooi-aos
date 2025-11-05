@@ -29,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -77,7 +76,6 @@ fun CalendarScreen(
     val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
     val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -261,16 +259,16 @@ private fun StatelessCalendarScreen(
             }
 
             // calendar date's time capsule bottom sheet
-            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsules.isNotEmpty()) {
+            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsulesFlow != null) {
                 TimeCapsuleBottomSheet(
                     date = state.calendarDate,
                     onDismissRequest = {
                         setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
                     },
-                    timeCapsules = state.timeCapsules,
-                    onToggleFavorite = {
-                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(it))
+                    timeCapsulesFlow = state.timeCapsulesFlow,
+                    onToggleFavorite = { id, prevFavorite ->
+                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(id, prevFavorite))
                     },
                     navToTimeCapsuleDetail = {
                         setShowTimeCapsuleBottomSheet(false)

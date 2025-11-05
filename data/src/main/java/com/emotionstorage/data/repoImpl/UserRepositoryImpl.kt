@@ -41,4 +41,6 @@ class UserRepositoryImpl
         override suspend fun deleteUser(): Boolean = userLocalDataSource.deleteUser()
 
         override suspend fun updateUserNickname(nickname: String) = userRemoteDataSource.updateUserNickname(nickname)
+
+        override suspend fun getKeyCount(): DataState<Int> = userRemoteDataSource.getKeyCount()
     }

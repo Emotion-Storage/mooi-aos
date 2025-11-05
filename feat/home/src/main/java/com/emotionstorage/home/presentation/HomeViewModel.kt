@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 data class HomeState(
     val nickname: String = "",
-    val keyCount: Int = 0,
+    val keyCount: Int? = null,
     val ticketCount: Int = 3,
     val newNotificationArrived: Boolean = false,
     val newTimeCapsuleArrived: Boolean = false,

@@ -12,4 +12,6 @@ interface UserRepository {
     suspend fun deleteUser(): Boolean
 
     suspend fun updateUserNickname(nickname: String): DataState<Unit?>
+
+    suspend fun getKeyCount(): DataState<Int>
 }

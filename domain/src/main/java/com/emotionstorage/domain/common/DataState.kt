@@ -29,6 +29,18 @@ sealed class DataState<out T> {
             is Loading -> "Loading[isLoading=$isLoading, data=$data]"
             is Error -> "Error[throwable=$throwable]"
         }
+
+    suspend fun handle(
+        onSuccess: suspend (data: T) -> Unit,
+        onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
+        onLoading: suspend (isLoading: Boolean) -> Unit = {},
+    ) {
+        when (this) {
+            is DataState.Success -> onSuccess(data)
+            is DataState.Error -> onError(throwable, data)
+            is DataState.Loading -> onLoading(isLoading)
+        }
+    }
 }
 
 suspend fun <T> collectDataState(

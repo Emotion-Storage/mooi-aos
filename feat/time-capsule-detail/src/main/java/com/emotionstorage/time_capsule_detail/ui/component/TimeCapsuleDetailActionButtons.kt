@@ -32,7 +32,7 @@ fun TimeCapsuleDetailActionButtons(
     status: TimeCapsule.Status,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = false,
-    expireAt: LocalDateTime = LocalDateTime.now(),
+    expireAt: LocalDateTime? = null,
     onSaveTimeCapsule: () -> Unit = {},
     onTimeCapsuleExpired: () -> Unit = {},
     onSaveMindNote: () -> Unit = {},
@@ -43,7 +43,7 @@ fun TimeCapsuleDetailActionButtons(
         verticalArrangement = Arrangement.spacedBy(16.7.dp),
         horizontalAlignment = Alignment.End,
     ) {
-        if (status == TimeCapsule.Status.TEMPORARY) {
+        if (status == TimeCapsule.Status.TEMPORARY && expireAt != null) {
             SaveTimeCapsuleButton(
                 modifier = Modifier.padding(top = 79.dp),
                 expireAt = expireAt,
