@@ -143,9 +143,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 PagingConfig(
                     pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
-                    prefetchDistance = PAGE_SIZE / 2,
-                    initialLoadSize = PAGE_SIZE,
-                    maxSize = PAGE_SIZE * 3,
                 ),
             pagingSourceFactory = {
                 GetTimeCapsulesPagingSource(
