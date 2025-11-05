@@ -69,6 +69,7 @@ dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
     implementation(libs.bundles.firebase)
+    implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.kakao.sdk.user)
 
