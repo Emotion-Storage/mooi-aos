@@ -3,7 +3,8 @@ package com.emotionstorage.domain.model
 import java.time.LocalDateTime
 
 data class User(
-    val id: String,
+    // ID 우선 제거
+//    val id: String,
     val socialType: AuthProvider,
     val socialId: String,
     val email: String,

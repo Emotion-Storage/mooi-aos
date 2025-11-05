@@ -6,7 +6,8 @@ import com.emotionstorage.local.model.UserLocal
 internal object UserMapper {
     fun toLocal(entity: UserEntity): UserLocal =
         UserLocal(
-            id = entity.id,
+            // TODO : 아이디 값 저장에선 제거
+//            id = entity.id,
             socialType = entity.socialType.name,
             socialId = entity.socialId,
             email = entity.email,
@@ -18,7 +19,7 @@ internal object UserMapper {
 
     fun toEntity(local: UserLocal): UserEntity =
         UserEntity(
-            id = local.id,
+//            id = local.id,
             socialType =
                 when (local.socialType) {
                     "GOOGLE" -> UserEntity.AuthProvider.GOOGLE

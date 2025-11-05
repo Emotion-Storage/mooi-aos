@@ -13,7 +13,8 @@ const val USER_PRIMARY_KEY = 0
 data class UserLocal(
     @PrimaryKey
     val pk: Int = USER_PRIMARY_KEY,
-    val id: String,
+    // ID값 우선 제거
+//    val id: String,
     val socialType: String,
     val socialId: String,
     val email: String,
