@@ -30,7 +30,7 @@ import java.time.YearMonth
 import javax.inject.Inject
 
 data class CalendarState(
-    val keyCount: Int = 0,
+    val keyCount: Int? = null,
     val madeTimeCapsuleToday: Boolean = false,
     // calendar states
     val calendarYearMonth: YearMonth = YearMonth.now(),
@@ -145,7 +145,7 @@ class CalendarViewModel @Inject constructor(
                 onError = { throwable, _ ->
                     Logger.e("handleInitKey error: $throwable")
                     reduce {
-                        state.copy(keyCount = 0)
+                        state.copy(keyCount = null)
                     }
                 },
             )
