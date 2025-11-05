@@ -1,4 +1,4 @@
-package com.emotionstorage.time_capsule.ui.component
+package com.emotionstorage.time_capsule.ui.component.timeCapsuleItem
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

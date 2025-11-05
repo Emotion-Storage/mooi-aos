@@ -9,6 +9,7 @@ import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
+import com.emotionstorage.data.pagingSource.GetFavoriteTimeCapsulesPagingSource
 import com.emotionstorage.data.pagingSource.GetTimeCapsulesPagingSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -81,55 +82,31 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun getFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<DataState<List<TimeCapsule>>> =
-        flow {
-            emit(DataState.Loading(isLoading = true))
-            try {
-                // get favorite time capsules without pagination
-                val result =
-                    remoteDataSource.getFavoriteTimeCapsules(
-                        page = 1,
-                        limit = 30,
+    override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> {
+        Napier.d("getPagedFavoriteTimeCapsules: sortBy: $sortBy")
+        return Pager(
+            config =
+                PagingConfig(
+                    pageSize = PAGE_SIZE,
+                    enablePlaceholders = false,
+                ),
+            pagingSourceFactory =
+                {
+                    GetFavoriteTimeCapsulesPagingSource(
+                        remoteDataSource = remoteDataSource,
                         sortBy =
                             when (sortBy) {
                                 FavoriteSortBy.FAVORITE_AT -> "favorite"
                                 FavoriteSortBy.NEWEST -> "latest"
                             },
                     )
-                emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(isLoading = false))
+                },
+        ).flow.map {
+            it.map { entity ->
+                TimeCapsuleMapper.toDomain(entity)
             }
         }
-
-    @Deprecated("Use getPagedTimeCapsules instead")
-    override suspend fun getTimeCapsules(
-        startDate: LocalDate,
-        endDate: LocalDate,
-        page: Int,
-        status: String,
-    ): Flow<DataState<List<TimeCapsule>>> =
-        flow {
-            emit(DataState.Loading(isLoading = true))
-            try {
-                val result =
-                    remoteDataSource.getTimeCapsules(
-                        startDate = startDate,
-                        endDate = endDate,
-                        page = page,
-                        // todo: implement pagination
-                        limit = 30,
-                        status = status,
-                    )
-                emit(DataState.Success(result.map { TimeCapsuleMapper.toDomain(it) }))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(isLoading = false))
-            }
-        }
+    }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedTimeCapsules(
@@ -143,9 +120,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 PagingConfig(
                     pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
-                    prefetchDistance = PAGE_SIZE / 2,
-                    initialLoadSize = PAGE_SIZE,
-                    maxSize = PAGE_SIZE * 3,
                 ),
             pagingSourceFactory = {
                 GetTimeCapsulesPagingSource(
@@ -155,14 +129,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                     status = status,
                 )
             },
-//            remoteMediator = GetTimeCapsulesRemoteMediator(
-//                remoteDataSource = remoteDataSource,
-//                localDataSource = localDataSource,
-//                startDate = startDate,
-//                endDate = endDate,
-//                status = status,
-//            ),
-//            pagingSourceFactory = localDataSource::getPagingSource
         ).flow.map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)
