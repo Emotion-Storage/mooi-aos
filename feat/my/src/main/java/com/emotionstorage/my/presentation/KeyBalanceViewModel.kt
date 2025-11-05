@@ -12,25 +12,26 @@ import javax.inject.Inject
 
 @HiltViewModel
 class KeyBalanceViewModel @Inject constructor(
-    private val getKeyCountUseCase: GetKeyCountUseCase
+    private val getKeyCountUseCase: GetKeyCountUseCase,
 ) : ViewModel() {
     private val _keyCountState = MutableStateFlow(KeyCountState())
     val keyCountState: StateFlow<KeyCountState> = _keyCountState
 
-    fun refreshKeyCount() = viewModelScope.launch {
-        _keyCountState.update { it.copy(isLoading = true, error = null) }
-        getKeyCountUseCase.invoke().handle(
-            onSuccess = { count ->
-                _keyCountState.update { it.copy(keyCount = count, isLoading = false) }
-            },
-            onLoading = {
-                _keyCountState.update { it.copy(isLoading = true) }
-            },
-            onError = { throwable, _ ->
-                _keyCountState.update { it.copy(error = throwable.message, isLoading = false) }
-            }
-        )
-    }
+    fun refreshKeyCount() =
+        viewModelScope.launch {
+            _keyCountState.update { it.copy(isLoading = true, error = null) }
+            getKeyCountUseCase.invoke().handle(
+                onSuccess = { count ->
+                    _keyCountState.update { it.copy(keyCount = count, isLoading = false) }
+                },
+                onLoading = {
+                    _keyCountState.update { it.copy(isLoading = true) }
+                },
+                onError = { throwable, _ ->
+                    _keyCountState.update { it.copy(error = throwable.message, isLoading = false) }
+                },
+            )
+        }
 
     fun openWhenToUseDialog() {
         _keyCountState.update {

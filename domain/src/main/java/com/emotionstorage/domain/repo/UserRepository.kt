@@ -16,5 +16,5 @@ interface UserRepository {
 
     suspend fun getKeyCount(): DataState<Int>
 
-    suspend fun getAccountInfo() : DataState<AccountInfo>
+    suspend fun getAccountInfo(): DataState<AccountInfo>
 }
