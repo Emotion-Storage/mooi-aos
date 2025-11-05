@@ -239,8 +239,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 flow = getRequiredKeyCount(state.timeCapsule?.openAt!!.toLocalDate()),
                 onSuccess = { requiredKeyCount ->
                     // get key count
-                    collectDataState(
-                        flow = getKeyCount(),
+                    getKeyCount().handle(
                         onSuccess = { keyCount ->
                             postSideEffect(
                                 ShowUnlockModal(

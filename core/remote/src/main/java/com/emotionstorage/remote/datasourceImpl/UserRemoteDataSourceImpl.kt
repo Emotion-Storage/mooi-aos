@@ -12,11 +12,11 @@ import com.emotionstorage.remote.response.toEmptyDataState
 import javax.inject.Inject
 
 class UserRemoteDataSourceImpl @Inject constructor(
-    private val userApiService: UserApiService,
+    private val apiService: UserApiService,
 ) : UserRemoteDataSource {
     override suspend fun updateUserNickname(nickname: String): DataState<Unit> =
         try {
-            val dto = userApiService.updateNickName(UpdateNicknameParam(nickname).toRequestBody())
+            val dto = apiService.updateNickName(UpdateNicknameParam(nickname).toRequestBody())
             dto.toEmptyDataState()
         } catch (e: Exception) {
             DataState.Error(e)
@@ -24,10 +24,21 @@ class UserRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getUserAccountInfo(): DataState<AccountInfo> =
         try {
-            userApiService.getAccountInfo().toDataState { dto ->
+            apiService.getAccountInfo().toDataState { dto ->
                 dto.toDomain()
             }
         } catch (e: Exception) {
             DataState.Error(e)
         }
+
+    override suspend fun getKeyCount(): DataState<Int> =
+        try {
+            val response = apiService.getKeys()
+
+            if (response.data == null) DataState.Error(Throwable("Response data is null"))
+            else DataState.Success(response.data.keyCount)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
 }
+

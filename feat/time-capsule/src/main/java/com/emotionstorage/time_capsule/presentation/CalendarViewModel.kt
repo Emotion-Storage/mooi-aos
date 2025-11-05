@@ -134,8 +134,7 @@ class CalendarViewModel @Inject constructor(
 
     private suspend fun initKeyCount() =
         subIntent {
-            collectDataState(
-                flow = getKeyCount(),
+            getKeyCount().handle(
                 onSuccess = { data ->
                     reduce {
                         state.copy(keyCount = data)
