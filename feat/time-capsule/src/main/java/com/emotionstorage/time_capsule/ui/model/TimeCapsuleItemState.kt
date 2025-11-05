@@ -12,8 +12,8 @@ data class TimeCapsuleItemState(
     val isFavorite: Boolean = false,
     val isFavoriteAt: LocalDateTime? = null,
     val createdAt: LocalDateTime,
+    // expireAt null if not TEMPORARY
+    val expireAt: LocalDateTime? = null,
     // open d-day null if TEMPORARY
     val openDDay: Int? = null,
-){
-    val expireAt = createdAt.plusHours(24)
-}
+)

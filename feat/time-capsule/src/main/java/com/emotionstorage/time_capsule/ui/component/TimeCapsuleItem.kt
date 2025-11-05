@@ -31,14 +31,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
-import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.util.TimeCapsuleItemStateProvider
 import com.emotionstorage.ui.R
@@ -52,6 +50,7 @@ import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
 private object TimeCapsuleItemDesignToken {
+    val tempContentHeight = 90.dp
     val contentHeight = 93.dp
     val contentPadding = PaddingValues(top = 18.dp, bottom = 20.dp, start = 15.dp, end = 9.dp)
 }
@@ -147,8 +146,8 @@ fun TimeCapsuleItem(
 private fun TimeCapsuleItemInfo(
     status: TimeCapsule.Status,
     createdAt: LocalDateTime,
-    expireAt: LocalDateTime,
     modifier: Modifier = Modifier,
+    expireAt: LocalDateTime? = null,
     showDate: Boolean = false,
     showInfoText: Boolean = true,
     showFavorite: Boolean = false,
@@ -169,19 +168,21 @@ private fun TimeCapsuleItemInfo(
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.errorRed),
                 )
-                CountDownTimer(
-                    deadline = expireAt,
-                    optimizeMinuteTick = true,
-                    optimizeSecondTick = true,
-                ) { hours, minutes, _ ->
-                    Text(
-                        text =
-                            "임시저장 보관기간이 " +
-                                (if (hours >= 1) "${hours}시간 " else "${minutes}분 ") +
-                                "남았어요.",
-                        style = MooiTheme.typography.caption6,
-                        color = MooiTheme.colorScheme.errorRed,
-                    )
+                if (expireAt != null) {
+                    CountDownTimer(
+                        deadline = expireAt,
+                        optimizeMinuteTick = true,
+                        optimizeSecondTick = true,
+                    ) { hours, minutes, _ ->
+                        Text(
+                            text =
+                                "임시저장 보관기간이 " +
+                                    (if (hours >= 1) "${hours}시간 " else "${minutes}분 ") +
+                                    "남았어요.",
+                            style = MooiTheme.typography.caption6,
+                            color = MooiTheme.colorScheme.errorRed,
+                        )
+                    }
                 }
             }
             Spacer(modifier = Modifier.size(4.dp))
@@ -276,6 +277,7 @@ private fun TemporaryContent(
     Row(
         modifier =
             modifier
+                .height(TimeCapsuleItemDesignToken.tempContentHeight)
                 .fillMaxWidth()
                 .errorRedBackground(
                     true,
@@ -283,11 +285,13 @@ private fun TemporaryContent(
                 )
                 .clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
-                .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 18.dp),
+                .padding(start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .padding(bottom = 6.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(
