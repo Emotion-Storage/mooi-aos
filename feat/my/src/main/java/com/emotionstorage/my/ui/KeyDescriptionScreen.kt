@@ -34,6 +34,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.emotionstorage.my.presentation.KeyBalanceViewModel
 import com.emotionstorage.my.presentation.KeyCountState
+import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import com.emotionstorage.my.ui.component.CountRow
 import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
@@ -43,7 +44,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun KeyDescriptionScreen(
     viewModel: KeyBalanceViewModel = hiltViewModel(),
-    navToBack: () -> Unit
+    navToBack: () -> Unit,
 ) {
     val state by viewModel.keyCountState.collectAsState()
 
@@ -56,6 +57,8 @@ fun KeyDescriptionScreen(
 
     StatelessKeyDescriptionScreen(
         state,
+        onOpenDialog = viewModel::openWhenToUseDialog,
+        onDismissDialog = viewModel::dismissDialog,
         navToBack = navToBack,
     )
 }
@@ -63,10 +66,10 @@ fun KeyDescriptionScreen(
 @Composable
 fun StatelessKeyDescriptionScreen(
     state: KeyCountState,
-    navToBack: () -> Unit = {}
+    onOpenDialog: () -> Unit = {},
+    onDismissDialog: () -> Unit = {},
+    navToBack: () -> Unit = {},
 ) {
-    var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -144,7 +147,7 @@ fun StatelessKeyDescriptionScreen(
                 Row(
                     modifier =
                         Modifier.clickable {
-                            showWhenToUseDialog = true
+                            onOpenDialog()
                         },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -162,11 +165,16 @@ fun StatelessKeyDescriptionScreen(
                     )
                 }
             }
-        }
-        if (showWhenToUseDialog) {
-            WhenToUseKeyDialog(
-                modifier = Modifier.padding(horizontal = 16.dp),
-            ) { showWhenToUseDialog = false }
+
+            when(state.dialog) {
+                KeyDescriptionDialog.WhenToUse -> {
+                    WhenToUseKeyDialog(
+                        modifier = Modifier.padding(horizontal = 16.dp),
+                        onDismiss = onDismissDialog,
+                    )
+                }
+                null -> Unit
+            }
         }
     }
 }

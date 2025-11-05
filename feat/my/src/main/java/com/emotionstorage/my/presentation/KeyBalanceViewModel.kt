@@ -31,10 +31,27 @@ class KeyBalanceViewModel @Inject constructor(
             }
         )
     }
+
+    fun openWhenToUseDialog() {
+        _keyCountState.update {
+            it.copy(dialog = KeyDescriptionDialog.WhenToUse)
+        }
+    }
+
+    fun dismissDialog() {
+        _keyCountState.update {
+            it.copy(dialog = null)
+        }
+    }
 }
 
 data class KeyCountState(
     val keyCount: Int? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
+    val dialog: KeyDescriptionDialog? = null,
 )
+
+sealed interface KeyDescriptionDialog {
+    data object WhenToUse : KeyDescriptionDialog
+}
