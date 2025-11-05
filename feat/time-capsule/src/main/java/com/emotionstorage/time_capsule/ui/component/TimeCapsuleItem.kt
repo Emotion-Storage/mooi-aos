@@ -30,6 +30,8 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -38,6 +40,7 @@ import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
+import com.emotionstorage.time_capsule.ui.util.TimeCapsuleItemStateProvider
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.button.RoundedToggleButton
@@ -107,11 +110,13 @@ fun TimeCapsuleItem(
                             } else {
                                 this
                             }
-                        }.height(TimeCapsuleItemDesignToken.contentHeight)
+                        }
+                        .height(TimeCapsuleItemDesignToken.contentHeight)
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
-                        ).clip(RoundedCornerShape(15.dp))
+                        )
+                        .clip(RoundedCornerShape(15.dp))
                         .clickable(onClick = onClick),
             ) {
                 // overlay
@@ -275,7 +280,8 @@ private fun TemporaryContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                ).clip(RoundedCornerShape(15.dp))
+                )
+                .clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(top = 17.dp, bottom = 23.dp, start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -363,7 +369,8 @@ private fun ArrivedContentOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                ).border(
+                )
+                .border(
                     1.dp,
                     LinearGradient(
                         colors =
@@ -415,14 +422,16 @@ private fun TimeCapsuleContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                ).run {
+                )
+                .run {
                     // blur content if not opened
                     if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }.padding(TimeCapsuleItemDesignToken.contentPadding),
+                }
+                .padding(TimeCapsuleItemDesignToken.contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
@@ -478,83 +487,21 @@ private fun TimeCapsuleContent(
 
 @Preview
 @Composable
-private fun TimeCapsuleItemPreview() {
-    val dummyTimeCapsule =
-        TimeCapsuleItemState(
-            id = 123L,
-            status = TimeCapsule.Status.OPENED,
-            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
-            emotions =
-                listOf(
-                    Emotion(
-                        emoji = "\uD83D\uDE14",
-                        label = "서운함",
-                        percentage = 30.0f,
-                    ),
-                    Emotion(
-                        emoji = "\uD83D\uDE0A",
-                        label = "고마움",
-                        percentage = 30.0f,
-                    ),
-                    Emotion(
-                        emoji = "\uD83E\uDD70",
-                        label = "안정감",
-                        percentage = 80.0f,
-                    ),
-                ),
-            isFavorite = true,
-            isFavoriteAt = LocalDateTime.now(),
-            createdAt = LocalDateTime.now(),
-            expireAt = LocalDateTime.now().plusHours(5),
-            openDDay = -99,
-        )
-
+private fun TimeCapsuleItemPreview(
+    @PreviewParameter(TimeCapsuleItemStateProvider::class) timeCapsule: TimeCapsuleItemState,
+) {
     MooiTheme {
-        Column(
-            modifier =
-                Modifier
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(vertical = 20.dp, horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(17.dp),
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(MooiTheme.colorScheme.background)
+                .padding(16.dp)
         ) {
             TimeCapsuleItem(
-                timeCapsule =
-                    dummyTimeCapsule.copy(
-                        status = TimeCapsule.Status.TEMPORARY,
-                        createdAt = LocalDateTime.now().minusHours(2),
-                    ),
-            )
-            TimeCapsuleItem(
-                timeCapsule =
-                    dummyTimeCapsule.copy(
-                        status = TimeCapsule.Status.LOCKED,
-                        openDDay = -20,
-                    ),
-            )
-            TimeCapsuleItem(
-                timeCapsule =
-                    dummyTimeCapsule.copy(
-                        status = TimeCapsule.Status.ARRIVED,
-                        openDDay = 20,
-                    ),
-            )
-            TimeCapsuleItem(
-                timeCapsule =
-                    dummyTimeCapsule.copy(
-                        status = TimeCapsule.Status.ARRIVED,
-                        openDDay = 20,
-                    ),
-                showDate = true,
-                showInfoText = false,
-                showFavorite = true,
-            )
-            TimeCapsuleItem(
-                timeCapsule =
-                    dummyTimeCapsule.copy(
-                        status = TimeCapsule.Status.OPENED,
-                        openDDay = 20,
-                    ),
+                modifier = Modifier.align(Alignment.Center),
+                timeCapsule = timeCapsule
             )
         }
     }
 }
+
