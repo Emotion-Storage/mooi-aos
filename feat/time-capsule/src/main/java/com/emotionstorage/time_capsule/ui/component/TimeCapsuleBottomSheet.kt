@@ -89,7 +89,7 @@ fun TimeCapsuleBottomSheet(
             verticalArrangement = Arrangement.spacedBy(18.dp),
             contentPadding = PaddingValues(bottom = 51.dp),
         ) {
-            if (timeCapsules != null && timeCapsules.loadState.refresh == LoadState.Loading) {
+            if (timeCapsules != null && timeCapsules.loadState.refresh is LoadState.NotLoading) {
                 if (timeCapsules.itemCount > 0) {
                     items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
                         timeCapsules[it]?.run {
