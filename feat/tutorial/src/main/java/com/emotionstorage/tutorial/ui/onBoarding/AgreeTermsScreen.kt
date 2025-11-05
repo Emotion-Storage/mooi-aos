@@ -98,13 +98,17 @@ private fun StatelessAgreeTermsScreen(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack)
+            TopAppBar(
+                showBackground = false,
+                fillStatusBar = true,
+                showBackButton = true,
+                onBackClick = navToBack
+            )
         },
     ) { innerPadding ->
         Column(

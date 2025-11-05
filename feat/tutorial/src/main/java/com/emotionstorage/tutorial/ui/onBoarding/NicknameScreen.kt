@@ -78,11 +78,9 @@ private fun StatelessNicknameScreen(
     )
 
     val focusManager = LocalFocusManager.current
-
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
@@ -92,6 +90,7 @@ private fun StatelessNicknameScreen(
             TopAppBar(
                 showBackground = false,
                 showBackButton = true,
+                fillStatusBar = true,
                 onBackClick = onBackClick,
                 handleBackPress = true,
                 onHandleBackPress = onBackClick,

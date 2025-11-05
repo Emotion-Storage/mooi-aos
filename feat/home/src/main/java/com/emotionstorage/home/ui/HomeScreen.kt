@@ -39,6 +39,7 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.AppBottomNavBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.theme.MooiTheme
@@ -331,9 +332,6 @@ private fun HomeScreenPreview() {
 private fun HomeScreenPreview2() {
     MooiTheme {
         StatelessHomeScreen(
-            bottomAppBar ={
-                AppBottomNavBar(navController = rememberNavController())
-            },
             state =
                 HomeState(
                     nickname = "찡찡이",

@@ -18,10 +18,10 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         topBar = {
             TopAppBar(
                 showBackground = false,
+                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack,
                 handleBackPress = true,
@@ -33,9 +33,8 @@ fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding),
         ) {
             PrivacyPolicyContent()
         }

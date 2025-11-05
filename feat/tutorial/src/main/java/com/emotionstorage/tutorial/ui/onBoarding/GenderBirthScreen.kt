@@ -74,12 +74,18 @@ private fun StatelessGenderBirthScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
-        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) },
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                fillStatusBar = true,
+                showBackButton = true,
+                onBackClick = navToBack
+            )
+        },
     ) { padding ->
         Column(
             modifier =
@@ -203,7 +209,8 @@ private fun GenderInput(
                             .subBackground(isSelected, defaultBackground = Color.Black)
                             .clickable {
                                 if (isSelected) onGenderSelect(null) else onGenderSelect(it)
-                            }.padding(14.dp),
+                            }
+                            .padding(14.dp),
                 ) {
                     Text(
                         style = MooiTheme.typography.body8,

@@ -72,12 +72,18 @@ private fun StatelessExpectationsScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
-        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) },
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                fillStatusBar = true,
+                showBackButton = true,
+                onBackClick = navToBack
+            )
+        },
     ) { padding ->
         Box(
             modifier =
@@ -173,7 +179,8 @@ private fun ExpectationItem(
                 .subBackground(isSelected, defaultBackground = Color.Black)
                 .clickable(
                     onClick = onClick,
-                ).padding(20.dp),
+                )
+                .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {

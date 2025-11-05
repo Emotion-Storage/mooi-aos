@@ -47,7 +47,6 @@ fun SplashScreen(
 @Composable
 private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize(),
