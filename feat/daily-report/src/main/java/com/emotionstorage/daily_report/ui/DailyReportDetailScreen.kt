@@ -73,7 +73,6 @@ private fun StatelessDailyReportDetailScreen(
     val scrollState = rememberScrollState()
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
@@ -86,6 +85,7 @@ private fun StatelessDailyReportDetailScreen(
                         .toLocalDate()
                         .toKorDateWithWeekDay(),
                 showBackButton = true,
+                fillStatusBar = true,
                 onBackClick = navToBack,
             )
         },
@@ -138,7 +138,8 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            ).padding(vertical = 15.dp, horizontal = 38.dp),
+                            )
+                            .padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
