@@ -24,26 +24,27 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun CountRow(
-    count: Int,
+    count: Int?,
     modifier: Modifier = Modifier,
 ) {
     val digits = remember(count) { count.toString().map { it } }
+    if (count != null) {
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                digits.forEach { char -> DigitBox(char) }
+            }
 
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            digits.forEach { char -> DigitBox(char) }
+            Spacer(Modifier.width(8.dp))
+            Text(
+                text = "개",
+                style = MooiTheme.typography.head2,
+                color = Color.White,
+            )
         }
-
-        Spacer(Modifier.width(8.dp))
-        Text(
-            text = "개",
-            style = MooiTheme.typography.head2,
-            color = Color.White,
-        )
     }
 }
 

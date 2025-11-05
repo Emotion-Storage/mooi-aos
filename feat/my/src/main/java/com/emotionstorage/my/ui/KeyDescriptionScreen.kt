@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -26,6 +28,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
+import com.emotionstorage.my.presentation.KeyBalanceViewModel
+import com.emotionstorage.my.presentation.KeyCountState
 import com.emotionstorage.my.ui.component.CountRow
 import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
@@ -33,14 +41,30 @@ import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun KeyDescriptionScreen(navToBack: () -> Unit) {
+fun KeyDescriptionScreen(
+    viewModel: KeyBalanceViewModel = hiltViewModel(),
+    navToBack: () -> Unit
+) {
+    val state by viewModel.keyCountState.collectAsState()
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.refreshKeyCount()
+        }
+    }
+
     StatelessKeyDescriptionScreen(
+        state,
         navToBack = navToBack,
     )
 }
 
 @Composable
-fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
+fun StatelessKeyDescriptionScreen(
+    state: KeyCountState,
+    navToBack: () -> Unit = {}
+) {
     var showWhenToUseDialog by rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
@@ -107,8 +131,7 @@ fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
 
                 CountRow(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    // Todo : ViewModel에 keyCount를 UI State로 변경한 후 값 전달하기
-                    count = 123,
+                    count = state.keyCount,
                 )
             }
 
@@ -152,6 +175,8 @@ fun StatelessKeyDescriptionScreen(navToBack: () -> Unit = {}) {
 @Composable
 fun KeyDescriptionScreenPreview() {
     MooiTheme {
-        StatelessKeyDescriptionScreen()
+        StatelessKeyDescriptionScreen(
+            state = KeyCountState(keyCount = 5),
+        )
     }
 }
