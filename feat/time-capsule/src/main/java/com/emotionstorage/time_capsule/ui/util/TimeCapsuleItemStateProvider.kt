@@ -30,6 +30,7 @@ internal class TimeCapsuleItemStateProvider(
                 ),
             ),
         createdAt = LocalDateTime.now(),
+        expireAt = LocalDateTime.now().plusHours(3).plusMinutes(25),
         openDDay = null,
     )
 ) : PreviewParameterProvider<TimeCapsuleItemState> {

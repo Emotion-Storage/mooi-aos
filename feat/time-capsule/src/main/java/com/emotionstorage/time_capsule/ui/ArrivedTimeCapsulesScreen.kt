@@ -32,7 +32,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesSideEffect
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
-import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
+import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
