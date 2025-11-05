@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,11 +26,10 @@ fun EmptyChatScreen(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                modifier = Modifier.size(100.dp),
-                painter = painterResource(R.drawable.success_filled),
+                modifier = Modifier.size(186.dp, 155.dp).offset(y = 5.dp),
+                painter = painterResource(R.drawable.ai_chat_graphic),
                 contentDescription = null,
             )
-            Spacer(modifier.size(18.dp))
             Text(
                 text = "지금 나누고 싶은\n이야기가 있나요?",
                 style = MooiTheme.typography.head1,
