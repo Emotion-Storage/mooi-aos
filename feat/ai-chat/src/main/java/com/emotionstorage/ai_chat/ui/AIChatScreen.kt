@@ -131,7 +131,20 @@ private fun StatelessAIChatScreen(
     )
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        topBar = {
+            TopAppBar(
+                showBackground = true,
+                fillStatusBar = true,
+                showBackButton = true,
+                onBackClick = {
+                    setExitModalOpen(true)
+                },
+                handleBackPress = true,
+                onHandleBackPress = {
+                    setExitModalOpen(true)
+                },
+            )
+        }
     ) { innerPadding ->
         Column(
             modifier =
@@ -142,17 +155,6 @@ private fun StatelessAIChatScreen(
                     .consumeWindowInsets(WindowInsets.navigationBars)
                     .imePadding(),
         ) {
-            TopAppBar(
-                showBackButton = true,
-                onBackClick = {
-                    setExitModalOpen(true)
-                },
-                handleBackPress = true,
-                onHandleBackPress = {
-                    setExitModalOpen(true)
-                },
-            )
-
             ChatProgressBar(
                 progress = state.chatProgress,
                 modifier =

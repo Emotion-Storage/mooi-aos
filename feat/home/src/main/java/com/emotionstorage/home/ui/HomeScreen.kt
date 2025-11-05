@@ -107,7 +107,6 @@ private fun StatelessHomeScreen(
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()

@@ -147,7 +147,11 @@ internal fun AppNavHost(
             currentDestination = navController.currentBackStackEntry?.destination,
             bottomNavDestinations = listOf(
                 BottomNavDest(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
-                BottomNavDest(AppDestination.TimeCapsuleCalendar::class.qualifiedName!!, R.drawable.ic_calendar, "감정 보관함"),
+                BottomNavDest(
+                    AppDestination.TimeCapsuleCalendar::class.qualifiedName!!,
+                    R.drawable.ic_calendar,
+                    "감정 보관함"
+                ),
                 BottomNavDest(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
             )
         )
