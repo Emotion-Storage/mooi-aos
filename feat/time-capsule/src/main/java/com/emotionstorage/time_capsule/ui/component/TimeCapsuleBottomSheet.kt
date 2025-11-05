@@ -89,30 +89,25 @@ fun TimeCapsuleBottomSheet(
             verticalArrangement = Arrangement.spacedBy(18.dp),
             contentPadding = PaddingValues(bottom = 51.dp),
         ) {
-            when (timeCapsules?.loadState?.refresh) {
-                is LoadState.NotLoading -> {
-                    if (timeCapsules.itemCount > 0) {
-                        items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                            timeCapsules[it]?.run {
-                                TimeCapsuleItem(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    timeCapsule = this,
-                                    onClick = { navToTimeCapsuleDetail(this.id) },
-                                    onFavoriteClick = { onToggleFavorite(this.id, this.isFavorite) },
-                                )
-                            }
+            if (timeCapsules != null && timeCapsules.loadState.refresh == LoadState.Loading) {
+                if (timeCapsules.itemCount > 0) {
+                    items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
+                        timeCapsules[it]?.run {
+                            TimeCapsuleItem(
+                                modifier = Modifier.fillMaxWidth(),
+                                timeCapsule = this,
+                                onClick = { navToTimeCapsuleDetail(this.id) },
+                                onFavoriteClick = { onToggleFavorite(this.id, this.isFavorite) },
+                            )
                         }
                     }
                 }
-
-                else -> {
-                    item {
-                        CircularProgressIndicator(
-                            modifier = Modifier.padding(vertical = 20.dp),
-                            color = MooiTheme.colorScheme.primary,
-                        )
-                    }
-                    // todo: add error ui
+            } else {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(vertical = 20.dp),
+                        color = MooiTheme.colorScheme.primary,
+                    )
                 }
             }
         }

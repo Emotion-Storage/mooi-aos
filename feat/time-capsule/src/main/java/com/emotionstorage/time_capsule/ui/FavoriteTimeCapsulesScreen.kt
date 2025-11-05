@@ -145,67 +145,63 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     )
                 }
             }
-            when (timeCapsules?.loadState?.refresh) {
-                is LoadState.NotLoading -> {
-                    if (timeCapsules.itemCount == 0) {
-                        item {
-                            Text(
-                                modifier = Modifier.padding(top = 224.dp),
-                                text = "아직 즐겨찾기한 타임캡슐이 없어요.",
-                                style = MooiTheme.typography.caption2,
-                                color = MooiTheme.colorScheme.gray400,
-                            )
-                        }
-                    } else {
-                        item {
-                            Box(modifier = Modifier.fillMaxWidth()) {
-                                DropDownPicker(
-                                    modifier =
-                                        Modifier
-                                            .align(Alignment.CenterEnd)
-                                            .width(102.dp)
-                                            .padding(top = 7.dp, bottom = 22.dp),
-                                    selectedValue = state.sortOrder.label,
-                                    options = FavoriteSortBy.entries.map { it.label },
-                                    onSelect = { label ->
-                                        onAction(
-                                            FavoriteTimeCapsulesAction.SetSortOrder(label),
-                                        )
-                                    },
-                                )
-                            }
-                        }
-                        items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                            timeCapsules[it]?.run {
-                                TimeCapsuleItem(
-                                    modifier =
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .padding(bottom = 26.dp),
-                                    timeCapsule = this,
-                                    showDate = true,
-                                    showFavorite = true,
-                                    onClick = { navToTimeCapsuleDetail(this.id) },
-                                    onFavoriteClick = {
-                                        onAction(
-                                            FavoriteTimeCapsulesAction.ToggleFavorite(this.id, this.isFavorite),
-                                        )
-                                    },
-                                )
-                            }
-                        }
-                    }
-                }
-
-                else -> {
+            if (timeCapsules != null && timeCapsules.loadState.refresh is LoadState.NotLoading) {
+                if (timeCapsules.itemCount == 0) {
                     item {
-                        CircularProgressIndicator(
-                            modifier = Modifier.padding(top = 244.dp),
-                            color = MooiTheme.colorScheme.primary,
+                        Text(
+                            modifier = Modifier.padding(top = 224.dp),
+                            text = "아직 즐겨찾기한 타임캡슐이 없어요.",
+                            style = MooiTheme.typography.caption2,
+                            color = MooiTheme.colorScheme.gray400,
                         )
                     }
-                    // todo: add error ui
+                } else {
+                    item {
+                        Box(modifier = Modifier.fillMaxWidth()) {
+                            DropDownPicker(
+                                modifier =
+                                    Modifier
+                                        .align(Alignment.CenterEnd)
+                                        .width(102.dp)
+                                        .padding(top = 7.dp, bottom = 22.dp),
+                                selectedValue = state.sortOrder.label,
+                                options = FavoriteSortBy.entries.map { it.label },
+                                onSelect = { label ->
+                                    onAction(
+                                        FavoriteTimeCapsulesAction.SetSortOrder(label),
+                                    )
+                                },
+                            )
+                        }
+                    }
+                    items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
+                        timeCapsules[it]?.run {
+                            TimeCapsuleItem(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 26.dp),
+                                timeCapsule = this,
+                                showDate = true,
+                                showFavorite = true,
+                                onClick = { navToTimeCapsuleDetail(this.id) },
+                                onFavoriteClick = {
+                                    onAction(
+                                        FavoriteTimeCapsulesAction.ToggleFavorite(this.id, this.isFavorite),
+                                    )
+                                },
+                            )
+                        }
+                    }
                 }
+            } else {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier.padding(top = 244.dp),
+                        color = MooiTheme.colorScheme.primary,
+                    )
+                }
+                // todo: add error ui
             }
         }
     }
