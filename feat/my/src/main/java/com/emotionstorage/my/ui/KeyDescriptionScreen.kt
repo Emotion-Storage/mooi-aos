@@ -172,7 +172,10 @@ fun StatelessKeyDescriptionScreen(
                         onDismiss = onDismissDialog,
                     )
                 }
-                null -> Unit
+
+                null -> {
+                    Unit
+                }
             }
         }
     }
