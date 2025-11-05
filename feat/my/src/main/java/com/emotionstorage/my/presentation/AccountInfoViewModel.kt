@@ -36,7 +36,11 @@ class AccountInfoViewModel @Inject constructor(
                         )
                 },
                 onError = { throwable, _ ->
-                    // 에러 처리 필요
+                    _state.value =
+                        _state.value.copy(
+                            error = throwable.message ?: "Unknown error",
+                            isLoading = false,
+                        )
                 },
                 onLoading = { isLoading ->
                     // do Nothing
@@ -53,6 +57,8 @@ data class AccountInfoState(
     val birthYear: Int = 0,
     val birthMonth: Int = 0,
     val birthDay: Int = 0,
+    val error: String? = null,
+    val isLoading: Boolean = false,
 )
 
 enum class AuthProvider { GOOGLE, KAKAO }
