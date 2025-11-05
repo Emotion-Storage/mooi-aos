@@ -108,6 +108,7 @@ fun MyPageScreen(
 
     StatelessMyPageScreen(
         modifier = modifier,
+        bottomAppBar = bottomAppBar,
         state = state.value,
         onAction = viewModel::onAction,
         navToWithdraw = navToWithdrawNotice,
