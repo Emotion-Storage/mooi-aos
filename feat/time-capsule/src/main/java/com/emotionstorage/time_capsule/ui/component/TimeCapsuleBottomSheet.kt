@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
@@ -87,19 +88,34 @@ fun TimeCapsuleBottomSheet(
                     .background(Color.Transparent)
                     .heightIn(max = 500.dp)
                     .padding(horizontal = 1.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(18.dp),
             contentPadding = PaddingValues(bottom = 51.dp),
         ) {
-            if (timeCapsules?.loadState?.refresh is LoadState.NotLoading && timeCapsules.itemCount > 0) {
-                items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                    timeCapsules[it]?.run {
-                        TimeCapsuleItem(
-                            modifier = Modifier.fillMaxWidth(),
-                            timeCapsule = this,
-                            onClick = { navToTimeCapsuleDetail(this.id) },
-                            onFavoriteClick = { onToggleFavorite(this.id, this.isFavorite) },
+            when (timeCapsules?.loadState?.refresh) {
+                is LoadState.NotLoading -> {
+                    if (timeCapsules.itemCount > 0) {
+                        items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
+                            timeCapsules[it]?.run {
+                                TimeCapsuleItem(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    timeCapsule = this,
+                                    onClick = { navToTimeCapsuleDetail(this.id) },
+                                    onFavoriteClick = { onToggleFavorite(this.id, this.isFavorite) },
+                                )
+                            }
+                        }
+                    }
+                }
+
+                else -> {
+                    item {
+                        CircularProgressIndicator(
+                            modifier = Modifier.padding(vertical = 20.dp),
+                            color = MooiTheme.colorScheme.primary
                         )
                     }
+                    // todo: add error ui
                 }
             }
         }
