@@ -132,39 +132,41 @@ class CalendarViewModel @Inject constructor(
             }
         }
 
-    private suspend fun initKeyCount() = subIntent {
-        collectDataState(
-            flow = getKeyCount(),
-            onSuccess = { data ->
-                reduce {
-                    state.copy(keyCount = data)
-                }
-            },
-            onError = { throwable, _ ->
-                Logger.e("handleInitKey error: $throwable")
-                reduce {
-                    state.copy(keyCount = 0)
-                }
-            },
-        )
-    }
+    private suspend fun initKeyCount() =
+        subIntent {
+            collectDataState(
+                flow = getKeyCount(),
+                onSuccess = { data ->
+                    reduce {
+                        state.copy(keyCount = data)
+                    }
+                },
+                onError = { throwable, _ ->
+                    Logger.e("handleInitKey error: $throwable")
+                    reduce {
+                        state.copy(keyCount = 0)
+                    }
+                },
+            )
+        }
 
-    private suspend fun initMadeTimeCapsuleToday() = subIntent {
-        try {
-            val timeCapsuleOfToday = getTimeCapsulesOfDate(LocalDate.now()).firstOrNull()
-            reduce {
-                state.copy(madeTimeCapsuleToday = timeCapsuleOfToday != null)
-            }
-        } catch (e: Exception) {
-            Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $e")
-            reduce {
-                state.copy(
-                    madeTimeCapsuleToday = false,
-                    timeCapsulesFlow = null
-                )
+    private suspend fun initMadeTimeCapsuleToday() =
+        subIntent {
+            try {
+                val timeCapsuleOfToday = getTimeCapsulesOfDate(LocalDate.now()).firstOrNull()
+                reduce {
+                    state.copy(madeTimeCapsuleToday = timeCapsuleOfToday != null)
+                }
+            } catch (e: Exception) {
+                Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $e")
+                reduce {
+                    state.copy(
+                        madeTimeCapsuleToday = false,
+                        timeCapsulesFlow = null,
+                    )
+                }
             }
         }
-    }
 
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
         intent {
@@ -206,61 +208,65 @@ class CalendarViewModel @Inject constructor(
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
         }
 
-    private suspend fun setTimeCapsulesFlow(date: LocalDate) = subIntent {
-        try {
-            reduce {
-                state.copy(
-                    timeCapsulesFlow = getTimeCapsulesOfDate(date).map {
-                        it.map { timeCapsule ->
-                            TimeCapsuleMapper.toUi(timeCapsule)
-                        }
-                    }
-                )
-            }
-        } catch (e: Exception) {
-            Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $e")
-            reduce {
-                state.copy(timeCapsulesFlow = null)
+    private suspend fun setTimeCapsulesFlow(date: LocalDate) =
+        subIntent {
+            try {
+                reduce {
+                    state.copy(
+                        timeCapsulesFlow =
+                            getTimeCapsulesOfDate(date).map {
+                                it.map { timeCapsule ->
+                                    TimeCapsuleMapper.toUi(timeCapsule)
+                                }
+                            },
+                    )
+                }
+            } catch (e: Exception) {
+                Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $e")
+                reduce {
+                    state.copy(timeCapsulesFlow = null)
+                }
             }
         }
-    }
 
-    private suspend fun setDailyReportState(date: LocalDate) = subIntent {
+    private suspend fun setDailyReportState(date: LocalDate) =
+        subIntent {
+            collectDataState(
+                flow = getDailyReportOfDate(date),
+                onSuccess = { data ->
+                    reduce {
+                        state.copy(
+                            dailyReportId = data.id,
+                            isNewDailyReport = !data.isOpen,
+                        )
+                    }
+                },
+                onError = { throwable, _ ->
+                    Logger.e("CalendarViewModel: handleGetDailyReportOfDate error: $throwable")
+                    reduce {
+                        state.copy(
+                            dailyReportId = null,
+                            isNewDailyReport = false,
+                        )
+                    }
+                },
+            )
+        }
+
+    private fun handleToggleFavorite(
+        id: Long,
+        prevFavorite: Boolean,
+    ) = intent {
         collectDataState(
-            flow = getDailyReportOfDate(date),
-            onSuccess = { data ->
-                reduce {
-                    state.copy(
-                        dailyReportId = data.id,
-                        isNewDailyReport = !data.isOpen,
-                    )
-                }
+            flow = setFavorite(id, !prevFavorite),
+            onSuccess = {
+                postSideEffect(ShowFavoriteToast(it))
             },
-            onError = { throwable, _ ->
-                Logger.e("CalendarViewModel: handleGetDailyReportOfDate error: $throwable")
-                reduce {
-                    state.copy(
-                        dailyReportId = null,
-                        isNewDailyReport = false,
-                    )
-                }
+            onError = { throwable, data ->
+                Logger.e("Failed to toggle favorite, $throwable")
             },
         )
     }
-
-    private fun handleToggleFavorite(id: Long, prevFavorite: Boolean) =
-        intent {
-            collectDataState(
-                flow = setFavorite(id, !prevFavorite),
-                onSuccess = {
-                    postSideEffect(ShowFavoriteToast(it))
-                },
-                onError = { throwable, data ->
-                    Logger.e("Failed to toggle favorite, $throwable")
-                },
-            )
-
-        }
 
     private fun handleClearBottomSheet() =
         intent {

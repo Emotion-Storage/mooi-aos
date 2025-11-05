@@ -38,8 +38,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.common.toKorDateWithWeekDay
-import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Status
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.component.button.CtaButton
@@ -47,11 +45,8 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.theme.pretendard
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDate
-import java.time.LocalDateTime
 
-@SuppressLint("ConfigurationScreenWidthHeight")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TimeCapsuleBottomSheet(
@@ -65,9 +60,6 @@ fun TimeCapsuleBottomSheet(
     navToDailyReport: (() -> Unit)? = null,
     isNewDailyReport: Boolean = false,
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp
-    val scrollState = rememberScrollState()
-
     val timeCapsules = timeCapsulesFlow?.collectAsLazyPagingItems()
 
     BottomSheet(
@@ -77,9 +69,10 @@ fun TimeCapsuleBottomSheet(
         contentPadding = PaddingValues(top = 7.dp, start = 15.dp, end = 15.dp, bottom = (39.7).dp),
     ) {
         Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 1.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 1.dp),
             text = date.toKorDateWithWeekDay(),
             style = MooiTheme.typography.body4,
             textAlign = TextAlign.Start,
@@ -88,14 +81,14 @@ fun TimeCapsuleBottomSheet(
         Spacer(modifier = Modifier.size(18.dp))
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent)
-                .heightIn(max = (screenHeight / 2).dp)
-                .padding(horizontal = 1.dp)
-                .verticalScroll(scrollState),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent)
+                    .heightIn(max = 500.dp)
+                    .padding(horizontal = 1.dp),
             verticalArrangement = Arrangement.spacedBy(18.dp),
-            contentPadding = PaddingValues(bottom = 51.dp)
+            contentPadding = PaddingValues(bottom = 51.dp),
         ) {
             if (timeCapsules?.loadState?.refresh is LoadState.NotLoading && timeCapsules.itemCount > 0) {
                 items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
@@ -142,20 +135,22 @@ private fun DailyReportButton(
             )
             if (isNewDailyReport && enabled) {
                 Box(
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .offset(x = 78.dp, y = -12.dp)
-                        .size(20.dp)
-                        .background(Color(0xFF1C1A22).copy(alpha = 0.5f), CircleShape),
+                    modifier =
+                        Modifier
+                            .align(Alignment.Center)
+                            .offset(x = 78.dp, y = -12.dp)
+                            .size(20.dp)
+                            .background(Color(0xFF1C1A22).copy(alpha = 0.5f), CircleShape),
                 ) {
                     Text(
                         modifier = Modifier.align(Alignment.Center),
                         text = "N",
-                        style = TextStyle(
-                            fontFamily = pretendard,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 10.sp,
-                        ),
+                        style =
+                            TextStyle(
+                                fontFamily = pretendard,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 10.sp,
+                            ),
                         color = Color.White,
                     )
                 }
@@ -169,10 +164,11 @@ private fun DailyReportButton(
 private fun DailyReportButtonPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(10.dp),
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             DailyReportButton(
@@ -195,15 +191,17 @@ private fun DailyReportButtonPreview() {
 private fun TimeCapsuleCalendarBottomSheetPreview() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
         ) {
             TimeCapsuleBottomSheet(
                 // open sheet state for preview
-                sheetState = rememberStandardBottomSheetState(
-                    initialValue = SheetValue.Expanded,
-                ),
+                sheetState =
+                    rememberStandardBottomSheetState(
+                        initialValue = SheetValue.Expanded,
+                    ),
                 date = LocalDate.now(),
                 onDismissRequest = {},
                 timeCapsulesFlow = emptyFlow(),
