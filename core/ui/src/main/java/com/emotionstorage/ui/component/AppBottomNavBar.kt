@@ -1,4 +1,4 @@
-package com.emotionstorage.emotionstorage.ui
+package com.emotionstorage.ui.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -25,58 +25,52 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavHostController
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.emotionstorage.R
 
-private enum class BottomNavDestination(
+
+data class BottomNavDest (
     val route: String,
     val icon: Int,
     val label: String,
-) {
-    HOME(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
-    CALENDAR(AppDestination.TimeCapsuleCalendar::class.qualifiedName!!, R.drawable.ic_calendar, "감정 보관함"),
-    MY(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
-}
+)
 
-private val BottomNavDestinationRoutes = BottomNavDestination.values().map { it.route }
 
 @Composable
 fun AppBottomNavBar(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     currentDestination: NavDestination? = null,
+    bottomNavDestinations: List<BottomNavDest> = emptyList<BottomNavDest>()
 ) {
-    if (currentDestination?.route in BottomNavDestinationRoutes) {
-        BottomAppBar(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
-            containerColor = MooiTheme.colorScheme.bottomBarBackground,
-            contentColor = Color.White,
-            contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp),
+    BottomAppBar(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
+        containerColor = MooiTheme.colorScheme.bottomBarBackground,
+        contentColor = Color.White,
+        contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp),
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                BottomNavDestination.values().forEach {
-                    BottomNavBarItem(
-                        iconId = it.icon,
-                        label = it.label,
-                        isSelected = (currentDestination?.route == it.route),
-                        onClick = {
-                            navController.navigate(it.route!!) {
-                                popUpTo(currentDestination?.route.toString()) {
-                                    inclusive = true
-                                    saveState = true
-                                }
-                                launchSingleTop = true
-                                restoreState = true
+            bottomNavDestinations.forEach {
+                BottomNavBarItem(
+                    iconId = it.icon,
+                    label = it.label,
+                    isSelected = (currentDestination?.route == it.route),
+                    onClick = {
+                        navController.navigate(it.route) {
+                            popUpTo(currentDestination?.route.toString()) {
+                                inclusive = true
+                                saveState = true
                             }
-                        },
-                    )
-                }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                )
             }
         }
     }

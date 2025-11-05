@@ -44,6 +44,7 @@ import com.orhanobut.logger.Logger
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     viewModel: MyPageViewModel = hiltViewModel(),
     navToLogin: () -> Unit = {},
     navToWithdrawNotice: () -> Unit = {},
@@ -121,6 +122,7 @@ fun MyPageScreen(
 @Composable
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     state: MyPageState = MyPageState(),
     onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
@@ -140,6 +142,7 @@ private fun StatelessMyPageScreen(
                 .fillMaxSize()
                 .padding(top = 16.dp)
                 .background(MooiTheme.colorScheme.background),
+        bottomBar = bottomAppBar,
     ) { innerPadding ->
         Column(
             modifier =

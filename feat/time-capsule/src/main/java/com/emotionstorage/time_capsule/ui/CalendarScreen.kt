@@ -60,6 +60,7 @@ import java.time.YearMonth
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
+    bottomAppBar: @Composable () -> Unit = {},
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
@@ -77,7 +78,6 @@ fun CalendarScreen(
     val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
     val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -103,6 +103,7 @@ fun CalendarScreen(
 
     StatelessCalendarScreen(
         modifier = modifier,
+        bottomAppBar = bottomAppBar,
         snackState = snackState,
         showYearMonthBottomSheet = showYearMonthBottomSheet,
         setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
@@ -122,6 +123,7 @@ fun CalendarScreen(
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     snackState: SnackbarHostState = SnackbarHostState(),
     showYearMonthBottomSheet: Boolean = false,
     setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
@@ -147,6 +149,7 @@ private fun StatelessCalendarScreen(
                 FavoriteToast(snackbarData.visuals.message)
             }
         },
+        bottomBar = bottomAppBar,
     ) { innerPadding ->
         Box(
             modifier =

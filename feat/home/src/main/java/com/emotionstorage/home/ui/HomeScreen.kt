@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.navigation.compose.rememberNavController
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
@@ -47,6 +48,7 @@ import com.orhanobut.logger.Logger
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    bottomAppBar: @Composable () -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
     navToDailyReport: (id: String) -> Unit = {},
@@ -82,6 +84,7 @@ fun HomeScreen(
 
     StatelessHomeScreen(
         modifier = modifier,
+        bottomAppBar = bottomAppBar,
         state = state.value,
         onAction = viewModel::onAction,
         navToKey = navToKey,
@@ -94,6 +97,7 @@ fun HomeScreen(
 @Composable
 private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
@@ -107,6 +111,7 @@ private fun StatelessHomeScreen(
             modifier
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
+        bottomBar = bottomAppBar,
     ) { innerPadding ->
         Box(
             modifier =
@@ -254,7 +259,8 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
@@ -325,6 +331,9 @@ private fun HomeScreenPreview() {
 private fun HomeScreenPreview2() {
     MooiTheme {
         StatelessHomeScreen(
+            bottomAppBar ={
+                AppBottomNavBar(navController = rememberNavController())
+            },
             state =
                 HomeState(
                     nickname = "찡찡이",
