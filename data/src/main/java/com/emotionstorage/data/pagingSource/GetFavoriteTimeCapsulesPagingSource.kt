@@ -42,6 +42,6 @@ class GetFavoriteTimeCapsulesPagingSource @Inject constructor(
         state.anchorPosition?.let { anchor ->
             Napier.d("getRefreshKey anchor: $anchor")
             val page = state.closestPageToPosition(anchor)
-            page?.prevKey?.plus(1) ?: page?.nextKey?.minus(1)
+            page?.nextKey?.minus(1)
         }
 }
