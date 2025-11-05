@@ -90,7 +90,6 @@ private fun StatelessNicknameScreen(
             TopAppBar(
                 showBackground = false,
                 showBackButton = true,
-                fillStatusBar = true,
                 onBackClick = onBackClick,
                 handleBackPress = true,
                 onHandleBackPress = onBackClick,

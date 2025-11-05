@@ -133,8 +133,6 @@ private fun StatelessAIChatScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                showBackground = true,
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = {
                     setExitModalOpen(true)

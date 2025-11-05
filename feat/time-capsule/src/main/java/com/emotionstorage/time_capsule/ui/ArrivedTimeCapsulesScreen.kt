@@ -85,7 +85,8 @@ private fun StatelessArrivedTimeCapsulesScreen(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
         topBar = {
-            TopAppBar(title = "도착한 타임캡슐", showBackButton = true, fillStatusBar = true, onBackClick = navToBack)
+            TopAppBar(
+                title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
         },
         snackbarHost = {
             AppSnackbarHost(

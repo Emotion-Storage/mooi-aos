@@ -118,7 +118,6 @@ fun StatelessWithDrawNoticeScreen(
         topBar = {
             TopAppBar(
                 showBackButton = true,
-                fillStatusBar = true,
                 title = "회원탈퇴",
                 onBackClick = onBackClick,
             )

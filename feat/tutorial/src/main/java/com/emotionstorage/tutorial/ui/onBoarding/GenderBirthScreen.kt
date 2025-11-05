@@ -81,7 +81,6 @@ private fun StatelessGenderBirthScreen(
         topBar = {
             TopAppBar(
                 showBackground = false,
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack
             )

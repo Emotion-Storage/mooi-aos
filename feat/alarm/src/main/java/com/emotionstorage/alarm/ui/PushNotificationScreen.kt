@@ -60,8 +60,6 @@ private fun StatelessPushNotificationScreen(
             TopAppBar(
                 title = "알림 내역",
                 showBackButton = true,
-                showBackground = true,
-                fillStatusBar = true,
                 onBackClick = navToBack,
             )
         },

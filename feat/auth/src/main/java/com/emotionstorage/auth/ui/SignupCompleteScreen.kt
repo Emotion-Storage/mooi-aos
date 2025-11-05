@@ -74,8 +74,6 @@ private fun StatelessSignupCompleteScreen(
         topBar = {
             TopAppBar(
                 showBackground = false,
-                fillStatusBar = true,
-                showBackButton = false,
             )
         },
     ) { padding ->

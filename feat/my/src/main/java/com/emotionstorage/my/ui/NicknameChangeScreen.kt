@@ -72,7 +72,6 @@ private fun StatelessNicknameChangeScreen(
             TopAppBar(
                 showBackButton = true,
                 showBackground = false,
-                fillStatusBar = true,
                 onBackClick = navToBack,
             )
         },

@@ -32,7 +32,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun TopAppBar(
     modifier: Modifier = Modifier,
     showBackground: Boolean = true,
-    fillStatusBar: Boolean = false,
+    fillStatusBar: Boolean = true,
     showBackButton: Boolean = false,
     onBackClick: () -> Unit = {},
     showCloseButton: Boolean = false,

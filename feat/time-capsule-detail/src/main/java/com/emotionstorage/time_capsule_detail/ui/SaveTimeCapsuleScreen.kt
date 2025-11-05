@@ -173,7 +173,6 @@ private fun StatelessSaveTimeCapsuleScreen(
         topBar = {
             TopAppBar(
                 showBackground = false,
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack,
             )

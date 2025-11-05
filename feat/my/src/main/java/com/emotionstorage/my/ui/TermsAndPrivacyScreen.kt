@@ -43,7 +43,6 @@ fun TermsAndPrivacyScreen(
         topBar = {
             TopAppBar(
                 title = "이용 약관 및 개인정보처리방침",
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack
             )

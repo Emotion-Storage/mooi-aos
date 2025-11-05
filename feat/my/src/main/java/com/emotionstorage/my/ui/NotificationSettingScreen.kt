@@ -102,7 +102,6 @@ private fun StatelessNotificationSettingScreen(
         topBar = {
             TopAppBar(
                 title = "알림 설정",
-                fillStatusBar = true,
                 onBackClick = navToBack,
                 showBackButton = true,
             )

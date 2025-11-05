@@ -21,7 +21,6 @@ fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
         topBar = {
             TopAppBar(
                 showBackground = false,
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack,
             )

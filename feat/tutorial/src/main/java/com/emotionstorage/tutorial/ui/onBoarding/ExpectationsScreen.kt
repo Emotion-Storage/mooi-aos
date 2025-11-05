@@ -79,7 +79,6 @@ private fun StatelessExpectationsScreen(
         topBar = {
             TopAppBar(
                 showBackground = false,
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack
             )

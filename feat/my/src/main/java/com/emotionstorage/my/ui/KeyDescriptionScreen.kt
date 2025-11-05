@@ -56,7 +56,6 @@ fun StatelessKeyDescriptionScreen(
             TopAppBar(
                 showBackButton = true,
                 showBackground = false,
-                fillStatusBar = true,
                 onBackClick = navToBack,
             )
         },

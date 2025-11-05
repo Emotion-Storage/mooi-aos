@@ -46,8 +46,6 @@ fun StatelessAccountInfoScreen(
         topBar = {
             TopAppBar(
                 showBackButton = true,
-                showBackground = true,
-                fillStatusBar = true,
                 title = "계정 정보",
                 onBackClick = navToBack,
             )

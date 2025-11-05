@@ -85,7 +85,6 @@ private fun StatelessDailyReportDetailScreen(
                         .toLocalDate()
                         .toKorDateWithWeekDay(),
                 showBackButton = true,
-                fillStatusBar = true,
                 onBackClick = navToBack,
             )
         },

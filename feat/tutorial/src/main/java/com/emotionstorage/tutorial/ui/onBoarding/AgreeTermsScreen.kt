@@ -105,7 +105,6 @@ private fun StatelessAgreeTermsScreen(
         topBar = {
             TopAppBar(
                 showBackground = false,
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = navToBack
             )

@@ -102,7 +102,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
         topBar = {
-            TopAppBar(title = "내 마음 서랍", showBackButton = true, fillStatusBar = true, onBackClick = navToBack)
+            TopAppBar(title = "내 마음 서랍", showBackButton = true,  onBackClick = navToBack)
         },
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->

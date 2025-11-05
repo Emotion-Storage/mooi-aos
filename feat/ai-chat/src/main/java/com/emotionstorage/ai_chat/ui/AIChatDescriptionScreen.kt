@@ -105,7 +105,6 @@ private fun StatelessAIChatDescriptionScreen(
                     Modifier.onGloballyPositioned {
                         onTopbarRect(it.boundsInParent())
                     },
-                fillStatusBar = true,
                 showBackButton = true,
                 onBackClick = {},
             )
