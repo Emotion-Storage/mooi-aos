@@ -6,7 +6,6 @@ import com.emotionstorage.domain.model.User
 internal object UserMapper {
     fun toDomain(entity: UserEntity): User =
         User(
-//            id = entity.id,
             socialType =
                 when (entity.socialType) {
                     UserEntity.AuthProvider.GOOGLE -> User.AuthProvider.GOOGLE
