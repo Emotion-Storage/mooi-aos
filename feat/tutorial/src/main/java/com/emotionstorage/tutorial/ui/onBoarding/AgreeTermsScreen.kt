@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +17,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -33,9 +33,9 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.ToggleButton
-import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -47,12 +47,19 @@ import kotlinx.coroutines.launch
 @Composable
 fun AgreeTermsScreen(
     modifier: Modifier = Modifier,
+    isAllAgreed: Boolean? = null,
+    isTermAgreed: Boolean? = null,
+    isPrivacyAgreed: Boolean? = null,
+    isMarketingAgreed: Boolean? = null,
+    isAgeAgreed: Boolean? = null,
     viewModel: AgreeTermsViewModel = hiltViewModel(),
     onAgreeTermsInputComplete: (
+        isAllAgreed: Boolean,
         isTermAgreed: Boolean,
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean,
-    ) -> Unit = { _, _, _ -> },
+        isAgeAgreed: Boolean,
+    ) -> Unit = { _, _, _, _, _ -> },
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
     navToTermDetail: () -> Unit = {},
@@ -62,6 +69,18 @@ fun AgreeTermsScreen(
     navToSignupComplete: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect("init") {
+        viewModel.event.resetAgreedTerms()
+        if (isAllAgreed == true) {
+            viewModel.event.onToggleAllAgreed()
+        } else {
+            if (isTermAgreed == true) viewModel.event.onToggleTermAgreed()
+            if (isPrivacyAgreed == true) viewModel.event.onTogglePrivacyAgreed()
+            if (isMarketingAgreed == true) viewModel.event.onToggleMarketingAgreed()
+            if (isAgeAgreed == true) viewModel.event.onToggleAgeAgreed()
+        }
+    }
 
     StatelessAgreeTermsScreen(
         state = state,
@@ -83,10 +102,12 @@ private fun StatelessAgreeTermsScreen(
     event: AgreeTermsEvent,
     modifier: Modifier = Modifier,
     onAgreeTermsInputComplete: (
+        isAllAgreed: Boolean,
         isTermAgreed: Boolean,
         isPrivacyAgreed: Boolean,
         isMarketingAgreed: Boolean,
-    ) -> Unit = { _, _, _ -> },
+        isAgeAgreed: Boolean,
+    ) -> Unit = { _, _, _, _, _ -> },
     onSignup: suspend () -> Unit = {},
     navToBack: () -> Unit = {},
     navToTermDetail: () -> Unit = {},
@@ -96,22 +117,39 @@ private fun StatelessAgreeTermsScreen(
     navToSignupComplete: () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
+    val onNavBack: () -> Unit = {
+        // save agreed terms state on nav back, to restore state
+        coroutineScope.launch {
+            onAgreeTermsInputComplete(
+                state.isAllAgreed,
+                state.isTermAgreed,
+                state.isPrivacyAgreed,
+                state.isMarketingAgreed,
+                state.isAgeAgreed,
+            )
+            navToBack()
+        }
+    }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
         topBar = {
-            TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack)
+            TopAppBar(
+                showBackButton = true,
+                onBackClick = onNavBack,
+                handleBackPress = true,
+                onHandleBackPress = onNavBack,
+            )
         },
     ) { innerPadding ->
         Column(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding),
         ) {
             OnBoardingTitle(
@@ -143,8 +181,8 @@ private fun StatelessAgreeTermsScreen(
                         horizontalArrangement = Arrangement.spacedBy(11.dp),
                     ) {
                         ToggleButton(
-                            isSelected = state.isAllAgree,
-                            onSelect = event::onToggleAllAgree,
+                            isSelected = state.isAllAgreed,
+                            onSelect = event::onToggleAllAgreed,
                         )
                         Text(
                             style =
@@ -166,8 +204,8 @@ private fun StatelessAgreeTermsScreen(
 
                     TermItem(
                         term = "[필수] 이용 약관 동의",
-                        isSelected = state.isTermAgree,
-                        onSelect = event::onToggleTermAgree,
+                        isSelected = state.isTermAgreed,
+                        onSelect = event::onToggleTermAgreed,
                         showTermDetail = true,
                         onShowDetail = {
                             navToTermDetail()
@@ -175,8 +213,8 @@ private fun StatelessAgreeTermsScreen(
                     )
                     TermItem(
                         term = "[필수] 개인정보 수집 및 이용 동의",
-                        isSelected = state.isPrivacyAgree,
-                        onSelect = event::onTogglePrivacyAgree,
+                        isSelected = state.isPrivacyAgreed,
+                        onSelect = event::onTogglePrivacyAgreed,
                         showTermDetail = true,
                         onShowDetail = {
                             navToPrivacyDetail()
@@ -184,8 +222,8 @@ private fun StatelessAgreeTermsScreen(
                     )
                     TermItem(
                         term = "[선택] 마케팅 활용 및 수신 동의",
-                        isSelected = state.isMarketingAgree,
-                        onSelect = event::onToggleMarketingAgree,
+                        isSelected = state.isMarketingAgreed,
+                        onSelect = event::onToggleMarketingAgreed,
                         showTermDetail = true,
                         onShowDetail = {
                             navToMarketingDetail()
@@ -193,8 +231,8 @@ private fun StatelessAgreeTermsScreen(
                     )
                     TermItem(
                         term = "[필수] 만 14세 이상입니다",
-                        isSelected = state.isAgeAgree,
-                        onSelect = event::onToggleAgeAgree,
+                        isSelected = state.isAgeAgreed,
+                        onSelect = event::onToggleAgeAgreed,
                     )
                 }
 
@@ -237,9 +275,11 @@ private fun StatelessAgreeTermsScreen(
                 onClick = {
                     coroutineScope.launch {
                         onAgreeTermsInputComplete(
-                            state.isTermAgree,
-                            state.isPrivacyAgree,
-                            state.isMarketingAgree,
+                            state.isAllAgreed,
+                            state.isTermAgreed,
+                            state.isPrivacyAgreed,
+                            state.isMarketingAgreed,
+                            state.isAgeAgreed,
                         )
                         onSignup()
                     }
@@ -302,15 +342,17 @@ private fun AgreeTermsScreenPreview() {
             state = State(),
             event =
                 object : AgreeTermsEvent {
-                    override fun onToggleAllAgree() {}
+                    override fun resetAgreedTerms() {}
 
-                    override fun onToggleTermAgree() {}
+                    override fun onToggleAllAgreed() {}
 
-                    override fun onTogglePrivacyAgree() {}
+                    override fun onToggleTermAgreed() {}
 
-                    override fun onToggleMarketingAgree() {}
+                    override fun onTogglePrivacyAgreed() {}
 
-                    override fun onToggleAgeAgree() {}
+                    override fun onToggleMarketingAgreed() {}
+
+                    override fun onToggleAgeAgreed() {}
                 },
         )
     }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -59,6 +58,7 @@ import java.time.YearMonth
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
+    bottomAppBar: @Composable () -> Unit = {},
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
@@ -101,6 +101,7 @@ fun CalendarScreen(
 
     StatelessCalendarScreen(
         modifier = modifier,
+        bottomAppBar = bottomAppBar,
         snackState = snackState,
         showYearMonthBottomSheet = showYearMonthBottomSheet,
         setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
@@ -120,6 +121,7 @@ fun CalendarScreen(
 @Composable
 private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
     snackState: SnackbarHostState = SnackbarHostState(),
     showYearMonthBottomSheet: Boolean = false,
     setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
@@ -134,24 +136,24 @@ private fun StatelessCalendarScreen(
     navToDailyReportDetail: (id: Long) -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(horizontal = 16.dp),
+                .background(MooiTheme.colorScheme.background),
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
                 FavoriteToast(snackbarData.visuals.message)
             }
         },
+        bottomBar = bottomAppBar,
     ) { innerPadding ->
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),

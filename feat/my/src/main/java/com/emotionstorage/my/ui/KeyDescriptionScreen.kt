@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,17 +33,17 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.emotionstorage.my.presentation.KeyBalanceViewModel
 import com.emotionstorage.my.presentation.KeyCountState
-import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import com.emotionstorage.my.ui.component.CountRow
 import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun KeyDescriptionScreen(
+    modifier: Modifier = Modifier,
     viewModel: KeyBalanceViewModel = hiltViewModel(),
-    navToBack: () -> Unit,
+    navToBack: () -> Unit
 ) {
     val state by viewModel.keyCountState.collectAsState()
 
@@ -53,7 +55,9 @@ fun KeyDescriptionScreen(
         }
     }
 
+
     StatelessKeyDescriptionScreen(
+        modifier = modifier,
         state,
         onOpenDialog = viewModel::openWhenToUseDialog,
         onDismissDialog = viewModel::dismissDialog,
@@ -63,32 +67,32 @@ fun KeyDescriptionScreen(
 
 @Composable
 fun StatelessKeyDescriptionScreen(
+    modifier: Modifier = Modifier,
     state: KeyCountState,
     onOpenDialog: () -> Unit = {},
     onDismissDialog: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
+        modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
                 showBackButton = true,
                 showBackground = false,
-                handleBackPress = true,
                 onBackClick = navToBack,
-                onHandleBackPress = navToBack,
             )
         },
+        containerColor = MooiTheme.colorScheme.background,
     ) { innerPadding ->
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(color = MooiTheme.colorScheme.background),
+                    .padding(innerPadding),
         ) {
             Column(
                 modifier =
                     Modifier
-                        .padding(innerPadding)
                         .align(Alignment.TopCenter),
             ) {
                 Text(

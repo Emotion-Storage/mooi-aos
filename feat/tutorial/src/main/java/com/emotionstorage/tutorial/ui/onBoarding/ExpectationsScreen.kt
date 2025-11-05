@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +17,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +34,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel.State
 import com.emotionstorage.ui.component.button.CtaButton
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 
@@ -45,12 +45,19 @@ import com.emotionstorage.ui.util.subBackground
 @Composable
 fun ExpectationsScreen(
     modifier: Modifier = Modifier,
+    expectations: List<Expectation>? = null,
     viewModel: ExpectationsViewModel = hiltViewModel(),
     onExpectationsSelectComplete: (expectations: List<Expectation>) -> Unit = {},
     navToAgreeTerms: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect("init") {
+        if (expectations != null) {
+            viewModel.onSelectExpectations(expectations)
+        }
+    }
 
     StatelessExpectationsScreen(
         state = state,
@@ -72,12 +79,17 @@ private fun StatelessExpectationsScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
-        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) },
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                showBackButton = true,
+                onBackClick = navToBack,
+            )
+        },
     ) { padding ->
         Box(
             modifier =
@@ -229,6 +241,8 @@ private fun ExpectationsScreenPreview() {
             event =
                 object : ExpectationsEvent {
                     override fun onToggleExpectation(index: Int) {}
+
+                    override fun onSelectExpectations(expectations: List<Expectation>) {}
                 },
         )
     }

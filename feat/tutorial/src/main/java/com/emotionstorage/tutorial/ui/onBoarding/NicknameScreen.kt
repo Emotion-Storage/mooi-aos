@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +37,7 @@ import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.text.TextInput
 import com.emotionstorage.ui.component.text.TextInputState
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**
@@ -46,11 +47,17 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun NicknameScreen(
     modifier: Modifier = Modifier,
+    nickname: String? = null,
     viewModel: NicknameViewModel = hiltViewModel(),
     onNicknameInputComplete: (nickname: String) -> Unit = {},
     navToGenderBirth: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    LaunchedEffect("init") {
+        // init nickname
+        if (nickname != null) viewModel.event.onNicknameChange(nickname)
+    }
+
     StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
@@ -78,11 +85,9 @@ private fun StatelessNicknameScreen(
     )
 
     val focusManager = LocalFocusManager.current
-
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)

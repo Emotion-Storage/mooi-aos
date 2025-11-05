@@ -3,7 +3,6 @@ package com.emotionstorage.time_capsule_detail.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -59,7 +58,7 @@ import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.toast.FavoriteToast
 import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.button.RoundedToggleButton
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -240,7 +239,6 @@ private fun StatelessTimeCapsuleDetailScreen(
         FullLoadingScreen()
     } else {
         Scaffold(
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             modifier =
                 modifier
                     .fillMaxSize()

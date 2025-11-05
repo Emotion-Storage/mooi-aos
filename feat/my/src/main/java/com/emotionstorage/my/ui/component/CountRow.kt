@@ -73,7 +73,7 @@ private fun DigitBox(char: Char) {
 @Composable
 fun CountRowPreview() {
     MooiTheme {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CountRow(
                 count = 123,
             )

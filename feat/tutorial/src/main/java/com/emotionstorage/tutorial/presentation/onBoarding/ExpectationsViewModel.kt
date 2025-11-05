@@ -12,15 +12,16 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 interface ExpectationsEvent {
+    fun onSelectExpectations(expectations: List<Expectation>)
+
     fun onToggleExpectation(index: Int)
 }
 
 @HiltViewModel
 class ExpectationsViewModel
-    @Inject
-    constructor() :
+    @Inject constructor() :
     ViewModel(),
-        ExpectationsEvent {
+    ExpectationsEvent {
         private val pSelectedExpectations = MutableStateFlow(emptyList<Expectation>())
 
         val state =
@@ -44,6 +45,12 @@ class ExpectationsViewModel
                 pSelectedExpectations.update { expectations ->
                     expectations + expectation
                 }
+            }
+        }
+
+        override fun onSelectExpectations(expectations: List<Expectation>) {
+            pSelectedExpectations.update {
+                expectations
             }
         }
 

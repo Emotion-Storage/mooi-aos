@@ -4,9 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -20,10 +23,11 @@ import androidx.compose.ui.layout.boundsInParent
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
-import com.emotionstorage.ai_chat.ui.component.DescriptionOverlayScreen
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ai_chat.ui.component.DescriptionOverlay
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -71,8 +75,25 @@ private fun StatelessAIChatDescriptionScreen(
     onTopbarRect: (Rect) -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        contentWindowInsets =
+            WindowInsets.safeDrawing.only(
+                WindowInsetsSides.Horizontal + WindowInsetsSides.Bottom,
+            ),
     ) { innerPadding ->
+        if (showDescription) {
+            DescriptionOverlay(
+                modifier =
+                    Modifier
+                        .padding(innerPadding)
+                        .zIndex(10f),
+                progressBarBounds = progressBarBounds,
+                inputBoxBounds = inputBoxBounds,
+                topbarBounds = topbarBounds,
+                onCheckboxChecked = onCheckboxChanged,
+                onComplete = onDescriptionCompleted,
+            )
+        }
+
         Column(
             modifier =
                 modifier
@@ -119,16 +140,6 @@ private fun StatelessAIChatDescriptionScreen(
                 onSendMessage = {},
             )
         }
-    }
-
-    if (showDescription) {
-        DescriptionOverlayScreen(
-            progressBarBounds = progressBarBounds,
-            inputBoxBounds = inputBoxBounds,
-            topbarBounds = topbarBounds,
-            onCheckboxChecked = onCheckboxChanged,
-            onComplete = onDescriptionCompleted,
-        )
     }
 }
 

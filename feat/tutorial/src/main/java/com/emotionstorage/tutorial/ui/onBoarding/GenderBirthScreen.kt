@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +31,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.picker.ScrollPicker
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
@@ -44,6 +44,8 @@ import java.time.LocalDate
 @Composable
 fun GenderBirthScreen(
     modifier: Modifier = Modifier,
+    gender: GENDER? = null,
+    birth: LocalDate? = null,
     viewModel: GenderBirthViewModel = hiltViewModel(),
     nickname: String = "",
     onGenderBirthInputComplete: (gender: GENDER, birth: LocalDate) -> Unit = { _, _ -> },
@@ -51,6 +53,16 @@ fun GenderBirthScreen(
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
+
+    LaunchedEffect("init") {
+        // init gender
+        if (gender != null) viewModel.event.onGenderSelect(gender)
+        if (birth != null) {
+            viewModel.event.onYearPickerSelect(birth.year.toString())
+            viewModel.event.onMonthPickerSelect(birth.monthValue.toString())
+            viewModel.event.onDayPickerSelect(birth.dayOfMonth.toString())
+        }
+    }
 
     StatelessGenderBirthScreen(
         event = viewModel.event,
@@ -74,12 +86,17 @@ private fun StatelessGenderBirthScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
                 .fillMaxSize(),
-        topBar = { TopAppBar(showBackground = false, showBackButton = true, onBackClick = navToBack) },
+        topBar = {
+            TopAppBar(
+                showBackground = false,
+                showBackButton = true,
+                onBackClick = navToBack,
+            )
+        },
     ) { padding ->
         Column(
             modifier =

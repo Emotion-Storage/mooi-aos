@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
@@ -54,7 +53,7 @@ import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.bottomSheet.DatePickerBottomSheet
 import com.emotionstorage.ui.component.FullLoadingScreen
 import com.emotionstorage.ui.component.toast.Toast
-import com.emotionstorage.ui.component.TopAppBar
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
@@ -163,7 +162,6 @@ private fun StatelessSaveTimeCapsuleScreen(
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()

@@ -22,7 +22,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 
 @Composable
-fun DescriptionCoachScreen(
+fun DescriptionCoach(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onCheckChanged: (Boolean) -> Unit,
@@ -100,7 +100,7 @@ fun DescriptionCoachScreen(
 @Composable
 fun DescriptionCoachScreenPreview() {
     MooiTheme {
-        DescriptionCoachScreen(
+        DescriptionCoach(
             checked = false,
             onCheckChanged = {},
         )
