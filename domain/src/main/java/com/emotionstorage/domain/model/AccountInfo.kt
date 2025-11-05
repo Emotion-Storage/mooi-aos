@@ -1,6 +1,7 @@
 package com.emotionstorage.domain.model
 
 data class AccountInfo(
+    val nickname: String,
     val email: String,
     val socialType: String,
     val gender: String,
