@@ -19,25 +19,28 @@ class AccountInfoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getAccountInfoUseCase().collect { dataState ->
-                if (dataState is DataState.Success) {
-                    val info = dataState.data
-                    _state.value =
-                        AccountInfoState(
-                            email = info.email,
-                            authProvider = AuthProvider.valueOf(info.socialType.uppercase()),
-                            gender =
-                                when (info.gender.uppercase()) {
-                                    "MALE" -> "남성"
-                                    "FEMALE" -> "여성"
-                                    else -> "기타"
-                                },
-                            birthYear = info.birthYear,
-                            birthMonth = info.birthMonth,
-                            birthDay = info.birthDay,
-                        )
+            getAccountInfoUseCase().handle(
+                onSuccess = { data ->
+                    _state.value = _state.value.copy(
+                        email = data.email,
+                        authProvider = AuthProvider.valueOf(data.socialType.uppercase()),
+                        gender = when (data.gender.uppercase()) {
+                            "MALE" -> "남성"
+                            "FEMALE" -> "여성"
+                            else -> "기타"
+                        },
+                        birthYear = data.birthYear,
+                        birthMonth = data.birthMonth,
+                        birthDay = data.birthDay,
+                    )
+                },
+                onError = { throwable, _ ->
+                    // 에러 처리 필요
+                },
+                onLoading = { isLoading ->
+                    // do Nothing
                 }
-            }
+            )
         }
     }
 }
