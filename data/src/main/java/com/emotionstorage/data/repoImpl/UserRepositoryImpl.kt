@@ -4,6 +4,7 @@ import com.emotionstorage.data.dataSource.local.UserLocalDataSource
 import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -43,4 +44,6 @@ class UserRepositoryImpl
         override suspend fun updateUserNickname(nickname: String) = userRemoteDataSource.updateUserNickname(nickname)
 
         override suspend fun getKeyCount(): DataState<Int> = userRemoteDataSource.getKeyCount()
+
+        override suspend fun getAccountInfo(): DataState<AccountInfo> = userRemoteDataSource.getUserAccountInfo()
     }
