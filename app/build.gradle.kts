@@ -66,6 +66,10 @@ dependencies {
     implementation(projects.feat.weeklyReport)
     implementation(projects.feat.my)
     implementation(projects.feat.alarm)
-    implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
+
+    implementation(platform("com.google.firebase:firebase-bom:34.5.0"))
+    implementation(libs.bundles.firebase)
+
     implementation(libs.kakao.sdk.user)
+
 }
