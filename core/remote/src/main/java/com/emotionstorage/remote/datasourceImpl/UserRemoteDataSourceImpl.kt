@@ -35,10 +35,12 @@ class UserRemoteDataSourceImpl @Inject constructor(
         try {
             val response = apiService.getKeys()
 
-            if (response.data == null) DataState.Error(Throwable("Response data is null"))
-            else DataState.Success(response.data.keyCount)
+            if (response.data == null) {
+                DataState.Error(Throwable("Response data is null"))
+            } else {
+                DataState.Success(response.data.keyCount)
+            }
         } catch (e: Exception) {
             DataState.Error(e)
         }
 }
-

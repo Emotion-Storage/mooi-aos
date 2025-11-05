@@ -19,5 +19,4 @@ interface UserApiService {
 
     @GET("/api/v1/mypage/keys")
     suspend fun getKeys(): ResponseDto<GetKeysResponse>
-
 }
