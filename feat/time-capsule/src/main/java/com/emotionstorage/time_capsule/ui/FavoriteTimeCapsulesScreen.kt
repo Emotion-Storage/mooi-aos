@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -33,23 +32,18 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.domain.repo.FavoriteSortBy
-import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleItem
-import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
 import com.emotionstorage.ui.component.toast.FavoriteToast
-import java.time.LocalDateTime
 
 @Composable
 fun FavoriteTimeCapsulesScreen(
@@ -208,7 +202,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     item {
                         CircularProgressIndicator(
                             modifier = Modifier.padding(top = 244.dp),
-                            color = MooiTheme.colorScheme.primary
+                            color = MooiTheme.colorScheme.primary,
                         )
                     }
                     // todo: add error ui

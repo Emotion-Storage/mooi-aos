@@ -94,10 +94,11 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 {
                     GetFavoriteTimeCapsulesPagingSource(
                         remoteDataSource = remoteDataSource,
-                        sortBy = when (sortBy) {
-                            FavoriteSortBy.FAVORITE_AT -> "favorite"
-                            FavoriteSortBy.NEWEST -> "latest"
-                        }
+                        sortBy =
+                            when (sortBy) {
+                                FavoriteSortBy.FAVORITE_AT -> "favorite"
+                                FavoriteSortBy.NEWEST -> "latest"
+                            },
                     )
                 },
         ).flow.map {
@@ -106,7 +107,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
     }
-
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedTimeCapsules(

@@ -176,7 +176,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     item {
                         CircularProgressIndicator(
                             modifier = Modifier.padding(top = 244.dp),
-                            color = MooiTheme.colorScheme.primary
+                            color = MooiTheme.colorScheme.primary,
                         )
                     }
                     // todo: add error ui

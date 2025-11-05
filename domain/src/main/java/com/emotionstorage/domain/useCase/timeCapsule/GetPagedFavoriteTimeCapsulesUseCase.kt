@@ -10,8 +10,6 @@ import javax.inject.Inject
 class GetPagedFavoriteTimeCapsulesUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    operator fun invoke(
-        sortBy: FavoriteSortBy
-    ): Flow<PagingData<TimeCapsule>> = timeCapsuleRepository.getPagedFavoriteTimeCapsules(sortBy)
-
+    operator fun invoke(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> =
+        timeCapsuleRepository.getPagedFavoriteTimeCapsules(sortBy)
 }

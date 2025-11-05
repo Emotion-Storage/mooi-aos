@@ -73,39 +73,41 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
 
     private fun handleInit() = setSortOrder(FavoriteSortBy.NEWEST)
 
-    private fun handleSetSortOrder(sortOrderLabel: String) =
-        setSortOrder(FavoriteSortBy.getByLabel(sortOrderLabel))
+    private fun handleSetSortOrder(sortOrderLabel: String) = setSortOrder(FavoriteSortBy.getByLabel(sortOrderLabel))
 
-
-    private fun setSortOrder(sortOrder: FavoriteSortBy) = intent {
-        try {
-            reduce {
-                state.copy(
-                    sortOrder = sortOrder,
-                    timeCapsulesFlow = getFavoriteTimeCapsules(sortOrder).map { pagingData ->
-                        pagingData.map {
-                            TimeCapsuleMapper.toUi(it)
-                        }
-                    }
-                )
+    private fun setSortOrder(sortOrder: FavoriteSortBy) =
+        intent {
+            try {
+                reduce {
+                    state.copy(
+                        sortOrder = sortOrder,
+                        timeCapsulesFlow =
+                            getFavoriteTimeCapsules(sortOrder).map { pagingData ->
+                                pagingData.map {
+                                    TimeCapsuleMapper.toUi(it)
+                                }
+                            },
+                    )
+                }
+            } catch (e: Exception) {
+                Logger.e("Failed to get favorite time capsules, $e")
             }
-        } catch (e: Exception) {
-            Logger.e("Failed to get favorite time capsules, $e")
+        }
+
+    private fun handleToggleFavorite(
+        id: Long,
+        prevIsFavorite: Boolean,
+    ) = intent {
+        coroutineScope {
+            collectDataState(
+                flow = setFavorite(id, !prevIsFavorite),
+                onSuccess = {
+                    postSideEffect(ShowFavoriteToast(it))
+                },
+                onError = { throwable, data ->
+                    Logger.e("Failed to toggle favorite, $throwable")
+                },
+            )
         }
     }
-
-    private fun handleToggleFavorite(id: Long, prevIsFavorite: Boolean) =
-        intent {
-            coroutineScope {
-                collectDataState(
-                    flow = setFavorite(id, !prevIsFavorite),
-                    onSuccess = {
-                        postSideEffect(ShowFavoriteToast(it))
-                    },
-                    onError = { throwable, data ->
-                        Logger.e("Failed to toggle favorite, $throwable")
-                    },
-                )
-            }
-        }
 }

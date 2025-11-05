@@ -20,9 +20,7 @@ interface TimeCapsuleRepository {
         isFavorite: Boolean,
     ): Flow<DataState<FavoriteResult>>
 
-    fun getPagedFavoriteTimeCapsules(
-        sortBy: FavoriteSortBy
-    ): Flow<PagingData<TimeCapsule>>
+    fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>>
 
     fun getPagedTimeCapsules(
         startDate: LocalDate,
