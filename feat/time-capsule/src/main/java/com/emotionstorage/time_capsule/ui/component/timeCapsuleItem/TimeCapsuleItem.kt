@@ -26,20 +26,16 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.util.TimeCapsuleItemStateProvider
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.LinearGradient
 import com.emotionstorage.ui.util.dropShadow
-import kotlin.math.absoluteValue
 
 private object TimeCapsuleItemDesignToken {
     val contentHeight = 93.dp
@@ -100,13 +96,11 @@ fun TimeCapsuleItem(
                             } else {
                                 this
                             }
-                        }
-                        .height(TimeCapsuleItemDesignToken.contentHeight)
+                        }.height(TimeCapsuleItemDesignToken.contentHeight)
                         .background(
                             Color.Transparent,
                             RoundedCornerShape(15.dp),
-                        )
-                        .clip(RoundedCornerShape(15.dp))
+                        ).clip(RoundedCornerShape(15.dp))
                         .clickable(onClick = onClick),
             ) {
                 // overlay
@@ -140,16 +134,14 @@ private fun TimeCapsuleContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                )
-                .run {
+                ).run {
                     // blur content if not opened
                     if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }
-                .padding(TimeCapsuleItemDesignToken.contentPadding),
+                }.padding(TimeCapsuleItemDesignToken.contentPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {
@@ -210,16 +202,16 @@ private fun TimeCapsuleItemPreview(
 ) {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background)
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(16.dp),
         ) {
             TimeCapsuleItem(
                 modifier = Modifier.align(Alignment.Center),
-                timeCapsule = timeCapsule
+                timeCapsule = timeCapsule,
             )
         }
     }
 }
-

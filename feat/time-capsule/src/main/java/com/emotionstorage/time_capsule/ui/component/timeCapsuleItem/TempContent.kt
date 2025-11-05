@@ -37,16 +37,16 @@ fun TempContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                )
-                .clip(RoundedCornerShape(15.dp))
+                ).clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column(
-            modifier = Modifier
-                .padding(bottom = 6.dp),
+            modifier =
+                Modifier
+                    .padding(bottom = 6.dp),
             verticalArrangement = Arrangement.spacedBy(2.dp),
         ) {
             Text(

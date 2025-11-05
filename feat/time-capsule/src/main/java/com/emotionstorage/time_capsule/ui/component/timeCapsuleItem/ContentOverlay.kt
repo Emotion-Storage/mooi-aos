@@ -30,18 +30,20 @@ fun ContentOverlay(
     openDDay: Int,
     modifier: Modifier = Modifier,
 ) {
-    if(status == TimeCapsule.Status.LOCKED){
-        LockedContentOverLay(
-            openDDay = openDDay,
-            modifier = modifier,
-        )
-    }
-    if(status == TimeCapsule.Status.ARRIVED){
-        ArrivedContentOverLay(
-            openDDay = openDDay,
-            modifier = modifier,
-        )
-    }
+    if (status == TimeCapsule.Status.LOCKED)
+        {
+            LockedContentOverLay(
+                openDDay = openDDay,
+                modifier = modifier,
+            )
+        }
+    if (status == TimeCapsule.Status.ARRIVED)
+        {
+            ArrivedContentOverLay(
+                openDDay = openDDay,
+                modifier = modifier,
+            )
+        }
 }
 
 @Composable
@@ -98,8 +100,7 @@ private fun ArrivedContentOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     LinearGradient(
                         colors =

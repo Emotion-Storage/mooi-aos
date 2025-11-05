@@ -25,9 +25,11 @@ data class TimeCapsule(
 ) {
     // 임시저장 만료 시각
     val expireAt: LocalDateTime? =
-        if (status == Status.TEMPORARY)
+        if (status == Status.TEMPORARY) {
             createdAt.plusHours(TIME_CAPSULE_TEMPORARY_HOURS.toLong())
-        else null
+        } else {
+            null
+        }
 
     enum class Status {
         // 임시저장 (열람일 지정 X)
