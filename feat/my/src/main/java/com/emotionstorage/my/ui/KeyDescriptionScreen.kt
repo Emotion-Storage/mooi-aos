@@ -1,7 +1,6 @@
 package com.emotionstorage.my.ui
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,12 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,6 +30,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import com.emotionstorage.my.presentation.KeyBalanceViewModel
 import com.emotionstorage.my.presentation.KeyCountState
+import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import com.emotionstorage.my.ui.component.CountRow
 import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
@@ -43,7 +41,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun KeyDescriptionScreen(
     modifier: Modifier = Modifier,
     viewModel: KeyBalanceViewModel = hiltViewModel(),
-    navToBack: () -> Unit
+    navToBack: () -> Unit,
 ) {
     val state by viewModel.keyCountState.collectAsState()
 
@@ -54,7 +52,6 @@ fun KeyDescriptionScreen(
             viewModel.refreshKeyCount()
         }
     }
-
 
     StatelessKeyDescriptionScreen(
         modifier = modifier,
@@ -175,7 +172,6 @@ fun StatelessKeyDescriptionScreen(
                         onDismiss = onDismissDialog,
                     )
                 }
-
                 null -> Unit
             }
         }
