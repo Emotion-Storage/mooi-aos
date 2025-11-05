@@ -33,9 +33,9 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
+import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.ToggleButton
-import com.emotionstorage.ui.component.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -138,7 +138,6 @@ private fun StatelessAgreeTermsScreen(
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
-                showBackground = false,
                 showBackButton = true,
                 onBackClick = onNavBack,
                 handleBackPress = true,
