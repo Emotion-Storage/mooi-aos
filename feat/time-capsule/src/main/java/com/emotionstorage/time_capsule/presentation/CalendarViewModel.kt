@@ -164,7 +164,6 @@ class CalendarViewModel @Inject constructor(
                 reduce {
                     state.copy(
                         madeTimeCapsuleToday = false,
-                        timeCapsulesFlow = null,
                     )
                 }
             }
