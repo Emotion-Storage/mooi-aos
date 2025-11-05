@@ -240,7 +240,6 @@ private fun StatelessTimeCapsuleDetailScreen(
         FullLoadingScreen()
     } else {
         Scaffold(
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
             modifier =
                 modifier
                     .fillMaxSize()
@@ -265,6 +264,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     onAction(OnExitTrigger)
                 }
                 TopAppBar(
+                    fillStatusBar = true,
                     title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd  HH:mm")),
                     showBackButton = !isNewTimeCapsule,
                     onBackClick = onTimeCapsuleExit,

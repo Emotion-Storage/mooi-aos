@@ -141,8 +141,7 @@ private fun StatelessCalendarScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
-                .padding(horizontal = 16.dp),
+                .background(MooiTheme.colorScheme.background),
         snackbarHost = {
             AppSnackbarHost(hostState = snackState) { snackbarData ->
                 FavoriteToast(snackbarData.visuals.message)
@@ -155,7 +154,8 @@ private fun StatelessCalendarScreen(
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding),
+                    .padding(innerPadding)
+                    .padding(horizontal = 16.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -354,7 +354,8 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

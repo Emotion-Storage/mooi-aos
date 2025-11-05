@@ -80,13 +80,12 @@ private fun StatelessArrivedTimeCapsulesScreen(
     navToBack: () -> Unit = {},
 ) {
     Scaffold(
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         modifier =
             modifier
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
         topBar = {
-            TopAppBar(title = "도착한 타임캡슐", showBackButton = true, onBackClick = navToBack)
+            TopAppBar(title = "도착한 타임캡슐", showBackButton = true, fillStatusBar = true, onBackClick = navToBack)
         },
         snackbarHost = {
             AppSnackbarHost(
