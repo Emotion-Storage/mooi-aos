@@ -57,7 +57,7 @@ class MyFirebaseMessagingService @Inject constructor(
      * C) User clears app data
      */
     override fun onNewToken(token: String) {
-        Log.d(TAG, "Refreshed fcm token: " + token)
+        Log.d(TAG, "new fcm token: " + token)
         sendRegistrationToServer(token)
     }
 
