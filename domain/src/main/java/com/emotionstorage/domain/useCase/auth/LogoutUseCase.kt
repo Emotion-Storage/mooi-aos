@@ -12,20 +12,20 @@ import javax.inject.Inject
  *  - logout fail: return false
  */
 class LogoutUseCase
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val sessionRepository: SessionRepository,
-    private val fcmRepository: FcmRepository
-) {
-    suspend operator fun invoke(): Boolean {
-        val result = authRepository.logout()
-        if (result) {
-            sessionRepository.deleteSession()
-            userRepository.deleteUser()
-            fcmRepository.deleteToken()
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val userRepository: UserRepository,
+        private val sessionRepository: SessionRepository,
+        private val fcmRepository: FcmRepository,
+    ) {
+        suspend operator fun invoke(): Boolean {
+            val result = authRepository.logout()
+            if (result) {
+                sessionRepository.deleteSession()
+                userRepository.deleteUser()
+                fcmRepository.deleteToken()
+            }
+            return result
         }
-        return result
     }
-}

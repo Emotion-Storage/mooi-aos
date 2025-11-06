@@ -12,20 +12,20 @@ import javax.inject.Inject
  * - delete account fail: return false
  */
 class DeleteAccountUseCase
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val sessionRepository: SessionRepository,
-    private val fcmRepository: FcmRepository
-) {
-    suspend operator fun invoke(): Boolean {
-        val result = authRepository.deleteAccount()
-        if (result) {
-            sessionRepository.deleteSession()
-            userRepository.deleteUser()
-            fcmRepository.deleteToken()
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val userRepository: UserRepository,
+        private val sessionRepository: SessionRepository,
+        private val fcmRepository: FcmRepository,
+    ) {
+        suspend operator fun invoke(): Boolean {
+            val result = authRepository.deleteAccount()
+            if (result) {
+                sessionRepository.deleteSession()
+                userRepository.deleteUser()
+                fcmRepository.deleteToken()
+            }
+            return result
         }
-        return result
     }
-}

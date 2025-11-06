@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class SaveOrRegisterFcmTokenUseCase @Inject constructor(
     private val fcmRepository: FcmRepository,
-    private val sessionRepository: SessionRepository
+    private val sessionRepository: SessionRepository,
 ) {
     suspend operator fun invoke(fcmToken: String) {
         val session = sessionRepository.getSession()

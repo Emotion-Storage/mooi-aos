@@ -10,26 +10,26 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AutomaticLoginUseCase
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val sessionRepository: SessionRepository,
-    private val userRepository: UserRepository,
-    private val fcmRepository: FcmRepository
-) {
-    suspend operator fun invoke(): Flow<DataState<Boolean>> =
-        authRepository.checkSession().map { it ->
-            if (it is DataState.Success) {
-                fcmRepository.getToken()?.let {
-                    fcmRepository.registerToken(it)
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val sessionRepository: SessionRepository,
+        private val userRepository: UserRepository,
+        private val fcmRepository: FcmRepository,
+    ) {
+        suspend operator fun invoke(): Flow<DataState<Boolean>> =
+            authRepository.checkSession().map { it ->
+                if (it is DataState.Success) {
+                    fcmRepository.getToken()?.let {
+                        fcmRepository.registerToken(it)
+                    }
                 }
+                if (it is DataState.Error) {
+                    sessionRepository.deleteSession()
+                    userRepository.deleteUser()
+                    fcmRepository.deleteToken()
+                    return@map it
+                }
+                it
             }
-            if (it is DataState.Error) {
-                sessionRepository.deleteSession()
-                userRepository.deleteUser()
-                fcmRepository.deleteToken()
-                return@map it
-            }
-            it
-        }
-}
+    }

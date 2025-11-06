@@ -17,7 +17,7 @@ class LoginWithIdTokenUseCase
         private val authRepository: AuthRepository,
         private val sessionRepository: SessionRepository,
         private val userRepository: UserRepository,
-        private val fcmRepository: FcmRepository
+        private val fcmRepository: FcmRepository,
     ) {
         suspend operator fun invoke(
             provider: User.AuthProvider,
@@ -26,7 +26,7 @@ class LoginWithIdTokenUseCase
             authRepository.loginWithIdToken(provider, idToken).map {
                 if (it is DataState.Success) {
                     sessionRepository.saveSession(Session(it.data))
-                    fcmRepository.getToken()?.let{
+                    fcmRepository.getToken()?.let {
                         fcmRepository.registerToken(it)
                     }
                 }
