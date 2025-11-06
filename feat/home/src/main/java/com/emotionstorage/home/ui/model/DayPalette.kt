@@ -12,5 +12,5 @@ data class DayPalette(
     val titleColor: Color,
     val contentColor: Color,
     val glowColor: Color? = null,
-    val glowElevationDp: Dp = 0.dp
+    val glowElevationDp: Dp = 0.dp,
 )

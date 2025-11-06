@@ -33,29 +33,31 @@ fun AttendanceRewardDialog(
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Column(
-            modifier = Modifier
-                .background(
-                    color = MooiTheme.colorScheme.background,
-                    shape = RoundedCornerShape(15.dp),
-                )
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier =
+                Modifier
+                    .background(
+                        color = MooiTheme.colorScheme.background,
+                        shape = RoundedCornerShape(15.dp),
+                    ).fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Spacer(modifier = Modifier.size(26.dp))
 
             Row(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .height(31.dp)
+                modifier =
+                    Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .height(31.dp),
             ) {
                 Image(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .align(Alignment.CenterVertically),
+                    modifier =
+                        Modifier
+                            .size(24.dp)
+                            .align(Alignment.CenterVertically),
                     painter = painterResource(R.drawable.gift),
-                    contentDescription = "선물"
+                    contentDescription = "선물",
                 )
 
                 Spacer(modifier = Modifier.size(4.dp))
@@ -64,7 +66,7 @@ fun AttendanceRewardDialog(
                     modifier = Modifier.align(Alignment.CenterVertically),
                     text = "출석 보상 도착!",
                     style = MooiTheme.typography.head2,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
 
@@ -78,8 +80,6 @@ fun AttendanceRewardDialog(
             )
 
             Spacer(modifier = Modifier.size(18.dp))
-
-
         }
     }
 }
