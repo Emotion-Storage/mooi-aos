@@ -3,7 +3,7 @@ package com.emotionstorage.local.model
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.emotionstorage.common.LocalDateTimeSerializer
+import com.emotionstorage.common.util.LocalDateTimeSerializer
 import com.emotionstorage.local.room.database.AppDatabaseConstant
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime

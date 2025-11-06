@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.common.getWeekDatesOfTargetMonth
+import com.emotionstorage.common.util.getWeekDatesOfTargetMonth
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.YearMonth

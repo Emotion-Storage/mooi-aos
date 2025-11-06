@@ -1,6 +1,6 @@
 package com.emotionstorage.domain.useCase.key
 
-import com.emotionstorage.common.getDaysBetween
+import com.emotionstorage.common.util.getDaysBetween
 import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

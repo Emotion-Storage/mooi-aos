@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.emotionstorage.common.toKorDateWithWeekDay
+import com.emotionstorage.common.util.toKorDateWithWeekDay
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet

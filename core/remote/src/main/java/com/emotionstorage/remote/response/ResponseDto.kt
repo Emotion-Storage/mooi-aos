@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.response
 
-import com.emotionstorage.common.LocalDateTimeSerializer
+import com.emotionstorage.common.util.LocalDateTimeSerializer
 import com.emotionstorage.domain.common.DataState
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime

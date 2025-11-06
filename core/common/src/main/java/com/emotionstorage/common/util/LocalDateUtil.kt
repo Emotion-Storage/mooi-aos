@@ -1,4 +1,4 @@
-package com.emotionstorage.common
+package com.emotionstorage.common.util
 
 import java.time.DayOfWeek
 import java.time.LocalDate

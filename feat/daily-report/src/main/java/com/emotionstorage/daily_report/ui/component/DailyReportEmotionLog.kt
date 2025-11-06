@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -29,7 +28,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.emotionstorage.common.formatToKorTime
+import com.emotionstorage.common.util.formatToKorTime
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.LinearGradient

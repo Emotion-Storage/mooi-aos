@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.common.getDaysBetween
+import com.emotionstorage.common.util.getDaysBetween
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
 import com.emotionstorage.ui.component.button.CtaButton

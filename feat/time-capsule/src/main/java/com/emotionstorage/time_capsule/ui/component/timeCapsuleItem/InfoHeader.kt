@@ -15,8 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.common.formatToKorDateTime
-import com.emotionstorage.common.formatToKorTime
+import com.emotionstorage.common.util.formatToKorDateTime
+import com.emotionstorage.common.util.formatToKorTime
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer

@@ -1,6 +1,6 @@
 package com.emotionstorage.time_capsule.ui.modelMapper
 
-import com.emotionstorage.common.getDaysBetween
+import com.emotionstorage.common.util.getDaysBetween
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import java.time.LocalDate

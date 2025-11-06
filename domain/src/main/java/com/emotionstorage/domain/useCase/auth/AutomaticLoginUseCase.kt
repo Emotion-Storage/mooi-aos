@@ -28,7 +28,6 @@ class AutomaticLoginUseCase
                     sessionRepository.deleteSession()
                     userRepository.deleteUser()
                     fcmRepository.deleteToken()
-                    return@map it
                 }
                 it
             }

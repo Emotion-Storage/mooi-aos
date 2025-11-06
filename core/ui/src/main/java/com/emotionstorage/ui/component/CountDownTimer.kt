@@ -8,7 +8,7 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.emotionstorage.common.toEpochMillis
+import com.emotionstorage.common.util.toEpochMillis
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 

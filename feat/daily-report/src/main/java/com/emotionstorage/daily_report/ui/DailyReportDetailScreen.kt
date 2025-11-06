@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.common.toKorDateWithWeekDay
+import com.emotionstorage.common.util.toKorDateWithWeekDay
 import com.emotionstorage.daily_report.presentation.DailyReportDetailAction
 import com.emotionstorage.daily_report.presentation.DailyReportDetailViewModel
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionLog

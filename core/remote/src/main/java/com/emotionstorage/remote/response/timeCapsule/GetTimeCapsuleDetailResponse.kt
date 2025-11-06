@@ -1,5 +1,5 @@
 package com.emotionstorage.remote.response.timeCapsule
-import com.emotionstorage.common.LocalDateTimeSerializer
+import com.emotionstorage.common.util.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
