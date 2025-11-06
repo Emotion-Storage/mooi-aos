@@ -1,23 +1,52 @@
 package com.emotionstorage.data.repoImpl
 
+import com.emotionstorage.data.dataSource.local.FcmLocalDataSource
+import com.emotionstorage.data.dataSource.remote.FcmRemoteDatasource
 import com.emotionstorage.domain.repo.FcmRepository
+import io.github.aakira.napier.Napier
 import javax.inject.Inject
 
 class FcmRepositoryImpl @Inject constructor(
+    private val localDataSource: FcmLocalDataSource, private val remoteDatasource: FcmRemoteDatasource
 ) : FcmRepository {
     override suspend fun registerToken(token: String): Boolean {
-        TODO("Not yet implemented")
+        try {
+            localDataSource.saveToken(token)
+            remoteDatasource.registerToken(token)
+            return true
+        } catch (e: Exception) {
+            Napier.e(e.message.toString())
+            return false
+        }
     }
 
     override suspend fun saveToken(token: String): Boolean {
-        TODO("Not yet implemented")
+        try {
+            return localDataSource.saveToken(token)
+        } catch (e: Exception) {
+            Napier.e(e.message.toString())
+            return false
+        }
     }
 
     override suspend fun getToken(): String? {
-        TODO("Not yet implemented")
+        try {
+            return localDataSource.getToken()
+        } catch (e: Exception) {
+            Napier.e(e.message.toString())
+            return null
+        }
     }
 
     override suspend fun deleteToken(): Boolean {
-        TODO("Not yet implemented")
+        try {
+            localDataSource.getToken()?.let {
+                remoteDatasource.deleteToken(it)
+            }
+            return true
+        } catch (e: Exception) {
+            Napier.e(e.message.toString())
+            return false
+        }
     }
 }
