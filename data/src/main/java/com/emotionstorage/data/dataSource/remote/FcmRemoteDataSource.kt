@@ -1,6 +1,6 @@
 package com.emotionstorage.data.dataSource.remote
 
-interface FcmRemoteDatasource {
+interface FcmRemoteDataSource {
     suspend fun registerToken(token: String): Boolean
     suspend fun deleteToken(token: String): Boolean
 }

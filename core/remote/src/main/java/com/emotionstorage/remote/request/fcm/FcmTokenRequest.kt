@@ -3,6 +3,6 @@ package com.emotionstorage.remote.request.fcm
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class PostFcmTokenRequest (
+data class FcmTokenRequest (
     val fcmToken: String,
 )
