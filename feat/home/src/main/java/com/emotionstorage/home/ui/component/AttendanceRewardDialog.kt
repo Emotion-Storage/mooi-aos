@@ -41,8 +41,7 @@ fun AttendanceRewardDialog(
                     .background(
                         color = MooiTheme.colorScheme.background,
                         shape = RoundedCornerShape(15.dp),
-                    )
-                    .fillMaxWidth()
+                    ).fillMaxWidth()
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -87,9 +86,10 @@ fun AttendanceRewardDialog(
             Spacer(modifier = Modifier.size(18.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 26.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 26.dp),
                 horizontalArrangement = Arrangement.spacedBy(9.dp),
             ) {
                 summary.days.slice(0..2).forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
@@ -98,9 +98,10 @@ fun AttendanceRewardDialog(
             Spacer(modifier = Modifier.size(11.dp))
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 26.dp),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 26.dp),
                 horizontalArrangement = Arrangement.spacedBy(9.dp),
             ) {
                 summary.days.slice(3..5).forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
@@ -109,9 +110,11 @@ fun AttendanceRewardDialog(
             Spacer(modifier = Modifier.size(11.dp))
 
             DayCircle(
-                day = summary.days[6], modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                day = summary.days[6],
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
             )
 
             Spacer(modifier = Modifier.size(21.dp))
@@ -141,10 +144,11 @@ fun AttendanceRewardDialog(
             Spacer(modifier = Modifier.size(8.dp))
 
             CtaButton(
-                modifier = Modifier
-                    .fillMaxWidth(0.65f)
-                    .height(50.dp)
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier
+                        .fillMaxWidth(0.65f)
+                        .height(50.dp)
+                        .align(Alignment.CenterHorizontally),
                 onClick = onConfirm,
                 radius = 10,
                 isDefaultWidth = false,
@@ -153,7 +157,7 @@ fun AttendanceRewardDialog(
                 Text(
                     text = "보상 받기",
                     style = MooiTheme.typography.mainButton,
-                    color = Color.White
+                    color = Color.White,
                 )
             }
 
@@ -167,19 +171,20 @@ fun AttendanceRewardDialog(
 private fun AttendanceRewardDialogPreview() {
     MooiTheme {
         AttendanceRewardDialog(
-            summary = AttendanceSummary(
-                days = listOf(
-                    Attendance(1, 1, AttendanceStatus.ATTENDED),
-                    Attendance(2, 1, AttendanceStatus.ATTENDED),
-                    Attendance(3, 1, AttendanceStatus.TODAY),
-                    Attendance(4, 1, AttendanceStatus.UPCOMING),
-                    Attendance(5, 1, AttendanceStatus.UPCOMING),
-                    Attendance(6, 1, AttendanceStatus.UPCOMING),
-                    Attendance(7, 3, AttendanceStatus.UPCOMING),
+            summary =
+                AttendanceSummary(
+                    days =
+                        listOf(
+                            Attendance(1, 1, AttendanceStatus.ATTENDED),
+                            Attendance(2, 1, AttendanceStatus.ATTENDED),
+                            Attendance(3, 1, AttendanceStatus.TODAY),
+                            Attendance(4, 1, AttendanceStatus.UPCOMING),
+                            Attendance(5, 1, AttendanceStatus.UPCOMING),
+                            Attendance(6, 1, AttendanceStatus.UPCOMING),
+                            Attendance(7, 3, AttendanceStatus.UPCOMING),
+                        ),
+                    true,
                 ),
-
-                true
-            ),
             onConfirm = {},
             onDismiss = {},
         )
