@@ -23,7 +23,7 @@ internal val Migration2to3 =
                         `updatedAt` TEXT NOT NULL,
                         `openAt` TEXT,
                         `favoriteAt` TEXT
-                ),
+                )
                 """.trimIndent(),
             )
 
