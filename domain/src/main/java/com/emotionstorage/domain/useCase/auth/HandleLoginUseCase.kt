@@ -23,7 +23,7 @@ class HandleLoginUseCase(
         applicationScope.launch {
             // save session
             runCatching {
-                accessToken?.let{
+                accessToken?.let {
                     sessionRepository.saveSession(Session(it))
                 }
             }

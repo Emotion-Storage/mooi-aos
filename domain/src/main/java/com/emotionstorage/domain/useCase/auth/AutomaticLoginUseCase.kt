@@ -7,19 +7,19 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class AutomaticLoginUseCase
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val handleLogin: HandleLoginUseCase,
-    private val handleLogout: HandleLogoutUseCase,
-) {
-    suspend operator fun invoke(): Flow<DataState<Boolean>> =
-        authRepository.checkSession().onEach { it ->
-            if (it is DataState.Success) {
-                handleLogin()
+    @Inject
+    constructor(
+        private val authRepository: AuthRepository,
+        private val handleLogin: HandleLoginUseCase,
+        private val handleLogout: HandleLogoutUseCase,
+    ) {
+        suspend operator fun invoke(): Flow<DataState<Boolean>> =
+            authRepository.checkSession().onEach { it ->
+                if (it is DataState.Success) {
+                    handleLogin()
+                }
+                if (it is DataState.Error) {
+                    handleLogout()
+                }
             }
-            if (it is DataState.Error) {
-                handleLogout()
-            }
-        }
-}
+    }
