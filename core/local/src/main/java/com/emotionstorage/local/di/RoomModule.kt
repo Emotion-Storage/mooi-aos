@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.emotionstorage.local.room.database.AppDatabase
 import com.emotionstorage.local.room.database.AppDatabaseConstant
-import com.emotionstorage.local.room.migration.MIGRATION_2_3
-import com.emotionstorage.local.room.migration.MIGRATION_3_4
+import com.emotionstorage.local.room.migration.Migration2to3
+import com.emotionstorage.local.room.migration.Migration3to4
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +27,7 @@ internal object RoomModule {
                 AppDatabase::class.java,
                 AppDatabaseConstant.NAME,
             ).fallbackToDestructiveMigration(false)
-            .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
+            .addMigrations(Migration2to3, Migration3to4)
             .build()
 
     @Provides
