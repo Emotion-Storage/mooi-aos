@@ -2,33 +2,29 @@ package com.emotionstorage.domain.useCase.auth
 
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.repo.AuthRepository
-import com.emotionstorage.domain.repo.FcmRepository
-import com.emotionstorage.domain.repo.SessionRepository
-import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 class AutomaticLoginUseCase
+@Inject
+constructor(
+    private val authRepository: AuthRepository,
+) {
     @Inject
-    constructor(
-        private val authRepository: AuthRepository,
-        private val sessionRepository: SessionRepository,
-        private val userRepository: UserRepository,
-        private val fcmRepository: FcmRepository,
-    ) {
-        suspend operator fun invoke(): Flow<DataState<Boolean>> =
-            authRepository.checkSession().map { it ->
-                if (it is DataState.Success) {
-                    fcmRepository.getToken()?.let {
-                        fcmRepository.registerToken(it)
-                    }
-                }
-                if (it is DataState.Error) {
-                    sessionRepository.deleteSession()
-                    userRepository.deleteUser()
-                    fcmRepository.deleteToken()
-                }
-                it
+    private lateinit var handleLogin: HandleLoginUseCase
+
+    @Inject
+    private lateinit var handleLogout: HandleLogoutUseCase
+
+
+    suspend operator fun invoke(): Flow<DataState<Boolean>> =
+        authRepository.checkSession().onEach { it ->
+            if (it is DataState.Success) {
+                handleLogin()
             }
-    }
+            if (it is DataState.Error) {
+                handleLogout()
+            }
+        }
+}
