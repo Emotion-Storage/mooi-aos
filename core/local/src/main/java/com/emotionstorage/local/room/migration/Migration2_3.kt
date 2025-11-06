@@ -1,11 +1,11 @@
-package com.emotionstorage.local.room.database
+package com.emotionstorage.local.room.migration
 
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 internal val MIGRATION_2_3 =
     object : Migration(2, 3) {
-        // create time capsule table
+        // create time capsule table & add indices
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL(
                 "CREATE TABLE IF NOT EXISTS `time_capsule` " +
@@ -25,5 +25,12 @@ internal val MIGRATION_2_3 =
                     "`favoriteAt` TEXT" +
                     ");",
             )
+
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_time_capsule_status` ON `time_capsule`(`status`);")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_time_capsule_isFavorite` ON `time_capsule`(`isFavorite`);")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_time_capsule_openAt` ON `time_capsule`(`openAt`);")
+
         }
     }
+
+

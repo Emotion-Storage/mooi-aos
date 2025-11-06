@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.emotionstorage.local.room.database.AppDatabase
 import com.emotionstorage.local.room.database.AppDatabaseConstant
-import com.emotionstorage.local.room.database.MIGRATION_2_3
+import com.emotionstorage.local.room.migration.MIGRATION_2_3
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
