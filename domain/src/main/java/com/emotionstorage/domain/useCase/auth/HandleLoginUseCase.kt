@@ -8,12 +8,13 @@ import com.emotionstorage.domain.repo.UserRepository
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /**
  * - Login success logic use case
  * - Should only be **called in Auth Use cases**
  */
-class HandleLoginUseCase(
+class HandleLoginUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
     private val fcmRepository: FcmRepository,
