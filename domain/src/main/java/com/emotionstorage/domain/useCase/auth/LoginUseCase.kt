@@ -30,6 +30,7 @@ class LoginUseCase
                 if (it is DataState.Error) {
                     sessionRepository.deleteSession()
                     userRepository.deleteUser()
+                    fcmRepository.deleteToken()
                 }
                 it
             }
