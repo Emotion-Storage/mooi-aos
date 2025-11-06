@@ -5,6 +5,7 @@ import com.emotionstorage.domain.model.Session
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -25,6 +26,7 @@ class HandleLoginUseCase(
             runCatching {
                 accessToken?.let {
                     sessionRepository.saveSession(Session(it))
+                    Napier.d("session saved")
                 }
             }
             // todo: fetch & save user
@@ -33,6 +35,7 @@ class HandleLoginUseCase(
             runCatching {
                 fcmRepository.getToken()?.let {
                     fcmRepository.registerToken(it)
+                    Napier.d("fcm token saved")
                 }
             }
         }

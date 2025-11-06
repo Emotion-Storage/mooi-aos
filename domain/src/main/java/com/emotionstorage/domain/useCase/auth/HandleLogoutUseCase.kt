@@ -4,6 +4,7 @@ import com.emotionstorage.domain.di.ApplicationScope
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,12 +23,15 @@ class HandleLogoutUseCase @Inject constructor(
         applicationScope.launch {
             runCatching {
                 sessionRepository.deleteSession()
+                Napier.d("session deleted")
             }
             runCatching {
                 userRepository.deleteUser()
+                Napier.d("user deleted")
             }
             runCatching {
                 fcmRepository.deleteToken()
+                Napier.d("fcm token deleted")
             }
         }
     }
