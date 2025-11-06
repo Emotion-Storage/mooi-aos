@@ -12,10 +12,8 @@ class FcmRepositoryImpl @Inject constructor(
 ) : FcmRepository {
     override suspend fun registerToken(token: String): Boolean {
         try {
-            Napier.d("save token & register token to server - $token")
-            localDataSource.saveToken(token)
-            remoteDatasource.registerToken(token)
-            return true
+            Napier.d("register token to server - $token")
+            return remoteDatasource.registerToken(token)
         } catch (e: Exception) {
             Napier.e(e.message.toString())
             return false
@@ -46,7 +44,7 @@ class FcmRepositoryImpl @Inject constructor(
         try {
             localDataSource.getToken()?.let {
                 Napier.d("delete token from server - $it")
-                remoteDatasource.deleteToken(it)
+                return remoteDatasource.deleteToken(it)
             }
             return true
         } catch (e: Exception) {
