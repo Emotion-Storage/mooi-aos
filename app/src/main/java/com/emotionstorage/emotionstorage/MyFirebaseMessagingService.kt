@@ -1,6 +1,5 @@
 package com.emotionstorage.emotionstorage
 
-
 import android.content.Context
 import android.util.Log
 import androidx.work.OneTimeWorkRequest
@@ -15,9 +14,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MyFirebaseMessagingService @Inject constructor(
-    private val saveOrRegisterFcmTokenUseCase: SaveOrRegisterFcmTokenUseCase
-) : FirebaseMessagingService() {
+class MyFirebaseMessagingService : FirebaseMessagingService() {
+
+    @Inject
+    lateinit var saveOrRegisterFcmToken: SaveOrRegisterFcmTokenUseCase
+
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
@@ -47,6 +48,7 @@ class MyFirebaseMessagingService @Inject constructor(
 
     // [END receive_message]
     // [START on_new_token]
+
     /**
      * There are two scenarios when onNewToken is called:
      * 1) When a new token is generated on initial app startup
@@ -64,8 +66,10 @@ class MyFirebaseMessagingService @Inject constructor(
     // [END on_new_token]
     private fun scheduleJob() {
         // [START dispatch_job]
-        val work = OneTimeWorkRequest.Builder(MyWorker::class.java)
-            .build()
+        val work =
+            OneTimeWorkRequest
+                .Builder(MyWorker::class.java)
+                .build()
         WorkManager.getInstance(this).beginWith(work).enqueue()
         // [END dispatch_job]
     }
@@ -76,11 +80,14 @@ class MyFirebaseMessagingService @Inject constructor(
 
     private fun sendRegistrationToServer(token: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            saveOrRegisterFcmTokenUseCase(token)
+            saveOrRegisterFcmToken(token)
         }
     }
 
-    class MyWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+    class MyWorker(
+        context: Context,
+        workerParams: WorkerParameters,
+    ) : Worker(context, workerParams) {
         override fun doWork(): Result {
             // TODO(developer): add long running task here.
             return Result.success()
