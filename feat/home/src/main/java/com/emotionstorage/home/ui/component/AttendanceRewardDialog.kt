@@ -22,12 +22,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.emotionstorage.home.ui.model.Attendance
+import com.emotionstorage.home.ui.model.AttendanceStatus
+import com.emotionstorage.home.ui.model.AttendanceSummary
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AttendanceRewardDialog(
-    days: List<Attendance>,
+    summary: AttendanceSummary,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -38,7 +41,8 @@ fun AttendanceRewardDialog(
                     .background(
                         color = MooiTheme.colorScheme.background,
                         shape = RoundedCornerShape(15.dp),
-                    ).fillMaxWidth()
+                    )
+                    .fillMaxWidth()
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,9 +74,10 @@ fun AttendanceRewardDialog(
                 )
             }
 
-            Spacer(modifier = Modifier.size(5.dp))
+            Spacer(modifier = Modifier.size(8.dp))
 
             Text(
+                modifier = Modifier.height(48.dp),
                 text = "당신의 오늘을 함께해서 기뻐요.\n매일 출석하면, 열쇠 보상이 가득 쌓여요!",
                 style = MooiTheme.typography.body6,
                 color = MooiTheme.colorScheme.gray500,
@@ -80,6 +85,79 @@ fun AttendanceRewardDialog(
             )
 
             Spacer(modifier = Modifier.size(18.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 26.dp),
+                horizontalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                summary.days.slice(0..2).forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
+            }
+
+            Spacer(modifier = Modifier.size(11.dp))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 26.dp),
+                horizontalArrangement = Arrangement.spacedBy(9.dp),
+            ) {
+                summary.days.slice(3..5).forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
+            }
+
+            Spacer(modifier = Modifier.size(11.dp))
+
+            DayCircle(
+                day = summary.days[6], modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.size(21.dp))
+
+            Row {
+                Text(
+                    modifier =
+                        Modifier.padding(
+                            top = 14.dp,
+                        ),
+                    text = "*",
+                    style = MooiTheme.typography.caption7,
+                    color = MooiTheme.colorScheme.primary,
+                )
+                Text(
+                    modifier =
+                        Modifier.padding(
+                            start = 2.dp,
+                            top = 16.dp,
+                        ),
+                    text = "출석 보상은 매일 자정 초기화 돼요.",
+                    style = MooiTheme.typography.caption7,
+                    color = MooiTheme.colorScheme.primary,
+                )
+            }
+
+            Spacer(modifier = Modifier.size(8.dp))
+
+            CtaButton(
+                modifier = Modifier
+                    .fillMaxWidth(0.65f)
+                    .height(50.dp)
+                    .align(Alignment.CenterHorizontally),
+                onClick = onConfirm,
+                radius = 10,
+                isDefaultWidth = false,
+                isDefaultHeight = false,
+            ) {
+                Text(
+                    text = "보상 받기",
+                    style = MooiTheme.typography.mainButton,
+                    color = Color.White
+                )
+            }
+
+            Spacer(modifier = Modifier.size(26.dp))
         }
     }
 }
@@ -89,7 +167,19 @@ fun AttendanceRewardDialog(
 private fun AttendanceRewardDialogPreview() {
     MooiTheme {
         AttendanceRewardDialog(
-            days = listOf(),
+            summary = AttendanceSummary(
+                days = listOf(
+                    Attendance(1, 1, AttendanceStatus.ATTENDED),
+                    Attendance(2, 1, AttendanceStatus.ATTENDED),
+                    Attendance(3, 1, AttendanceStatus.TODAY),
+                    Attendance(4, 1, AttendanceStatus.UPCOMING),
+                    Attendance(5, 1, AttendanceStatus.UPCOMING),
+                    Attendance(6, 1, AttendanceStatus.UPCOMING),
+                    Attendance(7, 3, AttendanceStatus.UPCOMING),
+                ),
+
+                true
+            ),
             onConfirm = {},
             onDismiss = {},
         )

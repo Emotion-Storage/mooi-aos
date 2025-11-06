@@ -7,3 +7,8 @@ data class Attendance(
     val rewardKeys: Int,
     val status: AttendanceStatus,
 )
+
+data class AttendanceSummary(
+    val days: List<Attendance>,
+    val canClaimToday: Boolean,
+)
