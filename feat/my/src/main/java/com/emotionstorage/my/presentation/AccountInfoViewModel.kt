@@ -2,7 +2,6 @@ package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.myPage.GetAccountInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,25 +18,34 @@ class AccountInfoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getAccountInfoUseCase().collect { dataState ->
-                if (dataState is DataState.Success) {
-                    val info = dataState.data
+            getAccountInfoUseCase().handle(
+                onSuccess = { data ->
                     _state.value =
-                        AccountInfoState(
-                            email = info.email,
-                            authProvider = AuthProvider.valueOf(info.socialType.uppercase()),
+                        _state.value.copy(
+                            email = data.email,
+                            authProvider = AuthProvider.valueOf(data.socialType.uppercase()),
                             gender =
-                                when (info.gender.uppercase()) {
+                                when (data.gender.uppercase()) {
                                     "MALE" -> "남성"
                                     "FEMALE" -> "여성"
                                     else -> "기타"
                                 },
-                            birthYear = info.birthYear,
-                            birthMonth = info.birthMonth,
-                            birthDay = info.birthDay,
+                            birthYear = data.birthYear,
+                            birthMonth = data.birthMonth,
+                            birthDay = data.birthDay,
                         )
-                }
-            }
+                },
+                onError = { throwable, _ ->
+                    _state.value =
+                        _state.value.copy(
+                            error = throwable.message ?: "Unknown error",
+                            isLoading = false,
+                        )
+                },
+                onLoading = { isLoading ->
+                    // do Nothing
+                },
+            )
         }
     }
 }
@@ -49,6 +57,8 @@ data class AccountInfoState(
     val birthYear: Int = 0,
     val birthMonth: Int = 0,
     val birthDay: Int = 0,
+    val error: String? = null,
+    val isLoading: Boolean = false,
 )
 
 enum class AuthProvider { GOOGLE, KAKAO }

@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter
 
 @Serializable
 data class AccountInfoResponse(
+    val nickname: String,
     val email: String,
     val socialType: String,
     val gender: String,
@@ -17,6 +18,7 @@ fun AccountInfoResponse.toDomain(): AccountInfo {
     val date = LocalDate.parse(birthday, DateTimeFormatter.ISO_DATE)
 
     return AccountInfo(
+        nickname = nickname,
         email = email,
         socialType = socialType,
         gender = gender,

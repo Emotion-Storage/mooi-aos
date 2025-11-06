@@ -1,6 +1,7 @@
 package com.emotionstorage.domain.repo
 
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
@@ -14,4 +15,6 @@ interface UserRepository {
     suspend fun updateUserNickname(nickname: String): DataState<Unit?>
 
     suspend fun getKeyCount(): DataState<Int>
+
+    suspend fun getAccountInfo(): DataState<AccountInfo>
 }
