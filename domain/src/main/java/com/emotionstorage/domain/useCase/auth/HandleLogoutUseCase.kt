@@ -8,7 +8,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-internal class HandleLogoutUseCase @Inject constructor(
+/**
+ * - Logout success logic use case
+ * - Should only be **called in Auth Use cases**
+ */
+class HandleLogoutUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
     private val fcmRepository: FcmRepository,

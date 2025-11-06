@@ -9,30 +9,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- *  Logout use case
- *  - logout success: delete session info, delete user info, return true
- *  - logout fail: return false
- */
+
 class LogoutUseCase
 @Inject
 constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val sessionRepository: SessionRepository,
-    private val fcmRepository: FcmRepository,
-    @ApplicationScope private val applicationScope: CoroutineScope,
+    private val handleLogout: HandleLogoutUseCase,
 ) {
     suspend operator fun invoke(): Boolean {
         val result = authRepository.logout()
         if (result) {
-            applicationScope.launch {
-                runCatching {
-                    sessionRepository.deleteSession()
-                    userRepository.deleteUser()
-                    fcmRepository.deleteToken()
-                }
-            }
+            handleLogout()
         }
         return result
     }

@@ -8,12 +8,17 @@ import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-internal class HandleLoginUseCase(
+/**
+ * - Login success logic use case
+ * - Should only be **called in Auth Use cases**
+ */
+class HandleLoginUseCase(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
     private val fcmRepository: FcmRepository,
     @ApplicationScope private val applicationScope: CoroutineScope,
 ) {
+    // access token can be null when called on automatic login success
     operator fun invoke(accessToken: String? = null) {
         applicationScope.launch {
             // save session

@@ -18,12 +18,9 @@ class LoginUseCase
 @Inject
 constructor(
     private val authRepository: AuthRepository,
+    private val handleLogin: HandleLoginUseCase,
+    private val handleLogout: HandleLogoutUseCase,
 ) {
-    @Inject
-    private lateinit var handleLogin: HandleLoginUseCase
-
-    @Inject
-    private lateinit var handleLogout: HandleLogoutUseCase
 
     suspend operator fun invoke(provider: User.AuthProvider): Flow<DataState<String>> =
         authRepository.login(provider).onEach {
