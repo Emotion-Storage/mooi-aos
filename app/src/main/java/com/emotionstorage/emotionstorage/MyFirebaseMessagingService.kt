@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
-
     @Inject
     lateinit var saveOrRegisterFcmToken: SaveOrRegisterFcmTokenUseCase
 
@@ -27,8 +26,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData())
-
-            if ( /* Check if data needs to be processed by long running job */true) {
+            // Check if data needs to be processed by long running job
+            if (true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.
                 scheduleJob()
             } else {

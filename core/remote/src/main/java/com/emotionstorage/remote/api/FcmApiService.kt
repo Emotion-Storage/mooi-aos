@@ -7,12 +7,8 @@ import retrofit2.http.POST
 
 interface FcmApiService {
     @POST("api/v1/users/fcm-token")
-    suspend fun postFcmToken(
-        body: FcmTokenRequest,
-    ): ResponseDto<Unit>
+    suspend fun postFcmToken(body: FcmTokenRequest): ResponseDto<Unit>
 
     @DELETE("api/v1/users/fcm-token")
-    suspend fun deleteFcmToken(
-        body: FcmTokenRequest,
-    ): ResponseDto<Unit>
+    suspend fun deleteFcmToken(body: FcmTokenRequest): ResponseDto<Unit>
 }

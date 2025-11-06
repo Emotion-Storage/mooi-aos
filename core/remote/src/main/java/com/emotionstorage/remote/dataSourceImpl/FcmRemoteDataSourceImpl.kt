@@ -6,7 +6,7 @@ import com.emotionstorage.remote.request.fcm.FcmTokenRequest
 import javax.inject.Inject
 
 class FcmRemoteDataSourceImpl @Inject constructor(
-    private val apiService: FcmApiService
+    private val apiService: FcmApiService,
 ) : FcmRemoteDataSource {
     override suspend fun registerToken(token: String): Boolean {
         apiService.postFcmToken(FcmTokenRequest(token))
@@ -17,5 +17,4 @@ class FcmRemoteDataSourceImpl @Inject constructor(
         apiService.deleteFcmToken(FcmTokenRequest(token))
         return true
     }
-
 }

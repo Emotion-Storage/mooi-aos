@@ -26,8 +26,8 @@ class FcmLocalDataSourceImpl @Inject constructor(
         return true
     }
 
-    override suspend fun getToken(): String? {
-        return dataStore
+    override suspend fun getToken(): String? =
+        dataStore
             .data
             .catch { exception ->
                 if (exception is IOException) {
@@ -38,5 +38,4 @@ class FcmLocalDataSourceImpl @Inject constructor(
             }.map { preferences ->
                 preferences[KEY]
             }.firstOrNull()
-    }
 }

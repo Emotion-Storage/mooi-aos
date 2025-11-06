@@ -7,7 +7,8 @@ import io.github.aakira.napier.Napier
 import javax.inject.Inject
 
 class FcmRepositoryImpl @Inject constructor(
-    private val localDataSource: FcmLocalDataSource, private val remoteDatasource: FcmRemoteDataSource
+    private val localDataSource: FcmLocalDataSource,
+    private val remoteDatasource: FcmRemoteDataSource,
 ) : FcmRepository {
     override suspend fun registerToken(token: String): Boolean {
         try {

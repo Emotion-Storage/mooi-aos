@@ -17,9 +17,7 @@ import javax.inject.Singleton
 object ApiServiceModule {
     @Singleton
     @Provides
-    fun provideFcmApiService(retrofit: Retrofit): FcmApiService =
-        retrofit.create(FcmApiService::class.java)
-
+    fun provideFcmApiService(retrofit: Retrofit): FcmApiService = retrofit.create(FcmApiService::class.java)
 
     @Singleton
     @Provides
