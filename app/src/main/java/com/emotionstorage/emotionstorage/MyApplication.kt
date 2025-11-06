@@ -10,7 +10,7 @@ import io.github.aakira.napier.DebugAntilog
 import io.github.aakira.napier.Napier
 
 @HiltAndroidApp
-class MainApplication : Application() {
+class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         initLogger()
@@ -37,7 +37,7 @@ class MainApplication : Application() {
 
     private fun initKakaoSDK() {
         try {
-            KakaoSdk.init(this@MainApplication, BuildConfig.KAKAO_NATIVE_APP_KEY)
+            KakaoSdk.init(this@MyApplication, BuildConfig.KAKAO_NATIVE_APP_KEY)
             Logger.i("kakao sdk init success")
         } catch (e: Exception) {
             Logger.e("kakao sdk init fail, $e")

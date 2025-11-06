@@ -5,7 +5,7 @@ import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
 import com.emotionstorage.ai_chat.remote.response.ChatMessageResponse
-import com.emotionstorage.domain.useCase.auth.GetTokenUseCase
+import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.flow.Flow
@@ -24,7 +24,7 @@ import javax.inject.Inject
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
 class ChatWSDataSourceImpl @Inject constructor(
-    private val getTokenUseCase: GetTokenUseCase,
+    private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWSDataSource {
     private val json = Json { ignoreUnknownKeys = true }
 
@@ -43,7 +43,7 @@ class ChatWSDataSourceImpl @Inject constructor(
 
     override suspend fun connectChatRoom(): Boolean {
         try {
-            val token = getTokenUseCase() ?: throw IllegalStateException("토큰이 없어 연결이 불가능합니다.")
+            val token = getAccessTokenUseCase() ?: throw IllegalStateException("토큰이 없어 연결이 불가능합니다.")
             val connectHeaders = mapOf("Authorization" to "Bearer $token")
 
             session = client.connect(url = WS_URL, customStompConnectHeaders = connectHeaders)
@@ -79,7 +79,7 @@ class ChatWSDataSourceImpl @Inject constructor(
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
-            val token = getTokenUseCase() ?: throw IllegalStateException("토큰이 없어 메세지 전송이 불가능 합니다.")
+            val token = getAccessTokenUseCase() ?: throw IllegalStateException("토큰이 없어 메세지 전송이 불가능 합니다.")
             val messageJson =
                 json.encodeToString(
                     ChatMessageRequestBody.serializer(),
