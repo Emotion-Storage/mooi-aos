@@ -6,15 +6,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.home.ui.model.Attendance
-import com.emotionstorage.home.ui.model.AttendanceStatus
+import com.emotionstorage.domain.model.AttendanceSummary
 import com.emotionstorage.home.ui.model.DayPalette
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun palette(day: Attendance): DayPalette =
+fun palette(day: AttendanceSummary.Attendance): DayPalette =
     when (day.status) {
-        AttendanceStatus.ATTENDED ->
+        AttendanceSummary.AttendanceStatus.ATTENDED ->
             DayPalette(
                 bg =
                     SolidColor(
@@ -32,7 +31,7 @@ fun palette(day: Attendance): DayPalette =
                 glowColor = null,
             )
 
-        AttendanceStatus.TODAY ->
+        AttendanceSummary.AttendanceStatus.TODAY ->
             DayPalette(
                 bg =
                     SolidColor(
@@ -51,7 +50,7 @@ fun palette(day: Attendance): DayPalette =
                 glowElevationDp = 10.dp,
             )
 
-        AttendanceStatus.UPCOMING ->
+        AttendanceSummary.AttendanceStatus.UPCOMING ->
             DayPalette(
                 bg = MooiTheme.brushScheme.subButtonBackground,
                 border = null,

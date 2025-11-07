@@ -3,6 +3,7 @@ plugins {
     id("com.emotionstorage.convention.android.library.compose")
     id("com.emotionstorage.convention.android.library.hilt")
     id("com.emotionstorage.convention.kotlin.library.retrofit")
+    id("com.emotionstorage.convention.android.library.datastore")
 }
 
 android {

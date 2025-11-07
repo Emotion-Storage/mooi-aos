@@ -28,14 +28,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.home.ui.model.Attendance
-import com.emotionstorage.home.ui.model.AttendanceStatus
+import com.emotionstorage.domain.model.AttendanceSummary
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun DayCircle(
-    day: Attendance,
+    day: AttendanceSummary.Attendance,
     modifier: Modifier = Modifier,
 ) {
     val p = palette(day)
@@ -147,30 +146,30 @@ private fun DayCirclePreview() {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 DayCircle(
-                    Attendance(
+                    AttendanceSummary.Attendance(
                         day = 1,
                         rewardKeys = 1,
-                        status = AttendanceStatus.ATTENDED,
+                        status = AttendanceSummary.AttendanceStatus.ATTENDED,
                     ),
                 )
 
                 Spacer(modifier = Modifier.size(24.dp))
 
                 DayCircle(
-                    Attendance(
+                    AttendanceSummary.Attendance(
                         day = 2,
                         rewardKeys = 1,
-                        status = AttendanceStatus.TODAY,
+                        status = AttendanceSummary.AttendanceStatus.TODAY,
                     ),
                 )
 
                 Spacer(modifier = Modifier.size(24.dp))
 
                 DayCircle(
-                    Attendance(
+                    AttendanceSummary.Attendance(
                         day = 1,
                         rewardKeys = 1,
-                        status = AttendanceStatus.UPCOMING,
+                        status = AttendanceSummary.AttendanceStatus.UPCOMING,
                     ),
                 )
             }
@@ -178,30 +177,30 @@ private fun DayCirclePreview() {
             Spacer(modifier = Modifier.size(24.dp))
 
             DayCircle(
-                Attendance(
+                AttendanceSummary.Attendance(
                     day = 7,
                     rewardKeys = 3,
-                    status = AttendanceStatus.ATTENDED,
+                    status = AttendanceSummary.AttendanceStatus.ATTENDED,
                 ),
             )
 
             Spacer(modifier = Modifier.size(24.dp))
 
             DayCircle(
-                Attendance(
+                AttendanceSummary.Attendance(
                     day = 7,
                     rewardKeys = 3,
-                    status = AttendanceStatus.TODAY,
+                    status = AttendanceSummary.AttendanceStatus.TODAY,
                 ),
             )
 
             Spacer(modifier = Modifier.size(24.dp))
 
             DayCircle(
-                Attendance(
+                AttendanceSummary.Attendance(
                     day = 7,
                     rewardKeys = 3,
-                    status = AttendanceStatus.UPCOMING,
+                    status = AttendanceSummary.AttendanceStatus.UPCOMING,
                 ),
             )
         }
