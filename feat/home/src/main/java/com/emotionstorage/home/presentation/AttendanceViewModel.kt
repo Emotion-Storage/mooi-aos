@@ -1,6 +1,5 @@
 package com.emotionstorage.home.presentation
 
-import android.support.annotation.VisibleForTesting
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,6 +22,7 @@ class AttendanceViewModel @Inject constructor(
     private val claimAttendanceRewardUseCase: ClaimAttendanceRewardUseCase,
     private val local: AttendanceLocalDataSource,
 ) : ViewModel() {
+    // 테스트용
     var uiState by mutableStateOf(UiState())
         private set
 
@@ -81,12 +81,6 @@ class AttendanceViewModel @Inject constructor(
     fun dismiss() {
         uiState = uiState.copy(showDialog = false)
     }
-
-    @VisibleForTesting
-    fun markDialogShownTodayForTest() =
-        viewModelScope.launch {
-            local.setDialogShown(LocalDate.now())
-        }
 
     data class UiState(
         val summary: AttendanceSummary? = null,
