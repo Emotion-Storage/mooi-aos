@@ -21,54 +21,58 @@ import javax.inject.Inject
 class AttendanceViewModel @Inject constructor(
     private val getAttendanceUseCase: GetAttendanceUseCase,
     private val claimAttendanceRewardUseCase: ClaimAttendanceRewardUseCase,
-
     private val local: AttendanceLocalDataSource,
 ) : ViewModel() {
     var uiState by mutableStateOf(UiState())
         private set
 
-    fun load() = viewModelScope.launch {
-        uiState = uiState.copy(loading = true, error = null)
-        getAttendanceUseCase().collect { s ->
-            when (s) {
-                is DataState.Success -> uiState = uiState.copy(summary = s.data, loading = false)
-                is DataState.Error -> uiState =
-                    uiState.copy(error = s.throwable.toString(), loading = false)
+    fun load() =
+        viewModelScope.launch {
+            uiState = uiState.copy(loading = true, error = null)
+            getAttendanceUseCase().collect { s ->
+                when (s) {
+                    is DataState.Success -> uiState = uiState.copy(summary = s.data, loading = false)
+                    is DataState.Error ->
+                        uiState =
+                            uiState.copy(error = s.throwable.toString(), loading = false)
 
-                is DataState.Loading -> uiState = uiState.copy(loading = true)
-            }
-        }
-    }
-
-    fun tryShowOnce() = viewModelScope.launch {
-        val today = LocalDate.now()
-        val alreadyShown = local.wasDialogShown(today).first()
-        val canClaim = uiState.summary?.canClaimToday == true
-        if (!alreadyShown && canClaim) {
-            uiState = uiState.copy(showDialog = true)
-            local.setDialogShown(today)
-        }
-    }
-
-    fun claimToday() = viewModelScope.launch {
-        claimAttendanceRewardUseCase().collect { s ->
-            when (s) {
-                is DataState.Success -> uiState = uiState.copy(summary = s.data, showDialog = false)
-                is DataState.Error -> uiState = uiState.copy(error = s.throwable.toString())
-                is DataState.Loading -> { /* no-op */
+                    is DataState.Loading -> uiState = uiState.copy(loading = true)
                 }
             }
         }
-    }
+
+    fun tryShowOnce() =
+        viewModelScope.launch {
+            val today = LocalDate.now()
+            val alreadyShown = local.wasDialogShown(today).first()
+            val canClaim = uiState.summary?.canClaimToday == true
+            if (!alreadyShown && canClaim) {
+                uiState = uiState.copy(showDialog = true)
+                local.setDialogShown(today)
+            }
+        }
+
+    fun claimToday() =
+        viewModelScope.launch {
+            claimAttendanceRewardUseCase().collect { s ->
+                when (s) {
+                    is DataState.Success -> uiState = uiState.copy(summary = s.data, showDialog = false)
+                    is DataState.Error -> uiState = uiState.copy(error = s.throwable.toString())
+                    is DataState.Loading -> { // no-op
+                    }
+                }
+            }
+        }
 
     fun dismiss() {
         uiState = uiState.copy(showDialog = false)
     }
 
     @VisibleForTesting
-    fun markDialogShownTodayForTest() = viewModelScope.launch {
-        local.setDialogShown(LocalDate.now())
-    }
+    fun markDialogShownTodayForTest() =
+        viewModelScope.launch {
+            local.setDialogShown(LocalDate.now())
+        }
 
     data class UiState(
         val summary: AttendanceSummary? = null,

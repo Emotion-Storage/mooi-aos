@@ -28,7 +28,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AttendanceRewardDialog(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     summary: AttendanceSummary,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,

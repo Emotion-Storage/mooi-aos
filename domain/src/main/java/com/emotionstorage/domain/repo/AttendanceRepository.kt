@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface AttendanceRepository {
     fun getAttendanceSummary(): Flow<DataState<AttendanceSummary>>
+
     fun claimAttendance(): Flow<DataState<AttendanceSummary>>
 }

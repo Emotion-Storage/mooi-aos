@@ -106,11 +106,13 @@ fun HomeScreen(
 
     if (attendanceState.showDialog && attendanceState.summary != null) {
         AttendanceRewardDialog(
-            modifier = Modifier.fillMaxSize()
-                .padding(horizontal = 26.dp, vertical = 135.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 26.dp, vertical = 135.dp),
             summary = attendanceState.summary,
             onConfirm = { attendanceViewModel.claimToday() },
-            onDismiss = { attendanceViewModel.dismiss() }
+            onDismiss = { attendanceViewModel.dismiss() },
         )
     }
 }
