@@ -44,25 +44,27 @@ class AttendanceRepositoryImpl @Inject constructor(
     ): List<AttendanceSummary.Attendance> {
         fun reward(day: Int) = if (day == 7) 3 else 1
 
-        val nextDay = if (streak == 0) 1 else (streak % 7) + if (alreadyClaimedToday) 0 else 1
+        val cyclePosition = streak % 7
+        val attendedCount =
+            when {
+                streak <= 0 -> 0
+                alreadyClaimedToday && cyclePosition == 0 -> 7
+                else -> cyclePosition
+            }
+        val nextClaimDay =
+            if (alreadyClaimedToday) {
+                null
+            } else {
+                val candidate = cyclePosition + 1
+                if (candidate <= 0 || candidate > 7) 1 else candidate
+            }
+
         return (1..7).map { day ->
             val status =
                 when {
-                    day < nextDay -> {
-                        AttendanceSummary.AttendanceStatus.ATTENDED
-                    }
-
-                    day == nextDay -> {
-                        if (alreadyClaimedToday) {
-                            AttendanceSummary.AttendanceStatus.ATTENDED
-                        } else {
-                            AttendanceSummary.AttendanceStatus.TODAY
-                        }
-                    }
-
-                    else -> {
-                        AttendanceSummary.AttendanceStatus.UPCOMING
-                    }
+                    day <= attendedCount -> AttendanceSummary.AttendanceStatus.ATTENDED
+                    nextClaimDay != null && day == nextClaimDay -> AttendanceSummary.AttendanceStatus.TODAY
+                    else -> AttendanceSummary.AttendanceStatus.UPCOMING
                 }
             AttendanceSummary.Attendance(day = day, rewardKeys = reward(day), status = status)
         }
