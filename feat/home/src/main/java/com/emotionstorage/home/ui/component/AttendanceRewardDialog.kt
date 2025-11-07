@@ -3,6 +3,7 @@ package com.emotionstorage.home.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +30,6 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AttendanceRewardDialog(
-    modifier: Modifier = Modifier,
     summary: AttendanceSummary,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
@@ -36,11 +37,12 @@ fun AttendanceRewardDialog(
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier =
-                modifier
+                Modifier
                     .background(
                         color = MooiTheme.colorScheme.background,
                         shape = RoundedCornerShape(15.dp),
                     ).fillMaxWidth()
+                    .widthIn(min = 328.dp)
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -84,37 +86,48 @@ fun AttendanceRewardDialog(
 
             Spacer(modifier = Modifier.size(18.dp))
 
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 26.dp),
-                horizontalArrangement = Arrangement.spacedBy(9.dp),
+            Box(
+                modifier = Modifier.padding(horizontal = 10.dp),
             ) {
-                summary.days.slice(0..2).forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
+                Column {
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(9.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        summary
+                            .days
+                            .slice(0..2)
+                            .forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
+                    }
+
+                    Spacer(modifier = Modifier.size(11.dp))
+
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(9.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        summary
+                            .days
+                            .slice(3..5)
+                            .forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
+                    }
+
+                    Spacer(modifier = Modifier.size(11.dp))
+
+                    DayCircle(
+                        day = summary.days[6],
+                        modifier =
+                            Modifier
+                                .fillMaxWidth(),
+                    )
+                }
             }
-
-            Spacer(modifier = Modifier.size(11.dp))
-
-            Row(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 26.dp),
-                horizontalArrangement = Arrangement.spacedBy(9.dp),
-            ) {
-                summary.days.slice(3..5).forEach { DayCircle(day = it, modifier = Modifier.weight(1f)) }
-            }
-
-            Spacer(modifier = Modifier.size(11.dp))
-
-            DayCircle(
-                day = summary.days[6],
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp),
-            )
 
             Spacer(modifier = Modifier.size(21.dp))
 
@@ -174,13 +187,41 @@ private fun AttendanceRewardDialogPreview() {
                 AttendanceSummary(
                     days =
                         listOf(
-                            AttendanceSummary.Attendance(1, 1, AttendanceSummary.AttendanceStatus.ATTENDED),
-                            AttendanceSummary.Attendance(2, 1, AttendanceSummary.AttendanceStatus.ATTENDED),
-                            AttendanceSummary.Attendance(3, 1, AttendanceSummary.AttendanceStatus.TODAY),
-                            AttendanceSummary.Attendance(4, 1, AttendanceSummary.AttendanceStatus.UPCOMING),
-                            AttendanceSummary.Attendance(5, 1, AttendanceSummary.AttendanceStatus.UPCOMING),
-                            AttendanceSummary.Attendance(6, 1, AttendanceSummary.AttendanceStatus.UPCOMING),
-                            AttendanceSummary.Attendance(7, 3, AttendanceSummary.AttendanceStatus.UPCOMING),
+                            AttendanceSummary.Attendance(
+                                1,
+                                1,
+                                AttendanceSummary.AttendanceStatus.ATTENDED,
+                            ),
+                            AttendanceSummary.Attendance(
+                                2,
+                                1,
+                                AttendanceSummary.AttendanceStatus.ATTENDED,
+                            ),
+                            AttendanceSummary.Attendance(
+                                3,
+                                1,
+                                AttendanceSummary.AttendanceStatus.TODAY,
+                            ),
+                            AttendanceSummary.Attendance(
+                                4,
+                                1,
+                                AttendanceSummary.AttendanceStatus.UPCOMING,
+                            ),
+                            AttendanceSummary.Attendance(
+                                5,
+                                1,
+                                AttendanceSummary.AttendanceStatus.UPCOMING,
+                            ),
+                            AttendanceSummary.Attendance(
+                                6,
+                                1,
+                                AttendanceSummary.AttendanceStatus.UPCOMING,
+                            ),
+                            AttendanceSummary.Attendance(
+                                7,
+                                3,
+                                AttendanceSummary.AttendanceStatus.UPCOMING,
+                            ),
                         ),
                     true,
                 ),

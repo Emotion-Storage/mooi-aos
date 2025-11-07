@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,9 +47,9 @@ fun DayCircle(
         if (isSeventh) {
             modifier
                 .fillMaxWidth()
-                .height(80.dp)
+                .requiredHeight(80.dp)
         } else {
-            modifier.size(86.dp)
+            modifier.requiredSize(86.dp)
         }
 
     DropShadowContainer(

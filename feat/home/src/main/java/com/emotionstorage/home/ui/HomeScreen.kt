@@ -39,8 +39,8 @@ import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -106,10 +106,6 @@ fun HomeScreen(
 
     if (attendanceState.showDialog && attendanceState.summary != null) {
         AttendanceRewardDialog(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 26.dp, vertical = 135.dp),
             summary = attendanceState.summary,
             onConfirm = { attendanceViewModel.claimToday() },
             onDismiss = { attendanceViewModel.dismiss() },
