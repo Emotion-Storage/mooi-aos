@@ -13,7 +13,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun palette(day: AttendanceSummary.Attendance): DayPalette =
     when (day.status) {
-        AttendanceSummary.AttendanceStatus.ATTENDED ->
+        AttendanceSummary.AttendanceStatus.ATTENDED -> {
             DayPalette(
                 bg =
                     SolidColor(
@@ -30,8 +30,9 @@ fun palette(day: AttendanceSummary.Attendance): DayPalette =
                 contentColor = MooiTheme.colorScheme.gray700,
                 glowColor = null,
             )
+        }
 
-        AttendanceSummary.AttendanceStatus.TODAY ->
+        AttendanceSummary.AttendanceStatus.TODAY -> {
             DayPalette(
                 bg =
                     SolidColor(
@@ -49,8 +50,9 @@ fun palette(day: AttendanceSummary.Attendance): DayPalette =
                 glowColor = MooiTheme.colorScheme.secondary,
                 glowElevationDp = 10.dp,
             )
+        }
 
-        AttendanceSummary.AttendanceStatus.UPCOMING ->
+        AttendanceSummary.AttendanceStatus.UPCOMING -> {
             DayPalette(
                 bg = MooiTheme.brushScheme.subButtonBackground,
                 border = null,
@@ -58,4 +60,5 @@ fun palette(day: AttendanceSummary.Attendance): DayPalette =
                 contentColor = MooiTheme.colorScheme.gray300,
                 glowColor = null,
             )
+        }
     }

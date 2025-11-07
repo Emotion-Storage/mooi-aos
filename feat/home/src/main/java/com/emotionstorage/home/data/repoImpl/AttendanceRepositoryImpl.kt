@@ -48,15 +48,21 @@ class AttendanceRepositoryImpl @Inject constructor(
         return (1..7).map { day ->
             val status =
                 when {
-                    day < nextDay -> AttendanceSummary.AttendanceStatus.ATTENDED
-                    day == nextDay ->
+                    day < nextDay -> {
+                        AttendanceSummary.AttendanceStatus.ATTENDED
+                    }
+
+                    day == nextDay -> {
                         if (alreadyClaimedToday) {
                             AttendanceSummary.AttendanceStatus.ATTENDED
                         } else {
                             AttendanceSummary.AttendanceStatus.TODAY
                         }
+                    }
 
-                    else -> AttendanceSummary.AttendanceStatus.UPCOMING
+                    else -> {
+                        AttendanceSummary.AttendanceStatus.UPCOMING
+                    }
                 }
             AttendanceSummary.Attendance(day = day, rewardKeys = reward(day), status = status)
         }

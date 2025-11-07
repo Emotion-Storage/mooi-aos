@@ -31,12 +31,18 @@ class AttendanceViewModel @Inject constructor(
             uiState = uiState.copy(loading = true, error = null)
             getAttendanceUseCase().collect { s ->
                 when (s) {
-                    is DataState.Success -> uiState = uiState.copy(summary = s.data, loading = false)
-                    is DataState.Error ->
+                    is DataState.Success -> {
+                        uiState = uiState.copy(summary = s.data, loading = false)
+                    }
+
+                    is DataState.Error -> {
                         uiState =
                             uiState.copy(error = s.throwable.toString(), loading = false)
+                    }
 
-                    is DataState.Loading -> uiState = uiState.copy(loading = true)
+                    is DataState.Loading -> {
+                        uiState = uiState.copy(loading = true)
+                    }
                 }
             }
         }
@@ -56,9 +62,17 @@ class AttendanceViewModel @Inject constructor(
         viewModelScope.launch {
             claimAttendanceRewardUseCase().collect { s ->
                 when (s) {
-                    is DataState.Success -> uiState = uiState.copy(summary = s.data, showDialog = false)
-                    is DataState.Error -> uiState = uiState.copy(error = s.throwable.toString())
-                    is DataState.Loading -> { // no-op
+                    is DataState.Success -> {
+                        uiState =
+                            uiState.copy(summary = s.data, showDialog = false)
+                    }
+
+                    is DataState.Error -> {
+                        uiState = uiState.copy(error = s.throwable.toString())
+                    }
+
+                    is DataState.Loading -> {
+                        // no-op
                     }
                 }
             }
