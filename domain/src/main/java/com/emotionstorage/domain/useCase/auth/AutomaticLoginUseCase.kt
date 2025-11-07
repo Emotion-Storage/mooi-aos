@@ -2,6 +2,7 @@ package com.emotionstorage.domain.useCase.auth
 
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.repo.AuthRepository
+import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.flow.Flow
@@ -14,12 +15,20 @@ class AutomaticLoginUseCase
         private val authRepository: AuthRepository,
         private val sessionRepository: SessionRepository,
         private val userRepository: UserRepository,
+        private val fcmRepository: FcmRepository,
     ) {
         suspend operator fun invoke(): Flow<DataState<Boolean>> =
             authRepository.checkSession().map { it ->
+                if (it is DataState.Success) {
+                    fcmRepository.getToken()?.let {
+                        fcmRepository.registerToken(it)
+                    }
+                }
                 if (it is DataState.Error) {
                     sessionRepository.deleteSession()
                     userRepository.deleteUser()
+                    fcmRepository.deleteToken()
+                    return@map it
                 }
                 it
             }

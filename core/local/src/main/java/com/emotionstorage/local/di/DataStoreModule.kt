@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.local.di
+package com.emotionstorage.local.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -12,9 +12,11 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+private const val DATASTORE_FILE_NAME = "mooi_data_store"
+
 @Module
 @InstallIn(SingletonComponent::class)
-object AiChatIntroDataModule {
+object DataStoreModule {
     @Provides
     @Singleton
     fun provideDataStore(
@@ -22,6 +24,6 @@ object AiChatIntroDataModule {
     ): DataStore<Preferences> =
         PreferenceDataStoreFactory
             .create {
-                context.preferencesDataStoreFile("ai_chat_intro")
+                context.preferencesDataStoreFile(DATASTORE_FILE_NAME)
             }
 }

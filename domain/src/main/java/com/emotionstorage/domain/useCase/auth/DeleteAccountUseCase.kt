@@ -1,6 +1,7 @@
 package com.emotionstorage.domain.useCase.auth
 
 import com.emotionstorage.domain.repo.AuthRepository
+import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
 import javax.inject.Inject
@@ -16,12 +17,14 @@ class DeleteAccountUseCase
         private val authRepository: AuthRepository,
         private val userRepository: UserRepository,
         private val sessionRepository: SessionRepository,
+        private val fcmRepository: FcmRepository,
     ) {
         suspend operator fun invoke(): Boolean {
             val result = authRepository.deleteAccount()
             if (result) {
                 sessionRepository.deleteSession()
                 userRepository.deleteUser()
+                fcmRepository.deleteToken()
             }
             return result
         }
