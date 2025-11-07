@@ -28,6 +28,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun AttendanceRewardDialog(
+    modifier : Modifier = Modifier,
     summary: AttendanceSummary,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
@@ -35,7 +36,7 @@ fun AttendanceRewardDialog(
     Dialog(onDismissRequest = onDismiss) {
         Column(
             modifier =
-                Modifier
+                modifier
                     .background(
                         color = MooiTheme.colorScheme.background,
                         shape = RoundedCornerShape(15.dp),
