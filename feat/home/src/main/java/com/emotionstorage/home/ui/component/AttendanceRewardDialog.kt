@@ -21,9 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.emotionstorage.home.ui.model.Attendance
-import com.emotionstorage.home.ui.model.AttendanceStatus
-import com.emotionstorage.home.ui.model.AttendanceSummary
+import com.emotionstorage.domain.model.AttendanceSummary
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
@@ -175,13 +173,13 @@ private fun AttendanceRewardDialogPreview() {
                 AttendanceSummary(
                     days =
                         listOf(
-                            Attendance(1, 1, AttendanceStatus.ATTENDED),
-                            Attendance(2, 1, AttendanceStatus.ATTENDED),
-                            Attendance(3, 1, AttendanceStatus.TODAY),
-                            Attendance(4, 1, AttendanceStatus.UPCOMING),
-                            Attendance(5, 1, AttendanceStatus.UPCOMING),
-                            Attendance(6, 1, AttendanceStatus.UPCOMING),
-                            Attendance(7, 3, AttendanceStatus.UPCOMING),
+                            AttendanceSummary.Attendance(1, 1, AttendanceSummary.AttendanceStatus.ATTENDED),
+                            AttendanceSummary.Attendance(2, 1, AttendanceSummary.AttendanceStatus.ATTENDED),
+                            AttendanceSummary.Attendance(3, 1, AttendanceSummary.AttendanceStatus.TODAY),
+                            AttendanceSummary.Attendance(4, 1, AttendanceSummary.AttendanceStatus.UPCOMING),
+                            AttendanceSummary.Attendance(5, 1, AttendanceSummary.AttendanceStatus.UPCOMING),
+                            AttendanceSummary.Attendance(6, 1, AttendanceSummary.AttendanceStatus.UPCOMING),
+                            AttendanceSummary.Attendance(7, 3, AttendanceSummary.AttendanceStatus.UPCOMING),
                         ),
                     true,
                 ),
