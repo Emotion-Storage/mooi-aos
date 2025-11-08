@@ -3,6 +3,7 @@ plugins {
     id("com.emotionstorage.convention.android.library.compose")
     id("com.emotionstorage.convention.android.library.hilt")
     id("com.emotionstorage.convention.kotlin.library.retrofit")
+    id("com.emotionstorage.convention.android.library.datastore")
 }
 
 android {
@@ -29,4 +30,5 @@ dependencies {
     implementation(projects.core.common)
     implementation(projects.core.remote)
     implementation(projects.core.ui)
+    implementation(platform(libs.androidx.compose.bom))
 }

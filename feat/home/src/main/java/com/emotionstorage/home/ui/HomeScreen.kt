@@ -32,13 +32,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
+import com.emotionstorage.home.ui.component.AttendanceRewardDialog
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -46,6 +48,7 @@ import com.orhanobut.logger.Logger
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
+    attendanceViewModel: AttendanceViewModel = hiltViewModel(),
     bottomAppBar: @Composable () -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
@@ -54,6 +57,7 @@ fun HomeScreen(
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val attendanceState = attendanceViewModel.uiState
 
     LaunchedEffect(Unit) {
         Logger.d("HomeScreen: Launch triggered")
@@ -80,6 +84,15 @@ fun HomeScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        attendanceViewModel.load()
+    }
+
+    LifecycleResumeEffect(Unit) {
+        attendanceViewModel.tryShowOnce()
+        onPauseOrDispose { }
+    }
+
     StatelessHomeScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
@@ -90,6 +103,14 @@ fun HomeScreen(
         navToDailyReport = navToDailyReport,
         navToArrivedTimeCapsules = navToArrivedTimeCapsules,
     )
+
+    if (attendanceState.showDialog && attendanceState.summary != null) {
+        AttendanceRewardDialog(
+            summary = attendanceState.summary,
+            onConfirm = { attendanceViewModel.claimToday() },
+            onDismiss = { attendanceViewModel.dismiss() },
+        )
+    }
 }
 
 @Composable
