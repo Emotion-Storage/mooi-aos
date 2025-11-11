@@ -60,37 +60,61 @@ fun NotificationSettingScreen(
 
     var systemEnabled by remember {
         mutableStateOf(
-            androidx.core.app.NotificationManagerCompat
-                .from(context).areNotificationsEnabled()
+            androidx
+                .core
+                .app
+                .NotificationManagerCompat
+                .from(context)
+                .areNotificationsEnabled(),
         )
     }
 
     DisposableEffect(lifecycleOwner) {
-        val obs = androidx.lifecycle.LifecycleEventObserver { _, ev ->
-            if (ev == androidx.lifecycle.Lifecycle.Event.ON_RESUME) {
-                systemEnabled = androidx.core.app.NotificationManagerCompat
-                    .from(context).areNotificationsEnabled()
+        val obs =
+            androidx.lifecycle.LifecycleEventObserver { _, ev ->
+                if (ev ==
+                    androidx
+                        .lifecycle
+                        .Lifecycle
+                        .Event
+                        .ON_RESUME
+                ) {
+                    systemEnabled =
+                        androidx
+                            .core
+                            .app
+                            .NotificationManagerCompat
+                            .from(context)
+                            .areNotificationsEnabled()
+                }
             }
-        }
         lifecycleOwner.lifecycle.addObserver(obs)
         onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
     }
 
-    val postGranted = if (android.os.Build.VERSION.SDK_INT >= 33)
-        (permissionState.status is com.google.accompanist.permissions.PermissionStatus.Granted)
-    else true
+    val postGranted =
+        if (android
+                .os
+                .Build
+                .VERSION
+                .SDK_INT >= 33
+        ) {
+            (permissionState.status is com.google.accompanist.permissions.PermissionStatus.Granted)
+        } else {
+            true
+        }
     val notificationsAllowed = systemEnabled && postGranted
-
 
     var activeSheet by remember {
         mutableStateOf(if (notificationsAllowed) Sheet.None else Sheet.Permission)
     }
     LaunchedEffect(notificationsAllowed) {
-        activeSheet = if (notificationsAllowed) {
-            if (activeSheet == Sheet.Permission) Sheet.None else activeSheet
-        } else {
-            Sheet.Permission
-        }
+        activeSheet =
+            if (notificationsAllowed) {
+                if (activeSheet == Sheet.Permission) Sheet.None else activeSheet
+            } else {
+                Sheet.Permission
+            }
     }
 
     val permissionSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -130,18 +154,17 @@ fun NotificationSettingScreen(
                 title = "설정에서 알림을 켜주시면\n감정 기록 시간과 리포트를\n제때 전해드릴게요.\uD83C\uDF19",
                 confirmLabel = "설정으로 이동하기",
                 onConfirm = {
-                    context.startActivity(Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                        putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                    })
+                    context.startActivity(
+                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
+                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
+                        },
+                    )
                 },
                 hideDragHandle = true,
                 sheetGesturesEnabled = false,
+            )
 
-                )
-
-            BackHandler(enabled = true) {
-                activeSheet = Sheet.None
-            }
+            BackHandler(enabled = true) { activeSheet = Sheet.None }
         }
 
         Sheet.TimePicker -> {
