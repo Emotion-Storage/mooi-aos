@@ -1,5 +1,6 @@
-package com.emotionstorage.tutorial.ui.tutorial
+package com.emotionstorage.tutorial.ui
 
+import android.Manifest
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -44,10 +45,10 @@ fun TutorialScreen(
 ) {
     val permissionState =
         rememberPermissionState(
-            permission = android.Manifest.permission.POST_NOTIFICATIONS,
+            permission = Manifest.permission.POST_NOTIFICATIONS,
         )
 
-    LifecycleStartEffect(Unit) {
+    LifecycleStartEffect("onStart") {
         permissionState.launchPermissionRequest()
         onStopOrDispose {}
     }
