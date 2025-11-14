@@ -20,6 +20,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RequestPermissionBottomSheet(
+    onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
 ) {
@@ -39,6 +40,7 @@ fun RequestPermissionBottomSheet(
                     putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
                 },
             )
+            onDismiss()
         },
         hideDragHandle = true,
         sheetGesturesEnabled = false,
@@ -56,6 +58,7 @@ private fun RequestPermissionBottomSheetPreview() {
                 .background(MooiTheme.colorScheme.background)
         )
         RequestPermissionBottomSheet(
+            onDismiss = {},
             // open sheet state for preview
             sheetState =
                 rememberStandardBottomSheetState(

@@ -38,6 +38,7 @@ import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.orhanobut.logger.Logger
 import java.time.DayOfWeek
 
 enum class Sheet { None, Permission, TimePicker }
@@ -51,41 +52,50 @@ fun NotificationSettingScreen(
     val context = LocalContext.current
     val state = viewModel.state.collectAsState()
 
-    var systemPermissionEnabled by remember {
+    var prevSystemEnabled by remember {
+        mutableStateOf(
+            NotificationManagerCompat.from(context).areNotificationsEnabled(),
+        )
+    }
+    var systemEnabled by remember {
         mutableStateOf(
             NotificationManagerCompat.from(context).areNotificationsEnabled(),
         )
     }
     LifecycleResumeEffect("onResume") {
-        systemPermissionEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
-        if (systemPermissionEnabled) {
-            // todo: init / turn on notifications
-            // todo: 원래 권한 있는 상태 / 권한 없다가 켜진 상태 구분 필요
+        systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
+        Logger.d("systemEnabled: $systemEnabled, prevSystemEnabled: $prevSystemEnabled")
+
+        if (systemEnabled) {
+            if (prevSystemEnabled != systemEnabled) {
+                // todo: turn on notifications
+            } else {
+                // todo: init notifications
+            }
         } else {
             // todo: turn off notifications
         }
-        onPauseOrDispose {}
+        onPauseOrDispose {
+            prevSystemEnabled = systemEnabled
+        }
     }
 
-    var activeSheet by remember(systemPermissionEnabled) {
-        mutableStateOf(if (systemPermissionEnabled) Sheet.None else Sheet.Permission)
+    var activeSheet by remember {
+        mutableStateOf(if (systemEnabled) Sheet.None else Sheet.Permission)
     }
-
-    val permissionSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val timePickerSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     StatelessNotificationSettingScreen(
         state = state.value,
-        notificationsAllowed = systemPermissionEnabled,
+        notificationsAllowed = systemEnabled,
         onToggleAppPush = { on ->
-            if (systemPermissionEnabled) viewModel.setAppPush(on)
+            if (systemEnabled) viewModel.setAppPush(on)
         },
         onToggleEmotionReminder = viewModel::setEmotionReminder,
         onToggleTimeCapsuleAndReport = viewModel::setTimeCapsule,
         onToggleMarketing = viewModel::setMarketing,
         onDayClick = viewModel::toggleDay,
         onClickTime = {
-            if (systemPermissionEnabled && state.value.emotionReminderNotify) {
+            if (systemEnabled && state.value.emotionReminderNotify) {
                 activeSheet = Sheet.TimePicker
             }
         },
@@ -97,14 +107,18 @@ fun NotificationSettingScreen(
 
     when (activeSheet) {
         Sheet.Permission -> {
+            Logger.d("Show RequestPermissionBottomSheet")
             RequestPermissionBottomSheet(
-                sheetState = permissionSheetState,
+                onDismiss = {
+                    activeSheet = Sheet.None
+                }
             )
         }
 
         Sheet.TimePicker -> {
+            Logger.d("Show TimePickerBottomSheet")
             TimePickerBottomSheet(
-                sheetState = timePickerSheetState,
+                sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
                 initialTime = state.value.emotionReminderTime,
                 onDismissRequest = { activeSheet = Sheet.None },
                 onTimeSelected = {
@@ -115,7 +129,7 @@ fun NotificationSettingScreen(
         }
 
         Sheet.None -> {
-            Unit
+            Logger.d("Close Sheets")
         }
     }
 }
