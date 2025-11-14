@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import androidx.lifecycle.compose.LifecycleStartEffect
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
@@ -64,7 +63,8 @@ fun HomeScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
-    val permissionState = rememberPermissionState(
+    val permissionState =
+        rememberPermissionState(
             permission = Manifest.permission.POST_NOTIFICATIONS,
         )
 
@@ -100,7 +100,6 @@ fun HomeScreen(
             }
         }
     }
-
 
     LifecycleResumeEffect("onResume") {
         // show attendance dialog, if needed
@@ -295,8 +294,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
