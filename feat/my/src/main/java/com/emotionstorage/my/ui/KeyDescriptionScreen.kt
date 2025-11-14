@@ -29,7 +29,7 @@ import com.emotionstorage.my.presentation.KeyBalanceViewModel
 import com.emotionstorage.my.presentation.KeyCountState
 import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import com.emotionstorage.my.ui.component.CountRow
-import com.emotionstorage.my.ui.component.WhenToUseKeyDialog
+import com.emotionstorage.my.ui.component.dialog.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
