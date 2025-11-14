@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -30,22 +31,22 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun ProfileHeader(
-    profileImage: String,
     nickname: String,
     signupDday: Int,
+    modifier: Modifier = Modifier,
     onProfileClick: () -> Unit = {},
     onEditClick: () -> Unit = {},
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-        // TODO : 이미지는 추후 변경 예정
         Image(
-            painterResource(R.drawable.success_filled),
+            painterResource(R.drawable.my_profile),
             contentDescription = "프로필 이미지",
             modifier =
                 Modifier
-                    .size(66.dp)
+                    .size(84.dp)
                     .clickable { onProfileClick() }
                     .background(
                         color = Color.Transparent,
@@ -55,15 +56,12 @@ fun ProfileHeader(
             contentScale = ContentScale.Crop,
         )
 
-        Spacer(modifier = Modifier.size(18.dp))
+        Spacer(modifier = Modifier.size(9.dp))
 
         Column(
             modifier =
                 Modifier
-                    .size(
-                        width = 285.dp,
-                        height = 60.dp,
-                    ),
+                    .height(60.dp),
         ) {
             Row(
                 modifier =
@@ -157,7 +155,7 @@ fun ProfileHeader(
 fun ProfileHeaderPreview() {
     MooiTheme {
         ProfileHeader(
-            profileImage = "Glide or Coil이 필요해 보인다",
+            modifier = Modifier.background(MooiTheme.colorScheme.background),
             nickname = "찡찡이",
             signupDday = 280,
         )

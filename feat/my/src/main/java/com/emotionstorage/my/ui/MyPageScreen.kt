@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -155,7 +156,7 @@ private fun StatelessMyPageScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             ProfileHeader(
-                profileImage = "고정 이미지",
+                modifier = Modifier.offset(x = -9.dp),
                 nickname = state.nickname,
                 signupDday = state.signupDday,
                 onEditClick = {
