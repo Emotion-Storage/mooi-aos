@@ -1,8 +1,5 @@
 package com.emotionstorage.my.ui
 
-import android.content.Intent
-import android.provider.Settings
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,8 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,19 +25,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.my.presentation.NotificationSettingState
 import com.emotionstorage.my.presentation.NotificationSettingViewModel
 import com.emotionstorage.my.ui.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.component.ToggleRow
+import com.emotionstorage.my.ui.component.bottomSheet.RequestPermissionBottomSheet
 import com.emotionstorage.ui.component.appBar.TopAppBar
-import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberPermissionState
 import java.time.DayOfWeek
 
 enum class Sheet { None, Permission, TimePicker }
@@ -55,66 +50,25 @@ fun NotificationSettingScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState()
-    val lifecycleOwner = LocalLifecycleOwner.current
-    val permissionState = rememberPermissionState(android.Manifest.permission.POST_NOTIFICATIONS)
 
-    var systemEnabled by remember {
+    var systemPermissionEnabled by remember {
         mutableStateOf(
-            androidx
-                .core
-                .app
-                .NotificationManagerCompat
-                .from(context)
-                .areNotificationsEnabled(),
+            NotificationManagerCompat.from(context).areNotificationsEnabled(),
         )
     }
-
-    DisposableEffect(lifecycleOwner) {
-        val obs =
-            androidx.lifecycle.LifecycleEventObserver { _, ev ->
-                if (ev ==
-                    androidx
-                        .lifecycle
-                        .Lifecycle
-                        .Event
-                        .ON_RESUME
-                ) {
-                    systemEnabled =
-                        androidx
-                            .core
-                            .app
-                            .NotificationManagerCompat
-                            .from(context)
-                            .areNotificationsEnabled()
-                }
-            }
-        lifecycleOwner.lifecycle.addObserver(obs)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(obs) }
-    }
-
-    val postGranted =
-        if (android
-                .os
-                .Build
-                .VERSION
-                .SDK_INT >= 33
-        ) {
-            (permissionState.status is com.google.accompanist.permissions.PermissionStatus.Granted)
+    LifecycleResumeEffect("onResume") {
+        systemPermissionEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
+        if (systemPermissionEnabled) {
+            // todo: init / turn on notifications
+            // todo: 원래 권한 있는 상태 / 권한 없다가 켜진 상태 구분 필요
         } else {
-            true
+            // todo: turn off notifications
         }
-    val notificationsAllowed = systemEnabled && postGranted
-
-    var activeSheet by remember {
-        mutableStateOf(if (notificationsAllowed) Sheet.None else Sheet.Permission)
+        onPauseOrDispose {}
     }
-    LaunchedEffect(notificationsAllowed) {
-        activeSheet =
-            if (notificationsAllowed) {
-                if (activeSheet == Sheet.Permission) Sheet.None else activeSheet
-            } else {
-                Sheet.Permission
-            }
+
+    var activeSheet by remember(systemPermissionEnabled) {
+        mutableStateOf(if (systemPermissionEnabled) Sheet.None else Sheet.Permission)
     }
 
     val permissionSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -122,20 +76,16 @@ fun NotificationSettingScreen(
 
     StatelessNotificationSettingScreen(
         state = state.value,
-        notificationsAllowed = notificationsAllowed,
+        notificationsAllowed = systemPermissionEnabled,
         onToggleAppPush = { on ->
-            if (!notificationsAllowed) {
-                activeSheet = Sheet.Permission
-            } else {
-                viewModel.setAppPush(on)
-            }
+            if (systemPermissionEnabled) viewModel.setAppPush(on)
         },
         onToggleEmotionReminder = viewModel::setEmotionReminder,
         onToggleTimeCapsuleAndReport = viewModel::setTimeCapsule,
         onToggleMarketing = viewModel::setMarketing,
         onDayClick = viewModel::toggleDay,
         onClickTime = {
-            if (notificationsAllowed && state.value.emotionReminderNotify) {
+            if (systemPermissionEnabled && state.value.emotionReminderNotify) {
                 activeSheet = Sheet.TimePicker
             }
         },
@@ -147,24 +97,9 @@ fun NotificationSettingScreen(
 
     when (activeSheet) {
         Sheet.Permission -> {
-            BottomSheet(
+            RequestPermissionBottomSheet(
                 sheetState = permissionSheetState,
-                onDismissRequest = { /* do-nothing */ },
-                subTitle = "앗, 알림이 꺼져 있어요!",
-                title = "설정에서 알림을 켜주시면\n감정 기록 시간과 리포트를\n제때 전해드릴게요.\uD83C\uDF19",
-                confirmLabel = "설정으로 이동하기",
-                onConfirm = {
-                    context.startActivity(
-                        Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS).apply {
-                            putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                        },
-                    )
-                },
-                hideDragHandle = true,
-                sheetGesturesEnabled = false,
             )
-
-            BackHandler(enabled = true) { activeSheet = Sheet.None }
         }
 
         Sheet.TimePicker -> {
@@ -208,10 +143,9 @@ private fun StatelessNotificationSettingScreen(
         },
     ) { innerPadding ->
         Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(color = MooiTheme.colorScheme.background),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MooiTheme.colorScheme.background),
         ) {
             Column(
                 modifier = Modifier.padding(innerPadding),
@@ -253,21 +187,19 @@ private fun StatelessNotificationSettingScreen(
 
                         Row {
                             Text(
-                                modifier =
-                                    Modifier.padding(
-                                        start = 16.dp,
-                                        top = 8.dp,
-                                    ),
+                                modifier = Modifier.padding(
+                                    start = 16.dp,
+                                    top = 8.dp,
+                                ),
                                 text = "*",
                                 style = MooiTheme.typography.caption7,
                                 color = MooiTheme.colorScheme.gray500,
                             )
                             Text(
-                                modifier =
-                                    Modifier.padding(
-                                        start = 2.dp,
-                                        top = 10.dp,
-                                    ),
+                                modifier = Modifier.padding(
+                                    start = 2.dp,
+                                    top = 10.dp,
+                                ),
                                 text = "원하는 요일을 모두 선택해주세요. 한 번 더 탭하면 해제돼요.",
                                 style = MooiTheme.typography.caption7,
                                 color = MooiTheme.colorScheme.gray500,
