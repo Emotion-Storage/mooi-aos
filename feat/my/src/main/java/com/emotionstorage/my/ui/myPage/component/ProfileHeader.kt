@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.myPage.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

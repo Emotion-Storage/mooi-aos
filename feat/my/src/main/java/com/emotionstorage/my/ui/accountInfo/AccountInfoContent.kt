@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.accountInfo
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

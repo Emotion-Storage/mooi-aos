@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui
+package com.emotionstorage.my.ui.keyDescription
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -28,8 +28,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.emotionstorage.my.presentation.KeyBalanceViewModel
 import com.emotionstorage.my.presentation.KeyCountState
 import com.emotionstorage.my.presentation.KeyDescriptionDialog
-import com.emotionstorage.my.ui.component.CountRow
-import com.emotionstorage.my.ui.component.dialog.WhenToUseKeyDialog
+import com.emotionstorage.my.ui.keyDescription.component.CountRow
+import com.emotionstorage.my.ui.keyDescription.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -42,11 +42,9 @@ fun KeyDescriptionScreen(
 ) {
     val state by viewModel.keyCountState.collectAsStateWithLifecycle()
 
-    LifecycleStartEffect(Unit) {
+    LifecycleStartEffect("onStart") {
         viewModel.refreshKeyCount()
-        onStopOrDispose {
-            //
-        }
+        onStopOrDispose {}
     }
 
     StatelessKeyDescriptionScreen(

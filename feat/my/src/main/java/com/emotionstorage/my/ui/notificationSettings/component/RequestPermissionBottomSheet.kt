@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component.bottomSheet
+package com.emotionstorage.my.ui.notificationSettings.component
 
 import android.content.Intent
 import android.provider.Settings

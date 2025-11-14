@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui
+package com.emotionstorage.my.ui.myPage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -35,9 +35,9 @@ import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
-import com.emotionstorage.my.ui.component.KeyCard
-import com.emotionstorage.my.ui.component.MenuSection
-import com.emotionstorage.my.ui.component.ProfileHeader
+import com.emotionstorage.my.ui.keyDescription.component.KeyCard
+import com.emotionstorage.my.ui.myPage.component.MenuSection
+import com.emotionstorage.my.ui.myPage.component.ProfileHeader
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
@@ -161,9 +161,6 @@ private fun StatelessMyPageScreen(
                 signupDday = state.signupDday,
                 onEditClick = {
                     navToNickNameChange()
-                },
-                onProfileClick = {
-                    // TODO 이미지 변경 기능 구현 필요
                 },
             )
 

@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.withdraw
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background

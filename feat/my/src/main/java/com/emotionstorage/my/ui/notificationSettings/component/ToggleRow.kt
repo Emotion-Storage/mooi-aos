@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.notificationSettings.component
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background

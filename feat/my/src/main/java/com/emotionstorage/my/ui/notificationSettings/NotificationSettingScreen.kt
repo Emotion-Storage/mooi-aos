@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui
+package com.emotionstorage.my.ui.notificationSettings
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,10 +30,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.my.presentation.NotificationSettingState
 import com.emotionstorage.my.presentation.NotificationSettingViewModel
-import com.emotionstorage.my.ui.component.DayOfWeekSelector
-import com.emotionstorage.my.ui.component.ReminderTimeComponent
-import com.emotionstorage.my.ui.component.ToggleRow
-import com.emotionstorage.my.ui.component.bottomSheet.RequestPermissionBottomSheet
+import com.emotionstorage.my.ui.notificationSettings.component.DayOfWeekSelector
+import com.emotionstorage.my.ui.notificationSettings.component.ReminderTimeComponent
+import com.emotionstorage.my.ui.notificationSettings.component.ToggleRow
+import com.emotionstorage.my.ui.notificationSettings.component.RequestPermissionBottomSheet
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
