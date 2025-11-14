@@ -53,6 +53,7 @@ fun TutorialScreen(
         onStopOrDispose {}
     }
 
+    // debug logs
     LaunchedEffect(permissionState.status) {
         when (permissionState.status) {
             is PermissionStatus.Granted -> {

@@ -31,4 +31,6 @@ dependencies {
     implementation(projects.core.remote)
     implementation(projects.core.ui)
     implementation(platform(libs.androidx.compose.bom))
+
+    implementation(libs.accompanist.permissions)
 }

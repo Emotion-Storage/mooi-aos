@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.lifecycle.compose.LifecycleStartEffect
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
@@ -43,7 +44,12 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionStatus
+import com.google.accompanist.permissions.rememberPermissionState
+import com.orhanobut.logger.Logger
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -58,8 +64,14 @@ fun HomeScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
+    val permissionState = rememberPermissionState(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+        )
 
     LaunchedEffect("init") {
+        // request permission
+        permissionState.launchPermissionRequest()
+
         // load attendance state
         attendanceViewModel.load()
 
@@ -69,6 +81,22 @@ fun HomeScreen(
                 is HomeSideEffect.EnterCharRoomSuccess -> {
                     navToChat(it.roomId)
                 }
+            }
+        }
+    }
+
+    // debug logs
+    LaunchedEffect(permissionState.status) {
+        when (permissionState.status) {
+            is PermissionStatus.Granted -> {
+                Logger.d("Permission granted")
+            }
+
+            is PermissionStatus.Denied -> {
+                Logger.d(
+                    "Permission denied, should show rationale: " +
+                        "${(permissionState.status as PermissionStatus.Denied).shouldShowRationale}",
+                )
             }
         }
     }
