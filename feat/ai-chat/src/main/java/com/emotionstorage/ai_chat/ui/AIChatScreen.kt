@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -101,13 +103,18 @@ private fun StatelessAIChatScreen(
     var isInputFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
-    val showEmptyScreen = state.messages.isEmpty() && !isInputFocused
-
     val listState = remember { LazyListState() }
 
     val canMakeTimeCapsule = state.chatProgress == 1f
     var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
     var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    val density = LocalDensity.current
+    val isKeyboardVisible = WindowInsets.ime.getBottom(density) > 0
+
+    // ✅ 메시지가 하나라도 있으면 이후부터는 Empty 화면 안 보이게
+    val hasMessage = state.messages.isNotEmpty()
+    val showEmptyScreen = !hasMessage
 
     LaunchedEffect(state.messages.size) {
         val last = state.messages.lastIndex
@@ -182,7 +189,11 @@ private fun StatelessAIChatScreen(
 
                 if (showEmptyScreen) {
                     EmptyChatScreen(
-                        modifier = Modifier.offset(y = (-60).dp),
+                        modifier =
+                            Modifier.offset(
+                                y = if (isKeyboardVisible) 45.dp else (-60).dp,
+                            ),
+                        isKeyboardVisible = isKeyboardVisible,
                     )
                 }
 
