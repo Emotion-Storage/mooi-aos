@@ -1,6 +1,7 @@
 package com.emotionstorage.ai_chat.ui.component
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.domain.model.ChatMessage
@@ -34,6 +36,7 @@ import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
+import com.emotionstorage.ui.R
 
 @Composable
 fun ChatMessageList(
@@ -88,10 +91,14 @@ fun ChatMessageList(
                     Box(
                         modifier =
                             Modifier
-                                .size(30.dp)
-                                .clip(CircleShape)
-                                .background(Color.Gray),
-                    )
+                                .size(40.dp)
+                                .clip(CircleShape),
+                    ) {
+                        Image(
+                            painter = painterResource(R.drawable.mooi_chat_icon),
+                            contentDescription = "mooi"
+                        )
+                    }
                     Spacer(modifier = Modifier.size(10.dp))
 
                     Box(
@@ -168,10 +175,14 @@ private fun ChatMessageItem(
                 Box(
                     modifier =
                         Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .background(Color.Gray),
-                )
+                            .size(40.dp)
+                            .clip(CircleShape),
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.mooi_chat_icon),
+                        contentDescription = "mooi"
+                    )
+                }
             }
             Spacer(modifier = Modifier.size(10.dp))
         }
