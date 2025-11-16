@@ -53,9 +53,10 @@ fun RequestPermissionBottomSheet(
 private fun RequestPermissionBottomSheetPreview() {
     MooiTheme {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
         )
         RequestPermissionBottomSheet(
             onDismiss = {},

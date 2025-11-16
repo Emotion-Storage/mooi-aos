@@ -170,9 +170,10 @@ private fun Pill(
 private fun AccountInfoContentPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
             verticalArrangement = Arrangement.Top,
         ) {
             AccountInfoContent(

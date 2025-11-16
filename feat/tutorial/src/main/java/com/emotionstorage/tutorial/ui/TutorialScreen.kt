@@ -29,7 +29,6 @@ import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
-import com.emotionstorage.ui.util.RequestPermissionEvent
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
 private const val TUTORIAL_PAGE_COUNT = 4
@@ -41,7 +40,7 @@ fun TutorialScreen(
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         RequestPermission(
-            permission = Manifest.permission.POST_NOTIFICATIONS
+            permission = Manifest.permission.POST_NOTIFICATIONS,
         )
     }
 

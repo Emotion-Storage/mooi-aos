@@ -10,7 +10,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.orhanobut.logger.Logger
 
 enum class RequestPermissionEvent {
-    ON_RESUME, ON_START
+    ON_RESUME,
+    ON_START,
 }
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -19,7 +20,7 @@ fun RequestPermission(
     permission: String,
     onEvent: RequestPermissionEvent = RequestPermissionEvent.ON_START,
     onPermissionGranted: () -> Unit = {},
-    onPermissionDenied: (showRationale: Boolean) -> Unit = {}
+    onPermissionDenied: (showRationale: Boolean) -> Unit = {},
 ) {
     val permissionState =
         rememberPermissionState(permission = permission)
@@ -40,7 +41,6 @@ fun RequestPermission(
         }
     }
 
-
     LaunchedEffect(permissionState.status) {
         when (permissionState.status) {
             is PermissionStatus.Granted -> {
@@ -51,7 +51,7 @@ fun RequestPermission(
             is PermissionStatus.Denied -> {
                 val shouldShowRationale = (permissionState.status as PermissionStatus.Denied).shouldShowRationale
                 Logger.d(
-                    "Permission denied, should show rationale: $shouldShowRationale"
+                    "Permission denied, should show rationale: $shouldShowRationale",
                 )
                 onPermissionDenied(shouldShowRationale)
             }

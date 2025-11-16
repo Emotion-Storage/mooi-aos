@@ -45,7 +45,6 @@ import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
-import com.emotionstorage.ui.util.RequestPermissionEvent
 
 @Composable
 fun HomeScreen(
@@ -86,7 +85,7 @@ fun HomeScreen(
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         RequestPermission(
-            permission = Manifest.permission.POST_NOTIFICATIONS
+            permission = Manifest.permission.POST_NOTIFICATIONS,
         )
     }
 
@@ -275,8 +274,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
