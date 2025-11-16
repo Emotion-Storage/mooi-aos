@@ -152,7 +152,7 @@ class AIChatViewModel @Inject constructor(
                                     messages = state.messages + message,
                                     chatProgress =
                                         message.gaugeScore?.let { score ->
-                                            (score / 100f).coerceIn(0f, 1f)
+                                            (score /70f).coerceIn(0f, 1f)
                                         } ?: state.chatProgress,
                                 )
                             }
@@ -257,7 +257,7 @@ class AIChatViewModel @Inject constructor(
             handleExitChatRoom()
 
             // todo: get time capsule id from server
-            postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess(123L))
+            postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess(state.roomId))
         }
 
     // TODO : 메세지 진행률 업데이트 관련 로직
