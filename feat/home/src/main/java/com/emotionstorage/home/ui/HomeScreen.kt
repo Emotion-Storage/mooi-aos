@@ -1,6 +1,7 @@
 package com.emotionstorage.home.ui
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -82,9 +83,11 @@ fun HomeScreen(
         onPauseOrDispose {}
     }
 
-    RequestPermissionOnResume(
-        Manifest.permission.POST_NOTIFICATIONS
-    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestPermissionOnResume(
+            permission = Manifest.permission.POST_NOTIFICATIONS
+        )
+    }
 
     StatelessHomeScreen(
         modifier = modifier,

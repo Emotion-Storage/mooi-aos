@@ -1,6 +1,7 @@
 package com.emotionstorage.tutorial.ui
 
 import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,44 +30,20 @@ import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.RequestPermissionOnResume
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.rememberPermissionState
-import com.orhanobut.logger.Logger
 
 private const val TUTORIAL_PAGE_COUNT = 4
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun TutorialScreen(
     modifier: Modifier = Modifier,
     navToLogin: () -> Unit = {},
 ) {
-    val permissionState =
-        rememberPermissionState(
-            permission = Manifest.permission.POST_NOTIFICATIONS,
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestPermissionOnResume(
+            permission = Manifest.permission.POST_NOTIFICATIONS
         )
-
-    LifecycleStartEffect("onStart") {
-        permissionState.launchPermissionRequest()
-        onStopOrDispose {}
-    }
-
-    // debug logs
-    LaunchedEffect(permissionState.status) {
-        when (permissionState.status) {
-            is PermissionStatus.Granted -> {
-                Logger.d("Permission granted")
-            }
-
-            is PermissionStatus.Denied -> {
-                Logger.d(
-                    "Permission denied, should show rationale: " +
-                        "${(permissionState.status as PermissionStatus.Denied).shouldShowRationale}",
-                )
-            }
-        }
     }
 
     Scaffold(
