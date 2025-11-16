@@ -260,9 +260,10 @@ private fun AIChatExitModal(
 ) {
     if (isModalOpen) {
         Modal(
-            title = "잠시 감정 대화를 중지할까요?\n오늘의 감정 대화는\n오늘까지만 임시저장돼요!",
-            confirmLabel = "대화 계속하기",
-            dismissLabel = "그만하기",
+            title = "잠시 감정 대화를\n 이대로 중지할까요?",
+            bottomDescription = "으늘의 감정 대화는\n오늘까지만 임시저장돼요!",
+            confirmLabel = "대화를 계속 진행할게요.",
+            dismissLabel = "메인 화면으로 나갈래요",
             onDismissRequest = onDismissRequest,
             onDismiss = onExit,
         )
