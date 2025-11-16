@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,13 +28,16 @@ import androidx.compose.ui.window.DialogWindowProvider
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
 @Composable
 fun Modal(
     onDismissRequest: () -> Unit,
     topDescription: String? = null,
+    topDescriptionHighlights: List<String>? = emptyList(),
     title: String? = null,
     bottomDescription: String? = null,
+    bottomDescriptionHighlights: List<String>? = emptyList(),
     confirmLabel: String? = null,
     onConfirm: () -> Unit = {},
     dismissLabel: String? = null,
@@ -63,7 +67,11 @@ fun Modal(
             ) {
                 if (!topDescription.isNullOrEmpty()) {
                     Text(
-                        text = topDescription,
+                        text =  buildHighlightAnnotatedString(
+                            topDescription,
+                            topDescriptionHighlights ?: emptyList(),
+                            SpanStyle(color = MooiTheme.colorScheme.primary),
+                        ),
                         style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
@@ -82,7 +90,11 @@ fun Modal(
                 }
                 if (!bottomDescription.isNullOrEmpty()) {
                     Text(
-                        text = bottomDescription,
+                        text =  buildHighlightAnnotatedString(
+                            bottomDescription,
+                            bottomDescriptionHighlights ?: emptyList(),
+                            SpanStyle(color = MooiTheme.colorScheme.primary),
+                        ),
                         style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
