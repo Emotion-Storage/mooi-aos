@@ -67,11 +67,12 @@ fun Modal(
             ) {
                 if (!topDescription.isNullOrEmpty()) {
                     Text(
-                        text =  buildHighlightAnnotatedString(
-                            topDescription,
-                            topDescriptionHighlights ?: emptyList(),
-                            SpanStyle(color = MooiTheme.colorScheme.primary),
-                        ),
+                        text =
+                            buildHighlightAnnotatedString(
+                                topDescription,
+                                topDescriptionHighlights ?: emptyList(),
+                                SpanStyle(color = MooiTheme.colorScheme.primary),
+                            ),
                         style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,
@@ -90,11 +91,12 @@ fun Modal(
                 }
                 if (!bottomDescription.isNullOrEmpty()) {
                     Text(
-                        text =  buildHighlightAnnotatedString(
-                            bottomDescription,
-                            bottomDescriptionHighlights ?: emptyList(),
-                            SpanStyle(color = MooiTheme.colorScheme.primary),
-                        ),
+                        text =
+                            buildHighlightAnnotatedString(
+                                bottomDescription,
+                                bottomDescriptionHighlights ?: emptyList(),
+                                SpanStyle(color = MooiTheme.colorScheme.primary),
+                            ),
                         style = MooiTheme.typography.body5,
                         color = MooiTheme.colorScheme.gray500,
                         textAlign = TextAlign.Center,

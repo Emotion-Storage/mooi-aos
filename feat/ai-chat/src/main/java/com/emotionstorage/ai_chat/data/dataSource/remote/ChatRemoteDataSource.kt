@@ -4,5 +4,4 @@ interface ChatRemoteDataSource {
     suspend fun getChatRoomId(): Long
 
     suspend fun exitChatRoom(roomId: Long): Boolean
-
 }

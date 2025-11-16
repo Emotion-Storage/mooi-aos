@@ -96,7 +96,7 @@ fun ChatMessageList(
                     ) {
                         Image(
                             painter = painterResource(R.drawable.mooi_chat_icon),
-                            contentDescription = "mooi"
+                            contentDescription = "mooi",
                         )
                     }
                     Spacer(modifier = Modifier.size(10.dp))
@@ -180,7 +180,7 @@ private fun ChatMessageItem(
                 ) {
                     Image(
                         painter = painterResource(R.drawable.mooi_chat_icon),
-                        contentDescription = "mooi"
+                        contentDescription = "mooi",
                     )
                 }
             }
