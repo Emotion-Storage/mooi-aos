@@ -43,12 +43,8 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionStatus
-import com.google.accompanist.permissions.rememberPermissionState
-import com.orhanobut.logger.Logger
+import com.emotionstorage.ui.util.RequestPermissionOnResume
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -63,15 +59,8 @@ fun HomeScreen(
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
-    val permissionState =
-        rememberPermissionState(
-            permission = Manifest.permission.POST_NOTIFICATIONS,
-        )
 
     LaunchedEffect("init") {
-        // request permission
-        permissionState.launchPermissionRequest()
-
         // load attendance state
         attendanceViewModel.load()
 
@@ -85,22 +74,6 @@ fun HomeScreen(
         }
     }
 
-    // debug logs
-    LaunchedEffect(permissionState.status) {
-        when (permissionState.status) {
-            is PermissionStatus.Granted -> {
-                Logger.d("Permission granted")
-            }
-
-            is PermissionStatus.Denied -> {
-                Logger.d(
-                    "Permission denied, should show rationale: " +
-                        "${(permissionState.status as PermissionStatus.Denied).shouldShowRationale}",
-                )
-            }
-        }
-    }
-
     LifecycleResumeEffect("onResume") {
         // show attendance dialog, if needed
         attendanceViewModel.tryShowOnce()
@@ -108,6 +81,10 @@ fun HomeScreen(
         viewModel.onAction(HomeAction.Initiate)
         onPauseOrDispose {}
     }
+
+    RequestPermissionOnResume(
+        Manifest.permission.POST_NOTIFICATIONS
+    )
 
     StatelessHomeScreen(
         modifier = modifier,
@@ -294,7 +271,8 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
