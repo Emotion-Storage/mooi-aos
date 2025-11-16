@@ -17,6 +17,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,11 +59,6 @@ fun NotificationSettingScreen(
         mutableStateOf(Sheet.None)
     }
 
-    var prevSystemEnabled by remember {
-        mutableStateOf(
-            NotificationManagerCompat.from(context).areNotificationsEnabled(),
-        )
-    }
     var systemEnabled by remember {
         mutableStateOf(
             NotificationManagerCompat.from(context).areNotificationsEnabled(),
@@ -72,57 +68,47 @@ fun NotificationSettingScreen(
         // request run time permission, if build version >= 33
         RequestPermission(
             permission = Manifest.permission.POST_NOTIFICATIONS,
-            onEvent = RequestPermissionEvent.ON_RESUME,
+            onEvent = RequestPermissionEvent.ON_START,
+            onPermissionGranted = {
+                Logger.d("Notification permission granted, init settings")
+                // todo: get notification settings
+            },
             onPermissionDenied = { showRationale ->
                 if (!showRationale) {
                     Logger.d("Notification permission denied permanently, open permission bottom sheet")
-                    viewModel.setAppPush(on = false)
                     activeSheet = Sheet.Permission
                 }
             },
         )
     } else {
-        if(!systemEnabled) {
+        if (!systemEnabled) {
             Logger.d("Notification system permission denied, open permission bottom sheet")
-            viewModel.setAppPush(on = false)
             activeSheet = Sheet.Permission
         }
     }
 
     LifecycleResumeEffect("onResume") {
         systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
-        Logger.d("systemEnabled: $systemEnabled, prevSystemEnabled: $prevSystemEnabled")
+        Logger.d("onResume - systemEnabled: $systemEnabled")
+        if (!systemEnabled) {
+            // turn off notifications, if permission is newly denied
+            Logger.d("turn off notifications")
+            viewModel.setAppPush(on = false)
+        }
 
-        if (systemEnabled) {
-            if (prevSystemEnabled != systemEnabled) {
-                // turn on notifications, if permission is newly granted
-                Logger.d("turn on notifications")
-                viewModel.setAppPush(on = true)
-            }
-        } else {
-            if (prevSystemEnabled != systemEnabled) {
-                // turn off notifications, if permission is newly denied
-                Logger.d("turn off notifications")
-                viewModel.setAppPush(on = false)
-            }
-        }
-        onPauseOrDispose {
-            prevSystemEnabled = systemEnabled
-        }
+        onPauseOrDispose { }
     }
 
     StatelessNotificationSettingScreen(
         state = state.value,
         notificationsAllowed = systemEnabled,
-        onToggleAppPush = { on ->
-            if (systemEnabled) viewModel.setAppPush(on)
-        },
+        onToggleAppPush = viewModel::setAppPush,
         onToggleEmotionReminder = viewModel::setEmotionReminder,
         onToggleTimeCapsuleAndReport = viewModel::setTimeCapsule,
         onToggleMarketing = viewModel::setMarketing,
         onDayClick = viewModel::toggleDay,
         onClickTime = {
-            if (systemEnabled && state.value.emotionReminderNotify) {
+            if (state.value.emotionReminderNotify) {
                 activeSheet = Sheet.TimePicker
             }
         },
@@ -165,7 +151,7 @@ fun NotificationSettingScreen(
 @Composable
 private fun StatelessNotificationSettingScreen(
     state: NotificationSettingState,
-    notificationsAllowed: Boolean,
+    notificationsAllowed: Boolean = true,
     onToggleAppPush: (Boolean) -> Unit = {},
     onToggleEmotionReminder: (Boolean) -> Unit = {},
     onToggleTimeCapsuleAndReport: (Boolean) -> Unit = {},
@@ -194,12 +180,12 @@ private fun StatelessNotificationSettingScreen(
                 ToggleRow(
                     modifier = Modifier.padding(top = 24.dp),
                     title = "MOOI 앱 푸시 알림",
-                    isChecked = state.appPushNotify && notificationsAllowed,
+                    isChecked = state.appPushNotify,
                     onCheckedChange = onToggleAppPush,
                     enabled = notificationsAllowed,
                 )
 
-                if (state.appPushNotify && notificationsAllowed) {
+                if (state.appPushNotify) {
                     ToggleRow(
                         modifier = Modifier.padding(top = 29.dp),
                         title = "감정 기록 알림",
