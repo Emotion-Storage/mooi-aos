@@ -21,7 +21,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import javax.inject.Inject
 
-enum class SendButtonMode { SEND, STOP }
+private const val TIME_CAPSULE_CREATE_SCORE = 70
 
 data class AIChatState(
     val roomId: Long = 0L,
@@ -147,13 +147,22 @@ class AIChatViewModel @Inject constructor(
                                 }
                             }
 
+                            val gaugeScore = message.gaugeScore
+
+                            val newProgress =
+                                gaugeScore
+                                    ?.let { score -> (score / 70f).coerceIn(0f, 1f) }
+                                    ?: state.chatProgress
+
+                            val canCreate =
+                                gaugeScore?.let { it >= TIME_CAPSULE_CREATE_SCORE }
+                                    ?: state.canCreateTimesCapsule
+
                             reduce {
                                 state.copy(
                                     messages = state.messages + message,
-                                    chatProgress =
-                                        message.gaugeScore?.let { score ->
-                                            (score /70f).coerceIn(0f, 1f)
-                                        } ?: state.chatProgress,
+                                    chatProgress = newProgress,
+                                    canCreateTimesCapsule = canCreate,
                                 )
                             }
                         }.catch {
