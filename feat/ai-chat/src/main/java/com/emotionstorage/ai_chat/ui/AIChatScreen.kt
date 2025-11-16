@@ -134,7 +134,10 @@ private fun StatelessAIChatScreen(
     AIChatExitModal(
         isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
-        onExit = navToBack,
+        onExit = {
+            onAction(AIChatAction.ExitChatRoom)
+            navToBack()
+        },
     )
 
     Scaffold(

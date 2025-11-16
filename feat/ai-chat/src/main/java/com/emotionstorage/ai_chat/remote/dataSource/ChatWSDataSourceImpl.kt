@@ -1,10 +1,10 @@
 package com.emotionstorage.ai_chat.remote.dataSource
 
 import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
-import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
 import com.emotionstorage.ai_chat.remote.response.ChatMessageResponse
+import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
 import com.orhanobut.logger.Logger
