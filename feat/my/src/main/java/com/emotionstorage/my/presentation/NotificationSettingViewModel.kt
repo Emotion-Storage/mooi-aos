@@ -42,15 +42,17 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun setAppPush(on: Boolean) = _state.update {
-        if(on) {
-            // todo: set notifications state to default
-            it.copy(appPushNotify = on)
-        } else{
-            // todo: turn off all notifications
-            it.copy(appPushNotify = on)
+    fun setAppPush(on: Boolean) =
+        _state.update {
+            if (on) {
+                // todo: set notifications state to default
+                it.copy(appPushNotify = on)
+            } else
+                {
+                    // todo: turn off all notifications
+                    it.copy(appPushNotify = on)
+                }
         }
-    }
 
     fun setEmotionReminder(on: Boolean) =
         _state.update {

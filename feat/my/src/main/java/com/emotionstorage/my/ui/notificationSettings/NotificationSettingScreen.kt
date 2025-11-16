@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -124,7 +123,7 @@ fun NotificationSettingScreen(
             RequestPermissionBottomSheet(
                 onDismiss = {
                     activeSheet = Sheet.None
-                }
+                },
             )
         }
 
@@ -170,9 +169,10 @@ private fun StatelessNotificationSettingScreen(
         },
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MooiTheme.colorScheme.background),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(color = MooiTheme.colorScheme.background),
         ) {
             Column(
                 modifier = Modifier.padding(innerPadding),
@@ -214,19 +214,21 @@ private fun StatelessNotificationSettingScreen(
 
                         Row {
                             Text(
-                                modifier = Modifier.padding(
-                                    start = 16.dp,
-                                    top = 8.dp,
-                                ),
+                                modifier =
+                                    Modifier.padding(
+                                        start = 16.dp,
+                                        top = 8.dp,
+                                    ),
                                 text = "*",
                                 style = MooiTheme.typography.caption7,
                                 color = MooiTheme.colorScheme.gray500,
                             )
                             Text(
-                                modifier = Modifier.padding(
-                                    start = 2.dp,
-                                    top = 10.dp,
-                                ),
+                                modifier =
+                                    Modifier.padding(
+                                        start = 2.dp,
+                                        top = 10.dp,
+                                    ),
                                 text = "원하는 요일을 모두 선택해주세요. 한 번 더 탭하면 해제돼요.",
                                 style = MooiTheme.typography.caption7,
                                 color = MooiTheme.colorScheme.gray500,
