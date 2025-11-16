@@ -5,9 +5,11 @@ import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
+import com.emotionstorage.remote.request.timeCapsule.CreateTimeCapsuleRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.response.ResponseDto
+import com.emotionstorage.remote.response.timeCapsule.toEntity
 import com.orhanobut.logger.Logger
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -160,6 +162,19 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             return true
         } catch (e: Exception) {
             throw Exception("deleteTimeCapsule api fail, ${e.message}", e)
+        }
+    }
+
+    override suspend fun createTimeCapsule(id: Long): TimeCapsuleEntity {
+        try {
+            val response = apiService.createTimeCapsule(CreateTimeCapsuleRequest(id))
+            if (response.data != null) {
+                return response.data.toEntity(id, "임시 저장")
+            } else {
+                throw Exception("createTimeCapsule response data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("createTimeCapsule api fail, ${e.message}", e)
         }
     }
 }

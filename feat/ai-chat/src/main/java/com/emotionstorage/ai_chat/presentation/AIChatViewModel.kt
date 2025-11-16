@@ -8,6 +8,7 @@ import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.CreateTimeCapsuleUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -71,6 +72,7 @@ class AIChatViewModel @Inject constructor(
     private val disconnectChatRoom: DisconnectChatRoomUseCase,
     private val sendChatMessage: SendChatMessageUseCase,
     private val observeChatMessages: ObserveChatMessagesUseCase,
+    private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
@@ -262,18 +264,34 @@ class AIChatViewModel @Inject constructor(
                 return@intent
             }
 
-            // disconnect chat room
-            handleExitChatRoom()
+            val roomId = state.roomId
+            if (roomId == 0L) {
+                Logger.e("Invalid roomId: $roomId")
+                postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
+                return@intent
+            }
 
-            // todo: get time capsule id from server
-            postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess(state.roomId))
-        }
+            when (val result = createTimeCapsuleUseCase(roomId)) {
+                is DataState.Success -> {
+                    val capsule = result.data
 
-    // TODO : 메세지 진행률 업데이트 관련 로직
-    private fun updateChatProgress() =
-        intent {
-            reduce {
-                state.copy()
+                    handleExitChatRoom()
+
+                    postSideEffect(
+                        AIChatSideEffect.CreateTimeCapsuleSuccess(capsule.id),
+                    )
+                }
+
+                is DataState.Error -> {
+                    Logger.e("createTimeCapsule error: ${result.throwable}")
+                    postSideEffect(
+                        AIChatSideEffect.ToastMessage("타임캡슐 생성 실패"),
+                    )
+                }
+
+                is DataState.Loading -> {
+                    // no - op
+                }
             }
         }
 }

@@ -76,7 +76,7 @@ fun AIChatScreen(
                 }
 
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
-                    // todo: show bottom sheet
+                    // TODO : SOMETHING
                 }
             }
         }
@@ -105,7 +105,7 @@ private fun StatelessAIChatScreen(
 
     val listState = remember { LazyListState() }
 
-    val canMakeTimeCapsule = state.chatProgress == 1f
+    val canMakeTimeCapsule = state.canCreateTimesCapsule
     var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
     var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
 
@@ -123,7 +123,7 @@ private fun StatelessAIChatScreen(
         }
     }
 
-    LaunchedEffect(state.chatProgress) {
+    LaunchedEffect(canMakeTimeCapsule) {
         if (canMakeTimeCapsule) {
             showTimeCapsuleCreateAlert = true
             delay(3000L)

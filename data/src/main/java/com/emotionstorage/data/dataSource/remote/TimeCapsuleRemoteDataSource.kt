@@ -36,6 +36,8 @@ interface TimeCapsuleRemoteDataSource {
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>
 
     suspend fun deleteTimeCapsule(id: Long): Boolean
+
+    suspend fun createTimeCapsule(id: Long): TimeCapsuleEntity
 }
 
 enum class FavoriteResultEntity {
