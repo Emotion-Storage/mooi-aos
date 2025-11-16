@@ -39,7 +39,8 @@ import com.emotionstorage.my.ui.notificationSettings.component.RequestPermission
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.RequestPermissionOnResume
+import com.emotionstorage.ui.util.RequestPermission
+import com.emotionstorage.ui.util.RequestPermissionEvent
 import com.orhanobut.logger.Logger
 import java.time.DayOfWeek
 
@@ -69,8 +70,9 @@ fun NotificationSettingScreen(
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         // request run time permission, if build version >= 33
-        RequestPermissionOnResume(
+        RequestPermission(
             permission = Manifest.permission.POST_NOTIFICATIONS,
+            onEvent = RequestPermissionEvent.ON_RESUME,
             onPermissionDenied = { showRationale ->
                 if (!showRationale) {
                     Logger.d("Notification permission denied permanently, open permission bottom sheet")

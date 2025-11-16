@@ -44,7 +44,8 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.RequestPermissionOnResume
+import com.emotionstorage.ui.util.RequestPermission
+import com.emotionstorage.ui.util.RequestPermissionEvent
 
 @Composable
 fun HomeScreen(
@@ -84,7 +85,7 @@ fun HomeScreen(
     }
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        RequestPermissionOnResume(
+        RequestPermission(
             permission = Manifest.permission.POST_NOTIFICATIONS
         )
     }

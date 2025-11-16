@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,12 +24,12 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleStartEffect
 import com.emotionstorage.tutorial.R
 import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.RequestPermissionOnResume
+import com.emotionstorage.ui.util.RequestPermission
+import com.emotionstorage.ui.util.RequestPermissionEvent
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
 private const val TUTORIAL_PAGE_COUNT = 4
@@ -41,7 +40,7 @@ fun TutorialScreen(
     navToLogin: () -> Unit = {},
 ) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        RequestPermissionOnResume(
+        RequestPermission(
             permission = Manifest.permission.POST_NOTIFICATIONS
         )
     }
