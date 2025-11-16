@@ -1,5 +1,7 @@
 package com.emotionstorage.my.ui.notificationSettings
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,13 +39,13 @@ import com.emotionstorage.my.ui.notificationSettings.component.RequestPermission
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.emotionstorage.ui.util.RequestPermissionOnResume
 import com.orhanobut.logger.Logger
 import java.time.DayOfWeek
 
 enum class Sheet { None, Permission, TimePicker }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationSettingScreen(
     viewModel: NotificationSettingViewModel = hiltViewModel(),
@@ -51,6 +53,9 @@ fun NotificationSettingScreen(
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState()
+    var activeSheet by remember {
+        mutableStateOf(Sheet.None)
+    }
 
     var prevSystemEnabled by remember {
         mutableStateOf(
@@ -62,26 +67,46 @@ fun NotificationSettingScreen(
             NotificationManagerCompat.from(context).areNotificationsEnabled(),
         )
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        // request run time permission, if build version >= 33
+        RequestPermissionOnResume(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+            onPermissionDenied = { showRationale ->
+                if (!showRationale) {
+                    Logger.d("Notification permission denied permanently, open permission bottom sheet")
+                    viewModel.setAppPush(on = false)
+                    activeSheet = Sheet.Permission
+                }
+            },
+        )
+    } else {
+        if(!systemEnabled) {
+            Logger.d("Notification system permission denied, open permission bottom sheet")
+            viewModel.setAppPush(on = false)
+            activeSheet = Sheet.Permission
+        }
+    }
+
     LifecycleResumeEffect("onResume") {
         systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
         Logger.d("systemEnabled: $systemEnabled, prevSystemEnabled: $prevSystemEnabled")
 
         if (systemEnabled) {
             if (prevSystemEnabled != systemEnabled) {
-                // todo: turn on notifications
-            } else {
-                // todo: init notifications
+                // turn on notifications, if permission is newly granted
+                Logger.d("turn on notifications")
+                viewModel.setAppPush(on = true)
             }
         } else {
-            // todo: turn off notifications
+            if (prevSystemEnabled != systemEnabled) {
+                // turn off notifications, if permission is newly denied
+                Logger.d("turn off notifications")
+                viewModel.setAppPush(on = false)
+            }
         }
         onPauseOrDispose {
             prevSystemEnabled = systemEnabled
         }
-    }
-
-    var activeSheet by remember {
-        mutableStateOf(if (systemEnabled) Sheet.None else Sheet.Permission)
     }
 
     StatelessNotificationSettingScreen(
