@@ -11,15 +11,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
 @Composable
-fun LoadingOverlay(
-    modifier: Modifier = Modifier
-) {
+fun LoadingOverlay(modifier: Modifier = Modifier) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .zIndex(20f)
-            .background(color = Color.Black.copy(alpha = 0.7f)),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxSize()
+                .zIndex(20f)
+                .background(color = Color.Black.copy(alpha = 0.7f)),
+        contentAlignment = Alignment.Center,
     ) {
         LoadingDots(
             dotSize = 13.dp,

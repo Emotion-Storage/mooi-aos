@@ -108,7 +108,7 @@ fun ChatMessageList(
                     ) {
                         LoadingDots(
                             modifier =
-                                Modifier.padding(horizontal = 19.5.dp, vertical = 18.5.dp)
+                                Modifier.padding(horizontal = 19.5.dp, vertical = 18.5.dp),
                         )
                     }
                 }
