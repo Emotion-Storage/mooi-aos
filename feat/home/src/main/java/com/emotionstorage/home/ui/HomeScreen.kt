@@ -59,7 +59,7 @@ fun HomeScreen(
     bottomAppBar: @Composable (() -> Unit) = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (Long, Boolean) -> Unit = { _, _ -> },
+    navToDailyReport: (Long) -> Unit = {  },
     navToChat: (Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
@@ -124,7 +124,7 @@ private fun StatelessHomeScreen(
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (id: Long, isNewDailyReport: Boolean) -> Unit = { _, _ -> },
+    navToDailyReport: (id: Long) -> Unit = {  },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
@@ -221,7 +221,7 @@ private fun StatelessHomeScreen(
                                 Modifier
                                     .size(30.dp)
                                     .clickable {
-                                        navToDailyReport(this, true)
+                                        navToDailyReport(this)
                                     },
                             painter = painterResource(id = R.drawable.ic_daily_report_new),
                             contentDescription = "new daily report arrived",

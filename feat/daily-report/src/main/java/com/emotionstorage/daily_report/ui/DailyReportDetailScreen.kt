@@ -46,14 +46,13 @@ import java.time.LocalDateTime
 @Composable
 fun DailyReportDetailScreen(
     id: Long,
-    isNewDailyReport: Boolean,
     modifier: Modifier = Modifier,
     viewModel: DailyReportDetailViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-    LaunchedEffect(id, isNewDailyReport) {
-        viewModel.onAction(DailyReportDetailAction.Init(id, isNewDailyReport))
+    LaunchedEffect(id) {
+        viewModel.onAction(DailyReportDetailAction.Init(id))
     }
 
     val (showErrorModal, setShowErrorModal) =

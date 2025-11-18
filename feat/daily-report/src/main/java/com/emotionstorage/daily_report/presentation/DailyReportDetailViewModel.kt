@@ -13,14 +13,12 @@ import javax.inject.Inject
 
 data class DailyReportDetailState(
     val isLoading: Boolean = true,
-    val id: Long? = null,
     val dailyReport: DailyReport? = null,
 )
 
 sealed class DailyReportDetailAction {
     data class Init(
         val id: Long,
-        val isNew: Boolean = false,
     ) : DailyReportDetailAction()
 }
 
