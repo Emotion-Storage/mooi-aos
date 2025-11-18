@@ -214,17 +214,19 @@ private fun StatelessHomeScreen(
                         contentDescription = "new time capsule arrived",
                     )
                 }
-                if (state.newReportArrived && state.newReportId != null) {
-                    Image(
-                        modifier =
-                            Modifier
-                                .size(30.dp)
-                                .clickable {
-                                    navToDailyReport(state.newReportId!!, true)
-                                },
-                        painter = painterResource(id = R.drawable.ic_daily_report_new),
-                        contentDescription = "new daily report arrived",
-                    )
+                if (state.newReportArrived) {
+                    state.newReportId?.run {
+                        Image(
+                            modifier =
+                                Modifier
+                                    .size(30.dp)
+                                    .clickable {
+                                        navToDailyReport(this, true)
+                                    },
+                            painter = painterResource(id = R.drawable.ic_daily_report_new),
+                            contentDescription = "new daily report arrived",
+                        )
+                    }
                 }
             }
 
@@ -311,7 +313,8 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
