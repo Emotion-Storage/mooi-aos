@@ -51,7 +51,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.bottomSheet.DatePickerBottomSheet
-import com.emotionstorage.ui.component.FullLoadingScreen
+import com.emotionstorage.ui.component.loading.FullLoadingScreen
 import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet

@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui.component
+package com.emotionstorage.ui.component.loading
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun MessageIncomeLoading() {
+fun LoadingDots() {
     val transition = rememberInfiniteTransition(label = "typing")
     val a1 by transition.animateFloat(
         initialValue = 0.5f,
@@ -69,8 +69,8 @@ fun MessageIncomeLoading() {
 
 @Preview
 @Composable
-private fun MessageIncomeLoadingPreview() {
+private fun LodaingDotsPreview() {
     MooiTheme {
-        MessageIncomeLoading()
+        LoadingDots()
     }
 }
