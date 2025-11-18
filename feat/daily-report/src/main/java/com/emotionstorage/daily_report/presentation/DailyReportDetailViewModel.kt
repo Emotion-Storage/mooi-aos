@@ -35,7 +35,8 @@ class DailyReportDetailViewModel @Inject constructor(
     private val openDailyReport: OpenDailyReportUseCase,
 ) : ViewModel(),
     ContainerHost<DailyReportDetailState, DailyReportDetailSideEffect> {
-    override val container: Container<DailyReportDetailState, DailyReportDetailSideEffect> = container(DailyReportDetailState())
+    override val container: Container<DailyReportDetailState, DailyReportDetailSideEffect> =
+        container(DailyReportDetailState())
 
     fun onAction(action: DailyReportDetailAction) {
         when (action) {
