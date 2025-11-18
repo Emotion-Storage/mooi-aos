@@ -38,7 +38,7 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-private fun FullLoadingScreenPreview() {
+private fun LoadingScreenPreview() {
     MooiTheme {
         LoadingScreen()
     }

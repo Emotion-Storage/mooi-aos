@@ -72,7 +72,7 @@ fun LoadingDots(
 
 @Preview
 @Composable
-private fun LodaingDotsPreview() {
+private fun LoadingDotsPreview() {
     MooiTheme {
         LoadingDots()
     }
