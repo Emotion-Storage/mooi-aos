@@ -247,7 +247,7 @@ class CalendarViewModel @Inject constructor(
                             isNewDailyReport = false,
                         )
                     }
-                }
+                },
             )
         }
 

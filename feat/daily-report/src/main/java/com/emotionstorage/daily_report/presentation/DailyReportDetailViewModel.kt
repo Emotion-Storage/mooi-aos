@@ -29,8 +29,7 @@ sealed class DailyReportDetailAction {
 class DailyReportDetailViewModel @Inject constructor(
     private val getDailyReportById: GetDailyReportByIdUseCase,
     private val openDailyReport: OpenDailyReportUseCase,
-) :
-    ViewModel(),
+) : ViewModel(),
     ContainerHost<DailyReportDetailState, Nothing> {
     override val container: Container<DailyReportDetailState, Nothing> = container(DailyReportDetailState())
 
@@ -61,11 +60,12 @@ class DailyReportDetailViewModel @Inject constructor(
                     reduce {
                         state.copy(dailyReport = null)
                     }
-                }
+                },
             )
         }
 
-    private suspend fun openNewReport(id: Long) = subIntent {
-        openDailyReport.invoke(id)
-    }
+    private suspend fun openNewReport(id: Long) =
+        subIntent {
+            openDailyReport.invoke(id)
+        }
 }

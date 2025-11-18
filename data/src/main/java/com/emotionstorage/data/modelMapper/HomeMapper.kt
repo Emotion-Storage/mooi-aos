@@ -12,6 +12,6 @@ object HomeMapper {
             hasNewNotification = entity.hasNewNotification,
             hasNewTimeCapsule = entity.hasNewTimeCapsule,
             hasNewReport = entity.hasNewReport,
-            newReportId = entity.newReportId
+            newReportId = entity.newReportId,
         )
 }

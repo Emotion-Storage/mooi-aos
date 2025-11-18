@@ -8,6 +8,5 @@ import javax.inject.Inject
 class GetDailyReportByIdUseCase @Inject constructor(
     private val dailyReportRepository: DailyReportRepository,
 ) {
-    suspend operator fun invoke(id: Long): DataState<DailyReport> =
-        dailyReportRepository.getDailyReport(id)
+    suspend operator fun invoke(id: Long): DataState<DailyReport> = dailyReportRepository.getDailyReport(id)
 }

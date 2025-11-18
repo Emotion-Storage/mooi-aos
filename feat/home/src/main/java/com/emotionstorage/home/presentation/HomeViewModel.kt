@@ -122,7 +122,7 @@ class HomeViewModel
                 collectDataState(
                     flow = getChatRoomId(),
                     onLoading = {
-                        reduce{
+                        reduce {
                             state.copy(isEnterChatLoading = it)
                         }
                     },

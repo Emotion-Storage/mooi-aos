@@ -12,6 +12,6 @@ object HomeMapper {
             hasNewNotification = remote.hasNewNotification,
             hasNewTimeCapsule = remote.hasNewTimeCapsule,
             hasNewReport = remote.hasNewReport,
-            newReportId = remote.reportId
+            newReportId = remote.reportId,
         )
 }

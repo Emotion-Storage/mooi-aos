@@ -42,10 +42,10 @@ class DailyReportRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun openDailyReport(id: Long): Boolean {
-        try{
+        try {
             apiService.patchDailyReportOpen(id)
             return true
-        }catch (e: Exception){
+        } catch (e: Exception) {
             throw Exception("openDailyReport api fail", e)
         }
     }

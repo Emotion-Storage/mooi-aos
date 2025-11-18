@@ -7,5 +7,5 @@ data class Home(
     val hasNewNotification: Boolean,
     val hasNewTimeCapsule: Boolean,
     val hasNewReport: Boolean,
-    val newReportId: Long? = null
+    val newReportId: Long? = null,
 )

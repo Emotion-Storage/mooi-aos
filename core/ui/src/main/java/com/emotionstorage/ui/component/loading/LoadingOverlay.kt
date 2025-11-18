@@ -19,7 +19,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun LoadingOverlay(
     modifier: Modifier = Modifier,
-    delayDuration: Long = 1500L
+    delayDuration: Long = 1500L,
 ) {
     var showOverlay by remember { mutableStateOf(false) }
     LaunchedEffect("init") {
