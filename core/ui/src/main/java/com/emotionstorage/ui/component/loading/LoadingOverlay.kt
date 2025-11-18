@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
 @Composable
@@ -20,6 +21,9 @@ fun LoadingOverlay(
             .background(color = Color.Black.copy(alpha = 0.7f)),
         contentAlignment = Alignment.Center
     ) {
-        LoadingDots()
+        LoadingDots(
+            dotSize = 13.dp,
+            dotSpacing = 10.dp,
+        )
     }
 }

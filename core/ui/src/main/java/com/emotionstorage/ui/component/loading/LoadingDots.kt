@@ -6,6 +6,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,11 +20,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun LoadingDots() {
+fun LoadingDots(
+    modifier: Modifier = Modifier,
+    dotSize: Dp = 5.dp,
+    dotSpacing: Dp = 5.dp,
+) {
     val transition = rememberInfiniteTransition(label = "typing")
     val a1 by transition.animateFloat(
         initialValue = 0.5f,
@@ -45,9 +51,9 @@ fun LoadingDots() {
     )
 
     Row(
-        Modifier
-            .padding(horizontal = 19.5.dp, vertical = 18.5.dp),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(dotSpacing),
     ) {
         repeat(3) { idx ->
             val alpha =
@@ -58,11 +64,10 @@ fun LoadingDots() {
                 }
             Box(
                 Modifier
-                    .size(5.dp)
+                    .size(dotSize)
                     .clip(CircleShape)
                     .background(Color(0xFFD9D9D9).copy(alpha = alpha)),
             )
-            if (idx != 2) Spacer(Modifier.size(5.dp))
         }
     }
 }
