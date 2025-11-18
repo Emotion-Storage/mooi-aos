@@ -24,14 +24,18 @@ sealed class DailyReportDetailAction {
     ) : DailyReportDetailAction()
 }
 
+sealed class DailyReportDetailSideEffect {
+    object ShowDailyReportError : DailyReportDetailSideEffect()
+}
+
 @OptIn(OrbitExperimental::class)
 @HiltViewModel
 class DailyReportDetailViewModel @Inject constructor(
     private val getDailyReportById: GetDailyReportByIdUseCase,
     private val openDailyReport: OpenDailyReportUseCase,
 ) : ViewModel(),
-    ContainerHost<DailyReportDetailState, Nothing> {
-    override val container: Container<DailyReportDetailState, Nothing> = container(DailyReportDetailState())
+    ContainerHost<DailyReportDetailState, DailyReportDetailSideEffect> {
+    override val container: Container<DailyReportDetailState, DailyReportDetailSideEffect> = container(DailyReportDetailState())
 
     fun onAction(action: DailyReportDetailAction) {
         when (action) {
@@ -56,10 +60,10 @@ class DailyReportDetailViewModel @Inject constructor(
                     if (!it.isOpen) openNewReport(id)
                 },
                 onError = { throwable, _ ->
-                    // todo: post daily report get error side effect
                     reduce {
                         state.copy(dailyReport = null)
                     }
+                    postSideEffect(DailyReportDetailSideEffect.ShowDailyReportError)
                 },
             )
         }

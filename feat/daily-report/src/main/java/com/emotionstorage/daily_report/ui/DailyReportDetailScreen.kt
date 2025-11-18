@@ -16,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.daily_report.presentation.DailyReportDetailAction
+import com.emotionstorage.daily_report.presentation.DailyReportDetailSideEffect
 import com.emotionstorage.daily_report.presentation.DailyReportDetailViewModel
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionLog
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionScores
@@ -34,6 +37,7 @@ import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
+import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -52,7 +56,30 @@ fun DailyReportDetailScreen(
         viewModel.onAction(DailyReportDetailAction.Init(id, isNewDailyReport))
     }
 
-    // todo: add daily report get error popup
+    val (showErrorModal, setShowErrorModal) = remember {
+        mutableStateOf(false)
+    }
+    LaunchedEffect("init") {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                DailyReportDetailSideEffect.ShowDailyReportError -> {
+                    setShowErrorModal(true)
+                }
+            }
+        }
+    }
+
+    if(showErrorModal){
+        Modal(
+            title = "해당 페이지에 접근할 수 없어요.",
+            onDismissRequest = {},
+            confirmLabel = "돌아가기",
+            onConfirm = {
+                setShowErrorModal(false)
+                navToBack()
+            },
+        )
+    }
 
     if (state.value.isLoading || state.value.dailyReport == null) {
         LoadingScreen()
@@ -138,7 +165,8 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            ).padding(vertical = 15.dp, horizontal = 38.dp),
+                            )
+                            .padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
