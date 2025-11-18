@@ -2,6 +2,7 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.FcmRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.HomeRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.MyPageRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.NotificationSettingRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
