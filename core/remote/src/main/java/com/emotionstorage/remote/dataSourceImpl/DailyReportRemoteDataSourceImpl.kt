@@ -26,4 +26,18 @@ class DailyReportRemoteDataSourceImpl @Inject constructor(
             throw Exception("getDailyReport api fail", e)
         }
     }
+
+    override suspend fun getDailyReport(id: Long): DailyReportEntity {
+        try {
+            val response =
+                apiService.getDailyReport(id)
+            if (response.data != null) {
+                return DailyReportResponseMapper.toData(response.data!!)
+            } else {
+                throw Exception("getDailyReport response data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("getDailyReport api fail", e)
+        }
+    }
 }

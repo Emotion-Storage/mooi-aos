@@ -11,4 +11,9 @@ interface DailyReportApiService {
         // yyyy-MM-dd
         @Query(value = "date") date: String,
     ): ResponseDto<GetDailyReportResponse>
+
+    @GET("api/v1/daily-report/{report-id}")
+    suspend fun getDailyReport(
+        @Query(value = "report-id") id: Long,
+    ): ResponseDto<GetDailyReportResponse>
 }

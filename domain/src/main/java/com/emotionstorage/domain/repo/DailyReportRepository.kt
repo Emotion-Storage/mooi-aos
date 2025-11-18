@@ -7,4 +7,5 @@ import java.time.LocalDate
 
 interface DailyReportRepository {
     suspend fun getDailyReport(date: LocalDate): DataState<DailyReport>
+    suspend fun getDailyReport(id: Long): DataState<DailyReport>
 }

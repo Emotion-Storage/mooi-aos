@@ -13,21 +13,26 @@ import javax.inject.Inject
 class DailyReportRepositoryImpl @Inject constructor(
     private val remoteDataSource: DailyReportRemoteDataSource,
 ) : DailyReportRepository {
-    override suspend fun getDailyReport(date: LocalDate): Flow<DataState<DailyReport>> =
-        flow {
-            emit(DataState.Loading(isLoading = true))
-            try {
-                emit(
-                    remoteDataSource.getDailyReport(date).run {
-                        DataState.Success(
-                            DailyReportMapper.toDomain(this),
-                        )
-                    },
+    override suspend fun getDailyReport(date: LocalDate): DataState<DailyReport> =
+        try {
+            remoteDataSource.getDailyReport(date).run {
+                DataState.Success(
+                    DailyReportMapper.toDomain(this),
                 )
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(isLoading = false))
             }
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+
+
+    override suspend fun getDailyReport(id: Long): DataState<DailyReport> =
+        try {
+            remoteDataSource.getDailyReport(id).run {
+                DataState.Success(
+                    DailyReportMapper.toDomain(this),
+                )
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
 }
