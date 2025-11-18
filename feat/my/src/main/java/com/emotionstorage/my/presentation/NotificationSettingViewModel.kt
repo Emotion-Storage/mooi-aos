@@ -50,7 +50,7 @@ class NotificationSettingViewModel @Inject constructor(
             updateSettings(
                 emotionReminderNotify = true,
                 emotionReminderDays = DayOfWeek.entries.toSet(),
-                emotionReminderTime = LocalTime.of(21, 0)
+                emotionReminderTime = LocalTime.of(21, 0),
             )
         } else {
             updateSettings(
@@ -83,29 +83,31 @@ class NotificationSettingViewModel @Inject constructor(
     ) {
         _state.update { it.copy(isLoading = true) }
 
-        val newState = NotificationSettingState(
-            isLoading = false,
-            appPushNotify = appPushNotify ?: state.value.appPushNotify,
-            emotionReminderNotify = emotionReminderNotify ?: state.value.emotionReminderNotify,
-            emotionReminderDays = emotionReminderDays ?: state.value.emotionReminderDays,
-            emotionReminderTime = emotionReminderTime ?: state.value.emotionReminderTime,
-            timeCapsuleReportNotify = timeCapsuleReportNotify ?: state.value.timeCapsuleReportNotify,
-            marketingInfoNotify = marketingInfoNotify ?: state.value.marketingInfoNotify,
-        )
-        viewModelScope.launch {
-            updateNotificationSettings(
-                NotificationSettings(
-                    appPushNotify = newState.appPushNotify,
-                    emotionReminderNotify = newState.emotionReminderNotify,
-                    emotionReminderDays = newState.emotionReminderDays,
-                    emotionReminderTime = newState.emotionReminderTime,
-                    timeCapsuleReportNotify = newState.timeCapsuleReportNotify,
-                    marketingInfoNotify = newState.marketingInfoNotify,
-                ),
+        val newState =
+            NotificationSettingState(
+                isLoading = false,
+                appPushNotify = appPushNotify ?: state.value.appPushNotify,
+                emotionReminderNotify = emotionReminderNotify ?: state.value.emotionReminderNotify,
+                emotionReminderDays = emotionReminderDays ?: state.value.emotionReminderDays,
+                emotionReminderTime = emotionReminderTime ?: state.value.emotionReminderTime,
+                timeCapsuleReportNotify = timeCapsuleReportNotify ?: state.value.timeCapsuleReportNotify,
+                marketingInfoNotify = marketingInfoNotify ?: state.value.marketingInfoNotify,
             )
-        }.invokeOnCompletion {
-            _state.update { newState }
-        }
+        viewModelScope
+            .launch {
+                updateNotificationSettings(
+                    NotificationSettings(
+                        appPushNotify = newState.appPushNotify,
+                        emotionReminderNotify = newState.emotionReminderNotify,
+                        emotionReminderDays = newState.emotionReminderDays,
+                        emotionReminderTime = newState.emotionReminderTime,
+                        timeCapsuleReportNotify = newState.timeCapsuleReportNotify,
+                        marketingInfoNotify = newState.marketingInfoNotify,
+                    ),
+                )
+            }.invokeOnCompletion {
+                _state.update { newState }
+            }
     }
 }
 
