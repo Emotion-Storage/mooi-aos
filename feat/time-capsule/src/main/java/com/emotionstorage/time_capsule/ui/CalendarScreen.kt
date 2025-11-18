@@ -63,7 +63,7 @@ fun CalendarScreen(
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToDailyReportDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long, isNewDailyReport: Boolean) -> Unit = { _, _ -> },
     navToAIChat: (roomId: Long) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -133,7 +133,7 @@ private fun StatelessCalendarScreen(
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToDailyReportDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long, isNewDailyReport: Boolean) -> Unit = { _, _ -> },
 ) {
     Scaffold(
         modifier =
@@ -280,7 +280,7 @@ private fun StatelessCalendarScreen(
                         state.dailyReportId?.run {
                             {
                                 setShowTimeCapsuleBottomSheet(false)
-                                navToDailyReportDetail(this)
+                                navToDailyReportDetail(this, state.isNewDailyReport)
                             }
                         },
                     isNewDailyReport = state.isNewDailyReport,
@@ -352,7 +352,8 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
+                    }
+                    .height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

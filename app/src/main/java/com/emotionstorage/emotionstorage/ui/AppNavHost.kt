@@ -108,6 +108,7 @@ internal sealed class AppDestination {
     @Serializable
     data class DailyReportDetail(
         val id: Long,
+        val isNewDailyReport: Boolean,
     ) : AppDestination()
 
     @Serializable
@@ -253,8 +254,8 @@ internal fun AppNavHost(
                 navToAlarm = {
                     navController.navigate(AppDestination.PushNotification)
                 },
-                navToDailyReport = { id ->
-                    navController.navigate(AppDestination.DailyReportDetail(id))
+                navToDailyReport = { id, isNew ->
+                    navController.navigate(AppDestination.DailyReportDetail(id, isNew))
                 },
             )
         }
@@ -273,8 +274,8 @@ internal fun AppNavHost(
                 navToTimeCapsuleDetail = { id ->
                     navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
                 },
-                navToDailyReportDetail = { id ->
-                    navController.navigate(AppDestination.DailyReportDetail(id))
+                navToDailyReportDetail = { id, isNew ->
+                    navController.navigate(AppDestination.DailyReportDetail(id, isNew))
                 },
                 navToAIChat = { roomId ->
                     navController.navigate(AppDestination.AIChat(roomId))
@@ -401,6 +402,7 @@ internal fun AppNavHost(
             val arguments = navBackStackEntry.toRoute<AppDestination.DailyReportDetail>()
             DailyReportDetailScreen(
                 id = arguments.id,
+                isNewDailyReport = arguments.isNewDailyReport,
                 navToBack = {
                     navController.popBackStack()
                 },

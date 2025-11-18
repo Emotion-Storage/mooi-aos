@@ -194,10 +194,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarDate(date: LocalDate) =
         intent {
-            if (date !in state.timeCapsuleDates) {
-                Logger.d("Cannot select date: $date")
-                return@intent
-            }
+            require(date in state.timeCapsuleDates)
 
             reduce {
                 state.copy(calendarDate = date)
