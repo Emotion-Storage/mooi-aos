@@ -34,8 +34,8 @@ data class CalendarState(
     val madeTimeCapsuleToday: Boolean = false,
     // calendar states
     val calendarYearMonth: YearMonth = YearMonth.now(),
-    val timeCapsuleDates: List<LocalDate> = emptyList(),
-    val calendarDate: LocalDate? = null,
+    val calendarTimeCapsuleDates: List<LocalDate> = emptyList(),
+    val calendarSelectedDate: LocalDate? = null,
     // bottom sheet states
     val timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
     val dailyReportId: Long? = null,
@@ -129,7 +129,7 @@ class CalendarViewModel @Inject constructor(
             handleSelectCalendarYearMonth(YearMonth.from(LocalDate.now()))
 
             // show bottom sheet if calendarDate is not null
-            if (state.calendarDate != null) {
+            if (state.calendarSelectedDate != null) {
                 postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
             }
         }
@@ -176,7 +176,7 @@ class CalendarViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             calendarYearMonth = yearMonth,
-                            timeCapsuleDates = data,
+                            calendarTimeCapsuleDates = data,
                         )
                     }
                 },
@@ -185,7 +185,7 @@ class CalendarViewModel @Inject constructor(
                     reduce {
                         state.copy(
                             calendarYearMonth = yearMonth,
-                            timeCapsuleDates = emptyList(),
+                            calendarTimeCapsuleDates = emptyList(),
                         )
                     }
                 },
@@ -194,13 +194,10 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarDate(date: LocalDate) =
         intent {
-            if (date !in state.timeCapsuleDates) {
-                Logger.d("Cannot select date: $date")
-                return@intent
-            }
+            require(date in state.calendarTimeCapsuleDates)
 
             reduce {
-                state.copy(calendarDate = date)
+                state.copy(calendarSelectedDate = date)
             }
             setTimeCapsulesFlow(date)
             setDailyReportState(date)
@@ -233,8 +230,7 @@ class CalendarViewModel @Inject constructor(
 
     private suspend fun setDailyReportState(date: LocalDate) =
         subIntent {
-            collectDataState(
-                flow = getDailyReportOfDate(date),
+            getDailyReportOfDate(date).handle(
                 onSuccess = { data ->
                     reduce {
                         state.copy(
@@ -275,7 +271,7 @@ class CalendarViewModel @Inject constructor(
             // clear bottom sheet states
             reduce {
                 state.copy(
-                    calendarDate = null,
+                    calendarSelectedDate = null,
                     timeCapsulesFlow = null,
                     dailyReportId = null,
                     isNewDailyReport = false,

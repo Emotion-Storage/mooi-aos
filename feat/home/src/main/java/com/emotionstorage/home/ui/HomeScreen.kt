@@ -47,6 +47,7 @@ import com.emotionstorage.home.ui.component.AttendanceRewardDialog
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
 
@@ -55,11 +56,11 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     attendanceViewModel: AttendanceViewModel = hiltViewModel(),
-    bottomAppBar: @Composable () -> Unit = {},
+    bottomAppBar: @Composable (() -> Unit) = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (id: String) -> Unit = {},
-    navToChat: (roomId: Long) -> Unit = {},
+    navToDailyReport: (Long) -> Unit = { },
+    navToChat: (Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -82,6 +83,7 @@ fun HomeScreen(
     LifecycleResumeEffect("onResume") {
         // show attendance dialog, if needed
         attendanceViewModel.tryShowOnce()
+
         // init screen state on resume
         viewModel.onAction(HomeAction.Initiate)
         onPauseOrDispose {}
@@ -122,7 +124,7 @@ private fun StatelessHomeScreen(
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (id: String) -> Unit = {},
+    navToDailyReport: (id: Long) -> Unit = { },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
@@ -147,7 +149,7 @@ private fun StatelessHomeScreen(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth(),
                 painter = painterResource(id = R.drawable.graphic_home_bg),
-                contentDescription = "background graphic image",
+                contentDescription = null,
             )
             Image(
                 modifier =
@@ -157,8 +159,13 @@ private fun StatelessHomeScreen(
                         .size(245.dp, 198.dp)
                         .offset(y = -36.dp),
                 painter = painterResource(id = R.drawable.graphic_home_mooi),
-                contentDescription = "background graphic image",
+                contentDescription = null,
             )
+
+            // loading overlay
+            if (state.isNicknameLoading || state.isHomeLoading || state.isEnterChatLoading) {
+                LoadingOverlay()
+            }
 
             // icons
             Column(
@@ -208,13 +215,18 @@ private fun StatelessHomeScreen(
                     )
                 }
                 if (state.newReportArrived) {
-                    // todo: navigate to daily report detail screen
-                    // todo: get most recently arrived daily report id
-                    Image(
-                        modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.ic_daily_report_new),
-                        contentDescription = "new daily report arrived",
-                    )
+                    state.newReportId?.run {
+                        Image(
+                            modifier =
+                                Modifier
+                                    .size(30.dp)
+                                    .clickable {
+                                        navToDailyReport(this)
+                                    },
+                            painter = painterResource(id = R.drawable.ic_daily_report_new),
+                            contentDescription = "new daily report arrived",
+                        )
+                    }
                 }
             }
 
@@ -279,7 +291,7 @@ private fun StatelessHomeScreen(
                             color = MooiTheme.colorScheme.secondary,
                         )
                         Text(
-                            text = "${state.ticketCount}/10",
+                            text = "${state.ticketCount}/${state.ticketLimit}",
                             style = MooiTheme.typography.body7,
                             color = MooiTheme.colorScheme.secondary,
                         )

@@ -1,9 +1,9 @@
-package com.emotionstorage.home.remote.dataSourceImpl
+package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.home.data.dataSource.HomeRemoteDataSource
-import com.emotionstorage.home.data.model.HomeEntity
-import com.emotionstorage.home.remote.api.HomeApiService
-import com.emotionstorage.home.remote.modelMapper.HomeMapper
+import com.emotionstorage.data.dataSource.remote.HomeRemoteDataSource
+import com.emotionstorage.data.model.HomeEntity
+import com.emotionstorage.remote.api.HomeApiService
+import com.emotionstorage.remote.modelMapper.HomeMapper
 import javax.inject.Inject
 
 class HomeRemoteDataSourceImpl
