@@ -1,5 +1,6 @@
 package com.emotionstorage.ai_chat.ui.component
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

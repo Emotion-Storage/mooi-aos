@@ -138,7 +138,7 @@ private fun StatelessAIChatDescriptionScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.ai_chat_graphic),
+                    painter = painterResource(id = R.drawable.graphic_ai_chat),
                     contentDescription = null,
                     modifier =
                         Modifier
