@@ -152,7 +152,7 @@ private fun StatelessHomeScreen(
                 ) {
                     IconWithCount(
                         modifier = Modifier.size(32.dp),
-                        iconId = R.drawable.key,
+                        iconId = R.drawable.ic_key,
                         count = state.keyCount,
                         onClick = navToKey,
                     )
@@ -165,7 +165,7 @@ private fun StatelessHomeScreen(
                                 },
                         painter =
                             painterResource(
-                                id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
+                                id = if (state.newNotificationArrived) R.drawable.ic_alarm_new else R.drawable.ic_alarm,
                             ),
                         contentDescription = "alarm",
                     )
@@ -178,7 +178,7 @@ private fun StatelessHomeScreen(
                                 .clickable {
                                     navToArrivedTimeCapsules()
                                 },
-                        painter = painterResource(id = R.drawable.time_capsule_new),
+                        painter = painterResource(id = R.drawable.ic_time_capsule_new),
                         contentDescription = "new time capsule arrived",
                     )
                 }
@@ -187,7 +187,7 @@ private fun StatelessHomeScreen(
                     // todo: get most recently arrived daily report id
                     Image(
                         modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.daily_report_new),
+                        painter = painterResource(id = R.drawable.ic_daily_report_new),
                         contentDescription = "new daily report arrived",
                     )
                 }
@@ -242,7 +242,7 @@ private fun StatelessHomeScreen(
                     ) {
                         Image(
                             modifier = Modifier.size(18.dp),
-                            painter = painterResource(id = R.drawable.ticket),
+                            painter = painterResource(id = R.drawable.ic_ticket),
                             contentDescription = "ticket",
                             colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondary),
                         )
@@ -294,7 +294,7 @@ private fun StartChatButton(
                 )
                 Image(
                     modifier = Modifier.size(18.dp),
-                    painter = painterResource(id = R.drawable.ticket),
+                    painter = painterResource(id = R.drawable.ic_ticket),
                     contentDescription = "ticket",
                     colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
                 )

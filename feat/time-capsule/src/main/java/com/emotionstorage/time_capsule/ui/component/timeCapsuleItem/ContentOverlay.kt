@@ -72,7 +72,7 @@ private fun LockedContentOverLay(
         ) {
             Image(
                 modifier = Modifier.size(17.dp, 20.dp),
-                painter = painterResource(id = R.drawable.lock),
+                painter = painterResource(id = R.drawable.ic_lock),
                 contentDescription = "lock",
             )
             Box(
@@ -124,7 +124,7 @@ private fun ArrivedContentOverLay(
         ) {
             Image(
                 modifier = Modifier.size(17.dp, 20.dp),
-                painter = painterResource(id = R.drawable.lock),
+                painter = painterResource(id = R.drawable.ic_lock),
                 contentDescription = "arrived",
             )
             Box(

@@ -142,7 +142,7 @@ private fun CtaButtonPreview() {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(
                         modifier = Modifier.size(20.dp),
-                        painter = painterResource(id = R.drawable.alarm),
+                        painter = painterResource(id = R.drawable.ic_alarm),
                         contentDescription = "alarm",
                     )
                     Text(

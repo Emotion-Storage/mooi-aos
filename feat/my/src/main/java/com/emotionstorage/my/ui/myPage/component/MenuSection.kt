@@ -140,7 +140,7 @@ fun MenuItem(
 
         if (showArrow) {
             Image(
-                painter = painterResource(R.drawable.arrow_front),
+                painter = painterResource(R.drawable.ic_arrow_front),
                 contentDescription = "상세 보기",
             )
         }
@@ -179,7 +179,7 @@ fun EmailMenuItem(
         }
 
         Image(
-            painterResource(R.drawable.clipboard),
+            painterResource(R.drawable.ic_clipboard),
             contentDescription = "복사",
             modifier =
                 Modifier

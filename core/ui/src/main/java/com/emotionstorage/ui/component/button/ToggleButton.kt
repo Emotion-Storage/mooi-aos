@@ -33,7 +33,7 @@ fun ToggleButton(
             ),
         painter =
             painterResource(
-                if (isSelected) R.drawable.checkbox_on else R.drawable.checkbox_off,
+                if (isSelected) R.drawable.ic_checkbox_on else R.drawable.ic_checkbox_off,
             ),
         contentDescription = contentDescription,
     )

@@ -52,7 +52,7 @@ fun KeyCard(
                     ).padding(start = 16.dp, end = 16.dp),
         ) {
             Image(
-                painter = painterResource(R.drawable.key_white),
+                painter = painterResource(R.drawable.ic_key_white),
                 contentDescription = "열쇠",
                 modifier =
                     Modifier
@@ -81,7 +81,7 @@ fun KeyCard(
             Spacer(modifier = Modifier.size(6.dp))
 
             Image(
-                painter = painterResource(R.drawable.arrow_front),
+                painter = painterResource(R.drawable.ic_arrow_front),
                 contentDescription = "열쇠 갯수 확인",
                 modifier =
                     Modifier

@@ -128,7 +128,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     verticalAlignment = Alignment.Top,
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.favorite_filled),
+                        painter = painterResource(id = R.drawable.ic_favorite_filled),
                         modifier =
                             Modifier
                                 .width(11.dp)

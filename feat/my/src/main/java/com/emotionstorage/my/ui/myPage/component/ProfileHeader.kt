@@ -42,7 +42,7 @@ fun ProfileHeader(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Image(
-            painterResource(R.drawable.my_profile),
+            painterResource(R.drawable.graphic_profile),
             contentDescription = "프로필 이미지",
             modifier =
                 Modifier
@@ -99,7 +99,7 @@ fun ProfileHeader(
                 Spacer(modifier = Modifier.size(2.dp))
 
                 Image(
-                    painterResource(R.drawable.edit),
+                    painterResource(R.drawable.ic_edit),
                     contentDescription = "수정",
                     modifier =
                         Modifier

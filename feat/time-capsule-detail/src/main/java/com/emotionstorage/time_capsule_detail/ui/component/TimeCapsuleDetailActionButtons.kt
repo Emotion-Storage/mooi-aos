@@ -151,7 +151,7 @@ private fun DeleteTimeCapsuleButton(
     ) {
         Image(
             modifier = Modifier.size(13.dp, 14.dp),
-            painter = painterResource(id = R.drawable.trash),
+            painter = painterResource(id = R.drawable.ic_trash),
             contentDescription = "delete",
         )
         Text(

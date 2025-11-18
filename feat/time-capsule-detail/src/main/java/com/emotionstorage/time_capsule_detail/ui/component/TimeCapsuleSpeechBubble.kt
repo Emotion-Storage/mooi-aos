@@ -44,7 +44,7 @@ fun TimeCapsuleSpeechBubble(
             ) {
                 Image(
                     modifier = Modifier.size(11.dp, 14.dp),
-                    painter = painterResource(R.drawable.lock),
+                    painter = painterResource(R.drawable.ic_lock),
                     contentDescription = "",
                     colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary),
                 )
@@ -76,7 +76,7 @@ fun TimeCapsuleSpeechBubble(
                     ) {
                         Image(
                             modifier = Modifier.size(12.dp),
-                            painter = painterResource(R.drawable.pencil),
+                            painter = painterResource(R.drawable.ic_pencil),
                             contentDescription = "",
                         )
                         Text(
@@ -93,7 +93,7 @@ fun TimeCapsuleSpeechBubble(
                 ) {
                     Image(
                         modifier = Modifier.size(14.dp),
-                        painter = painterResource(R.drawable.clock),
+                        painter = painterResource(R.drawable.ic_clock),
                         contentDescription = "",
                     )
                     Text(

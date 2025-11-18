@@ -47,7 +47,7 @@ fun InfoHeader(
                 ) {
                     Image(
                         modifier = Modifier.size(16.dp),
-                        painter = painterResource(R.drawable.caution),
+                        painter = painterResource(R.drawable.ic_caution),
                         contentDescription = "",
                         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.errorRed),
                     )
@@ -113,7 +113,7 @@ fun InfoHeader(
                     ) {
                         Image(
                             modifier = Modifier.size(16.dp),
-                            painter = painterResource(R.drawable.key),
+                            painter = painterResource(R.drawable.ic_key),
                             contentDescription = "",
                             colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                         )

@@ -36,7 +36,7 @@ fun FavoriteToast(favoriteResultVal: String) {
                 ),
             iconId =
                 if (favoriteResult != FavoriteResult.FULL) {
-                    R.drawable.success_filled
+                    R.drawable.ic_success_filled
                 } else {
                     null
                 },

@@ -128,14 +128,14 @@ fun ChatMessageInputBox(
             ) {
                 if (showStop) {
                     Image(
-                        painterResource(R.drawable.stop),
+                        painterResource(R.drawable.graphic_stop),
                         contentDescription = "전송",
                         modifier = Modifier.size(33.dp),
                         contentScale = ContentScale.Fit,
                     )
                 } else {
                     Image(
-                        painterResource(R.drawable.send),
+                        painterResource(R.drawable.graphic_send),
                         contentDescription = "전송",
                         modifier = Modifier.size(33.dp),
                         contentScale = ContentScale.Fit,

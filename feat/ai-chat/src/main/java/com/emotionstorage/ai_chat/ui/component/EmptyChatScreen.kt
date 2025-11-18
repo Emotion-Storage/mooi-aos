@@ -26,7 +26,7 @@ fun EmptyChatScreen(modifier: Modifier = Modifier) {
         ) {
             Image(
                 modifier = Modifier.size(186.dp, 155.dp).offset(y = 5.dp),
-                painter = painterResource(R.drawable.ai_chat_graphic),
+                painter = painterResource(R.drawable.graphic_ai_chat),
                 contentDescription = null,
             )
             Text(

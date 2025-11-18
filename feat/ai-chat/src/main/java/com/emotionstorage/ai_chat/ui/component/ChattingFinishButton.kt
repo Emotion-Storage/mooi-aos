@@ -56,7 +56,7 @@ fun ChattingFinishButton(
                     Modifier
                         .size(8.dp, 14.dp)
                         .rotate(180f),
-                painter = painterResource(R.drawable.arrow_back),
+                painter = painterResource(R.drawable.ic_arrow_back),
                 contentDescription = null,
             )
         }

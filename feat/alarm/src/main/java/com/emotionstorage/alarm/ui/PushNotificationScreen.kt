@@ -86,7 +86,7 @@ private fun StatelessPushNotificationScreen(
                         modifier =
                             Modifier
                                 .size(18.dp),
-                        painter = painterResource(R.drawable.alarm),
+                        painter = painterResource(R.drawable.ic_alarm),
                         contentDescription = "알림 아이콘",
                         tint = MooiTheme.colorScheme.gray600,
                     )

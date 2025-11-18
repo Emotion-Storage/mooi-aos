@@ -74,10 +74,10 @@ fun ScrollPicker(
             Image(
                 painter =
                     if (isScrollPickerOpen) {
-                        painterResource(id = R.drawable.toggle_up)
+                        painterResource(id = R.drawable.ic_toggle_up)
                     } else {
                         painterResource(
-                            id = R.drawable.toggle_down,
+                            id = R.drawable.ic_toggle_down,
                         )
                     },
                 contentDescription = null,
