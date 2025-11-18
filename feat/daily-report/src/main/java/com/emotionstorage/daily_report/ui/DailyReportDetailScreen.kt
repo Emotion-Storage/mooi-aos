@@ -50,11 +50,10 @@ fun DailyReportDetailScreen(
     val state = viewModel.container.stateFlow.collectAsState()
 
     LaunchedEffect(id, isNewDailyReport) {
-        // todo: open daily report if is new
-        viewModel.onAction(DailyReportDetailAction.Init(id))
+        viewModel.onAction(DailyReportDetailAction.Init(id, isNewDailyReport))
     }
 
-    if (state.value.dailyReport == null) {
+    if (state.value.isLoading || state.value.dailyReport == null) {
         LoadingScreen()
     } else {
         StatelessDailyReportDetailScreen(
@@ -138,7 +137,8 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            ).padding(vertical = 15.dp, horizontal = 38.dp),
+                            )
+                            .padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
