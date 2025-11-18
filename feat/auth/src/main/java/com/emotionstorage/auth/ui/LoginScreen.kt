@@ -25,7 +25,8 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.auth.R
+import com.emotionstorage.auth.R as authR
+import com.emotionstorage.ui.R
 import com.emotionstorage.auth.presentation.LoginAction
 import com.emotionstorage.auth.presentation.LoginSideEffect
 import com.emotionstorage.auth.presentation.LoginViewModel
@@ -90,7 +91,7 @@ private fun StatelessLoginScreen(
                         .align(Alignment.Center)
                         .fillMaxWidth()
                         .padding(padding),
-                painter = painterResource(id = R.drawable.graphic_login_bg),
+                painter = painterResource(id = authR.drawable.graphic_login_bg),
                 contentDescription = "background graphic image",
             )
 
@@ -106,19 +107,13 @@ private fun StatelessLoginScreen(
                     modifier = Modifier.height(24.dp),
                     style = MooiTheme.typography.brandFont2,
                     color = Color.White,
-                    text = stringResource(id = R.string.login_title),
+                    text = stringResource(id = authR.string.login_title),
                 )
                 Image(
                     modifier = Modifier.size(209.dp, 105.dp),
                     painter =
                         painterResource(
-                            id =
-                                com
-                                    .emotionstorage
-                                    .ui
-                                    .R
-                                    .drawable
-                                    .graphic_logo,
+                            id = R.drawable.graphic_logo,
                         ),
                     contentDescription = "graphic logo",
                 )
@@ -141,7 +136,7 @@ private fun StatelessLoginScreen(
                     color = Color.White,
                     text =
                         buildHighlightAnnotatedString(
-                            stringResource(R.string.login_description),
+                            stringResource(authR.string.login_description),
                             listOf("당신의 이야기"),
                             SpanStyle(color = MooiTheme.colorScheme.primary),
                         ),
