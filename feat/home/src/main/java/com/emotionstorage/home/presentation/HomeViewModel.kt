@@ -13,12 +13,17 @@ import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class HomeState(
+    val isNicknameLoading: Boolean = false,
+    val isHomeLoading: Boolean = false,
+    val isEnterChatLoading: Boolean = false,
     val nickname: String = "",
     val keyCount: Int? = null,
-    val ticketCount: Int = 3,
+    val ticketCount: Int = 0,
+    val ticketLimit: Int = 0,
     val newNotificationArrived: Boolean = false,
     val newTimeCapsuleArrived: Boolean = false,
     val newReportArrived: Boolean = false,
+    val newReportId: Long? = null,
 )
 
 sealed class HomeAction {
@@ -67,14 +72,21 @@ class HomeViewModel
             subIntent {
                 collectDataState(
                     flow = getHome(),
+                    onLoading = {
+                        reduce {
+                            state.copy(isHomeLoading = it)
+                        }
+                    },
                     onSuccess = {
                         reduce {
                             state.copy(
                                 keyCount = it.keyCount,
                                 ticketCount = it.ticketCount,
+                                ticketLimit = it.ticketLimit,
                                 newNotificationArrived = it.hasNewNotification,
                                 newTimeCapsuleArrived = it.hasNewTimeCapsule,
                                 newReportArrived = it.hasNewReport,
+                                newReportId = it.newReportId,
                             )
                         }
                     },
@@ -88,6 +100,11 @@ class HomeViewModel
             subIntent {
                 collectDataState(
                     flow = getUserNickname(),
+                    onLoading = {
+                        reduce {
+                            state.copy(isNicknameLoading = it)
+                        }
+                    },
                     onSuccess = {
                         reduce {
                             state.copy(nickname = it)
@@ -101,8 +118,14 @@ class HomeViewModel
 
         private fun handleEnterChat() =
             intent {
+                require(state.ticketCount > 0)
                 collectDataState(
                     flow = getChatRoomId(),
+                    onLoading = {
+                        reduce{
+                            state.copy(isEnterChatLoading = it)
+                        }
+                    },
                     onSuccess = {
                         postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it))
                     },
