@@ -38,6 +38,7 @@ import com.emotionstorage.my.ui.notificationSettings.component.ToggleRow
 import com.emotionstorage.my.ui.notificationSettings.component.RequestPermissionBottomSheet
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
 import com.emotionstorage.ui.util.RequestPermissionEvent
@@ -171,6 +172,10 @@ private fun StatelessNotificationSettingScreen(
                     .fillMaxSize()
                     .background(color = MooiTheme.colorScheme.background),
         ) {
+            if (state.isLoading) {
+                LoadingOverlay()
+            }
+
             Column(
                 modifier = Modifier.padding(innerPadding),
             ) {
