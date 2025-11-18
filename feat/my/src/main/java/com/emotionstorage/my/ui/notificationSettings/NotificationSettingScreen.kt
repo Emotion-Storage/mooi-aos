@@ -71,7 +71,6 @@ fun NotificationSettingScreen(
             onEvent = RequestPermissionEvent.ON_START,
             onPermissionGranted = {
                 Logger.d("Notification permission granted, init settings")
-                viewModel.setAppPush(true)
             },
             onPermissionDenied = { showRationale ->
                 if (!showRationale) {
