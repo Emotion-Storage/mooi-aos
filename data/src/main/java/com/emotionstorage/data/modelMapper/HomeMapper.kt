@@ -7,9 +7,11 @@ object HomeMapper {
     fun toDomain(entity: HomeEntity): Home =
         Home(
             ticketCount = entity.ticketCount,
+            ticketLimit = entity.ticketLimit,
             keyCount = entity.keyCount,
             hasNewNotification = entity.hasNewNotification,
             hasNewTimeCapsule = entity.hasNewTimeCapsule,
             hasNewReport = entity.hasNewReport,
+            newReportId = entity.newReportId
         )
 }
