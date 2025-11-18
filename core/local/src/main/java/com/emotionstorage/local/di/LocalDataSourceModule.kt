@@ -20,6 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class LocalDataSourceModule {
     @Binds
+    @Singleton
     abstract fun bindLocalDataSource(impl: AttendanceLocalDataSourceImpl): AttendanceLocalDataSource
 
     @Binds
