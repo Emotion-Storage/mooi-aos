@@ -102,7 +102,7 @@ private fun StatelessLoginScreen(
                     Modifier
                         .fillMaxWidth()
                         .align(Alignment.TopCenter)
-                        .padding(top = 64.dp),
+                        .padding(top = 109.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
