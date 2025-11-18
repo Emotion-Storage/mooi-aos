@@ -16,7 +16,7 @@ data class CreateTimeCapsuleResponse(
     @Serializable
     data class EmotionKeyword(
         val label: String,
-        val ration: Int,
+        val ratio: Int,
     )
 }
 
@@ -36,7 +36,7 @@ fun CreateTimeCapsuleResponse.toEntity(
             emotionKeywords.map {
                 TimeCapsuleEntity.Emotion(
                     emotion = it.label,
-                    percentage = it.ration / 100f,
+                    percentage = it.ratio / 100f,
                 )
             },
         comments = aiFeedback,
