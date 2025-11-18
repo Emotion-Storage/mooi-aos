@@ -80,9 +80,10 @@ fun BottomSheet(
         contentWindowInsets = { WindowInsets(0, 0, 0, WindowInsets.systemBars.getBottom(LocalDensity.current)) },
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
-        properties = ModalBottomSheetProperties(
-            shouldDismissOnBackPress = shouldDismissOnBackPress
-        )
+        properties =
+            ModalBottomSheetProperties(
+                shouldDismissOnBackPress = shouldDismissOnBackPress,
+            ),
     ) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
