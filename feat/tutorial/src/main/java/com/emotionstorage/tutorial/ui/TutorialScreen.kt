@@ -81,24 +81,7 @@ fun TutorialScreen(
                                     stringResource(R.string.tutorial_p1_title_highlights).split(
                                         ',',
                                     ),
-                            ) {
-                                Image(
-                                    modifier =
-                                        Modifier
-                                            .align(Alignment.BottomCenter)
-                                            .padding(bottom = 78.dp),
-                                    painter =
-                                        painterResource(
-                                            com
-                                                .emotionstorage
-                                                .ui
-                                                .R
-                                                .drawable
-                                                .luna,
-                                        ),
-                                    contentDescription = "효과",
-                                )
-                            }
+                            )
                         }
 
                         2 -> {
