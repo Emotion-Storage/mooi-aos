@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,10 +47,18 @@ fun EmptyChatScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                modifier = Modifier.size(186.dp, 155.dp).offset(y = 5.dp),
+                modifier = Modifier
+                    .size(186.dp, 155.dp)
+                    .offset(y = 5.dp)
+                    .graphicsLayer {
+                        scaleX = imageScale
+                        scaleY = imageScale
+                    }
+                    .alpha(imageAlpha),
                 painter = painterResource(R.drawable.graphic_ai_chat),
                 contentDescription = null,
             )
+
             Text(
                 modifier = Modifier.alpha(textAlpha),
                 text = "지금 나누고 싶은\n이야기가 있나요?",
