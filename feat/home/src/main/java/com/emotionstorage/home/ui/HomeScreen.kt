@@ -1,5 +1,7 @@
 package com.emotionstorage.home.ui
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,7 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,11 +29,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.home.presentation.AttendanceViewModel
@@ -41,40 +47,30 @@ import com.emotionstorage.home.ui.component.AttendanceRewardDialog
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
-import com.orhanobut.logger.Logger
+import com.emotionstorage.ui.util.RequestPermission
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     attendanceViewModel: AttendanceViewModel = hiltViewModel(),
-    bottomAppBar: @Composable () -> Unit = {},
+    bottomAppBar: @Composable (() -> Unit) = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (id: String) -> Unit = {},
-    navToChat: (roomId: Long) -> Unit = {},
+    navToDailyReport: (Long) -> Unit = { },
+    navToChat: (Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
 
-    LaunchedEffect(Unit) {
-        Logger.d("HomeScreen: Launch triggered")
-        // init nickname on launch
-        viewModel.onAction(HomeAction.InitNickname)
-    }
+    LaunchedEffect("init") {
+        // load attendance state
+        attendanceViewModel.load()
 
-    LifecycleResumeEffect(Unit) {
-        Logger.d("HomeScreen: onResume triggered")
-        // update screen state on resume
-        viewModel.onAction(HomeAction.Initiate)
-        onPauseOrDispose {
-            // do nothing
-        }
-    }
-
-    LaunchedEffect(Unit) {
+        // collect side effect
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is HomeSideEffect.EnterCharRoomSuccess -> {
@@ -84,13 +80,19 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        attendanceViewModel.load()
+    LifecycleResumeEffect("onResume") {
+        // show attendance dialog, if needed
+        attendanceViewModel.tryShowOnce()
+
+        // init screen state on resume
+        viewModel.onAction(HomeAction.Initiate)
+        onPauseOrDispose {}
     }
 
-    LifecycleResumeEffect(Unit) {
-        attendanceViewModel.tryShowOnce()
-        onPauseOrDispose { }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestPermission(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+        )
     }
 
     StatelessHomeScreen(
@@ -105,6 +107,7 @@ fun HomeScreen(
     )
 
     if (attendanceState.showDialog && attendanceState.summary != null) {
+        // todo: refresh attendance dialog on 23:59
         AttendanceRewardDialog(
             summary = attendanceState.summary,
             onConfirm = { attendanceViewModel.claimToday() },
@@ -121,7 +124,7 @@ private fun StatelessHomeScreen(
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (id: String) -> Unit = {},
+    navToDailyReport: (id: Long) -> Unit = { },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
@@ -136,15 +139,41 @@ private fun StatelessHomeScreen(
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
-                    .padding(horizontal = 16.dp)
                     .padding(innerPadding),
         ) {
+            // bg & character graphic
+            Image(
+                modifier =
+                    Modifier
+                        .zIndex(-10f)
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth(),
+                painter = painterResource(id = R.drawable.graphic_home_bg),
+                contentDescription = null,
+            )
+            Image(
+                modifier =
+                    Modifier
+                        .zIndex(-9f)
+                        .align(Alignment.BottomCenter)
+                        .size(245.dp, 198.dp)
+                        .offset(y = -36.dp),
+                painter = painterResource(id = R.drawable.graphic_home_mooi),
+                contentDescription = null,
+            )
+
+            // loading overlay
+            if (state.isNicknameLoading || state.isHomeLoading || state.isEnterChatLoading) {
+                LoadingOverlay()
+            }
+
             // icons
             Column(
                 modifier =
                     Modifier
                         .align(Alignment.TopEnd)
-                        .padding(top = 14.dp),
+                        .padding(top = 14.dp)
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
                 horizontalAlignment = Alignment.End,
             ) {
@@ -155,7 +184,7 @@ private fun StatelessHomeScreen(
                 ) {
                     IconWithCount(
                         modifier = Modifier.size(32.dp),
-                        iconId = R.drawable.key,
+                        iconId = R.drawable.ic_key,
                         count = state.keyCount,
                         onClick = navToKey,
                     )
@@ -168,7 +197,7 @@ private fun StatelessHomeScreen(
                                 },
                         painter =
                             painterResource(
-                                id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
+                                id = if (state.newNotificationArrived) R.drawable.ic_alarm_new else R.drawable.ic_alarm,
                             ),
                         contentDescription = "alarm",
                     )
@@ -181,18 +210,23 @@ private fun StatelessHomeScreen(
                                 .clickable {
                                     navToArrivedTimeCapsules()
                                 },
-                        painter = painterResource(id = R.drawable.time_capsule_new),
+                        painter = painterResource(id = R.drawable.ic_time_capsule_new),
                         contentDescription = "new time capsule arrived",
                     )
                 }
                 if (state.newReportArrived) {
-                    // todo: navigate to daily report detail screen
-                    // todo: get most recently arrived daily report id
-                    Image(
-                        modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.daily_report_new),
-                        contentDescription = "new daily report arrived",
-                    )
+                    state.newReportId?.run {
+                        Image(
+                            modifier =
+                                Modifier
+                                    .size(30.dp)
+                                    .clickable {
+                                        navToDailyReport(this)
+                                    },
+                            painter = painterResource(id = R.drawable.ic_daily_report_new),
+                            contentDescription = "new daily report arrived",
+                        )
+                    }
                 }
             }
 
@@ -201,7 +235,7 @@ private fun StatelessHomeScreen(
                 modifier =
                     Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 193.dp),
+                        .padding(top = 179.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -213,26 +247,28 @@ private fun StatelessHomeScreen(
                             }
                             append("은 어떤가요?")
                         },
-                    style = MooiTheme.typography.head1,
+                    style = MooiTheme.typography.brandFont1,
                     textAlign = TextAlign.Center,
                     color = Color.White,
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(9.dp))
                 Text(
                     modifier = Modifier.padding(top = 2.dp),
                     text = "대화로 내 감정을 들여다보고\n타임캡슐로 저장해보세요",
-                    style = MooiTheme.typography.body3,
+                    style =
+                        MooiTheme.typography.body8.copy(
+                            fontWeight = FontWeight.Light,
+                            lineHeight = 22.sp,
+                        ),
                     textAlign = TextAlign.Center,
                     color = MooiTheme.colorScheme.gray500,
                 )
-
-                Spacer(modifier = Modifier.height(22.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     StartChatButton(
-                        modifier = Modifier.padding(top = 12.dp),
                         canStartChat = state.ticketCount > 0,
                         onChatStart = {
                             onAction(HomeAction.EnterChat)
@@ -245,7 +281,7 @@ private fun StatelessHomeScreen(
                     ) {
                         Image(
                             modifier = Modifier.size(18.dp),
-                            painter = painterResource(id = R.drawable.ticket),
+                            painter = painterResource(id = R.drawable.ic_ticket),
                             contentDescription = "ticket",
                             colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondary),
                         )
@@ -255,7 +291,7 @@ private fun StatelessHomeScreen(
                             color = MooiTheme.colorScheme.secondary,
                         )
                         Text(
-                            text = "${state.ticketCount}/10",
+                            text = "${state.ticketCount}/${state.ticketLimit}",
                             style = MooiTheme.typography.body7,
                             color = MooiTheme.colorScheme.secondary,
                         )
@@ -297,7 +333,7 @@ private fun StartChatButton(
                 )
                 Image(
                     modifier = Modifier.size(18.dp),
-                    painter = painterResource(id = R.drawable.ticket),
+                    painter = painterResource(id = R.drawable.ic_ticket),
                     contentDescription = "ticket",
                     colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
                 )

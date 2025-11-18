@@ -16,6 +16,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.daily_report.presentation.DailyReportDetailAction
+import com.emotionstorage.daily_report.presentation.DailyReportDetailSideEffect
 import com.emotionstorage.daily_report.presentation.DailyReportDetailViewModel
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionLog
 import com.emotionstorage.daily_report.ui.component.DailyReportEmotionScores
@@ -34,7 +37,8 @@ import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
-import com.emotionstorage.ui.component.FullLoadingScreen
+import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
@@ -47,13 +51,38 @@ fun DailyReportDetailScreen(
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-
     LaunchedEffect(id) {
         viewModel.onAction(DailyReportDetailAction.Init(id))
     }
 
-    if (state.value.dailyReport == null) {
-        FullLoadingScreen()
+    val (showErrorModal, setShowErrorModal) =
+        remember {
+            mutableStateOf(false)
+        }
+    LaunchedEffect("init") {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                DailyReportDetailSideEffect.ShowDailyReportError -> {
+                    setShowErrorModal(true)
+                }
+            }
+        }
+    }
+
+    if (showErrorModal) {
+        Modal(
+            title = "해당 페이지에 접근할 수 없어요.",
+            onDismissRequest = {},
+            confirmLabel = "돌아가기",
+            onConfirm = {
+                setShowErrorModal(false)
+                navToBack()
+            },
+        )
+    }
+
+    if (state.value.isLoading || state.value.dailyReport == null) {
+        LoadingScreen()
     } else {
         StatelessDailyReportDetailScreen(
             modifier = modifier,

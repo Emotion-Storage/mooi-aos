@@ -74,7 +74,7 @@ fun TopAppBar(
                             .clickable {
                                 onBackClick()
                             },
-                    painter = painterResource(id = R.drawable.arrow_back),
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = "back",
                 )
             }
@@ -95,7 +95,7 @@ fun TopAppBar(
                             .clickable {
                                 onCloseClick()
                             },
-                    painter = painterResource(id = R.drawable.close),
+                    painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = "close",
                 )
             } else {

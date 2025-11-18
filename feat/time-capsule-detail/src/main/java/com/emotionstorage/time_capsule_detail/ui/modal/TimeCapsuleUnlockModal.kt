@@ -57,7 +57,7 @@ fun TimeCapsuleUnlockModal(
                 // icon
                 Image(
                     modifier = Modifier.size(17.dp, 20.dp),
-                    painter = painterResource(id = R.drawable.lock),
+                    painter = painterResource(id = R.drawable.ic_lock),
                     contentDescription = "lock",
                 )
                 // title & descriptions

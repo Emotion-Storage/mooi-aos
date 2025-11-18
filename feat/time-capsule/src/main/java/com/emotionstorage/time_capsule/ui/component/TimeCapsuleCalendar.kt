@@ -1,7 +1,7 @@
 package com.emotionstorage.time_capsule.ui.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -21,9 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.calendar.SwipeCalendar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
@@ -108,10 +108,8 @@ private fun DateItem(
             modifier =
                 Modifier
                     .align(Alignment.Center)
-                    .background(
-                        if (isToday) MooiTheme.colorScheme.secondary else Color.Transparent,
-                        shape = RoundedCornerShape(20.dp),
-                    ).padding(horizontal = 3.5.dp)
+                    .background(Color.Transparent)
+                    .padding(horizontal = 3.5.dp)
                     .padding(top = 4.dp, bottom = 2.dp),
             verticalArrangement =
                 Arrangement.spacedBy(
@@ -124,27 +122,17 @@ private fun DateItem(
                 modifier = Modifier.height(14.dp),
                 text = date.dayOfMonth.toString(),
                 style = MooiTheme.typography.caption6,
-                color = Color.White,
+                color = if (isToday) MooiTheme.colorScheme.primary else Color.White,
             )
-            Box(
+            Image(
                 modifier =
                     Modifier
-                        .size(TimeCapsuleCalendarDesignToken.dateWidth.dp)
-                        .background(
-                            if (isFilled) MooiTheme.colorScheme.primary else MooiTheme.colorScheme.background,
-                            shape = CircleShape,
-                        ).border(
-                            width = 1.5.dp,
-                            color =
-                                if (isFilled) {
-                                    Color.Transparent
-                                } else {
-                                    Color(0xFFAECBFA).copy(
-                                        alpha = 0.2f,
-                                    )
-                                },
-                            shape = CircleShape,
-                        ),
+                        .size(TimeCapsuleCalendarDesignToken.dateWidth.dp),
+                painter =
+                    painterResource(
+                        if (isFilled) R.drawable.ic_star_filled else R.drawable.ic_star,
+                    ),
+                contentDescription = if (isFilled) "filled date icon" else "empty date icon",
             )
         }
     }

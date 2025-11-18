@@ -1,5 +1,7 @@
 package com.emotionstorage.data.di
 
+import com.emotionstorage.data.repoImpl.AttendanceRepositoryImpl
+import com.emotionstorage.data.repoImpl.HomeRepositoryImpl
 import com.emotionstorage.data.repoImpl.DailyReportRepositoryImpl
 import com.emotionstorage.data.repoImpl.FcmRepositoryImpl
 import com.emotionstorage.data.repoImpl.MyPageRepositoryImpl
@@ -7,8 +9,10 @@ import com.emotionstorage.data.repoImpl.NotificationSettingsRepositoryImpl
 import com.emotionstorage.data.repoImpl.SessionRepositoryImpl
 import com.emotionstorage.data.repoImpl.TimeCapsuleRepositoryImpl
 import com.emotionstorage.data.repoImpl.UserRepositoryImpl
+import com.emotionstorage.domain.repo.AttendanceRepository
 import com.emotionstorage.domain.repo.DailyReportRepository
 import com.emotionstorage.domain.repo.FcmRepository
+import com.emotionstorage.domain.repo.HomeRepository
 import com.emotionstorage.domain.repo.MyPageRepository
 import com.emotionstorage.domain.repo.NotificationSettingRepository
 import com.emotionstorage.domain.repo.SessionRepository
@@ -23,6 +27,14 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+    @Binds
+    @Singleton
+    abstract fun bindHomeRepository(impl: HomeRepositoryImpl): HomeRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAttendanceRepository(impl: AttendanceRepositoryImpl): AttendanceRepository
+
     @Binds
     @Singleton
     abstract fun bindFcmRepository(impl: FcmRepositoryImpl): FcmRepository

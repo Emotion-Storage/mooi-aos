@@ -75,7 +75,7 @@ fun DayCircle(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.key),
+                    painter = painterResource(R.drawable.ic_key),
                     contentDescription = "열쇠",
                     modifier = Modifier.size(20.dp),
                     tint = p.contentColor,

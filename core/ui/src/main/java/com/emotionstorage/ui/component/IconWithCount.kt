@@ -94,19 +94,19 @@ private fun IconWithCountPreview() {
         ) {
             IconWithCount(
                 modifier = Modifier.size(32.dp),
-                iconId = R.drawable.key,
+                iconId = R.drawable.ic_key,
                 count = null,
             )
 
             IconWithCount(
                 modifier = Modifier.size(32.dp),
-                iconId = R.drawable.key,
+                iconId = R.drawable.ic_key,
                 count = 3,
             )
 
             IconWithCount(
                 modifier = Modifier.size(32.dp),
-                iconId = R.drawable.key,
+                iconId = R.drawable.ic_key,
                 count = 100,
             )
         }

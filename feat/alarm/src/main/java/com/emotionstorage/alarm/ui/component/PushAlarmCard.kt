@@ -54,7 +54,7 @@ fun PushAlarmCard(
                     Modifier
                         .size(20.dp)
                         .offset(y = 2.dp),
-                painter = painterResource(id = R.drawable.info),
+                painter = painterResource(id = R.drawable.ic_info),
                 contentDescription = "알림 아이콘",
                 tint = MooiTheme.colorScheme.gray600,
             )
@@ -95,7 +95,7 @@ fun PushAlarmCard(
                 modifier =
                     Modifier
                         .align(Alignment.CenterVertically),
-                painter = painterResource(R.drawable.big_arrow_front),
+                painter = painterResource(R.drawable.ic_big_arrow_front),
                 contentDescription = "상세 목록",
                 tint = MooiTheme.colorScheme.gray300,
             )

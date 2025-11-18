@@ -56,7 +56,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.toast.FavoriteToast
-import com.emotionstorage.ui.component.FullLoadingScreen
+import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -236,7 +236,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     )
 
     if (state.timeCapsule == null) {
-        FullLoadingScreen()
+        LoadingScreen()
     } else {
         Scaffold(
             modifier =

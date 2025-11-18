@@ -9,7 +9,7 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AttendanceSummary
 import com.emotionstorage.domain.useCase.home.ClaimAttendanceRewardUseCase
 import com.emotionstorage.domain.useCase.home.GetAttendanceUseCase
-import com.emotionstorage.home.data.dataSource.AttendanceLocalDataSource
+import com.emotionstorage.data.dataSource.local.AttendanceLocalDataSource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

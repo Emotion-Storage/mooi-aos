@@ -63,7 +63,7 @@ fun CalendarScreen(
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToDailyReportDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = { },
     navToAIChat: (roomId: Long) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
@@ -133,7 +133,7 @@ private fun StatelessCalendarScreen(
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToDailyReportDetail: (id: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = { },
 ) {
     Scaffold(
         modifier =
@@ -184,7 +184,7 @@ private fun StatelessCalendarScreen(
 
                     IconWithCount(
                         modifier = Modifier.size(32.dp),
-                        iconId = R.drawable.key,
+                        iconId = R.drawable.ic_key,
                         count = state.keyCount,
                         onClick = navToKey,
                     )
@@ -201,6 +201,7 @@ private fun StatelessCalendarScreen(
                     CalendarNavButton(
                         modifier = Modifier.weight(1f),
                         label = "도착한 타임캡슐",
+                        // todo: add new arrived timecapsules logic
                         showNewBadge = true,
                         onClick = navToArrived,
                     )
@@ -222,9 +223,11 @@ private fun StatelessCalendarScreen(
                     onDropDownIconClick = {
                         setShowYearMonthBottomSheet(true)
                     },
-                    timeCapsuleDates = state.timeCapsuleDates,
+                    timeCapsuleDates = state.calendarTimeCapsuleDates,
                     onDateSelect = {
-                        onAction(CalendarAction.SelectCalendarDate(it))
+                        if (it in state.calendarTimeCapsuleDates) {
+                            onAction(CalendarAction.SelectCalendarDate(it))
+                        }
                     },
                 )
             }
@@ -261,9 +264,9 @@ private fun StatelessCalendarScreen(
             }
 
             // calendar date's time capsule bottom sheet
-            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsulesFlow != null) {
+            if (showTimeCapsuleBottomSheet && state.calendarSelectedDate != null && state.timeCapsulesFlow != null) {
                 TimeCapsuleBottomSheet(
-                    date = state.calendarDate,
+                    date = state.calendarSelectedDate,
                     onDismissRequest = {
                         setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
@@ -366,7 +369,7 @@ private fun CalendarTodayActionButton(
                     Modifier
                         .size(8.dp, 14.dp)
                         .rotate(180f),
-                painter = painterResource(R.drawable.arrow_back),
+                painter = painterResource(R.drawable.ic_arrow_back),
                 contentDescription = null,
             )
         }

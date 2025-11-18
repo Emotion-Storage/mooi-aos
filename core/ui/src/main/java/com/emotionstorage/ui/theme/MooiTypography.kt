@@ -22,8 +22,29 @@ val pretendard =
         Font(R.font.pretendard_thin, weight = FontWeight.Thin),
     )
 
+val kyoboHandwriting2020 =
+    FontFamily(
+        Font(R.font.kyobo_handwriting_2020, weight = FontWeight.Normal),
+    )
+
 @Immutable
 data class MooiTypography(
+    val brandFont1: TextStyle =
+        TextStyle(
+            fontFamily = kyoboHandwriting2020,
+            fontWeight = FontWeight.Normal,
+            fontSize = 28.sp,
+            letterSpacing = (-0.02).em,
+            lineHeight = (28 * 1.4).sp,
+        ),
+    val brandFont2: TextStyle =
+        TextStyle(
+            fontFamily = kyoboHandwriting2020,
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp,
+            letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
+        ),
     val head1: TextStyle =
         TextStyle(
             fontFamily = pretendard,

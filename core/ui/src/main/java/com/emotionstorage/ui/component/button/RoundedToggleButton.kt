@@ -52,7 +52,7 @@ fun RoundedToggleButton(
                         .height(16.dp),
                 painter =
                     painterResource(
-                        if (isSelected) R.drawable.favorite_filled else R.drawable.favorite,
+                        if (isSelected) R.drawable.ic_favorite_filled else R.drawable.ic_favorite,
                     ),
                 contentDescription = contentDescription,
             )

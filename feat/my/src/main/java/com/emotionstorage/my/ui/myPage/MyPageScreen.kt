@@ -1,0 +1,223 @@
+package com.emotionstorage.my.ui.myPage
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.my.presentation.MyPageAction
+import com.emotionstorage.my.presentation.MyPageSideEffect
+import com.emotionstorage.my.presentation.MyPageState
+import com.emotionstorage.my.presentation.MyPageViewModel
+import com.emotionstorage.my.ui.keyDescription.component.KeyCard
+import com.emotionstorage.my.ui.myPage.component.MenuSection
+import com.emotionstorage.my.ui.myPage.component.ProfileHeader
+import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.theme.MooiTheme
+import com.orhanobut.logger.Logger
+
+@Composable
+fun MyPageScreen(
+    modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
+    viewModel: MyPageViewModel = hiltViewModel(),
+    navToLogin: () -> Unit = {},
+    navToWithdrawNotice: () -> Unit = {},
+    navToNickNameChange: () -> Unit = {},
+    navToKeyDescription: () -> Unit = {},
+    navToAccountInfo: () -> Unit = {},
+    navToTermsAndPrivacy: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
+) {
+    val state = viewModel.container.stateFlow.collectAsState()
+
+    LifecycleResumeEffect(Unit) {
+        Logger.d("MyPageScreen: onResume triggered")
+        viewModel.onAction(MyPageAction.Initiate)
+        onPauseOrDispose {
+            // do nothing
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
+                is MyPageSideEffect.LogoutSuccess -> {
+                    navToLogin()
+                }
+
+                is MyPageSideEffect.NavigateToNicknameChange -> {
+                    navToNickNameChange()
+                }
+
+                is MyPageSideEffect.NavigateToKeyDescription -> {
+                    navToKeyDescription()
+                }
+
+                is MyPageSideEffect.ShowToast -> {
+                    // todo: add error toast
+                }
+
+                is MyPageSideEffect.NavigateToTermsAndPrivacy -> {
+                    navToTermsAndPrivacy()
+                }
+
+                is MyPageSideEffect.NavigateToWithDrawNotice -> {
+                    navToWithdrawNotice()
+                }
+
+                is MyPageSideEffect.NavigateToAccountInfo -> {
+                    navToAccountInfo()
+                }
+
+                is MyPageSideEffect.NavigateToNotificationSetting -> {
+                    navToNotificationSetting()
+                }
+
+                else -> {
+                    Unit
+                }
+            }
+        }
+    }
+
+    StatelessMyPageScreen(
+        modifier = modifier,
+        bottomAppBar = bottomAppBar,
+        state = state.value,
+        onAction = viewModel::onAction,
+        navToWithdraw = navToWithdrawNotice,
+        navToNickNameChange = navToNickNameChange,
+        navToKeyDescription = navToKeyDescription,
+        navToAccountInfo = navToAccountInfo,
+        navToTermsAndPrivacy = navToTermsAndPrivacy,
+        navToNotificationSetting = navToNotificationSetting,
+    )
+}
+
+@Composable
+private fun StatelessMyPageScreen(
+    modifier: Modifier = Modifier,
+    bottomAppBar: @Composable () -> Unit = {},
+    state: MyPageState = MyPageState(),
+    onAction: (MyPageAction) -> Unit = {},
+    navToWithdraw: () -> Unit = {},
+    navToNickNameChange: () -> Unit = {},
+    navToKeyDescription: () -> Unit = {},
+    navToAccountInfo: () -> Unit = {},
+    navToTermsAndPrivacy: () -> Unit = {},
+    navToNotificationSetting: () -> Unit = {},
+) {
+    val clipboardManager = LocalClipboardManager.current
+    var showLogoutModal by remember { mutableStateOf(false) }
+
+    Scaffold(
+        modifier =
+            modifier
+                .fillMaxSize()
+                .padding(top = 16.dp)
+                .background(MooiTheme.colorScheme.background),
+        bottomBar = bottomAppBar,
+    ) { innerPadding ->
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background)
+                    .padding(innerPadding)
+                    .padding(start = 16.dp, end = 16.dp, top = 35.dp)
+                    .consumeWindowInsets(WindowInsets.navigationBars),
+            verticalArrangement = Arrangement.Top,
+        ) {
+            ProfileHeader(
+                modifier = Modifier.offset(x = -9.dp),
+                nickname = state.nickname,
+                signupDday = state.signupDday,
+                onEditClick = {
+                    navToNickNameChange()
+                },
+            )
+
+            Spacer(modifier = Modifier.size(16.dp))
+
+            KeyCard(
+                keyCount = state.keyCount,
+            ) {
+                navToKeyDescription()
+            }
+
+            Spacer(modifier = Modifier.size(24.dp))
+
+            MenuSection(
+                versionInfo = state.versionName,
+                onAccountInfoClick = navToAccountInfo,
+                onEmailCopyClick = {
+                    clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
+                },
+                onTermsAndPrivacyClick = navToTermsAndPrivacy,
+                onLogoutClick = { showLogoutModal = true },
+                onNotificationClick = navToNotificationSetting,
+            )
+
+            if (showLogoutModal) {
+                Modal(
+                    title = "정말 로그아웃 하시겠어요?",
+                    confirmLabel = "아니요, 그냥 있을래요.",
+                    onDismissRequest = { showLogoutModal = false },
+                    topDescription = null,
+                    bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
+                    dismissLabel = "네, 로그아웃 할래요.",
+                    onDismiss = { onAction(MyPageAction.Logout) },
+                    onConfirm = { showLogoutModal = false },
+                )
+            }
+
+            Spacer(modifier = Modifier.size(8.dp))
+            Text(
+                text = "계정 탈퇴하기",
+                modifier =
+                    Modifier
+                        .wrapContentSize()
+                        .align(alignment = Alignment.End)
+                        .clickable { navToWithdraw() },
+                textAlign = TextAlign.End,
+                color = MooiTheme.colorScheme.gray600,
+                style = MooiTheme.typography.caption7,
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun MyPageScreenPreview() {
+    MooiTheme {
+        StatelessMyPageScreen()
+    }
+}

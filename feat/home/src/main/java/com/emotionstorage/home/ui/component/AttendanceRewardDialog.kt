@@ -60,7 +60,7 @@ fun AttendanceRewardDialog(
                         Modifier
                             .size(24.dp)
                             .align(Alignment.CenterVertically),
-                    painter = painterResource(R.drawable.gift),
+                    painter = painterResource(R.drawable.ic_gift),
                     contentDescription = "선물",
                 )
 

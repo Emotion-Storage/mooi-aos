@@ -20,13 +20,13 @@ import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
-import com.emotionstorage.my.ui.AccountInfoScreen
-import com.emotionstorage.my.ui.KeyDescriptionScreen
-import com.emotionstorage.my.ui.MyPageScreen
+import com.emotionstorage.my.ui.accountInfo.AccountInfoScreen
+import com.emotionstorage.my.ui.keyDescription.KeyDescriptionScreen
+import com.emotionstorage.my.ui.myPage.MyPageScreen
 import com.emotionstorage.my.ui.NicknameChangeScreen
-import com.emotionstorage.my.ui.NotificationSettingScreen
+import com.emotionstorage.my.ui.notificationSettings.NotificationSettingScreen
 import com.emotionstorage.my.ui.TermsAndPrivacyScreen
-import com.emotionstorage.my.ui.WithDrawNoticeScreen
+import com.emotionstorage.my.ui.withdraw.WithDrawNoticeScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
 import com.emotionstorage.time_capsule.ui.FavoriteTimeCapsulesScreen
@@ -34,7 +34,7 @@ import com.emotionstorage.time_capsule_detail.ui.SaveTimeCapsuleScreen
 import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
-import com.emotionstorage.tutorial.ui.tutorial.TutorialScreen
+import com.emotionstorage.tutorial.ui.TutorialScreen
 import com.emotionstorage.ui.component.appBar.BottomAppNavBar
 import com.emotionstorage.ui.component.appBar.BottomNavDest
 import com.emotionstorage.ui.theme.MooiTheme
@@ -146,13 +146,13 @@ internal fun AppNavHost(
             currentDestination = navController.currentBackStackEntry?.destination,
             bottomNavDestinations =
                 listOf(
-                    BottomNavDest(AppDestination.Home::class.qualifiedName!!, R.drawable.ic_home, "홈 화면"),
+                    BottomNavDest(AppDestination.Home::class.qualifiedName!!, R.drawable.nav_ic_home, "홈 화면"),
                     BottomNavDest(
                         AppDestination.TimeCapsuleCalendar::class.qualifiedName!!,
-                        R.drawable.ic_calendar,
+                        R.drawable.nav_ic_calendar,
                         "감정 보관함",
                     ),
-                    BottomNavDest(AppDestination.MyPage::class.qualifiedName!!, R.drawable.ic_my, "내 페이지"),
+                    BottomNavDest(AppDestination.MyPage::class.qualifiedName!!, R.drawable.nav_ic_my, "내 페이지"),
                 ),
         )
     }
@@ -252,6 +252,9 @@ internal fun AppNavHost(
                 },
                 navToAlarm = {
                     navController.navigate(AppDestination.PushNotification)
+                },
+                navToDailyReport = { id ->
+                    navController.navigate(AppDestination.DailyReportDetail(id))
                 },
             )
         }

@@ -118,7 +118,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.lock_open),
+                        painter = painterResource(id = R.drawable.ic_lock_open),
                         modifier =
                             Modifier
                                 .width(12.dp)

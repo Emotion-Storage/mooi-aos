@@ -51,7 +51,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.bottomSheet.DatePickerBottomSheet
-import com.emotionstorage.ui.component.FullLoadingScreen
+import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
@@ -92,7 +92,7 @@ fun SaveTimeCapsuleScreen(
     }
 
     if (state.value.isLoading) {
-        FullLoadingScreen()
+        LoadingScreen()
     } else {
         StatelessSaveTimeCapsuleScreen(
             modifier = modifier,
@@ -359,7 +359,7 @@ private fun SaveTimeCapsuleTitle(
                         .clickable(
                             onClick = onToolTipClick,
                         ),
-                painter = painterResource(R.drawable.info),
+                painter = painterResource(R.drawable.ic_info),
                 contentDescription = "tool tip",
             )
         }
@@ -480,7 +480,7 @@ private fun RowScope.OpenAfterGridItem(
             }
             Image(
                 modifier = Modifier.size(16.dp),
-                painter = painterResource(R.drawable.calendar),
+                painter = painterResource(R.drawable.ic_calendar),
                 contentDescription = "calendar date picker",
             )
         }

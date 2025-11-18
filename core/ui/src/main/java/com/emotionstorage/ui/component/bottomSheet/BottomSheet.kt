@@ -15,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
@@ -43,6 +44,7 @@ fun BottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     sheetState: SheetState = rememberModalBottomSheetState(),
+    shouldDismissOnBackPress: Boolean = true,
     title: String? = null,
     subTitle: String? = null,
     confirmLabel: String? = null,
@@ -78,6 +80,10 @@ fun BottomSheet(
         contentWindowInsets = { WindowInsets(0, 0, 0, WindowInsets.systemBars.getBottom(LocalDensity.current)) },
         containerColor = MooiTheme.colorScheme.blueGrayBackground,
         contentColor = Color.White,
+        properties =
+            ModalBottomSheetProperties(
+                shouldDismissOnBackPress = shouldDismissOnBackPress,
+            ),
     ) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
