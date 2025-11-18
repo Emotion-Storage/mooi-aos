@@ -48,10 +48,11 @@ fun DailyReportDetailScreen(
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-
     LaunchedEffect(id, isNewDailyReport) {
         viewModel.onAction(DailyReportDetailAction.Init(id, isNewDailyReport))
     }
+
+    // todo: add daily report get error popup
 
     if (state.value.isLoading || state.value.dailyReport == null) {
         LoadingScreen()

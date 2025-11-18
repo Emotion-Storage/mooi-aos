@@ -57,7 +57,7 @@ class DailyReportDetailViewModel @Inject constructor(
                     if (!it.isOpen) openNewReport(id)
                 },
                 onError = { throwable, _ ->
-                    // todo: add error pop up
+                    // todo: post daily report get error side effect
                     reduce {
                         state.copy(dailyReport = null)
                     }
