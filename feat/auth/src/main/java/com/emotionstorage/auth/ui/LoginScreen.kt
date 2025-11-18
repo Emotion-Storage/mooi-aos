@@ -92,7 +92,7 @@ private fun StatelessLoginScreen(
                         .fillMaxWidth()
                         .padding(padding),
                 painter = painterResource(id = authR.drawable.graphic_login_bg),
-                contentDescription = "background graphic image",
+                contentDescription = null,
             )
 
             Column(
@@ -115,7 +115,7 @@ private fun StatelessLoginScreen(
                         painterResource(
                             id = R.drawable.graphic_logo,
                         ),
-                    contentDescription = "graphic logo",
+                    contentDescription = "Mooi logo",
                 )
             }
 

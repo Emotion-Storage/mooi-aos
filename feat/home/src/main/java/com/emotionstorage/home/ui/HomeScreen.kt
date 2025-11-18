@@ -149,7 +149,7 @@ private fun StatelessHomeScreen(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth(),
                 painter = painterResource(id = R.drawable.graphic_home_bg),
-                contentDescription = "background graphic image",
+                contentDescription = null,
             )
             Image(
                 modifier =
@@ -159,7 +159,7 @@ private fun StatelessHomeScreen(
                         .size(245.dp, 198.dp)
                         .offset(y = -36.dp),
                 painter = painterResource(id = R.drawable.graphic_home_mooi),
-                contentDescription = "background graphic image",
+                contentDescription = null,
             )
 
             // loading overlay
