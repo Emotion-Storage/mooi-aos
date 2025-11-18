@@ -60,7 +60,10 @@ class DailyReportDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, _ ->
                     reduce {
-                        state.copy(dailyReport = null)
+                        state.copy(
+                            isLoading = false,
+                            dailyReport = null,
+                        )
                     }
                     postSideEffect(DailyReportDetailSideEffect.ShowDailyReportError)
                 },
