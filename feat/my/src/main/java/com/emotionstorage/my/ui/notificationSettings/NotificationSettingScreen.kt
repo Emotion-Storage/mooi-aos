@@ -156,7 +156,6 @@ private fun StatelessNotificationSettingScreen(
     onClickTime: () -> Unit = {},
     navToBack: () -> Unit,
 ) {
-    // todo: show loading ui on save
     Scaffold(
         topBar = {
             TopAppBar(
