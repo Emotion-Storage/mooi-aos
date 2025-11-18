@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    Login Screen    -->
-    <string name="login_title">감정을 묻다, 나를 꺼내다</string>
-    <string name="login_app_name">MOOI</string>
-
+    <!--    Login Screen    -->
+    <string name="login_title">당신의 감정이 모이는 곳</string>
+    <string name="login_description">지금, 모이가 당신의 이야기를 기다리고 있어요.</string>
     <string name="login_btn_kako">카카오로 시작하기</string>
     <string name="login_btn_google">Google로 시작하기</string>
 </resources>

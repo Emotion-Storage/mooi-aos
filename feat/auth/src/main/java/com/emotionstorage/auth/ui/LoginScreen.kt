@@ -1,13 +1,18 @@
 package com.emotionstorage.auth.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -16,9 +21,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.auth.R
 import com.emotionstorage.auth.presentation.LoginAction
@@ -27,6 +36,7 @@ import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
 @Composable
 fun LoginScreen(
@@ -56,10 +66,6 @@ fun LoginScreen(
     StatelessLoginScreen(
         modifier = modifier,
         onAction = viewModel::onAction,
-        navToOnboarding = {
-            navToOnBoarding(AuthProvider.KAKAO, "")
-        },
-        navToHome = navToHome,
     )
 }
 
@@ -67,63 +73,82 @@ fun LoginScreen(
 private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
     onAction: (LoginAction) -> Unit = {},
-    // todo: delete after testing
-    navToOnboarding: () -> Unit = {},
-    navToHome: () -> Unit = {},
 ) {
-    val scrollState = rememberScrollState()
-
     Scaffold(
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
-                .fillMaxSize(),
+                .fillMaxSize()
     ) { padding ->
-        Column(
-            modifier =
-                Modifier
-                    .background(MooiTheme.colorScheme.background)
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 67.dp, bottom = 36.dp)
-                    .verticalScroll(scrollState),
-            verticalArrangement = Arrangement.SpaceBetween,
-            horizontalAlignment = Alignment.CenterHorizontally,
+        Box(
+            modifier = Modifier
+                .background(MooiTheme.colorScheme.background)
+                .fillMaxSize()
+                .padding(padding)
         ) {
+            Image(
+                modifier =
+                    Modifier
+                        .zIndex(-10f)
+                        .align(Alignment.Center)
+                        .fillMaxWidth()
+                        .padding(padding),
+                painter = painterResource(id = R.drawable.graphic_login_bg),
+                contentDescription = "background graphic image",
+            )
+
             Column(
                 modifier =
                     Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .padding(top = 64.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
-                    modifier = Modifier.height(37.dp),
-                    style = MooiTheme.typography.body2,
-                    color = MooiTheme.colorScheme.primary,
+                    modifier = Modifier.height(24.dp),
+                    style = MooiTheme.typography.brandFont2,
+                    color = Color.White,
                     text = stringResource(id = R.string.login_title),
+                )
+                Image(
+                    modifier = Modifier.size(209.dp, 105.dp),
+                    painter = painterResource(id = com.emotionstorage.ui.R.drawable.graphic_logo),
+                    contentDescription = "graphic logo",
                 )
             }
 
             Column(
                 modifier =
                     Modifier
-                        .fillMaxWidth(),
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .background(
+                            MooiTheme.colorScheme.blueGrayBackground,
+                            RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
+                        )
+                        .padding(top = 26.dp, bottom = 36.dp)
+                        .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Button(onClick = navToHome) {
-                    Text("홈 화면 이동")
-                }
-                Button(onClick = navToOnboarding) {
-                    Text("온보딩 이동")
-                }
+                Text(
+                    style = MooiTheme.typography.body5,
+                    color = Color.White,
+                    text =
+                        buildHighlightAnnotatedString(
+                            stringResource(R.string.login_description),
+                            listOf("당신의 이야기"),
+                            SpanStyle(color = MooiTheme.colorScheme.primary),
+                        ),
+                )
+                Spacer(modifier = Modifier.height(26.dp))
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
                     onClick = {
                         onAction(LoginAction.Login(AuthProvider.KAKAO))
                     },
                 )
+                Spacer(modifier = Modifier.height(12.dp))
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
