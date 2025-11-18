@@ -8,6 +8,7 @@ import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.remote.dataSourceImpl.DailyReportRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.FcmRemoteDataSourceImpl
+import com.emotionstorage.remote.dataSourceImpl.HomeRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.MyPageRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.NotificationSettingRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.TimeCapsuleRemoteDataSourceImpl
@@ -21,6 +22,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RemoteDataSourceModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindHomeRemoteDataSource(impl: HomeRemoteDataSourceImpl): HomeRemoteDataSource
+
     @Binds
     @Singleton
     abstract fun bindFcmRemoteDataSource(impl: FcmRemoteDataSourceImpl): FcmRemoteDataSource

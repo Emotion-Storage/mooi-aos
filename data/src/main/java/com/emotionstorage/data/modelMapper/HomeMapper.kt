@@ -1,6 +1,6 @@
-package com.emotionstorage.home.data.modelMapper
+package com.emotionstorage.data.modelMapper
 
-import com.emotionstorage.home.data.model.HomeEntity
+import com.emotionstorage.data.model.HomeEntity
 import com.emotionstorage.domain.model.Home
 
 object HomeMapper {

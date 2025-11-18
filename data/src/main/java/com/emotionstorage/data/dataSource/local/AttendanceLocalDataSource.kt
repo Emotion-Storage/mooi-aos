@@ -1,4 +1,4 @@
-package com.emotionstorage.home.data.dataSource
+package com.emotionstorage.data.dataSource.local
 
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate

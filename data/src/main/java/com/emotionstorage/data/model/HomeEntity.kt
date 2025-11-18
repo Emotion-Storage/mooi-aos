@@ -1,4 +1,4 @@
-package com.emotionstorage.home.data.model
+package com.emotionstorage.data.model
 
 data class HomeEntity(
     val ticketCount: Int,

@@ -1,10 +1,9 @@
-package com.emotionstorage.home.remote.modelMapper
+package com.emotionstorage.remote.modelMapper
 
-import com.emotionstorage.home.data.model.HomeEntity
-import com.emotionstorage.home.remote.response.HomeResponseData
+import com.emotionstorage.remote.response.home.HomeResponse
 
 object HomeMapper {
-    fun toData(remote: HomeResponseData): HomeEntity =
+    fun toData(remote: HomeResponse): HomeEntity =
         HomeEntity(
             ticketCount = remote.remainingTickets,
             keyCount = remote.keyCount,
