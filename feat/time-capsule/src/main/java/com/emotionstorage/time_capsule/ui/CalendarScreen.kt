@@ -201,6 +201,7 @@ private fun StatelessCalendarScreen(
                     CalendarNavButton(
                         modifier = Modifier.weight(1f),
                         label = "도착한 타임캡슐",
+                        // todo: add new arrived timecapsules logic
                         showNewBadge = true,
                         onClick = navToArrived,
                     )
@@ -224,7 +225,9 @@ private fun StatelessCalendarScreen(
                     },
                     timeCapsuleDates = state.timeCapsuleDates,
                     onDateSelect = {
-                        onAction(CalendarAction.SelectCalendarDate(it))
+                        if (it in state.timeCapsuleDates) {
+                            onAction(CalendarAction.SelectCalendarDate(it))
+                        }
                     },
                 )
             }
