@@ -59,7 +59,7 @@ fun HomeScreen(
     bottomAppBar: @Composable (() -> Unit) = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (Long) -> Unit = {  },
+    navToDailyReport: (Long) -> Unit = { },
     navToChat: (Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
@@ -124,7 +124,7 @@ private fun StatelessHomeScreen(
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
-    navToDailyReport: (id: Long) -> Unit = {  },
+    navToDailyReport: (id: Long) -> Unit = { },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     Scaffold(
@@ -313,8 +313,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
