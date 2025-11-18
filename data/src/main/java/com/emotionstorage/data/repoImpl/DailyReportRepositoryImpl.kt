@@ -5,6 +5,7 @@ import com.emotionstorage.data.modelMapper.DailyReportMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.repo.DailyReportRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
@@ -35,4 +36,13 @@ class DailyReportRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             DataState.Error(e)
         }
+
+    override suspend fun openDailyReport(id: Long): Boolean {
+        try{
+            return remoteDataSource.openDailyReport(id)
+        } catch (e: Exception) {
+            Napier.e("DailyReportRepositoryImpl: openDailyReport error: $e")
+            return false
+        }
+    }
 }
