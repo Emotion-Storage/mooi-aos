@@ -29,7 +29,7 @@ fun RequestPermissionBottomSheet(
     BottomSheet(
         modifier = modifier,
         sheetState = sheetState,
-        // todo: 바텀시트 닫히지 않게 고정 로직 고쳐야!
+        shouldDismissOnBackPress = false,
         onDismissRequest = { /* do-nothing */ },
         subTitle = "앗, 알림이 꺼져 있어요!",
         title = "설정에서 알림을 켜주시면\n감정 기록 시간과 리포트를\n제때 전해드릴게요.\uD83C\uDF19",
