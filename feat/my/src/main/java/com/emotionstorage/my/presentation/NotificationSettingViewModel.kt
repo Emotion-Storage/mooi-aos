@@ -81,11 +81,9 @@ class NotificationSettingViewModel @Inject constructor(
         timeCapsuleReportNotify: Boolean? = null,
         marketingInfoNotify: Boolean? = null,
     ) {
-        _state.update { it.copy(isLoading = true) }
-
-        val newState =
-            NotificationSettingState(
-                isLoading = false,
+        _state.update {
+            it.copy(
+                isLoading = true,
                 appPushNotify = appPushNotify ?: state.value.appPushNotify,
                 emotionReminderNotify = emotionReminderNotify ?: state.value.emotionReminderNotify,
                 emotionReminderDays = emotionReminderDays ?: state.value.emotionReminderDays,
@@ -93,20 +91,23 @@ class NotificationSettingViewModel @Inject constructor(
                 timeCapsuleReportNotify = timeCapsuleReportNotify ?: state.value.timeCapsuleReportNotify,
                 marketingInfoNotify = marketingInfoNotify ?: state.value.marketingInfoNotify,
             )
+        }
+
+        val snapShot = state.value
         viewModelScope
             .launch {
                 updateNotificationSettings(
                     NotificationSettings(
-                        appPushNotify = newState.appPushNotify,
-                        emotionReminderNotify = newState.emotionReminderNotify,
-                        emotionReminderDays = newState.emotionReminderDays,
-                        emotionReminderTime = newState.emotionReminderTime,
-                        timeCapsuleReportNotify = newState.timeCapsuleReportNotify,
-                        marketingInfoNotify = newState.marketingInfoNotify,
+                        appPushNotify = snapShot.appPushNotify,
+                        emotionReminderNotify = snapShot.emotionReminderNotify,
+                        emotionReminderDays = snapShot.emotionReminderDays,
+                        emotionReminderTime = snapShot.emotionReminderTime,
+                        timeCapsuleReportNotify = snapShot.timeCapsuleReportNotify,
+                        marketingInfoNotify = snapShot.marketingInfoNotify,
                     ),
                 )
             }.invokeOnCompletion {
-                _state.update { newState }
+                _state.update { it.copy(isLoading = false) }
             }
     }
 }
