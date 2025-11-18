@@ -10,6 +10,6 @@ import javax.inject.Inject
 class GetDailyReportOfDateUseCase @Inject constructor(
     private val dailyReportRepository: DailyReportRepository,
 ) {
-    suspend operator fun invoke(date: LocalDate): Flow<DataState<DailyReport>> =
+    suspend operator fun invoke(date: LocalDate): DataState<DailyReport> =
         dailyReportRepository.getDailyReport(date)
 }

@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
 interface DailyReportRepository {
-    suspend fun getDailyReport(date: LocalDate): Flow<DataState<DailyReport>>
+    suspend fun getDailyReport(date: LocalDate): DataState<DailyReport>
 }

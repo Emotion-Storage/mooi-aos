@@ -230,8 +230,7 @@ class CalendarViewModel @Inject constructor(
 
     private suspend fun setDailyReportState(date: LocalDate) =
         subIntent {
-            collectDataState(
-                flow = getDailyReportOfDate(date),
+            getDailyReportOfDate(date).handle(
                 onSuccess = { data ->
                     reduce {
                         state.copy(
@@ -248,7 +247,7 @@ class CalendarViewModel @Inject constructor(
                             isNewDailyReport = false,
                         )
                     }
-                },
+                }
             )
         }
 
