@@ -2,12 +2,13 @@ package com.emotionstorage.home.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
-import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
 import com.emotionstorage.domain.useCase.home.GetHomeUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
@@ -21,8 +22,6 @@ data class HomeState(
 )
 
 sealed class HomeAction {
-    object InitNickname : HomeAction()
-
     object Initiate : HomeAction()
 
     object EnterChat : HomeAction()
@@ -34,6 +33,7 @@ sealed class HomeSideEffect {
     ) : HomeSideEffect()
 }
 
+@OptIn(OrbitExperimental::class)
 @HiltViewModel
 class HomeViewModel
     @Inject
@@ -47,10 +47,6 @@ class HomeViewModel
 
         fun onAction(action: HomeAction) {
             when (action) {
-                is HomeAction.InitNickname -> {
-                    handleInitNickname()
-                }
-
                 is HomeAction.Initiate -> {
                     handleInitiate()
                 }
@@ -61,66 +57,59 @@ class HomeViewModel
             }
         }
 
-        private fun handleInitNickname() =
-            intent {
-                getUserNickname().collect {
-                    when (it) {
-                        is DataState.Success -> {
-                            Logger.d("HomeViewModel: handleInitNickname: $it")
-                            reduce {
-                                state.copy(nickname = it.data)
-                            }
-                        }
-
-                        is DataState.Error -> {
-                            Logger.e("HomeViewModel: handleInitNickname error: $it")
-                        }
-
-                        is DataState.Loading -> {
-                            // do nothing
-                        }
-                    }
-                }
-            }
-
         private fun handleInitiate() =
             intent {
-                getHome().collect {
-                    when (it) {
-                        is DataState.Success -> {
-                            Logger.d("HomeViewModel: handleUpdateState: $it")
-                            reduce {
-                                state.copy(
-                                    keyCount = it.data.keyCount,
-                                    ticketCount = it.data.ticketCount,
-                                    newNotificationArrived = it.data.hasNewNotification,
-                                    newTimeCapsuleArrived = it.data.hasNewTimeCapsule,
-                                    newReportArrived = it.data.hasNewReport,
-                                )
-                            }
-                        }
+                initNickname()
+                initHomeState()
+            }
 
-                        is DataState.Error -> {
-                            Logger.e("HomeViewModel: handleUpdateState error: $it")
+        private suspend fun initHomeState() =
+            subIntent {
+                collectDataState(
+                    flow = getHome(),
+                    onSuccess = {
+                        reduce {
+                            state.copy(
+                                keyCount = it.keyCount,
+                                ticketCount = it.ticketCount,
+                                newNotificationArrived = it.hasNewNotification,
+                                newTimeCapsuleArrived = it.hasNewTimeCapsule,
+                                newReportArrived = it.hasNewReport,
+                            )
                         }
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("HomeViewModel: handleUpdateState error: $throwable")
+                    },
+                )
+            }
 
-                        is DataState.Loading -> {
-                            // do nothing
+        private suspend fun initNickname() =
+            subIntent {
+                collectDataState(
+                    flow = getUserNickname(),
+                    onSuccess = {
+                        reduce {
+                            state.copy(nickname = it)
                         }
-                    }
-                }
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("HomeViewModel: handleInitNickname error: $throwable")
+                    },
+                )
             }
 
         private fun handleEnterChat() =
             intent {
-                getChatRoomId().collect {
-                    Logger.d("HomeViewModel: handleEnterChat: $it")
-                    if (it is DataState.Success) {
-                        postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it.data))
-                    }
-                    if (it is DataState.Error) {
-                        Logger.e("HomeViewModel: handleEnterChat error: $it")
-                    }
-                }
+                collectDataState(
+                    flow = getChatRoomId(),
+                    onSuccess = {
+                        postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it))
+                    },
+                    onError = { throwable, _ ->
+                        Logger.e("HomeViewModel: handleEnterChat error: $throwable")
+                        // todo: add error popup
+                    },
+                )
             }
     }

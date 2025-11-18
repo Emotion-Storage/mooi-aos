@@ -1,6 +1,7 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.accountInfo
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -107,7 +108,7 @@ fun AccountInfoContent(
 }
 
 @Composable
-fun LabeledSection(
+private fun LabeledSection(
     modifier: Modifier = Modifier,
     label: String,
     content: @Composable ColumnScope.() -> Unit,
@@ -124,7 +125,7 @@ fun LabeledSection(
 }
 
 @Composable
-fun Pill(
+private fun Pill(
     modifier: Modifier = Modifier,
     text: String,
     style: PillStyle = PillStyle.Start,
@@ -166,9 +167,15 @@ fun Pill(
 
 @Preview
 @Composable
-fun AccountInfoContentPreview() {
+private fun AccountInfoContentPreview() {
     MooiTheme {
-        Column {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(MooiTheme.colorScheme.background),
+            verticalArrangement = Arrangement.Top,
+        ) {
             AccountInfoContent(
                 modifier = Modifier,
                 email = "mooi.reply@gmail.com",

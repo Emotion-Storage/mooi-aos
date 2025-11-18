@@ -34,7 +34,7 @@ import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
-import com.emotionstorage.ui.component.FullLoadingScreen
+import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
@@ -53,7 +53,7 @@ fun DailyReportDetailScreen(
     }
 
     if (state.value.dailyReport == null) {
-        FullLoadingScreen()
+        LoadingScreen()
     } else {
         StatelessDailyReportDetailScreen(
             modifier = modifier,

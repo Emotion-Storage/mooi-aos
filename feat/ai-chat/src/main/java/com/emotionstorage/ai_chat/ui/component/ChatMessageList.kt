@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.model.ChatMessage.MessageSource
 import com.emotionstorage.common.toKorDateWithWeekDay
+import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -105,7 +106,10 @@ fun ChatMessageList(
                                 ),
                         contentAlignment = Alignment.CenterStart,
                     ) {
-                        MessageIncomeLoading()
+                        LoadingDots(
+                            modifier =
+                                Modifier.padding(horizontal = 19.5.dp, vertical = 18.5.dp),
+                        )
                     }
                 }
             }

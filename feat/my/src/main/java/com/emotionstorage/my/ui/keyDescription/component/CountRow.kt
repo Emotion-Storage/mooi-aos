@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.keyDescription.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

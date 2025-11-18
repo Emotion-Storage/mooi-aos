@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui
+package com.emotionstorage.my.ui.accountInfo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.AccountInfoState
 import com.emotionstorage.my.presentation.AccountInfoViewModel
-import com.emotionstorage.my.ui.component.AccountInfoContent
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 

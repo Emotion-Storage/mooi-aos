@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui.component
+package com.emotionstorage.my.ui.keyDescription.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -94,7 +94,7 @@ fun KeyCard(
 
 @Preview
 @Composable
-fun KeyCardPreview() {
+private fun KeyCardPreview() {
     MooiTheme {
         KeyCard(
             keyCount = 10,

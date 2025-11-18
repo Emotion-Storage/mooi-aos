@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui
+package com.emotionstorage.my.ui.myPage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -34,9 +35,9 @@ import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
-import com.emotionstorage.my.ui.component.KeyCard
-import com.emotionstorage.my.ui.component.MenuSection
-import com.emotionstorage.my.ui.component.ProfileHeader
+import com.emotionstorage.my.ui.keyDescription.component.KeyCard
+import com.emotionstorage.my.ui.myPage.component.MenuSection
+import com.emotionstorage.my.ui.myPage.component.ProfileHeader
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
@@ -155,14 +156,11 @@ private fun StatelessMyPageScreen(
             verticalArrangement = Arrangement.Top,
         ) {
             ProfileHeader(
-                profileImage = "고정 이미지",
+                modifier = Modifier.offset(x = -9.dp),
                 nickname = state.nickname,
                 signupDday = state.signupDday,
                 onEditClick = {
                     navToNickNameChange()
-                },
-                onProfileClick = {
-                    // TODO 이미지 변경 기능 구현 필요
                 },
             )
 

@@ -1,5 +1,7 @@
 package com.emotionstorage.home.ui
 
+import android.Manifest
+import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,7 +44,7 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
-import com.orhanobut.logger.Logger
+import com.emotionstorage.ui.util.RequestPermission
 
 @Composable
 fun HomeScreen(
@@ -59,22 +61,11 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
 
-    LaunchedEffect(Unit) {
-        Logger.d("HomeScreen: Launch triggered")
-        // init nickname on launch
-        viewModel.onAction(HomeAction.InitNickname)
-    }
+    LaunchedEffect("init") {
+        // load attendance state
+        attendanceViewModel.load()
 
-    LifecycleResumeEffect(Unit) {
-        Logger.d("HomeScreen: onResume triggered")
-        // update screen state on resume
-        viewModel.onAction(HomeAction.Initiate)
-        onPauseOrDispose {
-            // do nothing
-        }
-    }
-
-    LaunchedEffect(Unit) {
+        // collect side effect
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is HomeSideEffect.EnterCharRoomSuccess -> {
@@ -84,13 +75,18 @@ fun HomeScreen(
         }
     }
 
-    LaunchedEffect(Unit) {
-        attendanceViewModel.load()
+    LifecycleResumeEffect("onResume") {
+        // show attendance dialog, if needed
+        attendanceViewModel.tryShowOnce()
+        // init screen state on resume
+        viewModel.onAction(HomeAction.Initiate)
+        onPauseOrDispose {}
     }
 
-    LifecycleResumeEffect(Unit) {
-        attendanceViewModel.tryShowOnce()
-        onPauseOrDispose { }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        RequestPermission(
+            permission = Manifest.permission.POST_NOTIFICATIONS,
+        )
     }
 
     StatelessHomeScreen(
@@ -105,6 +101,7 @@ fun HomeScreen(
     )
 
     if (attendanceState.showDialog && attendanceState.summary != null) {
+        // todo: refresh attendance dialog on 23:59
         AttendanceRewardDialog(
             summary = attendanceState.summary,
             onConfirm = { attendanceViewModel.claimToday() },

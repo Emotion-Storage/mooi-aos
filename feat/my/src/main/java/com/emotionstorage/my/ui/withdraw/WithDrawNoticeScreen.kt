@@ -1,4 +1,4 @@
-package com.emotionstorage.my.ui
+package com.emotionstorage.my.ui.withdraw
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -20,7 +20,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageViewModel
-import com.emotionstorage.my.ui.component.WithDrawNoticeContent
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
