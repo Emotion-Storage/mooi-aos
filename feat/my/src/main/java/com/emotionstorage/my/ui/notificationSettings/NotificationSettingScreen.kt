@@ -70,7 +70,7 @@ fun NotificationSettingScreen(
             onEvent = RequestPermissionEvent.ON_START,
             onPermissionGranted = {
                 Logger.d("Notification permission granted, init settings")
-                // todo: get notification settings
+                viewModel.setAppPush(true)
             },
             onPermissionDenied = { showRationale ->
                 if (!showRationale) {
@@ -92,7 +92,7 @@ fun NotificationSettingScreen(
         if (!systemEnabled) {
             // turn off notifications, if permission is newly denied
             Logger.d("turn off notifications")
-            viewModel.setAppPush(on = false)
+            viewModel.setAppPush(isOn = false)
         }
 
         onPauseOrDispose { }
@@ -111,10 +111,7 @@ fun NotificationSettingScreen(
                 activeSheet = Sheet.TimePicker
             }
         },
-        navToBack = {
-            viewModel.save()
-            navToBack()
-        },
+        navToBack = navToBack,
     )
 
     when (activeSheet) {
@@ -159,6 +156,7 @@ private fun StatelessNotificationSettingScreen(
     onClickTime: () -> Unit = {},
     navToBack: () -> Unit,
 ) {
+    // todo: show loading ui on save
     Scaffold(
         topBar = {
             TopAppBar(

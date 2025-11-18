@@ -17,19 +17,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NotificationSettingViewModel @Inject constructor(
-    private val getNotificationSettingsUseCase: GetNotificationSettingsUseCase,
-    private val updateNotificationSettingsUseCase: UpdateNotificationSettingsUseCase,
+    private val getNotificationSettings: GetNotificationSettingsUseCase,
+    private val updateNotificationSettings: UpdateNotificationSettingsUseCase,
 ) : ViewModel() {
     private val _state = MutableStateFlow(NotificationSettingState())
     val state: StateFlow<NotificationSettingState> = _state
 
     init {
         viewModelScope.launch {
-            getNotificationSettingsUseCase().collect { dataState ->
+            getNotificationSettings().collect { dataState ->
                 if (dataState is DataState.Success) {
                     val settings = dataState.data
                     _state.value =
                         NotificationSettingState(
+                            isLoading = false,
                             appPushNotify = settings.appPushNotify,
                             emotionReminderNotify = settings.emotionReminderNotify,
                             emotionReminderDays = settings.emotionReminderDays,
@@ -42,60 +43,74 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun setAppPush(on: Boolean) =
-        _state.update {
-            if (on) {
-                // todo: set notifications state to default
-                it.copy(appPushNotify = on)
-            } else {
-                // todo: turn off all notifications
-                it.copy(appPushNotify = on)
-            }
+    fun setAppPush(isOn: Boolean) = updateSettings(appPushNotify = isOn)
+
+    fun setEmotionReminder(on: Boolean) {
+        if (on) {
+            updateSettings(
+                emotionReminderNotify = true,
+                emotionReminderDays = DayOfWeek.entries.toSet(),
+                emotionReminderTime = LocalTime.of(21, 0)
+            )
+        } else {
+            updateSettings(
+                emotionReminderNotify = false,
+                emotionReminderDays = emptySet(),
+                emotionReminderTime = LocalTime.of(21, 0),
+            )
         }
+    }
 
-    fun setEmotionReminder(on: Boolean) =
-        _state.update {
-            if (on) {
-                it.copy(emotionReminderNotify = true)
-            } else {
-                it.copy(
-                    emotionReminderNotify = false,
-                    emotionReminderDays = emptySet(),
-                    emotionReminderTime = LocalTime.of(21, 0),
-                )
-            }
-        }
+    fun setTimeCapsule(on: Boolean) = updateSettings(timeCapsuleReportNotify = on)
 
-    fun setTimeCapsule(on: Boolean) = _state.update { it.copy(timeCapsuleReportNotify = on) }
+    fun setMarketing(on: Boolean) = updateSettings(marketingInfoNotify = on)
 
-    fun setMarketing(on: Boolean) = _state.update { it.copy(marketingInfoNotify = on) }
+    fun setTime(time: LocalTime) = updateSettings(emotionReminderTime = time)
 
-    fun setTime(time: LocalTime) = _state.update { it.copy(emotionReminderTime = time) }
+    fun toggleDay(day: DayOfWeek) {
+        val days = state.value.emotionReminderDays.toMutableSet()
+        if (!days.add(day)) days.remove(day)
+        updateSettings(emotionReminderDays = days)
+    }
 
-    fun toggleDay(day: DayOfWeek) =
-        _state.update {
-            val days = it.emotionReminderDays.toMutableSet()
-            if (!days.add(day)) days.remove(day)
-            it.copy(emotionReminderDays = days)
-        }
+    private fun updateSettings(
+        appPushNotify: Boolean? = null,
+        emotionReminderNotify: Boolean? = null,
+        emotionReminderDays: Set<DayOfWeek>? = null,
+        emotionReminderTime: LocalTime? = null,
+        timeCapsuleReportNotify: Boolean? = null,
+        marketingInfoNotify: Boolean? = null,
+    ) {
+        _state.update { it.copy(isLoading = true) }
 
-    fun save() {
+        val newState = NotificationSettingState(
+            isLoading = false,
+            appPushNotify = appPushNotify ?: state.value.appPushNotify,
+            emotionReminderNotify = emotionReminderNotify ?: state.value.emotionReminderNotify,
+            emotionReminderDays = emotionReminderDays ?: state.value.emotionReminderDays,
+            emotionReminderTime = emotionReminderTime ?: state.value.emotionReminderTime,
+            timeCapsuleReportNotify = timeCapsuleReportNotify ?: state.value.timeCapsuleReportNotify,
+            marketingInfoNotify = marketingInfoNotify ?: state.value.marketingInfoNotify,
+        )
         viewModelScope.launch {
-            updateNotificationSettingsUseCase(
+            updateNotificationSettings(
                 NotificationSettings(
-                    appPushNotify = state.value.appPushNotify,
-                    emotionReminderNotify = state.value.emotionReminderNotify,
-                    emotionReminderDays = state.value.emotionReminderDays,
-                    emotionReminderTime = state.value.emotionReminderTime,
-                    timeCapsuleReportNotify = state.value.timeCapsuleReportNotify,
-                    marketingInfoNotify = state.value.marketingInfoNotify,
+                    appPushNotify = newState.appPushNotify,
+                    emotionReminderNotify = newState.emotionReminderNotify,
+                    emotionReminderDays = newState.emotionReminderDays,
+                    emotionReminderTime = newState.emotionReminderTime,
+                    timeCapsuleReportNotify = newState.timeCapsuleReportNotify,
+                    marketingInfoNotify = newState.marketingInfoNotify,
                 ),
             )
+        }.invokeOnCompletion {
+            _state.update { newState }
         }
     }
 }
 
 data class NotificationSettingState(
+    val isLoading: Boolean = false,
     val appPushNotify: Boolean = false,
     val emotionReminderNotify: Boolean = false,
     val emotionReminderDays: Set<DayOfWeek> = emptySet(),
