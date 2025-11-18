@@ -160,7 +160,6 @@ private fun StatelessHomeScreen(
                 contentDescription = "background graphic image",
             )
 
-
             // icons
             Column(
                 modifier =
@@ -244,10 +243,11 @@ private fun StatelessHomeScreen(
                 Text(
                     modifier = Modifier.padding(top = 2.dp),
                     text = "대화로 내 감정을 들여다보고\n타임캡슐로 저장해보세요",
-                    style = MooiTheme.typography.body8.copy(
-                        fontWeight = FontWeight.Light,
-                        lineHeight = 22.sp,
-                    ),
+                    style =
+                        MooiTheme.typography.body8.copy(
+                            fontWeight = FontWeight.Light,
+                            lineHeight = 22.sp,
+                        ),
                     textAlign = TextAlign.Center,
                     color = MooiTheme.colorScheme.gray500,
                 )
@@ -301,8 +301,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,

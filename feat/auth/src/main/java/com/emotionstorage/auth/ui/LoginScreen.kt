@@ -2,7 +2,6 @@ package com.emotionstorage.auth.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -78,13 +74,14 @@ private fun StatelessLoginScreen(
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
+                .fillMaxSize(),
     ) { padding ->
         Box(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.background)
-                .fillMaxSize()
-                .padding(padding)
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.background)
+                    .fillMaxSize()
+                    .padding(padding),
         ) {
             Image(
                 modifier =
@@ -113,7 +110,16 @@ private fun StatelessLoginScreen(
                 )
                 Image(
                     modifier = Modifier.size(209.dp, 105.dp),
-                    painter = painterResource(id = com.emotionstorage.ui.R.drawable.graphic_logo),
+                    painter =
+                        painterResource(
+                            id =
+                                com
+                                    .emotionstorage
+                                    .ui
+                                    .R
+                                    .drawable
+                                    .graphic_logo,
+                        ),
                     contentDescription = "graphic logo",
                 )
             }
@@ -125,9 +131,8 @@ private fun StatelessLoginScreen(
                         .fillMaxWidth()
                         .background(
                             MooiTheme.colorScheme.blueGrayBackground,
-                            RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)
-                        )
-                        .padding(top = 26.dp, bottom = 36.dp)
+                            RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
+                        ).padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
