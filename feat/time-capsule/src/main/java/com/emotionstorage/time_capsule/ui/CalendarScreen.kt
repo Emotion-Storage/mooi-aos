@@ -223,9 +223,9 @@ private fun StatelessCalendarScreen(
                     onDropDownIconClick = {
                         setShowYearMonthBottomSheet(true)
                     },
-                    timeCapsuleDates = state.timeCapsuleDates,
+                    timeCapsuleDates = state.calendarTimeCapsuleDates,
                     onDateSelect = {
-                        if (it in state.timeCapsuleDates) {
+                        if (it in state.calendarTimeCapsuleDates) {
                             onAction(CalendarAction.SelectCalendarDate(it))
                         }
                     },
@@ -264,9 +264,9 @@ private fun StatelessCalendarScreen(
             }
 
             // calendar date's time capsule bottom sheet
-            if (showTimeCapsuleBottomSheet && state.calendarDate != null && state.timeCapsulesFlow != null) {
+            if (showTimeCapsuleBottomSheet && state.calendarSelectedDate != null && state.timeCapsulesFlow != null) {
                 TimeCapsuleBottomSheet(
-                    date = state.calendarDate,
+                    date = state.calendarSelectedDate,
                     onDismissRequest = {
                         setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
