@@ -57,7 +57,7 @@ fun ReminderTimeComponent(
         Spacer(modifier = Modifier.size(16.dp))
 
         Icon(
-            painter = painterResource(R.drawable.clock),
+            painter = painterResource(R.drawable.ic_clock),
             tint = MooiTheme.colorScheme.gray500,
             contentDescription = null,
         )

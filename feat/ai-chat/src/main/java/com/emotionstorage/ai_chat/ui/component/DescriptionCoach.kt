@@ -39,7 +39,7 @@ fun DescriptionCoach(
                 painterResource(
                     R
                         .drawable
-                        .touch,
+                        .ic_touch,
                 ),
             contentDescription = "터치하세요",
             tint = MooiTheme.colorScheme.gray500,
@@ -72,14 +72,14 @@ fun DescriptionCoach(
             if (checked) {
                 Icon(
                     modifier = Modifier.size(16.dp),
-                    painter = painterResource(R.drawable.checkbox_on),
+                    painter = painterResource(R.drawable.ic_checkbox_on),
                     contentDescription = "체크상태",
                     tint = MooiTheme.colorScheme.primary,
                 )
             } else {
                 Icon(
                     modifier = Modifier.size(16.dp),
-                    painter = painterResource(R.drawable.checkbox_off),
+                    painter = painterResource(R.drawable.ic_checkbox_off),
                     contentDescription = "체크상태",
                     tint = MooiTheme.colorScheme.gray700,
                 )

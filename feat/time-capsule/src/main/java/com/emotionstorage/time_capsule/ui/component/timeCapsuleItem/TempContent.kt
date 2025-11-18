@@ -69,7 +69,7 @@ fun TempContent(
                 Modifier
                     .size(11.dp, 24.dp)
                     .rotate(180f),
-            painter = painterResource(id = R.drawable.arrow_back),
+            painter = painterResource(id = R.drawable.ic_arrow_back),
             contentDescription = "타임캡슐 보관하기",
         )
     }

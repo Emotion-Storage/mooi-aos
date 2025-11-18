@@ -77,7 +77,7 @@ fun CalendarHeader(
             if (showDropDownIcon) {
                 Image(
                     modifier = Modifier.size(10.dp, 9.dp),
-                    painter = painterResource(id = R.drawable.toggle_down),
+                    painter = painterResource(id = R.drawable.ic_toggle_down),
                     contentDescription = "calendar year month picker",
                 )
             }
@@ -108,7 +108,7 @@ private fun ArrowIcon(
                 .clickable {
                     onClick()
                 },
-        painter = painterResource(id = R.drawable.arrow_back),
+        painter = painterResource(id = R.drawable.ic_arrow_back),
         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
         contentDescription = "",
     )

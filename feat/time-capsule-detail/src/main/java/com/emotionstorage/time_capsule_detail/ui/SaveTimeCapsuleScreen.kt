@@ -359,7 +359,7 @@ private fun SaveTimeCapsuleTitle(
                         .clickable(
                             onClick = onToolTipClick,
                         ),
-                painter = painterResource(R.drawable.info),
+                painter = painterResource(R.drawable.ic_info),
                 contentDescription = "tool tip",
             )
         }
@@ -480,7 +480,7 @@ private fun RowScope.OpenAfterGridItem(
             }
             Image(
                 modifier = Modifier.size(16.dp),
-                painter = painterResource(R.drawable.calendar),
+                painter = painterResource(R.drawable.ic_calendar),
                 contentDescription = "calendar date picker",
             )
         }

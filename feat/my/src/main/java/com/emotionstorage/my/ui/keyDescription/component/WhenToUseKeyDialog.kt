@@ -70,7 +70,7 @@ fun WhenToUseKeyDialog(
                                 .height(28.dp),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.key),
+                            painter = painterResource(R.drawable.ic_key),
                             contentDescription = "열쇠",
                             tint = MooiTheme.colorScheme.primary,
                             modifier =
@@ -86,7 +86,7 @@ fun WhenToUseKeyDialog(
                                     .offset(18.dp, 0.dp),
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.close),
+                                painter = painterResource(R.drawable.ic_close),
                                 contentDescription = "닫기",
                                 tint = Color.White,
                             )

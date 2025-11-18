@@ -60,8 +60,8 @@ fun SocialLoginButton(
                 painter =
                     painterResource(
                         when (provider) {
-                            AuthProvider.KAKAO -> R.drawable.kakao_logo
-                            AuthProvider.GOOGLE -> R.drawable.google_logo
+                            AuthProvider.KAKAO -> R.drawable.logo_kakao
+                            AuthProvider.GOOGLE -> R.drawable.logo_google
                         },
                     ),
                 contentDescription =

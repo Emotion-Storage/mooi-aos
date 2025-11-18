@@ -66,7 +66,7 @@ fun AccountInfoContent(
                         AuthProvider.KAKAO -> {
                             Image(
                                 modifier = Modifier.size(20.dp),
-                                painter = painterResource(R.drawable.kakao_icon),
+                                painter = painterResource(R.drawable.ic_kakao),
                                 contentDescription = "카카오",
                             )
                         }

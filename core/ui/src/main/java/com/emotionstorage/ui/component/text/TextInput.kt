@@ -155,9 +155,9 @@ private fun TextInputMessage(
             painter =
                 painterResource(
                     when (state) {
-                        is TextInputState.Empty -> R.drawable.caution
-                        is TextInputState.Error -> R.drawable.caution
-                        is TextInputState.Success -> R.drawable.success
+                        is TextInputState.Empty -> R.drawable.ic_caution
+                        is TextInputState.Error -> R.drawable.ic_caution
+                        is TextInputState.Success -> R.drawable.ic_success
                     },
                 ),
             modifier = Modifier.size(18.dp),

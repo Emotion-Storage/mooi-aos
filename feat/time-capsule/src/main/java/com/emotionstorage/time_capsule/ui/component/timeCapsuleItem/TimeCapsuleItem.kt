@@ -156,7 +156,7 @@ private fun TimeCapsuleContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.lock_open),
+                    painter = painterResource(id = R.drawable.ic_lock_open),
                     modifier =
                         Modifier
                             .width(11.dp)

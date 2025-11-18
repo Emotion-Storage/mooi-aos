@@ -110,7 +110,7 @@ fun StatelessKeyDescriptionScreen(
                             .heightIn(198.dp)
                             .widthIn(198.dp)
                             .align(Alignment.CenterHorizontally),
-                    painter = painterResource(R.drawable.big_key),
+                    painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
                 )
 
@@ -145,7 +145,7 @@ fun StatelessKeyDescriptionScreen(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.question_mark),
+                        painter = painterResource(R.drawable.ic_question_mark),
                         contentDescription = "물음표",
                     )
 

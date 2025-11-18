@@ -248,7 +248,7 @@ fun SpeechBubblePreview() {
                     ) {
                         Image(
                             modifier = Modifier.size(14.dp),
-                            painter = painterResource(R.drawable.clock),
+                            painter = painterResource(R.drawable.ic_clock),
                             contentDescription = "",
                         )
                         Text(

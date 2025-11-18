@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,11 +29,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.home.presentation.AttendanceViewModel
@@ -133,15 +137,36 @@ private fun StatelessHomeScreen(
                 Modifier
                     .fillMaxSize()
                     .background(MooiTheme.colorScheme.background)
-                    .padding(horizontal = 16.dp)
                     .padding(innerPadding),
         ) {
+            // bg & character graphic
+            Image(
+                modifier =
+                    Modifier
+                        .zIndex(-10f)
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth(),
+                painter = painterResource(id = R.drawable.graphic_home_bg),
+                contentDescription = "background graphic image",
+            )
+            Image(
+                modifier =
+                    Modifier
+                        .zIndex(-9f)
+                        .align(Alignment.BottomCenter)
+                        .size(245.dp, 198.dp)
+                        .offset(y = -36.dp),
+                painter = painterResource(id = R.drawable.graphic_home_mooi),
+                contentDescription = "background graphic image",
+            )
+
             // icons
             Column(
                 modifier =
                     Modifier
                         .align(Alignment.TopEnd)
-                        .padding(top = 14.dp),
+                        .padding(top = 14.dp)
+                        .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(15.dp),
                 horizontalAlignment = Alignment.End,
             ) {
@@ -152,7 +177,7 @@ private fun StatelessHomeScreen(
                 ) {
                     IconWithCount(
                         modifier = Modifier.size(32.dp),
-                        iconId = R.drawable.key,
+                        iconId = R.drawable.ic_key,
                         count = state.keyCount,
                         onClick = navToKey,
                     )
@@ -165,7 +190,7 @@ private fun StatelessHomeScreen(
                                 },
                         painter =
                             painterResource(
-                                id = if (state.newNotificationArrived) R.drawable.alarm_new else R.drawable.alarm,
+                                id = if (state.newNotificationArrived) R.drawable.ic_alarm_new else R.drawable.ic_alarm,
                             ),
                         contentDescription = "alarm",
                     )
@@ -178,7 +203,7 @@ private fun StatelessHomeScreen(
                                 .clickable {
                                     navToArrivedTimeCapsules()
                                 },
-                        painter = painterResource(id = R.drawable.time_capsule_new),
+                        painter = painterResource(id = R.drawable.ic_time_capsule_new),
                         contentDescription = "new time capsule arrived",
                     )
                 }
@@ -187,7 +212,7 @@ private fun StatelessHomeScreen(
                     // todo: get most recently arrived daily report id
                     Image(
                         modifier = Modifier.size(30.dp),
-                        painter = painterResource(id = R.drawable.daily_report_new),
+                        painter = painterResource(id = R.drawable.ic_daily_report_new),
                         contentDescription = "new daily report arrived",
                     )
                 }
@@ -198,7 +223,7 @@ private fun StatelessHomeScreen(
                 modifier =
                     Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 193.dp),
+                        .padding(top = 179.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -210,26 +235,28 @@ private fun StatelessHomeScreen(
                             }
                             append("은 어떤가요?")
                         },
-                    style = MooiTheme.typography.head1,
+                    style = MooiTheme.typography.brandFont1,
                     textAlign = TextAlign.Center,
                     color = Color.White,
                 )
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(9.dp))
                 Text(
                     modifier = Modifier.padding(top = 2.dp),
                     text = "대화로 내 감정을 들여다보고\n타임캡슐로 저장해보세요",
-                    style = MooiTheme.typography.body3,
+                    style =
+                        MooiTheme.typography.body8.copy(
+                            fontWeight = FontWeight.Light,
+                            lineHeight = 22.sp,
+                        ),
                     textAlign = TextAlign.Center,
                     color = MooiTheme.colorScheme.gray500,
                 )
-
-                Spacer(modifier = Modifier.height(22.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     StartChatButton(
-                        modifier = Modifier.padding(top = 12.dp),
                         canStartChat = state.ticketCount > 0,
                         onChatStart = {
                             onAction(HomeAction.EnterChat)
@@ -242,7 +269,7 @@ private fun StatelessHomeScreen(
                     ) {
                         Image(
                             modifier = Modifier.size(18.dp),
-                            painter = painterResource(id = R.drawable.ticket),
+                            painter = painterResource(id = R.drawable.ic_ticket),
                             contentDescription = "ticket",
                             colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondary),
                         )
@@ -294,7 +321,7 @@ private fun StartChatButton(
                 )
                 Image(
                     modifier = Modifier.size(18.dp),
-                    painter = painterResource(id = R.drawable.ticket),
+                    painter = painterResource(id = R.drawable.ic_ticket),
                     contentDescription = "ticket",
                     colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
                 )
