@@ -133,9 +133,10 @@ class SaveTimeCapsuleViewModel @Inject constructor(
             },
             onError = { throwable, _ ->
                 Logger.e("Error getting time capsule by id, $throwable")
+                // todo: show error modal
                 reduce {
                     state.copy(
-                        isLoading = true,
+                        isLoading = false,
                     )
                 }
             },
