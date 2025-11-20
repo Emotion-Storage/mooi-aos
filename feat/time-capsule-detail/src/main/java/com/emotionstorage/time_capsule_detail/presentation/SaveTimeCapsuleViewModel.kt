@@ -269,7 +269,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                     reduce { state.copy(isLoading = false) }
                     // todo: show error modal
                     Logger.e("Error saving time capsule, $throwable")
-                }
+                },
             )
         }
 }

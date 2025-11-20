@@ -17,7 +17,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TimeCapsuleApiService {
-
     /**
      * 타임캡슐 목록 조회
      */
@@ -30,7 +29,6 @@ interface TimeCapsuleApiService {
         @Query("status") status: String = "all",
     ): ResponseDto<GetTimeCapsulesResponse>
 
-
     /**
      * 타임캡슐 존재 날짜 조회
      */
@@ -39,7 +37,6 @@ interface TimeCapsuleApiService {
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): ResponseDto<GetTimeCapsuleDatesReponse>
-
 
     /**
      * 즐겨찾기한 타임캡슐 목록 조회
@@ -50,7 +47,6 @@ interface TimeCapsuleApiService {
         @Query("limit") limit: Int,
         @Query("sort") sortBy: String,
     ): ResponseDto<GetTimeCapsulesResponse>
-
 
     /**
      * 타임캡슐 상세 조회
@@ -87,7 +83,6 @@ interface TimeCapsuleApiService {
         @Path(value = "capsuleId") id: Long,
         @Body requestBody: PatchTimeCapsuleNoteRequest,
     ): ResponseDto<Unit>
-
 
     /**
      * 타임캡슐 즐겨찾기

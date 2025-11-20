@@ -33,15 +33,17 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
 ) : TimeCapsuleRepository {
     override suspend fun setTimeCapsuleOpenAt(
         id: Long,
-        openAt: LocalDateTime
+        openAt: LocalDateTime,
     ): DataState<Unit> =
         try {
-            if (remoteDataSource.postTimeCapsuleOpenAt(id, openAt)) DataState.Success(Unit)
-            else DataState.Error(Throwable("Failed to set time capsule open at"))
+            if (remoteDataSource.postTimeCapsuleOpenAt(id, openAt)) {
+                DataState.Success(Unit)
+            } else {
+                DataState.Error(Throwable("Failed to set time capsule open at"))
+            }
         } catch (e: Exception) {
             DataState.Error(e)
         }
-
 
     override suspend fun openTimeCapsule(id: Long): Flow<DataState<Unit>> =
         flow {

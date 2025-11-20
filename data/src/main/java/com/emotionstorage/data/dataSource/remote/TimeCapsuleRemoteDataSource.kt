@@ -41,7 +41,6 @@ interface TimeCapsuleRemoteDataSource {
         isFavorite: Boolean,
     ): FavoriteResultEntity
 
-
     suspend fun deleteTimeCapsule(id: Long): Boolean
 }
 

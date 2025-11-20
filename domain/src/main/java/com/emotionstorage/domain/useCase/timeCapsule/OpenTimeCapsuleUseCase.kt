@@ -8,4 +8,3 @@ class OpenTimeCapsuleUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(id: Long) = timeCapsuleRepository.openTimeCapsule(id)
 }
-

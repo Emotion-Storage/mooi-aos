@@ -24,7 +24,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.theme.MooiTheme
@@ -50,20 +49,20 @@ fun CheckOpenDateModal(
                 Row(
                     modifier = Modifier.padding(bottom = 20.dp),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     Image(
                         modifier = Modifier.size(18.dp),
                         painter = painterResource(R.drawable.ic_search),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Text(
                         text = "확인해주세요!",
                         style = MooiTheme.typography.body1,
-                        color = Color.White
+                        color = Color.White,
                     )
                 }
-            }
+            },
         ) {
             Column(
                 modifier =

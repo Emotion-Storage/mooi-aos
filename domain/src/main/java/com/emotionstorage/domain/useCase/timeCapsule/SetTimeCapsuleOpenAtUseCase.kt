@@ -11,7 +11,9 @@ class SetTimeCapsuleOpenAtUseCase @Inject constructor(
     suspend operator fun invoke(
         id: Long,
         openAt: LocalDateTime,
-    ): DataState<Unit> = timeCapsuleRepository.setTimeCapsuleOpenAt(
-        id, openAt
-    )
+    ): DataState<Unit> =
+        timeCapsuleRepository.setTimeCapsuleOpenAt(
+            id,
+            openAt,
+        )
 }

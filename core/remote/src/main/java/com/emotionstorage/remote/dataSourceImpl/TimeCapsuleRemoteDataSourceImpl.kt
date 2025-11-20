@@ -30,15 +30,19 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun postTimeCapsuleOpenAt(id: Long, openAt: LocalDateTime): Boolean {
+    override suspend fun postTimeCapsuleOpenAt(
+        id: Long,
+        openAt: LocalDateTime,
+    ): Boolean {
         try {
             apiService.postTimeCapsuleOpenAt(
                 id = id,
-                requestBody = PostTimeCapsuleOpenAtRequest(
-                    capsuleId = id,
-                    storedAt = LocalDateTime.now().toString(),
-                    openAt = openAt.toString(),
-                )
+                requestBody =
+                    PostTimeCapsuleOpenAtRequest(
+                        capsuleId = id,
+                        storedAt = LocalDateTime.now().toString(),
+                        openAt = openAt.toString(),
+                    ),
             )
             return true
         } catch (e: Exception) {

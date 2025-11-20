@@ -9,7 +9,10 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 
 interface TimeCapsuleRepository {
-    suspend fun setTimeCapsuleOpenAt(id: Long, openAt: LocalDateTime): DataState<Unit>
+    suspend fun setTimeCapsuleOpenAt(
+        id: Long,
+        openAt: LocalDateTime,
+    ): DataState<Unit>
 
     suspend fun openTimeCapsule(id: Long): Flow<DataState<Unit>>
 

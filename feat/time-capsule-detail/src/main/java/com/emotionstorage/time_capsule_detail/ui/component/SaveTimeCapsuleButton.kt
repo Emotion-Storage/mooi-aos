@@ -53,9 +53,10 @@ fun SaveTimeCapsuleButton(
             isDefaultHeight = false,
         ) {
             // set deadline as state, to prevent re-rendering countdown
-            val deadLine = remember(expireAt) {
-                mutableStateOf(expireAt ?: LocalDateTime.now().plusHours(24))
-            }
+            val deadLine =
+                remember(expireAt) {
+                    mutableStateOf(expireAt ?: LocalDateTime.now().plusHours(24))
+                }
             CountDownTimer(
                 deadline = deadLine.value,
             ) { hours, minutes, seconds ->
