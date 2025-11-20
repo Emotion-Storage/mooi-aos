@@ -37,117 +37,114 @@ fun TimeCapsuleUnlockModal(
     keyCount: Int,
     requiredKeyCount: Int,
     openAt: LocalDateTime,
-    isModalOpen: Boolean = false,
     onUnlock: () -> Unit = {},
 ) {
     val canUnlock = keyCount >= requiredKeyCount
-
-    if (isModalOpen) {
-        Modal(
-            onDismissRequest = {
-                // cannot dismiss unless confirm button clicked
-            },
-            contentPadding = PaddingValues(top = 19.dp, bottom = 29.dp, start = 27.dp, end = 27.dp),
+    Modal(
+        onDismissRequest = {
+            // cannot dismiss unless confirm button clicked
+        },
+        contentPadding = PaddingValues(top = 19.dp, bottom = 29.dp, start = 27.dp, end = 27.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
+            // icon
+            Image(
+                modifier = Modifier.size(17.dp, 20.dp),
+                painter = painterResource(id = R.drawable.ic_lock),
+                contentDescription = "lock",
+            )
+            // title & descriptions
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(top = 13.dp, bottom = 20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // icon
-                Image(
-                    modifier = Modifier.size(17.dp, 20.dp),
-                    painter = painterResource(id = R.drawable.ic_lock),
-                    contentDescription = "lock",
+                Text(
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    text =
+                        buildAnnotatedString {
+                            append("이 타임캡슐을 미리 열려면\n")
+                            withStyle(
+                                SpanStyle(
+                                    color = MooiTheme.colorScheme.primary,
+                                ),
+                            ) {
+                                append("열쇠 ${requiredKeyCount}개")
+                            }
+                            append("가 필요해요!")
+                        },
+                    style = MooiTheme.typography.body5,
+                    color = MooiTheme.colorScheme.gray500,
+                    textAlign = TextAlign.Center,
                 )
-                // title & descriptions
-                Column(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 13.dp, bottom = 20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        modifier = Modifier.padding(bottom = 8.dp),
-                        text =
-                            buildAnnotatedString {
-                                append("이 타임캡슐을 미리 열려면\n")
-                                withStyle(
-                                    SpanStyle(
-                                        color = MooiTheme.colorScheme.primary,
-                                    ),
-                                ) {
-                                    append("열쇠 ${requiredKeyCount}개")
-                                }
-                                append("가 필요해요!")
-                            },
-                        style = MooiTheme.typography.body5,
-                        color = MooiTheme.colorScheme.gray500,
-                        textAlign = TextAlign.Center,
-                    )
-                    if (openAt.toLocalDate() == LocalDate.now()) {
-                        // run countdown timer, if openAt is within an day
-                        CountDownTimer(
-                            deadline = openAt,
-                            optimizeMinuteTick = true,
-                            optimizeSecondTick = true,
-                        ) { hours, minutes, seconds ->
-                            Text(
-                                modifier = Modifier.height(30.dp),
-                                text =
-                                    "남은 기간 : " +
-                                        (if (hours == 0L) "" else "${hours}시간 ") +
-                                        (if (hours != 0L && minutes == 0L) "" else "${minutes}분"),
-                                style = MooiTheme.typography.head2,
-                                color = Color.White,
-                            )
-                        }
-                    } else {
+                if (openAt.toLocalDate() == LocalDate.now()) {
+                    // run countdown timer, if openAt is within an day
+                    CountDownTimer(
+                        deadline = openAt,
+                        optimizeMinuteTick = true,
+                        optimizeSecondTick = true,
+                    ) { hours, minutes, seconds ->
                         Text(
                             modifier = Modifier.height(30.dp),
-                            text = "남은 기간 : ${
-                                LocalDate.now().getDaysBetween(openAt.toLocalDate()).absoluteValue
-                            }일",
+                            text =
+                                "남은 기간 : " +
+                                    (if (hours == 0L) "" else "${hours}시간 ") +
+                                    (if (hours != 0L && minutes == 0L) "" else "${minutes}분"),
                             style = MooiTheme.typography.head2,
                             color = Color.White,
                         )
                     }
+                } else {
                     Text(
                         modifier = Modifier.height(30.dp),
-                        text = "현재 보유 열쇠 : ${keyCount}개",
+                        text = "남은 기간 : ${
+                            LocalDate.now().getDaysBetween(openAt.toLocalDate()).absoluteValue
+                        }일",
                         style = MooiTheme.typography.head2,
                         color = Color.White,
                     )
                 }
-                // button
-                CtaButton(
-                    modifier =
-                        Modifier
-                            .height(
-                                if (canUnlock) 50.dp else 65.dp,
-                            ).fillMaxWidth(),
-                    enabled = canUnlock,
-                    onClick = {
-                        onUnlock()
-                    },
-                    radius = 10,
-                    isDefaultHeight = false,
-                    isDefaultWidth = false,
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                    ) {
-                        Text(
-                            text = "열쇠 ${requiredKeyCount}개 사용해서 열기",
-                            style = MooiTheme.typography.mainButton,
+                Text(
+                    modifier = Modifier.height(30.dp),
+                    text = "현재 보유 열쇠 : ${keyCount}개",
+                    style = MooiTheme.typography.head2,
+                    color = Color.White,
+                )
+            }
+            // button
+            CtaButton(
+                modifier =
+                    Modifier
+                        .height(
+                            if (canUnlock) 50.dp else 65.dp,
                         )
-                        if (!canUnlock) {
-                            Text(
-                                text = "(보유 열쇠 부족)",
-                                style = MooiTheme.typography.caption3,
-                            )
-                        }
+                        .fillMaxWidth(),
+                enabled = canUnlock,
+                onClick = {
+                    onUnlock()
+                },
+                radius = 10,
+                isDefaultHeight = false,
+                isDefaultWidth = false,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "열쇠 ${requiredKeyCount}개 사용해서 열기",
+                        style = MooiTheme.typography.mainButton,
+                    )
+                    if (!canUnlock) {
+                        Text(
+                            text = "(보유 열쇠 부족)",
+                            style = MooiTheme.typography.caption3,
+                        )
                     }
                 }
             }
@@ -165,6 +162,5 @@ private fun TimeCapsuleUnlockModalPreview() {
         keyCount = 1,
         requiredKeyCount = 5,
         openAt = LocalDateTime.now().plusMinutes(1),
-        isModalOpen = true,
     )
 }
