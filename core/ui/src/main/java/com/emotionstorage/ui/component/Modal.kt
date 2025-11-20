@@ -41,6 +41,8 @@ fun Modal(
     contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
     content: @Composable (() -> Unit)? = null,
 ) {
+    // set bg color to black with 0.8f dim
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.8f)))
     Dialog(onDismissRequest = onDismissRequest) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
