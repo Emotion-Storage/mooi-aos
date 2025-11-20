@@ -9,7 +9,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.OpenTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
@@ -111,7 +111,7 @@ sealed class TimeCapsuleDetailSideEffect {
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
-    private val openArrivedTimeCapsule: OpenArrivedTimeCapsuleUseCase,
+    private val openTimeCapsule: OpenTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
@@ -211,7 +211,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private suspend fun openArrivedTimeCapsule(timeCapsule: TimeCapsule) =
         subIntent {
             collectDataState(
-                flow = openArrivedTimeCapsule(timeCapsule.id),
+                flow = openTimeCapsule(timeCapsule.id),
                 onSuccess = {
                     reduce {
                         state.copy(
