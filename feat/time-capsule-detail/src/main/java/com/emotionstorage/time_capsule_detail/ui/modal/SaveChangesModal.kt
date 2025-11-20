@@ -23,7 +23,6 @@ fun SaveChangesModal(
         onConfirm = onSave,
         onDismiss = onDismiss,
     )
-
 }
 
 @Preview(showBackground = true)

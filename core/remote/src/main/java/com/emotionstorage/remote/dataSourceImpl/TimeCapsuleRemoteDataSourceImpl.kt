@@ -48,14 +48,13 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         } catch (e: Exception) {
             throw Exception("postTimeCapsuleOpenAt api fail, ${e.message}", e)
             // todo: handle 410 error
-            /**
-             * {
-             *   "status": 410,
-             *   "code": "TIME_CAPSULE_DRAFT_EXPIRED",
-             *   "message": "타임캡슐 임시저장 기간이 만료되었습니다.",
-             *   "timestamp": "2025-11-20T16:43:36.924675036"
-             * }
-             */
+
+//             {
+//                "status": 410,
+//                "code": "TIME_CAPSULE_DRAFT_EXPIRED",
+//                "message": "타임캡슐 임시저장 기간이 만료되었습니다.",
+//                "timestamp": "2025-11-20T16:43:36.924675036"
+//              }
         }
     }
 

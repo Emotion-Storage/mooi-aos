@@ -123,8 +123,7 @@ fun TimeCapsuleUnlockModal(
                     Modifier
                         .height(
                             if (canUnlock) 50.dp else 65.dp,
-                        )
-                        .fillMaxWidth(),
+                        ).fillMaxWidth(),
                 enabled = canUnlock,
                 onClick = {
                     onUnlock()

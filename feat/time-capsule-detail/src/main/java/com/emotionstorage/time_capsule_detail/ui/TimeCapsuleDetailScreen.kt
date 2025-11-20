@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -204,7 +203,7 @@ private fun StatelessTimeCapsuleDetailScreen(
         onSaveDismiss = {
             dismissModal()
             navToBack()
-        }
+        },
     )
 
     if (state.timeCapsule == null) {
@@ -352,13 +351,13 @@ private fun ModalHandler(
                 keyCount = unlockModalState.keyCount,
                 requiredKeyCount = unlockModalState.requiredKeyCount,
                 openAt = unlockModalState.openAt,
-                onUnlock = onUnlock
+                onUnlock = onUnlock,
             )
         }
 
         TimeCapsuleDetailModal.EXPIRED -> {
             TimeCapsuleExpiredModal(
-                onConfirm = onExpire
+                onConfirm = onExpire,
             )
         }
 
