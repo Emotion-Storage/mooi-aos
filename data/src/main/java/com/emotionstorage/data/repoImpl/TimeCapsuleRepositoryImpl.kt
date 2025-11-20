@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
 import javax.inject.Inject
 
@@ -30,7 +31,19 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     private val remoteDataSource: TimeCapsuleRemoteDataSource,
     private val localDataSource: TimeCapsuleLocalDataSource,
 ) : TimeCapsuleRepository {
-    override suspend fun openArrivedTimeCapsule(id: Long): Flow<DataState<Unit>> =
+    override suspend fun setTimeCapsuleOpenAt(
+        id: Long,
+        openAt: LocalDateTime
+    ): DataState<Unit> =
+        try {
+            if (remoteDataSource.postTimeCapsuleOpenAt(id, openAt)) DataState.Success(Unit)
+            else DataState.Error(Throwable("Failed to set time capsule open at"))
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+
+
+    override suspend fun openTimeCapsule(id: Long): Flow<DataState<Unit>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
