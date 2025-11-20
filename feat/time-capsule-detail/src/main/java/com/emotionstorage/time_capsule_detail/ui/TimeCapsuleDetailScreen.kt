@@ -90,19 +90,21 @@ fun TimeCapsuleDetailScreen(
     val (isDeleteModalOpen, setDeleteModalOpen) = remember { mutableStateOf(false) }
     val (isSaveChangesModalOpen, setSaveChangesModalOpen) = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is GetTimeCapsuleFail -> {
+                    // todo: add deleted time capsule modal
                     navToBack()
                 }
 
                 is OpenTimeCapsuleFail -> {
+                    // todo: add error modal
                     navToBack()
                 }
 
                 is DeleteTimeCapsuleSuccess -> {
+                    // todo: add modal
                     navToBack()
                 }
 
