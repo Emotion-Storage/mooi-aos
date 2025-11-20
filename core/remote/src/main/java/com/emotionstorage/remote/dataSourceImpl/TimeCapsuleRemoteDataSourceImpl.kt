@@ -7,11 +7,13 @@ import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
+import com.emotionstorage.remote.request.timeCapsule.PostTimeCapsuleOpenAtRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.orhanobut.logger.Logger
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -25,6 +27,22 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             return true
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleOpen api fail, ${e.message}", e)
+        }
+    }
+
+    override suspend fun postTimeCapsuleOpenAt(id: Long, openAt: LocalDateTime): Boolean {
+        try {
+            apiService.postTimeCapsuleOpenAt(
+                id = id,
+                requestBody = PostTimeCapsuleOpenAtRequest(
+                    capsuleId = id,
+                    storedAt = LocalDateTime.now().toString(),
+                    openAt = openAt.toString(),
+                )
+            )
+            return true
+        } catch (e: Exception) {
+            throw Exception("postTimeCapsuleOpenAt api fail, ${e.message}", e)
         }
     }
 

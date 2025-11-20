@@ -2,6 +2,7 @@ package com.emotionstorage.remote.api
 
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
+import com.emotionstorage.remote.request.timeCapsule.PostTimeCapsuleOpenAtRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDatesReponse
@@ -11,6 +12,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.DELETE
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -57,6 +59,15 @@ interface TimeCapsuleApiService {
     suspend fun getTimeCapsuleDetail(
         @Path(value = "capsuleId") id: Long,
     ): ResponseDto<GetTimeCapsuleDetailResponse>
+
+    /**
+     * 타임캡슐 오픈일 지정
+     */
+    @POST("api/v1/time-capsule/{capsuleId}/openAt")
+    suspend fun postTimeCapsuleOpenAt(
+        @Path(value = "capsuleId") id: Long,
+        @Body requestBody: PostTimeCapsuleOpenAtRequest,
+    ): ResponseDto<Unit>
 
     /**
      * 타임캡슐 열람
