@@ -8,9 +8,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.Modal
 
 @Composable
-fun TimeCapsuleExpiredModal(
-    onConfirm: () -> Unit = {},
-) {
+fun TimeCapsuleExpiredModal(onConfirm: () -> Unit = {}) {
     Modal(
         title =
             "보관 기한이 만료되어\n캡슐을 보관할 수 없어요.",
