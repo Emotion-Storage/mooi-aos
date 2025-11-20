@@ -51,10 +51,10 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.bottomSheet.DatePickerBottomSheet
-import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
@@ -92,20 +92,19 @@ fun SaveTimeCapsuleScreen(
     }
 
     if (state.value.isLoading) {
-        LoadingScreen()
-    } else {
-        StatelessSaveTimeCapsuleScreen(
-            modifier = modifier,
-            snackbarState = snackState,
-            state = state.value,
-            onAction = viewModel::onAction,
-            showSavedModal = showSavedModal,
-            dismissSavedModal = { setShowSavedModal(false) },
-            navToMain = navToMain,
-            navToPrevious = navToPrevious,
-            navToBack = navToBack,
-        )
+        LoadingOverlay()
     }
+    StatelessSaveTimeCapsuleScreen(
+        modifier = modifier,
+        snackbarState = snackState,
+        state = state.value,
+        onAction = viewModel::onAction,
+        showSavedModal = showSavedModal,
+        dismissSavedModal = { setShowSavedModal(false) },
+        navToMain = navToMain,
+        navToPrevious = navToPrevious,
+        navToBack = navToBack,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -206,7 +205,8 @@ private fun StatelessSaveTimeCapsuleScreen(
                             .offset(
                                 x = 34.dp,
                                 y = 73.dp,
-                            ).size(310.dp, 144.dp),
+                            )
+                            .size(310.dp, 144.dp),
                     painter =
                         painterResource(
                             com
@@ -438,7 +438,8 @@ private fun RowScope.OpenAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -458,7 +459,8 @@ private fun RowScope.OpenAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),

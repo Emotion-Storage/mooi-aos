@@ -253,16 +253,19 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         intent {
             require(state.openDateTime != null)
 
+            reduce { state.copy(isLoading = true) }
             setTimeCapsuleOpenAt(
                 id = state.id,
                 openAt = state.openDateTime!!,
             ).handle(
                 onSuccess = {
+                    reduce { state.copy(isLoading = false) }
                     postSideEffect(
                         SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess,
                     )
                 },
                 onError = { throwable, _ ->
+                    reduce { state.copy(isLoading = false) }
                     // todo: show error modal
                     Logger.e("Error saving time capsule, $throwable")
                 }
