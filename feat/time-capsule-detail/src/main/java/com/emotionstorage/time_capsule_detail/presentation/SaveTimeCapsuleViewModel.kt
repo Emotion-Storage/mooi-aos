@@ -3,6 +3,7 @@ package com.emotionstorage.time_capsule_detail.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.SetTimeCapsuleOpenAtUseCase
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.OpenAfter
 import com.orhanobut.logger.Logger
@@ -75,6 +76,7 @@ sealed class SaveTimeCapsuleSideEffect {
 @HiltViewModel
 class SaveTimeCapsuleViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
+    private val setTimeCapsuleOpenAt: SetTimeCapsuleOpenAtUseCase,
 ) : ViewModel(),
     ContainerHost<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> {
     override val container: Container<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> =
@@ -249,9 +251,21 @@ class SaveTimeCapsuleViewModel @Inject constructor(
 
     private fun handleSaveTimeCapsule() =
         intent {
-            // todo: call save open date use case
-            postSideEffect(
-                SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess,
+            require(state.openDateTime != null)
+
+            setTimeCapsuleOpenAt(
+                id = state.id,
+                openAt = state.openDateTime!!,
+            ).handle(
+                onSuccess = {
+                    postSideEffect(
+                        SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess,
+                    )
+                },
+                onError = { throwable, _ ->
+                    // todo: show error modal
+                    Logger.e("Error saving time capsule, $throwable")
+                }
             )
         }
 }
