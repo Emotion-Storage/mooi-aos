@@ -5,9 +5,9 @@ import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
-import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
-import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
-import com.emotionstorage.remote.request.timeCapsule.PostTimeCapsuleOpenAtRequest
+import com.emotionstorage.remote.modelMapper.toPatchFavoriteRequest
+import com.emotionstorage.remote.modelMapper.toPatchNoteRequest
+import com.emotionstorage.remote.modelMapper.toPostOpenAtRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.orhanobut.logger.Logger
 import kotlinx.serialization.json.Json
@@ -37,18 +37,12 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         try {
             apiService.postTimeCapsuleOpenAt(
                 id = id,
-                requestBody =
-                    PostTimeCapsuleOpenAtRequest(
-                        capsuleId = id,
-                        storedAt = LocalDateTime.now().toString(),
-                        openAt = openAt.toString(),
-                    ),
+                requestBody = openAt.toPostOpenAtRequest(id)
             )
             return true
         } catch (e: Exception) {
             throw Exception("postTimeCapsuleOpenAt api fail, ${e.message}", e)
             // todo: handle 410 error
-
 //             {
 //                "status": 410,
 //                "code": "TIME_CAPSULE_DRAFT_EXPIRED",
@@ -65,7 +59,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         try {
             apiService.patchTimeCapsuleNote(
                 id,
-                PatchTimeCapsuleNoteRequest(note),
+                note.toPatchNoteRequest(),
             )
             return true
         } catch (e: Exception) {
@@ -81,7 +75,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             val response =
                 apiService.patchTimeCapsuleFavorite(
                     id,
-                    PatchTimeCapsuleFavoriteRequest(isFavorite),
+                    isFavorite.toPatchFavoriteRequest(),
                 )
             if (response.data != null) {
                 if (isFavorite) FavoriteResultEntity.ADDED else FavoriteResultEntity.REMOVED
