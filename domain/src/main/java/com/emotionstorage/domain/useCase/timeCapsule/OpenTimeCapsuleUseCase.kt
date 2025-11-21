@@ -3,8 +3,8 @@ package com.emotionstorage.domain.useCase.timeCapsule
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import javax.inject.Inject
 
-class OpenArrivedTimeCapsuleUseCase @Inject constructor(
+class OpenTimeCapsuleUseCase @Inject constructor(
     private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    suspend operator fun invoke(id: Long) = timeCapsuleRepository.openArrivedTimeCapsule(id)
+    suspend operator fun invoke(id: Long) = timeCapsuleRepository.openTimeCapsule(id)
 }

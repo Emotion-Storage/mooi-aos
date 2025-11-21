@@ -9,7 +9,7 @@ import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.OpenArrivedTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.OpenTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
@@ -17,10 +17,10 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnOpenTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
@@ -49,15 +49,15 @@ sealed class TimeCapsuleDetailAction {
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
+    data class OnOpenTimeCapsule(
+        val id: Long,
+    ) : TimeCapsuleDetailAction()
+
     data class OnToggleFavorite(
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
     data class OnDeleteTimeCapsule(
-        val id: Long,
-    ) : TimeCapsuleDetailAction()
-
-    data class OnUnlockTimeCapsule(
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
@@ -111,7 +111,7 @@ sealed class TimeCapsuleDetailSideEffect {
 @HiltViewModel
 class TimeCapsuleDetailViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
-    private val openArrivedTimeCapsule: OpenArrivedTimeCapsuleUseCase,
+    private val openTimeCapsule: OpenTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
@@ -128,16 +128,16 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
+            is OnOpenTimeCapsule -> {
+                handleOpenTimeCapsule(action.id)
+            }
+
             is OnToggleFavorite -> {
                 handleToggleFavorite(action.id)
             }
 
             is OnDeleteTimeCapsule -> {
                 handleDeleteTimeCapsule(action.id)
-            }
-
-            is OnUnlockTimeCapsule -> {
-                handleUnlockTimeCapsule(action.id)
             }
 
             is OnNoteChanged -> {
@@ -191,7 +191,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                     if (it.status == TimeCapsule.Status.ARRIVED) {
-                        openArrivedTimeCapsule(it)
+                        handleOpenTimeCapsule(id)
                     }
                     if (it.status == TimeCapsule.Status.LOCKED) {
                         triggerUnlockModal()
@@ -207,15 +207,15 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             )
         }
 
-    @OptIn(OrbitExperimental::class)
-    private suspend fun openArrivedTimeCapsule(timeCapsule: TimeCapsule) =
-        subIntent {
+    private fun handleOpenTimeCapsule(id: Long) =
+        intent {
             collectDataState(
-                flow = openArrivedTimeCapsule(timeCapsule.id),
+                flow = openTimeCapsule(id),
                 onSuccess = {
+                    Logger.d("openArrivedTimeCapsule success")
                     reduce {
                         state.copy(
-                            timeCapsule = timeCapsule.copy(status = TimeCapsule.Status.OPENED),
+                            timeCapsule = state.timeCapsule?.copy(status = TimeCapsule.Status.OPENED),
                         )
                     }
                 },
@@ -305,19 +305,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     Logger.e("deleteTimeCapsule error: $throwable")
                 },
             )
-        }
-
-    private fun handleUnlockTimeCapsule(id: Long) =
-        intent {
-            // todo: unlock time capsule
-            reduce {
-                state.copy(
-                    timeCapsule =
-                        state.timeCapsule?.copy(
-                            status = TimeCapsule.Status.ARRIVED,
-                        ),
-                )
-            }
         }
 
     private fun handleNoteChanged(note: String) =

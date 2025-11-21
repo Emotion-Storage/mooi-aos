@@ -25,58 +25,55 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun ExitTimeCapsuleModal(
-    isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onContinue: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
-    if (isModalOpen) {
-        Modal(
-            onDismissRequest = onDismissRequest,
-            contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
-            confirmLabel = "아니요, 계속할래요.",
-            onConfirm = onContinue,
-            dismissLabel = "네, 그냥 나갈래요.",
-            onDismiss = onExit,
+    Modal(
+        onDismissRequest = onDismissRequest,
+        contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
+        confirmLabel = "아니요, 계속할래요.",
+        onConfirm = onContinue,
+        dismissLabel = "네, 그냥 나갈래요.",
+        onDismiss = onExit,
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    text =
-                        buildAnnotatedString {
-                            append("타임캡슐을 보관하지 않으면,\n")
-                            append("감정은 임시 저장되며\n")
-                            withStyle(
-                                SpanStyle(
-                                    color = MooiTheme.colorScheme.primary,
-                                ),
-                            ) {
-                                append("24시간 후 자동 삭제")
-                            }
-                            append("돼요.")
-                        },
-                    style = MooiTheme.typography.body1.copy(lineHeight = 22.sp),
-                    color = MooiTheme.colorScheme.gray300,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    modifier = Modifier.padding(top = 9.dp, bottom = 15.dp),
-                    text = "* 그 전까지는 언제든 다시 보관할 수 있어요.",
-                    style = MooiTheme.typography.body8,
-                    color = MooiTheme.colorScheme.gray500,
-                )
-                Text(
-                    modifier = Modifier.height(30.dp),
-                    text = "지금 페이지를 나가시겠어요?",
-                    style = MooiTheme.typography.head2,
-                    color = Color.White,
-                )
-            }
+            Text(
+                text =
+                    buildAnnotatedString {
+                        append("타임캡슐을 보관하지 않으면,\n")
+                        append("감정은 임시 저장되며\n")
+                        withStyle(
+                            SpanStyle(
+                                color = MooiTheme.colorScheme.primary,
+                            ),
+                        ) {
+                            append("24시간 후 자동 삭제")
+                        }
+                        append("돼요.")
+                    },
+                style = MooiTheme.typography.body1.copy(lineHeight = 22.sp),
+                color = MooiTheme.colorScheme.gray300,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                modifier = Modifier.padding(top = 9.dp, bottom = 15.dp),
+                text = "* 그 전까지는 언제든 다시 보관할 수 있어요.",
+                style = MooiTheme.typography.body8,
+                color = MooiTheme.colorScheme.gray500,
+            )
+            Text(
+                modifier = Modifier.height(30.dp),
+                text = "지금 페이지를 나가시겠어요?",
+                style = MooiTheme.typography.head2,
+                color = Color.White,
+            )
         }
     }
 }
@@ -87,7 +84,5 @@ private fun TimeCapsuleExitModalPreview() {
     // background ui
     Box(modifier = Modifier.fillMaxSize())
 
-    ExitTimeCapsuleModal(
-        isModalOpen = true,
-    )
+    ExitTimeCapsuleModal()
 }
