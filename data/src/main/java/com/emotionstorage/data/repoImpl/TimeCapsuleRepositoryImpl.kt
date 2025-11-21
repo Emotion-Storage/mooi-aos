@@ -49,8 +49,11 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                remoteDataSource.patchTimeCapsuleOpen(id)
-                emit(DataState.Success(Unit))
+                if (remoteDataSource.patchTimeCapsuleOpen(id)) {
+                    emit(DataState.Success(Unit))
+                } else {
+                    emit(DataState.Error(Throwable("Failed to open time capsule")))
+                }
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
