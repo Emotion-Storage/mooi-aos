@@ -44,7 +44,7 @@ fun Modal(
     content: @Composable (() -> Unit)? = null,
 ) {
     if (showBackground) {
-        // set bg color to black with 0.8f dim
+        // set bg color to black with 0.8 alpha (80% opacity)
         Box(
             modifier =
                 Modifier
