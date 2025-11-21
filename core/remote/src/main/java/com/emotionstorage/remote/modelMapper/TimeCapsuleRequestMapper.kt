@@ -9,15 +9,15 @@ internal fun LocalDateTime.toPostOpenAtRequest(id: Long) =
     PostTimeCapsuleOpenAtRequest(
         capsuleId = id,
         storedAt = LocalDateTime.now().toString(),
-        openAt = this.toString()
+        openAt = this.toString(),
     )
 
 internal fun String.toPatchNoteRequest() =
     PatchTimeCapsuleNoteRequest(
-        content = this
+        content = this,
     )
 
 internal fun Boolean.toPatchFavoriteRequest() =
     PatchTimeCapsuleFavoriteRequest(
-        addFavorite = this
+        addFavorite = this,
     )

@@ -37,7 +37,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         try {
             apiService.postTimeCapsuleOpenAt(
                 id = id,
-                requestBody = openAt.toPostOpenAtRequest(id)
+                requestBody = openAt.toPostOpenAtRequest(id),
             )
             return true
         } catch (e: Exception) {
