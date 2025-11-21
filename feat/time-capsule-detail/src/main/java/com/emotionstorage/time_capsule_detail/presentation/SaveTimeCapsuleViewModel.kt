@@ -252,7 +252,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
 
     private fun handleSaveTimeCapsule() =
         intent {
-            require(state.openDateTime != null)
+            if (state.openDateTime == null) return@intent
 
             reduce { state.copy(isLoading = true) }
             setTimeCapsuleOpenAt(
