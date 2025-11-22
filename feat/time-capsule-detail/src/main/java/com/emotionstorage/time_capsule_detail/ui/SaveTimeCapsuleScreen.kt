@@ -51,10 +51,10 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleSavedModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.bottomSheet.DatePickerBottomSheet
-import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
@@ -92,20 +92,19 @@ fun SaveTimeCapsuleScreen(
     }
 
     if (state.value.isLoading) {
-        LoadingScreen()
-    } else {
-        StatelessSaveTimeCapsuleScreen(
-            modifier = modifier,
-            snackbarState = snackState,
-            state = state.value,
-            onAction = viewModel::onAction,
-            showSavedModal = showSavedModal,
-            dismissSavedModal = { setShowSavedModal(false) },
-            navToMain = navToMain,
-            navToPrevious = navToPrevious,
-            navToBack = navToBack,
-        )
+        LoadingOverlay()
     }
+    StatelessSaveTimeCapsuleScreen(
+        modifier = modifier,
+        snackbarState = snackState,
+        state = state.value,
+        onAction = viewModel::onAction,
+        showSavedModal = showSavedModal,
+        dismissSavedModal = { setShowSavedModal(false) },
+        navToMain = navToMain,
+        navToPrevious = navToPrevious,
+        navToBack = navToBack,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,9 +136,8 @@ private fun StatelessSaveTimeCapsuleScreen(
         },
     )
 
-    if (!showSavedModal) {
+    if (!showSavedModal && showExpiredModal) {
         TimeCapsuleExpiredModal(
-            isModalOpen = showExpiredModal,
             onConfirm = {
                 setShowExpiredModal(false)
                 navToPrevious()

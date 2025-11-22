@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,8 +52,13 @@ fun SaveTimeCapsuleButton(
             isDefaultWidth = false,
             isDefaultHeight = false,
         ) {
+            // set deadline as state, to prevent re-rendering countdown
+            val deadLine =
+                remember(expireAt) {
+                    mutableStateOf(expireAt ?: LocalDateTime.now().plusHours(24))
+                }
             CountDownTimer(
-                deadline = expireAt ?: LocalDateTime.now().plusHours(24),
+                deadline = deadLine.value,
             ) { hours, minutes, seconds ->
                 LaunchedEffect(hours, minutes, seconds) {
                     if (hours == 0L && minutes == 0L && seconds == 0L) {

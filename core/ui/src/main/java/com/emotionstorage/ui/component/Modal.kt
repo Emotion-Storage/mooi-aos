@@ -43,99 +43,111 @@ fun Modal(
     dismissLabel: String? = null,
     onDismiss: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
+    showBackground: Boolean = true,
+    topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
 ) {
+    if (showBackground) {
+        // set bg color to black with 0.8 alpha (80% opacity)
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.8f)),
+        )
+    }
+
     Dialog(onDismissRequest = onDismissRequest) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
 
         Column(
-            modifier =
-                Modifier
-                    .clip(RoundedCornerShape(15.dp))
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(contentPadding)
-                    .widthIn(max = 293.dp),
-            verticalArrangement = Arrangement.spacedBy(18.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // title & descriptions
+            topOuterContent?.invoke()
             Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
+                modifier =
+                    Modifier
+                        .clip(RoundedCornerShape(15.dp))
+                        .background(MooiTheme.colorScheme.background)
+                        .padding(contentPadding)
+                        .widthIn(max = 293.dp),
+                verticalArrangement = Arrangement.spacedBy(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if (!topDescription.isNullOrEmpty()) {
-                    Text(
-                        text =
-                            buildHighlightAnnotatedString(
-                                topDescription,
-                                topDescriptionHighlights ?: emptyList(),
-                                SpanStyle(color = MooiTheme.colorScheme.primary),
-                            ),
-                        style = MooiTheme.typography.body5,
-                        color = MooiTheme.colorScheme.gray500,
-                        textAlign = TextAlign.Center,
-                    )
+                // title & descriptions
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (!topDescription.isNullOrEmpty()) {
+                        Text(
+                            text =
+                                buildHighlightAnnotatedString(
+                                    topDescription,
+                                    topDescriptionHighlights ?: emptyList(),
+                                    SpanStyle(color = MooiTheme.colorScheme.primary),
+                                ),
+                            style = MooiTheme.typography.body5,
+                            color = MooiTheme.colorScheme.gray500,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    if (!title.isNullOrEmpty()) {
+                        Text(
+                            text = title,
+                            style =
+                                MooiTheme.typography.head2.copy(
+                                    lineHeight = 30.sp,
+                                ),
+                            color = Color.White,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
+                    if (!bottomDescription.isNullOrEmpty()) {
+                        Text(
+                            text = bottomDescription,
+                            style = MooiTheme.typography.body5,
+                            color = MooiTheme.colorScheme.gray500,
+                            textAlign = TextAlign.Center,
+                        )
+                    }
                 }
-                if (!title.isNullOrEmpty()) {
-                    Text(
-                        text = title,
-                        style =
-                            MooiTheme.typography.head2.copy(
-                                lineHeight = 30.sp,
-                            ),
-                        color = Color.White,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-                if (!bottomDescription.isNullOrEmpty()) {
-                    Text(
-                        text =
-                            buildHighlightAnnotatedString(
-                                bottomDescription,
-                                bottomDescriptionHighlights ?: emptyList(),
-                                SpanStyle(color = MooiTheme.colorScheme.primary),
-                            ),
-                        style = MooiTheme.typography.body5,
-                        color = MooiTheme.colorScheme.gray500,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
 
-            content?.invoke()
+                content?.invoke()
 
-            // buttons
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                if (confirmLabel != null) {
-                    CtaButton(
-                        modifier = Modifier.height(50.dp),
-                        labelString = confirmLabel,
-                        onClick = {
-                            onConfirm()
-                            onDismissRequest()
-                        },
-                        radius = 10,
-                        textStyle = MooiTheme.typography.mainButton,
-                    )
-                }
-                if (dismissLabel != null) {
-                    CtaButton(
-                        modifier = Modifier.height(50.dp),
-                        labelString = dismissLabel,
-                        onClick = {
-                            onDismiss()
-                            onDismissRequest()
-                        },
-                        type = CtaButtonType.TONAL,
-                        radius = 10,
-                        textStyle = MooiTheme.typography.mainButton,
-                    )
+                // buttons
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    if (confirmLabel != null) {
+                        CtaButton(
+                            modifier = Modifier.height(50.dp),
+                            labelString = confirmLabel,
+                            onClick = {
+                                onConfirm()
+                                onDismissRequest()
+                            },
+                            radius = 10,
+                            textStyle = MooiTheme.typography.mainButton,
+                        )
+                    }
+                    if (dismissLabel != null) {
+                        CtaButton(
+                            modifier = Modifier.height(50.dp),
+                            labelString = dismissLabel,
+                            onClick = {
+                                onDismiss()
+                                onDismissRequest()
+                            },
+                            type = CtaButtonType.TONAL,
+                            radius = 10,
+                            textStyle = MooiTheme.typography.mainButton,
+                        )
+                    }
                 }
             }
         }
