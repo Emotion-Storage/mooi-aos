@@ -45,6 +45,7 @@ import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
+import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
@@ -241,6 +242,10 @@ private fun StatelessAIChatScreen(
                         onAction(AIChatAction.ExitChatRoom)
                     },
                 )
+            }
+
+            if (state.isCreatingTimeCapsule) {
+                TimeCapsuleCreateLoadingModal()
             }
 
             ChatMessageInputBox(

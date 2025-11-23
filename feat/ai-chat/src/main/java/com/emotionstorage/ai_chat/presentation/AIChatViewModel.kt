@@ -31,6 +31,7 @@ data class AIChatState(
     val chatProgress: Float = 0.03f,
     val turnScore: Int = 0,
     val isWaitingReply: Boolean = false,
+    val isCreatingTimeCapsule: Boolean = false,
     val forceQuitTriggerTurn: Int? = null,
     val hasShownForceQuitBottomSheet: Boolean = false,
     val showForceQuitBottomSheet: Boolean = false,
@@ -307,27 +308,32 @@ class AIChatViewModel @Inject constructor(
                 return@intent
             }
 
-            when (val result = createTimeCapsuleUseCase(roomId)) {
-                is DataState.Success -> {
-                    val capsule = result.data
+            reduce { state.copy(isCreatingTimeCapsule = true) }
 
-                    handleExitChatRoom()
+            try {
+                when (val result = createTimeCapsuleUseCase(roomId)) {
+                    is DataState.Success -> {
+                        val capsule = result.data
 
-                    postSideEffect(
-                        AIChatSideEffect.CreateTimeCapsuleSuccess(capsule.id),
-                    )
+                        handleExitChatRoom()
+                        postSideEffect(
+                            AIChatSideEffect.CreateTimeCapsuleSuccess(capsule.id),
+                        )
+                    }
+
+                    is DataState.Error -> {
+                        Logger.e("createTimeCapsule error: ${result.throwable}")
+                        postSideEffect(
+                            AIChatSideEffect.ToastMessage("타임캡슐 생성 실패"),
+                        )
+                    }
+
+                    is DataState.Loading -> {
+                        // no - op
+                    }
                 }
-
-                is DataState.Error -> {
-                    Logger.e("createTimeCapsule error: ${result.throwable}")
-                    postSideEffect(
-                        AIChatSideEffect.ToastMessage("타임캡슐 생성 실패"),
-                    )
-                }
-
-                is DataState.Loading -> {
-                    // no - op
-                }
+            } finally {
+                reduce { state.copy(isCreatingTimeCapsule = false) }
             }
         }
 
