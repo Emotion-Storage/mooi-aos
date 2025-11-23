@@ -140,18 +140,8 @@ class AIChatViewModel @Inject constructor(
                 viewModelScope.launch {
                     observeChatMessages(roomId)
                         .onEach { message ->
-                            if (state.isWaitingReply) {
-                                reduce {
-                                    state.copy(
-                                        isMooiTyping = false,
-                                        isWaitingReply = false,
-                                    )
-                                }
-                            }
-
                             val isComplete = message.isComplete
                             val gaugeScore = message.gaugeScore
-
                             val newProgress =
                                 gaugeScore
                                     ?.let { score -> (score / 70f).coerceIn(0f, 1f) }
@@ -160,6 +150,15 @@ class AIChatViewModel @Inject constructor(
                             val canCreate =
                                 gaugeScore?.let { it >= TIME_CAPSULE_CREATE_SCORE }
                                     ?: state.canCreateTimesCapsule
+
+                            if (state.isWaitingReply && isComplete) {
+                                reduce {
+                                    state.copy(
+                                        isMooiTyping = false,
+                                        isWaitingReply = false,
+                                    )
+                                }
+                            }
 
                             // TODO : gauge 값이 간헐적으로 null이 안들어오게 된다면 !! turnScore 값을 non-null type으로 변경
                             reduce {

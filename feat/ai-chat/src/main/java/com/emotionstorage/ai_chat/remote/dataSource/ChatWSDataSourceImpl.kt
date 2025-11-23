@@ -80,6 +80,10 @@ class ChatWSDataSourceImpl @Inject constructor(
 
                                 val isComplete = dto.messageType == "chat.complete"
 
+                                if (!isComplete) {
+                                    kotlinx.coroutines.delay(1500L)
+                                }
+
                                 emit(
                                     ChatMessage(
                                         roomId = roomId,
