@@ -90,10 +90,11 @@ fun ChatMessageList(
                 val showTypingProfile =
                     lastMessage == null || lastMessage.source != MessageSource.SERVER
 
-                val topPadding = when (lastMessage?.source) {
-                    MessageSource.SERVER -> 8.dp
-                    else -> 20.dp
-                }
+                val topPadding =
+                    when (lastMessage?.source) {
+                        MessageSource.SERVER -> 8.dp
+                        else -> 20.dp
+                    }
 
                 Spacer(Modifier.height(topPadding))
 

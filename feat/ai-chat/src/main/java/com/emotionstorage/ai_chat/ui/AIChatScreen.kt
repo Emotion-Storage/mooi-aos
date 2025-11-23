@@ -37,13 +37,13 @@ import com.emotionstorage.ai_chat.presentation.AIChatAction
 import com.emotionstorage.ai_chat.presentation.AIChatSideEffect
 import com.emotionstorage.ai_chat.presentation.AIChatState
 import com.emotionstorage.ai_chat.presentation.AIChatViewModel
+import com.emotionstorage.ai_chat.ui.component.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
-import com.emotionstorage.ui.component.Modal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
@@ -252,25 +252,6 @@ private fun StatelessAIChatScreen(
                 },
             )
         }
-    }
-}
-
-@Composable
-private fun AIChatExitModal(
-    isModalOpen: Boolean = false,
-    onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {},
-) {
-    if (isModalOpen) {
-        Modal(
-            title = "잠시 감정 대화를\n 이대로 중지할까요?",
-            bottomDescription = "으늘의 감정 대화는\n오늘까지만 임시저장돼요!",
-            bottomDescriptionHighlights = listOf("오늘까지만"),
-            confirmLabel = "대화를 계속 진행할게요.",
-            dismissLabel = "메인 화면으로 나갈래요",
-            onDismissRequest = onDismissRequest,
-            onDismiss = onExit,
-        )
     }
 }
 
