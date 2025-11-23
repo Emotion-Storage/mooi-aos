@@ -1,13 +1,13 @@
-package com.emotionstorage.auth.remote.dataSourceImpl
+package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.auth.data.dataSource.AuthRemoteDataSource
-import com.emotionstorage.auth.data.model.SignupFormEntity
-import com.emotionstorage.auth.remote.api.AuthApiService
-import com.emotionstorage.auth.remote.modelMapper.GoogleSignupFormMapper
-import com.emotionstorage.auth.remote.modelMapper.KakaoSignupFormMapper
-import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
-import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
+import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
+import com.emotionstorage.data.model.SignupFormEntity
 import com.emotionstorage.domain.model.User
+import com.emotionstorage.remote.api.AuthApiService
+import com.emotionstorage.remote.modelMapper.GoogleSignupFormMapper
+import com.emotionstorage.remote.modelMapper.KakaoSignupFormMapper
+import com.emotionstorage.remote.request.auth.GoogleLoginRequestBody
+import com.emotionstorage.remote.request.auth.KakaoLoginRequestBody
 import com.emotionstorage.remote.response.ResponseStatus
 import com.orhanobut.logger.Logger
 import javax.inject.Inject

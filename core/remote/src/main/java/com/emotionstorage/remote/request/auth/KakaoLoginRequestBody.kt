@@ -1,8 +1,8 @@
-package com.emotionstorage.auth.remote.response
+package com.emotionstorage.remote.request.auth
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginResponseData(
+data class KakaoLoginRequestBody(
     val accessToken: String,
 )

@@ -1,6 +1,7 @@
 package com.emotionstorage.domain.useCase.user
 
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.map
 import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,10 +14,8 @@ class GetUserNicknameUseCase
     ) {
         suspend operator fun invoke(): Flow<DataState<String>> =
             userRepository.getUser().map {
-                when (it) {
-                    is DataState.Success -> DataState.Success(it.data.nickname)
-                    is DataState.Error -> DataState.Error(it.throwable, it.data)
-                    is DataState.Loading -> DataState.Loading(it.isLoading)
+                it.map {
+                    it.nickname
                 }
             }
     }

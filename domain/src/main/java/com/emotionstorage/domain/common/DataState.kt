@@ -44,6 +44,15 @@ sealed class DataState<out T> {
     }
 }
 
+fun <T, K> DataState<T>.map(
+    convertData: (T) -> K
+): DataState<K> =
+    when (this) {
+        is DataState.Success -> DataState.Success(convertData(data))
+        is DataState.Error -> DataState.Error(throwable, code, data)
+        is DataState.Loading -> DataState.Loading(isLoading, data?.let { convertData(it) })
+    }
+
 suspend fun <T> collectDataState(
     flow: Flow<DataState<T>>,
     onSuccess: suspend (data: T) -> Unit,

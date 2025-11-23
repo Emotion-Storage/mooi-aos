@@ -1,8 +1,8 @@
-package com.emotionstorage.auth.remote.modelMapper
+package com.emotionstorage.remote.modelMapper
 
-import com.emotionstorage.auth.data.model.SignupFormEntity
-import com.emotionstorage.auth.remote.request.GoogleSignupRequestBody
-import com.emotionstorage.auth.remote.request.KakaoSignupRequestBody
+import com.emotionstorage.data.model.SignupFormEntity
+import com.emotionstorage.remote.request.auth.GoogleSignupRequestBody
+import com.emotionstorage.remote.request.auth.KakaoSignupRequestBody
 import java.time.format.DateTimeFormatter
 
 internal object GoogleSignupFormMapper {

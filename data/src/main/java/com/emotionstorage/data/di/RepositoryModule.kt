@@ -1,5 +1,6 @@
 package com.emotionstorage.data.di
 
+import com.emotionstorage.data.repoImpl.AuthRepositoryImpl
 import com.emotionstorage.data.repoImpl.AttendanceRepositoryImpl
 import com.emotionstorage.data.repoImpl.HomeRepositoryImpl
 import com.emotionstorage.data.repoImpl.DailyReportRepositoryImpl
@@ -10,6 +11,7 @@ import com.emotionstorage.data.repoImpl.SessionRepositoryImpl
 import com.emotionstorage.data.repoImpl.TimeCapsuleRepositoryImpl
 import com.emotionstorage.data.repoImpl.UserRepositoryImpl
 import com.emotionstorage.domain.repo.AttendanceRepository
+import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.repo.DailyReportRepository
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.HomeRepository
@@ -27,6 +29,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
+
     @Binds
     @Singleton
     abstract fun bindHomeRepository(impl: HomeRepositoryImpl): HomeRepository
