@@ -107,7 +107,11 @@ fun Modal(
                     }
                     if (!bottomDescription.isNullOrEmpty()) {
                         Text(
-                            text = bottomDescription,
+                            text = buildHighlightAnnotatedString(
+                                bottomDescription,
+                                bottomDescriptionHighlights ?: emptyList(),
+                                SpanStyle(color = MooiTheme.colorScheme.primary),
+                            ),
                             style = MooiTheme.typography.body5,
                             color = MooiTheme.colorScheme.gray500,
                             textAlign = TextAlign.Center,
