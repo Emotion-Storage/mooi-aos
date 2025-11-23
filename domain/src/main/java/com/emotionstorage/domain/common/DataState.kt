@@ -37,33 +37,9 @@ sealed class DataState<out T> {
         onLoading: suspend (isLoading: Boolean) -> Unit = {},
     ) {
         when (this) {
-            is DataState.Success -> onSuccess(data)
-            is DataState.Error -> onError(throwable, data)
-            is DataState.Loading -> onLoading(isLoading)
-        }
-    }
-}
-
-fun <T, K> DataState<T>.map(
-    convertData: (T) -> K
-): DataState<K> =
-    when (this) {
-        is DataState.Success -> DataState.Success(convertData(data))
-        is DataState.Error -> DataState.Error(throwable, code, data)
-        is DataState.Loading -> DataState.Loading(isLoading, data?.let { convertData(it) })
-    }
-
-suspend fun <T> collectDataState(
-    flow: Flow<DataState<T>>,
-    onSuccess: suspend (data: T) -> Unit,
-    onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
-    onLoading: suspend (isLoading: Boolean) -> Unit = {},
-) {
-    flow.collect { result ->
-        when (result) {
-            is DataState.Success -> onSuccess(result.data)
-            is DataState.Error -> onError(result.throwable, result.data)
-            is DataState.Loading -> onLoading(result.isLoading)
+            is Success -> onSuccess(data)
+            is Error -> onError(throwable, data)
+            is Loading -> onLoading(isLoading)
         }
     }
 }
