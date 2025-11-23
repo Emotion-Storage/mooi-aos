@@ -8,10 +8,7 @@ import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.modelMapper.toPatchFavoriteRequest
 import com.emotionstorage.remote.modelMapper.toPatchNoteRequest
 import com.emotionstorage.remote.modelMapper.toPostOpenAtRequest
-import com.emotionstorage.remote.response.ResponseDto
-import com.orhanobut.logger.Logger
-import kotlinx.serialization.json.Json
-import retrofit2.HttpException
+import com.emotionstorage.remote.response.CustomHttpException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -82,23 +79,10 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             } else {
                 throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }
-        } catch (e: HttpException) {
-            // parse error response body
-            val errorResponse =
-                try {
-                    e.response()?.errorBody()?.string()?.let {
-                        Json.decodeFromString<ResponseDto<Nothing>>(it)
-                    }
-                } catch (parseError: Exception) {
-                    Logger.e("patchTimeCapsuleFavorite error body parse fail: $parseError")
-                    null
-                }
-
-            if (errorResponse?.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED") {
+        } catch (e: CustomHttpException) {
+            if (e.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED")
                 FavoriteResultEntity.FULL
-            } else {
-                throw e
-            }
+            else throw e
         } catch (e: Exception) {
             throw Exception("patchTimeCapsuleFavorite api fail, ${e.message}", e)
         }
@@ -116,7 +100,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                     sortBy = sortBy,
                 )
             if (response.data != null) {
-                return TimeCapsuleResponseMapper.toData(response.data!!)
+                return TimeCapsuleResponseMapper.toData(response.data)
             } else {
                 throw Exception("getFavoriteTimeCapsules response data is empty, $response")
             }
@@ -142,7 +126,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                     status = status,
                 )
             if (response.data != null) {
-                return TimeCapsuleResponseMapper.toData(response.data!!)
+                return TimeCapsuleResponseMapper.toData(response.data)
             } else {
                 throw Exception("getTimeCapsules response data is empty, $response")
             }
@@ -155,7 +139,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         try {
             val response = apiService.getTimeCapsuleDetail(id)
             if (response.data != null) {
-                return TimeCapsuleResponseMapper.toData(response.data!!)
+                return TimeCapsuleResponseMapper.toData(response.data)
             } else {
                 throw Exception("getTimeCapsuleDetail response data is empty, $response")
             }
@@ -169,7 +153,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             val response =
                 apiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
             if (response.data != null) {
-                return response.data!!.dates.map { LocalDate.parse(it) }
+                return response.data.dates.map { LocalDate.parse(it) }
             } else {
                 throw Exception("getTimeCapsuleDates response data is empty, $response")
             }
