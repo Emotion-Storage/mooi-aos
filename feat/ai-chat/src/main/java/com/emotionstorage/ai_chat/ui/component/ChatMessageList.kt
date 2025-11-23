@@ -49,12 +49,12 @@ fun ChatMessageList(
     LazyColumn(
         modifier =
             modifier
-                .fillMaxSize()
-                .padding(top = 16.dp),
+                .fillMaxSize(),
         state = listState,
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
+                Spacer(modifier = Modifier.height(16.dp))
                 DateDivider(
                     date = item.timestamp.toLocalDate(),
                     modifier = Modifier.padding(vertical = if (index != 0) 16.dp else 0.dp),
@@ -86,21 +86,34 @@ fun ChatMessageList(
 
         if (isMooiTyping) {
             item {
+                val lastMessage = chatMessages.lastOrNull()
+                val showTypingProfile =
+                    lastMessage == null || lastMessage.source != MessageSource.SERVER
+
+                val topPadding = when (lastMessage?.source) {
+                    MessageSource.SERVER -> 7.dp
+                    else -> 0.dp
+                }
+
+                Spacer(Modifier.height(topPadding))
+
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(40.dp)
-                                .clip(CircleShape),
-                    ) {
-                        Image(
-                            painter = painterResource(R.drawable.mooi_chat_icon),
-                            contentDescription = "mooi",
-                        )
+                    if (showTypingProfile) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape),
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.mooi_chat_icon),
+                                contentDescription = "mooi",
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
                     }
-                    Spacer(modifier = Modifier.size(10.dp))
 
                     Box(
                         modifier =
