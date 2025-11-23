@@ -191,10 +191,10 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun createTimeCapsule(id: Long): DataState<TimeCapsule> =
+    override suspend fun createTimeCapsule(id: Long): DataState<Long> =
         try {
-            val entity = remoteDataSource.createTimeCapsule(id)
-            DataState.Success(TimeCapsuleMapper.toDomain(entity))
+            val timeCapsuleId = remoteDataSource.createTimeCapsule(id)
+            DataState.Success(timeCapsuleId)
         } catch (e: Exception) {
             DataState.Error(e)
         }

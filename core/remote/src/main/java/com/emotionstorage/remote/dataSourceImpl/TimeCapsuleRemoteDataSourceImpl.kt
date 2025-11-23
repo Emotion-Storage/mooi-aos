@@ -10,7 +10,6 @@ import com.emotionstorage.remote.modelMapper.toPatchNoteRequest
 import com.emotionstorage.remote.modelMapper.toPostOpenAtRequest
 import com.emotionstorage.remote.request.timeCapsule.CreateTimeCapsuleRequest
 import com.emotionstorage.remote.response.ResponseDto
-import com.emotionstorage.remote.response.timeCapsule.toEntity
 import com.orhanobut.logger.Logger
 import kotlinx.serialization.json.Json
 import retrofit2.HttpException
@@ -189,11 +188,11 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun createTimeCapsule(id: Long): TimeCapsuleEntity {
+    override suspend fun createTimeCapsule(id: Long): Long {
         try {
             val response = apiService.createTimeCapsule(CreateTimeCapsuleRequest(id))
             if (response.data != null) {
-                return response.data.toEntity(id, "임시 저장")
+                return response.data.timeCapsuleId
             } else {
                 throw Exception("createTimeCapsule response data is empty, $response")
             }

@@ -40,7 +40,7 @@ interface TimeCapsuleRepository {
 
     suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>>
 
-    suspend fun createTimeCapsule(id: Long): DataState<TimeCapsule>
+    suspend fun createTimeCapsule(id: Long): DataState<Long>
 }
 
 enum class FavoriteResult {

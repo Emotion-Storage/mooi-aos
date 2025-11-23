@@ -313,11 +313,11 @@ class AIChatViewModel @Inject constructor(
             try {
                 when (val result = createTimeCapsuleUseCase(roomId)) {
                     is DataState.Success -> {
-                        val capsule = result.data
+                        val capsuleId = result.data
 
                         handleExitChatRoom()
                         postSideEffect(
-                            AIChatSideEffect.CreateTimeCapsuleSuccess(capsule.id),
+                            AIChatSideEffect.CreateTimeCapsuleSuccess(capsuleId),
                         )
                     }
 
