@@ -9,8 +9,6 @@ import com.emotionstorage.remote.modelMapper.toPatchFavoriteRequest
 import com.emotionstorage.remote.modelMapper.toPatchNoteRequest
 import com.emotionstorage.remote.modelMapper.toPostOpenAtRequest
 import com.emotionstorage.remote.request.timeCapsule.CreateTimeCapsuleRequest
-import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
-import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.timeCapsule.toEntity
 import com.orhanobut.logger.Logger

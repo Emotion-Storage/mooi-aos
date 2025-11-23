@@ -149,6 +149,7 @@ class AIChatViewModel @Inject constructor(
                                 }
                             }
 
+                            val isComplete = message.isComplete
                             val gaugeScore = message.gaugeScore
 
                             val newProgress =
@@ -160,11 +161,25 @@ class AIChatViewModel @Inject constructor(
                                 gaugeScore?.let { it >= TIME_CAPSULE_CREATE_SCORE }
                                     ?: state.canCreateTimesCapsule
 
+                            // TODO : gauge 값이 간헐적으로 null이 안들어오게 된다면 !! turnScore 값을 non-null type으로 변경
                             reduce {
+                                val nextTurnScore =
+                                    when {
+                                        !isComplete -> state.turnScore
+                                        message.turnCountScore!! > 0 -> message.turnCountScore
+                                        else -> state.turnScore + 1
+                                    }
+
                                 state.copy(
-                                    messages = state.messages + message,
+                                    messages =
+                                        if (isComplete) {
+                                            state.messages
+                                        } else {
+                                            state.messages + message
+                                        },
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
+                                    turnScore = nextTurnScore!!,
                                 )
                             }
                         }.catch {

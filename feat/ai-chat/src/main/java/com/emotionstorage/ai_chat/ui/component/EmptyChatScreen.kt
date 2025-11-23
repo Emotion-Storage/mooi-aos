@@ -47,14 +47,14 @@ fun EmptyChatScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
-                modifier = Modifier
-                    .size(186.dp, 155.dp)
-                    .offset(y = 5.dp)
-                    .graphicsLayer {
-                        scaleX = imageScale
-                        scaleY = imageScale
-                    }
-                    .alpha(imageAlpha),
+                modifier =
+                    Modifier
+                        .size(186.dp, 155.dp)
+                        .offset(y = 5.dp)
+                        .graphicsLayer {
+                            scaleX = imageScale
+                            scaleY = imageScale
+                        }.alpha(imageAlpha),
                 painter = painterResource(R.drawable.graphic_ai_chat),
                 contentDescription = null,
             )

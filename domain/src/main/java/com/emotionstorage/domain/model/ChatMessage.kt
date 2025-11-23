@@ -10,6 +10,7 @@ data class ChatMessage(
     val content: String,
     val gaugeScore: Int? = null,
     val turnCountScore: Int? = null,
+    val isComplete: Boolean = false,
     val timestamp: LocalDateTime = LocalDateTime.now(),
 ) {
     enum class MessageSource {

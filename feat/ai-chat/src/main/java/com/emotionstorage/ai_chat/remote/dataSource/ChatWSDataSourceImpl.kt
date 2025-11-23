@@ -8,8 +8,9 @@ import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
@@ -62,20 +63,39 @@ class ChatWSDataSourceImpl @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
-        session.subscribeText("/sub/chatroom/$roomId").mapNotNull { message ->
-            Logger.d("observeChatMessages() it: $message")
-            runCatching {
-                val dto = json.decodeFromString<ChatMessageResponse>(message)
-                ChatMessage(
-                    roomId = roomId,
-                    source = ChatMessage.MessageSource.SERVER,
-                    content = dto.content ?: "",
-                    gaugeScore = dto.gauge?.gaugeScore,
-                    turnCountScore = dto.gauge?.turnCountScore ?: 0,
-                )
-            }.getOrElse { null }
-        }
+        session
+            .subscribeText("/sub/chatroom/$roomId")
+            .flatMapConcat { raw ->
+                kotlinx.coroutines.flow.flow {
+                    raw
+                        .lines()
+                        .map { it.replace("\uFFFD", "").trim() }
+                        .filter { it.isNotBlank() }
+                        .forEach { line ->
+                            Logger.d("observeChatMessages() line: $line")
+                            runCatching {
+                                val dto = json.decodeFromString<ChatMessageResponse>(line)
+
+                                val isComplete = dto.messageType == "chat.complete"
+
+                                emit(
+                                    ChatMessage(
+                                        roomId = roomId,
+                                        source = ChatMessage.MessageSource.SERVER,
+                                        content = dto.content.orEmpty(),
+                                        gaugeScore = dto.gauge?.gaugeScore,
+                                        turnCountScore = dto.gauge?.turnCountScore ?: 0,
+                                        isComplete = isComplete,
+                                    ),
+                                )
+                            }.onFailure { e ->
+                                Logger.e("observeChatMessages() decode failed. line=$line", e)
+                            }
+                        }
+                }
+            }
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
