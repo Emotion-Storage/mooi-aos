@@ -20,6 +20,7 @@ sealed class DataState<out T> {
 
     class Error(
         val throwable: Throwable,
+        val code: String? = null,
         val data: Any? = null,
     ) : DataState<Nothing>()
 
