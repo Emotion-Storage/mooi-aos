@@ -64,10 +64,10 @@ fun ChatMessageList(
                 val previousChat = chatMessages[index - 1]
                 val topPadding =
                     when {
-                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 22.dp
-                        previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 13.dp
-                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 7.dp
-                        else -> 0.dp
+                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 20.dp
+                        previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 10.dp
+                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 8.dp
+                        else -> 20.dp
                     }
                 Spacer(Modifier.size(topPadding))
             }
@@ -91,8 +91,8 @@ fun ChatMessageList(
                     lastMessage == null || lastMessage.source != MessageSource.SERVER
 
                 val topPadding = when (lastMessage?.source) {
-                    MessageSource.SERVER -> 7.dp
-                    else -> 0.dp
+                    MessageSource.SERVER -> 8.dp
+                    else -> 20.dp
                 }
 
                 Spacer(Modifier.height(topPadding))
