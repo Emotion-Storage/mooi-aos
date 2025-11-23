@@ -31,6 +31,9 @@ data class AIChatState(
     val chatProgress: Float = 0.03f,
     val turnScore: Int = 0,
     val isWaitingReply: Boolean = false,
+    val forceQuitTriggerTurn: Int? = null,
+    val hasShownForceQuitBottomSheet: Boolean = false,
+    val showForceQuitBottomSheet: Boolean = false,
     val isMooiTyping: Boolean = false,
 ) {
     val isEmpty: Boolean get() = messages.isEmpty()
@@ -52,6 +55,8 @@ sealed class AIChatAction {
     object ExitChatRoom : AIChatAction()
 
     object CreateTimeCapsule : AIChatAction()
+
+    object DismissForceQuitSheet : AIChatAction()
 }
 
 sealed class AIChatSideEffect {
@@ -95,6 +100,10 @@ class AIChatViewModel @Inject constructor(
 
             is AIChatAction.CreateTimeCapsule -> {
                 handleCreateTimeCapsule()
+            }
+
+            is AIChatAction.DismissForceQuitSheet -> {
+                handleForceQuitSheet()
             }
         }
     }
@@ -169,16 +178,29 @@ class AIChatViewModel @Inject constructor(
                                         else -> state.turnScore + 1
                                     }
 
+                                val isNewlyCreatable = canCreate && !state.canCreateTimesCapsule
+                                val quitTriggerTurn =
+                                    when {
+                                        state.forceQuitTriggerTurn != null -> state.forceQuitTriggerTurn
+                                        isNewlyCreatable -> (nextTurnScore ?: state.turnScore) + 10
+                                        else -> null
+                                    }
+
+                                val shouldShowForceQuit =
+                                    !state.hasShownForceQuitBottomSheet &&
+                                        quitTriggerTurn != null &&
+                                        (nextTurnScore ?: state.turnScore) >= quitTriggerTurn
+
                                 state.copy(
                                     messages =
-                                        if (isComplete) {
-                                            state.messages
-                                        } else {
-                                            state.messages + message
-                                        },
+                                        if (isComplete) state.messages else state.messages + message,
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
                                     turnScore = nextTurnScore!!,
+
+                                    forceQuitTriggerTurn = quitTriggerTurn,
+                                    hasShownForceQuitBottomSheet = state.hasShownForceQuitBottomSheet || shouldShowForceQuit,
+                                    showForceQuitBottomSheet = shouldShowForceQuit,
                                 )
                             }
                         }.catch {
@@ -308,4 +330,10 @@ class AIChatViewModel @Inject constructor(
                 }
             }
         }
+
+    private fun handleForceQuitSheet() = intent {
+        reduce {
+            state.copy(showForceQuitBottomSheet = false)
+        }
+    }
 }

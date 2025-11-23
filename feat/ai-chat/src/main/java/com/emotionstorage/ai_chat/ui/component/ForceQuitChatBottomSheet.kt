@@ -17,15 +17,18 @@ import com.emotionstorage.ui.theme.MooiTheme
 // 그냥 Modal이라 Preview 확인이 어려움
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForceQuitChatBottomSheet() {
+fun ForceQuitChatBottomSheet(
+    onDismissRequest: () -> Unit = {},
+    onConfirm: () -> Unit = {},
+) {
     BottomSheet(
-        onDismissRequest = { },
+        onDismissRequest = onDismissRequest,
         hideDragHandle = true,
         subTitle = "감정 대화를 충분히 나누었어요",
         title = "지금 이 감정,\n타임캡슐에 담아둘까요?",
         confirmLabel = "타임캡슐 만들러 가기",
         contentPadding = PaddingValues(top = 23.dp, bottom = 42.dp, start = 15.dp, end = 15.dp),
-        onConfirm = {},
+        onConfirm = onConfirm,
     )
 }
 

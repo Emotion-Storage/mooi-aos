@@ -43,6 +43,7 @@ import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
+import com.emotionstorage.ai_chat.ui.component.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
@@ -227,6 +228,17 @@ private fun StatelessAIChatScreen(
                     onConfirm = {
                         showFinishBottomSheet = false
                         onAction(AIChatAction.CreateTimeCapsule)
+                    },
+                )
+            }
+
+            if (state.showForceQuitBottomSheet) {
+                ForceQuitChatBottomSheet(
+                    onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
+                    onConfirm = {
+                        onAction(AIChatAction.DismissForceQuitSheet)
+                        onAction(AIChatAction.CreateTimeCapsule)
+                        onAction(AIChatAction.ExitChatRoom)
                     },
                 )
             }
