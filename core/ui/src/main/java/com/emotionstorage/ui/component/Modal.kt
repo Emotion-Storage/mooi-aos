@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -43,6 +44,7 @@ fun Modal(
     dismissLabel: String? = null,
     onDismiss: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
+    verticalSpacing: Dp = 18.dp,
     showBackground: Boolean = true,
     topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
@@ -72,7 +74,7 @@ fun Modal(
                         .background(MooiTheme.colorScheme.background)
                         .padding(contentPadding)
                         .widthIn(max = 293.dp),
-                verticalArrangement = Arrangement.spacedBy(18.dp),
+                verticalArrangement = Arrangement.spacedBy(verticalSpacing),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // title & descriptions
@@ -121,36 +123,38 @@ fun Modal(
 
                 content?.invoke()
 
-                // buttons
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    if (confirmLabel != null) {
-                        CtaButton(
-                            modifier = Modifier.height(50.dp),
-                            labelString = confirmLabel,
-                            onClick = {
-                                onConfirm()
-                                onDismissRequest()
-                            },
-                            radius = 10,
-                            textStyle = MooiTheme.typography.mainButton,
-                        )
-                    }
-                    if (dismissLabel != null) {
-                        CtaButton(
-                            modifier = Modifier.height(50.dp),
-                            labelString = dismissLabel,
-                            onClick = {
-                                onDismiss()
-                                onDismissRequest()
-                            },
-                            type = CtaButtonType.TONAL,
-                            radius = 10,
-                            textStyle = MooiTheme.typography.mainButton,
-                        )
+                if (confirmLabel != null || dismissLabel != null) {
+                    // buttons
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        if (confirmLabel != null) {
+                            CtaButton(
+                                modifier = Modifier.height(50.dp),
+                                labelString = confirmLabel,
+                                onClick = {
+                                    onConfirm()
+                                    onDismissRequest()
+                                },
+                                radius = 10,
+                                textStyle = MooiTheme.typography.mainButton,
+                            )
+                        }
+                        if (dismissLabel != null) {
+                            CtaButton(
+                                modifier = Modifier.height(50.dp),
+                                labelString = dismissLabel,
+                                onClick = {
+                                    onDismiss()
+                                    onDismissRequest()
+                                },
+                                type = CtaButtonType.TONAL,
+                                radius = 10,
+                                textStyle = MooiTheme.typography.mainButton,
+                            )
+                        }
                     }
                 }
             }
