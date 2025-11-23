@@ -1,7 +1,5 @@
 package com.emotionstorage.domain.common
 
-import kotlinx.coroutines.flow.Flow
-
 /**
  * Sealed class to represent data state - **used in ui & presentation layer**
  * - Success: success, with data
@@ -20,7 +18,7 @@ sealed class DataState<out T> {
 
     class Error(
         val throwable: Throwable,
-        val code: String? = null,
+        val code: ErrorCode = ErrorCode.UNKNOWN,
         val data: Any? = null,
     ) : DataState<Nothing>()
 
@@ -28,7 +26,7 @@ sealed class DataState<out T> {
         when (this) {
             is Success -> "Success[data=$data]"
             is Loading -> "Loading[isLoading=$isLoading, data=$data]"
-            is Error -> "Error[throwable=$throwable]"
+            is Error -> "Error[code: ${code.name}, throwable=$throwable]"
         }
 
     suspend fun handle(
