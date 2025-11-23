@@ -198,9 +198,10 @@ class AIChatViewModel @Inject constructor(
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
                                     turnScore = nextTurnScore!!,
-
                                     forceQuitTriggerTurn = quitTriggerTurn,
-                                    hasShownForceQuitBottomSheet = state.hasShownForceQuitBottomSheet || shouldShowForceQuit,
+                                    hasShownForceQuitBottomSheet =
+                                        state.hasShownForceQuitBottomSheet ||
+                                            shouldShowForceQuit,
                                     showForceQuitBottomSheet = shouldShowForceQuit,
                                 )
                             }
@@ -337,9 +338,10 @@ class AIChatViewModel @Inject constructor(
             }
         }
 
-    private fun handleForceQuitSheet() = intent {
-        reduce {
-            state.copy(showForceQuitBottomSheet = false)
+    private fun handleForceQuitSheet() =
+        intent {
+            reduce {
+                state.copy(showForceQuitBottomSheet = false)
+            }
         }
-    }
 }
