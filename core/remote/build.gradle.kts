@@ -49,6 +49,8 @@ dependencies {
     api(projects.domain)
     api(projects.data)
     api(projects.core.common)
+    // local dependency for session storage access
+    api(projects.core.local)
 
     implementation(libs.bundles.credentials)
     implementation(libs.kakao.sdk.user)
