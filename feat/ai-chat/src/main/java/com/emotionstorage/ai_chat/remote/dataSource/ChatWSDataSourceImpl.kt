@@ -75,7 +75,7 @@ class ChatWSDataSourceImpl @Inject constructor(
                         .filter { it.isNotBlank() }
                         .forEach { line ->
                             Logger.d("observeChatMessages() line: $line")
-                            runCatching {
+                            try {
                                 val dto = json.decodeFromString<ChatMessageResponse>(line)
 
                                 val isComplete = dto.messageType == "chat.complete"
@@ -94,7 +94,7 @@ class ChatWSDataSourceImpl @Inject constructor(
                                         isComplete = isComplete,
                                     ),
                                 )
-                            }.onFailure { e ->
+                            } catch (e: Exception) {
                                 Logger.e("observeChatMessages() decode failed. line=$line", e)
                             }
                         }

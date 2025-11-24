@@ -172,10 +172,12 @@ class AIChatViewModel @Inject constructor(
 
                             // TODO : gauge 값이 간헐적으로 null이 안들어오게 된다면 !! turnScore 값을 non-null type으로 변경
                             reduce {
+                                val rawTurnCountScore = message.turnCountScore
+
                                 val nextTurnScore =
                                     when {
                                         !isComplete -> state.turnScore
-                                        message.turnCountScore!! > 0 -> message.turnCountScore
+                                        rawTurnCountScore != null && rawTurnCountScore > 0 -> rawTurnCountScore
                                         else -> state.turnScore + 1
                                     }
 
@@ -183,14 +185,14 @@ class AIChatViewModel @Inject constructor(
                                 val quitTriggerTurn =
                                     when {
                                         state.forceQuitTriggerTurn != null -> state.forceQuitTriggerTurn
-                                        isNewlyCreatable -> (nextTurnScore ?: state.turnScore) + 10
+                                        isNewlyCreatable -> nextTurnScore + 10
                                         else -> null
                                     }
 
                                 val shouldShowForceQuit =
                                     !state.hasShownForceQuitBottomSheet &&
                                         quitTriggerTurn != null &&
-                                        (nextTurnScore ?: state.turnScore) >= quitTriggerTurn
+                                        nextTurnScore >= quitTriggerTurn
 
                                 state.copy(
                                     messages =
