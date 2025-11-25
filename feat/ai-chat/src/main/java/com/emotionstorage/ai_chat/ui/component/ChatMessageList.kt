@@ -109,7 +109,7 @@ fun ChatMessageList(
                                     .clip(CircleShape),
                         ) {
                             Image(
-                                painter = painterResource(R.drawable.mooi_chat_icon),
+                                painter = painterResource(R.drawable.ic_chat),
                                 contentDescription = "mooi",
                             )
                         }
@@ -197,7 +197,7 @@ private fun ChatMessageItem(
                             .clip(CircleShape),
                 ) {
                     Image(
-                        painter = painterResource(R.drawable.mooi_chat_icon),
+                        painter = painterResource(R.drawable.ic_chat),
                         contentDescription = "mooi",
                     )
                 }
