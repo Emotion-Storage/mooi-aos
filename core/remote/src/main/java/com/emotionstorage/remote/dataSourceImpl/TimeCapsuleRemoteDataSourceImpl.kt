@@ -190,7 +190,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun createTimeCapsule(id: Long): Long {
         try {
-            val response = apiService.createTimeCapsule(CreateTimeCapsuleRequest(id))
+            val response = apiService.postTimeCapsuleCreate(CreateTimeCapsuleRequest(id))
             if (response.data != null) {
                 return response.data.timeCapsuleId
             } else {

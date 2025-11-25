@@ -104,7 +104,7 @@ interface TimeCapsuleApiService {
     ): ResponseDto<Unit>
 
     @POST("/api/v1/time-capsule/create")
-    suspend fun createTimeCapsule(
+    suspend fun postTimeCapsuleCreate(
         @Body requestBody: CreateTimeCapsuleRequest,
     ): ResponseDto<CreateTimeCapsuleResponse>
 }
