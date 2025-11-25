@@ -192,7 +192,7 @@ data class MooiTypography(
     val bottomBar: TextStyle =
         TextStyle(
             fontFamily = pretendard,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Medium,
             fontSize = 10.sp,
             letterSpacing = (-0.02).em,
             lineHeight = 24.sp,
