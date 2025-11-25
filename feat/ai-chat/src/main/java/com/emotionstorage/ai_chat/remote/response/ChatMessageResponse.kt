@@ -9,6 +9,8 @@ data class ChatMessageResponse(
     val gauge: GaugeDto? = null,
     val sender: String? = null,
     val timestamp: String? = null,
+    @SerialName("message_type")
+    val messageType: String? = null,
 )
 
 @Serializable

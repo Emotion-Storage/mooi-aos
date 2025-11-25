@@ -8,6 +8,7 @@ import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.modelMapper.toPatchFavoriteRequest
 import com.emotionstorage.remote.modelMapper.toPatchNoteRequest
 import com.emotionstorage.remote.modelMapper.toPostOpenAtRequest
+import com.emotionstorage.remote.request.timeCapsule.CreateTimeCapsuleRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.orhanobut.logger.Logger
 import kotlinx.serialization.json.Json
@@ -184,6 +185,19 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             return true
         } catch (e: Exception) {
             throw Exception("deleteTimeCapsule api fail, ${e.message}", e)
+        }
+    }
+
+    override suspend fun createTimeCapsule(id: Long): Long {
+        try {
+            val response = apiService.postTimeCapsuleCreate(CreateTimeCapsuleRequest(id))
+            if (response.data != null) {
+                return response.data.timeCapsuleId
+            } else {
+                throw Exception("createTimeCapsule response data is empty, $response")
+            }
+        } catch (e: Exception) {
+            throw Exception("createTimeCapsule api fail, ${e.message}", e)
         }
     }
 }

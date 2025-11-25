@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.offset
@@ -28,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,13 +37,15 @@ import com.emotionstorage.ai_chat.presentation.AIChatAction
 import com.emotionstorage.ai_chat.presentation.AIChatSideEffect
 import com.emotionstorage.ai_chat.presentation.AIChatState
 import com.emotionstorage.ai_chat.presentation.AIChatViewModel
+import com.emotionstorage.ai_chat.ui.component.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
+import com.emotionstorage.ai_chat.ui.component.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
-import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
@@ -74,7 +78,7 @@ fun AIChatScreen(
                 }
 
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
-                    // todo: show bottom sheet
+                    // TODO : SOMETHING
                 }
             }
         }
@@ -101,13 +105,18 @@ private fun StatelessAIChatScreen(
     var isInputFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
-    val showEmptyScreen = state.messages.isEmpty() && !isInputFocused
-
     val listState = remember { LazyListState() }
 
-    val canMakeTimeCapsule = state.chatProgress == 1f
+    val canMakeTimeCapsule = state.canCreateTimesCapsule
     var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
     var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
+
+    val density = LocalDensity.current
+    val isKeyboardVisible = WindowInsets.ime.getBottom(density) > 0
+
+    // ✅ 메시지가 하나라도 있으면 이후부터는 Empty 화면 안 보이게
+    val hasMessage = state.messages.isNotEmpty()
+    val showEmptyScreen = !hasMessage
 
     LaunchedEffect(state.messages.size) {
         val last = state.messages.lastIndex
@@ -116,7 +125,7 @@ private fun StatelessAIChatScreen(
         }
     }
 
-    LaunchedEffect(state.chatProgress) {
+    LaunchedEffect(canMakeTimeCapsule) {
         if (canMakeTimeCapsule) {
             showTimeCapsuleCreateAlert = true
             delay(3000L)
@@ -127,7 +136,10 @@ private fun StatelessAIChatScreen(
     AIChatExitModal(
         isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
-        onExit = navToBack,
+        onExit = {
+            onAction(AIChatAction.ExitChatRoom)
+            navToBack()
+        },
     )
 
     Scaffold(
@@ -182,7 +194,11 @@ private fun StatelessAIChatScreen(
 
                 if (showEmptyScreen) {
                     EmptyChatScreen(
-                        modifier = Modifier.offset(y = (-60).dp),
+                        modifier =
+                            Modifier.offset(
+                                y = if (isKeyboardVisible) 45.dp else (-60).dp,
+                            ),
+                        isKeyboardVisible = isKeyboardVisible,
                     )
                 }
 
@@ -217,6 +233,21 @@ private fun StatelessAIChatScreen(
                 )
             }
 
+            if (state.showForceQuitBottomSheet) {
+                ForceQuitChatBottomSheet(
+                    onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
+                    onConfirm = {
+                        onAction(AIChatAction.DismissForceQuitSheet)
+                        onAction(AIChatAction.CreateTimeCapsule)
+                        onAction(AIChatAction.ExitChatRoom)
+                    },
+                )
+            }
+
+            if (state.isCreatingTimeCapsule) {
+                TimeCapsuleCreateLoadingModal()
+            }
+
             ChatMessageInputBox(
                 text = draft,
                 modifier =
@@ -238,23 +269,6 @@ private fun StatelessAIChatScreen(
                 },
             )
         }
-    }
-}
-
-@Composable
-private fun AIChatExitModal(
-    isModalOpen: Boolean = false,
-    onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {},
-) {
-    if (isModalOpen) {
-        Modal(
-            title = "잠시 감정 대화를 중지할까요?\n오늘의 감정 대화는\n오늘까지만 임시저장돼요!",
-            confirmLabel = "대화 계속하기",
-            dismissLabel = "그만하기",
-            onDismissRequest = onDismissRequest,
-            onDismiss = onExit,
-        )
     }
 }
 

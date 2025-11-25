@@ -45,6 +45,7 @@ class ChatRepositoryImpl
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
+                    chatRemoteDataSource.exitChatRoom(roomId)
                     val isDisconnected = chatWSDataSource.disconnectChatRoom()
                     emit(DataState.Success(isDisconnected))
                 } catch (e: Exception) {

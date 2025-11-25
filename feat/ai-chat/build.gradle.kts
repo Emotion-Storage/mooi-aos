@@ -32,4 +32,5 @@ dependencies {
     implementation(projects.core.remote)
 
     implementation(libs.bundles.krossbow)
+    implementation(libs.accompanist.drawablepainter)
 }

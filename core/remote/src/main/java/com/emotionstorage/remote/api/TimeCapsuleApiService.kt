@@ -1,9 +1,11 @@
 package com.emotionstorage.remote.api
 
+import com.emotionstorage.remote.request.timeCapsule.CreateTimeCapsuleRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleFavoriteRequest
 import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.request.timeCapsule.PostTimeCapsuleOpenAtRequest
 import com.emotionstorage.remote.response.ResponseDto
+import com.emotionstorage.remote.response.timeCapsule.CreateTimeCapsuleResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDatesReponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDetailResponse
@@ -100,4 +102,9 @@ interface TimeCapsuleApiService {
     suspend fun deleteTimeCapsule(
         @Path(value = "capsuleId") id: Long,
     ): ResponseDto<Unit>
+
+    @POST("/api/v1/time-capsule/create")
+    suspend fun postTimeCapsuleCreate(
+        @Body requestBody: CreateTimeCapsuleRequest,
+    ): ResponseDto<CreateTimeCapsuleResponse>
 }

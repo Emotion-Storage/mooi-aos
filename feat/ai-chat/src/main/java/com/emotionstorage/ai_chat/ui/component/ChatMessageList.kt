@@ -1,6 +1,7 @@
 package com.emotionstorage.ai_chat.ui.component
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.domain.model.ChatMessage
@@ -35,6 +37,7 @@ import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
+import com.emotionstorage.ui.R
 
 @Composable
 fun ChatMessageList(
@@ -46,12 +49,12 @@ fun ChatMessageList(
     LazyColumn(
         modifier =
             modifier
-                .fillMaxSize()
-                .padding(top = 16.dp),
+                .fillMaxSize(),
         state = listState,
     ) {
         itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
+                Spacer(modifier = Modifier.height(16.dp))
                 DateDivider(
                     date = item.timestamp.toLocalDate(),
                     modifier = Modifier.padding(vertical = if (index != 0) 16.dp else 0.dp),
@@ -61,10 +64,10 @@ fun ChatMessageList(
                 val previousChat = chatMessages[index - 1]
                 val topPadding =
                     when {
-                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 22.dp
-                        previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 13.dp
-                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 7.dp
-                        else -> 0.dp
+                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 20.dp
+                        previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 10.dp
+                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 8.dp
+                        else -> 20.dp
                     }
                 Spacer(Modifier.size(topPadding))
             }
@@ -83,17 +86,35 @@ fun ChatMessageList(
 
         if (isMooiTyping) {
             item {
+                val lastMessage = chatMessages.lastOrNull()
+                val showTypingProfile =
+                    lastMessage == null || lastMessage.source != MessageSource.SERVER
+
+                val topPadding =
+                    when (lastMessage?.source) {
+                        MessageSource.SERVER -> 8.dp
+                        else -> 20.dp
+                    }
+
+                Spacer(Modifier.height(topPadding))
+
                 Column(
                     modifier = Modifier.padding(horizontal = 16.dp),
                 ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(30.dp)
-                                .clip(CircleShape)
-                                .background(Color.Gray),
-                    )
-                    Spacer(modifier = Modifier.size(10.dp))
+                    if (showTypingProfile) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .size(40.dp)
+                                    .clip(CircleShape),
+                        ) {
+                            Image(
+                                painter = painterResource(R.drawable.ic_chat),
+                                contentDescription = "mooi",
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                    }
 
                     Box(
                         modifier =
@@ -172,10 +193,14 @@ private fun ChatMessageItem(
                 Box(
                     modifier =
                         Modifier
-                            .size(30.dp)
-                            .clip(CircleShape)
-                            .background(Color.Gray),
-                )
+                            .size(40.dp)
+                            .clip(CircleShape),
+                ) {
+                    Image(
+                        painter = painterResource(R.drawable.ic_chat),
+                        contentDescription = "mooi",
+                    )
+                }
             }
             Spacer(modifier = Modifier.size(10.dp))
         }

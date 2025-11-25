@@ -39,6 +39,8 @@ interface TimeCapsuleRepository {
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>
 
     suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>>
+
+    suspend fun createTimeCapsule(id: Long): DataState<Long>
 }
 
 enum class FavoriteResult {
