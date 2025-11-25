@@ -71,14 +71,17 @@ class ChatWSDataSourceImpl @Inject constructor(
                 kotlinx.coroutines.flow.flow {
                     raw
                         .lines()
+                        // 응답에 문제가 없다면 필요 없는 부분
                         .map { it.replace("\uFFFD", "").trim() }
                         .filter { it.isNotBlank() }
                         .forEach { line ->
                             Logger.d("observeChatMessages() line: $line")
                             try {
                                 val dto = json.decodeFromString<ChatMessageResponse>(line)
-
                                 val isComplete = dto.messageType == "chat.complete"
+
+                                val content = dto.content.orEmpty()
+                                if (content.isBlank() && !isComplete) return@forEach
 
                                 if (!isComplete) {
                                     kotlinx.coroutines.delay(1500L)
@@ -88,9 +91,9 @@ class ChatWSDataSourceImpl @Inject constructor(
                                     ChatMessage(
                                         roomId = roomId,
                                         source = ChatMessage.MessageSource.SERVER,
-                                        content = dto.content.orEmpty(),
+                                        content = content,
                                         gaugeScore = dto.gauge?.gaugeScore,
-                                        turnCountScore = dto.gauge?.turnCountScore ?: 0,
+                                        turnCountScore = dto.gauge?.turnCountScore,
                                         isComplete = isComplete,
                                     ),
                                 )
