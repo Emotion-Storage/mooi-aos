@@ -3,6 +3,7 @@ package com.emotionstorage.remote.dataSourceImpl
 import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
+import com.emotionstorage.remote.response.ResponseCode
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.modelMapper.toPatchFavoriteRequest
@@ -39,13 +40,6 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
             return true
         } catch (e: Exception) {
             throw Exception("postTimeCapsuleOpenAt api fail, ${e.message}", e)
-            // todo: handle 410 error
-//             {
-//                "status": 410,
-//                "code": "TIME_CAPSULE_DRAFT_EXPIRED",
-//                "message": "타임캡슐 임시저장 기간이 만료되었습니다.",
-//                "timestamp": "2025-11-20T16:43:36.924675036"
-//              }
         }
     }
 
@@ -75,12 +69,13 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                     isFavorite.toPatchFavoriteRequest(),
                 )
             if (response.data != null) {
-                if (isFavorite) FavoriteResultEntity.ADDED else FavoriteResultEntity.REMOVED
+                if (response.data.isFavorite) FavoriteResultEntity.ADDED
+                else FavoriteResultEntity.REMOVED
             } else {
                 throw Exception("patchTimeCapsuleFavorite response data is empty, $response")
             }
         } catch (e: CustomHttpException) {
-            if (e.code == "TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED")
+            if (e.code == ResponseCode.TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED.name)
                 FavoriteResultEntity.FULL
             else throw e
         } catch (e: Exception) {
