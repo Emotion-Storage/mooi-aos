@@ -1,5 +1,7 @@
 package com.emotionstorage.domain.common
 
+import ErrorCode
+
 /**
  * Sealed class to represent data state - **used in ui & presentation layer**
  * - Success: success, with data
