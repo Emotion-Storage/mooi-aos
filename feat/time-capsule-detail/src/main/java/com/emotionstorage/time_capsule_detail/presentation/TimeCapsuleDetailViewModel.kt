@@ -51,10 +51,6 @@ sealed class TimeCapsuleDetailAction {
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
-    data class OnToggleFavorite(
-        val id: Long,
-    ) : TimeCapsuleDetailAction()
-
     data class OnDeleteTimeCapsule(
         val id: Long,
     ) : TimeCapsuleDetailAction()
@@ -100,12 +96,6 @@ sealed class TimeCapsuleDetailSideEffect {
     object ShowDeleteModal : TimeCapsuleDetailSideEffect()
 
     object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
-
-    data class ShowFavoriteSuccessToast(
-        val isFavorite: Boolean,
-    ) : TimeCapsuleDetailSideEffect()
-
-    object ShowFavoriteFailToast : TimeCapsuleDetailSideEffect()
 }
 
 @HiltViewModel
@@ -114,7 +104,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val openTimeCapsule: OpenTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
-    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
     private val saveNote: SaveTimeCapsuleNoteUseCase,
     private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : ViewModel(),
@@ -130,10 +119,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
             is OnOpenTimeCapsule -> {
                 handleOpenTimeCapsule(action.id)
-            }
-
-            is OnToggleFavorite -> {
-                handleToggleFavorite(action.id)
             }
 
             is OnDeleteTimeCapsule -> {
@@ -257,33 +242,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                     Logger.e("getRequiredKeyCount error: $throwable")
                     // todo: handle error
                 },
-            )
-        }
-
-    private fun handleToggleFavorite(id: Long) =
-        intent {
-            if (state.timeCapsule == null) {
-                return@intent
-            }
-
-            setFavorite(id, !state.timeCapsule!!.isFavorite).handle(
-                onSuccess = {
-                    reduce {
-                        state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = it))
-                    }
-                    postSideEffect(TimeCapsuleDetailSideEffect.ShowFavoriteSuccessToast(it))
-                },
-                onError = { throwable, code, data ->
-                    when(code){
-                        ErrorCode.TIME_CAPSULE_FAVORITE_LIST_FULL -> {
-                            postSideEffect(TimeCapsuleDetailSideEffect.ShowFavoriteFailToast)
-                        }
-                        else ->{
-                            Logger.e("setFavorite error, code: $code, throwable: $throwable")
-                            // todo: add error ui
-                        }
-                    }
-                }
             )
         }
 
