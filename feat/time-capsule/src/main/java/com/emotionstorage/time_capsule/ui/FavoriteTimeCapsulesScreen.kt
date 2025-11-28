@@ -23,6 +23,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,51 +33,90 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
-import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteAction
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteFailToast
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteSuccessToast
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteState
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
-import com.emotionstorage.ui.component.toast.FavoriteToast
+import com.emotionstorage.ui.component.toast.AppSnackbarController
 
 @Composable
 fun FavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: FavoriteTimeCapsulesViewModel = hiltViewModel(),
+    favoriteViewModel: ToggleFavoriteViewModel = hiltViewModel(),
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     val state = viewModel.container.stateFlow.collectAsState()
+    val timeCapsulesState = state.value.timeCapsulesFlow?.collectAsLazyPagingItems()
+    val favoriteState = favoriteViewModel.container.stateFlow.collectAsState()
+
+    val snackState = remember { SnackbarHostState() }
+    val snackbarController = remember { AppSnackbarController(snackState) }
+
+    // init state
     LaunchedEffect(Unit) {
         // initial load, triggered on launch
         viewModel.onAction(FavoriteTimeCapsulesAction.Init)
     }
 
-    val snackState = remember { SnackbarHostState() }
-    LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect { sideEffect ->
-            when (sideEffect) {
-                is ShowFavoriteToast -> {
-                    // dismiss current snackbar if exists
+    // init favorite state
+    LaunchedEffect(timeCapsulesState?.itemSnapshotList) {
+        val favorites = timeCapsulesState
+            ?.itemSnapshotList?.items
+            ?.filter { it.isFavorite }
+            ?.map { it.id }
+            ?: emptyList()
+
+        favoriteViewModel.onAction(
+            ToggleFavoriteAction.Init(favorites)
+        )
+    }
+
+    // collect favorite side effect
+    LaunchedEffect("init") {
+        favoriteViewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is ShowFavoriteSuccessToast -> {
                     snackState.currentSnackbarData?.dismiss()
-                    // show new snackbar
-                    snackState.showSnackbar(
-                        sideEffect.favoriteResult.name,
+                    snackbarController.showSnackbar(
+                        message =
+                            if (it.isFavorite) context.getString(R.string.toast_favorite_added)
+                            else context.getString(R.string.toast_favorite_removed),
+                        iconResId = R.drawable.ic_success_filled,
+                    )
+                }
+
+                is ShowFavoriteFailToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackbarController.showSnackbar(
+                        message = context.getString(R.string.toast_favorite_full),
                     )
                 }
             }
         }
     }
 
+
     StatelessFavoriteTimeCapsulesScreen(
         modifier = modifier.fillMaxSize(),
         snackState = snackState,
+        snackbarController = snackbarController,
         state = state.value,
+        favoriteState = favoriteState.value,
         onAction = viewModel::onAction,
+        onFavoriteAction = favoriteViewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack,
     )
@@ -86,8 +126,11 @@ fun FavoriteTimeCapsulesScreen(
 private fun StatelessFavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    snackbarController: AppSnackbarController = remember { AppSnackbarController(SnackbarHostState()) },
     state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
+    favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
     onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
+    onFavoriteAction: (ToggleFavoriteAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
@@ -102,9 +145,10 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
         },
         snackbarHost = {
-            AppSnackbarHost(hostState = snackState) { snackbarData ->
-                FavoriteToast(snackbarData.visuals.message)
-            }
+            AppSnackbarHost(
+                hostState = snackState,
+                customDataFlow = snackbarController.currentData
+            )
         },
     ) { innerPadding ->
         LazyColumn(
@@ -179,13 +223,15 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                                     Modifier
                                         .fillMaxWidth()
                                         .padding(bottom = 26.dp),
-                                timeCapsule = this,
+                                timeCapsule = this.copy(
+                                    isFavorite = favoriteState.favoriteIds.contains(this.id)
+                                ),
                                 showDate = true,
                                 showFavorite = true,
                                 onClick = { navToTimeCapsuleDetail(this.id) },
                                 onFavoriteClick = {
-                                    onAction(
-                                        FavoriteTimeCapsulesAction.ToggleFavorite(this.id, this.isFavorite),
+                                    onFavoriteAction(
+                                        ToggleFavoriteAction.OnToggle(this.id),
                                     )
                                 },
                             )
