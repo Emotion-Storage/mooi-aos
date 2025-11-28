@@ -27,7 +27,8 @@ class FailResponseInterceptor @Inject constructor(
 
         // parse error response body & throw custom error
         val httpResponseBody = httpResponse.peekBody(Long.MAX_VALUE).string()
-        val responseDto = json.decodeFromString<ResponseDto<*>>(httpResponseBody)
+
+        val responseDto = json.decodeFromString<ResponseDto<String>>(httpResponseBody)
         throw CustomHttpException(
             status = ResponseStatus.fromCode(responseDto.status),
             code = responseDto.code,
