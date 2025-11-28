@@ -31,6 +31,7 @@ sealed class DataState<out T> {
             is Error -> "Error[code: ${code.name}, throwable=$throwable]"
         }
 
+    @Deprecated("use handle instead")
     suspend fun handle(
         onSuccess: suspend (data: T) -> Unit,
         onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
@@ -39,6 +40,18 @@ sealed class DataState<out T> {
         when (this) {
             is Success -> onSuccess(data)
             is Error -> onError(throwable, data)
+            is Loading -> onLoading(isLoading)
+        }
+    }
+
+    suspend fun handle(
+        onSuccess: suspend (data: T) -> Unit,
+        onError: suspend (throwable: Throwable, code: ErrorCode, data: Any?) -> Unit = { _, _, _ -> },
+        onLoading: suspend (isLoading: Boolean) -> Unit = {},
+    ) {
+        when (this) {
+            is Success -> onSuccess(data)
+            is Error -> onError(throwable, code, data)
             is Loading -> onLoading(isLoading)
         }
     }

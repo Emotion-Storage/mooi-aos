@@ -3,7 +3,6 @@ package com.emotionstorage.time_capsule_detail.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
@@ -26,7 +25,6 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
@@ -103,9 +101,11 @@ sealed class TimeCapsuleDetailSideEffect {
 
     object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
 
-    data class ShowFavoriteToast(
-        val favoriteResult: FavoriteResult,
+    data class ShowFavoriteSuccessToast(
+        val isFavorite: Boolean,
     ) : TimeCapsuleDetailSideEffect()
+
+    object ShowFavoriteFailToast : TimeCapsuleDetailSideEffect()
 }
 
 @HiltViewModel
@@ -266,31 +266,24 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 return@intent
             }
 
-            collectDataState(
-                flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
+            setFavorite(id, !state.timeCapsule!!.isFavorite).handle(
                 onSuccess = {
-                    when (it) {
-                        FavoriteResult.ADDED -> {
-                            reduce {
-                                state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
-                            }
+                    reduce {
+                        state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = it))
+                    }
+                    postSideEffect(TimeCapsuleDetailSideEffect.ShowFavoriteSuccessToast(it))
+                },
+                onError = { throwable, code, data ->
+                    when(code){
+                        ErrorCode.TIME_CAPSULE_LIST_FULL -> {
+                            postSideEffect(TimeCapsuleDetailSideEffect.ShowFavoriteFailToast)
                         }
-
-                        FavoriteResult.REMOVED -> {
-                            reduce {
-                                state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
-                            }
-                        }
-
-                        FavoriteResult.FULL -> {
-                            // do nothing
+                        else ->{
+                            Logger.e("setFavorite error, code: $code, throwable: $throwable")
+                            // todo: add error ui
                         }
                     }
-                    postSideEffect(ShowFavoriteToast(it))
-                },
-                onError = { throwable, data ->
-                    Logger.e("setFavorite error: $throwable")
-                },
+                }
             )
         }
 

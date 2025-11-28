@@ -17,8 +17,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
@@ -32,14 +35,16 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteFailToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteSuccessToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
@@ -53,11 +58,12 @@ import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
-import com.emotionstorage.ui.component.toast.FavoriteToast
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.appBar.TopAppBar
+import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -82,12 +88,16 @@ fun TimeCapsuleDetailScreen(
     navToSaveTimeCapsule: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     val state = viewModel.container.stateFlow.collectAsState()
     LaunchedEffect(id) {
         viewModel.onAction(TimeCapsuleDetailAction.Init(id))
     }
 
     val snackState = remember { SnackbarHostState() }
+    val snackbarController = remember { AppSnackbarController(snackState) }
+
     val (modalState, setModalState) = remember { mutableStateOf(TimeCapsuleDetailModal.NONE) }
     val (unlockModalState, setUnlockModalState) =
         remember {
@@ -134,10 +144,21 @@ fun TimeCapsuleDetailScreen(
                     setModalState(TimeCapsuleDetailModal.SAVE_CHANGES)
                 }
 
-                is ShowFavoriteToast -> {
-                    // dismiss current snackbar if exists
+                is ShowFavoriteSuccessToast -> {
                     snackState.currentSnackbarData?.dismiss()
-                    snackState.showSnackbar(sideEffect.favoriteResult.name)
+                    snackbarController.showSnackbar(
+                        message =
+                            if (sideEffect.isFavorite) context.getString(R.string.toast_favorite_added)
+                            else context.getString(R.string.toast_favorite_removed),
+                        iconResId = R.drawable.ic_success_filled,
+                    )
+                }
+
+                is ShowFavoriteFailToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackbarController.showSnackbar(
+                        message = context.getString(R.string.toast_favorite_full),
+                    )
                 }
             }
         }
@@ -147,6 +168,7 @@ fun TimeCapsuleDetailScreen(
         id = id,
         modifier = modifier,
         snackState = snackState,
+        snackbarController = snackbarController,
         modalState = modalState,
         dismissModal = { setModalState(TimeCapsuleDetailModal.NONE) },
         isNewTimeCapsule = isNewTimeCapsule,
@@ -164,6 +186,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: Long,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
+    snackbarController: AppSnackbarController = AppSnackbarController(SnackbarHostState()),
     modalState: TimeCapsuleDetailModal = TimeCapsuleDetailModal.NONE,
     dismissModal: () -> Unit = {},
     unlockModalState: UnlockModalState = UnlockModalState(),
@@ -260,9 +283,10 @@ private fun StatelessTimeCapsuleDetailScreen(
                 )
             },
             snackbarHost = {
-                AppSnackbarHost(hostState = snackState) { snackbarData ->
-                    FavoriteToast(snackbarData.visuals.message)
-                }
+                AppSnackbarHost(
+                    hostState = snackState,
+                    customDataFlow = snackbarController.currentData
+                )
             },
         ) { innerPadding ->
             Column(
