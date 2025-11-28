@@ -102,6 +102,7 @@ android-logger = { group = "com.orhanobut", name = "logger", version.ref = "logg
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+accompanist-drawablepainter = { group = "com.google.accompanist", name = "accompanist-drawablepainter", version.ref = "accompanist"}
 
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }

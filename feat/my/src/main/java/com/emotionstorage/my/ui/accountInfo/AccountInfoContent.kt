@@ -58,7 +58,7 @@ fun AccountInfoContent(
                         AuthProvider.GOOGLE -> {
                             Image(
                                 modifier = Modifier.size(20.dp),
-                                painter = painterResource(R.drawable.google_icon),
+                                painter = painterResource(R.drawable.ic_google),
                                 contentDescription = "구글 로그인",
                             )
                         }

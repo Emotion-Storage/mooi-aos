@@ -24,6 +24,7 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 
+// TODO : When Design Changed Delete It
 @Composable
 fun ChattingFinishButton(
     modifier: Modifier = Modifier,

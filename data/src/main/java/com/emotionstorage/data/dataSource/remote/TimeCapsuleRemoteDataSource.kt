@@ -43,6 +43,8 @@ interface TimeCapsuleRemoteDataSource {
     ): DataState<Boolean>
 
     suspend fun deleteTimeCapsule(id: Long): Boolean
+
+    suspend fun createTimeCapsule(id: Long): Long
 }
 
 enum class FavoriteResultEntity {

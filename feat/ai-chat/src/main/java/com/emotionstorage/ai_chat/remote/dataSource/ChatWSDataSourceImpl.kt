@@ -1,15 +1,16 @@
 package com.emotionstorage.ai_chat.remote.dataSource
 
 import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
-import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
 import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
 import com.emotionstorage.ai_chat.remote.response.ChatMessageResponse
+import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
@@ -62,20 +63,46 @@ class ChatWSDataSourceImpl @Inject constructor(
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
-        session.subscribeText("/sub/chatroom/$roomId").mapNotNull { message ->
-            Logger.d("observeChatMessages() it: $message")
-            runCatching {
-                val dto = json.decodeFromString<ChatMessageResponse>(message)
-                ChatMessage(
-                    roomId = roomId,
-                    source = ChatMessage.MessageSource.SERVER,
-                    content = dto.content ?: "",
-                    gaugeScore = dto.gauge?.gaugeScore,
-                    turnCountScore = dto.gauge?.turnCountScore ?: 0,
-                )
-            }.getOrElse { null }
-        }
+        session
+            .subscribeText("/sub/chatroom/$roomId")
+            .flatMapConcat { raw ->
+                kotlinx.coroutines.flow.flow {
+                    raw
+                        .lines()
+                        // 응답에 문제가 없다면 필요 없는 부분
+                        .map { it.replace("\uFFFD", "").trim() }
+                        .filter { it.isNotBlank() }
+                        .forEach { line ->
+                            Logger.d("observeChatMessages() line: $line")
+                            try {
+                                val dto = json.decodeFromString<ChatMessageResponse>(line)
+                                val isComplete = dto.messageType == "chat.complete"
+
+                                val content = dto.content.orEmpty()
+                                if (content.isBlank() && !isComplete) return@forEach
+
+                                if (!isComplete) {
+                                    kotlinx.coroutines.delay(1500L)
+                                }
+
+                                emit(
+                                    ChatMessage(
+                                        roomId = roomId,
+                                        source = ChatMessage.MessageSource.SERVER,
+                                        content = content,
+                                        gaugeScore = dto.gauge?.gaugeScore,
+                                        turnCountScore = dto.gauge?.turnCountScore,
+                                        isComplete = isComplete,
+                                    ),
+                                )
+                            } catch (e: Exception) {
+                                Logger.e("observeChatMessages() decode failed. line=$line", e)
+                            }
+                        }
+                }
+            }
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {

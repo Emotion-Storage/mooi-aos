@@ -15,4 +15,11 @@ class ChatRemoteDataSourceImpl
                 return this
             } ?: throw Throwable("getChatRoomId() failed, no room id received!")
         }
+
+        override suspend fun exitChatRoom(roomId: Long): Boolean {
+            val response = chatApiService.exitEmotionConversation(roomId)
+            response.data?.finished?.run {
+                return this
+            } ?: throw Throwable("exitChatRoom() failed, no finished received!")
+        }
     }

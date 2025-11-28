@@ -8,6 +8,7 @@ import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.CreateTimeCapsuleUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,7 +22,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import javax.inject.Inject
 
-enum class SendButtonMode { SEND, STOP }
+private const val TIME_CAPSULE_CREATE_SCORE = 70
 
 data class AIChatState(
     val roomId: Long = 0L,
@@ -30,6 +31,10 @@ data class AIChatState(
     val chatProgress: Float = 0.03f,
     val turnScore: Int = 0,
     val isWaitingReply: Boolean = false,
+    val isCreatingTimeCapsule: Boolean = false,
+    val forceQuitTriggerTurn: Int? = null,
+    val hasShownForceQuitBottomSheet: Boolean = false,
+    val showForceQuitBottomSheet: Boolean = false,
     val isMooiTyping: Boolean = false,
 ) {
     val isEmpty: Boolean get() = messages.isEmpty()
@@ -51,6 +56,8 @@ sealed class AIChatAction {
     object ExitChatRoom : AIChatAction()
 
     object CreateTimeCapsule : AIChatAction()
+
+    object DismissForceQuitSheet : AIChatAction()
 }
 
 sealed class AIChatSideEffect {
@@ -71,6 +78,7 @@ class AIChatViewModel @Inject constructor(
     private val disconnectChatRoom: DisconnectChatRoomUseCase,
     private val sendChatMessage: SendChatMessageUseCase,
     private val observeChatMessages: ObserveChatMessagesUseCase,
+    private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
 ) : ViewModel(),
     ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
@@ -93,6 +101,10 @@ class AIChatViewModel @Inject constructor(
 
             is AIChatAction.CreateTimeCapsule -> {
                 handleCreateTimeCapsule()
+            }
+
+            is AIChatAction.DismissForceQuitSheet -> {
+                handleForceQuitSheet()
             }
         }
     }
@@ -138,7 +150,18 @@ class AIChatViewModel @Inject constructor(
                 viewModelScope.launch {
                     observeChatMessages(roomId)
                         .onEach { message ->
-                            if (state.isWaitingReply) {
+                            val isComplete = message.isComplete
+                            val gaugeScore = message.gaugeScore
+                            val newProgress =
+                                gaugeScore
+                                    ?.let { score -> (score / 70f).coerceIn(0f, 1f) }
+                                    ?: state.chatProgress
+
+                            val canCreate =
+                                gaugeScore?.let { it >= TIME_CAPSULE_CREATE_SCORE }
+                                    ?: state.canCreateTimesCapsule
+
+                            if (state.isWaitingReply && isComplete) {
                                 reduce {
                                     state.copy(
                                         isMooiTyping = false,
@@ -147,13 +170,41 @@ class AIChatViewModel @Inject constructor(
                                 }
                             }
 
+                            // TODO : gauge 값이 간헐적으로 null이 안들어오게 된다면 !! turnScore 값을 non-null type으로 변경
                             reduce {
+                                val rawTurnCountScore = message.turnCountScore
+
+                                val nextTurnScore =
+                                    when {
+                                        !isComplete -> state.turnScore
+                                        rawTurnCountScore != null && rawTurnCountScore > 0 -> rawTurnCountScore
+                                        else -> state.turnScore + 1
+                                    }
+
+                                val isNewlyCreatable = canCreate && !state.canCreateTimesCapsule
+                                val quitTriggerTurn =
+                                    when {
+                                        state.forceQuitTriggerTurn != null -> state.forceQuitTriggerTurn
+                                        isNewlyCreatable -> nextTurnScore + 10
+                                        else -> null
+                                    }
+
+                                val shouldShowForceQuit =
+                                    !state.hasShownForceQuitBottomSheet &&
+                                        quitTriggerTurn != null &&
+                                        nextTurnScore >= quitTriggerTurn
+
                                 state.copy(
-                                    messages = state.messages + message,
-                                    chatProgress =
-                                        message.gaugeScore?.let { score ->
-                                            (score / 100f).coerceIn(0f, 1f)
-                                        } ?: state.chatProgress,
+                                    messages =
+                                        if (isComplete) state.messages else state.messages + message,
+                                    chatProgress = newProgress,
+                                    canCreateTimesCapsule = canCreate,
+                                    turnScore = nextTurnScore!!,
+                                    forceQuitTriggerTurn = quitTriggerTurn,
+                                    hasShownForceQuitBottomSheet =
+                                        state.hasShownForceQuitBottomSheet ||
+                                            shouldShowForceQuit,
+                                    showForceQuitBottomSheet = shouldShowForceQuit,
                                 )
                             }
                         }.catch {
@@ -253,18 +304,46 @@ class AIChatViewModel @Inject constructor(
                 return@intent
             }
 
-            // disconnect chat room
-            handleExitChatRoom()
+            val roomId = state.roomId
+            if (roomId == 0L) {
+                Logger.e("Invalid roomId: $roomId")
+                postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
+                return@intent
+            }
 
-            // todo: get time capsule id from server
-            postSideEffect(AIChatSideEffect.CreateTimeCapsuleSuccess(123L))
+            reduce { state.copy(isCreatingTimeCapsule = true) }
+
+            try {
+                when (val result = createTimeCapsuleUseCase(roomId)) {
+                    is DataState.Success -> {
+                        val capsuleId = result.data
+
+                        handleExitChatRoom()
+                        postSideEffect(
+                            AIChatSideEffect.CreateTimeCapsuleSuccess(capsuleId),
+                        )
+                    }
+
+                    is DataState.Error -> {
+                        Logger.e("createTimeCapsule error: ${result.throwable}")
+                        postSideEffect(
+                            AIChatSideEffect.ToastMessage("타임캡슐 생성 실패"),
+                        )
+                    }
+
+                    is DataState.Loading -> {
+                        // no - op
+                    }
+                }
+            } finally {
+                reduce { state.copy(isCreatingTimeCapsule = false) }
+            }
         }
 
-    // TODO : 메세지 진행률 업데이트 관련 로직
-    private fun updateChatProgress() =
+    private fun handleForceQuitSheet() =
         intent {
             reduce {
-                state.copy()
+                state.copy(showForceQuitBottomSheet = false)
             }
         }
 }
