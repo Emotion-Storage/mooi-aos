@@ -420,8 +420,8 @@ internal fun AppNavHost(
                 navToBack = {
                     navController.popBackStack()
                 },
-                navToSplash = {
-                    navController.navigateWithClearStack(AppDestination.Splash)
+                navToLogin = {
+                    navController.navigateWithClearStack(AppDestination.Login)
                 },
                 navToNotificationSetting = {
                     navController.navigateWithClearStack(AppDestination.NotificationSetting)

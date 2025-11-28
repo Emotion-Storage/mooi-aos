@@ -32,7 +32,7 @@ fun WithDrawNoticeScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToNotificationSetting: () -> Unit = {},
-    navToSplash: () -> Unit = {},
+    navToLogin: () -> Unit = {},
 ) {
     var showSuggestDialog by remember { mutableStateOf(false) }
     var showDoneDialog by remember { mutableStateOf(false) }
@@ -66,7 +66,7 @@ fun WithDrawNoticeScreen(
         if (!showDoneDialog && pendingNavigate) {
             delay(250)
             pendingNavigate = false
-            navToSplash()
+            navToLogin()
         }
     }
 
