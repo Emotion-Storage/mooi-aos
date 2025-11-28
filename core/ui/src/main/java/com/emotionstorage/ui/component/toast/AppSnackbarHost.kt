@@ -52,8 +52,8 @@ class AppSnackbarController(
 @Composable
 fun AppSnackbarHost(
     hostState: SnackbarHostState,
-    customDataFlow: StateFlow<CustomSnackbarData?>,
     modifier: Modifier = Modifier,
+    customDataFlow: StateFlow<CustomSnackbarData?>? = null,
     gravity: Int = Gravity.BOTTOM,
     paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
     hostContent: @Composable (message: String, iconId: Int?) -> Unit = { message, iconId ->
@@ -63,7 +63,7 @@ fun AppSnackbarHost(
         )
     },
 ) {
-    val customData = customDataFlow.collectAsState()
+    val customData = customDataFlow?.collectAsState()
 
     val dismissState =
         rememberSwipeToDismissBoxState(
@@ -128,7 +128,7 @@ fun AppSnackbarHost(
                     backgroundContent = {},
                 ) {
                     SnackbarHost(hostState = hostState) {
-                        hostContent(it.visuals.message, customData.value?.iconResId)
+                        hostContent(it.visuals.message, customData?.value?.iconResId)
                     }
                 }
             }
