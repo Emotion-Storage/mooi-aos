@@ -1,5 +1,6 @@
 package com.emotionstorage.remote.response
 
+import java.io.IOException
 import java.time.LocalDateTime
 
 class CustomHttpException(
@@ -9,4 +10,4 @@ class CustomHttpException(
     val timestamp: LocalDateTime,
     override val message: String? = null,
     override val cause: Throwable? = null,
-) : Throwable()
+) : IOException()
