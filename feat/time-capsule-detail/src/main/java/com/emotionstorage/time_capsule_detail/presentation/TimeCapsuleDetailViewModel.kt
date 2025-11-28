@@ -275,7 +275,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, code, data ->
                     when(code){
-                        ErrorCode.TIME_CAPSULE_LIST_FULL -> {
+                        ErrorCode.TIME_CAPSULE_FAVORITE_LIST_FULL -> {
                             postSideEffect(TimeCapsuleDetailSideEffect.ShowFavoriteFailToast)
                         }
                         else ->{
