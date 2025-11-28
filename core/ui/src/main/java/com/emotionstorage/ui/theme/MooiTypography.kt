@@ -213,4 +213,12 @@ data class MooiTypography(
             letterSpacing = (-0.02).em,
             lineHeight = 24.sp,
         ),
+    val topBar: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 17.sp,
+            letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
+        ),
 )
