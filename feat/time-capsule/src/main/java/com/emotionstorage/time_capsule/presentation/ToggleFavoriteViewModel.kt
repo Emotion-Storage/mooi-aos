@@ -11,14 +11,13 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
-
 data class ToggleFavoriteState(
-    val favoriteIds: List<Long> = emptyList()
+    val favoriteIds: List<Long> = emptyList(),
 )
 
 sealed class ToggleFavoriteAction {
     data class Init(
-        val favoriteIds: List<Long>
+        val favoriteIds: List<Long>,
     ) : ToggleFavoriteAction()
 
     data class OnToggle(
@@ -27,7 +26,6 @@ sealed class ToggleFavoriteAction {
 }
 
 sealed class ToggleFavoriteSideEffect {
-
     data class ShowFavoriteSuccessToast(
         val isFavorite: Boolean,
     ) : ToggleFavoriteSideEffect()
@@ -38,8 +36,8 @@ sealed class ToggleFavoriteSideEffect {
 @HiltViewModel
 class ToggleFavoriteViewModel @Inject constructor(
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
-) : ViewModel(), ContainerHost<ToggleFavoriteState, ToggleFavoriteSideEffect> {
-
+) : ViewModel(),
+    ContainerHost<ToggleFavoriteState, ToggleFavoriteSideEffect> {
     override val container: Container<ToggleFavoriteState, ToggleFavoriteSideEffect> =
         container(ToggleFavoriteState())
 
@@ -65,7 +63,7 @@ class ToggleFavoriteViewModel @Inject constructor(
                 onSuccess = {
                     reduce {
                         state.copy(
-                            favoriteIds = if (it) state.favoriteIds + id else state.favoriteIds - id
+                            favoriteIds = if (it) state.favoriteIds + id else state.favoriteIds - id,
                         )
                     }
                     postSideEffect(ShowFavoriteSuccessToast(it))
@@ -81,8 +79,7 @@ class ToggleFavoriteViewModel @Inject constructor(
                             // todo: add error ui
                         }
                     }
-                }
+                },
             )
         }
-
 }

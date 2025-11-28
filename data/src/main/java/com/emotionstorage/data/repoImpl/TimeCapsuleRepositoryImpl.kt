@@ -84,7 +84,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             DataState.Error(e)
         }
 
-
     override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> {
         Napier.d("getPagedFavoriteTimeCapsules: sortBy: $sortBy")
         return Pager(

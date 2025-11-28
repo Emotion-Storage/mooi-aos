@@ -71,7 +71,8 @@ enum class ResponseStatus(
     NotExtended(510),
     NetworkAuthenticationRequired(511),
 
-    Unknown(0);
+    Unknown(0),
+    ;
 
     companion object {
         fun fromCode(code: Int): ResponseStatus = ResponseStatus.entries.find { it.code == code } ?: Unknown

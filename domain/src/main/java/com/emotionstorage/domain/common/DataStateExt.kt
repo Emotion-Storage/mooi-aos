@@ -2,9 +2,7 @@ package com.emotionstorage.domain.common
 
 import kotlinx.coroutines.flow.Flow
 
-fun <T, K> DataState<T>.map(
-    convertData: (T) -> K
-): DataState<K> =
+fun <T, K> DataState<T>.map(convertData: (T) -> K): DataState<K> =
     when (this) {
         is DataState.Success -> DataState.Success(convertData(data))
         is DataState.Error -> DataState.Error(throwable, code, data)

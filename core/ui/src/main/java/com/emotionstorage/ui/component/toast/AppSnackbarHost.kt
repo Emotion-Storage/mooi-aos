@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
@@ -33,21 +32,23 @@ private const val SNACKBAR_VERTICAL_PADDING = 30
  */
 data class CustomSnackbarData(
     val message: String,
-    val iconResId: Int?
+    val iconResId: Int?,
 )
 
 class AppSnackbarController(
-    private val snackbarHostState: SnackbarHostState
+    private val snackbarHostState: SnackbarHostState,
 ) {
     private val _currentData = MutableStateFlow<CustomSnackbarData?>(null)
     val currentData = _currentData.asStateFlow()
 
-    suspend fun showSnackbar(message: String, iconResId: Int? = null) {
+    suspend fun showSnackbar(
+        message: String,
+        iconResId: Int? = null,
+    ) {
         _currentData.emit(CustomSnackbarData(message, iconResId))
         snackbarHostState.showSnackbar(message)
     }
 }
-
 
 @Composable
 fun AppSnackbarHost(

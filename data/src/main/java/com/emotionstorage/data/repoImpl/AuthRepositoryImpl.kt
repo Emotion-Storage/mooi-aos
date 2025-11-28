@@ -70,7 +70,7 @@ class AuthRepositoryImpl @Inject constructor(
 
                 authRemoteDataSource.signup(
                     signupForm.provider!!,
-                    SignupFormMapper.toData(signupForm)
+                    SignupFormMapper.toData(signupForm),
                 )
                 emit(DataState.Success(true))
             } catch (e: Exception) {

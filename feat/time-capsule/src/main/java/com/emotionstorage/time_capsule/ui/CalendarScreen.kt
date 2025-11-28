@@ -90,10 +90,13 @@ fun CalendarScreen(
 
     // update favorite state
     LaunchedEffect(timeCapsulesState?.itemSnapshotList?.items) {
-        val favorites = timeCapsulesState?.itemSnapshotList?.items
-            ?.filter { it.isFavorite }
-            ?.map { it.id }
-            ?: emptyList()
+        val favorites =
+            timeCapsulesState
+                ?.itemSnapshotList
+                ?.items
+                ?.filter { it.isFavorite }
+                ?.map { it.id }
+                ?: emptyList()
 
         favoriteViewModel.onAction(ToggleFavoriteAction.Init(favorites))
     }
@@ -126,8 +129,11 @@ fun CalendarScreen(
                     snackState.currentSnackbarData?.dismiss()
                     snackbarController.showSnackbar(
                         message =
-                            if (it.isFavorite) context.getString(R.string.toast_favorite_added)
-                            else context.getString(R.string.toast_favorite_removed),
+                            if (it.isFavorite) {
+                                context.getString(R.string.toast_favorite_added)
+                            } else {
+                                context.getString(R.string.toast_favorite_removed)
+                            },
                         iconResId = R.drawable.ic_success_filled,
                     )
                 }
@@ -141,8 +147,6 @@ fun CalendarScreen(
             }
         }
     }
-
-
 
     StatelessCalendarScreen(
         modifier = modifier,
@@ -194,7 +198,7 @@ private fun StatelessCalendarScreen(
         snackbarHost = {
             AppSnackbarHost(
                 hostState = snackState,
-                customDataFlow = snackbarController.currentData
+                customDataFlow = snackbarController.currentData,
             )
         },
         bottomBar = bottomAppBar,
@@ -323,13 +327,14 @@ private fun StatelessCalendarScreen(
                         setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
                     },
-                    timeCapsulesFlow = state.timeCapsulesFlow.map {
-                        it.map {
-                            it.copy(
-                                isFavorite = favoriteState.favoriteIds.contains(it.id)
-                            )
-                        }
-                    },
+                    timeCapsulesFlow =
+                        state.timeCapsulesFlow.map {
+                            it.map {
+                                it.copy(
+                                    isFavorite = favoriteState.favoriteIds.contains(it.id),
+                                )
+                            }
+                        },
                     onToggleFavorite = { id, prevFavorite ->
                         onFavoriteAction(ToggleFavoriteAction.OnToggle(id))
                     },
@@ -413,8 +418,7 @@ private fun CalendarTodayActionButton(
                     .mainBackground(true, RoundedCornerShape(500.dp))
                     .clickable {
                         if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }
-                    .height(44.dp)
+                    }.height(44.dp)
                     .padding(horizontal = 25.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(10.dp),

@@ -26,7 +26,6 @@ sealed class ToggleSingleFavoriteAction {
 }
 
 sealed class ToggleSingleFavoriteSideEffect {
-
     data class ShowFavoriteSuccessToast(
         val isFavorite: Boolean,
     ) : ToggleSingleFavoriteSideEffect()
@@ -37,8 +36,8 @@ sealed class ToggleSingleFavoriteSideEffect {
 @HiltViewModel
 class ToggleSingleFavoriteViewModel @Inject constructor(
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
-) : ViewModel(), ContainerHost<ToggleSingleFavoriteState, ToggleSingleFavoriteSideEffect> {
-
+) : ViewModel(),
+    ContainerHost<ToggleSingleFavoriteState, ToggleSingleFavoriteSideEffect> {
     override val container: Container<ToggleSingleFavoriteState, ToggleSingleFavoriteSideEffect> =
         container(ToggleSingleFavoriteState())
 
@@ -78,8 +77,7 @@ class ToggleSingleFavoriteViewModel @Inject constructor(
                             // todo: add error ui
                         }
                     }
-                }
+                },
             )
         }
-
 }

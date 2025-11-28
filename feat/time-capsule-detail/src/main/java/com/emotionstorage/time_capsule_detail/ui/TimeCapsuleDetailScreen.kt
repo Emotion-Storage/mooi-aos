@@ -164,8 +164,11 @@ fun TimeCapsuleDetailScreen(
                     snackState.currentSnackbarData?.dismiss()
                     snackbarController.showSnackbar(
                         message =
-                            if (it.isFavorite) context.getString(R.string.toast_favorite_added)
-                            else context.getString(R.string.toast_favorite_removed),
+                            if (it.isFavorite) {
+                                context.getString(R.string.toast_favorite_added)
+                            } else {
+                                context.getString(R.string.toast_favorite_removed)
+                            },
                         iconResId = R.drawable.ic_success_filled,
                     )
                 }
@@ -305,7 +308,7 @@ private fun StatelessTimeCapsuleDetailScreen(
             snackbarHost = {
                 AppSnackbarHost(
                     hostState = snackState,
-                    customDataFlow = snackbarController.currentData
+                    customDataFlow = snackbarController.currentData,
                 )
             },
         ) { innerPadding ->

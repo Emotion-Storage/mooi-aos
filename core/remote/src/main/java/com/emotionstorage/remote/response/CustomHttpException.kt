@@ -8,5 +8,5 @@ class CustomHttpException(
     val data: Any? = null,
     val timestamp: LocalDateTime,
     override val message: String? = null,
-    override val cause: Throwable? = null
+    override val cause: Throwable? = null,
 ) : Throwable()

@@ -61,27 +61,32 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
     override suspend fun patchTimeCapsuleFavorite(
         id: Long,
         isFavorite: Boolean,
-    ): DataState<Boolean> = try {
-        val response = apiService.patchTimeCapsuleFavorite(
-            id,
-            isFavorite.toPatchFavoriteRequest(),
-        )
-        if (response.data != null) {
-            DataState.Success(response.data.isFavorite)
-        } else {
-            DataState.Error(
-                Exception("patchTimeCapsuleFavorite response data is empty, $response"),
-            )
+    ): DataState<Boolean> =
+        try {
+            val response =
+                apiService.patchTimeCapsuleFavorite(
+                    id,
+                    isFavorite.toPatchFavoriteRequest(),
+                )
+            if (response.data != null) {
+                DataState.Success(response.data.isFavorite)
+            } else {
+                DataState.Error(
+                    Exception("patchTimeCapsuleFavorite response data is empty, $response"),
+                )
+            }
+        } catch (e: CustomHttpException) {
+            if (e.code == ResponseCode.TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED.name) {
+                DataState.Error(
+                    e,
+                    code = ErrorCode.TIME_CAPSULE_FAVORITE_LIST_FULL,
+                )
+            } else {
+                throw e
+            }
+        } catch (e: Exception) {
+            DataState.Error(Exception("patchTimeCapsuleFavorite api fail, ${e.message}", e))
         }
-    } catch (e: CustomHttpException) {
-        if (e.code == ResponseCode.TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED.name) DataState.Error(
-            e,
-            code = ErrorCode.TIME_CAPSULE_FAVORITE_LIST_FULL
-        )
-        else throw e
-    } catch (e: Exception) {
-        DataState.Error(Exception("patchTimeCapsuleFavorite api fail, ${e.message}", e))
-    }
 
     override suspend fun getFavoriteTimeCapsules(
         page: Int,
@@ -89,11 +94,12 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         sortBy: String,
     ): List<TimeCapsuleEntity> {
         try {
-            val response = apiService.getFavoriteTimeCapsules(
-                page = page,
-                limit = limit,
-                sortBy = sortBy,
-            )
+            val response =
+                apiService.getFavoriteTimeCapsules(
+                    page = page,
+                    limit = limit,
+                    sortBy = sortBy,
+                )
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data)
             } else {
@@ -112,13 +118,14 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         status: String,
     ): List<TimeCapsuleEntity> {
         try {
-            val response = apiService.getTimeCapsules(
-                startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                page = page,
-                limit = limit,
-                status = status,
-            )
+            val response =
+                apiService.getTimeCapsules(
+                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                    page = page,
+                    limit = limit,
+                    status = status,
+                )
             if (response.data != null) {
                 return TimeCapsuleResponseMapper.toData(response.data)
             } else {

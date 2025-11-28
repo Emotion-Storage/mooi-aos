@@ -62,16 +62,17 @@ fun ArrivedTimeCapsulesScreen(
 
     // update favorite state
     LaunchedEffect(timeCapsulesState.itemSnapshotList) {
-        val favorites = timeCapsulesState
-            .itemSnapshotList.items
-            .filter { it.isFavorite }
-            .map { it.id }
+        val favorites =
+            timeCapsulesState
+                .itemSnapshotList
+                .items
+                .filter { it.isFavorite }
+                .map { it.id }
 
         favoriteViewModel.onAction(
-            ToggleFavoriteAction.Init(favorites)
+            ToggleFavoriteAction.Init(favorites),
         )
     }
-
 
     // collect favorite side effect
     LaunchedEffect("init") {
@@ -81,8 +82,11 @@ fun ArrivedTimeCapsulesScreen(
                     snackState.currentSnackbarData?.dismiss()
                     snackbarController.showSnackbar(
                         message =
-                            if (it.isFavorite) context.getString(R.string.toast_favorite_added)
-                            else context.getString(R.string.toast_favorite_removed),
+                            if (it.isFavorite) {
+                                context.getString(R.string.toast_favorite_added)
+                            } else {
+                                context.getString(R.string.toast_favorite_removed)
+                            },
                         iconResId = R.drawable.ic_success_filled,
                     )
                 }
@@ -96,7 +100,6 @@ fun ArrivedTimeCapsulesScreen(
             }
         }
     }
-
 
     StatelessArrivedTimeCapsulesScreen(
         modifier = modifier,
@@ -136,7 +139,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
         snackbarHost = {
             AppSnackbarHost(
                 hostState = snackState,
-                customDataFlow = snackbarController.currentData
+                customDataFlow = snackbarController.currentData,
             )
         },
     ) { innerPadding ->
@@ -196,9 +199,10 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                         Modifier
                                             .fillMaxWidth()
                                             .padding(bottom = 26.dp),
-                                    timeCapsule = this.copy(
-                                        isFavorite = favoriteState.favoriteIds.contains(this.id)
-                                    ),
+                                    timeCapsule =
+                                        this.copy(
+                                            isFavorite = favoriteState.favoriteIds.contains(this.id),
+                                        ),
                                     showDate = true,
                                     showInfoText = false,
                                     showFavorite = true,

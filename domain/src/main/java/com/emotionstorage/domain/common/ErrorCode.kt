@@ -42,5 +42,5 @@ enum class ErrorCode {
 
     // attendance reward
     ALREADY_GET_ATTENDANCE_REWARD,
-    EXPIRED_ATTENDANCE_REWARD;
+    EXPIRED_ATTENDANCE_REWARD,
 }

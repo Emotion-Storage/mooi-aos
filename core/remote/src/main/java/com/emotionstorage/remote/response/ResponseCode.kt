@@ -85,8 +85,5 @@ enum class ResponseCode {
 
     // attendance reward
     ALREADY_GET_ATTENDANCE_REWARD,
-    EXPIRED_ATTENDANCE_REWARD;
+    EXPIRED_ATTENDANCE_REWARD,
 }
-
-
-

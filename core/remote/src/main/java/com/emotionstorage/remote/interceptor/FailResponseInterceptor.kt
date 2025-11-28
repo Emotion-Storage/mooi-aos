@@ -6,19 +6,16 @@ import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.ResponseStatus
 import kotlinx.serialization.json.Json
 import okhttp3.Interceptor
-import okhttp3.Request
 import okhttp3.Response
-import okio.Buffer
 import java.time.LocalDateTime
 import javax.inject.Inject
-
 
 private const val MAX_TRY_COUNT = 3
 
 // todo: refresh token & retry on UNAUTHORIZED error
 // todo: retry request for max 3 times on error
 class FailResponseInterceptor @Inject constructor(
-    private val sessionLocalDataSource: SessionLocalDataSource
+    private val sessionLocalDataSource: SessionLocalDataSource,
 ) : Interceptor {
     private val json = Json { ignoreUnknownKeys = true }
 
