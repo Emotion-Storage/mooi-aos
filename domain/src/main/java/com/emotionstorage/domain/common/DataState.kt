@@ -31,7 +31,6 @@ sealed class DataState<out T> {
             is Error -> "Error[code: ${code.name}, throwable=$throwable]"
         }
 
-    @Deprecated("use handle instead")
     suspend fun handle(
         onSuccess: suspend (data: T) -> Unit,
         onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
