@@ -2,6 +2,7 @@ package com.emotionstorage.my.ui.withdraw
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -124,6 +125,7 @@ fun StatelessWithDrawNoticeScreen(
                 onConfirm = onKeepClick,
                 onDismiss = onWithDrawClick,
                 topDescription = null,
+                contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 24.5.dp, end = 24.5.dp)
             )
         }
 
