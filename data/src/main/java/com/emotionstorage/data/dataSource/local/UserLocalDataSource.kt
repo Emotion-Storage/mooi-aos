@@ -9,5 +9,5 @@ interface UserLocalDataSource {
 
     suspend fun deleteUser(): Boolean
 
-    suspend fun updateUserNickname(nickname: String)
+    suspend fun updateUserNickname(nickname: String): Boolean
 }

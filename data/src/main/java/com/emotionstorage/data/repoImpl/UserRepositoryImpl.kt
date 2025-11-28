@@ -46,7 +46,11 @@ class UserRepositoryImpl
                 .updateUserNickname(nickname)
                 .also { state ->
                     if (state is DataState.Success) {
-                        userLocalDataSource.updateUserNickname(nickname)
+                        val localUpdateSuccess = userLocalDataSource.updateUserNickname(nickname)
+                        if (!localUpdateSuccess) {
+                            // 로컬 업데이트 실패 상황 및 실패 했을 때의 대처 고려 필요
+                            throw Exception("Local update failed")
+                        }
                     }
                 }
 

@@ -41,11 +41,13 @@ class UserLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUserNickname(nickname: String) {
+    override suspend fun updateUserNickname(nickname: String): Boolean {
         try {
             userDao.updateUserNickname(nickname)
+            return true
         } catch (e: Exception) {
             Logger.e("updateUserNickname error: $e")
+            return false
         }
     }
 }
