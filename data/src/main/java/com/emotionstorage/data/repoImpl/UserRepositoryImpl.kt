@@ -28,7 +28,7 @@ class UserRepositoryImpl
                     // ?: userRemoteDataSource.getUser()
 
                     if (user != null) {
-                        emit(DataState.Success(UserMapper.toDomain(user!!)))
+                        emit(DataState.Success(UserMapper.toDomain(user)))
                     } else {
                         emit(DataState.Error(Exception("User not found")))
                     }
@@ -41,7 +41,14 @@ class UserRepositoryImpl
 
         override suspend fun deleteUser(): Boolean = userLocalDataSource.deleteUser()
 
-        override suspend fun updateUserNickname(nickname: String) = userRemoteDataSource.updateUserNickname(nickname)
+        override suspend fun updateUserNickname(nickname: String) =
+            userRemoteDataSource
+                .updateUserNickname(nickname)
+                .also { state ->
+                    if (state is DataState.Success) {
+                        userLocalDataSource.updateUserNickname(nickname)
+                    }
+                }
 
         override suspend fun getKeyCount(): DataState<Int> = userRemoteDataSource.getKeyCount()
 
