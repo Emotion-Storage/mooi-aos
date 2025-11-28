@@ -6,7 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
-import com.emotionstorage.data.dataSource.remote.FavoriteResultEntity
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.data.pagingSource.GetFavoriteTimeCapsulesPagingSource
@@ -14,7 +13,6 @@ import com.emotionstorage.data.pagingSource.GetTimeCapsulesPagingSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
-import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
 import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
@@ -79,26 +77,13 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     override suspend fun setFavoriteTimeCapsule(
         id: Long,
         isFavorite: Boolean,
-    ): Flow<DataState<FavoriteResult>> =
-        flow {
-            emit(DataState.Loading(isLoading = true))
-            try {
-                val result = remoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
-                emit(
-                    DataState.Success(
-                        when (result) {
-                            FavoriteResultEntity.ADDED -> FavoriteResult.ADDED
-                            FavoriteResultEntity.REMOVED -> FavoriteResult.REMOVED
-                            FavoriteResultEntity.FULL -> FavoriteResult.FULL
-                        },
-                    ),
-                )
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(isLoading = false))
-            }
+    ): DataState<Boolean> =
+        try {
+            remoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
+
 
     override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> {
         Napier.d("getPagedFavoriteTimeCapsules: sortBy: $sortBy")
