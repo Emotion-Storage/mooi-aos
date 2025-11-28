@@ -11,10 +11,6 @@ import com.emotionstorage.remote.modelMapper.toPatchNoteRequest
 import com.emotionstorage.remote.modelMapper.toPostOpenAtRequest
 import com.emotionstorage.remote.response.CustomHttpException
 import com.emotionstorage.remote.request.timeCapsule.CreateTimeCapsuleRequest
-import com.emotionstorage.remote.response.ResponseDto
-import com.orhanobut.logger.Logger
-import kotlinx.serialization.json.Json
-import retrofit2.HttpException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
