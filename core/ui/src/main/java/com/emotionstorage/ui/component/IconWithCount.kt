@@ -31,7 +31,6 @@ fun IconWithCount(
     @DrawableRes
     iconId: Int,
     count: Int? = null,
-    iconSizeDp: Int = 30,
     onClick: (() -> Unit)? = null,
 ) {
     Box(
@@ -48,7 +47,7 @@ fun IconWithCount(
             modifier =
                 Modifier
                     .align(Alignment.Center)
-                    .size(iconSizeDp.dp),
+                    .size(30.dp),
             painter = painterResource(id = iconId),
             contentScale = ContentScale.Crop,
             contentDescription = null,
