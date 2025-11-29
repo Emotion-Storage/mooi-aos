@@ -14,9 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
 import androidx.compose.material3.SheetState
@@ -72,17 +70,21 @@ fun BottomSheet(
             } else {
                 {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(29.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(29.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Box(
-                            modifier = Modifier.width(35.dp)
-                                .height(3.dp)
-                                .background(color = MooiTheme.colorScheme.gray500,
-                                    shape = RoundedCornerShape(100.dp))
-                                .padding(bottom = 3.dp)
+                            modifier =
+                                Modifier
+                                    .width(35.dp)
+                                    .height(3.dp)
+                                    .background(
+                                        color = MooiTheme.colorScheme.gray500,
+                                        shape = RoundedCornerShape(100.dp),
+                                    ).padding(bottom = 3.dp),
                         )
                     }
                 }

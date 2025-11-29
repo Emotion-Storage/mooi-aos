@@ -41,14 +41,15 @@ fun TimePickerBottomSheet(
         confirmLabel = "확인",
         onConfirm = { onTimeSelected(spinnerTime) },
         hideDragHandle = false,
-        contentPadding = PaddingValues(top = 23.dp, bottom = 42.dp, start = 16.dp, end = 16.dp)
+        contentPadding = PaddingValues(top = 23.dp, bottom = 42.dp, start = 16.dp, end = 16.dp),
     ) {
         TimeWheelSpinner(
             selected = spinnerTime,
             onSelect = { spinnerTime = it },
-            modifier = Modifier
-                .padding(bottom = 40.dp)
-                .align(Alignment.CenterHorizontally),
+            modifier =
+                Modifier
+                    .padding(bottom = 40.dp)
+                    .align(Alignment.CenterHorizontally),
         )
     }
 }
