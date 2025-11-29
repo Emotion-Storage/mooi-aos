@@ -110,7 +110,7 @@ private fun WheelList(
     modifier: Modifier = Modifier,
     visibleItemsCount: Int = 3,
     itemHeight: Dp = 24.dp,
-    itemSpacing: Dp = 12.dp,
+    itemSpacing: Dp = 21.dp,
     listState: LazyListState,
     onSnappedTo: (centerAbsIndex: Int) -> Unit = {},
 ) {
