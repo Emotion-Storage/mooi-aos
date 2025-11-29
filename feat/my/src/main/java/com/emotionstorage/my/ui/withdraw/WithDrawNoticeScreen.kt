@@ -125,7 +125,7 @@ fun StatelessWithDrawNoticeScreen(
                 onConfirm = onKeepClick,
                 onDismiss = onWithDrawClick,
                 topDescription = null,
-                contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 24.5.dp, end = 24.5.dp)
+                contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 24.5.dp, end = 24.5.dp),
             )
         }
 
