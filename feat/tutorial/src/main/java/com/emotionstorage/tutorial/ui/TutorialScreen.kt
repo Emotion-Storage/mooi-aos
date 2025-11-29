@@ -2,14 +2,19 @@ package com.emotionstorage.tutorial.ui
 
 import android.Manifest
 import android.os.Build
+import android.support.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -17,6 +22,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -54,8 +61,7 @@ fun TutorialScreen(
                     .background(MooiTheme.colorScheme.background)
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(horizontal = 15.dp)
-                    .padding(top = 78.dp, bottom = 35.dp),
+                    .padding(bottom = 41.dp),
             pageCount = TUTORIAL_PAGE_COUNT,
             pageContent =
                 { page ->
@@ -68,6 +74,17 @@ fun TutorialScreen(
                                     stringResource(R.string.tutorial_p0_title_highlights).split(
                                         ',',
                                     ),
+                                content = {
+                                    TutorialGraphicImage(
+                                        resId =
+                                            com
+                                                .emotionstorage
+                                                .ui
+                                                .R
+                                                .drawable
+                                                .graphic_tutorial_greeting,
+                                    )
+                                },
                             )
                         }
 
@@ -79,6 +96,17 @@ fun TutorialScreen(
                                     stringResource(R.string.tutorial_p1_title_highlights).split(
                                         ',',
                                     ),
+                                content = {
+                                    TutorialGraphicImage(
+                                        resId =
+                                            com
+                                                .emotionstorage
+                                                .ui
+                                                .R
+                                                .drawable
+                                                .graphic_tutorial_chat,
+                                    )
+                                },
                             )
                         }
 
@@ -90,6 +118,17 @@ fun TutorialScreen(
                                     stringResource(R.string.tutorial_p2_title_highlights).split(
                                         ',',
                                     ),
+                                content = {
+                                    TutorialGraphicImage(
+                                        resId =
+                                            com
+                                                .emotionstorage
+                                                .ui
+                                                .R
+                                                .drawable
+                                                .graphic_tutorial_timecapsule,
+                                    )
+                                },
                             )
                         }
 
@@ -102,15 +141,30 @@ fun TutorialScreen(
                                         ',',
                                     ),
                                 content = {
-                                    CtaButton(
-                                        modifier =
-                                            Modifier
-                                                .align(Alignment.BottomCenter)
-                                                .fillMaxWidth(),
-                                        labelString = stringResource(R.string.tutorial_btn_start),
-                                        onClick = navToLogin,
-                                        isDefaultWidth = false,
-                                    )
+                                    Box(
+                                        modifier = Modifier.align(Alignment.Center),
+                                        contentAlignment = Alignment.BottomCenter,
+                                    ) {
+                                        TutorialGraphicImage(
+                                            resId =
+                                                com
+                                                    .emotionstorage
+                                                    .ui
+                                                    .R
+                                                    .drawable
+                                                    .graphic_tutorial_report,
+                                        )
+
+                                        CtaButton(
+                                            modifier =
+                                                Modifier
+                                                    .fillMaxWidth()
+                                                    .padding(horizontal = 15.dp),
+                                            labelString = stringResource(R.string.tutorial_btn_start),
+                                            onClick = navToLogin,
+                                            isDefaultWidth = false,
+                                        )
+                                    }
                                 },
                             )
                         }
@@ -139,10 +193,23 @@ private fun ColumnScope.TutorialPage(
         modifier =
             modifier
                 .fillMaxSize(),
+        contentAlignment = Alignment.Center,
     ) {
+        Box(
+            modifier = modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center,
+        ) {
+            content()
+        }
+
         Column(
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier =
+                Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(horizontal = 15.dp)
+                    .padding(top = 78.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
             Text(
                 modifier = Modifier.height(37.dp),
@@ -163,8 +230,24 @@ private fun ColumnScope.TutorialPage(
                     ),
             )
         }
-        content()
     }
+}
+
+@Composable
+private fun BoxScope.TutorialGraphicImage(
+    @DrawableRes resId: Int,
+) {
+    Image(
+        modifier =
+            Modifier
+                .align(Alignment.Center)
+                .fillMaxWidth()
+                .aspectRatio(360f / 752f)
+                .offset(y = 5.dp),
+        painter = painterResource(resId),
+        contentScale = ContentScale.Crop,
+        contentDescription = null,
+    )
 }
 
 @PreviewScreenSizes
