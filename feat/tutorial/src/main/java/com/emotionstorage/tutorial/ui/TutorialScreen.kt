@@ -2,7 +2,7 @@ package com.emotionstorage.tutorial.ui
 
 import android.Manifest
 import android.os.Build
-import android.support.annotation.DrawableRes
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
