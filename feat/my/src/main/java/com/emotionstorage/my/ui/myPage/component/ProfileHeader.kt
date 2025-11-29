@@ -80,13 +80,7 @@ fun ProfileHeader(
 
                 Text(
                     text = "Edit",
-                    style =
-                        MooiTheme
-                            .typography
-                            .body4
-                            .copy(
-                                fontSize = 12.sp,
-                            ),
+                    style = MooiTheme.typography.caption8,
                     color = MooiTheme.colorScheme.secondary,
                     modifier =
                         Modifier
