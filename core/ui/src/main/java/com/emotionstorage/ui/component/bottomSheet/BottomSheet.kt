@@ -52,6 +52,7 @@ fun BottomSheet(
     dismissLabel: String? = null,
     onDismiss: (() -> Unit)? = null,
     hideDragHandle: Boolean = false,
+    forbidDismiss: Boolean = false,
     sheetGesturesEnabled: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(top = 23.dp, bottom = 54.dp, start = 15.dp, end = 15.dp),
     content: @Composable (ColumnScope.() -> Unit)? = null,
@@ -96,7 +97,7 @@ fun BottomSheet(
             // title
             if (!subTitle.isNullOrEmpty()) {
                 Text(
-                    modifier = Modifier.padding(bottom = 5.dp),
+                    modifier = Modifier.padding(bottom = 6.dp),
                     text = subTitle,
                     style = MooiTheme.typography.body2,
                     color = MooiTheme.colorScheme.gray500,
@@ -130,10 +131,14 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         labelString = confirmLabel,
                         onClick = {
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onConfirm?.invoke()
+                            if (!forbidDismiss) {
+                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        onConfirm?.invoke()
+                                    }
                                 }
+                            } else {
+                                onConfirm?.invoke()
                             }
                         },
                     )
