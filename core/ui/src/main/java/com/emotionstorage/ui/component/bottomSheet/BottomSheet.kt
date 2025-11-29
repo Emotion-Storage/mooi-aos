@@ -73,7 +73,8 @@ fun BottomSheet(
                         modifier =
                             Modifier
                                 .fillMaxWidth()
-                                .height(29.dp),
+                                .height(29.dp)
+                                .padding(bottom = 3.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Box(
@@ -84,7 +85,7 @@ fun BottomSheet(
                                     .background(
                                         color = MooiTheme.colorScheme.gray500,
                                         shape = RoundedCornerShape(100.dp),
-                                    ).padding(bottom = 3.dp),
+                                    ),
                         )
                     }
                 }
@@ -193,7 +194,7 @@ private fun BottomSheetPreview() {
                     rememberStandardBottomSheetState(
                         initialValue = SheetValue.Expanded,
                     ),
-                hideDragHandle = true,
+                hideDragHandle = false,
                 title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
                 subTitle = "감정을 충분히 이야기했어요.",
                 confirmLabel = "네, 종료할래요.",
