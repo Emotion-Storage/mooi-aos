@@ -92,7 +92,7 @@ fun ProfileHeader(
                 Spacer(modifier = Modifier.size(2.dp))
 
                 Image(
-                    painterResource(R.drawable.ic_edit),
+                    painterResource(R.drawable.ic_pencil_primary),
                     contentDescription = "수정",
                     modifier =
                         Modifier
