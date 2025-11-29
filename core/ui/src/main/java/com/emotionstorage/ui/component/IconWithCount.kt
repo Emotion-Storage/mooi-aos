@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -33,13 +34,12 @@ fun IconWithCount(
     @DrawableRes
     iconId: Int,
     count: Int? = null,
-    iconSizeDp: Int = 22,
+    iconSizeDp: Int = 30,
     onClick: (() -> Unit)? = null,
 ) {
     Box(
         modifier =
             modifier
-                .padding(horizontal = 2.dp)
                 .clickable(
                     enabled = onClick != null,
                     onClick = {
@@ -50,9 +50,10 @@ fun IconWithCount(
         Image(
             modifier =
                 Modifier
-                    .align(Alignment.TopStart)
+                    .align(Alignment.Center)
                     .size(iconSizeDp.dp),
             painter = painterResource(id = iconId),
+            contentScale = ContentScale.Crop,
             contentDescription = null,
         )
 
@@ -61,9 +62,7 @@ fun IconWithCount(
                 modifier =
                     Modifier
                         .align(Alignment.BottomEnd)
-                        .background(MooiTheme.colorScheme.secondary, CircleShape)
-                        .sizeIn(minWidth = 16.dp, minHeight = 16.dp)
-                        .padding(vertical = 0.5.dp, horizontal = 2.dp),
+                        .sizeIn(minWidth = 9.dp, minHeight = 12.dp),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),
@@ -74,7 +73,6 @@ fun IconWithCount(
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 10.sp,
                             lineHeight = 20.sp,
-                            letterSpacing = (-0.02).em,
                             color = Color.White,
                         ),
                     maxLines = 1,
