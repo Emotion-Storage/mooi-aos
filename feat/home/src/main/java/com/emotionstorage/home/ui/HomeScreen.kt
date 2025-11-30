@@ -183,7 +183,7 @@ private fun StatelessHomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(15.dp),
                 ) {
                     IconWithCount(
-                        modifier = Modifier.size(32.dp),
+                        modifier = Modifier.size(30.dp),
                         iconId = R.drawable.ic_key,
                         count = state.keyCount,
                         onClick = navToKey,

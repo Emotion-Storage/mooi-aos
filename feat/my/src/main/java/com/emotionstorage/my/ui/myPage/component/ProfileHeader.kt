@@ -25,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -80,13 +79,7 @@ fun ProfileHeader(
 
                 Text(
                     text = "Edit",
-                    style =
-                        MooiTheme
-                            .typography
-                            .body4
-                            .copy(
-                                fontSize = 12.sp,
-                            ),
+                    style = MooiTheme.typography.caption8,
                     color = MooiTheme.colorScheme.secondary,
                     modifier =
                         Modifier
@@ -99,7 +92,7 @@ fun ProfileHeader(
                 Spacer(modifier = Modifier.size(2.dp))
 
                 Image(
-                    painterResource(R.drawable.ic_edit),
+                    painterResource(R.drawable.ic_pencil_primary),
                     contentDescription = "수정",
                     modifier =
                         Modifier
