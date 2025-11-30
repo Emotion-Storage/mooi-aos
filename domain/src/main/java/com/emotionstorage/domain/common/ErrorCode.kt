@@ -45,10 +45,10 @@ enum class ErrorCode {
 
     // attendance reward
     ALREADY_GET_ATTENDANCE_REWARD,
-    EXPIRED_ATTENDANCE_REWARD;
+    EXPIRED_ATTENDANCE_REWARD,
+    ;
 
     companion object {
         fun toErrorCode(code: String) = ErrorCode.entries.firstOrNull { it.name == code } ?: UNKNOWN
     }
 }
-

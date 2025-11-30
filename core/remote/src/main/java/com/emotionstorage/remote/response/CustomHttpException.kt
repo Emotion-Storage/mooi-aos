@@ -12,7 +12,6 @@ class CustomHttpException(
     override val cause: Throwable? = null,
 ) : IOException()
 
-
 //    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 오류입니다."),
 //
 //    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
