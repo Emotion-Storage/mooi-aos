@@ -49,7 +49,6 @@ class LoginViewModel
 
         private fun handleLogin(provider: User.AuthProvider) =
             intent {
-                Logger.v("onLoginButtonClick, provider: $provider")
                 reduce {
                     state.copy(isLoading = true)
                 }
@@ -67,6 +66,7 @@ class LoginViewModel
                             val idToken = data.toString()
                             postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
                         } else {
+                            // todo: handle by error code
                             postSideEffect(LoginSideEffect.LoginFailedWithException)
                         }
                     },
