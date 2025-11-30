@@ -3,7 +3,7 @@ package com.emotionstorage.remote.dataSourceImpl
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.remote.response.ResponseCode
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.remote.api.TimeCapsuleApiService
 import com.emotionstorage.remote.modelMapper.TimeCapsuleResponseMapper
 import com.emotionstorage.remote.modelMapper.toPatchFavoriteRequest
@@ -77,14 +77,7 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
                 )
             }
         } catch (e: CustomHttpException) {
-            if (e.code == ResponseCode.TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED.name) {
-                DataState.Error(
-                    e,
-                    code = ErrorCode.TIME_CAPSULE_FAVORITE_LIST_FULL,
-                )
-            } else {
-                throw e
-            }
+            DataState.Error(e, code = ErrorCode.toErrorCode(e.code ?: ""))
         } catch (e: Exception) {
             DataState.Error(Exception("patchTimeCapsuleFavorite api fail, ${e.message}", e))
         }

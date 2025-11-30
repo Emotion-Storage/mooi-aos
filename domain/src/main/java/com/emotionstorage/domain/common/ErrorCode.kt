@@ -1,3 +1,5 @@
+package com.emotionstorage.domain.common
+
 enum class ErrorCode {
     UNKNOWN,
     INTERNAL_SERVER_ERROR,
@@ -7,7 +9,8 @@ enum class ErrorCode {
     NEED_SIGN_UP,
     ALREADY_REGISTERED_WITH_GOOGLE,
     ALREADY_REGISTERED_WITH_KAKAO,
-    INVALID_SOCIAL_TOKEN,
+    INVALID_ID_TOKEN,
+    INVALID_KAKAO_ACCESS_TOKEN,
     ACCESS_TOKEN_EXPIRED,
     ACCESS_TOKEN_INVALID,
     REFRESH_TOKEN_EXPIRED,
@@ -23,7 +26,7 @@ enum class ErrorCode {
     // time capsule
     TIME_CAPSULE_NOT_FOUND,
     TIME_CAPSULE_IS_NOT_OWNED,
-    TIME_CAPSULE_FAVORITE_LIST_FULL,
+    TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED,
     TIME_CAPSULE_KEY_NOT_ENOUGH,
     TIME_CAPSULE_OPEN_RULE_NOT_FOUND,
     TIME_CAPSULE_NOT_TEMP_SAVE,
@@ -42,5 +45,10 @@ enum class ErrorCode {
 
     // attendance reward
     ALREADY_GET_ATTENDANCE_REWARD,
-    EXPIRED_ATTENDANCE_REWARD,
+    EXPIRED_ATTENDANCE_REWARD;
+
+    companion object {
+        fun toErrorCode(code: String) = ErrorCode.entries.firstOrNull { it.name == code } ?: UNKNOWN
+    }
 }
+
