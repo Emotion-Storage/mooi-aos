@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,9 +30,11 @@ import com.emotionstorage.auth.R as authR
 import com.emotionstorage.ui.R
 import com.emotionstorage.auth.presentation.LoginAction
 import com.emotionstorage.auth.presentation.LoginSideEffect
+import com.emotionstorage.auth.presentation.LoginState
 import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
@@ -42,6 +45,8 @@ fun LoginScreen(
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
+    val state = viewModel.container.stateFlow.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
@@ -49,12 +54,12 @@ fun LoginScreen(
                     navToHome()
                 }
 
-                is LoginSideEffect.LoginFailed -> {
+                is LoginSideEffect.NeedSignUp -> {
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
                 is LoginSideEffect.LoginFailedWithException -> {
-                    // do nothing
+                    // todo: add error modal
                 }
             }
         }
@@ -62,6 +67,7 @@ fun LoginScreen(
 
     StatelessLoginScreen(
         modifier = modifier,
+        state = state.value,
         onAction = viewModel::onAction,
     )
 }
@@ -69,8 +75,13 @@ fun LoginScreen(
 @Composable
 private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
+    state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
 ) {
+    if (state.isLoading) {
+        LoadingOverlay()
+    }
+
     Scaffold(
         modifier =
             modifier
@@ -127,7 +138,8 @@ private fun StatelessLoginScreen(
                         .background(
                             MooiTheme.colorScheme.blueGrayBackground,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                        ).padding(top = 26.dp, bottom = 36.dp)
+                        )
+                        .padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
