@@ -1,6 +1,7 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.time_capsule_detail.presentation.ToggleSingleFavoriteSideEffect.ShowFavoriteFailToast
 import com.emotionstorage.time_capsule_detail.presentation.ToggleSingleFavoriteSideEffect.ShowFavoriteSuccessToast
@@ -68,7 +69,7 @@ class ToggleSingleFavoriteViewModel @Inject constructor(
                 },
                 onError = { throwable, code, data ->
                     when (code) {
-                        ErrorCode.TIME_CAPSULE_FAVORITE_LIST_FULL -> {
+                        ErrorCode.TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED -> {
                             postSideEffect(ShowFavoriteFailToast)
                         }
 
