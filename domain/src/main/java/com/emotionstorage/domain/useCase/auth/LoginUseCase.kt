@@ -7,6 +7,7 @@ import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class LoginUseCase @Inject
@@ -23,6 +24,7 @@ constructor(
                 fcmRepository.getToken()?.let {
                     fcmRepository.registerToken(it)
                 }
+                userRepository.getAccountInfo()
             }
             if (it is DataState.Error) {
                 sessionRepository.deleteSession()
