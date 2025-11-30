@@ -11,7 +11,7 @@ interface AuthRepository {
     suspend fun loginWithIdToken(
         provider: User.AuthProvider,
         idToken: String,
-    ): Flow<DataState<String>>
+    ): DataState<String>
 
     suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>>
 

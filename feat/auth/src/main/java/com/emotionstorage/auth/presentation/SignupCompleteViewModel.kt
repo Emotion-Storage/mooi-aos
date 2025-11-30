@@ -2,7 +2,6 @@ package com.emotionstorage.auth.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.auth.LoginWithIdTokenUseCase
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -45,22 +44,15 @@ class SignupCompleteViewModel
             provider: User.AuthProvider,
             idToken: String,
         ) = intent {
-            loginWithIdToken(provider, idToken).collect { result ->
-                when (result) {
-                    is DataState.Loading -> {
-                        // do nothing
-                    }
-
-                    is DataState.Success -> {
-                        Logger.i("LoginWithIdToken success")
-                        postSideEffect(SignupCompleteSideEffect.LoginSuccess)
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e("LoginWithIdToken failed: ${result.throwable?.message}")
-                        postSideEffect(SignupCompleteSideEffect.LoginFailed)
-                    }
+            loginWithIdToken(provider, idToken).handle(
+                onSuccess = {
+                    Logger.i("LoginWithIdToken success")
+                    postSideEffect(SignupCompleteSideEffect.LoginSuccess)
+                },
+                onError = { throwable, code, data ->
+                    Logger.e("LoginWithIdToken failed: $throwable, $code, $data")
+                    postSideEffect(SignupCompleteSideEffect.LoginFailed)
                 }
-            }
+            )
         }
     }

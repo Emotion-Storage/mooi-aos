@@ -27,14 +27,9 @@ class AuthRepositoryImpl @Inject constructor(
                     User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                     User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                 }
-            Napier.d("provider: $provider, idToken: ${idToken.substring(0..5) + "..."}")
+            Napier.d("GetIdToken success, provider: $provider, idToken: ${idToken.substring(0..5) + "..."}")
 
-            // login with id token
-            try {
-                authRemoteDataSource.login(provider, idToken)
-            } catch (e: Exception) {
-                DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
-            }
+            loginWithIdToken(provider, idToken)
         } catch (e: Exception) {
             DataState.Error(Throwable("failed to get social id token, $e"))
         }
@@ -42,24 +37,13 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun loginWithIdToken(
         provider: User.AuthProvider,
         idToken: String,
-    ): Flow<DataState<String>> =
-        flow {
-            emit(DataState.Loading(true))
-            try {
-                authRemoteDataSource.login(provider, idToken).handle(
-                    onSuccess = {
-                        emit(DataState.Success(it))
-                    },
-                    onError = { throwable, code, data ->
-                        emit(DataState.Error(throwable, code, data))
-                    },
-                )
-            } catch (e: Exception) {
-                emit(DataState.Error(throwable = e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+    ): DataState<String> =
+        try {
+            authRemoteDataSource.login(provider, idToken)
+        } catch (e: Exception) {
+            DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
         }
+
 
     override suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>> =
         flow {
