@@ -17,4 +17,7 @@ interface UserDao {
 
     @Query("DELETE FROM user WHERE pk = $USER_PRIMARY_KEY")
     suspend fun deleteUser()
+
+    @Query("UPDATE user SET name = :nickname WHERE pk = $USER_PRIMARY_KEY")
+    suspend fun updateUserNickname(nickname: String)
 }
