@@ -175,7 +175,7 @@ private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
     snackState: SnackbarHostState = SnackbarHostState(),
-    snackbarController: AppSnackbarController = remember { AppSnackbarController(SnackbarHostState()) },
+    snackbarController: AppSnackbarController? = null,
     showYearMonthBottomSheet: Boolean = false,
     setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
     showTimeCapsuleBottomSheet: Boolean = false,
@@ -198,7 +198,7 @@ private fun StatelessCalendarScreen(
         snackbarHost = {
             AppSnackbarHost(
                 hostState = snackState,
-                customDataFlow = snackbarController.currentData,
+                customDataFlow = snackbarController?.currentData,
             )
         },
         bottomBar = bottomAppBar,

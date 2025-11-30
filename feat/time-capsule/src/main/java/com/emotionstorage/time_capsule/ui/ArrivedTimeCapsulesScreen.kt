@@ -117,7 +117,7 @@ fun ArrivedTimeCapsulesScreen(
 private fun StatelessArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = remember { SnackbarHostState() },
-    snackbarController: AppSnackbarController = remember { AppSnackbarController(SnackbarHostState()) },
+    snackbarController: AppSnackbarController? = null,
     timeCapsules: LazyPagingItems<TimeCapsuleItemState>? = null,
     favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
     onFavoriteAction: (ToggleFavoriteAction) -> Unit = {},
@@ -139,7 +139,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
         snackbarHost = {
             AppSnackbarHost(
                 hostState = snackState,
-                customDataFlow = snackbarController.currentData,
+                customDataFlow = snackbarController?.currentData,
             )
         },
     ) { innerPadding ->

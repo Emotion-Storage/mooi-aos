@@ -130,7 +130,7 @@ fun FavoriteTimeCapsulesScreen(
 private fun StatelessFavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
-    snackbarController: AppSnackbarController = remember { AppSnackbarController(SnackbarHostState()) },
+    snackbarController: AppSnackbarController? = null,
     state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
     favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
     onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
@@ -151,7 +151,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         snackbarHost = {
             AppSnackbarHost(
                 hostState = snackState,
-                customDataFlow = snackbarController.currentData,
+                customDataFlow = snackbarController?.currentData,
             )
         },
     ) { innerPadding ->

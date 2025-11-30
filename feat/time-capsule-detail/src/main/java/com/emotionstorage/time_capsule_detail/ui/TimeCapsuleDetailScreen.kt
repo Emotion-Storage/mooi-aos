@@ -207,7 +207,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     id: Long,
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
-    snackbarController: AppSnackbarController = AppSnackbarController(SnackbarHostState()),
+    snackbarController: AppSnackbarController? = null,
     modalState: TimeCapsuleDetailModal = TimeCapsuleDetailModal.NONE,
     dismissModal: () -> Unit = {},
     unlockModalState: UnlockModalState = UnlockModalState(),
@@ -308,7 +308,7 @@ private fun StatelessTimeCapsuleDetailScreen(
             snackbarHost = {
                 AppSnackbarHost(
                     hostState = snackState,
-                    customDataFlow = snackbarController.currentData,
+                    customDataFlow = snackbarController?.currentData,
                 )
             },
         ) { innerPadding ->
