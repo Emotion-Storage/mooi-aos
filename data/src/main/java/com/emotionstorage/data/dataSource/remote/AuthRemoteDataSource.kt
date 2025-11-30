@@ -5,17 +5,11 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 
 interface AuthRemoteDataSource {
+
     /**
      * Login with id token
      * @return access token
      */
-    @Deprecated("Use login instead")
-    suspend fun _login(
-        provider: User.AuthProvider,
-        idToken: String,
-    ): String
-
-
     suspend fun login(
         provider: User.AuthProvider,
         idToken: String,

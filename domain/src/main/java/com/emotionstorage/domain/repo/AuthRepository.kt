@@ -6,9 +6,6 @@ import com.emotionstorage.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
-    @Deprecated("Use login instead")
-    suspend fun _login(provider: User.AuthProvider): Flow<DataState<String>>
-
     suspend fun login(provider: User.AuthProvider): DataState<String>
 
     suspend fun loginWithIdToken(

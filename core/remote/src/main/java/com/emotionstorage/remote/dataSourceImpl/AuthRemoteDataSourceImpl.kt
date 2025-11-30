@@ -20,42 +20,6 @@ class AuthRemoteDataSourceImpl
 constructor(
     private val authApiService: AuthApiService,
 ) : AuthRemoteDataSource {
-    @Deprecated("Use login instead")
-    override suspend fun _login(
-        provider: User.AuthProvider,
-        idToken: String,
-    ): String {
-        try {
-            // call login api
-            val response =
-                when (provider) {
-                    User.AuthProvider.KAKAO -> {
-                        authApiService.postKakaoLogin(
-                            KakaoLoginRequestBody(idToken),
-                        )
-                    }
-
-                    User.AuthProvider.GOOGLE -> {
-                        authApiService.postGoogleLogin(
-                            GoogleLoginRequestBody(idToken),
-                        )
-                    }
-                }
-
-            // return access token if success
-            Logger.d("login response: $response")
-            if (response.status == ResponseStatus.Created.code) {
-                response.data?.accessToken?.run {
-                    return this
-                } ?: throw Exception("No access token received")
-            } else {
-                throw Exception(response.code + "" + response.message)
-            }
-        } catch (e: Exception) {
-            Logger.e("Login fail, $e")
-            throw Exception("Login api failed", e)
-        }
-    }
 
     override suspend fun login(
         provider: User.AuthProvider,

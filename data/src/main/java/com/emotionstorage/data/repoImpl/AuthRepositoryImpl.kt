@@ -18,33 +18,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-    @Deprecated("Use login instead")
-    override suspend fun _login(provider: User.AuthProvider): Flow<DataState<String>> =
-        flow {
-            emit(DataState.Loading(true))
-
-            try {
-                // get id token from providers
-                val idToken =
-                    when (provider) {
-                        User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-                        User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
-                    }
-                Napier.d("provider: $provider, idToken: ${idToken.substring(0..10) + "..."}")
-
-                // login with id token
-                try {
-                    val accessToken = authRemoteDataSource._login(provider, idToken)
-                    emit(DataState.Success(accessToken))
-                } catch (e: Exception) {
-                    emit(DataState.Error(throwable = e, data = idToken))
-                }
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
-        }
 
     override suspend fun login(provider: User.AuthProvider): DataState<String> =
         try {
@@ -73,8 +46,14 @@ class AuthRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(true))
             try {
-                val accessToken = authRemoteDataSource._login(provider, idToken)
-                emit(DataState.Success(accessToken))
+                authRemoteDataSource.login(provider, idToken).handle(
+                    onSuccess = {
+                        emit(DataState.Success(it))
+                    },
+                    onError = { throwable, code, data ->
+                        emit(DataState.Error(throwable, code, data))
+                    },
+                )
             } catch (e: Exception) {
                 emit(DataState.Error(throwable = e))
             } finally {
