@@ -3,7 +3,7 @@ package com.emotionstorage.auth.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
-import com.emotionstorage.domain.useCase.auth.LoginUseCase
+import com.emotionstorage.domain.useCase.auth._LoginUseCase
 import com.emotionstorage.domain.useCase.myPage.GetAccountInfoUseCase
 import com.emotionstorage.domain.useCase.user.SaveUserAccountInfoToLocalUseCase
 import com.orhanobut.logger.Logger
@@ -34,7 +34,7 @@ sealed class LoginSideEffect {
 class LoginViewModel
     @Inject
     constructor(
-        private val login: LoginUseCase,
+        private val login: _LoginUseCase,
         private val getAccountInfo: GetAccountInfoUseCase,
         private val saveUserLocal: SaveUserAccountInfoToLocalUseCase,
     ) : ViewModel(),

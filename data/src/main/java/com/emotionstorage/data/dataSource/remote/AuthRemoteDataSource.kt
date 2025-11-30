@@ -1,18 +1,25 @@
 package com.emotionstorage.data.dataSource.remote
 
 import com.emotionstorage.data.model.SignupFormEntity
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 
-// todo: Add provider model in data layer
 interface AuthRemoteDataSource {
     /**
      * Login with id token
      * @return access token
      */
-    suspend fun login(
+    @Deprecated("Use login instead")
+    suspend fun _login(
         provider: User.AuthProvider,
         idToken: String,
     ): String
+
+
+    suspend fun login(
+        provider: User.AuthProvider,
+        idToken: String,
+    ): DataState<String>
 
     /**
      * Signup with id token

@@ -18,7 +18,8 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-    override suspend fun login(provider: User.AuthProvider): Flow<DataState<String>> =
+    @Deprecated("Use login instead")
+    override suspend fun _login(provider: User.AuthProvider): Flow<DataState<String>> =
         flow {
             emit(DataState.Loading(true))
 
@@ -33,7 +34,7 @@ class AuthRepositoryImpl @Inject constructor(
 
                 // login with id token
                 try {
-                    val accessToken = authRemoteDataSource.login(provider, idToken)
+                    val accessToken = authRemoteDataSource._login(provider, idToken)
                     emit(DataState.Success(accessToken))
                 } catch (e: Exception) {
                     emit(DataState.Error(throwable = e, data = idToken))
@@ -45,6 +46,26 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun login(provider: User.AuthProvider): DataState<String> =
+        try {
+            // get id token from providers
+            val idToken =
+                when (provider) {
+                    User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
+                    User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
+                }
+            Napier.d("provider: $provider, idToken: ${idToken.substring(0..5) + "..."}")
+
+            // login with id token
+            try {
+                authRemoteDataSource.login(provider, idToken)
+            } catch (e: Exception) {
+                DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
+            }
+        } catch (e: Exception) {
+            DataState.Error(Throwable("failed to get social id token, $e"))
+        }
+
     override suspend fun loginWithIdToken(
         provider: User.AuthProvider,
         idToken: String,
@@ -52,7 +73,7 @@ class AuthRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(true))
             try {
-                val accessToken = authRemoteDataSource.login(provider, idToken)
+                val accessToken = authRemoteDataSource._login(provider, idToken)
                 emit(DataState.Success(accessToken))
             } catch (e: Exception) {
                 emit(DataState.Error(throwable = e))
