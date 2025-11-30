@@ -52,7 +52,7 @@ class SignupCompleteViewModel
                 onError = { throwable, code, data ->
                     Logger.e("LoginWithIdToken failed: $throwable, $code, $data")
                     postSideEffect(SignupCompleteSideEffect.LoginFailed)
-                }
+                },
             )
         }
     }

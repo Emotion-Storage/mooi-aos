@@ -18,7 +18,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-
     override suspend fun login(provider: User.AuthProvider): DataState<String> =
         try {
             // get id token from providers
@@ -43,7 +42,6 @@ class AuthRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
         }
-
 
     override suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>> =
         flow {

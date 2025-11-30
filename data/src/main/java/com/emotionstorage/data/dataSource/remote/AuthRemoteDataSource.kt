@@ -5,7 +5,6 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.User
 
 interface AuthRemoteDataSource {
-
     /**
      * Login with id token
      * @return access token

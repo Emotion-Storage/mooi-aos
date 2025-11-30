@@ -12,11 +12,12 @@ data class AccountInfo(
     val birthDay: Int,
 )
 
-fun AccountInfo.toUser() =  User(
-    socialType = enumValueOf(socialType),
-    email = email,
-    nickname = nickname,
-    profileImageUrl = null,
-    createdAt = LocalDateTime.now(),
-    updatedAt = LocalDateTime.now(),
-)
+fun AccountInfo.toUser() =
+    User(
+        socialType = enumValueOf(socialType),
+        email = email,
+        nickname = nickname,
+        profileImageUrl = null,
+        createdAt = LocalDateTime.now(),
+        updatedAt = LocalDateTime.now(),
+    )

@@ -3,14 +3,13 @@ package com.emotionstorage.auth.presentation
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
-import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class LoginState(
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
 )
 
 sealed class LoginAction {
