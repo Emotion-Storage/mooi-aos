@@ -29,7 +29,7 @@ class AuthRepositoryImpl @Inject constructor(
                         User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                         User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                     }
-                Napier.d("provider: $provider, idToken: $idToken")
+                Napier.d("provider: $provider, idToken: ${idToken.substring(0..10) + "..."}")
 
                 // login with id token
                 try {
