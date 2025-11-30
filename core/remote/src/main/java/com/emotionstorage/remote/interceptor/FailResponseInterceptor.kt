@@ -28,13 +28,16 @@ class FailResponseInterceptor @Inject constructor(
         // parse error response body & throw custom error
         val httpResponseBody = httpResponse.peekBody(Long.MAX_VALUE).string()
 
-        val responseDto = json.decodeFromString<ResponseDto<String>>(httpResponseBody)
+        val responseDto = runCatching {
+            json.decodeFromString<ResponseDto<String>>(httpResponseBody)
+        }.getOrNull()
+
         throw CustomHttpException(
-            status = ResponseStatus.fromCode(responseDto.status),
-            code = responseDto.code,
-            message = responseDto.message,
-            data = responseDto.data,
-            timestamp = responseDto.timestamp ?: LocalDateTime.now(),
+            status = ResponseStatus.fromCode(responseDto?.status ?: httpResponse.code),
+            code = responseDto?.code ?: "unknown(${httpResponse.code})",
+            message = responseDto?.message ?: httpResponse.message,
+            data = responseDto?.data ?: httpResponseBody,
+            timestamp = responseDto?.timestamp ?: LocalDateTime.now(),
         )
         return httpResponse
     }
