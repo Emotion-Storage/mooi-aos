@@ -4,7 +4,6 @@ import java.time.LocalDateTime
 
 data class User(
     val socialType: AuthProvider,
-    val socialId: String,
     val email: String,
     val nickname: String,
     val profileImageUrl: String? = null,

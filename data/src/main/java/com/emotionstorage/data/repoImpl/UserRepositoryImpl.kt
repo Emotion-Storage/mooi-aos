@@ -6,44 +6,52 @@ import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.User
+import com.emotionstorage.domain.model.toUser
 import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 class UserRepositoryImpl
-    @Inject
-    constructor(
-        private val userLocalDataSource: UserLocalDataSource,
-        private val userRemoteDataSource: UserRemoteDataSource,
-    ) : UserRepository {
-        override suspend fun saveUser(user: User): Boolean = userLocalDataSource.saveUser(UserMapper.toData(user))
+@Inject
+constructor(
+    private val localDataSource: UserLocalDataSource,
+    private val remoteDataSource: UserRemoteDataSource,
+) : UserRepository {
+    override suspend fun saveUser(user: User): Boolean = localDataSource.saveUser(UserMapper.toData(user))
 
-        override suspend fun getUser(): Flow<DataState<User>> =
-            flow {
-                emit(DataState.Loading(isLoading = true))
-                try {
-                    val user = userLocalDataSource.getUser()
-                    // TODO: get user from remote if null
-                    // ?: userRemoteDataSource.getUser()
-
-                    if (user != null) {
-                        emit(DataState.Success(UserMapper.toDomain(user!!)))
-                    } else {
-                        emit(DataState.Error(Exception("User not found")))
-                    }
-                } catch (e: Exception) {
-                    emit(DataState.Error(e))
-                } finally {
-                    emit(DataState.Loading(isLoading = false))
+    override suspend fun getUser(): Flow<DataState<User>> =
+        flow {
+            emit(DataState.Loading(isLoading = true))
+            try {
+                // return user from local data source first
+                localDataSource.getUser()?.run {
+                    emit(DataState.Success(UserMapper.toDomain(this)))
                 }
+
+                // fetch user from remote & save to local & return
+                remoteDataSource.getUserAccountInfo().handle(
+                    onSuccess = {
+                        localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                        emit(DataState.Success(it.toUser()))
+                    },
+                    onError = { throwable, code, message ->
+                        emit(DataState.Error(throwable, code, message))
+                    },
+                )
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            } finally {
+                emit(DataState.Loading(isLoading = false))
             }
+        }
 
-        override suspend fun deleteUser(): Boolean = userLocalDataSource.deleteUser()
+    override suspend fun deleteUser(): Boolean = localDataSource.deleteUser()
 
-        override suspend fun updateUserNickname(nickname: String) = userRemoteDataSource.updateUserNickname(nickname)
+    override suspend fun updateUserNickname(nickname: String) = remoteDataSource.updateUserNickname(nickname)
 
-        override suspend fun getKeyCount(): DataState<Int> = userRemoteDataSource.getKeyCount()
+    override suspend fun getKeyCount(): DataState<Int> = remoteDataSource.getKeyCount()
 
-        override suspend fun getAccountInfo(): DataState<AccountInfo> = userRemoteDataSource.getUserAccountInfo()
-    }
+    override suspend fun getAccountInfo(): DataState<AccountInfo> = remoteDataSource.getUserAccountInfo()
+}
