@@ -2,6 +2,7 @@ package com.emotionstorage.my.ui.withdraw
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -32,7 +33,7 @@ fun WithDrawNoticeScreen(
     viewModel: MyPageViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToNotificationSetting: () -> Unit = {},
-    navToSplash: () -> Unit = {},
+    navToLogin: () -> Unit = {},
 ) {
     var showSuggestDialog by remember { mutableStateOf(false) }
     var showDoneDialog by remember { mutableStateOf(false) }
@@ -66,7 +67,7 @@ fun WithDrawNoticeScreen(
         if (!showDoneDialog && pendingNavigate) {
             delay(250)
             pendingNavigate = false
-            navToSplash()
+            navToLogin()
         }
     }
 
@@ -124,6 +125,7 @@ fun StatelessWithDrawNoticeScreen(
                 onConfirm = onKeepClick,
                 onDismiss = onWithDrawClick,
                 topDescription = null,
+                contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 24.5.dp, end = 24.5.dp),
             )
         }
 

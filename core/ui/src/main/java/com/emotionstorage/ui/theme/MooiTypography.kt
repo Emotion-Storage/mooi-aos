@@ -189,6 +189,14 @@ data class MooiTypography(
             letterSpacing = (-0.02).em,
             lineHeight = 24.sp,
         ),
+    val caption8: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp,
+            letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
+        ),
     val bottomBar: TextStyle =
         TextStyle(
             fontFamily = pretendard,
@@ -210,6 +218,14 @@ data class MooiTypography(
             fontFamily = pretendard,
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
+            letterSpacing = (-0.02).em,
+            lineHeight = 24.sp,
+        ),
+    val topBar: TextStyle =
+        TextStyle(
+            fontFamily = pretendard,
+            fontWeight = FontWeight.Medium,
+            fontSize = 17.sp,
             letterSpacing = (-0.02).em,
             lineHeight = 24.sp,
         ),
