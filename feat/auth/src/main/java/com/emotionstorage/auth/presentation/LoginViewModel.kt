@@ -56,6 +56,7 @@ class LoginViewModel
                         reduce {
                             state.copy(isLoading = false)
                         }
+                        postSideEffect(LoginSideEffect.LoginSuccess)
                     },
                     onError = { throwable, code, data ->
                         reduce {
