@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -91,9 +90,8 @@ fun NotificationSettingScreen(
         systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
         Logger.d("onResume - systemEnabled: $systemEnabled")
         if (!systemEnabled) {
-            // turn off notifications, if permission is newly denied
-            Logger.d("turn off notifications")
             viewModel.setAppPush(isOn = false)
+            activeSheet = Sheet.Permission
         }
 
         onPauseOrDispose { }
@@ -101,8 +99,13 @@ fun NotificationSettingScreen(
 
     StatelessNotificationSettingScreen(
         state = state.value,
-        notificationsAllowed = systemEnabled,
-        onToggleAppPush = viewModel::setAppPush,
+        onToggleAppPush = { isOn ->
+            if (systemEnabled) {
+                viewModel.setAppPush(isOn)
+            } else {
+                activeSheet = Sheet.Permission
+            }
+        },
         onToggleEmotionReminder = viewModel::setEmotionReminder,
         onToggleTimeCapsuleAndReport = viewModel::setTimeCapsule,
         onToggleMarketing = viewModel::setMarketing,
@@ -123,12 +126,7 @@ fun NotificationSettingScreen(
                     activeSheet = Sheet.None
                 },
                 sheetState =
-                    rememberModalBottomSheetState(
-                        skipPartiallyExpanded = true,
-                        confirmValueChange = {
-                            it != SheetValue.Hidden
-                        },
-                    ),
+                    rememberModalBottomSheetState(skipPartiallyExpanded = true),
             )
         }
 
@@ -155,7 +153,6 @@ fun NotificationSettingScreen(
 @Composable
 private fun StatelessNotificationSettingScreen(
     state: NotificationSettingState,
-    notificationsAllowed: Boolean = true,
     onToggleAppPush: (Boolean) -> Unit = {},
     onToggleEmotionReminder: (Boolean) -> Unit = {},
     onToggleTimeCapsuleAndReport: (Boolean) -> Unit = {},
@@ -191,7 +188,7 @@ private fun StatelessNotificationSettingScreen(
                     title = "MOOI 앱 푸시 알림",
                     isChecked = state.appPushNotify,
                     onCheckedChange = onToggleAppPush,
-                    enabled = notificationsAllowed,
+                    enabled = true,
                 )
 
                 if (state.appPushNotify) {
@@ -302,7 +299,6 @@ private fun NotificationSettingScreenPreview() {
     MooiTheme {
         StatelessNotificationSettingScreen(
             state = NotificationSettingState(),
-            notificationsAllowed = true,
             onToggleAppPush = { },
             onToggleEmotionReminder = {},
             onToggleTimeCapsuleAndReport = {},
