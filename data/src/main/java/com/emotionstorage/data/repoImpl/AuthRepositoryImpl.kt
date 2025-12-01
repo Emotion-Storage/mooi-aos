@@ -26,7 +26,7 @@ class AuthRepositoryImpl @Inject constructor(
                     User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                     User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                 }
-            Napier.d("GetIdToken success, provider: $provider, idToken: ${idToken.substring(0..5) + "..."}")
+            Napier.d("GetIdToken success, provider: $provider, idToken: ${idToken.take(6) + "..."}")
 
             loginWithIdToken(provider, idToken)
         } catch (e: Exception) {
