@@ -78,10 +78,6 @@ private fun StatelessLoginScreen(
     state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
 ) {
-    if (state.isLoading) {
-        LoadingOverlay()
-    }
-
     Scaffold(
         modifier =
             modifier
@@ -95,6 +91,10 @@ private fun StatelessLoginScreen(
                     .fillMaxSize()
                     .padding(padding),
         ) {
+            if (state.isLoading) {
+                LoadingOverlay()
+            }
+
             Image(
                 modifier =
                     Modifier
