@@ -56,8 +56,8 @@ constructor(
                     if (state is DataState.Success) {
                         val localUpdateSuccess = localDataSource.updateUserNickname(nickname)
                         if (!localUpdateSuccess) {
-                            // 로컬 업데이트 실패 상황 및 실패 했을 때의 대처 고려 필요
-                            throw Exception("Local update failed")
+                            // delete user on update error - fetch user on next get user call
+                            deleteUser()
                         }
                     }
                 }
