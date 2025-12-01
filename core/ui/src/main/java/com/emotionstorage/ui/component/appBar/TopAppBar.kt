@@ -82,7 +82,7 @@ fun TopAppBar(
                 Text(
                     modifier = Modifier.align(Alignment.Center),
                     text = title,
-                    style = MooiTheme.typography.body3,
+                    style = MooiTheme.typography.topBar,
                     color = Color.White,
                 )
             }

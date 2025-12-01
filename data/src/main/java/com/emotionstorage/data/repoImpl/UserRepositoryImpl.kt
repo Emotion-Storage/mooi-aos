@@ -49,7 +49,18 @@ constructor(
 
     override suspend fun deleteUser(): Boolean = localDataSource.deleteUser()
 
-    override suspend fun updateUserNickname(nickname: String) = remoteDataSource.updateUserNickname(nickname)
+        override suspend fun updateUserNickname(nickname: String) =
+            remoteDataSource
+                .updateUserNickname(nickname)
+                .also { state ->
+                    if (state is DataState.Success) {
+                        val localUpdateSuccess = localDataSource.updateUserNickname(nickname)
+                        if (!localUpdateSuccess) {
+                            // 로컬 업데이트 실패 상황 및 실패 했을 때의 대처 고려 필요
+                            throw Exception("Local update failed")
+                        }
+                    }
+                }
 
     override suspend fun getKeyCount(): DataState<Int> = remoteDataSource.getKeyCount()
 
