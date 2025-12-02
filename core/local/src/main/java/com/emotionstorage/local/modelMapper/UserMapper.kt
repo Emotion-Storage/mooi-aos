@@ -7,7 +7,8 @@ internal object UserMapper {
     fun toLocal(entity: UserEntity): UserLocal =
         UserLocal(
             socialType = entity.socialType.name,
-            socialId = entity.socialId,
+            // todo: delete social id from db
+            socialId = "",
             email = entity.email,
             name = entity.name,
             profileImageUrl = entity.profileImageUrl,
@@ -23,7 +24,6 @@ internal object UserMapper {
                     "KAKAO" -> UserEntity.AuthProvider.KAKAO
                     else -> throw IllegalArgumentException("Invalid social type: ${local.socialType}")
                 },
-            socialId = local.socialId,
             email = local.email,
             name = local.name,
             profileImageUrl = local.profileImageUrl,

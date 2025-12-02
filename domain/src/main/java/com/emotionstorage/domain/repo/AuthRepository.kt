@@ -5,16 +5,13 @@ import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User
 import kotlinx.coroutines.flow.Flow
 
-/**
- *
- */
 interface AuthRepository {
-    suspend fun login(provider: User.AuthProvider): Flow<DataState<String>>
+    suspend fun login(provider: User.AuthProvider): DataState<String>
 
     suspend fun loginWithIdToken(
         provider: User.AuthProvider,
         idToken: String,
-    ): Flow<DataState<String>>
+    ): DataState<String>
 
     suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>>
 

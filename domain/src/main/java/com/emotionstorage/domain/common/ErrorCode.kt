@@ -4,7 +4,7 @@ enum class ErrorCode {
     UNKNOWN,
     INTERNAL_SERVER_ERROR,
 
-    // auth
+    // auth remote
     USER_NOT_FOUND,
     NEED_SIGN_UP,
     ALREADY_REGISTERED_WITH_GOOGLE,
@@ -18,12 +18,12 @@ enum class ErrorCode {
     UNAUTHORIZED,
     INVALID_NICKNAME,
 
-    // chat
+    // chat remote
     CHAT_ROOM_NOT_FOUND,
     CHAT_ROOM_ACCESS_DENIED,
     TICKET_NOT_ENOUGH,
 
-    // time capsule
+    // time capsule remote
     TIME_CAPSULE_NOT_FOUND,
     TIME_CAPSULE_IS_NOT_OWNED,
     TIME_CAPSULE_FAVORITE_LIMIT_EXCEEDED,
@@ -34,16 +34,16 @@ enum class ErrorCode {
     TIME_CAPSULE_OPEN_DATE_BEFORE_STORED_AT,
     TIME_CAPSULE_OPEN_DATE_AFTER_LIMIT,
 
-    // daily report
+    // daily report remote
     REPORT_NOT_FOUND,
     DAILY_REPORT_NOT_FOUND,
     INVALID_DATE_FORMAT,
 
-    // notification settings
+    // notification settings remote
     EMOTION_REMINDER_DAYS_REQUIRED,
     EMOTION_REMINDER_TIME_REQUIRED,
 
-    // attendance reward
+    // attendance reward remote
     ALREADY_GET_ATTENDANCE_REWARD,
     EXPIRED_ATTENDANCE_REWARD,
     ;

@@ -7,8 +7,6 @@ import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class LoginWithIdTokenUseCase
@@ -22,19 +20,19 @@ class LoginWithIdTokenUseCase
         suspend operator fun invoke(
             provider: User.AuthProvider,
             idToken: String,
-        ): Flow<DataState<String>> =
-            authRepository.loginWithIdToken(provider, idToken).map {
+        ): DataState<String> =
+            authRepository.loginWithIdToken(provider, idToken).also {
                 if (it is DataState.Success) {
                     sessionRepository.saveSession(Session(it.data))
                     fcmRepository.getToken()?.let {
                         fcmRepository.registerToken(it)
                     }
+                    userRepository.getAccountInfo()
                 }
                 if (it is DataState.Error) {
                     sessionRepository.deleteSession()
                     userRepository.deleteUser()
                     fcmRepository.deleteToken()
                 }
-                it
             }
     }

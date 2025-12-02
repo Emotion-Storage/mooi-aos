@@ -6,6 +6,7 @@ import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.User
+import com.emotionstorage.domain.model.toUser
 import com.emotionstorage.domain.repo.UserRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -14,23 +15,30 @@ import javax.inject.Inject
 class UserRepositoryImpl
     @Inject
     constructor(
-        private val userLocalDataSource: UserLocalDataSource,
-        private val userRemoteDataSource: UserRemoteDataSource,
+        private val localDataSource: UserLocalDataSource,
+        private val remoteDataSource: UserRemoteDataSource,
     ) : UserRepository {
-        override suspend fun saveUser(user: User): Boolean = userLocalDataSource.saveUser(UserMapper.toData(user))
+        override suspend fun saveUser(user: User): Boolean = localDataSource.saveUser(UserMapper.toData(user))
 
         override suspend fun getUser(): Flow<DataState<User>> =
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
-                    val user = userLocalDataSource.getUser()
-                    // TODO: get user from remote if null
-                    // ?: userRemoteDataSource.getUser()
-
-                    if (user != null) {
-                        emit(DataState.Success(UserMapper.toDomain(user)))
+                    // return user from local data source first
+                    val localUser = localDataSource.getUser()
+                    if (localUser != null) {
+                        emit(DataState.Success(UserMapper.toDomain(localUser)))
                     } else {
-                        emit(DataState.Error(Exception("User not found")))
+                        // fetch user from remote & save to local & return
+                        remoteDataSource.getUserAccountInfo().handle(
+                            onSuccess = {
+                                localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                                emit(DataState.Success(it.toUser()))
+                            },
+                            onError = { throwable, code, message ->
+                                emit(DataState.Error(throwable, code, message))
+                            },
+                        )
                     }
                 } catch (e: Exception) {
                     emit(DataState.Error(e))
@@ -39,22 +47,22 @@ class UserRepositoryImpl
                 }
             }
 
-        override suspend fun deleteUser(): Boolean = userLocalDataSource.deleteUser()
+        override suspend fun deleteUser(): Boolean = localDataSource.deleteUser()
 
         override suspend fun updateUserNickname(nickname: String) =
-            userRemoteDataSource
+            remoteDataSource
                 .updateUserNickname(nickname)
                 .also { state ->
                     if (state is DataState.Success) {
-                        val localUpdateSuccess = userLocalDataSource.updateUserNickname(nickname)
+                        val localUpdateSuccess = localDataSource.updateUserNickname(nickname)
                         if (!localUpdateSuccess) {
-                            // 로컬 업데이트 실패 상황 및 실패 했을 때의 대처 고려 필요
-                            throw Exception("Local update failed")
+                            // delete user on update error - fetch user on next get user call
+                            deleteUser()
                         }
                     }
                 }
 
-        override suspend fun getKeyCount(): DataState<Int> = userRemoteDataSource.getKeyCount()
+        override suspend fun getKeyCount(): DataState<Int> = remoteDataSource.getKeyCount()
 
-        override suspend fun getAccountInfo(): DataState<AccountInfo> = userRemoteDataSource.getUserAccountInfo()
+        override suspend fun getAccountInfo(): DataState<AccountInfo> = remoteDataSource.getUserAccountInfo()
     }

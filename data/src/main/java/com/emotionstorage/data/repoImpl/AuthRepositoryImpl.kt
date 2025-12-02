@@ -18,47 +18,29 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-    override suspend fun login(provider: User.AuthProvider): Flow<DataState<String>> =
-        flow {
-            emit(DataState.Loading(true))
-
-            try {
-                // get id token from providers
-                val idToken =
-                    when (provider) {
-                        User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-                        User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
-                    }
-                Napier.d("provider: $provider, idToken: ${idToken.substring(0..10) + "..."}")
-
-                // login with id token
-                try {
-                    val accessToken = authRemoteDataSource.login(provider, idToken)
-                    emit(DataState.Success(accessToken))
-                } catch (e: Exception) {
-                    emit(DataState.Error(throwable = e, data = idToken))
+    override suspend fun login(provider: User.AuthProvider): DataState<String> =
+        try {
+            // get id token from providers
+            val idToken =
+                when (provider) {
+                    User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
+                    User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                 }
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+            Napier.d("GetIdToken success, provider: $provider, idToken: ${idToken.take(6) + "..."}")
+
+            loginWithIdToken(provider, idToken)
+        } catch (e: Exception) {
+            DataState.Error(Throwable("failed to get social id token, $e"))
         }
 
     override suspend fun loginWithIdToken(
         provider: User.AuthProvider,
         idToken: String,
-    ): Flow<DataState<String>> =
-        flow {
-            emit(DataState.Loading(true))
-            try {
-                val accessToken = authRemoteDataSource.login(provider, idToken)
-                emit(DataState.Success(accessToken))
-            } catch (e: Exception) {
-                emit(DataState.Error(throwable = e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+    ): DataState<String> =
+        try {
+            authRemoteDataSource.login(provider, idToken)
+        } catch (e: Exception) {
+            DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
         }
 
     override suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>> =
