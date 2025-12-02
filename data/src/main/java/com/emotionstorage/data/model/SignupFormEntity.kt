@@ -1,4 +1,4 @@
-package com.emotionstorage.auth.data.model
+package com.emotionstorage.data.model
 
 import java.time.LocalDate
 

@@ -1,7 +1,7 @@
-package com.emotionstorage.auth.remote.dataSourceImpl
+package com.emotionstorage.remote.dataSourceImpl
 
 import android.content.Context
-import com.emotionstorage.auth.data.dataSource.KakaoRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause

@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -37,20 +38,28 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.map
 import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarState
 import com.emotionstorage.time_capsule.presentation.CalendarViewModel
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteAction
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteFailToast
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteSuccessToast
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteState
+import com.emotionstorage.time_capsule.presentation.ToggleFavoriteViewModel
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleBottomSheet
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
-import com.emotionstorage.ui.component.toast.FavoriteToast
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
+import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -58,6 +67,7 @@ import java.time.YearMonth
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
+    favoriteViewModel: ToggleFavoriteViewModel = hiltViewModel(),
     bottomAppBar: @Composable () -> Unit = {},
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
@@ -66,30 +76,42 @@ fun CalendarScreen(
     navToDailyReportDetail: (id: Long) -> Unit = { },
     navToAIChat: (roomId: Long) -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     val state = viewModel.container.stateFlow.collectAsState()
+    val timeCapsulesState = state.value.timeCapsulesFlow?.collectAsLazyPagingItems()
+    val favoriteState = favoriteViewModel.container.stateFlow.collectAsState()
+
+    // init screen on resume
     LifecycleResumeEffect(Unit) {
         viewModel.onAction(CalendarAction.Initiate)
         onPauseOrDispose { }
     }
 
+    // update favorite state
+    LaunchedEffect(timeCapsulesState?.itemSnapshotList?.items) {
+        val favorites =
+            timeCapsulesState
+                ?.itemSnapshotList
+                ?.items
+                ?.filter { it.isFavorite }
+                ?.map { it.id }
+                ?: emptyList()
+
+        favoriteViewModel.onAction(ToggleFavoriteAction.Init(favorites))
+    }
+
     val snackState = remember { SnackbarHostState() }
+    val snackbarController = remember { AppSnackbarController(snackState) }
     val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
     val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
 
+    // collect side effect
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
                     setShowTimeCapsuleBottomSheet(true)
-                }
-
-                is CalendarSideEffect.ShowFavoriteToast -> {
-                    // dismiss current snackbar if exists
-                    snackState.currentSnackbarData?.dismiss()
-                    // show new snackbar
-                    snackState.showSnackbar(
-                        sideEffect.favoriteResult.name,
-                    )
                 }
 
                 is CalendarSideEffect.EnterCharRoomSuccess -> {
@@ -99,16 +121,46 @@ fun CalendarScreen(
         }
     }
 
+    // collect favorite side effect
+    LaunchedEffect("init") {
+        favoriteViewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is ShowFavoriteSuccessToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackbarController.showSnackbar(
+                        message =
+                            if (it.isFavorite) {
+                                context.getString(R.string.toast_favorite_added)
+                            } else {
+                                context.getString(R.string.toast_favorite_removed)
+                            },
+                        iconResId = R.drawable.ic_success_filled,
+                    )
+                }
+
+                is ShowFavoriteFailToast -> {
+                    snackState.currentSnackbarData?.dismiss()
+                    snackbarController.showSnackbar(
+                        message = context.getString(R.string.toast_favorite_full),
+                    )
+                }
+            }
+        }
+    }
+
     StatelessCalendarScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
         snackState = snackState,
+        snackbarController = snackbarController,
         showYearMonthBottomSheet = showYearMonthBottomSheet,
         setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
         showTimeCapsuleBottomSheet = showTimeCapsuleBottomSheet,
         setShowTimeCapsuleBottomSheet = setShowTimeCapsuleBottomSheet,
         state = state.value,
-        viewModel::onAction,
+        favoriteState = favoriteState.value,
+        onAction = viewModel::onAction,
+        onFavoriteAction = favoriteViewModel::onAction,
         navToKey = navToKey,
         navToArrived = navToArrived,
         navToFavorites = navToFavorites,
@@ -123,12 +175,15 @@ private fun StatelessCalendarScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
     snackState: SnackbarHostState = SnackbarHostState(),
+    snackbarController: AppSnackbarController? = null,
     showYearMonthBottomSheet: Boolean = false,
     setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
     showTimeCapsuleBottomSheet: Boolean = false,
     setShowTimeCapsuleBottomSheet: (Boolean) -> Unit = {},
     state: CalendarState = CalendarState(),
+    favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
     onAction: (CalendarAction) -> Unit = {},
+    onFavoriteAction: (ToggleFavoriteAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
@@ -141,9 +196,10 @@ private fun StatelessCalendarScreen(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
         snackbarHost = {
-            AppSnackbarHost(hostState = snackState) { snackbarData ->
-                FavoriteToast(snackbarData.visuals.message)
-            }
+            AppSnackbarHost(
+                hostState = snackState,
+                customDataFlow = snackbarController?.currentData,
+            )
         },
         bottomBar = bottomAppBar,
     ) { innerPadding ->
@@ -271,9 +327,16 @@ private fun StatelessCalendarScreen(
                         setShowTimeCapsuleBottomSheet(false)
                         onAction(CalendarAction.ClearBottomSheet)
                     },
-                    timeCapsulesFlow = state.timeCapsulesFlow,
+                    timeCapsulesFlow =
+                        state.timeCapsulesFlow.map {
+                            it.map {
+                                it.copy(
+                                    isFavorite = favoriteState.favoriteIds.contains(it.id),
+                                )
+                            }
+                        },
                     onToggleFavorite = { id, prevFavorite ->
-                        onAction(CalendarAction.ToggleTimeCapsuleFavorite(id, prevFavorite))
+                        onFavoriteAction(ToggleFavoriteAction.OnToggle(id))
                     },
                     navToTimeCapsuleDetail = {
                         setShowTimeCapsuleBottomSheet(false)

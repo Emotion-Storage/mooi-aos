@@ -2,6 +2,7 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.remote.BuildConfig
+import com.emotionstorage.remote.interceptor.FailResponseInterceptor
 import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -9,10 +10,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
-import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
-import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
@@ -33,34 +32,10 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideRetrofit(requestHeaderInterceptor: RequestHeaderInterceptor): Retrofit {
-        val cloneErrorBodyInterceptor =
-            Interceptor { chain ->
-                val request = chain.request()
-                val response = chain.proceed(request)
-
-                if (response.isSuccessful) return@Interceptor response
-
-                // get error body
-                val sourceBody = response.body
-                if (sourceBody == null) {
-                    return@Interceptor response
-                }
-
-                // clone error body stream to byte array input stream
-                val bytes = sourceBody.bytes()
-                val contentType = sourceBody.contentType()
-                val newResponseBody =
-                    bytes.inputStream().use {
-                        ResponseBody.create(contentType, bytes)
-                    }
-
-                response
-                    .newBuilder()
-                    .body(newResponseBody)
-                    .build()
-            }
-
+    fun provideRetrofit(
+        requestHeaderInterceptor: RequestHeaderInterceptor,
+        failResponseInterceptor: FailResponseInterceptor,
+    ): Retrofit {
         val loggingInterceptor =
             HttpLoggingInterceptor().apply {
                 level =
@@ -81,9 +56,9 @@ object RetrofitModule {
                     .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.SECONDS)
                     .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                    .addNetworkInterceptor(loggingInterceptor)
                     .addInterceptor(requestHeaderInterceptor)
-                    .addInterceptor(cloneErrorBodyInterceptor)
-                    .addInterceptor(loggingInterceptor)
+                    .addInterceptor(failResponseInterceptor)
                     .build(),
             ).build()
     }
@@ -92,4 +67,9 @@ object RetrofitModule {
     @Provides
     fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
         RequestHeaderInterceptor(sessionLocalDataSource)
+
+    @Singleton
+    @Provides
+    fun provideFailResponseHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
+        FailResponseInterceptor(sessionLocalDataSource)
 }

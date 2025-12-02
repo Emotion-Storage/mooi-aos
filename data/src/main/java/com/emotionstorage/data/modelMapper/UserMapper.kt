@@ -11,7 +11,6 @@ internal object UserMapper {
                     UserEntity.AuthProvider.GOOGLE -> User.AuthProvider.GOOGLE
                     UserEntity.AuthProvider.KAKAO -> User.AuthProvider.KAKAO
                 },
-            socialId = entity.socialId,
             email = entity.email,
             nickname = entity.name,
             profileImageUrl = entity.profileImageUrl,
@@ -21,13 +20,11 @@ internal object UserMapper {
 
     fun toData(domain: User): UserEntity =
         UserEntity(
-//            id = domain.id,
             socialType =
                 when (domain.socialType) {
                     User.AuthProvider.GOOGLE -> UserEntity.AuthProvider.GOOGLE
                     User.AuthProvider.KAKAO -> UserEntity.AuthProvider.KAKAO
                 },
-            socialId = domain.socialId,
             email = domain.email,
             name = domain.nickname,
             profileImageUrl = domain.profileImageUrl,

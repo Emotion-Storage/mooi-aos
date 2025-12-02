@@ -1,7 +1,5 @@
 package com.emotionstorage.domain.common
 
-import kotlinx.coroutines.flow.Flow
-
 /**
  * Sealed class to represent data state - **used in ui & presentation layer**
  * - Success: success, with data
@@ -20,6 +18,7 @@ sealed class DataState<out T> {
 
     class Error(
         val throwable: Throwable,
+        val code: ErrorCode = ErrorCode.UNKNOWN,
         val data: Any? = null,
     ) : DataState<Nothing>()
 
@@ -27,7 +26,7 @@ sealed class DataState<out T> {
         when (this) {
             is Success -> "Success[data=$data]"
             is Loading -> "Loading[isLoading=$isLoading, data=$data]"
-            is Error -> "Error[throwable=$throwable]"
+            is Error -> "Error[code: ${code.name}, throwable=$throwable]"
         }
 
     suspend fun handle(
@@ -36,24 +35,21 @@ sealed class DataState<out T> {
         onLoading: suspend (isLoading: Boolean) -> Unit = {},
     ) {
         when (this) {
-            is DataState.Success -> onSuccess(data)
-            is DataState.Error -> onError(throwable, data)
-            is DataState.Loading -> onLoading(isLoading)
+            is Success -> onSuccess(data)
+            is Error -> onError(throwable, data)
+            is Loading -> onLoading(isLoading)
         }
     }
-}
 
-suspend fun <T> collectDataState(
-    flow: Flow<DataState<T>>,
-    onSuccess: suspend (data: T) -> Unit,
-    onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
-    onLoading: suspend (isLoading: Boolean) -> Unit = {},
-) {
-    flow.collect { result ->
-        when (result) {
-            is DataState.Success -> onSuccess(result.data)
-            is DataState.Error -> onError(result.throwable, result.data)
-            is DataState.Loading -> onLoading(result.isLoading)
+    suspend fun handle(
+        onSuccess: suspend (data: T) -> Unit,
+        onError: suspend (throwable: Throwable, code: ErrorCode, data: Any?) -> Unit = { _, _, _ -> },
+        onLoading: suspend (isLoading: Boolean) -> Unit = {},
+    ) {
+        when (this) {
+            is Success -> onSuccess(data)
+            is Error -> onError(throwable, code, data)
+            is Loading -> onLoading(isLoading)
         }
     }
 }

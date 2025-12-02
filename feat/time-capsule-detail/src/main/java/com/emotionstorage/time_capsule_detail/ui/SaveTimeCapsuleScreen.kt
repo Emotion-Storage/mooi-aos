@@ -178,10 +178,10 @@ private fun StatelessSaveTimeCapsuleScreen(
             AppSnackbarHost(
                 hostState = snackbarState,
                 gravity = Gravity.TOP,
-            ) { snackbarData ->
-                // todo: change toast duration to 4s
+            ) { message, iconId ->
                 Toast(
-                    message = snackbarData.visuals.message,
+                    message = message,
+                    iconId = iconId,
                     paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
                 )
             }

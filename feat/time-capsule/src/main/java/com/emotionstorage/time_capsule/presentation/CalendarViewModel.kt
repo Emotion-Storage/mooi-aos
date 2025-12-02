@@ -7,13 +7,10 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
-import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedTimeCapsulesOfDateUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
-import com.emotionstorage.time_capsule.presentation.CalendarSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
@@ -56,11 +53,6 @@ sealed class CalendarAction {
         val date: LocalDate,
     ) : CalendarAction()
 
-    data class ToggleTimeCapsuleFavorite(
-        val id: Long,
-        val prevFavorite: Boolean,
-    ) : CalendarAction()
-
     // reset bottom sheet states
     object ClearBottomSheet : CalendarAction()
 
@@ -70,10 +62,6 @@ sealed class CalendarAction {
 
 sealed class CalendarSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
-
-    data class ShowFavoriteToast(
-        val favoriteResult: FavoriteResult,
-    ) : CalendarSideEffect()
 
     data class EnterCharRoomSuccess(
         val roomId: Long,
@@ -87,7 +75,6 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetPagedTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
-    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
     private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(),
     ContainerHost<CalendarState, CalendarSideEffect> {
@@ -106,10 +93,6 @@ class CalendarViewModel @Inject constructor(
 
             is CalendarAction.SelectCalendarDate -> {
                 handleSelectCalendarDate(action.date)
-            }
-
-            is CalendarAction.ToggleTimeCapsuleFavorite -> {
-                handleToggleFavorite(action.id, action.prevFavorite)
             }
 
             is CalendarAction.ClearBottomSheet -> {
@@ -250,21 +233,6 @@ class CalendarViewModel @Inject constructor(
                 },
             )
         }
-
-    private fun handleToggleFavorite(
-        id: Long,
-        prevFavorite: Boolean,
-    ) = intent {
-        collectDataState(
-            flow = setFavorite(id, !prevFavorite),
-            onSuccess = {
-                postSideEffect(ShowFavoriteToast(it))
-            },
-            onError = { throwable, data ->
-                Logger.e("Failed to toggle favorite, $throwable")
-            },
-        )
-    }
 
     private fun handleClearBottomSheet() =
         intent {

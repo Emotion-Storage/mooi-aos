@@ -1,6 +1,7 @@
 package com.emotionstorage.data.dataSource.remote
 
 import com.emotionstorage.data.model.TimeCapsuleEntity
+import com.emotionstorage.domain.common.DataState
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -39,7 +40,7 @@ interface TimeCapsuleRemoteDataSource {
     suspend fun patchTimeCapsuleFavorite(
         id: Long,
         isFavorite: Boolean,
-    ): FavoriteResultEntity
+    ): DataState<Boolean>
 
     suspend fun deleteTimeCapsule(id: Long): Boolean
 

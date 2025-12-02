@@ -1,16 +1,7 @@
-import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
-
-fun getLocalProperty(propertyKey: String): String {
-    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
-        propertyKey,
-    )
-}
-
 plugins {
     id("com.emotionstorage.convention.android.library")
     id("com.emotionstorage.convention.android.library.compose")
     id("com.emotionstorage.convention.android.library.hilt")
-    id("com.emotionstorage.convention.kotlin.library.retrofit")
 }
 
 android {
@@ -19,12 +10,6 @@ android {
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 //        consumerProguardFiles("consumer-rules.pro")
-
-        buildConfigField(
-            "String",
-            "GOOGLE_SERVER_CLIENT_ID",
-            getLocalProperty("GOOGLE_SERVER_CLIENT_ID"),
-        )
     }
 
     buildTypes {
@@ -44,12 +29,6 @@ android {
 
 dependencies {
     implementation(projects.domain)
-    implementation(projects.data)
     implementation(projects.core.common)
     implementation(projects.core.ui)
-    implementation(projects.core.remote)
-    implementation(projects.core.local)
-
-    implementation(libs.bundles.credentials)
-    implementation(libs.kakao.sdk.user)
 }

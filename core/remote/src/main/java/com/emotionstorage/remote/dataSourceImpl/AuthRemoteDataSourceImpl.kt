@@ -1,13 +1,16 @@
-package com.emotionstorage.auth.remote.dataSourceImpl
+package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.auth.data.dataSource.AuthRemoteDataSource
-import com.emotionstorage.auth.data.model.SignupFormEntity
-import com.emotionstorage.auth.remote.api.AuthApiService
-import com.emotionstorage.auth.remote.modelMapper.GoogleSignupFormMapper
-import com.emotionstorage.auth.remote.modelMapper.KakaoSignupFormMapper
-import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
-import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
+import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
+import com.emotionstorage.data.model.SignupFormEntity
+import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User
+import com.emotionstorage.remote.api.AuthApiService
+import com.emotionstorage.remote.modelMapper.GoogleSignupFormMapper
+import com.emotionstorage.remote.modelMapper.KakaoSignupFormMapper
+import com.emotionstorage.remote.request.auth.GoogleLoginRequestBody
+import com.emotionstorage.remote.request.auth.KakaoLoginRequestBody
+import com.emotionstorage.remote.response.CustomHttpException
 import com.emotionstorage.remote.response.ResponseStatus
 import com.orhanobut.logger.Logger
 import javax.inject.Inject
@@ -20,7 +23,7 @@ class AuthRemoteDataSourceImpl
         override suspend fun login(
             provider: User.AuthProvider,
             idToken: String,
-        ): String {
+        ): DataState<String> =
             try {
                 // call login api
                 val response =
@@ -38,20 +41,16 @@ class AuthRemoteDataSourceImpl
                         }
                     }
 
-                // return access token if success
-                Logger.d("login response: $response")
-                if (response.status == ResponseStatus.Created.code) {
-                    response.data?.accessToken?.run {
-                        return this
-                    } ?: throw Exception("No access token received")
-                } else {
-                    throw Exception(response.code + "" + response.message)
-                }
+                response.data?.accessToken?.run {
+                    DataState.Success(this)
+                } ?: DataState.Error(Throwable("No access token received"))
+            } catch (e: CustomHttpException) {
+                Logger.e("Login http exception, $e")
+                DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""))
             } catch (e: Exception) {
-                Logger.e("Login fail, $e")
-                throw Exception("Login api failed", e)
+                Logger.e("Login exception, $e")
+                DataState.Error(Throwable("Login api failed", e))
             }
-        }
 
         override suspend fun signup(
             provider: User.AuthProvider,
