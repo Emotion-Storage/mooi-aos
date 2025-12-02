@@ -1,6 +1,6 @@
-package com.emotionstorage.auth.data.dataSource
+package com.emotionstorage.data.dataSource.remote
 
-import com.emotionstorage.auth.data.model.SignupFormEntity
+import com.emotionstorage.data.model.SignupFormEntity
 import com.emotionstorage.domain.model.User
 
 // todo: Add provider model in data layer

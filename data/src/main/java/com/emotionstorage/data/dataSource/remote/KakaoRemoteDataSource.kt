@@ -1,4 +1,4 @@
-package com.emotionstorage.auth.data.dataSource
+package com.emotionstorage.data.dataSource.remote
 
 interface KakaoRemoteDataSource {
     suspend fun getIdToken(): String

@@ -14,6 +14,6 @@ class GetPagedTimeCapsulesOfDateUseCase @Inject constructor(
         timeCapsuleRepository.getPagedTimeCapsules(
             startDate = date,
             endDate = date,
-            status = "arrived",
+            status = "all",
         )
 }

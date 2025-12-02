@@ -1,4 +1,4 @@
-package com.emotionstorage.auth.remote.request
+package com.emotionstorage.remote.request.auth
 
 import kotlinx.serialization.Serializable
 

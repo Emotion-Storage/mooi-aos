@@ -1,12 +1,11 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.repo.FavoriteResult
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.SetFavoriteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenTimeCapsuleUseCase
@@ -20,13 +19,11 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnOpenTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnToggleFavorite
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowFavoriteToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
@@ -50,10 +47,6 @@ sealed class TimeCapsuleDetailAction {
     ) : TimeCapsuleDetailAction()
 
     data class OnOpenTimeCapsule(
-        val id: Long,
-    ) : TimeCapsuleDetailAction()
-
-    data class OnToggleFavorite(
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
@@ -102,10 +95,6 @@ sealed class TimeCapsuleDetailSideEffect {
     object ShowDeleteModal : TimeCapsuleDetailSideEffect()
 
     object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
-
-    data class ShowFavoriteToast(
-        val favoriteResult: FavoriteResult,
-    ) : TimeCapsuleDetailSideEffect()
 }
 
 @HiltViewModel
@@ -114,7 +103,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val openTimeCapsule: OpenTimeCapsuleUseCase,
     private val getKeyCount: GetKeyCountUseCase,
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
-    private val setFavorite: SetFavoriteTimeCapsuleUseCase,
     private val saveNote: SaveTimeCapsuleNoteUseCase,
     private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : ViewModel(),
@@ -130,10 +118,6 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
             is OnOpenTimeCapsule -> {
                 handleOpenTimeCapsule(action.id)
-            }
-
-            is OnToggleFavorite -> {
-                handleToggleFavorite(action.id)
             }
 
             is OnDeleteTimeCapsule -> {
@@ -239,57 +223,22 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 flow = getRequiredKeyCount(state.timeCapsule?.openAt!!.toLocalDate()),
                 onSuccess = { requiredKeyCount ->
                     // get key count
-                    getKeyCount().handle(
-                        onSuccess = { keyCount ->
-                            postSideEffect(
-                                ShowUnlockModal(
-                                    UnlockModalState(
-                                        keyCount = keyCount,
-                                        requiredKeyCount = requiredKeyCount,
-                                        openAt = state.timeCapsule?.openAt!!,
-                                    ),
+                    val result = getKeyCount()
+                    if (result is DataState.Success) {
+                        postSideEffect(
+                            ShowUnlockModal(
+                                UnlockModalState(
+                                    keyCount = result.data,
+                                    requiredKeyCount = requiredKeyCount,
+                                    openAt = state.timeCapsule?.openAt!!,
                                 ),
-                            )
-                        },
-                    )
+                            ),
+                        )
+                    }
                 },
                 onError = { throwable, data ->
                     Logger.e("getRequiredKeyCount error: $throwable")
                     // todo: handle error
-                },
-            )
-        }
-
-    private fun handleToggleFavorite(id: Long) =
-        intent {
-            if (state.timeCapsule == null) {
-                return@intent
-            }
-
-            collectDataState(
-                flow = setFavorite(id, !state.timeCapsule!!.isFavorite),
-                onSuccess = {
-                    when (it) {
-                        FavoriteResult.ADDED -> {
-                            reduce {
-                                state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = true))
-                            }
-                        }
-
-                        FavoriteResult.REMOVED -> {
-                            reduce {
-                                state.copy(timeCapsule = state.timeCapsule?.copy(isFavorite = false))
-                            }
-                        }
-
-                        FavoriteResult.FULL -> {
-                            // do nothing
-                        }
-                    }
-                    postSideEffect(ShowFavoriteToast(it))
-                },
-                onError = { throwable, data ->
-                    Logger.e("setFavorite error: $throwable")
                 },
             )
         }

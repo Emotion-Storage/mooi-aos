@@ -22,6 +22,12 @@ android {
             "MOOI_DEV_SERVER_URL",
             getLocalProperty("MOOI_DEV_SERVER_URL"),
         )
+
+        buildConfigField(
+            "String",
+            "GOOGLE_SERVER_CLIENT_ID",
+            getLocalProperty("GOOGLE_SERVER_CLIENT_ID"),
+        )
     }
 
     buildTypes {
@@ -43,4 +49,9 @@ dependencies {
     api(projects.domain)
     api(projects.data)
     api(projects.core.common)
+    // local dependency for session storage access
+    api(projects.core.local)
+
+    implementation(libs.bundles.credentials)
+    implementation(libs.kakao.sdk.user)
 }

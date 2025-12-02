@@ -1,5 +1,6 @@
 package com.emotionstorage.remote.di
 
+import com.emotionstorage.remote.api.AuthApiService
 import com.emotionstorage.remote.api.DailyReportApiService
 import com.emotionstorage.remote.api.FcmApiService
 import com.emotionstorage.remote.api.HomeApiService
@@ -16,6 +17,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiServiceModule {
+    @Singleton
+    @Provides
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService = retrofit.create(AuthApiService::class.java)
+
     @Singleton
     @Provides
     fun provideHomeApiService(retrofit: Retrofit): HomeApiService = retrofit.create(HomeApiService::class.java)

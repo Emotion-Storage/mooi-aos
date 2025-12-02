@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.SnackbarData
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SwipeToDismissBox
@@ -14,6 +13,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -21,23 +21,51 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 private const val SNACKBAR_VERTICAL_PADDING = 30
+
+/**
+ * custom data class for additional snack bar data
+ */
+data class CustomSnackbarData(
+    val message: String,
+    val iconResId: Int?,
+)
+
+class AppSnackbarController(
+    private val snackbarHostState: SnackbarHostState,
+) {
+    private val _currentData = MutableStateFlow<CustomSnackbarData?>(null)
+    val currentData = _currentData.asStateFlow()
+
+    suspend fun showSnackbar(
+        message: String,
+        iconResId: Int? = null,
+    ) {
+        _currentData.emit(CustomSnackbarData(message, iconResId))
+        snackbarHostState.showSnackbar(message)
+    }
+}
 
 @Composable
 fun AppSnackbarHost(
     hostState: SnackbarHostState,
     modifier: Modifier = Modifier,
+    customDataFlow: StateFlow<CustomSnackbarData?>? = null,
     gravity: Int = Gravity.BOTTOM,
     paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
-    snackbarIconId: Int? = null,
-    hostContent: @Composable (snackbarData: SnackbarData) -> Unit = {
+    hostContent: @Composable (message: String, iconId: Int?) -> Unit = { message, iconId ->
         Toast(
-            message = it.visuals.message,
-            iconId = snackbarIconId,
+            message = message,
+            iconId = iconId,
         )
     },
 ) {
+    val customData = customDataFlow?.collectAsState()
+
     val dismissState =
         rememberSwipeToDismissBoxState(
             confirmValueChange = { value ->
@@ -101,7 +129,7 @@ fun AppSnackbarHost(
                     backgroundContent = {},
                 ) {
                     SnackbarHost(hostState = hostState) {
-                        hostContent(it)
+                        hostContent(it.visuals.message, customData?.value?.iconResId)
                     }
                 }
             }

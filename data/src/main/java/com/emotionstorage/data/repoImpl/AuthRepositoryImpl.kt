@@ -1,14 +1,14 @@
-package com.emotionstorage.auth.data.repoImpl
+package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.auth.data.dataSource.AuthRemoteDataSource
-import com.emotionstorage.auth.data.dataSource.GoogleRemoteDataSource
-import com.emotionstorage.auth.data.dataSource.KakaoRemoteDataSource
-import com.emotionstorage.auth.data.modelMapper.SignupFormMapper
-import com.emotionstorage.domain.model.SignupForm
-import com.emotionstorage.domain.repo.AuthRepository
+import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
+import com.emotionstorage.data.modelMapper.SignupFormMapper
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User
-import com.orhanobut.logger.Logger
+import com.emotionstorage.domain.repo.AuthRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -29,7 +29,7 @@ class AuthRepositoryImpl @Inject constructor(
                         User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                         User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                     }
-                Logger.d("provider: $provider, idToken: $idToken")
+                Napier.d("provider: $provider, idToken: ${idToken.substring(0..10) + "..."}")
 
                 // login with id token
                 try {
@@ -68,7 +68,10 @@ class AuthRepositoryImpl @Inject constructor(
                 if (signupForm.provider == null) throw Exception("provider is null")
                 if (signupForm.idToken == null) throw Exception("idToken is null")
 
-                authRemoteDataSource.signup(signupForm.provider!!, SignupFormMapper.toData(signupForm))
+                authRemoteDataSource.signup(
+                    signupForm.provider!!,
+                    SignupFormMapper.toData(signupForm),
+                )
                 emit(DataState.Success(true))
             } catch (e: Exception) {
                 emit(DataState.Error(e))

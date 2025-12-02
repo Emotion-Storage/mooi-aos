@@ -1,6 +1,6 @@
-package com.emotionstorage.auth.data.modelMapper
+package com.emotionstorage.data.modelMapper
 
-import com.emotionstorage.auth.data.model.SignupFormEntity
+import com.emotionstorage.data.model.SignupFormEntity
 import com.emotionstorage.domain.model.SignupForm
 
 internal object SignupFormMapper {

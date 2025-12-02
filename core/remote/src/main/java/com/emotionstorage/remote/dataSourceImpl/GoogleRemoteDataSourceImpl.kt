@@ -1,4 +1,4 @@
-package com.emotionstorage.auth.remote.dataSourceImpl
+package com.emotionstorage.remote.dataSourceImpl
 
 import android.content.Context
 import android.os.Build
@@ -7,8 +7,8 @@ import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import com.emotionstorage.auth.BuildConfig
-import com.emotionstorage.auth.data.dataSource.GoogleRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
+import com.emotionstorage.remote.BuildConfig
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException

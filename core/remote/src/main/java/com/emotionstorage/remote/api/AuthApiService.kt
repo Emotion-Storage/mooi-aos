@@ -1,13 +1,13 @@
-package com.emotionstorage.auth.remote.api
+package com.emotionstorage.remote.api
 
-import com.emotionstorage.auth.remote.request.GoogleLoginRequestBody
-import com.emotionstorage.auth.remote.request.GoogleSignupRequestBody
-import com.emotionstorage.auth.remote.request.KakaoLoginRequestBody
-import com.emotionstorage.auth.remote.request.KakaoSignupRequestBody
-import com.emotionstorage.auth.remote.response.LoginResponseData
-import com.emotionstorage.auth.remote.response.SignupResponseData
 import com.emotionstorage.remote.interceptor.AuthRequest
+import com.emotionstorage.remote.request.auth.GoogleLoginRequestBody
+import com.emotionstorage.remote.request.auth.GoogleSignupRequestBody
+import com.emotionstorage.remote.request.auth.KakaoLoginRequestBody
+import com.emotionstorage.remote.request.auth.KakaoSignupRequestBody
 import com.emotionstorage.remote.response.ResponseDto
+import com.emotionstorage.remote.response.auth.LoginResponseData
+import com.emotionstorage.remote.response.auth.SignupResponseData
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
