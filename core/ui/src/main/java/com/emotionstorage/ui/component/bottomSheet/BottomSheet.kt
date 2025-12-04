@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalBottomSheetProperties
@@ -52,6 +53,7 @@ fun BottomSheet(
     dismissLabel: String? = null,
     onDismiss: (() -> Unit)? = null,
     hideDragHandle: Boolean = false,
+    forbidDismiss: Boolean = false,
     sheetGesturesEnabled: Boolean = true,
     contentPadding: PaddingValues = PaddingValues(top = 23.dp, bottom = 54.dp, start = 15.dp, end = 15.dp),
     content: @Composable (ColumnScope.() -> Unit)? = null,
@@ -67,12 +69,25 @@ fun BottomSheet(
                 null
             } else {
                 {
-                    BottomSheetDefaults.DragHandle(
-                        width = 35.dp,
-                        height = 3.dp,
-                        color = MooiTheme.colorScheme.gray500,
-                        shape = RoundedCornerShape(100),
-                    )
+                    Box(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(29.dp)
+                                .padding(bottom = 3.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Box(
+                            modifier =
+                                Modifier
+                                    .width(35.dp)
+                                    .height(3.dp)
+                                    .background(
+                                        color = MooiTheme.colorScheme.gray500,
+                                        shape = RoundedCornerShape(100.dp),
+                                    ),
+                        )
+                    }
                 }
             },
         sheetGesturesEnabled = !hideDragHandle && sheetGesturesEnabled,
@@ -96,7 +111,7 @@ fun BottomSheet(
             // title
             if (!subTitle.isNullOrEmpty()) {
                 Text(
-                    modifier = Modifier.padding(bottom = 5.dp),
+                    modifier = Modifier.padding(bottom = 6.dp),
                     text = subTitle,
                     style = MooiTheme.typography.body2,
                     color = MooiTheme.colorScheme.gray500,
@@ -130,10 +145,14 @@ fun BottomSheet(
                         modifier = Modifier.fillMaxWidth(),
                         labelString = confirmLabel,
                         onClick = {
-                            scope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    onConfirm?.invoke()
+                            if (!forbidDismiss) {
+                                scope.launch { sheetState.hide() }.invokeOnCompletion {
+                                    if (!sheetState.isVisible) {
+                                        onConfirm?.invoke()
+                                    }
                                 }
+                            } else {
+                                onConfirm?.invoke()
                             }
                         },
                     )
@@ -175,7 +194,7 @@ private fun BottomSheetPreview() {
                     rememberStandardBottomSheetState(
                         initialValue = SheetValue.Expanded,
                     ),
-                hideDragHandle = true,
+                hideDragHandle = false,
                 title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
                 subTitle = "감정을 충분히 이야기했어요.",
                 confirmLabel = "네, 종료할래요.",

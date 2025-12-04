@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component.bottomSheet
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -11,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,11 +41,15 @@ fun TimePickerBottomSheet(
         confirmLabel = "확인",
         onConfirm = { onTimeSelected(spinnerTime) },
         hideDragHandle = false,
+        contentPadding = PaddingValues(top = 23.dp, bottom = 42.dp, start = 16.dp, end = 16.dp),
     ) {
         TimeWheelSpinner(
             selected = spinnerTime,
             onSelect = { spinnerTime = it },
-            modifier = Modifier.padding(top = 8.dp, bottom = 40.dp),
+            modifier =
+                Modifier
+                    .padding(bottom = 40.dp)
+                    .align(Alignment.CenterHorizontally),
         )
     }
 }
