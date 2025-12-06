@@ -247,6 +247,9 @@ internal fun AppNavHost(
                         navController.navigate(AppDestination.AIChatDesc(roomId))
                     }
                 },
+                navToKey = {
+                    navController.navigate(AppDestination.KeyDescription)
+                },
                 navToArrivedTimeCapsules = {
                     navController.navigate(AppDestination.ArrivedTimeCapsules)
                 },
