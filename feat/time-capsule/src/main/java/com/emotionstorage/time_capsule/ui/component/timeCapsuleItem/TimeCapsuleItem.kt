@@ -37,159 +37,50 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.dropShadow
 
-private object TimeCapsuleItemDesignToken {
-    val contentHeight = 93.dp
-    val contentPadding = PaddingValues(top = 18.dp, bottom = 20.dp, start = 15.dp, end = 9.dp)
-}
 
 @Composable
 fun TimeCapsuleItem(
-    modifier: Modifier = Modifier,
     timeCapsule: TimeCapsuleItemState,
-    showDate: Boolean = false,
-    showInfoText: Boolean = true,
-    showFavorite: Boolean = false,
+    modifier: Modifier = Modifier,
+    showHeader: Boolean = true,
     onFavoriteClick: () -> Unit = {},
     onClick: () -> Unit = {},
 ) {
-    Column(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .background(Color.Transparent),
-    ) {
-        // information row
-        InfoHeader(
-            modifier = Modifier.fillMaxWidth(),
-            status = timeCapsule.status,
-            createdAt = timeCapsule.createdAt,
-            expireAt = timeCapsule.expireAt,
-            showDate = showDate,
-            showInfoText = showInfoText,
-            showFavorite = showFavorite,
-            isFavorite = timeCapsule.isFavorite,
-            onFavoriteClick = onFavoriteClick,
-        )
-        // content
-        if (timeCapsule.status == TimeCapsule.Status.TEMPORARY) {
-            TempContent(
-                modifier = Modifier.fillMaxWidth(),
+    when (timeCapsule.status) {
+        TimeCapsule.Status.TEMPORARY -> {
+            TempTimeCapsuleItem(
+                timeCapsule = timeCapsule,
+                modifier = modifier,
+                showHeader = showHeader,
                 onClick = onClick,
             )
-        } else {
-            // content box
-            Spacer(modifier = Modifier.size(10.dp))
-            Box(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .run {
-                            if (timeCapsule.status == TimeCapsule.Status.ARRIVED) {
-                                this.dropShadow(
-                                    shape = RoundedCornerShape(15.dp),
-                                    color = Color(0xFF849BEA).copy(alpha = 0.15f),
-                                    offsetX = 0.dp,
-                                    offsetY = 0.dp,
-                                    blur = 5.dp,
-                                    spread = 2.dp,
-                                )
-                            } else {
-                                this
-                            }
-                        }.height(TimeCapsuleItemDesignToken.contentHeight)
-                        .background(
-                            Color.Transparent,
-                            RoundedCornerShape(15.dp),
-                        ).clip(RoundedCornerShape(15.dp))
-                        .clickable(onClick = onClick),
-            ) {
-                // overlay
-                ContentOverlay(
-                    status = timeCapsule.status,
-                    openDDay = timeCapsule.openDDay ?: 0,
-                    modifier = Modifier.fillMaxSize(),
-                )
-
-                // content
-                TimeCapsuleContent(
-                    modifier = Modifier.fillMaxSize(),
-                    timeCapsule = timeCapsule,
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun TimeCapsuleContent(
-    modifier: Modifier = Modifier,
-    timeCapsule: TimeCapsuleItemState,
-) {
-    val blurContent =
-        timeCapsule.status == TimeCapsule.Status.LOCKED || timeCapsule.status == TimeCapsule.Status.ARRIVED
-    Row(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(
-                    Color(0x1A849BEA),
-                    RoundedCornerShape(15.dp),
-                ).run {
-                    // blur content if not opened
-                    if (blurContent) {
-                        this.blur(4.dp)
-                    } else {
-                        this
-                    }
-                }.padding(TimeCapsuleItemDesignToken.contentPadding),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(11.dp),
-    ) {
-        // unlocked icon
-        if (timeCapsule.status == TimeCapsule.Status.OPENED) {
-            Column(
-                modifier =
-                    Modifier
-                        .size(54.dp)
-                        .border(1.dp, Color(0xFFAECBFA).copy(alpha = 0.2f), CircleShape),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_lock_open),
-                    modifier =
-                        Modifier
-                            .width(11.dp)
-                            .height(14.dp),
-                    contentDescription = "open",
-                )
-                Text(
-                    modifier = Modifier.padding(top = 3.dp),
-                    text = "열림",
-                    style = MooiTheme.typography.caption6.copy(fontSize = 11.sp),
-                    color = MooiTheme.colorScheme.secondary,
-                )
-            }
         }
 
-        // time capsule content
-        Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(5.dp),
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                for (emotion in timeCapsule.emotions) {
-                    EmotionTag(emotion = emotion)
-                }
-            }
-            Text(
-                text = timeCapsule.title,
-                style = MooiTheme.typography.caption2,
-                color = MooiTheme.colorScheme.primary,
-                maxLines = 1,
+        TimeCapsule.Status.LOCKED -> {
+            LockedTimeCapsuleItem(
+                timeCapsule = timeCapsule,
+                modifier = modifier,
+                showHeader = showHeader,
+                onClick = onClick,
+            )
+        }
+
+        TimeCapsule.Status.ARRIVED -> {
+            ArrivedTimeCapsuleItem(
+                timeCapsule = timeCapsule,
+                modifier = modifier,
+                showHeader = showHeader,
+                onClick = onClick,
+            )
+        }
+
+        TimeCapsule.Status.OPENED -> {
+            OpenTimeCapsuleItem(
+                timeCapsule = timeCapsule,
+                modifier = modifier,
+                showHeader = showHeader,
+                onClick = onClick,
+                onFavoriteClick = onFavoriteClick
             )
         }
     }
