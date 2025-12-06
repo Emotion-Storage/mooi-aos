@@ -46,13 +46,11 @@ fun KeyCard(
                 Modifier
                     .background(
                         brush = MooiTheme.brushScheme.subButtonBackground,
-                    )
-                    .border(
+                    ).border(
                         width = 1.dp,
                         brush = MooiTheme.brushScheme.subButtonBorder,
                         shape = RoundedCornerShape(10.dp),
-                    )
-                    .padding(start = 16.dp, end = 16.dp),
+                    ).padding(start = 16.dp, end = 16.dp),
         ) {
             Image(
                 painter = painterResource(R.drawable.ic_key),

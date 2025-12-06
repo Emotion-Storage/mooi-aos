@@ -114,7 +114,7 @@ fun StatelessKeyDescriptionScreen(
                     contentDescription = "열쇠",
                 )
 
-                Spacer(modifier = Modifier.padding(6.dp))
+                Spacer(modifier = Modifier.padding(58.dp))
 
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -124,7 +124,6 @@ fun StatelessKeyDescriptionScreen(
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.size(12.dp))
-
                 CountRow(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     count = state.keyCount,
