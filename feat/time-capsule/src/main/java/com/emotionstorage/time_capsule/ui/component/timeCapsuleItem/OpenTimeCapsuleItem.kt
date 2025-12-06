@@ -43,7 +43,7 @@ fun OpenTimeCapsuleItem(
         if (showHeader) {
             Row(
                 modifier =
-                    modifier
+                    Modifier
                         .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,

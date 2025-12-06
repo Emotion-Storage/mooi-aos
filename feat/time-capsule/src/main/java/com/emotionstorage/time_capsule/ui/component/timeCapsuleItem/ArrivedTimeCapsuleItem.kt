@@ -50,7 +50,7 @@ fun ArrivedTimeCapsuleItem(
             Column {
                 Row(
                     modifier =
-                        modifier
+                        Modifier
                             .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
