@@ -1,5 +1,8 @@
 package com.emotionstorage.emotionstorage.ui
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -165,7 +168,18 @@ internal fun AppNavHost(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.background),
     ) {
-        composable<AppDestination.Splash> { backstackEntry ->
+        composable<AppDestination.Splash>(
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(durationMillis = 800)
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(durationMillis = 800)
+                )
+            },
+        ) { backstackEntry ->
             SplashScreen(
                 navToTutorial = {
                     navController.navigateWithClearStack(AppDestination.Tutorial)
@@ -176,7 +190,18 @@ internal fun AppNavHost(
             )
         }
 
-        composable<AppDestination.Tutorial> { backstackEntry ->
+        composable<AppDestination.Tutorial>(
+            enterTransition = {
+                fadeIn(
+                    animationSpec = tween(durationMillis = 800)
+                )
+            },
+            exitTransition = {
+                fadeOut(
+                    animationSpec = tween(durationMillis = 800)
+                )
+            },
+        ) { backstackEntry ->
             TutorialScreen(
                 navToLogin = {
                     navController.navigateWithClearStack(AppDestination.Login)
