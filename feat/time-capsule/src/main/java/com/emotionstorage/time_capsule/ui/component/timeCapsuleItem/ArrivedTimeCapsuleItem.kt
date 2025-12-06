@@ -146,7 +146,7 @@ private fun ArrivedOverLay(
         ) {
             Image(
                 modifier = Modifier.size(17.dp, 20.dp),
-                painter = painterResource(id = R.drawable.ic_lock),
+                painter = painterResource(id = R.drawable.ic_lock_open),
                 contentDescription = "arrived",
             )
             Box(
