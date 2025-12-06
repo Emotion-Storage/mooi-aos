@@ -107,8 +107,8 @@ fun StatelessKeyDescriptionScreen(
                 Image(
                     modifier =
                         Modifier
-                            .heightIn(198.dp)
-                            .widthIn(198.dp)
+                            .heightIn(147.dp)
+                            .widthIn(147.dp)
                             .align(Alignment.CenterHorizontally),
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
