@@ -1,5 +1,11 @@
 package com.emotionstorage.time_capsule.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.EaseOutElastic
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -392,16 +399,30 @@ private fun CalendarTodayButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
-    // todo: animate visibility
-    Image(
-        modifier = modifier
-            .size(114.dp, 72.dp)
-            .clickable(
-                onClick = onClick
-            ),
-        painter = painterResource(R.drawable.graphic_calendar_today),
-        contentDescription = "today"
-    )
+    val density = LocalDensity.current
+    AnimatedVisibility(
+        modifier = modifier,
+        visible = isVisible,
+        enter = slideInVertically {
+            with(density) { 100.dp.roundToPx() }
+        },
+        exit = slideOutVertically(
+            // delay exit animation by 1s
+            animationSpec = tween(durationMillis = 2000, delayMillis = 1000, easing = EaseOutElastic),
+            targetOffsetY = {
+                with(density) { 100.dp.roundToPx() }
+            })
+    ) {
+        Image(
+            modifier = Modifier
+                .size(114.dp, 72.dp)
+                .clickable(
+                    onClick = onClick
+                ),
+            painter = painterResource(R.drawable.graphic_calendar_today),
+            contentDescription = "today"
+        )
+    }
 }
 
 @PreviewScreenSizes
