@@ -15,9 +15,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -31,83 +28,26 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
-import com.emotionstorage.time_capsule.presentation.ToggleFavoriteAction
-import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteFailToast
-import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteSuccessToast
-import com.emotionstorage.time_capsule.presentation.ToggleFavoriteState
-import com.emotionstorage.time_capsule.presentation.ToggleFavoriteViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
-import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.appBar.TopAppBar
-import com.emotionstorage.ui.component.toast.AppSnackbarController
+import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun ArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: ArrivedTimeCapsulesViewModel = hiltViewModel(),
-    favoriteViewModel: ToggleFavoriteViewModel = hiltViewModel(),
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val context = LocalContext.current
-
     val timeCapsulesState = viewModel.arrivedTimeCapsules.collectAsLazyPagingItems()
-    val favoriteState = favoriteViewModel.container.stateFlow.collectAsState()
-
-    val snackState = remember { SnackbarHostState() }
-    val snackbarController = remember { AppSnackbarController(snackState) }
-
-    // update favorite state
-    LaunchedEffect(timeCapsulesState.itemSnapshotList) {
-        val favorites =
-            timeCapsulesState
-                .itemSnapshotList
-                .items
-                .filter { it.isFavorite }
-                .map { it.id }
-
-        favoriteViewModel.onAction(
-            ToggleFavoriteAction.Init(favorites),
-        )
-    }
-
-    // collect favorite side effect
-    LaunchedEffect("init") {
-        favoriteViewModel.container.sideEffectFlow.collect {
-            when (it) {
-                is ShowFavoriteSuccessToast -> {
-                    snackState.currentSnackbarData?.dismiss()
-                    snackbarController.showSnackbar(
-                        message =
-                            if (it.isFavorite) {
-                                context.getString(R.string.toast_favorite_added)
-                            } else {
-                                context.getString(R.string.toast_favorite_removed)
-                            },
-                        iconResId = R.drawable.ic_success_filled,
-                    )
-                }
-
-                is ShowFavoriteFailToast -> {
-                    snackState.currentSnackbarData?.dismiss()
-                    snackbarController.showSnackbar(
-                        message = context.getString(R.string.toast_favorite_full),
-                    )
-                }
-            }
-        }
-    }
 
     StatelessArrivedTimeCapsulesScreen(
         modifier = modifier,
-        snackState = snackState,
-        snackbarController = snackbarController,
         timeCapsules = timeCapsulesState,
-        favoriteState = favoriteState.value,
-        onFavoriteAction = favoriteViewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack,
     )
@@ -116,11 +56,7 @@ fun ArrivedTimeCapsulesScreen(
 @Composable
 private fun StatelessArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
-    snackState: SnackbarHostState = remember { SnackbarHostState() },
-    snackbarController: AppSnackbarController? = null,
     timeCapsules: LazyPagingItems<TimeCapsuleItemState>? = null,
-    favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
-    onFavoriteAction: (ToggleFavoriteAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
@@ -134,12 +70,6 @@ private fun StatelessArrivedTimeCapsulesScreen(
                 title = "도착한 타임캡슐",
                 showBackButton = true,
                 onBackClick = navToBack,
-            )
-        },
-        snackbarHost = {
-            AppSnackbarHost(
-                hostState = snackState,
-                customDataFlow = snackbarController?.currentData,
             )
         },
     ) { innerPadding ->
@@ -199,19 +129,10 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                         Modifier
                                             .fillMaxWidth()
                                             .padding(bottom = 26.dp),
-                                    timeCapsule =
-                                        this.copy(
-                                            isFavorite = favoriteState.favoriteIds.contains(this.id),
-                                        ),
+                                    timeCapsule = this,
                                     showDate = true,
                                     showInfoText = false,
-                                    showFavorite = true,
                                     onClick = { navToTimeCapsuleDetail(this.id) },
-                                    onFavoriteClick = {
-                                        onFavoriteAction(
-                                            ToggleFavoriteAction.OnToggle(this.id),
-                                        )
-                                    },
                                 )
                             }
                         }
@@ -220,9 +141,10 @@ private fun StatelessArrivedTimeCapsulesScreen(
 
                 else -> {
                     item {
-                        CircularProgressIndicator(
+                        LoadingDots(
                             modifier = Modifier.padding(top = 244.dp),
-                            color = MooiTheme.colorScheme.primary,
+                            dotSize = 13.dp,
+                            dotSpacing = 10.dp,
                         )
                     }
                     // todo: add error ui
