@@ -123,10 +123,10 @@ private fun StatelessArrivedTimeCapsulesScreen(
                         }
                     } else {
                         items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                            if (timeCapsules[it] != null) {
+                            timeCapsules[it]?.let {
                                 Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                                     Text(
-                                        text = timeCapsules[it]!!.createdAt.formatToKorDateTime(),
+                                        text = it.createdAt.formatToKorDateTime(),
                                         style = MooiTheme.typography.caption4,
                                         color = MooiTheme.colorScheme.gray300,
                                     )
@@ -135,9 +135,9 @@ private fun StatelessArrivedTimeCapsulesScreen(
                                             Modifier
                                                 .fillMaxWidth()
                                                 .padding(bottom = 26.dp),
-                                        timeCapsule = timeCapsules[it]!!,
+                                        timeCapsule = it,
                                         showHeader = false,
-                                        onClick = { navToTimeCapsuleDetail(timeCapsules[it]!!.id) },
+                                        onClick = { navToTimeCapsuleDetail(it.id) },
                                     )
                                 }
                             }
