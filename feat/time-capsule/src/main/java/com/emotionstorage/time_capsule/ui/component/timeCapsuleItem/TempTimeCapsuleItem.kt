@@ -71,12 +71,12 @@ fun TempTimeCapsuleItem(
             }
         }
         Spacer(modifier = Modifier.height(7.dp))
+        // content
+        TempContent(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onClick,
+        )
     }
-    // content
-    TempContent(
-        modifier = Modifier.fillMaxWidth(),
-        onClick = onClick,
-    )
 }
 
 @Composable
@@ -92,7 +92,8 @@ private fun TempContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                ).clip(RoundedCornerShape(15.dp))
+                )
+                .clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
