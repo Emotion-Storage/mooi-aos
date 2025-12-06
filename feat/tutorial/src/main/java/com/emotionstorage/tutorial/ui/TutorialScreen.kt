@@ -10,12 +10,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,8 +33,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.R as tutorialR
 import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
@@ -53,7 +58,8 @@ fun TutorialScreen(
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.background)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .consumeWindowInsets(WindowInsets.systemBars),
     ) { innerPadding ->
         PagerWithIndicator(
             modifier =
@@ -68,105 +74,82 @@ fun TutorialScreen(
                     when (page) {
                         0 -> {
                             TutorialPage(
-                                description = stringResource(R.string.tutorial_p0_desc),
-                                title = stringResource(R.string.tutorial_p0_title),
+                                description = stringResource(tutorialR.string.tutorial_p0_desc),
+                                title = stringResource(tutorialR.string.tutorial_p0_title),
                                 titleHighlights =
-                                    stringResource(R.string.tutorial_p0_title_highlights).split(
+                                    stringResource(tutorialR.string.tutorial_p0_title_highlights).split(
                                         ',',
                                     ),
-                                content = {
-                                    TutorialGraphicImage(
-                                        resId =
-                                            com
-                                                .emotionstorage
-                                                .ui
-                                                .R
-                                                .drawable
-                                                .graphic_tutorial_greeting,
-                                    )
-                                },
-                            )
+                            ) {
+                                TutorialGraphicImage(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    resId = R.drawable.graphic_tutorial_greeting,
+                                )
+                            }
+
                         }
 
                         1 -> {
                             TutorialPage(
-                                description = stringResource(R.string.tutorial_p1_desc),
-                                title = stringResource(R.string.tutorial_p1_title),
+                                description = stringResource(tutorialR.string.tutorial_p1_desc),
+                                title = stringResource(tutorialR.string.tutorial_p1_title),
                                 titleHighlights =
-                                    stringResource(R.string.tutorial_p1_title_highlights).split(
+                                    stringResource(tutorialR.string.tutorial_p1_title_highlights).split(
                                         ',',
-                                    ),
-                                content = {
-                                    TutorialGraphicImage(
-                                        resId =
-                                            com
-                                                .emotionstorage
-                                                .ui
-                                                .R
-                                                .drawable
-                                                .graphic_tutorial_chat,
                                     )
-                                },
-                            )
+                            ) {
+                                TutorialGraphicImage(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    resId = R.drawable.graphic_tutorial_chat,
+                                )
+                            }
+
                         }
 
                         2 -> {
                             TutorialPage(
-                                description = stringResource(R.string.tutorial_p2_desc),
-                                title = stringResource(R.string.tutorial_p2_title),
+                                description = stringResource(tutorialR.string.tutorial_p2_desc),
+                                title = stringResource(tutorialR.string.tutorial_p2_title),
                                 titleHighlights =
-                                    stringResource(R.string.tutorial_p2_title_highlights).split(
+                                    stringResource(tutorialR.string.tutorial_p2_title_highlights).split(
                                         ',',
                                     ),
-                                content = {
-                                    TutorialGraphicImage(
-                                        resId =
-                                            com
-                                                .emotionstorage
-                                                .ui
-                                                .R
-                                                .drawable
-                                                .graphic_tutorial_timecapsule,
-                                    )
-                                },
-                            )
+                            ) {
+                                TutorialGraphicImage(
+                                    modifier = Modifier.align(Alignment.Center),
+                                    resId = R.drawable.graphic_tutorial_timecapsule,
+                                )
+                            }
                         }
 
                         3 -> {
                             TutorialPage(
-                                description = stringResource(R.string.tutorial_p3_desc),
-                                title = stringResource(R.string.tutorial_p3_title),
+                                description = stringResource(tutorialR.string.tutorial_p3_desc),
+                                title = stringResource(tutorialR.string.tutorial_p3_title),
                                 titleHighlights =
-                                    stringResource(R.string.tutorial_p3_title_highlights).split(
+                                    stringResource(tutorialR.string.tutorial_p3_title_highlights).split(
                                         ',',
                                     ),
-                                content = {
-                                    Box(
-                                        modifier = Modifier.align(Alignment.Center),
-                                        contentAlignment = Alignment.BottomCenter,
-                                    ) {
-                                        TutorialGraphicImage(
-                                            resId =
-                                                com
-                                                    .emotionstorage
-                                                    .ui
-                                                    .R
-                                                    .drawable
-                                                    .graphic_tutorial_report,
-                                        )
+                            ) {
+                                TutorialGraphicImage(
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .offset(y = 60.dp),
+                                    resId = R.drawable.graphic_tutorial_report,
+                                )
 
-                                        CtaButton(
-                                            modifier =
-                                                Modifier
-                                                    .fillMaxWidth()
-                                                    .padding(horizontal = 15.dp),
-                                            labelString = stringResource(R.string.tutorial_btn_start),
-                                            onClick = navToLogin,
-                                            isDefaultWidth = false,
-                                        )
-                                    }
-                                },
-                            )
+                                CtaButton(
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.BottomCenter)
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 15.dp),
+                                    labelString = stringResource(tutorialR.string.tutorial_btn_start),
+                                    onClick = navToLogin,
+                                    isDefaultWidth = false,
+                                )
+
+                            }
                         }
                     }
                 },
@@ -185,29 +168,23 @@ fun TutorialScreen(
 private fun ColumnScope.TutorialPage(
     description: String,
     title: String,
-    titleHighlights: List<String> = emptyList(),
     modifier: Modifier = Modifier,
+    titleHighlights: List<String> = emptyList(),
     content: @Composable BoxScope.() -> Unit = {},
 ) {
     Box(
         modifier =
             modifier
                 .fillMaxSize(),
-        contentAlignment = Alignment.Center,
     ) {
-        Box(
-            modifier = modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center,
-        ) {
-            content()
-        }
+        content()
 
         Column(
             modifier =
                 Modifier
                     .align(Alignment.TopCenter)
                     .padding(horizontal = 15.dp)
-                    .padding(top = 78.dp),
+                    .padding(top = 123.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
@@ -236,14 +213,12 @@ private fun ColumnScope.TutorialPage(
 @Composable
 private fun BoxScope.TutorialGraphicImage(
     @DrawableRes resId: Int,
+    modifier: Modifier = Modifier,
 ) {
     Image(
         modifier =
-            Modifier
-                .align(Alignment.Center)
-                .fillMaxWidth()
-                .aspectRatio(360f / 752f)
-                .offset(y = 5.dp),
+            modifier
+                .fillMaxSize(),
         painter = painterResource(resId),
         contentScale = ContentScale.Crop,
         contentDescription = null,
