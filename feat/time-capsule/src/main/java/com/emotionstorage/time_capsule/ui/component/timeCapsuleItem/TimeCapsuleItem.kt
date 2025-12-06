@@ -77,7 +77,6 @@ private fun TimeCapsuleItemPreview(
                     .padding(16.dp),
         ) {
             TimeCapsuleItem(
-                modifier = Modifier.align(Alignment.Center),
                 timeCapsule = timeCapsule,
             )
         }

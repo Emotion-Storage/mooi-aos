@@ -48,9 +48,7 @@ fun ArrivedTimeCapsuleItem(
     ) {
         // header
         if (showHeader) {
-            Column(
-                verticalArrangement = Arrangement.spacedBy((10.5).dp),
-            ) {
+            Column {
                 Row(
                     modifier =
                         modifier
@@ -65,7 +63,7 @@ fun ArrivedTimeCapsuleItem(
                     )
                 }
                 Row(
-                    modifier = modifier.height(34.dp),
+                    modifier = Modifier.height(31.dp),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(7.dp),
                 ) {
@@ -73,7 +71,6 @@ fun ArrivedTimeCapsuleItem(
                         modifier = Modifier.size(16.dp),
                         painter = painterResource(R.drawable.ic_key),
                         contentDescription = "",
-                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     )
                     Text(
                         text = "도착한 타임캡슐을 열어 내 지난 감정을 확인해요.",
@@ -96,11 +93,13 @@ fun ArrivedTimeCapsuleItem(
                         offsetY = 0.dp,
                         blur = 5.dp,
                         spread = 2.dp,
-                    ).height(93.dp)
+                    )
+                    .height(93.dp)
                     .background(
                         Color.Transparent,
                         RoundedCornerShape(15.dp),
-                    ).clip(RoundedCornerShape(15.dp))
+                    )
+                    .clip(RoundedCornerShape(15.dp))
                     .clickable(onClick = onClick),
         ) {
             ArrivedOverLay(
@@ -131,7 +130,8 @@ private fun ArrivedOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                ).border(
+                )
+                .border(
                     1.dp,
                     LinearGradient(
                         colors =
