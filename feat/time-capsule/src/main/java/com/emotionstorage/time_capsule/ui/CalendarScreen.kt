@@ -1,7 +1,6 @@
 package com.emotionstorage.time_capsule.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.core.EaseOutElastic
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -63,7 +62,6 @@ import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
 import java.time.YearMonth
@@ -288,7 +286,6 @@ private fun StatelessCalendarScreen(
                 )
             }
 
-
             CalendarTodayButton(
                 isVisible = state.calendarYearMonth != YearMonth.now(),
                 modifier =
@@ -403,24 +400,28 @@ private fun CalendarTodayButton(
     AnimatedVisibility(
         modifier = modifier,
         visible = isVisible,
-        enter = slideInVertically {
-            with(density) { 100.dp.roundToPx() }
-        },
-        exit = slideOutVertically(
-            // delay exit animation by 1s
-            animationSpec = tween(durationMillis = 2000, delayMillis = 1000, easing = EaseOutElastic),
-            targetOffsetY = {
+        enter =
+            slideInVertically {
                 with(density) { 100.dp.roundToPx() }
-            })
+            },
+        exit =
+            slideOutVertically(
+                // delay exit animation by 1s
+                animationSpec = tween(durationMillis = 2000, delayMillis = 1000, easing = EaseOutElastic),
+                targetOffsetY = {
+                    with(density) { 100.dp.roundToPx() }
+                },
+            ),
     ) {
         Image(
-            modifier = Modifier
-                .size(114.dp, 72.dp)
-                .clickable(
-                    onClick = onClick
-                ),
+            modifier =
+                Modifier
+                    .size(114.dp, 72.dp)
+                    .clickable(
+                        onClick = onClick,
+                    ),
             painter = painterResource(R.drawable.graphic_calendar_today),
-            contentDescription = "today"
+            contentDescription = "today",
         )
     }
 }
