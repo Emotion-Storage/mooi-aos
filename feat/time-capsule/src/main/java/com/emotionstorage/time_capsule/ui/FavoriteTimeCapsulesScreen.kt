@@ -4,12 +4,14 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
@@ -30,6 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.emotionstorage.common.formatToKorDateTime
+import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
@@ -43,6 +47,7 @@ import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleI
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
@@ -74,12 +79,7 @@ fun FavoriteTimeCapsulesScreen(
     // init favorite state
     LaunchedEffect(timeCapsulesState?.itemSnapshotList) {
         val favorites =
-            timeCapsulesState
-                ?.itemSnapshotList
-                ?.items
-                ?.filter { it.isFavorite }
-                ?.map { it.id }
-                ?: emptyList()
+            timeCapsulesState?.itemSnapshotList?.items?.filter { it.isFavorite }?.map { it.id } ?: emptyList()
 
         favoriteViewModel.onAction(
             ToggleFavoriteAction.Init(favorites),
@@ -93,12 +93,11 @@ fun FavoriteTimeCapsulesScreen(
                 is ShowFavoriteSuccessToast -> {
                     snackState.currentSnackbarData?.dismiss()
                     snackbarController.showSnackbar(
-                        message =
-                            if (it.isFavorite) {
-                                context.getString(R.string.toast_favorite_added)
-                            } else {
-                                context.getString(R.string.toast_favorite_removed)
-                            },
+                        message = if (it.isFavorite) {
+                            context.getString(R.string.toast_favorite_added)
+                        } else {
+                            context.getString(R.string.toast_favorite_removed)
+                        },
                         iconResId = R.drawable.ic_success_filled,
                     )
                 }
@@ -141,10 +140,9 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     val timeCapsules = state.timeCapsulesFlow?.collectAsLazyPagingItems()
 
     Scaffold(
-        modifier =
-            modifier
-                .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+        modifier = modifier
+            .fillMaxSize()
+            .background(MooiTheme.colorScheme.background),
         topBar = {
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
         },
@@ -156,31 +154,28 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         },
     ) { innerPadding ->
         LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MooiTheme.colorScheme.background)
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // info text
             item {
                 Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 13.dp)
-                            .offset(x = -1.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 13.dp)
+                        .offset(x = -1.dp),
                     horizontalArrangement = Arrangement.spacedBy(6.dp),
                     verticalAlignment = Alignment.Top,
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_favorite_filled),
-                        modifier =
-                            Modifier
-                                .width(11.dp)
-                                .height(12.dp),
+                        modifier = Modifier
+                            .width(11.dp)
+                            .height(12.dp),
                         contentDescription = "open",
                         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     )
@@ -205,11 +200,10 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     item {
                         Box(modifier = Modifier.fillMaxWidth()) {
                             DropDownPicker(
-                                modifier =
-                                    Modifier
-                                        .align(Alignment.CenterEnd)
-                                        .width(102.dp)
-                                        .padding(top = 7.dp, bottom = 22.dp),
+                                modifier = Modifier
+                                    .align(Alignment.CenterEnd)
+                                    .width(102.dp)
+                                    .padding(top = 7.dp, bottom = 22.dp),
                                 selectedValue = state.sortOrder.label,
                                 options = FavoriteSortBy.entries.map { it.label },
                                 onSelect = { label ->
@@ -221,25 +215,39 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         }
                     }
                     items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                        timeCapsules[it]?.run {
-                            TimeCapsuleItem(
-                                modifier =
-                                    Modifier
+                        if (timeCapsules[it] != null) {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Row(
+                                    modifier =
+                                        modifier
+                                            .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        text = timeCapsules[it]!!.createdAt.formatToKorDateTime(),
+                                        style = MooiTheme.typography.caption4,
+                                        color = MooiTheme.colorScheme.gray300,
+                                    )
+                                    RoundedToggleButton(
+                                        modifier = Modifier.size(36.dp),
+                                        isSelected = favoriteState.favoriteIds.contains(timeCapsules[it]!!.id),
+                                        onSelect = {
+                                            onFavoriteAction(
+                                                ToggleFavoriteAction.OnToggle(timeCapsules[it]!!.id),
+                                            )
+                                        },
+                                    )
+                                }
+                                TimeCapsuleItem(
+                                    modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(bottom = 26.dp),
-                                timeCapsule =
-                                    this.copy(
-                                        isFavorite = favoriteState.favoriteIds.contains(this.id),
-                                    ),
-                                showDate = true,
-                                showFavorite = true,
-                                onClick = { navToTimeCapsuleDetail(this.id) },
-                                onFavoriteClick = {
-                                    onFavoriteAction(
-                                        ToggleFavoriteAction.OnToggle(this.id),
-                                    )
-                                },
-                            )
+                                    timeCapsule = timeCapsules[it]!!,
+                                    showHeader = false,
+                                    onClick = { navToTimeCapsuleDetail(timeCapsules[it]!!.id) },
+                                )
+                            }
                         }
                     }
                 }
