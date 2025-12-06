@@ -1,6 +1,7 @@
 package com.emotionstorage.my.ui.keyDescription
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -102,18 +103,15 @@ fun StatelessKeyDescriptionScreen(
                     color = MooiTheme.colorScheme.gray400,
                 )
 
-                Spacer(modifier = Modifier.padding(28.dp))
-
+                Spacer(modifier = Modifier.padding(58.dp))
                 Image(
                     modifier =
                         Modifier
-                            .heightIn(147.dp)
-                            .widthIn(147.dp)
+                            .size(149.dp)
                             .align(Alignment.CenterHorizontally),
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
                 )
-
                 Spacer(modifier = Modifier.padding(58.dp))
 
                 Text(
