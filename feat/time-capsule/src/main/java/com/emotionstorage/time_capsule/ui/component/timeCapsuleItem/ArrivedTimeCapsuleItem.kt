@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -93,13 +92,11 @@ fun ArrivedTimeCapsuleItem(
                         offsetY = 0.dp,
                         blur = 5.dp,
                         spread = 2.dp,
-                    )
-                    .height(93.dp)
+                    ).height(93.dp)
                     .background(
                         Color.Transparent,
                         RoundedCornerShape(15.dp),
-                    )
-                    .clip(RoundedCornerShape(15.dp))
+                    ).clip(RoundedCornerShape(15.dp))
                     .clickable(onClick = onClick),
         ) {
             ArrivedOverLay(
@@ -130,8 +127,7 @@ private fun ArrivedOverLay(
                 .background(
                     Color(0xFF262736).copy(alpha = 0.85f),
                     RoundedCornerShape(15.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     LinearGradient(
                         colors =
