@@ -391,10 +391,14 @@ private fun CalendarTodayButton(
     isVisible: Boolean,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-){
+) {
     // todo: animate visibility
     Image(
-        modifier = Modifier.size(114.dp, 72.dp),
+        modifier = modifier
+            .size(114.dp, 72.dp)
+            .clickable(
+                onClick = onClick
+            ),
         painter = painterResource(R.drawable.graphic_calendar_today),
         contentDescription = "today"
     )
