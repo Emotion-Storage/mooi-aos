@@ -3,6 +3,7 @@ package com.emotionstorage.time_capsule.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.emotionstorage.common.formatToKorDateTime
+import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
@@ -123,17 +126,23 @@ private fun StatelessArrivedTimeCapsulesScreen(
                         }
                     } else {
                         items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                            timeCapsules[it]?.run {
-                                TimeCapsuleItem(
-                                    modifier =
-                                        Modifier
-                                            .fillMaxWidth()
-                                            .padding(bottom = 26.dp),
-                                    timeCapsule = this,
-                                    showDate = true,
-                                    showInfoText = false,
-                                    onClick = { navToTimeCapsuleDetail(this.id) },
-                                )
+                            if (timeCapsules[it] != null) {
+                                Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
+                                    Text(
+                                        text = timeCapsules[it]!!.createdAt.formatToKorDateTime(),
+                                        style = MooiTheme.typography.caption4,
+                                        color = MooiTheme.colorScheme.gray300,
+                                    )
+                                    TimeCapsuleItem(
+                                        modifier =
+                                            Modifier
+                                                .fillMaxWidth()
+                                                .padding(bottom = 26.dp),
+                                        timeCapsule = timeCapsules[it]!!,
+                                        showHeader = false,
+                                        onClick = { navToTimeCapsuleDetail(timeCapsules[it]!!.id) },
+                                    )
+                                }
                             }
                         }
                     }
