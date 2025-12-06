@@ -92,8 +92,7 @@ private fun TempContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                )
-                .clip(RoundedCornerShape(15.dp))
+                ).clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
