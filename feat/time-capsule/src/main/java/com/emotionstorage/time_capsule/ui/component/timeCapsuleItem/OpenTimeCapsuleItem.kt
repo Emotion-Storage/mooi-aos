@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule.ui.component.timeCapsuleItem
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,16 +19,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.common.formatToKorTime
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.dropShadow
-
 
 @Composable
 fun OpenTimeCapsuleItem(
@@ -76,16 +70,14 @@ fun OpenTimeCapsuleItem(
                     .background(
                         Color.Transparent,
                         RoundedCornerShape(15.dp),
-                    )
-                    .clip(RoundedCornerShape(15.dp))
+                    ).clip(RoundedCornerShape(15.dp))
                     .clickable(onClick = onClick),
         ) {
             TimeCapsuleItemContent(
                 modifier = Modifier.fillMaxSize(),
                 timeCapsule = timeCapsule,
-                blurContent = false
+                blurContent = false,
             )
         }
     }
 }
-

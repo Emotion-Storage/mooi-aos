@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,7 +30,6 @@ import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
 
-
 @Composable
 fun TimeCapsuleItemContent(
     timeCapsule: TimeCapsuleItemState,
@@ -45,16 +43,14 @@ fun TimeCapsuleItemContent(
                 .background(
                     Color(0x1A849BEA),
                     RoundedCornerShape(15.dp),
-                )
-                .run {
+                ).run {
                     // blur content if not opened
                     if (blurContent) {
                         this.blur(4.dp)
                     } else {
                         this
                     }
-                }
-                .padding(top = 18.dp, bottom = 20.dp, start = 15.dp, end = 9.dp),
+                }.padding(top = 18.dp, bottom = 20.dp, start = 15.dp, end = 9.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(11.dp),
     ) {

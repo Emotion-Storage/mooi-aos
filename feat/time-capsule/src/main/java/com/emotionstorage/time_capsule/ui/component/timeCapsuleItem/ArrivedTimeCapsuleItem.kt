@@ -81,7 +81,6 @@ fun ArrivedTimeCapsuleItem(
                         color = MooiTheme.colorScheme.gray400,
                     )
                 }
-
             }
             Spacer(modifier = Modifier.padding(bottom = (5.5).dp))
         }
@@ -97,13 +96,11 @@ fun ArrivedTimeCapsuleItem(
                         offsetY = 0.dp,
                         blur = 5.dp,
                         spread = 2.dp,
-                    )
-                    .height(93.dp)
+                    ).height(93.dp)
                     .background(
                         Color.Transparent,
                         RoundedCornerShape(15.dp),
-                    )
-                    .clip(RoundedCornerShape(15.dp))
+                    ).clip(RoundedCornerShape(15.dp))
                     .clickable(onClick = onClick),
         ) {
             ArrivedOverLay(
@@ -115,12 +112,11 @@ fun ArrivedTimeCapsuleItem(
             TimeCapsuleItemContent(
                 modifier = Modifier.fillMaxSize(),
                 timeCapsule = timeCapsule,
-                blurContent = true
+                blurContent = true,
             )
         }
     }
 }
-
 
 @Composable
 private fun ArrivedOverLay(

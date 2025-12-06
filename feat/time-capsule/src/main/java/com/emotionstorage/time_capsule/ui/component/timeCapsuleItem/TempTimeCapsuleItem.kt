@@ -23,7 +23,6 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
@@ -93,8 +92,7 @@ private fun TempContent(
                 .errorRedBackground(
                     true,
                     RoundedCornerShape(15.dp),
-                )
-                .clip(RoundedCornerShape(15.dp))
+                ).clip(RoundedCornerShape(15.dp))
                 .clickable(onClick = onClick)
                 .padding(start = 15.dp, end = 18.dp),
         verticalAlignment = Alignment.CenterVertically,
@@ -131,4 +129,3 @@ private fun TempContent(
         )
     }
 }
-

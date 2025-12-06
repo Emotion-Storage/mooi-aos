@@ -59,8 +59,7 @@ fun LockedTimeCapsuleItem(
                     .background(
                         Color.Transparent,
                         RoundedCornerShape(15.dp),
-                    )
-                    .clip(RoundedCornerShape(15.dp))
+                    ).clip(RoundedCornerShape(15.dp))
                     .clickable(onClick = onClick),
         ) {
             LockedOverLay(
@@ -72,12 +71,11 @@ fun LockedTimeCapsuleItem(
             TimeCapsuleItemContent(
                 modifier = Modifier.fillMaxSize(),
                 timeCapsule = timeCapsule,
-                blurContent = true
+                blurContent = true,
             )
         }
     }
 }
-
 
 @Composable
 private fun LockedOverLay(
