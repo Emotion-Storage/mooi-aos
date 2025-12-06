@@ -276,9 +276,6 @@ internal fun AppNavHost(
                 navToDailyReportDetail = { id ->
                     navController.navigate(AppDestination.DailyReportDetail(id))
                 },
-                navToAIChat = { roomId ->
-                    navController.navigate(AppDestination.AIChat(roomId))
-                },
             )
         }
         composable<AppDestination.MyPage> {

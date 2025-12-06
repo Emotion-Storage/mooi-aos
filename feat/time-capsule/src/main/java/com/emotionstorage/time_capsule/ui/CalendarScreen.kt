@@ -26,7 +26,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -60,7 +59,6 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
-import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
@@ -73,8 +71,7 @@ fun CalendarScreen(
     navToArrived: () -> Unit = {},
     navToFavorites: () -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToDailyReportDetail: (id: Long) -> Unit = { },
-    navToAIChat: (roomId: Long) -> Unit = {},
+    navToDailyReportDetail: (id: Long) -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -112,10 +109,6 @@ fun CalendarScreen(
             when (sideEffect) {
                 is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
                     setShowTimeCapsuleBottomSheet(true)
-                }
-
-                is CalendarSideEffect.EnterCharRoomSuccess -> {
-                    navToAIChat(sideEffect.roomId)
                 }
             }
         }
@@ -288,20 +281,15 @@ private fun StatelessCalendarScreen(
                 )
             }
 
-            CalendarTodayActionButton(
+
+            CalendarTodayButton(
+                isVisible = state.calendarYearMonth != YearMonth.now(),
                 modifier =
                     Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 24.dp),
-                madeTimeCapsuleToday = state.madeTimeCapsuleToday,
-                onTodayAction = {
+                        .align(Alignment.BottomEnd),
+                onClick = {
                     // change calendar year & month to today
                     onAction(CalendarAction.SelectCalendarYearMonth(YearMonth.now()))
-                    // open today's bottom sheet
-                    onAction(CalendarAction.SelectCalendarDate(LocalDate.now()))
-                },
-                onChatAction = {
-                    onAction(CalendarAction.EnterChat)
                 },
             )
 
@@ -399,44 +387,17 @@ private fun CalendarNavButton(
 }
 
 @Composable
-private fun CalendarTodayActionButton(
+private fun CalendarTodayButton(
+    isVisible: Boolean,
     modifier: Modifier = Modifier,
-    madeTimeCapsuleToday: Boolean = false,
-    onTodayAction: () -> Unit = {},
-    onChatAction: () -> Unit = {},
-) {
-    Box(
-        modifier =
-            modifier
-                .fillMaxWidth()
-                .background(Color.Transparent),
-    ) {
-        Row(
-            modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .mainBackground(true, RoundedCornerShape(500.dp))
-                    .clickable {
-                        if (madeTimeCapsuleToday) onTodayAction() else onChatAction()
-                    }.height(44.dp)
-                    .padding(horizontal = 25.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
-        ) {
-            Text(
-                text = if (madeTimeCapsuleToday) "오늘 내 감정 보기" else "오늘 감정 기록하러가기",
-                style = MooiTheme.typography.body6.copy(color = Color.White),
-            )
-            Image(
-                modifier =
-                    Modifier
-                        .size(8.dp, 14.dp)
-                        .rotate(180f),
-                painter = painterResource(R.drawable.ic_arrow_back),
-                contentDescription = null,
-            )
-        }
-    }
+    onClick: () -> Unit = {},
+){
+    // todo: animate visibility
+    Image(
+        modifier = Modifier.size(114.dp, 72.dp),
+        painter = painterResource(R.drawable.graphic_calendar_today),
+        contentDescription = "today"
+    )
 }
 
 @PreviewScreenSizes
