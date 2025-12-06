@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -44,6 +43,7 @@ import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleI
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
 import com.emotionstorage.ui.component.toast.AppSnackbarController
@@ -245,9 +245,10 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                 }
             } else {
                 item {
-                    CircularProgressIndicator(
+                    LoadingDots(
                         modifier = Modifier.padding(top = 244.dp),
-                        color = MooiTheme.colorScheme.primary,
+                        dotSize = 13.dp,
+                        dotSpacing = 10.dp,
                     )
                 }
                 // todo: add error ui
