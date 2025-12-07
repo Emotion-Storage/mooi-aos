@@ -12,6 +12,7 @@ data class MooiColorScheme(
     val backgroundDefault: Color = Color(0xFF1C1A22),
     val backgroundElevated: Color = Color(0xFF100E14),
     val backgroundTinted: Color = Color(0xFF262736),
+    val backgroundTintedBlue: Color = Color(0xFF4B5885),
     val error: Color = Color(0xFFF36868),
     val gray900: Color = Color(0xFF1C1C1C),
     val gray800: Color = Color(0xFF3C3C3C),
