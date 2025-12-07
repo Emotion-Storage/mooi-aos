@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -46,7 +47,7 @@ fun ChatMessageInputBox(
     readOnly: Boolean = false,
     enabled: Boolean = true,
     sendEnabled: Boolean = true,
-    showStop: Boolean = false,
+    showSendingDisabled: Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onTextChange: (String) -> Unit,
     onSendMessage: () -> Unit = {},
@@ -56,6 +57,8 @@ fun ChatMessageInputBox(
     val canSend = text.isNotBlank() && enabled && !readOnly && sendEnabled
     val shape = RoundedCornerShape(100.dp)
 
+    val sendButtonEnabled = canSend && !showSendingDisabled
+
     Row(
         modifier =
             modifier
@@ -63,7 +66,7 @@ fun ChatMessageInputBox(
                 .background(Color(0xFF26262C), shape)
                 .border(1.dp, MooiTheme.colorScheme.gray800, shape)
                 .animateContentSize(),
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicTextField(
             modifier =
@@ -111,36 +114,37 @@ fun ChatMessageInputBox(
             },
         )
 
-        if (canSend || readOnly || showStop) {
+        if (canSend || readOnly || showSendingDisabled) {
             Box(
                 modifier =
                     Modifier
-                        .padding(end = 7.dp, bottom = 7.dp, top = 6.dp)
+                        .padding(end = 7.dp, bottom = 7.dp, top = 7.dp)
                         .size(33.dp)
                         .clip(CircleShape)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            enabled = canSend,
+                            enabled = sendButtonEnabled,
                             onClick = onSendMessage,
                         ),
                 contentAlignment = Alignment.Center,
             ) {
-                if (showStop) {
-                    Image(
-                        painterResource(R.drawable.graphic_stop),
-                        contentDescription = "전송",
-                        modifier = Modifier.size(33.dp),
-                        contentScale = ContentScale.Fit,
-                    )
-                } else {
-                    Image(
-                        painterResource(R.drawable.graphic_send),
-                        contentDescription = "전송",
-                        modifier = Modifier.size(33.dp),
-                        contentScale = ContentScale.Fit,
-                    )
-                }
+                val iconColorFilter =
+                    if (showSendingDisabled) {
+                        ColorFilter.tint(MooiTheme.colorScheme.gray600)
+                    } else {
+                        null
+                    }
+
+                Image(
+                    painter = painterResource(R.drawable.graphic_send),
+                    contentDescription = if (showSendingDisabled) "전송 불가" else "전송",
+                    modifier =
+                        Modifier
+                            .size(33.dp),
+                    contentScale = ContentScale.Fit,
+                    colorFilter = iconColorFilter,
+                )
             }
         }
     }

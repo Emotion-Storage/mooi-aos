@@ -41,11 +41,12 @@ import com.emotionstorage.ai_chat.ui.component.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
-import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateLoadingModal
+import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
+import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
@@ -102,7 +103,6 @@ private fun StatelessAIChatScreen(
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     var draft by remember { mutableStateOf("") }
-    var isInputFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     val listState = remember { LazyListState() }
@@ -153,6 +153,15 @@ private fun StatelessAIChatScreen(
                 onHandleBackPress = {
                     setExitModalOpen(true)
                 },
+                rightComponent = {
+                    if (canMakeTimeCapsule) {
+                        TimeCapsuleCreateTopbarContent(
+                            onClick = {
+                                showFinishBottomSheet = true
+                            },
+                        )
+                    }
+                },
             )
         },
     ) { innerPadding ->
@@ -201,18 +210,6 @@ private fun StatelessAIChatScreen(
                         isKeyboardVisible = isKeyboardVisible,
                     )
                 }
-
-                if (canMakeTimeCapsule) {
-                    ChattingFinishButton(
-                        modifier =
-                            Modifier
-                                .padding(bottom = 13.dp)
-                                .align(Alignment.BottomCenter),
-                        onClick = {
-                            showFinishBottomSheet = true
-                        },
-                    )
-                }
             }
 
             if (canMakeTimeCapsule && showFinishBottomSheet) {
@@ -247,27 +244,28 @@ private fun StatelessAIChatScreen(
             if (state.isCreatingTimeCapsule) {
                 TimeCapsuleCreateLoadingModal()
             }
-
-            ChatMessageInputBox(
-                text = draft,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(all = 16.dp),
-                onFocusChanged = { focused -> isInputFocused = focused },
-                onTextChange = { draft = it },
-                focusRequester = focusRequester,
-                enabled = true,
-                sendEnabled = !state.isWaitingReply,
-                showStop = state.isMooiTyping,
-                onSendMessage = {
-                    val msg = draft.trim()
-                    if (msg.isNotEmpty()) {
-                        onAction(AIChatAction.SendChatMessage(msg))
-                        draft = ""
-                    }
-                },
-            )
+            HideKeyboard {
+                ChatMessageInputBox(
+                    text = draft,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(all = 16.dp),
+                    onFocusChanged = { focused -> },
+                    onTextChange = { draft = it },
+                    focusRequester = focusRequester,
+                    enabled = true,
+                    sendEnabled = !state.isWaitingReply,
+                    showSendingDisabled = state.isMooiTyping,
+                    onSendMessage = {
+                        val msg = draft.trim()
+                        if (msg.isNotEmpty()) {
+                            onAction(AIChatAction.SendChatMessage(msg))
+                            draft = ""
+                        }
+                    },
+                )
+            }
         }
     }
 }
