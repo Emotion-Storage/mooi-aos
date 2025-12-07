@@ -119,9 +119,9 @@ private fun StatelessNicknameScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                     currentStep = 0,
-                    title = stringResource(R.string.on_boarding_nickname_title),
+                    title = stringResource(R.string.on_boarding_p0_title),
                     titleHighlights =
-                        stringResource(R.string.on_boarding_nickname_title_highlights).split(
+                        stringResource(R.string.on_boarding_p0_title_highlights).split(
                             ',',
                         ),
                 )
