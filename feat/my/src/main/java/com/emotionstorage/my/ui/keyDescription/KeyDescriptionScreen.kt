@@ -110,8 +110,15 @@ fun StatelessKeyDescriptionScreen(
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
                 )
-                Spacer(modifier = Modifier.padding(58.dp))
+            }
 
+            Column(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 48.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "현재 보유한 열쇠",
@@ -124,14 +131,7 @@ fun StatelessKeyDescriptionScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     count = state.keyCount,
                 )
-            }
-
-            Box(
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 48.dp),
-            ) {
+                Spacer(modifier = Modifier.padding(93.dp))
                 Row(
                     modifier =
                         Modifier.clickable {
