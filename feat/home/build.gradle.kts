@@ -27,6 +27,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
     implementation(projects.core.remote)
+    implementation(projects.core.presentation)
     implementation(projects.core.ui)
     implementation(platform(libs.androidx.compose.bom))
 }

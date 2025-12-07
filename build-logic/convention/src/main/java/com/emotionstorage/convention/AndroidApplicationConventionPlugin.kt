@@ -27,6 +27,8 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
             val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
             dependencies {
                 add("implementation", libs.findLibrary("napier").get())
+                add("implementation", libs.findBundle("orbit-mvi").get())
+
             }
 
             extensions.configure<ApplicationExtension> {
