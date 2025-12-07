@@ -2,15 +2,18 @@ package com.emotionstorage.time_capsule.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.calendar.SwipeCalendar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -108,9 +112,19 @@ private fun DateItem(
             modifier =
                 Modifier
                     .align(Alignment.Center)
-                    .background(Color.Transparent)
-                    .padding(horizontal = 3.5.dp)
-                    .padding(top = 4.dp, bottom = 2.dp),
+                    .run {
+                        if (isToday) {
+                            this
+                                .background(
+                                    MooiTheme.brushScheme.gra2,
+                                    RoundedCornerShape(20.dp),
+                                )
+                        } else {
+                            this.background(Color.Transparent)
+                        }
+                    }
+                    .padding(horizontal = 5.dp)
+                    .padding(top = 5.dp, bottom = 7.dp),
             verticalArrangement =
                 Arrangement.spacedBy(
                     9.dp,
@@ -122,7 +136,7 @@ private fun DateItem(
                 modifier = Modifier.height(14.dp),
                 text = date.dayOfMonth.toString(),
                 style = MooiTheme.typography.caption6,
-                color = if (isToday) MooiTheme.colorScheme.primaryBlue500 else Color.White,
+                color = Color.White,
             )
             Image(
                 modifier =
@@ -135,6 +149,37 @@ private fun DateItem(
                 contentDescription = if (isFilled) "filled date icon" else "empty date icon",
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun DateItemPreview(){
+    Row(
+        modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault).padding(20.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ){
+        DateItem(
+            date = LocalDate.now(),
+            isFilled = true,
+            isToday = true
+        )
+        DateItem(
+            date = LocalDate.now(),
+            isFilled = false,
+            isToday = true
+        )
+        DateItem(
+            date = LocalDate.now(),
+            isFilled = true,
+            isToday = false
+        )
+        DateItem(
+            date = LocalDate.now(),
+            isFilled = false,
+            isToday = false
+        )
+
     }
 }
 
