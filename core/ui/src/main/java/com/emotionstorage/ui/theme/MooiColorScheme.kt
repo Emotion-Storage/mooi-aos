@@ -4,7 +4,6 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
 @Immutable
-
 data class MooiColorScheme(
     val primaryBlue500: Color = Color(0xFFAECBFA),
     val secondaryBlue700: Color = Color(0xFF849BEA),

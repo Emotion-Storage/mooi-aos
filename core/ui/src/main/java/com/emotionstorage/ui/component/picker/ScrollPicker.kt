@@ -68,7 +68,14 @@ fun ScrollPicker(
         ) {
             Text(
                 style = MooiTheme.typography.caption3,
-                color = if (selectedValue != null) MooiTheme.colorScheme.primaryBlue500 else MooiTheme.colorScheme.gray600,
+                color =
+                    if (selectedValue !=
+                        null
+                    ) {
+                        MooiTheme.colorScheme.primaryBlue500
+                    } else {
+                        MooiTheme.colorScheme.gray600
+                    },
                 text = selectedValue ?: placeholder ?: "",
             )
             Image(

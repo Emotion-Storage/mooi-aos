@@ -46,8 +46,6 @@ data class MooiBrushScheme(
                     colorScheme.backgroundTintedBlue.copy(0.05f),
                 ),
         ),
-
-
     val mainButtonBackground: Brush =
         LinearGradient(
             colors =
@@ -145,7 +143,7 @@ private fun GraBrushPreview() {
                         .background(
                             MooiTheme.brushScheme.gra2,
                             RoundedCornerShape(10.dp),
-                        )
+                        ),
             )
             Box(
                 modifier =
@@ -156,12 +154,11 @@ private fun GraBrushPreview() {
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.gra3,
                             shape = RoundedCornerShape(10.dp),
-                        )
+                        ),
             )
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -195,8 +192,7 @@ private fun BrushPreview() {
                         .background(
                             MooiTheme.brushScheme.subButtonBackground,
                             RoundedCornerShape(10.dp),
-                        )
-                        .border(
+                        ).border(
                             width = 1.dp,
                             brush = MooiTheme.brushScheme.subButtonBorder,
                             shape = RoundedCornerShape(10.dp),

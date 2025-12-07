@@ -84,7 +84,6 @@ fun TutorialScreen(
                                     resId = R.drawable.graphic_tutorial_greeting,
                                 )
                             }
-
                         }
 
                         1 -> {
@@ -94,14 +93,13 @@ fun TutorialScreen(
                                 titleHighlights =
                                     stringResource(tutorialR.string.tutorial_p1_title_highlights).split(
                                         ',',
-                                    )
+                                    ),
                             ) {
                                 TutorialGraphicImage(
                                     modifier = Modifier.align(Alignment.Center),
                                     resId = R.drawable.graphic_tutorial_chat,
                                 )
                             }
-
                         }
 
                         2 -> {
@@ -130,9 +128,10 @@ fun TutorialScreen(
                                     ),
                             ) {
                                 TutorialGraphicImage(
-                                    modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .offset(y = 60.dp),
+                                    modifier =
+                                        Modifier
+                                            .align(Alignment.BottomCenter)
+                                            .offset(y = 60.dp),
                                     resId = R.drawable.graphic_tutorial_report,
                                 )
 
@@ -146,7 +145,6 @@ fun TutorialScreen(
                                     onClick = navToLogin,
                                     isDefaultWidth = false,
                                 )
-
                             }
                         }
                     }

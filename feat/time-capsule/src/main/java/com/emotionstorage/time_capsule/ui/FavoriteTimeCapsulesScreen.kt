@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -169,30 +168,30 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         ) {
             // info text
             item {
-                    Row(
+                Row(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(top = 13.dp)
+                            .offset(x = -1.dp),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.Top,
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_favorite_filled),
                         modifier =
                             Modifier
-                                .fillMaxWidth()
-                                .padding(top = 13.dp)
-                                .offset(x = -1.dp),
-                        horizontalArrangement = Arrangement.spacedBy(6.dp),
-                        verticalAlignment = Alignment.Top,
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_favorite_filled),
-                            modifier =
-                                Modifier
-                                    .width(12.dp)
-                                    .offset(y = 2.dp),
-                            contentDescription = null,
-                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
-                        )
-                        Text(
-                            text = "오래 기억하고싶은 타임캡슐을 즐겨찾기 해보세요.\n최대 30개까지 저장할 수 있습니다.",
-                            style = MooiTheme.typography.caption7.copy(lineHeight = 22.sp),
-                            color = MooiTheme.colorScheme.gray500,
-                        )
-                    }
+                                .width(12.dp)
+                                .offset(y = 2.dp),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
+                    )
+                    Text(
+                        text = "오래 기억하고싶은 타임캡슐을 즐겨찾기 해보세요.\n최대 30개까지 저장할 수 있습니다.",
+                        style = MooiTheme.typography.caption7.copy(lineHeight = 22.sp),
+                        color = MooiTheme.colorScheme.gray500,
+                    )
+                }
             }
             if (timeCapsules != null && timeCapsules.loadState.refresh is LoadState.NotLoading) {
                 if (timeCapsules.itemCount == 0) {

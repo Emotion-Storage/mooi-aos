@@ -2,7 +2,6 @@ package com.emotionstorage.time_capsule.ui.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -29,7 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.calendar.SwipeCalendar
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -122,8 +120,7 @@ private fun DateItem(
                         } else {
                             this.background(Color.Transparent)
                         }
-                    }
-                    .padding(horizontal = 5.dp)
+                    }.padding(horizontal = 5.dp)
                     .padding(top = 5.dp, bottom = 7.dp),
             verticalArrangement =
                 Arrangement.spacedBy(
@@ -154,32 +151,31 @@ private fun DateItem(
 
 @Preview
 @Composable
-private fun DateItemPreview(){
+private fun DateItemPreview()  {
     Row(
         modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault).padding(20.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ){
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
         DateItem(
             date = LocalDate.now(),
             isFilled = true,
-            isToday = true
+            isToday = true,
         )
         DateItem(
             date = LocalDate.now(),
             isFilled = false,
-            isToday = true
+            isToday = true,
         )
         DateItem(
             date = LocalDate.now(),
             isFilled = true,
-            isToday = false
+            isToday = false,
         )
         DateItem(
             date = LocalDate.now(),
             isFilled = false,
-            isToday = false
+            isToday = false,
         )
-
     }
 }
 

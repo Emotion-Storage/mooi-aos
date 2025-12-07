@@ -46,7 +46,7 @@ fun WhenToUseKeyDialog(
             tonalElevation = 6.dp,
             shadowElevation = 12.dp,
             color = MooiTheme.colorScheme.backgroundDefault,
-            modifier = Modifier.width(321.dp)
+            modifier = Modifier.width(321.dp),
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,

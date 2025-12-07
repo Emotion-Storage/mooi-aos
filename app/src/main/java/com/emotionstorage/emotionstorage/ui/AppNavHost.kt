@@ -171,12 +171,12 @@ internal fun AppNavHost(
         composable<AppDestination.Splash>(
             enterTransition = {
                 fadeIn(
-                    animationSpec = tween(durationMillis = 800)
+                    animationSpec = tween(durationMillis = 800),
                 )
             },
             exitTransition = {
                 fadeOut(
-                    animationSpec = tween(durationMillis = 800)
+                    animationSpec = tween(durationMillis = 800),
                 )
             },
         ) { backstackEntry ->
@@ -193,12 +193,12 @@ internal fun AppNavHost(
         composable<AppDestination.Tutorial>(
             enterTransition = {
                 fadeIn(
-                    animationSpec = tween(durationMillis = 800)
+                    animationSpec = tween(durationMillis = 800),
                 )
             },
             exitTransition = {
                 fadeOut(
-                    animationSpec = tween(durationMillis = 800)
+                    animationSpec = tween(durationMillis = 800),
                 )
             },
         ) { backstackEntry ->
