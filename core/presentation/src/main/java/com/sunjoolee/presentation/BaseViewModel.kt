@@ -20,12 +20,12 @@ interface BaseSideEffect {
 }
 
 @OptIn(OrbitExperimental::class)
-open class BaseViewModel<STATE : Any, SIDE_EFFECT : BaseSideEffect>(
+open class BaseViewModel<STATE : Any>(
     initialState: STATE
-) : ViewModel(), ContainerHost<STATE, SIDE_EFFECT> {
-    override val container = container<STATE, SIDE_EFFECT>(initialState)
+) : ViewModel(), ContainerHost<STATE, BaseSideEffect> {
+    override val container = container<STATE, BaseSideEffect>(initialState)
 
-    protected fun baseIntent(transformer: suspend Syntax<STATE, SIDE_EFFECT>.() -> Unit) = intent {
+    protected fun baseIntent(transformer: suspend Syntax<STATE, BaseSideEffect>.() -> Unit) = intent {
         try {
             transformer()
         } catch (e: Throwable) {
@@ -47,17 +47,17 @@ open class BaseViewModel<STATE : Any, SIDE_EFFECT : BaseSideEffect>(
         ) {
             if (code == ErrorCode.NETWORK_ERROR) {
                 // handle network error
-                postSideEffect(BaseSideEffect.NetworkError as SIDE_EFFECT)
+                postSideEffect(BaseSideEffect.NetworkError)
             } else if (code.isAuthError()) {
                 // handle auth expiration error
                 // todo: refresh token here? or in remote interceptor?
-                postSideEffect(BaseSideEffect.SessionExpired as SIDE_EFFECT)
+                postSideEffect(BaseSideEffect.SessionExpired)
             } else if (code == ErrorCode.INTERNAL_SERVER_ERROR) {
                 // handle server error
-                postSideEffect(BaseSideEffect.TemporalError as SIDE_EFFECT)
+                postSideEffect(BaseSideEffect.TemporalError)
             } else if (code == ErrorCode.UNKNOWN) {
                 // handle unknown error
-                postSideEffect(BaseSideEffect.TemporalError as SIDE_EFFECT)
+                postSideEffect(BaseSideEffect.TemporalError)
             } else {
                 Logger.e("Error could not be handled in BaseViewModel, ${this}")
                 throw this

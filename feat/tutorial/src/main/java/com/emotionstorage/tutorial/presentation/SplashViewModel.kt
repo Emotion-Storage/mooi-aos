@@ -26,7 +26,7 @@ class SplashViewModel
 @Inject
 constructor(
     private val automaticLogin: AutomaticLoginUseCase,
-) : BaseViewModel<Unit, BaseSideEffect>(
+) : BaseViewModel<Unit>(
     initialState = Unit
 ) {
     suspend fun onAction(action: SplashAction) {
