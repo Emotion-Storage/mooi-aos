@@ -1,65 +1,66 @@
 package com.emotionstorage.tutorial.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.isAuthError
 import com.orhanobut.logger.Logger
+import com.sunjoolee.presentation.BaseException
+import com.sunjoolee.presentation.BaseSideEffect
+import com.sunjoolee.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 private const val SPLASH_DURATION = 2000L
 
 sealed class SplashAction {
-    object Initiate : SplashAction()
+    object Init : SplashAction()
 }
 
-sealed class SplashSideEffect {
+sealed class SplashSideEffect : BaseSideEffect {
     object AutoLoginSuccess : SplashSideEffect()
-
-    object AutoLoginFailed : SplashSideEffect()
 }
 
 @HiltViewModel
 class SplashViewModel
-    @Inject
-    constructor(
-        private val automaticLogin: AutomaticLoginUseCase,
-    ) : ViewModel(),
-        ContainerHost<Unit, SplashSideEffect> {
-        override val container = container<Unit, SplashSideEffect>(Unit)
-
-        suspend fun onAction(action: SplashAction) {
-            when (action) {
-                SplashAction.Initiate -> {
-                    delay(SPLASH_DURATION)
-                    handleAutoLogin()
-                }
+@Inject
+constructor(
+    private val automaticLogin: AutomaticLoginUseCase,
+) : BaseViewModel<Unit, BaseSideEffect>(
+    initialState = Unit
+) {
+    suspend fun onAction(action: SplashAction) {
+        when (action) {
+            SplashAction.Init -> {
+                delay(SPLASH_DURATION)
+                handleAutoLogin()
             }
         }
+    }
 
-        private fun handleAutoLogin() =
-            intent {
-                automaticLogin().collect { result ->
-                    Logger.d("SplashViewModel handleAutoLogin, result: $result")
+    private fun handleAutoLogin() =
+        baseIntent {
+            automaticLogin().collect { result ->
+                Logger.d("SplashViewModel handleAutoLogin, result: $result")
 
-                    when (result) {
-                        is DataState.Loading -> {
-                            // do nothing
-                        }
+                when (result) {
+                    is DataState.Loading -> {
+                        // do nothing
+                    }
 
-                        is DataState.Success -> {
-                            Logger.i("Auto login success")
-                            postSideEffect(SplashSideEffect.AutoLoginSuccess)
-                        }
+                    is DataState.Success -> {
+                        Logger.i("Auto login success")
+                        postSideEffect(SplashSideEffect.AutoLoginSuccess)
+                    }
 
-                        is DataState.Error -> {
-                            Logger.e("Auto login error, ${result.throwable}")
-                            postSideEffect(SplashSideEffect.AutoLoginFailed)
-                        }
+                    is DataState.Error -> {
+                        throw BaseException(
+                            message = result.throwable.message,
+                            code = result.code,
+                            throwable = result.throwable,
+                        )
                     }
                 }
             }
-    }
+        }
+}
