@@ -120,7 +120,8 @@ private fun DateItem(
                         } else {
                             this.background(Color.Transparent)
                         }
-                    }.padding(horizontal = 5.dp)
+                    }
+                    .padding(horizontal = 5.dp)
                     .padding(top = 5.dp, bottom = 7.dp),
             verticalArrangement =
                 Arrangement.spacedBy(
@@ -152,30 +153,34 @@ private fun DateItem(
 @Preview
 @Composable
 private fun DateItemPreview() {
-    Row(
-        modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault).padding(20.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-    ) {
-        DateItem(
-            date = LocalDate.now(),
-            isFilled = true,
-            isToday = true,
-        )
-        DateItem(
-            date = LocalDate.now(),
-            isFilled = false,
-            isToday = true,
-        )
-        DateItem(
-            date = LocalDate.now(),
-            isFilled = true,
-            isToday = false,
-        )
-        DateItem(
-            date = LocalDate.now(),
-            isFilled = false,
-            isToday = false,
-        )
+    MooiTheme {
+        Row(
+            modifier = Modifier
+                .background(MooiTheme.colorScheme.backgroundDefault)
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = true,
+                isToday = true,
+            )
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = false,
+                isToday = true,
+            )
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = true,
+                isToday = false,
+            )
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = false,
+                isToday = false,
+            )
+        }
     }
 }
 
