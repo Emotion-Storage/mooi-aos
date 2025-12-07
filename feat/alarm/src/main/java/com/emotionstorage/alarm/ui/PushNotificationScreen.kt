@@ -64,14 +64,12 @@ private fun StatelessPushNotificationScreen(
             )
         },
     ) { innerPadding ->
-
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
                     .background(color = MooiTheme.colorScheme.background)
-                    .consumeWindowInsets(WindowInsets.navigationBars),
+                    .padding(innerPadding),
         ) {
             Column(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
