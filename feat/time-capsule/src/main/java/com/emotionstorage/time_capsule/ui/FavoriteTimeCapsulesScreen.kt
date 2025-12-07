@@ -227,7 +227,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                 Row(
                                     modifier =
-                                        modifier
+                                        Modifier
                                             .fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,
