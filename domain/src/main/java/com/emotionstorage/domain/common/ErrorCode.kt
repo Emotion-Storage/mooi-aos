@@ -3,6 +3,7 @@ package com.emotionstorage.domain.common
 enum class ErrorCode {
     UNKNOWN,
     INTERNAL_SERVER_ERROR,
+    NETWORK_ERROR,
 
     // auth remote
     USER_NOT_FOUND,
