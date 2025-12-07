@@ -244,14 +244,14 @@ private fun StatelessAgreeTermsScreen(
                         style =
                             MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.primary,
-                        text = stringResource(tutorialR.string.on_boarding_p3_info1)
+                        text = stringResource(tutorialR.string.on_boarding_p3_info1),
                     )
                     Spacer(modifier = Modifier.size(5.dp))
                     Text(
                         style =
                             MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.primary,
-                        text = stringResource(tutorialR.string.on_boarding_p3_info2)
+                        text = stringResource(tutorialR.string.on_boarding_p3_info2),
                     )
                 }
 
