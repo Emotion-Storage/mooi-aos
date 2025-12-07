@@ -120,8 +120,7 @@ private fun DateItem(
                         } else {
                             this.background(Color.Transparent)
                         }
-                    }
-                    .padding(horizontal = 5.dp)
+                    }.padding(horizontal = 5.dp)
                     .padding(top = 5.dp, bottom = 7.dp),
             verticalArrangement =
                 Arrangement.spacedBy(
@@ -155,9 +154,10 @@ private fun DateItem(
 private fun DateItemPreview() {
     MooiTheme {
         Row(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.backgroundDefault)
-                .padding(20.dp),
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.backgroundDefault)
+                    .padding(20.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             DateItem(
