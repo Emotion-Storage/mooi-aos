@@ -3,6 +3,7 @@ package com.sunjoolee.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.ErrorCode
+import com.emotionstorage.domain.common.isAuthError
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -12,18 +13,14 @@ import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.Syntax
 import org.orbitmvi.orbit.viewmodel.container
 
-data class BaseState(
-    val isLoading: Boolean = false,
-)
-
-sealed class BaseSideEffect {
-    object NetworkError : BaseSideEffect()
-    object SessionExpired : BaseSideEffect()
-    object TemporalError : BaseSideEffect()
+interface BaseSideEffect {
+    object NetworkError : BaseSideEffect
+    object SessionExpired : BaseSideEffect
+    object TemporalError : BaseSideEffect
 }
 
 @OptIn(OrbitExperimental::class)
-open class BaseViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
+open class BaseViewModel<STATE : Any, SIDE_EFFECT : BaseSideEffect>(
     initialState: STATE
 ) : ViewModel(), ContainerHost<STATE, SIDE_EFFECT> {
     override val container = container<STATE, SIDE_EFFECT>(initialState)
@@ -51,14 +48,7 @@ open class BaseViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
             if (code == ErrorCode.NETWORK_ERROR) {
                 // handle network error
                 postSideEffect(BaseSideEffect.NetworkError as SIDE_EFFECT)
-            } else if (code in listOf<ErrorCode>(
-                    ErrorCode.ACCESS_TOKEN_EXPIRED,
-                    ErrorCode.ACCESS_TOKEN_INVALID,
-                    ErrorCode.REFRESH_TOKEN_EXPIRED,
-                    ErrorCode.REFRESH_TOKEN_NOT_FOUND,
-                    ErrorCode.UNAUTHORIZED,
-                )
-            ) {
+            } else if (code.isAuthError()) {
                 // handle auth expiration error
                 // todo: refresh token here? or in remote interceptor?
                 postSideEffect(BaseSideEffect.SessionExpired as SIDE_EFFECT)
