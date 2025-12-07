@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.onBoarding
+package com.emotionstorage.tutorial.ui.terms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
