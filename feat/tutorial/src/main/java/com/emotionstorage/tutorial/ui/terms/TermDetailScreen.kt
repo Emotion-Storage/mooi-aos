@@ -1,4 +1,4 @@
-package com.emotionstorage.tutorial.ui.onBoarding
+package com.emotionstorage.tutorial.ui.terms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -8,12 +8,12 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.emotionstorage.ui.content.PrivacyPolicyContent
+import com.emotionstorage.ui.content.TermsOfServiceContent
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
+fun TermDetailScreen(navToBack: () -> Unit = {}) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -30,15 +30,15 @@ fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
                     .background(MooiTheme.colorScheme.background)
                     .padding(innerPadding),
         ) {
-            PrivacyPolicyContent()
+            TermsOfServiceContent()
         }
     }
 }
 
 @Preview
 @Composable
-private fun PrivacyPolicyDetailScreenPreview() {
+private fun TermDetailScreenPreview() {
     MooiTheme {
-        PrivacyPolicyDetailScreen()
+        TermDetailScreen()
     }
 }
