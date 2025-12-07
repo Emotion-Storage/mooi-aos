@@ -46,10 +46,10 @@ class AuthRemoteDataSourceImpl
                 } ?: DataState.Error(Throwable("No access token received"))
             } catch (e: CustomHttpException) {
                 Logger.e("Login http exception, $e")
-                DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""))
+                DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""), data = idToken)
             } catch (e: Exception) {
                 Logger.e("Login exception, $e")
-                DataState.Error(Throwable("Login api failed", e))
+                DataState.Error(Throwable("Login api failed", e), data = idToken)
             }
 
         override suspend fun signup(
