@@ -151,7 +151,7 @@ private fun DateItem(
 
 @Preview
 @Composable
-private fun DateItemPreview()  {
+private fun DateItemPreview() {
     Row(
         modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault).padding(20.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
