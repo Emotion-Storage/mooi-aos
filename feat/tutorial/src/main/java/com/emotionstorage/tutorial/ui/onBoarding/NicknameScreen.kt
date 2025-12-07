@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.R as tutorialR
 import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
@@ -119,9 +119,9 @@ private fun StatelessNicknameScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp),
                     currentStep = 0,
-                    title = stringResource(R.string.on_boarding_p0_title),
+                    title = stringResource(tutorialR.string.on_boarding_p0_title),
                     titleHighlights =
-                        stringResource(R.string.on_boarding_p0_title_highlights).split(
+                        stringResource(tutorialR.string.on_boarding_p0_title_highlights).split(
                             ',',
                         ),
                 )
@@ -133,12 +133,12 @@ private fun StatelessNicknameScreen(
                             .padding(vertical = 30.dp, horizontal = 16.dp),
                 ) {
                     TextInput(
-                        label = "이름",
+                        label = stringResource(tutorialR.string.on_boarding_p0_name_label),
                         value = state.nickname,
                         onValueChange = event::onNicknameChange,
                         showCharCount = true,
                         maxCharCount = 8,
-                        placeHolder = "최소 2글자 이상의 이름을 적어주세요",
+                        placeHolder = stringResource(tutorialR.string.on_boarding_p0_name_placeholder),
                         state =
                             when (state.nicknameInputState) {
                                 InputState.EMPTY -> TextInputState.Empty(infoMessage = state.nicknameHelperMessage)
@@ -171,7 +171,7 @@ private fun StatelessNicknameScreen(
                             .padding(
                                 bottom = animatedPadding,
                             ),
-                    labelString = "다음으로",
+                    labelString = stringResource(tutorialR.string.on_boarding_btn_next),
                     enabled = state.nicknameInputState == InputState.VALID,
                     onClick = {
                         focusManager.clearFocus()
@@ -193,10 +193,10 @@ private fun OnBoardingExitModel(
 ) {
     if (isModelOpen) {
         Modal(
-            topDescription = "지금 돌아가면 회원가입을\n다시 시작해야 해요.",
-            title = "그래도 로그인 화면으로\n돌아갈까요?",
-            confirmLabel = "회원가입을 계속 할게요.",
-            dismissLabel = "로그인 화면으로 나갈래요.",
+            topDescription = stringResource(tutorialR.string.on_boarding_exit_modal_desc),
+            title = stringResource(tutorialR.string.on_boarding_exit_modal_title),
+            confirmLabel = stringResource(tutorialR.string.on_boarding_exit_modal_confirm),
+            dismissLabel = stringResource(tutorialR.string.on_boarding_exit_modal_dismiss),
             onDismissRequest = onDismissRequest,
             onDismiss = onExit,
         )
