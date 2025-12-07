@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.SignupForm.GENDER
-import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.R as tutorialR
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State
@@ -116,14 +116,14 @@ private fun StatelessGenderBirthScreen(
                 title =
                     stringResource(
                         if (nickname.length < 5) {
-                            R.string.on_boarding_gender_birth_title_short
+                            tutorialR.string.on_boarding_p1_title_short
                         } else {
-                            R.string.on_boarding_gender_birth_title_long
+                            tutorialR.string.on_boarding_p1_title_long
                         },
                         nickname,
                     ),
                 titleHighlights =
-                    stringResource(R.string.on_boarding_gender_birth_title_highlights).split(
+                    stringResource(tutorialR.string.on_boarding_p1_title_highlights).split(
                         ',',
                     ),
             )
@@ -163,7 +163,7 @@ private fun StatelessGenderBirthScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp)
                         .padding(bottom = 39.dp),
-                labelString = "다음으로",
+                labelString = stringResource(tutorialR.string.on_boarding_btn_next),
                 enabled = state.isNextButtonEnabled,
                 onClick = {
                     if (
@@ -176,7 +176,7 @@ private fun StatelessGenderBirthScreen(
                     }
 
                     onGenderBirthInputComplete(
-                        state.gender!!,
+                        state.gender,
                         LocalDate.of(
                             state.yearPickerState.selectedValue.toInt(),
                             state.monthPickerState.selectedValue.toInt(),
@@ -207,7 +207,7 @@ private fun GenderInput(
         Text(
             style = MooiTheme.typography.body7,
             color = Color.White,
-            text = "성별",
+            text = stringResource(tutorialR.string.on_boarding_p1_gender_label),
             modifier = Modifier.height(24.dp),
         )
         Row(modifier = Modifier, horizontalArrangement = Arrangement.spacedBy(9.dp)) {
@@ -228,8 +228,8 @@ private fun GenderInput(
                         color = if (isSelected) MooiTheme.colorScheme.primaryBlue500 else Color.White,
                         text =
                             when (it) {
-                                GENDER.MALE -> "남자"
-                                GENDER.FEMALE -> "여자"
+                                GENDER.MALE -> stringResource(tutorialR.string.on_boarding_p1_gender_male)
+                                GENDER.FEMALE -> stringResource(tutorialR.string.on_boarding_p1_gender_female)
                             },
                         modifier =
                             Modifier
@@ -267,7 +267,7 @@ private fun BirthInput(
         Text(
             style = MooiTheme.typography.body7,
             color = Color.White,
-            text = "생년월일",
+            text = stringResource(tutorialR.string.on_boarding_p1_birth_label),
             modifier = Modifier.height(24.dp),
         )
 
@@ -277,7 +277,7 @@ private fun BirthInput(
             verticalAlignment = Alignment.Top,
         ) {
             ScrollPicker(
-                placeholder = "년도",
+                placeholder = stringResource(tutorialR.string.on_boarding_p1_birth_year),
                 selectedValue = selectedYear,
                 onValueChange = onYearSelect,
                 range = yearRange,
@@ -285,7 +285,7 @@ private fun BirthInput(
                 modifier = Modifier.width(110.dp),
             )
             ScrollPicker(
-                placeholder = "월",
+                placeholder = stringResource(tutorialR.string.on_boarding_p1_birth_month),
                 selectedValue = selectedMonth,
                 onValueChange = onMonthSelect,
                 range = monthRange,
@@ -293,7 +293,7 @@ private fun BirthInput(
                 modifier = Modifier.width(78.dp),
             )
             ScrollPicker(
-                placeholder = "일",
+                placeholder = stringResource(tutorialR.string.on_boarding_p1_birth_day),
                 selectedValue = selectedDay,
                 onValueChange = onDaySelect,
                 range = dayRange,

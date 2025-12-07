@@ -29,7 +29,7 @@ import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.Expectation
-import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.R as tutorialR
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.ExpectationsViewModel.State
@@ -109,9 +109,9 @@ private fun StatelessExpectationsScreen(
                 OnBoardingTitle(
                     modifier = Modifier.fillMaxWidth(),
                     currentStep = 2,
-                    title = stringResource(R.string.on_boarding_expectations_title),
+                    title = stringResource(tutorialR.string.on_boarding_p2_title),
                     titleHighlights =
-                        stringResource(R.string.on_boarding_expectations_title_highlights).split(
+                        stringResource(tutorialR.string.on_boarding_p2_title_highlights).split(
                             ',',
                         ),
                 )
@@ -127,7 +127,7 @@ private fun StatelessExpectationsScreen(
                         modifier = Modifier.height(24.dp),
                         style = MooiTheme.typography.body7,
                         color = Color.White,
-                        text = "감정 기록 목적",
+                        text = stringResource(tutorialR.string.on_boarding_p2_input_title),
                     )
                     Text(
                         style =
@@ -135,7 +135,7 @@ private fun StatelessExpectationsScreen(
                                 fontWeight = FontWeight.Light,
                             ),
                         color = MooiTheme.colorScheme.primaryBlue500,
-                        text = "* 여러 개를 선택할 수도 있어요",
+                        text = stringResource(tutorialR.string.on_boarding_p2_input_desc),
                     )
                     Column(
                         modifier = modifier.padding(top = 20.dp, bottom = 120.dp),
@@ -159,7 +159,7 @@ private fun StatelessExpectationsScreen(
                         .align(Alignment.BottomCenter)
                         .padding(horizontal = 15.dp)
                         .padding(bottom = 39.dp),
-                labelString = "다음으로",
+                labelString = stringResource(tutorialR.string.on_boarding_btn_next),
                 enabled = state.isNextButtonEnabled,
                 onClick = {
                     onExpectationsSelectComplete(state.selectedExpectations)
@@ -202,12 +202,12 @@ private fun ExpectationItem(
                 painter =
                     painterResource(
                         when (expectation) {
-                            Expectation.EMOTION -> R.drawable.expectation_0
-                            Expectation.STRESS -> R.drawable.expectation_1
-                            Expectation.REGRET -> R.drawable.expectation_2
-                            Expectation.MEMORY -> R.drawable.expectation_3
-                            Expectation.PATTERN -> R.drawable.expectation_4
-                            Expectation.RECORD -> R.drawable.expectation_5
+                            Expectation.EMOTION -> tutorialR.drawable.expectation_0
+                            Expectation.STRESS -> tutorialR.drawable.expectation_1
+                            Expectation.REGRET -> tutorialR.drawable.expectation_2
+                            Expectation.MEMORY -> tutorialR.drawable.expectation_3
+                            Expectation.PATTERN -> tutorialR.drawable.expectation_4
+                            Expectation.RECORD -> tutorialR.drawable.expectation_5
                         },
                     ),
                 contentDescription = null,
@@ -226,7 +226,7 @@ private fun ExpectationItem(
                     Modifier
                         .width(20.dp)
                         .height(20.dp),
-                painter = painterResource(R.drawable.success_fill),
+                painter = painterResource(tutorialR.drawable.success_fill),
                 contentDescription = null,
             )
         }
