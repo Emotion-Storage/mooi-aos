@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
@@ -16,7 +15,6 @@ import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -28,7 +26,6 @@ import javax.inject.Inject
 
 data class CalendarState(
     val keyCount: Int? = null,
-    val madeTimeCapsuleToday: Boolean = false,
     // calendar states
     val calendarYearMonth: YearMonth = YearMonth.now(),
     val calendarTimeCapsuleDates: List<LocalDate> = emptyList(),
@@ -55,17 +52,10 @@ sealed class CalendarAction {
 
     // reset bottom sheet states
     object ClearBottomSheet : CalendarAction()
-
-    // get chat room id
-    object EnterChat : CalendarAction()
 }
 
 sealed class CalendarSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
-
-    data class EnterCharRoomSuccess(
-        val roomId: Long,
-    ) : CalendarSideEffect()
 }
 
 @OptIn(OrbitExperimental::class)
@@ -75,7 +65,6 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetPagedTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
-    private val getChatRoomId: GetChatRoomIdUseCase,
 ) : ViewModel(),
     ContainerHost<CalendarState, CalendarSideEffect> {
     override val container: Container<CalendarState, CalendarSideEffect> =
@@ -98,17 +87,12 @@ class CalendarViewModel @Inject constructor(
             is CalendarAction.ClearBottomSheet -> {
                 handleClearBottomSheet()
             }
-
-            is CalendarAction.EnterChat -> {
-                handleEnterChat()
-            }
         }
     }
 
     private fun handleInitiate() =
         intent {
             initKeyCount()
-            initMadeTimeCapsuleToday()
             handleSelectCalendarYearMonth(YearMonth.from(LocalDate.now()))
 
             // show bottom sheet if calendarDate is not null
@@ -132,23 +116,6 @@ class CalendarViewModel @Inject constructor(
                     }
                 },
             )
-        }
-
-    private suspend fun initMadeTimeCapsuleToday() =
-        subIntent {
-            try {
-                val timeCapsuleOfToday = getTimeCapsulesOfDate(LocalDate.now()).firstOrNull()
-                reduce {
-                    state.copy(madeTimeCapsuleToday = timeCapsuleOfToday != null)
-                }
-            } catch (e: Exception) {
-                Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $e")
-                reduce {
-                    state.copy(
-                        madeTimeCapsuleToday = false,
-                    )
-                }
-            }
         }
 
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
@@ -245,18 +212,5 @@ class CalendarViewModel @Inject constructor(
                     isNewDailyReport = false,
                 )
             }
-        }
-
-    private fun handleEnterChat() =
-        intent {
-            collectDataState(
-                flow = getChatRoomId(),
-                onSuccess = { data ->
-                    postSideEffect(CalendarSideEffect.EnterCharRoomSuccess(data))
-                },
-                onError = { throwable, _ ->
-                    Logger.e("CalendarViewModel: handleEnterChat error: $throwable")
-                },
-            )
         }
 }
