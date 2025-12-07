@@ -248,6 +248,9 @@ internal fun AppNavHost(
                         navController.navigate(AppDestination.AIChatDesc(roomId))
                     }
                 },
+                navToKey = {
+                    navController.navigate(AppDestination.KeyDescription)
+                },
                 navToArrivedTimeCapsules = {
                     navController.navigate(AppDestination.ArrivedTimeCapsules)
                 },
@@ -276,9 +279,6 @@ internal fun AppNavHost(
                 },
                 navToDailyReportDetail = { id ->
                     navController.navigate(AppDestination.DailyReportDetail(id))
-                },
-                navToAIChat = { roomId ->
-                    navController.navigate(AppDestination.AIChat(roomId))
                 },
             )
         }

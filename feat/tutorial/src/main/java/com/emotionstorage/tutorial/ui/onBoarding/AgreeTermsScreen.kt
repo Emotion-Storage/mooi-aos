@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.R as tutorialR
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.AgreeTermsViewModel.State
@@ -159,9 +159,9 @@ private fun StatelessAgreeTermsScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp),
                 currentStep = 3,
-                title = stringResource(R.string.on_boarding_terms_title),
+                title = stringResource(tutorialR.string.on_boarding_p3_title),
                 titleHighlights =
-                    stringResource(R.string.on_boarding_terms_title_highlights).split(
+                    stringResource(tutorialR.string.on_boarding_p3_title_highlights).split(
                         ',',
                     ),
             )
@@ -191,7 +191,7 @@ private fun StatelessAgreeTermsScreen(
                                     fontWeight = FontWeight.SemiBold,
                                 ),
                             color = Color.White,
-                            text = "약관 전체 동의",
+                            text = stringResource(tutorialR.string.on_boarding_p3_agree_all),
                         )
                     }
 
@@ -204,7 +204,7 @@ private fun StatelessAgreeTermsScreen(
                     )
 
                     TermItem(
-                        term = "[필수] 이용 약관 동의",
+                        term = stringResource(tutorialR.string.on_boarding_p3_agree_terms),
                         isSelected = state.isTermAgreed,
                         onSelect = event::onToggleTermAgreed,
                         showTermDetail = true,
@@ -213,7 +213,7 @@ private fun StatelessAgreeTermsScreen(
                         },
                     )
                     TermItem(
-                        term = "[필수] 개인정보 수집 및 이용 동의",
+                        term = stringResource(tutorialR.string.on_boarding_p3_agree_privacy),
                         isSelected = state.isPrivacyAgreed,
                         onSelect = event::onTogglePrivacyAgreed,
                         showTermDetail = true,
@@ -222,7 +222,7 @@ private fun StatelessAgreeTermsScreen(
                         },
                     )
                     TermItem(
-                        term = "[선택] 마케팅 활용 및 수신 동의",
+                        term = stringResource(tutorialR.string.on_boarding_p3_agree_marketing),
                         isSelected = state.isMarketingAgreed,
                         onSelect = event::onToggleMarketingAgreed,
                         showTermDetail = true,
@@ -231,7 +231,7 @@ private fun StatelessAgreeTermsScreen(
                         },
                     )
                     TermItem(
-                        term = "[필수] 만 14세 이상입니다",
+                        term = stringResource(tutorialR.string.on_boarding_p3_agree_age),
                         isSelected = state.isAgeAgreed,
                         onSelect = event::onToggleAgeAgreed,
                     )
@@ -244,14 +244,14 @@ private fun StatelessAgreeTermsScreen(
                         style =
                             MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.primary,
-                        text = "* 필수 약관에 동의하셔야만 서비스를 이용하실 수 있어요.",
+                        text = stringResource(tutorialR.string.on_boarding_p3_info1),
                     )
                     Spacer(modifier = Modifier.size(5.dp))
                     Text(
                         style =
                             MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.primary,
-                        text = "* 선택 약관은 원하실 경우에만 동의하셔도 괜찮아요.",
+                        text = stringResource(tutorialR.string.on_boarding_p3_info2),
                     )
                 }
 
@@ -271,7 +271,7 @@ private fun StatelessAgreeTermsScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp)
                         .padding(bottom = 39.dp),
-                labelString = "가입 완료하기",
+                labelString = stringResource(tutorialR.string.on_boarding_p3_btn_signup),
                 enabled = state.isSignupCompleteButtonEnabled,
                 onClick = {
                     coroutineScope.launch {
@@ -328,7 +328,7 @@ private fun TermItem(
                         .clickable {
                             onShowDetail()
                         },
-                painter = painterResource(R.drawable.arrow_right),
+                painter = painterResource(tutorialR.drawable.arrow_right),
                 contentDescription = "show term detail",
             )
         }

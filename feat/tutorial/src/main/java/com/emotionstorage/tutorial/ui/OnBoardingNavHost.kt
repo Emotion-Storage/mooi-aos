@@ -19,10 +19,10 @@ import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
 import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.GenderBirthScreen
-import com.emotionstorage.tutorial.ui.onBoarding.MarketingUsageDetailScreen
+import com.emotionstorage.tutorial.ui.terms.MarketingUsageDetailScreen
 import com.emotionstorage.tutorial.ui.onBoarding.NicknameScreen
-import com.emotionstorage.tutorial.ui.onBoarding.PrivacyPolicyDetailScreen
-import com.emotionstorage.tutorial.ui.onBoarding.TermDetailScreen
+import com.emotionstorage.tutorial.ui.terms.PrivacyPolicyDetailScreen
+import com.emotionstorage.tutorial.ui.terms.TermDetailScreen
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**

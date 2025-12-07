@@ -4,15 +4,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
@@ -44,6 +46,8 @@ import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleI
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.component.button.RoundedToggleButton
+import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
 import com.emotionstorage.ui.component.toast.AppSnackbarController
@@ -78,8 +82,7 @@ fun FavoriteTimeCapsulesScreen(
                 ?.itemSnapshotList
                 ?.items
                 ?.filter { it.isFavorite }
-                ?.map { it.id }
-                ?: emptyList()
+                ?.map { it.id } ?: emptyList()
 
         favoriteViewModel.onAction(
             ToggleFavoriteAction.Init(favorites),
@@ -221,33 +224,49 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         }
                     }
                     items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                        timeCapsules[it]?.run {
-                            TimeCapsuleItem(
-                                modifier =
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .padding(bottom = 26.dp),
-                                timeCapsule =
-                                    this.copy(
-                                        isFavorite = favoriteState.favoriteIds.contains(this.id),
-                                    ),
-                                showDate = true,
-                                showFavorite = true,
-                                onClick = { navToTimeCapsuleDetail(this.id) },
-                                onFavoriteClick = {
-                                    onFavoriteAction(
-                                        ToggleFavoriteAction.OnToggle(this.id),
+                        timeCapsules[it]?.let {
+                            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                                Row(
+                                    modifier =
+                                        modifier
+                                            .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                ) {
+                                    Text(
+                                        text = it.createdAt.formatToKorDateTime(),
+                                        style = MooiTheme.typography.caption4,
+                                        color = MooiTheme.colorScheme.gray300,
                                     )
-                                },
-                            )
+                                    RoundedToggleButton(
+                                        modifier = Modifier.size(36.dp),
+                                        isSelected = favoriteState.favoriteIds.contains(it.id),
+                                        onSelect = {
+                                            onFavoriteAction(
+                                                ToggleFavoriteAction.OnToggle(it.id),
+                                            )
+                                        },
+                                    )
+                                }
+                                TimeCapsuleItem(
+                                    modifier =
+                                        Modifier
+                                            .fillMaxWidth()
+                                            .padding(bottom = 26.dp),
+                                    timeCapsule = it,
+                                    showHeader = false,
+                                    onClick = { navToTimeCapsuleDetail(it.id) },
+                                )
+                            }
                         }
                     }
                 }
             } else {
                 item {
-                    CircularProgressIndicator(
+                    LoadingDots(
                         modifier = Modifier.padding(top = 244.dp),
-                        color = MooiTheme.colorScheme.primary,
+                        dotSize = 13.dp,
+                        dotSpacing = 10.dp,
                     )
                 }
                 // todo: add error ui

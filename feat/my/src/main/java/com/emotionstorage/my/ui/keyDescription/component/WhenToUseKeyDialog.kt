@@ -75,7 +75,7 @@ fun WhenToUseKeyDialog(
                             tint = MooiTheme.colorScheme.primary,
                             modifier =
                                 Modifier
-                                    .size(18.dp)
+                                    .size(24.dp)
                                     .align(Alignment.Center),
                         )
                         IconButton(
@@ -93,7 +93,7 @@ fun WhenToUseKeyDialog(
                         }
                     }
 
-                    Spacer(modifier = Modifier.size(6.dp))
+                    Spacer(modifier = Modifier.size(5.dp))
 
                     Text(
                         modifier = Modifier.fillMaxWidth(),
