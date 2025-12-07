@@ -95,7 +95,7 @@ fun MarketingTable(
                 Modifier
                     .width(tableW)
                     .border(border, MooiTheme.colorScheme.gray700, RoundedCornerShape(5.dp))
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             TableRow(
                 items = header,

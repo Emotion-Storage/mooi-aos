@@ -174,7 +174,7 @@ private fun StatelessNotificationSettingScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(color = MooiTheme.colorScheme.background),
+                    .background(color = MooiTheme.colorScheme.backgroundDefault),
         ) {
             if (state.isLoading) {
                 LoadingOverlay()

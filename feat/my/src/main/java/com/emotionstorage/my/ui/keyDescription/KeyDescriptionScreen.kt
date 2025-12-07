@@ -1,7 +1,6 @@
 package com.emotionstorage.my.ui.keyDescription
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,7 +71,7 @@ fun StatelessKeyDescriptionScreen(
                 onBackClick = navToBack,
             )
         },
-        containerColor = MooiTheme.colorScheme.background,
+        containerColor = MooiTheme.colorScheme.backgroundDefault,
     ) { innerPadding ->
         Box(
             modifier =
@@ -89,7 +88,7 @@ fun StatelessKeyDescriptionScreen(
                     modifier = Modifier.padding(top = 24.dp),
                     text = "차곡차곡 모은 열쇠로\n타입캡슐을 미리 열어보세요!",
                     style = MooiTheme.typography.head2,
-                    color = MooiTheme.colorScheme.primary,
+                    color = MooiTheme.colorScheme.primaryBlue500,
                     textAlign = TextAlign.Center,
                 )
 

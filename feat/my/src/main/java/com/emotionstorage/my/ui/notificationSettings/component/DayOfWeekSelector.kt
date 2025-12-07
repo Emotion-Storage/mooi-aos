@@ -69,7 +69,7 @@ private fun DayChip(
     val containerColor =
         if (selected) MooiTheme.brushScheme.subButtonBackground else SolidColor(Color.Black)
     val labelColor =
-        if (selected) MooiTheme.colorScheme.primary else Color.White
+        if (selected) MooiTheme.colorScheme.primaryBlue500 else Color.White
 
     Box(
         modifier =

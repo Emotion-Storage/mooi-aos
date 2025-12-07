@@ -153,7 +153,7 @@ private fun PagerIndicatorDotPreview() {
             modifier =
                 Modifier
                     .padding(16.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {

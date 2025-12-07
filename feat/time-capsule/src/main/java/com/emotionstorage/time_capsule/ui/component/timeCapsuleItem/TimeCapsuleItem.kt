@@ -72,7 +72,7 @@ private fun TimeCapsuleItemPreview(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(16.dp),
         ) {
             TimeCapsuleItem(

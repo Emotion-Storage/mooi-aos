@@ -163,7 +163,7 @@ private fun StatelessSaveTimeCapsuleScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .clickable {
                     setShowToolTip(false)
                 },
@@ -191,7 +191,7 @@ private fun StatelessSaveTimeCapsuleScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(bottom = 39.67.dp),
         ) {
@@ -342,7 +342,7 @@ private fun SaveTimeCapsuleTitle(
             Text(
                 text =
                     buildAnnotatedString {
-                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                        withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
                             append("언제 다시 ")
                         }
                         append("꺼내볼까요?")
@@ -444,7 +444,7 @@ private fun RowScope.OpenAfterGridItem(
             modifier = Modifier.align(Alignment.Center),
             text = openAfter.label,
             style = MooiTheme.typography.body8,
-            color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
+            color = if (isSelected) MooiTheme.colorScheme.primaryBlue500 else Color.White,
         )
     }
 

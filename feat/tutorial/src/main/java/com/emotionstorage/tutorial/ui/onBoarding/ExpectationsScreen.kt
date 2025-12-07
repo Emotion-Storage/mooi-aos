@@ -82,7 +82,7 @@ private fun StatelessExpectationsScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
@@ -95,7 +95,7 @@ private fun StatelessExpectationsScreen(
         Box(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .fillMaxSize()
                     .padding(padding),
         ) {
@@ -134,7 +134,7 @@ private fun StatelessExpectationsScreen(
                             MooiTheme.typography.body8.copy(
                                 fontWeight = FontWeight.Light,
                             ),
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = "* 여러 개를 선택할 수도 있어요",
                     )
                     Column(
@@ -215,7 +215,7 @@ private fun ExpectationItem(
 
             Text(
                 style = MooiTheme.typography.body8,
-                color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
+                color = if (isSelected) MooiTheme.colorScheme.primaryBlue500 else Color.White,
                 text = expectation.content,
             )
         }

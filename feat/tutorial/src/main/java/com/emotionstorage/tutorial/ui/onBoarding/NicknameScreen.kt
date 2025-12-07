@@ -91,7 +91,7 @@ private fun StatelessNicknameScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
             val onBackClick = { setIsExitModelOpen(true) }
@@ -108,7 +108,7 @@ private fun StatelessNicknameScreen(
             Column(
                 modifier =
                     Modifier
-                        .background(MooiTheme.colorScheme.background)
+                        .background(MooiTheme.colorScheme.backgroundDefault)
                         .fillMaxSize()
                         .padding(padding)
                         .consumeWindowInsets(WindowInsets.navigationBars),

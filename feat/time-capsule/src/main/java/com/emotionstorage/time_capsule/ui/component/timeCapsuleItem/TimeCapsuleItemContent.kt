@@ -76,7 +76,7 @@ fun TimeCapsuleItemContent(
                     modifier = Modifier.padding(top = 3.dp),
                     text = "열림",
                     style = MooiTheme.typography.caption6.copy(fontSize = 11.sp),
-                    color = MooiTheme.colorScheme.secondary,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
                 )
             }
         }
@@ -97,7 +97,7 @@ fun TimeCapsuleItemContent(
             Text(
                 text = timeCapsule.title,
                 style = MooiTheme.typography.caption2,
-                color = MooiTheme.colorScheme.primary,
+                color = MooiTheme.colorScheme.primaryBlue500,
                 maxLines = 1,
             )
         }
@@ -125,7 +125,7 @@ private fun EmotionTag(
         Text(
             text = emotion.label,
             style = MooiTheme.typography.caption3,
-            color = MooiTheme.colorScheme.primary,
+            color = MooiTheme.colorScheme.primaryBlue500,
         )
     }
 }
@@ -154,7 +154,7 @@ private fun EmotionTagPreview() {
 
     MooiTheme {
         Row(
-            modifier = Modifier.background(MooiTheme.colorScheme.background).padding(6.dp),
+            modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault).padding(6.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {

@@ -6,12 +6,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -47,7 +45,7 @@ fun WhenToUseKeyDialog(
             shape = RoundedCornerShape(10.dp),
             tonalElevation = 6.dp,
             shadowElevation = 12.dp,
-            color = MooiTheme.colorScheme.background,
+            color = MooiTheme.colorScheme.backgroundDefault,
             modifier = Modifier.width(321.dp)
         ) {
             Box(
@@ -69,7 +67,7 @@ fun WhenToUseKeyDialog(
                         Icon(
                             painter = painterResource(R.drawable.ic_key),
                             contentDescription = "열쇠",
-                            tint = MooiTheme.colorScheme.primary,
+                            tint = MooiTheme.colorScheme.primaryBlue500,
                             modifier =
                                 Modifier
                                     .size(24.dp)
@@ -96,7 +94,7 @@ fun WhenToUseKeyDialog(
                     Text(
                         text = "열쇠는 이럴 때 쓰면 좋아요!",
                         style = MooiTheme.typography.head2.copy(lineHeight = 30.sp),
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         textAlign = TextAlign.Center,
                     )
 

@@ -79,7 +79,7 @@ private fun StatelessNicknameChangeScreen(
         HideKeyboard(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .fillMaxSize(),
         ) {
             Column(
@@ -161,7 +161,7 @@ fun NicknameChangeTitle() {
 
     val title =
         buildAnnotatedString {
-            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+            withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
                 append("어떤 이름")
             }
             append("으로\n")

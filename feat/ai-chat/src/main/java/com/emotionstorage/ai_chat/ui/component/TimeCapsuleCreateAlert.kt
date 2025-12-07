@@ -24,7 +24,7 @@ fun TimeCapsuleCreateAlert(modifier: Modifier = Modifier) {
                 .fillMaxWidth()
                 .heightIn(min = 50.dp)
                 .background(
-                    color = MooiTheme.colorScheme.bottomBarBackground.copy(alpha = 0.8f),
+                    color = MooiTheme.colorScheme.backgroundElevated.copy(alpha = 0.8f),
                     shape = RoundedCornerShape(100.dp),
                 ),
         contentAlignment = Alignment.Center,

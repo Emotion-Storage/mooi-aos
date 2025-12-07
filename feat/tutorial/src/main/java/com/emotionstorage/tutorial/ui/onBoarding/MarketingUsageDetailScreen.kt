@@ -27,7 +27,7 @@ fun MarketingUsageDetailScreen(navToBack: () -> Unit = {}) {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
             MarketingUsageContent()

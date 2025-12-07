@@ -39,7 +39,7 @@ fun AttendanceRewardDialog(
             modifier =
                 Modifier
                     .background(
-                        color = MooiTheme.colorScheme.background,
+                        color = MooiTheme.colorScheme.backgroundDefault,
                         shape = RoundedCornerShape(15.dp),
                     ).fillMaxWidth()
                     .widthIn(min = 328.dp)
@@ -139,7 +139,7 @@ fun AttendanceRewardDialog(
                         ),
                     text = "*",
                     style = MooiTheme.typography.caption7,
-                    color = MooiTheme.colorScheme.primary,
+                    color = MooiTheme.colorScheme.primaryBlue500,
                 )
                 Text(
                     modifier =
@@ -149,7 +149,7 @@ fun AttendanceRewardDialog(
                         ),
                     text = "출석 보상은 매일 자정 초기화 돼요.",
                     style = MooiTheme.typography.caption7,
-                    color = MooiTheme.colorScheme.primary,
+                    color = MooiTheme.colorScheme.primaryBlue500,
                 )
             }
 

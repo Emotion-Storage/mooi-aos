@@ -71,7 +71,7 @@ fun SaveTimeCapsuleButton(
                         buildAnnotatedString {
                             withStyle(
                                 SpanStyle(
-                                    color = MooiTheme.colorScheme.errorRed,
+                                    color = MooiTheme.colorScheme.error,
                                 ),
                             ) {
                                 append("$remainingTime 남은\n")
@@ -94,7 +94,7 @@ private fun SaveTimeCapsuleButtonPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {

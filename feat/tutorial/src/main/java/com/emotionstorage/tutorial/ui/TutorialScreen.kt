@@ -11,9 +11,7 @@ import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -57,14 +55,14 @@ fun TutorialScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize()
                 .consumeWindowInsets(WindowInsets.systemBars),
     ) { innerPadding ->
         PagerWithIndicator(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .fillMaxSize()
                     .padding(innerPadding)
                     .padding(bottom = 41.dp),
@@ -203,7 +201,7 @@ private fun ColumnScope.TutorialPage(
                     buildHighlightAnnotatedString(
                         fullString = title,
                         highlightWords = titleHighlights,
-                        highlightStyle = SpanStyle(color = MooiTheme.colorScheme.primary),
+                        highlightStyle = SpanStyle(color = MooiTheme.colorScheme.primaryBlue500),
                     ),
             )
         }

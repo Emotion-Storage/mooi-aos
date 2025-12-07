@@ -84,7 +84,7 @@ fun ChatMessageInputBox(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
             keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
             interactionSource = interaction,
-            cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
+            cursorBrush = SolidColor(MooiTheme.colorScheme.primaryBlue500),
             decorationBox = { inner ->
                 Box(
                     modifier =

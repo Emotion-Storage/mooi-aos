@@ -128,7 +128,7 @@ private fun DateItem(
                             if (selectedDate != date) {
                                 Color.Transparent
                             } else {
-                                MooiTheme.colorScheme.secondary
+                                MooiTheme.colorScheme.secondaryBlue700
                             },
                             CircleShape,
                         ).clip(CircleShape)
@@ -159,7 +159,7 @@ private fun DatePickerBottomSheetPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             DatePickerBottomSheet(
                 // open sheet state for preview

@@ -122,7 +122,7 @@ private fun DateItem(
                 modifier = Modifier.height(14.dp),
                 text = date.dayOfMonth.toString(),
                 style = MooiTheme.typography.caption6,
-                color = if (isToday) MooiTheme.colorScheme.primary else Color.White,
+                color = if (isToday) MooiTheme.colorScheme.primaryBlue500 else Color.White,
             )
             Image(
                 modifier =
@@ -147,7 +147,7 @@ private fun TimeCapsuleCalendarPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(horizontal = 16.dp, vertical = 30.dp),
         ) {
             TimeCapsuleCalendar(

@@ -147,7 +147,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         topBar = {
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
         },
@@ -162,7 +162,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

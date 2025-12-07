@@ -52,7 +52,7 @@ fun TempTimeCapsuleItem(
                     modifier = Modifier.size(16.dp),
                     painter = painterResource(R.drawable.ic_caution),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.errorRed),
+                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.error),
                 )
                 CountDownTimer(
                     deadline = timeCapsule.expireAt,
@@ -65,7 +65,7 @@ fun TempTimeCapsuleItem(
                                 (if (hours >= 1) "${hours}시간 " else "${minutes}분 ") +
                                 "남았어요.",
                         style = MooiTheme.typography.caption6,
-                        color = MooiTheme.colorScheme.errorRed,
+                        color = MooiTheme.colorScheme.error,
                     )
                 }
             }

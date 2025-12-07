@@ -39,15 +39,15 @@ fun palette(day: AttendanceSummary.Attendance): DayPalette =
                         Color(
                             MooiTheme
                                 .colorScheme
-                                .secondary
+                                .secondaryBlue700
                                 .copy(alpha = 0.15f)
                                 .toArgb(),
                         ),
                     ),
-                border = BorderStroke(1.dp, MooiTheme.colorScheme.secondary),
-                titleColor = MooiTheme.colorScheme.secondary,
-                contentColor = MooiTheme.colorScheme.secondary,
-                glowColor = MooiTheme.colorScheme.secondary,
+                border = BorderStroke(1.dp, MooiTheme.colorScheme.secondaryBlue700),
+                titleColor = MooiTheme.colorScheme.secondaryBlue700,
+                contentColor = MooiTheme.colorScheme.secondaryBlue700,
+                glowColor = MooiTheme.colorScheme.secondaryBlue700,
                 glowElevationDp = 10.dp,
             )
         }

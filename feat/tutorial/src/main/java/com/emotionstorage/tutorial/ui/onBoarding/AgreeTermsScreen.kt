@@ -135,7 +135,7 @@ private fun StatelessAgreeTermsScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
@@ -150,7 +150,7 @@ private fun StatelessAgreeTermsScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
             OnBoardingTitle(
@@ -243,14 +243,14 @@ private fun StatelessAgreeTermsScreen(
                     Text(
                         style =
                             MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = "* 필수 약관에 동의하셔야만 서비스를 이용하실 수 있어요.",
                     )
                     Spacer(modifier = Modifier.size(5.dp))
                     Text(
                         style =
                             MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = "* 선택 약관은 원하실 경우에만 동의하셔도 괜찮아요.",
                     )
                 }

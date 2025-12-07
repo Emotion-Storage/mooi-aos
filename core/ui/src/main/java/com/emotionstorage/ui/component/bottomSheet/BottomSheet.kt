@@ -93,7 +93,7 @@ fun BottomSheet(
         sheetGesturesEnabled = !hideDragHandle && sheetGesturesEnabled,
         shape = RoundedCornerShape(topStart = 15.dp, topEnd = 15.dp),
         contentWindowInsets = { WindowInsets(0, 0, 0, WindowInsets.systemBars.getBottom(LocalDensity.current)) },
-        containerColor = MooiTheme.colorScheme.blueGrayBackground,
+        containerColor = MooiTheme.colorScheme.backgroundTinted,
         contentColor = Color.White,
         properties =
             ModalBottomSheetProperties(
@@ -185,7 +185,7 @@ private fun BottomSheetPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             BottomSheet(
                 onDismissRequest = {},

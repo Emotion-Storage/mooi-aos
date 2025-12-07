@@ -82,13 +82,13 @@ private fun StatelessLoginScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
     ) { padding ->
         Box(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .fillMaxSize()
                     .padding(padding),
         ) {
@@ -148,7 +148,7 @@ private fun StatelessLoginScreen(
                         .align(Alignment.BottomCenter)
                         .fillMaxWidth()
                         .background(
-                            MooiTheme.colorScheme.blueGrayBackground,
+                            MooiTheme.colorScheme.backgroundTinted,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
                         )
                         .padding(top = 26.dp, bottom = 36.dp)
@@ -162,7 +162,7 @@ private fun StatelessLoginScreen(
                         buildHighlightAnnotatedString(
                             stringResource(authR.string.login_description),
                             listOf("당신의 이야기"),
-                            SpanStyle(color = MooiTheme.colorScheme.primary),
+                            SpanStyle(color = MooiTheme.colorScheme.primaryBlue500),
                         ),
                 )
                 Spacer(modifier = Modifier.height(26.dp))

@@ -68,7 +68,7 @@ private fun StatelessSignupCompleteScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
@@ -79,7 +79,7 @@ private fun StatelessSignupCompleteScreen(
         Column(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .fillMaxSize()
                     .padding(padding)
                     .padding(horizontal = 15.dp),
@@ -93,7 +93,7 @@ private fun StatelessSignupCompleteScreen(
                     text =
                         buildAnnotatedString {
                             append("가입을 환영해요.\n")
-                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
                                 append("당신의 감정")
                             }
                             append("을,\n")

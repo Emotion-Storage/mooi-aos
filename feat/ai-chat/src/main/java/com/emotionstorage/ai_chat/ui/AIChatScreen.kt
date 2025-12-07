@@ -160,7 +160,7 @@ private fun StatelessAIChatScreen(
             modifier =
                 modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .consumeWindowInsets(WindowInsets.navigationBars)
                     .imePadding(),

@@ -49,7 +49,7 @@ fun DailyReportKeywords(
                         modifier = Modifier.align(Alignment.Center),
                         text = keyword,
                         style = MooiTheme.typography.body8,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                     )
                 }
             }
@@ -65,7 +65,7 @@ private fun DailyReportKeywordsPreview() {
             modifier =
                 Modifier
                     .padding(20.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             DailyReportKeywords(
                 keywords =

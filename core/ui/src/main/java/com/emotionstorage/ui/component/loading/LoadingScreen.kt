@@ -18,13 +18,13 @@ fun LoadingScreen(modifier: Modifier = Modifier) {
         modifier =
             modifier
                 .fillMaxSize(),
-        containerColor = MooiTheme.colorScheme.background,
+        containerColor = MooiTheme.colorScheme.backgroundDefault,
     ) { innerPadding ->
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
             contentAlignment = Alignment.Center,
         ) {

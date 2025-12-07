@@ -83,7 +83,7 @@ fun IconWithCount(
 private fun IconWithCountPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             IconWithCount(

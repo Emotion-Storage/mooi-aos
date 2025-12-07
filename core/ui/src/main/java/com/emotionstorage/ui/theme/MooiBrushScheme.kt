@@ -95,7 +95,7 @@ private fun BrushPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(50.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {

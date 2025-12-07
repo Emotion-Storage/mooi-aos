@@ -166,7 +166,7 @@ internal fun AppNavHost(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
     ) {
         composable<AppDestination.Splash>(
             enterTransition = {
