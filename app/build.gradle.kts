@@ -55,6 +55,7 @@ android {
 dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
+    implementation(projects.core.presentation)
     implementation(projects.core.ui)
     implementation(projects.feat.tutorial)
     implementation(projects.feat.auth)

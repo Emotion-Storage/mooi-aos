@@ -1,8 +1,12 @@
 package com.sunjoolee.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.ErrorCode
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import org.orbitmvi.orbit.syntax.Syntax
@@ -19,7 +23,7 @@ sealed class BaseSideEffect {
 }
 
 @OptIn(OrbitExperimental::class)
-open class BaseOrbitViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
+open class BaseViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
     initialState: STATE
 ) : ViewModel(), ContainerHost<STATE, SIDE_EFFECT> {
     override val container = container<STATE, SIDE_EFFECT>(initialState)
@@ -28,16 +32,26 @@ open class BaseOrbitViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
         try {
             transformer()
         } catch (e: Throwable) {
-            val error = if (e !is BaseException)
-                BaseException(
-                    message = e.message,
-                    code = ErrorCode.UNKNOWN,
-                    throwable = e
-                ) else e
+            handleError(e)
+        }
+    }
 
-            if (error.code == ErrorCode.NETWORK_ERROR) {
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        viewModelScope.launch {
+            handleError(throwable)
+        }
+    }
+    protected val baseViewModelScope = viewModelScope.plus(exceptionHandler)
+
+    protected suspend fun handleError(error: Throwable) = subIntent {
+        with(
+            if (error is BaseException) error
+            else BaseException(message = error.message, code = ErrorCode.UNKNOWN, throwable = error)
+        ) {
+            if (code == ErrorCode.NETWORK_ERROR) {
+                // handle network error
                 postSideEffect(BaseSideEffect.NetworkError as SIDE_EFFECT)
-            } else if (error.code in listOf<ErrorCode>(
+            } else if (code in listOf<ErrorCode>(
                     ErrorCode.ACCESS_TOKEN_EXPIRED,
                     ErrorCode.ACCESS_TOKEN_INVALID,
                     ErrorCode.REFRESH_TOKEN_EXPIRED,
@@ -45,15 +59,18 @@ open class BaseOrbitViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
                     ErrorCode.UNAUTHORIZED,
                 )
             ) {
+                // handle auth expiration error
                 // todo: refresh token here? or in remote interceptor?
                 postSideEffect(BaseSideEffect.SessionExpired as SIDE_EFFECT)
-            } else if (error.code == ErrorCode.INTERNAL_SERVER_ERROR) {
+            } else if (code == ErrorCode.INTERNAL_SERVER_ERROR) {
+                // handle server error
                 postSideEffect(BaseSideEffect.TemporalError as SIDE_EFFECT)
-            } else if (error.code == ErrorCode.UNKNOWN) {
+            } else if (code == ErrorCode.UNKNOWN) {
+                // handle unknown error
                 postSideEffect(BaseSideEffect.TemporalError as SIDE_EFFECT)
             } else {
-                Logger.e("Error could not be handled in BaseViewModel, ${error}")
-                throw error
+                Logger.e("Error could not be handled in BaseViewModel, ${this}")
+                throw this
             }
         }
     }
