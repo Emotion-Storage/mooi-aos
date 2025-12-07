@@ -1,10 +1,8 @@
 package com.emotionstorage.ai_chat.presentation
 
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.useCase.chat.MarkChatIntroSeenUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatIntroSeenUseCase
 import com.sunjoolee.presentation.BaseSideEffect
-import com.sunjoolee.presentation.BaseState
 import com.sunjoolee.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +16,8 @@ import javax.inject.Inject
 class AiChatIntroViewModel @Inject constructor(
     observesIntroSeenUseCase: ObserveChatIntroSeenUseCase,
     private val markIntroSeenUseCase: MarkChatIntroSeenUseCase,
-) : BaseViewModel<BaseState, BaseSideEffect>(
-    initialState = BaseState(),
+) : BaseViewModel<Unit>(
+    initialState = Unit,
 ) {
     val introSeen =
         observesIntroSeenUseCase()
