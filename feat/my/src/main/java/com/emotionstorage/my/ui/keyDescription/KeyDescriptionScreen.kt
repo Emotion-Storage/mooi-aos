@@ -1,16 +1,15 @@
 package com.emotionstorage.my.ui.keyDescription
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -102,19 +101,16 @@ fun StatelessKeyDescriptionScreen(
                     color = MooiTheme.colorScheme.gray400,
                 )
 
-                Spacer(modifier = Modifier.padding(28.dp))
-
+                Spacer(modifier = Modifier.padding(58.dp))
                 Image(
                     modifier =
                         Modifier
-                            .heightIn(198.dp)
-                            .widthIn(198.dp)
+                            .size(149.dp)
                             .align(Alignment.CenterHorizontally),
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
                 )
-
-                Spacer(modifier = Modifier.padding(6.dp))
+                Spacer(modifier = Modifier.padding(58.dp))
 
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
@@ -124,7 +120,6 @@ fun StatelessKeyDescriptionScreen(
                     textAlign = TextAlign.Center,
                 )
                 Spacer(modifier = Modifier.size(12.dp))
-
                 CountRow(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     count = state.keyCount,

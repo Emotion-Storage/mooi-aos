@@ -26,12 +26,13 @@ import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
 fun KeyCard(
+    modifier: Modifier = Modifier,
     keyCount: Int,
     onCardClick: (Int) -> Unit,
 ) {
     Surface(
         modifier =
-            Modifier
+            modifier
                 .fillMaxWidth()
                 .heightIn(61.dp)
                 .clip(RoundedCornerShape(10.dp))
@@ -52,11 +53,11 @@ fun KeyCard(
                     ).padding(start = 16.dp, end = 16.dp),
         ) {
             Image(
-                painter = painterResource(R.drawable.ic_key_white),
+                painter = painterResource(R.drawable.ic_key),
                 contentDescription = "열쇠",
                 modifier =
                     Modifier
-                        .size(13.dp)
+                        .size((15.9).dp)
                         .align(Alignment.CenterVertically),
             )
 
@@ -97,6 +98,7 @@ fun KeyCard(
 private fun KeyCardPreview() {
     MooiTheme {
         KeyCard(
+            modifier = Modifier.background(MooiTheme.colorScheme.background),
             keyCount = 10,
             onCardClick = { key ->
             },
