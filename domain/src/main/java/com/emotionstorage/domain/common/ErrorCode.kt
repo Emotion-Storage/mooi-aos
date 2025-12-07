@@ -1,6 +1,7 @@
 package com.emotionstorage.domain.common
 
 enum class ErrorCode {
+    // common
     UNKNOWN,
     INTERNAL_SERVER_ERROR,
     NETWORK_ERROR,
