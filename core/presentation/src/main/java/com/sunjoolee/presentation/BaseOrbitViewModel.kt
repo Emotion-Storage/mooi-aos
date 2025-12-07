@@ -19,7 +19,7 @@ sealed class BaseSideEffect {
 }
 
 @OptIn(OrbitExperimental::class)
-open class BaseViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
+open class BaseOrbitViewModel<STATE : BaseState, SIDE_EFFECT : BaseSideEffect>(
     initialState: STATE
 ) : ViewModel(), ContainerHost<STATE, SIDE_EFFECT> {
     override val container = container<STATE, SIDE_EFFECT>(initialState)
