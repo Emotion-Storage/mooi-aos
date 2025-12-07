@@ -1,9 +1,11 @@
 package com.emotionstorage.ai_chat.presentation
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.useCase.chat.MarkChatIntroSeenUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatIntroSeenUseCase
+import com.sunjoolee.presentation.BaseSideEffect
+import com.sunjoolee.presentation.BaseState
+import com.sunjoolee.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,19 +18,19 @@ import javax.inject.Inject
 class AiChatIntroViewModel @Inject constructor(
     observesIntroSeenUseCase: ObserveChatIntroSeenUseCase,
     private val markIntroSeenUseCase: MarkChatIntroSeenUseCase,
-) : ViewModel() {
+) : BaseViewModel<BaseState, BaseSideEffect>(
+    initialState = BaseState(),
+) {
     val introSeen =
         observesIntroSeenUseCase()
             .stateIn(
-                viewModelScope,
+                baseViewModelScope,
                 SharingStarted.WhileSubscribed(1_000),
                 false,
             )
 
     fun onIntroSeenChanged(value: Boolean) =
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                markIntroSeenUseCase(value)
-            }
+        baseViewModelScope.launch(Dispatchers.IO) {
+            markIntroSeenUseCase(value)
         }
 }
