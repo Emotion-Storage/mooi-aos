@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -95,17 +96,28 @@ private fun StatelessLoginScreen(
                 LoadingOverlay()
             }
 
+            // bg image
             Image(
                 modifier =
                     Modifier
-                        .zIndex(-10f)
+                        .zIndex(-20f)
                         .align(Alignment.Center)
-                        .fillMaxWidth()
-                        .padding(padding),
+                        .fillMaxWidth(),
                 painter = painterResource(id = authR.drawable.graphic_login_bg),
                 contentDescription = null,
             )
 
+            // mooi image
+            Image(
+                modifier =
+                    Modifier
+                        .zIndex(-10f)
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .offset(y = (-148).dp),
+                painter = painterResource(id = authR.drawable.graphic_login_mooi),
+                contentDescription = null,
+            )
             Column(
                 modifier =
                     Modifier
@@ -138,7 +150,8 @@ private fun StatelessLoginScreen(
                         .background(
                             MooiTheme.colorScheme.blueGrayBackground,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                        ).padding(top = 26.dp, bottom = 36.dp)
+                        )
+                        .padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
