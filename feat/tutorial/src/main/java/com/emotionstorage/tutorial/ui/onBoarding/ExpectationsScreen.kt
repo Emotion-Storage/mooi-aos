@@ -134,7 +134,7 @@ private fun StatelessExpectationsScreen(
                             MooiTheme.typography.body8.copy(
                                 fontWeight = FontWeight.Light,
                             ),
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = stringResource(tutorialR.string.on_boarding_p2_input_desc),
                     )
                     Column(
@@ -215,7 +215,7 @@ private fun ExpectationItem(
 
             Text(
                 style = MooiTheme.typography.body8,
-                color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
+                color = if (isSelected) MooiTheme.colorScheme.primaryBlue500 else Color.White,
                 text = expectation.content,
             )
         }
