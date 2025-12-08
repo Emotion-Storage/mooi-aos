@@ -237,7 +237,6 @@ private fun StatelessAIChatScreen(
                         onConfirm = {
                             onAction(AIChatAction.DismissForceQuitSheet)
                             onAction(AIChatAction.CreateTimeCapsule)
-                            onAction(AIChatAction.ExitChatRoom)
                         },
                     )
                 }
