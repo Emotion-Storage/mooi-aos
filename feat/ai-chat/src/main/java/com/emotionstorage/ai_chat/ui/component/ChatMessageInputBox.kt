@@ -84,7 +84,7 @@ fun ChatMessageInputBox(
             enabled = enabled,
             textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-            keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
+            keyboardActions = KeyboardActions(onSend = { if (sendButtonEnabled) onSendMessage() }),
             interactionSource = interaction,
             cursorBrush = SolidColor(MooiTheme.colorScheme.primaryBlue500),
             decorationBox = { inner ->

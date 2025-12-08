@@ -165,86 +165,86 @@ private fun StatelessAIChatScreen(
             )
         },
     ) { innerPadding ->
-        Column(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.backgroundDefault)
-                    .padding(innerPadding)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
-                    .imePadding(),
-        ) {
-            ChatProgressBar(
-                progress = state.chatProgress,
+        HideKeyboard {
+            Column(
                 modifier =
-                    Modifier
-                        .fillMaxWidth(),
-            )
-
-            if (showTimeCapsuleCreateAlert) {
-                TimeCapsuleCreateAlert(
-                    modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
-                )
-            }
-
-            Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                contentAlignment = Alignment.Center,
+                    modifier
+                        .fillMaxWidth()
+                        .background(MooiTheme.colorScheme.backgroundDefault)
+                        .padding(innerPadding)
+                        .consumeWindowInsets(WindowInsets.navigationBars)
+                        .imePadding(),
             ) {
-                ChatMessageList(
-                    modifier = Modifier.fillMaxSize(),
-                    chatMessages = state.messages,
-                    listState = listState,
-                    isMooiTyping = state.isMooiTyping,
+                ChatProgressBar(
+                    progress = state.chatProgress,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
                 )
 
-                if (showEmptyScreen) {
-                    EmptyChatScreen(
-                        modifier =
-                            Modifier.offset(
-                                y = if (isKeyboardVisible) 45.dp else (-60).dp,
-                            ),
-                        isKeyboardVisible = isKeyboardVisible,
+                if (showTimeCapsuleCreateAlert) {
+                    TimeCapsuleCreateAlert(
+                        modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
                     )
                 }
-            }
 
-            if (canMakeTimeCapsule && showFinishBottomSheet) {
-                val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-                BottomSheet(
-                    onDismissRequest = { showFinishBottomSheet = false },
-                    sheetState = sheetState,
-                    hideDragHandle = true,
-                    subTitle = "감정을 충분히 이야기했어요.",
-                    title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
-                    confirmLabel = "네, 종료할래요.",
-                    dismissLabel = "아니요, 더 이야기할래요.",
-                    onDismiss = { showFinishBottomSheet = false },
-                    onConfirm = {
-                        showFinishBottomSheet = false
-                        onAction(AIChatAction.CreateTimeCapsule)
-                    },
-                )
-            }
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    ChatMessageList(
+                        modifier = Modifier.fillMaxSize(),
+                        chatMessages = state.messages,
+                        listState = listState,
+                        isMooiTyping = state.isMooiTyping,
+                    )
 
-            if (state.showForceQuitBottomSheet) {
-                ForceQuitChatBottomSheet(
-                    onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
-                    onConfirm = {
-                        onAction(AIChatAction.DismissForceQuitSheet)
-                        onAction(AIChatAction.CreateTimeCapsule)
-                        onAction(AIChatAction.ExitChatRoom)
-                    },
-                )
-            }
+                    if (showEmptyScreen) {
+                        EmptyChatScreen(
+                            modifier =
+                                Modifier.offset(
+                                    y = if (isKeyboardVisible) 45.dp else (-60).dp,
+                                ),
+                            isKeyboardVisible = isKeyboardVisible,
+                        )
+                    }
+                }
 
-            if (state.isCreatingTimeCapsule) {
-                TimeCapsuleCreateLoadingModal()
-            }
-            HideKeyboard {
+                if (canMakeTimeCapsule && showFinishBottomSheet) {
+                    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                    BottomSheet(
+                        onDismissRequest = { showFinishBottomSheet = false },
+                        sheetState = sheetState,
+                        hideDragHandle = true,
+                        subTitle = "감정을 충분히 이야기했어요.",
+                        title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
+                        confirmLabel = "네, 종료할래요.",
+                        dismissLabel = "아니요, 더 이야기할래요.",
+                        onDismiss = { showFinishBottomSheet = false },
+                        onConfirm = {
+                            showFinishBottomSheet = false
+                            onAction(AIChatAction.CreateTimeCapsule)
+                        },
+                    )
+                }
+
+                if (state.showForceQuitBottomSheet) {
+                    ForceQuitChatBottomSheet(
+                        onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
+                        onConfirm = {
+                            onAction(AIChatAction.DismissForceQuitSheet)
+                            onAction(AIChatAction.CreateTimeCapsule)
+                            onAction(AIChatAction.ExitChatRoom)
+                        },
+                    )
+                }
+
+                if (state.isCreatingTimeCapsule) {
+                    TimeCapsuleCreateLoadingModal()
+                }
                 ChatMessageInputBox(
                     text = draft,
                     modifier =
