@@ -23,8 +23,6 @@ mockk = "1.14.6"
 mockitoCore = "5.20.0"
 mockitoKotlin = "6.1.0"
 navigationCompose = "2.9.1"
-orbitCore = "6.0.0"
-orbitTest = "6.0.0"
 uiToolingPreviewAndroid = "1.8.3"
 hiltNavigation = "1.2.0"
 daggerHilt = "2.52"
@@ -38,7 +36,7 @@ serialization = "1.7.3"
 serializationConverter = "1.0.0"
 logger = "2.2.0"
 napier = "2.7.1"
-orbitMvi = "10.0.0"
+orbit = "10.0.0"
 kakao = "2.21.4"
 workRuntimeKtx = "2.11.0"
 kotlinxCoroutines = "1.10.2"
@@ -127,10 +125,10 @@ accompanist-drawablepainter = { group = "com.google.accompanist", name = "accomp
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 
-orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbitMvi" }
-orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbitMvi" }
-orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbitCore" }
-orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref = "orbitTest" }
+orbit-viewmodel = { group = "org.orbit-mvi", name = "orbit-viewmodel", version.ref = "orbit" }
+orbit-compose = { group = "org.orbit-mvi", name = "orbit-compose", version.ref = "orbit" }
+orbit-core = { module = "org.orbit-mvi:orbit-core", version.ref = "orbit" }
+orbit-test = { module = "org.orbit-mvi:orbit-test", version.ref = "orbit" }
 
 kakao-sdk-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 
