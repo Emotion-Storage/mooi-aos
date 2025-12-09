@@ -3,9 +3,9 @@ package com.emotionstorage.auth.presentation
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
-import com.sunjoolee.presentation.BaseException
-import com.sunjoolee.presentation.BaseSideEffect
-import com.sunjoolee.presentation.BaseViewModel
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

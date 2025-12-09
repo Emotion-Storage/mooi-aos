@@ -55,7 +55,7 @@ import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
-import com.sunjoolee.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
 fun HomeScreen(

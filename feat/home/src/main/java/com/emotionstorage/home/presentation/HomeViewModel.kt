@@ -6,9 +6,9 @@ import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
 import com.emotionstorage.domain.useCase.home.GetHomeUseCase
 import com.orhanobut.logger.Logger
-import com.sunjoolee.presentation.BaseException
-import com.sunjoolee.presentation.BaseViewModel
-import com.sunjoolee.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseViewModel
+import com.emotionstorage.presentation.BaseSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.sunjoolee.presentation
+package com.emotionstorage.presentation
 
 import org.junit.Test
 

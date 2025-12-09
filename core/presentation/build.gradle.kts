@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.sunjoolee.presentation"
+    namespace = "com.emotionstorage.presentation"
 
     defaultConfig {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

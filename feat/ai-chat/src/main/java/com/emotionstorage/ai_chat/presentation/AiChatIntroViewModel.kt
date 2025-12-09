@@ -2,7 +2,7 @@ package com.emotionstorage.ai_chat.presentation
 
 import com.emotionstorage.domain.useCase.chat.MarkChatIntroSeenUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatIntroSeenUseCase
-import com.sunjoolee.presentation.BaseViewModel
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted

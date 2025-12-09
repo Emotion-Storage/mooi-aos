@@ -42,7 +42,7 @@ import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 import com.orhanobut.logger.Logger
-import com.sunjoolee.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
 fun LoginScreen(

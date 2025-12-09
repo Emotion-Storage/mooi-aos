@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalCoroutinesApi::class, OrbitExperimental::class)
 
-package com.sunjoolee.presentation
+package com.emotionstorage.presentation
 
 import com.emotionstorage.domain.common.ErrorCode
 import kotlinx.coroutines.ExperimentalCoroutinesApi
