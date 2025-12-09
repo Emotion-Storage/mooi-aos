@@ -16,11 +16,12 @@ class ChatRepositoryImpl
         private val chatWSDataSource: ChatWSDataSource,
     ) : ChatRepository {
         override suspend fun getChatRoomId(): DataState<Long> =
-                try {
-                    chatRemoteDataSource.getChatRoomId()
-                } catch (e: Exception) {
-                  DataState.Error(e)
-                }
+            try {
+                chatRemoteDataSource.getChatRoomId()
+            } catch (e: Exception) {
+                DataState.Error(e)
+            }
+
         override suspend fun connectChatRoom(roomId: Long): Flow<DataState<Boolean>> =
             flow {
                 emit(DataState.Loading(isLoading = true))

@@ -15,8 +15,8 @@ class AiChatIntroViewModel @Inject constructor(
     observesIntroSeenUseCase: ObserveChatIntroSeenUseCase,
     private val markIntroSeenUseCase: MarkChatIntroSeenUseCase,
 ) : BaseViewModel<Unit>(
-    initialState = Unit,
-) {
+        initialState = Unit,
+    ) {
     val introSeen =
         observesIntroSeenUseCase()
             .stateIn(
