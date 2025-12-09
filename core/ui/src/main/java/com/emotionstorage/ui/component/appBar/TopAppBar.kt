@@ -51,7 +51,7 @@ fun TopAppBar(
     Column(
         modifier =
             modifier
-                .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.background)
+                .background(if (showBackground) Color(0x800E0C12) else MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxWidth(),
     ) {
         if (fillStatusBar) {

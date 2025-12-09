@@ -73,7 +73,7 @@ fun ToggleSwitch(
         label = "thumbOffset",
     )
 
-    val trackColor = if (checked) MooiTheme.colorScheme.secondary else MooiTheme.colorScheme.gray500
+    val trackColor = if (checked) MooiTheme.colorScheme.secondaryBlue700 else MooiTheme.colorScheme.gray500
     val thumbColor = Color.White
 
     Box(

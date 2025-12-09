@@ -71,7 +71,7 @@ fun Modal(
                 modifier =
                     Modifier
                         .clip(RoundedCornerShape(15.dp))
-                        .background(MooiTheme.colorScheme.background)
+                        .background(MooiTheme.colorScheme.backgroundDefault)
                         .padding(contentPadding)
                         .widthIn(max = 293.dp),
                 verticalArrangement = Arrangement.spacedBy(verticalSpacing),
@@ -89,7 +89,7 @@ fun Modal(
                                 buildHighlightAnnotatedString(
                                     topDescription,
                                     topDescriptionHighlights ?: emptyList(),
-                                    SpanStyle(color = MooiTheme.colorScheme.primary),
+                                    SpanStyle(color = MooiTheme.colorScheme.primaryBlue500),
                                 ),
                             style = MooiTheme.typography.body5,
                             color = MooiTheme.colorScheme.gray500,
@@ -113,7 +113,7 @@ fun Modal(
                                 buildHighlightAnnotatedString(
                                     bottomDescription,
                                     bottomDescriptionHighlights ?: emptyList(),
-                                    SpanStyle(color = MooiTheme.colorScheme.primary),
+                                    SpanStyle(color = MooiTheme.colorScheme.primaryBlue500),
                                 ),
                             style = MooiTheme.typography.body5,
                             color = MooiTheme.colorScheme.gray500,

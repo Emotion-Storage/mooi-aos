@@ -122,7 +122,7 @@ fun ChatMessageList(
                                 .widthIn(max = 64.dp)
                                 .heightIn(max = 42.dp)
                                 .background(
-                                    color = MooiTheme.colorScheme.blueGrayBackground,
+                                    color = MooiTheme.colorScheme.backgroundTinted,
                                     shape = RoundedCornerShape(20.dp),
                                 ),
                         contentAlignment = Alignment.CenterStart,
@@ -213,7 +213,7 @@ private fun ChatMessageItem(
                         .widthIn(max = screenWidth.dp * 0.7f)
                         .heightIn(42.dp)
                         .background(
-                            color = MooiTheme.colorScheme.blueGrayBackground,
+                            color = MooiTheme.colorScheme.backgroundTinted,
                             shape = RoundedCornerShape(20.dp),
                         ),
                 contentAlignment = Alignment.CenterStart,
@@ -292,7 +292,7 @@ private fun ChatMessageListPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
             chatMessages = chatMessages,
             listState = LazyListState(),
         )

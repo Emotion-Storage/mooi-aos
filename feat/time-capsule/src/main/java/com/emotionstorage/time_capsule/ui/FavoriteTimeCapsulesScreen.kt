@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -147,7 +146,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         topBar = {
             TopAppBar(title = "내 마음 서랍", showBackButton = true, onBackClick = navToBack)
         },
@@ -162,7 +161,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -182,9 +181,9 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                         painter = painterResource(id = R.drawable.ic_favorite_filled),
                         modifier =
                             Modifier
-                                .width(11.dp)
-                                .height(12.dp),
-                        contentDescription = "open",
+                                .width(12.dp)
+                                .offset(y = 2.dp),
+                        contentDescription = null,
                         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     )
                     Text(
@@ -228,7 +227,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                 Row(
                                     modifier =
-                                        modifier
+                                        Modifier
                                             .fillMaxWidth(),
                                     verticalAlignment = Alignment.CenterVertically,
                                     horizontalArrangement = Arrangement.SpaceBetween,

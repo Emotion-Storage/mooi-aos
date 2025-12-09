@@ -46,12 +46,12 @@ fun TimeCapsuleSpeechBubble(
                     modifier = Modifier.size(11.dp, 14.dp),
                     painter = painterResource(R.drawable.ic_lock),
                     contentDescription = "",
-                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primary),
+                    colorFilter = ColorFilter.tint(MooiTheme.colorScheme.primaryBlue500),
                 )
                 Text(
                     text = "${openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"))} 에 열릴 예정이에요!",
                     style = MooiTheme.typography.body6,
-                    color = MooiTheme.colorScheme.primary,
+                    color = MooiTheme.colorScheme.primaryBlue500,
                 )
             }
         }
@@ -123,7 +123,7 @@ fun TimeCapsuleSpeechBubble(
                             Text(
                                 text = label,
                                 style = MooiTheme.typography.caption3,
-                                color = MooiTheme.colorScheme.primary,
+                                color = MooiTheme.colorScheme.primaryBlue500,
                             )
                         }
                     }
@@ -140,7 +140,7 @@ private fun TimeCapsuleSpeeckBubblePreview() {
         Column(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {

@@ -135,7 +135,7 @@ private fun StatelessAgreeTermsScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
@@ -150,7 +150,7 @@ private fun StatelessAgreeTermsScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
             OnBoardingTitle(
@@ -243,14 +243,14 @@ private fun StatelessAgreeTermsScreen(
                     Text(
                         style =
                             MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = stringResource(tutorialR.string.on_boarding_p3_info1),
                     )
                     Spacer(modifier = Modifier.size(5.dp))
                     Text(
                         style =
                             MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = stringResource(tutorialR.string.on_boarding_p3_info2),
                     )
                 }

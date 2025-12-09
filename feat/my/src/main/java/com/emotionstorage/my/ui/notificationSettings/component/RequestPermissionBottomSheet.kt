@@ -61,7 +61,7 @@ private fun RequestPermissionBottomSheetPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         )
         RequestPermissionBottomSheet(
             onDismiss = {},

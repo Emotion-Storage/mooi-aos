@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,7 @@ fun MenuSection(
                 .fillMaxWidth()
                 .wrapContentSize()
                 .background(
-                    color = MooiTheme.colorScheme.chatMessageColor,
+                    color = Color.Black.copy(alpha = 0.2f),
                     shape = RoundedCornerShape(10.dp),
                 ),
     ) {

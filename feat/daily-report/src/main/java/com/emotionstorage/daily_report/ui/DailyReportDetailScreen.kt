@@ -104,7 +104,7 @@ private fun StatelessDailyReportDetailScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         topBar = {
             TopAppBar(
                 title =
@@ -121,7 +121,7 @@ private fun StatelessDailyReportDetailScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState),
@@ -172,7 +172,7 @@ private fun StatelessDailyReportDetailScreen(
                     Text(
                         text = "감정 요약",
                         style = MooiTheme.typography.body8,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                     )
                     Text(
                         text = dailyReport.emotionSummary,

@@ -6,11 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -108,9 +110,18 @@ private fun DateItem(
             modifier =
                 Modifier
                     .align(Alignment.Center)
-                    .background(Color.Transparent)
-                    .padding(horizontal = 3.5.dp)
-                    .padding(top = 4.dp, bottom = 2.dp),
+                    .run {
+                        if (isToday) {
+                            this
+                                .background(
+                                    MooiTheme.brushScheme.gra2,
+                                    RoundedCornerShape(20.dp),
+                                )
+                        } else {
+                            this.background(Color.Transparent)
+                        }
+                    }.padding(horizontal = 5.dp)
+                    .padding(top = 5.dp, bottom = 7.dp),
             verticalArrangement =
                 Arrangement.spacedBy(
                     9.dp,
@@ -122,7 +133,7 @@ private fun DateItem(
                 modifier = Modifier.height(14.dp),
                 text = date.dayOfMonth.toString(),
                 style = MooiTheme.typography.caption6,
-                color = if (isToday) MooiTheme.colorScheme.primary else Color.White,
+                color = Color.White,
             )
             Image(
                 modifier =
@@ -140,6 +151,41 @@ private fun DateItem(
 
 @Preview
 @Composable
+private fun DateItemPreview() {
+    MooiTheme {
+        Row(
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.backgroundDefault)
+                    .padding(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = true,
+                isToday = true,
+            )
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = false,
+                isToday = true,
+            )
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = true,
+                isToday = false,
+            )
+            DateItem(
+                date = LocalDate.now(),
+                isFilled = false,
+                isToday = false,
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
 private fun TimeCapsuleCalendarPreview() {
     val (calendarYearMonth, setCalendarYearMonth) = remember { mutableStateOf(YearMonth.now()) }
     MooiTheme {
@@ -147,7 +193,7 @@ private fun TimeCapsuleCalendarPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(horizontal = 16.dp, vertical = 30.dp),
         ) {
             TimeCapsuleCalendar(

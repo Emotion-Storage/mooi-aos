@@ -31,7 +31,7 @@ fun WithDrawNoticeContent(modifier: Modifier = Modifier) {
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
     ) {
         WithDrawTitle()
 
@@ -63,7 +63,7 @@ private fun WithDrawTitle() {
             append("정말 떠나시겠어요? 🥲\n")
             append("이 곳엔 ")
 
-            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+            withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
                 append("당신의 감정들")
             }
 
@@ -133,7 +133,7 @@ private fun WithDrawNoticeContentPreview() {
         WithDrawNoticeContent(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         )
     }
 }

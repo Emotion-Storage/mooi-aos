@@ -41,11 +41,12 @@ import com.emotionstorage.ai_chat.ui.component.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
-import com.emotionstorage.ai_chat.ui.component.ChattingFinishButton
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateLoadingModal
+import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
+import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
@@ -102,7 +103,6 @@ private fun StatelessAIChatScreen(
 ) {
     val (isExitModalOpen, setExitModalOpen) = remember { mutableStateOf(false) }
     var draft by remember { mutableStateOf("") }
-    var isInputFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     val listState = remember { LazyListState() }
@@ -153,121 +153,118 @@ private fun StatelessAIChatScreen(
                 onHandleBackPress = {
                     setExitModalOpen(true)
                 },
-            )
-        },
-    ) { innerPadding ->
-        Column(
-            modifier =
-                modifier
-                    .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
-                    .padding(innerPadding)
-                    .consumeWindowInsets(WindowInsets.navigationBars)
-                    .imePadding(),
-        ) {
-            ChatProgressBar(
-                progress = state.chatProgress,
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
-            )
-
-            if (showTimeCapsuleCreateAlert) {
-                TimeCapsuleCreateAlert(
-                    modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
-                )
-            }
-
-            Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ) {
-                ChatMessageList(
-                    modifier = Modifier.fillMaxSize(),
-                    chatMessages = state.messages,
-                    listState = listState,
-                    isMooiTyping = state.isMooiTyping,
-                )
-
-                if (showEmptyScreen) {
-                    EmptyChatScreen(
-                        modifier =
-                            Modifier.offset(
-                                y = if (isKeyboardVisible) 45.dp else (-60).dp,
-                            ),
-                        isKeyboardVisible = isKeyboardVisible,
-                    )
-                }
-
-                if (canMakeTimeCapsule) {
-                    ChattingFinishButton(
-                        modifier =
-                            Modifier
-                                .padding(bottom = 13.dp)
-                                .align(Alignment.BottomCenter),
-                        onClick = {
-                            showFinishBottomSheet = true
-                        },
-                    )
-                }
-            }
-
-            if (canMakeTimeCapsule && showFinishBottomSheet) {
-                val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-                BottomSheet(
-                    onDismissRequest = { showFinishBottomSheet = false },
-                    sheetState = sheetState,
-                    hideDragHandle = true,
-                    subTitle = "감정을 충분히 이야기했어요.",
-                    title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
-                    confirmLabel = "네, 종료할래요.",
-                    dismissLabel = "아니요, 더 이야기할래요.",
-                    onDismiss = { showFinishBottomSheet = false },
-                    onConfirm = {
-                        showFinishBottomSheet = false
-                        onAction(AIChatAction.CreateTimeCapsule)
-                    },
-                )
-            }
-
-            if (state.showForceQuitBottomSheet) {
-                ForceQuitChatBottomSheet(
-                    onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
-                    onConfirm = {
-                        onAction(AIChatAction.DismissForceQuitSheet)
-                        onAction(AIChatAction.CreateTimeCapsule)
-                        onAction(AIChatAction.ExitChatRoom)
-                    },
-                )
-            }
-
-            if (state.isCreatingTimeCapsule) {
-                TimeCapsuleCreateLoadingModal()
-            }
-
-            ChatMessageInputBox(
-                text = draft,
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(all = 16.dp),
-                onFocusChanged = { focused -> isInputFocused = focused },
-                onTextChange = { draft = it },
-                focusRequester = focusRequester,
-                enabled = true,
-                sendEnabled = !state.isWaitingReply,
-                showStop = state.isMooiTyping,
-                onSendMessage = {
-                    val msg = draft.trim()
-                    if (msg.isNotEmpty()) {
-                        onAction(AIChatAction.SendChatMessage(msg))
-                        draft = ""
+                rightComponent = {
+                    if (canMakeTimeCapsule) {
+                        TimeCapsuleCreateTopbarContent(
+                            onClick = {
+                                showFinishBottomSheet = true
+                            },
+                        )
                     }
                 },
             )
+        },
+    ) { innerPadding ->
+        HideKeyboard {
+            Column(
+                modifier =
+                    modifier
+                        .fillMaxWidth()
+                        .background(MooiTheme.colorScheme.backgroundDefault)
+                        .padding(innerPadding)
+                        .consumeWindowInsets(WindowInsets.navigationBars)
+                        .imePadding(),
+            ) {
+                ChatProgressBar(
+                    progress = state.chatProgress,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
+                )
+
+                if (showTimeCapsuleCreateAlert) {
+                    TimeCapsuleCreateAlert(
+                        modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
+                    )
+                }
+
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    ChatMessageList(
+                        modifier = Modifier.fillMaxSize(),
+                        chatMessages = state.messages,
+                        listState = listState,
+                        isMooiTyping = state.isMooiTyping,
+                    )
+
+                    if (showEmptyScreen) {
+                        EmptyChatScreen(
+                            modifier =
+                                Modifier.offset(
+                                    y = if (isKeyboardVisible) 45.dp else (-60).dp,
+                                ),
+                            isKeyboardVisible = isKeyboardVisible,
+                        )
+                    }
+                }
+
+                if (canMakeTimeCapsule && showFinishBottomSheet) {
+                    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+                    BottomSheet(
+                        onDismissRequest = { showFinishBottomSheet = false },
+                        sheetState = sheetState,
+                        hideDragHandle = true,
+                        subTitle = "감정을 충분히 이야기했어요.",
+                        title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
+                        confirmLabel = "네, 종료할래요.",
+                        dismissLabel = "아니요, 더 이야기할래요.",
+                        onDismiss = { showFinishBottomSheet = false },
+                        onConfirm = {
+                            showFinishBottomSheet = false
+                            onAction(AIChatAction.CreateTimeCapsule)
+                        },
+                    )
+                }
+
+                if (state.showForceQuitBottomSheet) {
+                    ForceQuitChatBottomSheet(
+                        onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
+                        onConfirm = {
+                            onAction(AIChatAction.DismissForceQuitSheet)
+                            onAction(AIChatAction.CreateTimeCapsule)
+                        },
+                    )
+                }
+
+                if (state.isCreatingTimeCapsule) {
+                    TimeCapsuleCreateLoadingModal()
+                }
+                ChatMessageInputBox(
+                    text = draft,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(all = 16.dp),
+                    onFocusChanged = { focused -> },
+                    onTextChange = { draft = it },
+                    focusRequester = focusRequester,
+                    enabled = true,
+                    sendEnabled = !state.isWaitingReply,
+                    showSendingDisabled = state.isMooiTyping,
+                    onSendMessage = {
+                        val msg = draft.trim()
+                        if (msg.isNotEmpty()) {
+                            onAction(AIChatAction.SendChatMessage(msg))
+                            draft = ""
+                        }
+                    },
+                )
+            }
         }
     }
 }

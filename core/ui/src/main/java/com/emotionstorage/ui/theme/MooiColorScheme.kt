@@ -5,15 +5,14 @@ import androidx.compose.ui.graphics.Color
 
 @Immutable
 data class MooiColorScheme(
-    val primary: Color = Color(0xFFAECBFA),
-    val secondary: Color = Color(0xFF849BEA),
-    val tertiary: Color = Color(0xFF859CEA),
-    val background: Color = Color(0xFF1C1A22),
-    val dropBox: Color = Color(0xFF100E14),
-    val blueGrayBackground: Color = Color(0xFF262736),
-    val bottomBarBackground: Color = Color(0xFF0E0C12),
-    val chatMessageColor: Color = Color(0x33000000),
-    val errorRed: Color = Color(0xFFF36868),
+    val primaryBlue500: Color = Color(0xFFAECBFA),
+    val secondaryBlue700: Color = Color(0xFF849BEA),
+    val tertiary: Color = Color(0xFFAFCBFA),
+    val backgroundDefault: Color = Color(0xFF1C1A22),
+    val backgroundElevated: Color = Color(0xFF100E14),
+    val backgroundTinted: Color = Color(0xFF262736),
+    val backgroundTintedBlue: Color = Color(0xFF4B5885),
+    val error: Color = Color(0xFFF36868),
     val gray900: Color = Color(0xFF1C1C1C),
     val gray800: Color = Color(0xFF3C3C3C),
     val gray700: Color = Color(0xFF5B5B5B),

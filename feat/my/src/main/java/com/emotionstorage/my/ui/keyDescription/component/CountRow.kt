@@ -57,14 +57,14 @@ private fun DigitBox(char: Char) {
                 .heightIn(57.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(
-                    color = MooiTheme.colorScheme.blueGrayBackground,
+                    color = MooiTheme.colorScheme.backgroundTinted,
                 ),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = char.toString(),
             style = MooiTheme.typography.head1,
-            color = MooiTheme.colorScheme.secondary,
+            color = MooiTheme.colorScheme.secondaryBlue700,
         )
     }
 }

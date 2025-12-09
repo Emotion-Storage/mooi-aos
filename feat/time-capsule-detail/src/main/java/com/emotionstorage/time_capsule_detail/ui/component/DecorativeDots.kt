@@ -34,7 +34,7 @@ fun DecorativeDots(
                         .background(
                             Brush.horizontalGradient(
                                 listOf(
-                                    MooiTheme.colorScheme.primary.copy(alpha = alpha),
+                                    MooiTheme.colorScheme.primaryBlue500.copy(alpha = alpha),
                                     Color(0xFF9AB4F2).copy(alpha = alpha),
                                     MooiTheme.colorScheme.tertiary.copy(alpha = alpha),
                                 ),

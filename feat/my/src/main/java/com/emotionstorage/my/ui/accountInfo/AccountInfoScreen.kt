@@ -54,7 +54,7 @@ fun StatelessAccountInfoScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(color = MooiTheme.colorScheme.background),
+                    .background(color = MooiTheme.colorScheme.backgroundDefault),
         ) {
             Column(
                 modifier =

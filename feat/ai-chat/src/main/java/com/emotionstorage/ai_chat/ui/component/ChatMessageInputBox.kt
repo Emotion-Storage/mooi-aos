@@ -46,7 +46,7 @@ fun ChatMessageInputBox(
     readOnly: Boolean = false,
     enabled: Boolean = true,
     sendEnabled: Boolean = true,
-    showStop: Boolean = false,
+    showSendingDisabled: Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onTextChange: (String) -> Unit,
     onSendMessage: () -> Unit = {},
@@ -56,6 +56,8 @@ fun ChatMessageInputBox(
     val canSend = text.isNotBlank() && enabled && !readOnly && sendEnabled
     val shape = RoundedCornerShape(100.dp)
 
+    val sendButtonEnabled = canSend && !showSendingDisabled
+
     Row(
         modifier =
             modifier
@@ -63,7 +65,7 @@ fun ChatMessageInputBox(
                 .background(Color(0xFF26262C), shape)
                 .border(1.dp, MooiTheme.colorScheme.gray800, shape)
                 .animateContentSize(),
-        verticalAlignment = Alignment.Bottom,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         BasicTextField(
             modifier =
@@ -82,9 +84,9 @@ fun ChatMessageInputBox(
             enabled = enabled,
             textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-            keyboardActions = KeyboardActions(onSend = { if (canSend) onSendMessage() }),
+            keyboardActions = KeyboardActions(onSend = { if (sendButtonEnabled) onSendMessage() }),
             interactionSource = interaction,
-            cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
+            cursorBrush = SolidColor(MooiTheme.colorScheme.primaryBlue500),
             decorationBox = { inner ->
                 Box(
                     modifier =
@@ -111,36 +113,32 @@ fun ChatMessageInputBox(
             },
         )
 
-        if (canSend || readOnly || showStop) {
+        if (canSend || readOnly || showSendingDisabled) {
             Box(
                 modifier =
                     Modifier
-                        .padding(end = 7.dp, bottom = 7.dp, top = 6.dp)
+                        .padding(end = 7.dp, bottom = 7.dp, top = 7.dp)
                         .size(33.dp)
                         .clip(CircleShape)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,
-                            enabled = canSend,
+                            enabled = sendButtonEnabled,
                             onClick = onSendMessage,
                         ),
                 contentAlignment = Alignment.Center,
             ) {
-                if (showStop) {
-                    Image(
-                        painterResource(R.drawable.graphic_stop),
-                        contentDescription = "전송",
-                        modifier = Modifier.size(33.dp),
-                        contentScale = ContentScale.Fit,
-                    )
-                } else {
-                    Image(
-                        painterResource(R.drawable.graphic_send),
-                        contentDescription = "전송",
-                        modifier = Modifier.size(33.dp),
-                        contentScale = ContentScale.Fit,
-                    )
-                }
+                Image(
+                    painter =
+                        if (sendButtonEnabled) {
+                            painterResource(R.drawable.graphic_send)
+                        } else {
+                            painterResource(R.drawable.graphic_send_disabled)
+                        },
+                    contentDescription = "전송",
+                    modifier = Modifier.size(33.dp),
+                    contentScale = ContentScale.Fit,
+                )
             }
         }
     }

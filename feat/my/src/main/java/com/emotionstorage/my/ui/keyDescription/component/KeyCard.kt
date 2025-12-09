@@ -76,7 +76,7 @@ fun KeyCard(
                 modifier = Modifier.align(Alignment.CenterVertically),
                 text = "${keyCount}개",
                 style = MooiTheme.typography.caption1,
-                color = MooiTheme.colorScheme.primary,
+                color = MooiTheme.colorScheme.primaryBlue500,
             )
 
             Spacer(modifier = Modifier.size(6.dp))
@@ -98,7 +98,7 @@ fun KeyCard(
 private fun KeyCardPreview() {
     MooiTheme {
         KeyCard(
-            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault),
             keyCount = 10,
             onCardClick = { key ->
             },

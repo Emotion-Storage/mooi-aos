@@ -78,7 +78,7 @@ fun CheckOpenDateModal(
                             append("감정기록일: ")
                             withStyle(
                                 SpanStyle(
-                                    color = MooiTheme.colorScheme.primary,
+                                    color = MooiTheme.colorScheme.primaryBlue500,
                                 ),
                             ) {
                                 append(createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
@@ -86,7 +86,7 @@ fun CheckOpenDateModal(
                             append("\n타임캡슐 오픈일: ")
                             withStyle(
                                 SpanStyle(
-                                    color = MooiTheme.colorScheme.primary,
+                                    color = MooiTheme.colorScheme.primaryBlue500,
                                 ),
                             ) {
                                 append(openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))

@@ -58,7 +58,7 @@ fun DayCircle(
         glowColor = p.glowColor,
         background = p.bg,
         border = p.border,
-        maskBase = MooiTheme.colorScheme.background,
+        maskBase = MooiTheme.colorScheme.backgroundDefault,
     ) {
         Column(
             modifier = Modifier.align(Alignment.Center),

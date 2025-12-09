@@ -46,7 +46,7 @@ fun OnBoardingTitle(
                 buildHighlightAnnotatedString(
                     title,
                     titleHighlights,
-                    SpanStyle(color = MooiTheme.colorScheme.primary),
+                    SpanStyle(color = MooiTheme.colorScheme.primaryBlue500),
                 ),
             modifier = Modifier.align(Alignment.TopStart),
         )
@@ -152,7 +152,7 @@ private fun OnBoardingTitlePreview() {
                 titleHighlights = listOf("어떤", "이름"),
                 modifier =
                     Modifier
-                        .background(MooiTheme.colorScheme.background)
+                        .background(MooiTheme.colorScheme.backgroundDefault)
                         .fillMaxWidth(),
             )
             OnBoardingTitle(
@@ -161,7 +161,7 @@ private fun OnBoardingTitlePreview() {
                 titleHighlights = listOf("이용약관"),
                 modifier =
                     Modifier
-                        .background(MooiTheme.colorScheme.background)
+                        .background(MooiTheme.colorScheme.backgroundDefault)
                         .fillMaxWidth(),
             )
         }

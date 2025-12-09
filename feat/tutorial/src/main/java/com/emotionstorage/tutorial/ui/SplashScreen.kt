@@ -60,7 +60,7 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(padding),
         ) {
             Image(

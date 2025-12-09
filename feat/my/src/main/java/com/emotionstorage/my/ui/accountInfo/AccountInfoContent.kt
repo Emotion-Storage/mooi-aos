@@ -173,7 +173,7 @@ private fun AccountInfoContentPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
             verticalArrangement = Arrangement.Top,
         ) {
             AccountInfoContent(

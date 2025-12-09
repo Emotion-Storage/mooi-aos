@@ -158,7 +158,7 @@ private fun ArrivedOverLay(
                     modifier = Modifier.align(Alignment.Center),
                     text = "도착한지 D+${openDDay.absoluteValue}",
                     style = MooiTheme.typography.caption1,
-                    color = MooiTheme.colorScheme.secondary,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
                 )
             }
         }

@@ -64,7 +64,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         topBar = {
             TopAppBar(
                 title = "도착한 타임캡슐",
@@ -78,7 +78,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,

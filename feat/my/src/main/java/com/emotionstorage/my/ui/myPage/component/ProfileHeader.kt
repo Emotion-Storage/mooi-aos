@@ -80,7 +80,7 @@ fun ProfileHeader(
                 Text(
                     text = "Edit",
                     style = MooiTheme.typography.caption8,
-                    color = MooiTheme.colorScheme.secondary,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
                     modifier =
                         Modifier
                             .offset(x = 0.dp, y = (-5).dp)
@@ -123,7 +123,7 @@ fun ProfileHeader(
                                 .body5
                                 .copy(fontWeight = FontWeight(500))
                                 .toSpanStyle()
-                                .copy(color = MooiTheme.colorScheme.primary),
+                                .copy(color = MooiTheme.colorScheme.primaryBlue500),
                     ) {
                         append("${signupDday}일")
                     }
@@ -148,7 +148,7 @@ fun ProfileHeader(
 fun ProfileHeaderPreview() {
     MooiTheme {
         ProfileHeader(
-            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault),
             nickname = "찡찡이",
             signupDday = 280,
         )

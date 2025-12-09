@@ -20,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
@@ -112,7 +111,7 @@ fun DailyReportEmotionLog(
                             Text(
                                 text = emotionLog.label,
                                 style = MooiTheme.typography.body5,
-                                color = MooiTheme.colorScheme.primary,
+                                color = MooiTheme.colorScheme.primaryBlue500,
                             )
                             Text(
                                 text = emotionLog.description,
@@ -160,7 +159,7 @@ private fun LogLine(modifier: Modifier = Modifier) {
                             colors =
                                 listOf(
                                     Color(0xFFAECBFA).copy(alpha = 0.1f),
-                                    MooiTheme.colorScheme.secondary,
+                                    MooiTheme.colorScheme.secondaryBlue700,
                                 ),
                             angleInDegrees = -90f,
                         ),
@@ -177,7 +176,7 @@ private fun DailyReportEmotionLogPreview() {
             modifier =
                 Modifier
                     .padding(20.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             DailyReportEmotionLog(
                 emotionLogs =
@@ -226,7 +225,7 @@ private fun DailyReportEmotionLogPreview2() {
             modifier =
                 Modifier
                     .padding(20.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             DailyReportEmotionLog(
                 emotionLogs =

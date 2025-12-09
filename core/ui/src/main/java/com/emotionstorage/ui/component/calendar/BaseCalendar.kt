@@ -52,7 +52,7 @@ fun BaseCalendar(
     Column(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
     ) {
         CalendarHeader(
             calendarYearMonth = calendarYearMonth,

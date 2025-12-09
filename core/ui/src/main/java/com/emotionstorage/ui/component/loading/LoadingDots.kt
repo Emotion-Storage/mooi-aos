@@ -63,7 +63,7 @@ fun LoadingDots(
                 Modifier
                     .size(dotSize)
                     .clip(CircleShape)
-                    .background(MooiTheme.colorScheme.primary.copy(alpha = alpha)),
+                    .background(MooiTheme.colorScheme.primaryBlue500.copy(alpha = alpha)),
             )
         }
     }
