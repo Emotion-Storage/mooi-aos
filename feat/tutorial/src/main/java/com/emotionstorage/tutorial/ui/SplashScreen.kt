@@ -30,12 +30,17 @@ fun SplashScreen(
     navToHome: () -> Unit = {},
 ) {
     LaunchedEffect(Unit) {
-        viewModel.onAction(SplashAction.Initiate)
-
+        viewModel.onAction(SplashAction.Init)
         viewModel.container.sideEffectFlow.collect { effect ->
             when (effect) {
-                is SplashSideEffect.AutoLoginFailed -> navToTutorial()
-                is SplashSideEffect.AutoLoginSuccess -> navToHome()
+                is SplashSideEffect.AutoLoginSuccess -> {
+                    navToHome()
+                }
+
+                else -> {
+                    // nav to tutorial on any error
+                    navToTutorial()
+                }
             }
         }
     }

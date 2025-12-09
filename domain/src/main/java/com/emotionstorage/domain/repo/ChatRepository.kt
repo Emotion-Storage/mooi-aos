@@ -5,7 +5,7 @@ import com.emotionstorage.domain.common.DataState
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    suspend fun getChatRoomId(): Flow<DataState<Long>>
+    suspend fun getChatRoomId(): DataState<Long>
 
     suspend fun connectChatRoom(roomId: Long): Flow<DataState<Boolean>>
 

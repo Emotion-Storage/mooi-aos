@@ -23,6 +23,7 @@ android {
 dependencies {
     implementation(projects.domain)
     implementation(projects.core.common)
+    implementation(projects.core.presentation)
     implementation(projects.core.ui)
     testImplementation(kotlin("test"))
 }

@@ -130,7 +130,7 @@ class CalendarViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, _ ->
+                onError = { throwable, code, data ->
                     Logger.e("getTimeCapsuleDates error, $throwable")
                     reduce {
                         state.copy(

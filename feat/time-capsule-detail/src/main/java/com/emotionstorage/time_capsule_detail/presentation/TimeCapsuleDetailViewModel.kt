@@ -181,7 +181,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         triggerUnlockModal()
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("getTimeCapsuleById error: $throwable")
                     reduce {
                         state.copy(timeCapsule = null, note = "")
@@ -203,7 +203,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("openArrivedTimeCapsule error: $throwable")
                     postSideEffect(TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail)
                 },
@@ -236,7 +236,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("getRequiredKeyCount error: $throwable")
                     // todo: handle error
                 },
@@ -250,7 +250,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 onSuccess = {
                     postSideEffect(DeleteTimeCapsuleSuccess)
                 },
-                onError = { throwable, _ ->
+                onError = { throwable, code, data ->
                     Logger.e("deleteTimeCapsule error: $throwable")
                 },
             )
@@ -281,7 +281,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("saveNote error: $throwable")
                 },
             )

@@ -1,8 +1,16 @@
 package com.emotionstorage.domain.common
 
+import com.emotionstorage.domain.common.ErrorCode.ACCESS_TOKEN_EXPIRED
+import com.emotionstorage.domain.common.ErrorCode.ACCESS_TOKEN_INVALID
+import com.emotionstorage.domain.common.ErrorCode.REFRESH_TOKEN_EXPIRED
+import com.emotionstorage.domain.common.ErrorCode.REFRESH_TOKEN_NOT_FOUND
+import com.emotionstorage.domain.common.ErrorCode.UNAUTHORIZED
+
 enum class ErrorCode {
+    // common
     UNKNOWN,
     INTERNAL_SERVER_ERROR,
+    NETWORK_ERROR,
 
     // auth remote
     USER_NOT_FOUND,
@@ -52,3 +60,13 @@ enum class ErrorCode {
         fun toErrorCode(code: String) = ErrorCode.entries.firstOrNull { it.name == code } ?: UNKNOWN
     }
 }
+
+fun ErrorCode.isAuthError() =
+    this in
+        listOf<ErrorCode>(
+            ACCESS_TOKEN_EXPIRED,
+            ACCESS_TOKEN_INVALID,
+            REFRESH_TOKEN_EXPIRED,
+            REFRESH_TOKEN_NOT_FOUND,
+            UNAUTHORIZED,
+        )

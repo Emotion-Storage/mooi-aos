@@ -139,8 +139,8 @@ internal sealed class AppDestination {
 internal fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
+    aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel(),
 ) {
-    val aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel()
     val introSeen = aiChatIntroViewModel.introSeen.collectAsState()
 
     val bottomAppBar: @Composable () -> Unit = {

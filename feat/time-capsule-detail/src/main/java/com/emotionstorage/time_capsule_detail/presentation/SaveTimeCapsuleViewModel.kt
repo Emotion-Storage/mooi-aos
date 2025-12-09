@@ -131,7 +131,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                     postSideEffect(ShowToast())
                 }
             },
-            onError = { throwable, _ ->
+            onError = { throwable, code, data ->
                 Logger.e("Error getting time capsule by id, $throwable")
                 // todo: show error modal
                 reduce {

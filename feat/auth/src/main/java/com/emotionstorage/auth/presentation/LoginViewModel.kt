@@ -1,13 +1,12 @@
 package com.emotionstorage.auth.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
-import com.orhanobut.logger.Logger
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class LoginState(
@@ -20,15 +19,13 @@ sealed class LoginAction {
     ) : LoginAction()
 }
 
-sealed class LoginSideEffect {
+sealed class LoginSideEffect : BaseSideEffect {
     object LoginSuccess : LoginSideEffect()
 
     data class NeedSignUp(
         val provider: User.AuthProvider,
         val idToken: String,
     ) : LoginSideEffect()
-
-    object LoginFailedWithException : LoginSideEffect()
 }
 
 @HiltViewModel
@@ -36,10 +33,9 @@ class LoginViewModel
     @Inject
     constructor(
         private val login: LoginUseCase,
-    ) : ViewModel(),
-        ContainerHost<LoginState, LoginSideEffect> {
-        override val container = container<LoginState, LoginSideEffect>(LoginState())
-
+    ) : BaseViewModel<LoginState>(
+            LoginState(),
+        ) {
         fun onAction(action: LoginAction) {
             when (action) {
                 is LoginAction.Login -> {
@@ -49,7 +45,7 @@ class LoginViewModel
         }
 
         private fun handleLogin(provider: User.AuthProvider) =
-            intent {
+            baseIntent {
                 reduce {
                     state.copy(isLoading = true)
                 }
@@ -61,16 +57,23 @@ class LoginViewModel
                         postSideEffect(LoginSideEffect.LoginSuccess)
                     },
                     onError = { throwable, code, data ->
-                        Logger.e("LoginViewModel handleLogin onError, throwable: $throwable, code: $code, data: $data")
                         reduce {
                             state.copy(isLoading = false)
                         }
                         if (code == ErrorCode.NEED_SIGN_UP) {
-                            val idToken = data?.toString() ?: throw IllegalStateException("idToken is null")
+                            val idToken =
+                                (data as? String) ?: throw BaseException(
+                                    message = "idToken is null or not a String",
+                                    code = ErrorCode.UNKNOWN,
+                                    cause = IllegalStateException(),
+                                )
                             postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
                         } else {
-                            // todo: handle by error code
-                            postSideEffect(LoginSideEffect.LoginFailedWithException)
+                            throw BaseException(
+                                message = throwable.message,
+                                code = code,
+                                cause = throwable,
+                            )
                         }
                     },
                 )

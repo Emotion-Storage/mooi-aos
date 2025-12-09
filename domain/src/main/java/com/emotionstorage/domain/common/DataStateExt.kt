@@ -12,13 +12,13 @@ fun <T, K> DataState<T>.map(convertData: (T) -> K): DataState<K> =
 suspend fun <T> collectDataState(
     flow: Flow<DataState<T>>,
     onSuccess: suspend (data: T) -> Unit,
-    onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
+    onError: suspend (throwable: Throwable, code: ErrorCode, data: Any?) -> Unit = { _, _, _ -> },
     onLoading: suspend (isLoading: Boolean) -> Unit = {},
 ) {
     flow.collect { result ->
         when (result) {
             is DataState.Success -> onSuccess(result.data)
-            is DataState.Error -> onError(result.throwable, result.data)
+            is DataState.Error -> onError(result.throwable, result.code, result.data)
             is DataState.Loading -> onLoading(result.isLoading)
         }
     }

@@ -1,25 +1,23 @@
 package com.emotionstorage.tutorial.presentation
 
-import androidx.lifecycle.ViewModel
-import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.orhanobut.logger.Logger
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 private const val SPLASH_DURATION = 2000L
 
 sealed class SplashAction {
-    object Initiate : SplashAction()
+    object Init : SplashAction()
 }
 
-sealed class SplashSideEffect {
+sealed class SplashSideEffect : BaseSideEffect {
     object AutoLoginSuccess : SplashSideEffect()
-
-    object AutoLoginFailed : SplashSideEffect()
 }
 
 @HiltViewModel
@@ -27,13 +25,12 @@ class SplashViewModel
     @Inject
     constructor(
         private val automaticLogin: AutomaticLoginUseCase,
-    ) : ViewModel(),
-        ContainerHost<Unit, SplashSideEffect> {
-        override val container = container<Unit, SplashSideEffect>(Unit)
-
+    ) : BaseViewModel<Unit>(
+            initialState = Unit,
+        ) {
         suspend fun onAction(action: SplashAction) {
             when (action) {
-                SplashAction.Initiate -> {
+                SplashAction.Init -> {
                     delay(SPLASH_DURATION)
                     handleAutoLogin()
                 }
@@ -41,7 +38,7 @@ class SplashViewModel
         }
 
         private fun handleAutoLogin() =
-            intent {
+            baseIntent {
                 automaticLogin().collect { result ->
                     Logger.d("SplashViewModel handleAutoLogin, result: $result")
 
@@ -56,8 +53,11 @@ class SplashViewModel
                         }
 
                         is DataState.Error -> {
-                            Logger.e("Auto login error, ${result.throwable}")
-                            postSideEffect(SplashSideEffect.AutoLoginFailed)
+                            throw BaseException(
+                                message = result.throwable.message,
+                                code = result.code,
+                                cause = result.throwable,
+                            )
                         }
                     }
                 }

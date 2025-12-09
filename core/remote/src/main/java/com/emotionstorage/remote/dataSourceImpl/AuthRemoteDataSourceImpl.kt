@@ -13,6 +13,7 @@ import com.emotionstorage.remote.request.auth.KakaoLoginRequestBody
 import com.emotionstorage.remote.response.CustomHttpException
 import com.emotionstorage.remote.response.ResponseStatus
 import com.orhanobut.logger.Logger
+import java.io.IOException
 import javax.inject.Inject
 
 class AuthRemoteDataSourceImpl
@@ -25,7 +26,6 @@ class AuthRemoteDataSourceImpl
             idToken: String,
         ): DataState<String> =
             try {
-                // call login api
                 val response =
                     when (provider) {
                         User.AuthProvider.KAKAO -> {
@@ -44,10 +44,16 @@ class AuthRemoteDataSourceImpl
                 response.data?.accessToken?.run {
                     DataState.Success(this)
                 } ?: DataState.Error(Throwable("No access token received"))
+            } catch (e: IOException) {
+                // handle network error
+                Logger.e("Login network exception, $e")
+                DataState.Error(e, ErrorCode.NETWORK_ERROR, data = idToken)
             } catch (e: CustomHttpException) {
+                // handle http response error
                 Logger.e("Login http exception, $e")
                 DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""), data = idToken)
             } catch (e: Exception) {
+                // handle unknown error
                 Logger.e("Login exception, $e")
                 DataState.Error(Throwable("Login api failed", e), data = idToken)
             }

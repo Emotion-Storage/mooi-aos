@@ -2,6 +2,7 @@ package com.emotionstorage.home.ui
 
 import android.Manifest
 import android.os.Build
+import android.view.Gravity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -18,14 +19,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -48,8 +52,10 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
+import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
 fun HomeScreen(
@@ -63,8 +69,11 @@ fun HomeScreen(
     navToChat: (Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
+    val snackbarState = remember { SnackbarHostState() }
 
     LaunchedEffect("init") {
         // load attendance state
@@ -73,8 +82,25 @@ fun HomeScreen(
         // collect side effect
         viewModel.container.sideEffectFlow.collect {
             when (it) {
-                is HomeSideEffect.EnterCharRoomSuccess -> {
+                is HomeSideEffect.TicketNotEnough -> {
+                    // todo: 티켓 개수 부족한 경우 에러 처리
+                    snackbarState.showSnackbar("감정 대화 티켓이 부족해요 😢")
+                }
+
+                is HomeSideEffect.EnterChatRoom -> {
                     navToChat(it.roomId)
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    snackbarState.showSnackbar(context.getString(R.string.toast_network_error))
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    // todo: show session expired modal
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    // todo: show temporal error modal
                 }
             }
         }
@@ -99,6 +125,7 @@ fun HomeScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
         state = state.value,
+        snackbarState = snackbarState,
         onAction = viewModel::onAction,
         navToKey = navToKey,
         navToAlarm = navToAlarm,
@@ -121,6 +148,7 @@ private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
+    snackbarState: SnackbarHostState = SnackbarHostState(),
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
@@ -133,6 +161,9 @@ private fun StatelessHomeScreen(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
+        snackbarHost = {
+            AppSnackbarHost(hostState = snackbarState, gravity = Gravity.TOP)
+        },
     ) { innerPadding ->
         Box(
             modifier =
@@ -157,13 +188,13 @@ private fun StatelessHomeScreen(
                         .zIndex(-9f)
                         .align(Alignment.BottomCenter)
                         .size(245.dp, 198.dp)
-                        .offset(y = -36.dp),
+                        .offset(y = (-36).dp),
                 painter = painterResource(id = R.drawable.graphic_home_mooi),
                 contentDescription = null,
             )
 
             // loading overlay
-            if (state.isNicknameLoading || state.isHomeLoading || state.isEnterChatLoading) {
+            if (state.isLoading) {
                 LoadingOverlay()
             }
 
