@@ -6,7 +6,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -140,7 +139,7 @@ internal sealed class AppDestination {
 internal fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
-    aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel()
+    aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel(),
 ) {
     val introSeen = aiChatIntroViewModel.introSeen.collectAsState()
 

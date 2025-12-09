@@ -6,4 +6,4 @@ class BaseException(
     override val message: String?,
     val code: ErrorCode,
     val throwable: Throwable? = null,
-): Throwable()
+) : Throwable()

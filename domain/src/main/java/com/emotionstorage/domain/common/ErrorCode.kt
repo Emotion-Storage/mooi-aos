@@ -61,10 +61,12 @@ enum class ErrorCode {
     }
 }
 
-fun ErrorCode.isAuthError() = this in listOf<ErrorCode>(
-    ACCESS_TOKEN_EXPIRED,
-    ACCESS_TOKEN_INVALID,
-    REFRESH_TOKEN_EXPIRED,
-    REFRESH_TOKEN_NOT_FOUND,
-    UNAUTHORIZED,
-)
+fun ErrorCode.isAuthError() =
+    this in
+        listOf<ErrorCode>(
+            ACCESS_TOKEN_EXPIRED,
+            ACCESS_TOKEN_INVALID,
+            REFRESH_TOKEN_EXPIRED,
+            REFRESH_TOKEN_NOT_FOUND,
+            UNAUTHORIZED,
+        )
