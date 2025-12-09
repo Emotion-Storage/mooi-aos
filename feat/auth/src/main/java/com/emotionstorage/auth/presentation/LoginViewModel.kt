@@ -67,7 +67,7 @@ class LoginViewModel
                             throw BaseException(
                                 message = throwable.message,
                                 code = code,
-                                throwable = throwable,
+                                cause = throwable,
                             )
                         }
                     },

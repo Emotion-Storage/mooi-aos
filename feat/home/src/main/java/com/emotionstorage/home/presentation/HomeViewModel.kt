@@ -106,7 +106,7 @@ class HomeViewModel
                         }
                         Logger.e("HomeViewModel: init home state error: $throwable")
                         throw BaseException(
-                            throwable = throwable,
+                            cause = throwable,
                             code = code,
                             message = throwable.message ?: "Home init error",
                         )
@@ -129,7 +129,7 @@ class HomeViewModel
                         }
                         Logger.e("HomeViewModel: init nickname error: $throwable")
                         throw BaseException(
-                            throwable = throwable,
+                            cause = throwable,
                             code = code,
                             message = throwable.message ?: "Home nickname init error",
                         )
@@ -152,7 +152,7 @@ class HomeViewModel
                                 postSideEffect(HomeSideEffect.TicketNotEnough)
                             } else {
                                 throw BaseException(
-                                    throwable = throwable,
+                                    cause = throwable,
                                     code = code,
                                     message = throwable.message ?: "Home enter chat error",
                                 )

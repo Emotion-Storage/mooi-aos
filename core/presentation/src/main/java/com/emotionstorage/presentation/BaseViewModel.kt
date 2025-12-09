@@ -51,7 +51,7 @@ open class BaseViewModel<STATE : Any>(
                 if (error is BaseException) {
                     error
                 } else {
-                    BaseException(message = error.message, code = ErrorCode.UNKNOWN, throwable = error)
+                    BaseException(message = error.message, code = ErrorCode.UNKNOWN, cause = error)
                 },
             ) {
                 if (code == ErrorCode.NETWORK_ERROR) {

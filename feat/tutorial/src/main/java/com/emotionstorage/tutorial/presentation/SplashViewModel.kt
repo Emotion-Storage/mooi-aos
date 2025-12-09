@@ -56,7 +56,7 @@ constructor(
                         throw BaseException(
                             message = result.throwable.message,
                             code = result.code,
-                            throwable = result.throwable,
+                            cause = result.throwable,
                         )
                     }
                 }
