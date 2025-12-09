@@ -38,6 +38,8 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
+import com.orhanobut.logger.Logger
+import com.sunjoolee.presentation.BaseSideEffect
 
 @Composable
 fun LoginScreen(
@@ -59,7 +61,13 @@ fun LoginScreen(
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
-                is LoginSideEffect.LoginFailedWithException -> {
+                is BaseSideEffect.NetworkError -> {
+                    Logger.e("Network error side effect")
+                    // todo: add network error toast
+                }
+
+                else -> {
+                    Logger.e("Unknown side effect: $effect")
                     // todo: add error modal
                 }
             }
