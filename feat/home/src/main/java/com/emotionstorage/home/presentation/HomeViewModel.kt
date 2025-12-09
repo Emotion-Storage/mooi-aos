@@ -37,8 +37,6 @@ sealed class HomeAction {
 sealed class HomeSideEffect : BaseSideEffect {
     object TicketNotEnough : HomeSideEffect()
 
-    object EnterChatRoomError : HomeSideEffect()
-
     data class EnterChatRoom(
         val roomId: Long,
     ) : HomeSideEffect()
@@ -143,8 +141,7 @@ constructor(
             if (state.ticketCount <= 0) {
                 postSideEffect(HomeSideEffect.TicketNotEnough)
             } else {
-                collectDataState(
-                    flow = getChatRoomId(),
+                getChatRoomId().handle(
                     onSuccess = {
                         postSideEffect(HomeSideEffect.EnterChatRoom(it))
                     },
@@ -153,7 +150,11 @@ constructor(
                         if (code == ErrorCode.TICKET_NOT_ENOUGH) {
                             postSideEffect(HomeSideEffect.TicketNotEnough)
                         } else {
-                            postSideEffect(HomeSideEffect.EnterChatRoomError)
+                            throw BaseException(
+                                throwable = throwable,
+                                code = code,
+                                message = throwable.message ?: "Home enter chat error",
+                            )
                         }
                     },
                 )

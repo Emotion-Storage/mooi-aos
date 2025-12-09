@@ -10,5 +10,5 @@ class GetChatRoomIdUseCase
     constructor(
         private val chatRepository: ChatRepository,
     ) {
-        suspend operator fun invoke(): Flow<DataState<Long>> = chatRepository.getChatRoomId()
+        suspend operator fun invoke(): DataState<Long> = chatRepository.getChatRoomId()
     }

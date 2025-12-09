@@ -2,6 +2,7 @@ package com.emotionstorage.home.ui
 
 import android.Manifest
 import android.os.Build
+import android.view.Gravity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,6 +52,7 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
 import com.sunjoolee.presentation.BaseSideEffect
@@ -89,16 +91,16 @@ fun HomeScreen(
                     navToChat(it.roomId)
                 }
 
-                is HomeSideEffect.EnterChatRoomError -> {
-                    // todo: show temp error modal
-                }
-
                 is BaseSideEffect.NetworkError -> {
                     snackbarState.showSnackbar(context.getString(R.string.toast_network_error))
                 }
 
-                else -> {
-                // todo: show temp error modal
+                is BaseSideEffect.SessionExpired -> {
+                    // todo: show session expired modal
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    // todo: show temporal error modal
                 }
             }
         }
@@ -123,6 +125,7 @@ fun HomeScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
         state = state.value,
+        snackbarState = snackbarState,
         onAction = viewModel::onAction,
         navToKey = navToKey,
         navToAlarm = navToAlarm,
@@ -145,6 +148,7 @@ private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
+    snackbarState: SnackbarHostState = SnackbarHostState(),
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
@@ -157,6 +161,9 @@ private fun StatelessHomeScreen(
                 .fillMaxSize()
                 .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
+        snackbarHost = {
+            AppSnackbarHost(hostState = snackbarState, gravity = Gravity.TOP)
+        },
     ) { innerPadding ->
         Box(
             modifier =
