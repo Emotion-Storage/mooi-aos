@@ -9,22 +9,6 @@ fun <T, K> DataState<T>.map(convertData: (T) -> K): DataState<K> =
         is DataState.Loading -> DataState.Loading(isLoading, data?.let { convertData(it) })
     }
 
-@Deprecated("use collectDataState instead")
-suspend fun <T> _collectDataState(
-    flow: Flow<DataState<T>>,
-    onSuccess: suspend (data: T) -> Unit,
-    onError: suspend (throwable: Throwable, data: Any?) -> Unit = { _, _ -> },
-    onLoading: suspend (isLoading: Boolean) -> Unit = {},
-) {
-    flow.collect { result ->
-        when (result) {
-            is DataState.Success -> onSuccess(result.data)
-            is DataState.Error -> onError(result.throwable, result.data)
-            is DataState.Loading -> onLoading(result.isLoading)
-        }
-    }
-}
-
 suspend fun <T> collectDataState(
     flow: Flow<DataState<T>>,
     onSuccess: suspend (data: T) -> Unit,

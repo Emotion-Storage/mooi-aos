@@ -1,7 +1,7 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
-import com.emotionstorage.domain.common._collectDataState
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetTimeCapsuleOpenAtUseCase
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
@@ -110,7 +110,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         id: Long,
         isNewTimeCapsule: Boolean,
     ) = intent {
-        _collectDataState(
+        collectDataState(
             flow = getTimeCapsuleById(id),
             onSuccess = {
                 reduce {
@@ -131,7 +131,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                     postSideEffect(ShowToast())
                 }
             },
-            onError = { throwable, _ ->
+            onError = { throwable, code, data ->
                 Logger.e("Error getting time capsule by id, $throwable")
                 // todo: show error modal
                 reduce {

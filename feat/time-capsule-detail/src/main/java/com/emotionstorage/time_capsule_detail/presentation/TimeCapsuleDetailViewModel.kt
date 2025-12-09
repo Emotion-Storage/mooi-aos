@@ -2,7 +2,7 @@ package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.common._collectDataState
+import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
@@ -164,7 +164,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleInit(id: Long) =
         intent {
-            _collectDataState(
+            collectDataState(
                 flow = getTimeCapsuleById(id),
                 onSuccess = {
                     reduce {
@@ -181,7 +181,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         triggerUnlockModal()
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("getTimeCapsuleById error: $throwable")
                     reduce {
                         state.copy(timeCapsule = null, note = "")
@@ -193,7 +193,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleOpenTimeCapsule(id: Long) =
         intent {
-            _collectDataState(
+            collectDataState(
                 flow = openTimeCapsule(id),
                 onSuccess = {
                     Logger.d("openArrivedTimeCapsule success")
@@ -203,7 +203,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("openArrivedTimeCapsule error: $throwable")
                     postSideEffect(TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail)
                 },
@@ -219,7 +219,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
 
             // get required key count
-            _collectDataState(
+            collectDataState(
                 flow = getRequiredKeyCount(state.timeCapsule?.openAt!!.toLocalDate()),
                 onSuccess = { requiredKeyCount ->
                     // get key count
@@ -236,7 +236,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("getRequiredKeyCount error: $throwable")
                     // todo: handle error
                 },
@@ -245,12 +245,12 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleDeleteTimeCapsule(id: Long) =
         intent {
-            _collectDataState(
+            collectDataState(
                 flow = deleteTimeCapsule(id),
                 onSuccess = {
                     postSideEffect(DeleteTimeCapsuleSuccess)
                 },
-                onError = { throwable, _ ->
+                onError = { throwable, code, data ->
                     Logger.e("deleteTimeCapsule error: $throwable")
                 },
             )
@@ -270,7 +270,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         intent {
             if (!state.isNoteChanged) return@intent
 
-            _collectDataState(
+            collectDataState(
                 flow = saveNote(id, state.note),
                 onSuccess = {
                     reduce {
@@ -281,7 +281,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         )
                     }
                 },
-                onError = { throwable, data ->
+                onError = { throwable, code, data ->
                     Logger.e("saveNote error: $throwable")
                 },
             )
