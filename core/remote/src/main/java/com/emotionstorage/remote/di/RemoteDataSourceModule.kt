@@ -1,5 +1,6 @@
 package com.emotionstorage.remote.di
 
+import com.emotionstorage.data.dataSource.remote.AttendanceRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.FcmRemoteDataSource
@@ -10,6 +11,7 @@ import com.emotionstorage.data.dataSource.remote.MyPageRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.NotificationSettingRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
+import com.emotionstorage.remote.dataSourceImpl.AttendanceRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.AuthRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.DailyReportRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.FcmRemoteDataSourceImpl
@@ -72,4 +74,8 @@ abstract class RemoteDataSourceModule {
     abstract fun bindNotificationSettingRemoteDataSource(
         impl: NotificationSettingRemoteDataSourceImpl,
     ): NotificationSettingRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAttendanceRemoteDataSource(impl: AttendanceRemoteDataSourceImpl): AttendanceRemoteDataSource
 }

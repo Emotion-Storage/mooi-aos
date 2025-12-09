@@ -1,38 +1,51 @@
 package com.emotionstorage.data.repoImpl
 
+import com.emotionstorage.data.dataSource.remote.AttendanceRemoteDataSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AttendanceSummary
 import com.emotionstorage.domain.repo.AttendanceRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class AttendanceRepositoryImpl @Inject constructor(
-    // TODO : 테스트를 위한 구현체 주입 (추후 인터페이스 주입으로 변경)
-    // private val local: AttendanceLocalDataSourceImpl,
-    // TODO : api 연동
+    private val remote: AttendanceRemoteDataSource,
 ) : AttendanceRepository {
     override fun getAttendanceSummary(): Flow<DataState<AttendanceSummary>> =
         flow {
-            val today = LocalDate.now()
-//            val lastDate = local.lastClaimDate().first()?.let(LocalDate::parse)
-//            val streak = local.streak().first()
-//
-//            val alreadyClaimedToday = (lastDate == today)
-//            val currentStreak = if (alreadyClaimedToday) streak else streak // 값 그대론데 가독성용
-//
-//            val days = buildDays(currentStreak, alreadyClaimedToday)
-//            val canClaimToday = !alreadyClaimedToday
-//
-//            emit(DataState.Success(AttendanceSummary(days = days, canClaimToday = canClaimToday)))
+            try {
+                val entity = remote.getAttendanceStatus()
+                val streak = entity.streak.toInt()
+                val alreadyClaimedToday = entity.isAttendedToday
+
+                val days = buildDays(streak, alreadyClaimedToday)
+                val canClaimToday = !alreadyClaimedToday
+
+                emit(DataState.Success(AttendanceSummary(days, canClaimToday)))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            }
         }
 
     override fun claimAttendance(): Flow<DataState<AttendanceSummary>> =
         flow {
-            val today = LocalDate.now()
-//            local.saveClaimToday(today)
-//            emitAll(getAttendanceSummary())
+            try {
+                val today = LocalDate.now()
+                val rewardDate = today.format(DateTimeFormatter.ISO_DATE)
+
+                val entity = remote.requestAttendance(rewardDate)
+                val streak = entity.streak.toInt()
+                val alreadyClaimedToday = entity.isAttendedToday
+
+                val days = buildDays(streak, alreadyClaimedToday)
+                val canClaimToday = !alreadyClaimedToday
+
+                emit(DataState.Success(AttendanceSummary(days, canClaimToday)))
+            } catch (e: Exception) {
+                emit(DataState.Error(e))
+            }
         }
 
     private fun buildDays(
