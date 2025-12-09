@@ -106,7 +106,7 @@ private fun StatelessAIChatDescriptionScreen(
             modifier =
                 modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .imePadding(),
         ) {

@@ -107,7 +107,7 @@ private fun StatelessOnBoardingNavHost(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
     ) {
         OnBoardingRoute.entries.forEach { destination ->
             composable(destination.route) {

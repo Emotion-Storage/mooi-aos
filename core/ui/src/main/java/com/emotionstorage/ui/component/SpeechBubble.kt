@@ -229,7 +229,7 @@ fun SpeechBubble(
 fun SpeechBubblePreview() {
     MooiTheme {
         Column(
-            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

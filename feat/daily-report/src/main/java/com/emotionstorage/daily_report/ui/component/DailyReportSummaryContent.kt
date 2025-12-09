@@ -34,7 +34,7 @@ fun DailyReportSummaries(
         Text(
             text = "오늘 있었던 일은...",
             style = MooiTheme.typography.body2,
-            color = MooiTheme.colorScheme.primary,
+            color = MooiTheme.colorScheme.primaryBlue500,
         )
 
         Column(
@@ -80,7 +80,7 @@ private fun DailyReportSummariesPreview() {
             modifier =
                 Modifier
                     .padding(20.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         )
         DailyReportSummaries(
             summaries =

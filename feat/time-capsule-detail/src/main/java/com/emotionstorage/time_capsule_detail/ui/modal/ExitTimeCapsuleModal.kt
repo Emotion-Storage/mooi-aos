@@ -51,7 +51,7 @@ fun ExitTimeCapsuleModal(
                         append("감정은 임시 저장되며\n")
                         withStyle(
                             SpanStyle(
-                                color = MooiTheme.colorScheme.primary,
+                                color = MooiTheme.colorScheme.primaryBlue500,
                             ),
                         ) {
                             append("24시간 후 자동 삭제")

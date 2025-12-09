@@ -106,7 +106,7 @@ fun TimeCapsuleBottomSheet(
                 item {
                     CircularProgressIndicator(
                         modifier = Modifier.padding(vertical = 20.dp),
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                     )
                 }
             }
@@ -175,7 +175,7 @@ private fun DailyReportButtonPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(10.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
@@ -202,7 +202,7 @@ private fun TimeCapsuleCalendarBottomSheetPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             TimeCapsuleBottomSheet(
                 // open sheet state for preview

@@ -18,8 +18,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.util.LinearGradient
 
+private val colorScheme = MooiColorScheme()
+
 @Immutable
 data class MooiBrushScheme(
+    val gra1: Brush =
+        LinearGradient(
+            colors =
+                listOf(
+                    colorScheme.primaryBlue500,
+                    colorScheme.secondaryBlue700,
+                ),
+        ),
+    val gra2: Brush =
+        LinearGradient(
+            colors =
+                listOf(
+                    colorScheme.secondaryBlue700.copy(0.5f),
+                    colorScheme.secondaryBlue700.copy(0.08f),
+                ),
+        ),
+    val gra3: Brush =
+        LinearGradient(
+            colors =
+                listOf(
+                    colorScheme.secondaryBlue700.copy(0.1f),
+                    colorScheme.backgroundTintedBlue.copy(0.05f),
+                ),
+        ),
     val mainButtonBackground: Brush =
         LinearGradient(
             colors =
@@ -89,13 +115,60 @@ data class MooiBrushScheme(
 
 @Preview(showBackground = true)
 @Composable
+private fun GraBrushPreview() {
+    MooiTheme {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .background(MooiTheme.colorScheme.backgroundDefault)
+                    .padding(50.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(
+                            MooiTheme.brushScheme.gra1,
+                            RoundedCornerShape(10.dp),
+                        ),
+            )
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .background(
+                            MooiTheme.brushScheme.gra2,
+                            RoundedCornerShape(10.dp),
+                        ),
+            )
+            Box(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .border(
+                            width = 1.dp,
+                            brush = MooiTheme.brushScheme.gra3,
+                            shape = RoundedCornerShape(10.dp),
+                        ),
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
 private fun BrushPreview() {
     MooiTheme {
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(50.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {

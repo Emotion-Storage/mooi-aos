@@ -110,7 +110,7 @@ private fun LockedOverLay(
                     modifier = Modifier.align(Alignment.Center),
                     text = "(D-${openDDay.absoluteValue})",
                     style = MooiTheme.typography.caption1,
-                    color = MooiTheme.colorScheme.secondary,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
                     textAlign = TextAlign.Center,
                 )
             }

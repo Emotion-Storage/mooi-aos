@@ -142,14 +142,14 @@ private fun StatelessMyPageScreen(
             modifier
                 .fillMaxSize()
                 .padding(top = 16.dp)
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
     ) { innerPadding ->
         Column(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(start = 16.dp, end = 16.dp, top = 35.dp)
                     .consumeWindowInsets(WindowInsets.navigationBars),

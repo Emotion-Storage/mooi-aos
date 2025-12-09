@@ -72,7 +72,7 @@ fun TimeCapsuleUnlockModal(
                             append("이 타임캡슐을 미리 열려면\n")
                             withStyle(
                                 SpanStyle(
-                                    color = MooiTheme.colorScheme.primary,
+                                    color = MooiTheme.colorScheme.primaryBlue500,
                                 ),
                             ) {
                                 append("열쇠 ${requiredKeyCount}개")

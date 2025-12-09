@@ -107,7 +107,7 @@ fun StatelessWithDrawNoticeScreen(
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         topBar = {
             TopAppBar(
                 showBackButton = true,
@@ -144,7 +144,7 @@ fun StatelessWithDrawNoticeScreen(
         Box(
             Modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .padding(innerPadding),
         ) {
             WithDrawNoticeContent(

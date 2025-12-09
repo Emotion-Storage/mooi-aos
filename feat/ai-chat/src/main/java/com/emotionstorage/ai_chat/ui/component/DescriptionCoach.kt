@@ -74,7 +74,7 @@ fun DescriptionCoach(
                     modifier = Modifier.size(16.dp),
                     painter = painterResource(R.drawable.ic_checkbox_on),
                     contentDescription = "체크상태",
-                    tint = MooiTheme.colorScheme.primary,
+                    tint = MooiTheme.colorScheme.primaryBlue500,
                 )
             } else {
                 Icon(

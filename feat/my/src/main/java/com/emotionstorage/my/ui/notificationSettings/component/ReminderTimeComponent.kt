@@ -51,7 +51,7 @@ fun ReminderTimeComponent(
         Text(
             text = time.formatKoreanAmPm(),
             style = MooiTheme.typography.caption3,
-            color = MooiTheme.colorScheme.primary,
+            color = MooiTheme.colorScheme.primaryBlue500,
         )
 
         Spacer(modifier = Modifier.size(16.dp))

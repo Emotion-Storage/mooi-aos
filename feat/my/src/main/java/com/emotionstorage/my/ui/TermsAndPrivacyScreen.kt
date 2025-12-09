@@ -36,7 +36,7 @@ fun TermsAndPrivacyScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         topBar = {
             TopAppBar(
                 title = "이용 약관 및 개인정보처리방침",
@@ -50,12 +50,12 @@ fun TermsAndPrivacyScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                containerColor = MooiTheme.colorScheme.background,
+                containerColor = MooiTheme.colorScheme.backgroundDefault,
                 divider = {
                     HorizontalDivider(
                         color = MooiTheme.colorScheme.gray800,
@@ -65,7 +65,7 @@ fun TermsAndPrivacyScreen(
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         modifier = Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         height = 2.dp,
                     )
                 },
@@ -82,7 +82,7 @@ fun TermsAndPrivacyScreen(
                                     if (selectedTabIndex ==
                                         index
                                     ) {
-                                        MooiTheme.colorScheme.primary
+                                        MooiTheme.colorScheme.primaryBlue500
                                     } else {
                                         MooiTheme.colorScheme.gray800
                                     },

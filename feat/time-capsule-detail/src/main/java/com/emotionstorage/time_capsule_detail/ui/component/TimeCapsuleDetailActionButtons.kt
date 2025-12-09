@@ -101,7 +101,7 @@ private fun SaveTimeCapsuleButton(
                     contentText = "이 캡슐을 보관할 수 있는 시간이\n$timerString 남았어요!",
                     tail = BubbleTail.BottomCenter,
                     sizeParam = DpSize(265.dp, 84.dp),
-                    textColor = MooiTheme.colorScheme.errorRed,
+                    textColor = MooiTheme.colorScheme.error,
                 )
             }
         }
@@ -169,7 +169,7 @@ private fun TimeCapsuleDetailActionButtonsPreview() {
         Column(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(16.dp),
         ) {
             TimeCapsuleDetailActionButtons(

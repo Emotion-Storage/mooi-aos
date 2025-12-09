@@ -131,14 +131,14 @@ private fun StatelessHomeScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
     ) { innerPadding ->
         Box(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
             // bg & character graphic
@@ -242,7 +242,7 @@ private fun StatelessHomeScreen(
                     text =
                         buildAnnotatedString {
                             append("${state.nickname}님,\n")
-                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primary)) {
+                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
                                 append("오늘의 기분")
                             }
                             append("은 어떤가요?")
@@ -283,17 +283,17 @@ private fun StatelessHomeScreen(
                             modifier = Modifier.size(18.dp),
                             painter = painterResource(id = R.drawable.ic_ticket),
                             contentDescription = "ticket",
-                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondary),
+                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondaryBlue700),
                         )
                         Text(
                             text = "감정 대화 티켓",
                             style = MooiTheme.typography.body7,
-                            color = MooiTheme.colorScheme.secondary,
+                            color = MooiTheme.colorScheme.secondaryBlue700,
                         )
                         Text(
                             text = "${state.ticketCount}/${state.ticketLimit}",
                             style = MooiTheme.typography.body7,
-                            color = MooiTheme.colorScheme.secondary,
+                            color = MooiTheme.colorScheme.secondaryBlue700,
                         )
                     }
                 }

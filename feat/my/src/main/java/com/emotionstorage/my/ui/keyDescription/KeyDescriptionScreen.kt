@@ -1,7 +1,6 @@
 package com.emotionstorage.my.ui.keyDescription
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -72,7 +71,7 @@ fun StatelessKeyDescriptionScreen(
                 onBackClick = navToBack,
             )
         },
-        containerColor = MooiTheme.colorScheme.background,
+        containerColor = MooiTheme.colorScheme.backgroundDefault,
     ) { innerPadding ->
         Box(
             modifier =
@@ -89,7 +88,7 @@ fun StatelessKeyDescriptionScreen(
                     modifier = Modifier.padding(top = 24.dp),
                     text = "차곡차곡 모은 열쇠로\n타입캡슐을 미리 열어보세요!",
                     style = MooiTheme.typography.head2,
-                    color = MooiTheme.colorScheme.primary,
+                    color = MooiTheme.colorScheme.primaryBlue500,
                     textAlign = TextAlign.Center,
                 )
 
@@ -110,8 +109,15 @@ fun StatelessKeyDescriptionScreen(
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
                 )
-                Spacer(modifier = Modifier.padding(58.dp))
+            }
 
+            Column(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 48.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
                 Text(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "현재 보유한 열쇠",
@@ -124,14 +130,7 @@ fun StatelessKeyDescriptionScreen(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     count = state.keyCount,
                 )
-            }
-
-            Box(
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 48.dp),
-            ) {
+                Spacer(modifier = Modifier.padding(93.dp))
                 Row(
                     modifier =
                         Modifier.clickable {

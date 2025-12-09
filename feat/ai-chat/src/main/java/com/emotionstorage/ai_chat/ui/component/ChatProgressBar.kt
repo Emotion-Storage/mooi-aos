@@ -42,7 +42,7 @@ fun ChatProgressBar(
                     .fillMaxWidth(animatedProgress.value)
                     .fillMaxHeight()
                     .background(
-                        MooiTheme.colorScheme.secondary,
+                        MooiTheme.colorScheme.secondaryBlue700,
                     ),
         )
     }

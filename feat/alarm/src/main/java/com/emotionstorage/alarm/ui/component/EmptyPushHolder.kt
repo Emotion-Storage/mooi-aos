@@ -16,7 +16,7 @@ fun EmptyPushHolder() {
         modifier =
             Modifier
                 .fillMaxSize()
-                .background(color = MooiTheme.colorScheme.background),
+                .background(color = MooiTheme.colorScheme.backgroundDefault),
         contentAlignment = Alignment.Center,
     ) {
         Text(

@@ -124,7 +124,7 @@ private fun CalendarYearMonthIndicatorPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {

@@ -51,7 +51,7 @@ fun CalendarDates(
 private fun CalendarDatesPreview() {
     MooiTheme {
         CalendarDates(
-            modifier = Modifier.background(MooiTheme.colorScheme.background),
+            modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault),
             calendarYearMonth = YearMonth.now(),
         )
     }

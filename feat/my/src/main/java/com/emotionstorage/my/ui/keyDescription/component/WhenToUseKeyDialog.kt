@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -46,21 +45,17 @@ fun WhenToUseKeyDialog(
             shape = RoundedCornerShape(10.dp),
             tonalElevation = 6.dp,
             shadowElevation = 12.dp,
-            color = MooiTheme.colorScheme.background,
-            modifier =
-                modifier
-                    .widthIn(328.dp)
-                    .heightIn(451.dp),
+            color = MooiTheme.colorScheme.backgroundDefault,
+            modifier = Modifier.width(321.dp),
         ) {
             Box(
-                modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.TopCenter,
             ) {
                 Column(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(top = 17.dp, start = 20.dp, end = 20.dp),
+                            .padding(top = 17.dp, start = 25.dp, end = 25.dp, bottom = 35.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Box(
@@ -72,7 +67,7 @@ fun WhenToUseKeyDialog(
                         Icon(
                             painter = painterResource(R.drawable.ic_key),
                             contentDescription = "열쇠",
-                            tint = MooiTheme.colorScheme.primary,
+                            tint = MooiTheme.colorScheme.primaryBlue500,
                             modifier =
                                 Modifier
                                     .size(24.dp)
@@ -86,6 +81,7 @@ fun WhenToUseKeyDialog(
                                     .offset(18.dp, 0.dp),
                         ) {
                             Icon(
+                                modifier = Modifier.size(16.dp),
                                 painter = painterResource(R.drawable.ic_close),
                                 contentDescription = "닫기",
                                 tint = Color.White,
@@ -96,10 +92,9 @@ fun WhenToUseKeyDialog(
                     Spacer(modifier = Modifier.size(5.dp))
 
                     Text(
-                        modifier = Modifier.fillMaxWidth(),
                         text = "열쇠는 이럴 때 쓰면 좋아요!",
                         style = MooiTheme.typography.head2.copy(lineHeight = 30.sp),
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         textAlign = TextAlign.Center,
                     )
 

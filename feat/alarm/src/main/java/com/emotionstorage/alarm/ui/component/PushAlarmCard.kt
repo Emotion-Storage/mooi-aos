@@ -42,7 +42,7 @@ fun PushAlarmCard(
                 .heightIn(84.dp)
                 .clip(RoundedCornerShape(15.dp)),
         shape = RoundedCornerShape(15.dp),
-        colors = CardDefaults.cardColors(MooiTheme.colorScheme.secondary.copy(alpha = 0.1f)),
+        colors = CardDefaults.cardColors(MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.1f)),
     ) {
         Row(
             modifier =

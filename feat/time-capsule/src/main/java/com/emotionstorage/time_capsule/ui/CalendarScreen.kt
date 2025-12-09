@@ -192,7 +192,7 @@ private fun StatelessCalendarScreen(
         modifier =
             modifier
                 .fillMaxSize()
-                .background(MooiTheme.colorScheme.background),
+                .background(MooiTheme.colorScheme.backgroundDefault),
         snackbarHost = {
             AppSnackbarHost(
                 hostState = snackState,
@@ -205,7 +205,7 @@ private fun StatelessCalendarScreen(
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding)
                     .padding(horizontal = 16.dp),
         ) {
@@ -225,7 +225,7 @@ private fun StatelessCalendarScreen(
                             buildAnnotatedString {
                                 withStyle(
                                     SpanStyle(
-                                        color = MooiTheme.colorScheme.primary,
+                                        color = MooiTheme.colorScheme.primaryBlue500,
                                     ),
                                 ) {
                                     append("${state.calendarYearMonth.monthValue}월")
@@ -371,7 +371,7 @@ private fun CalendarNavButton(
                         .align(Alignment.TopEnd)
                         .size(20.dp)
                         .offset(x = 7.dp, y = -7.dp)
-                        .background(MooiTheme.colorScheme.secondary, CircleShape),
+                        .background(MooiTheme.colorScheme.secondaryBlue700, CircleShape),
             ) {
                 Text(
                     modifier = Modifier.align(Alignment.Center),

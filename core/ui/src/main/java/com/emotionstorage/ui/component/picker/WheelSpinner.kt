@@ -112,7 +112,7 @@ private fun WheelSpinnerContent(
                         .align(Alignment.Center)
                         .height(38.dp)
                         .fillMaxWidth()
-                        .background(MooiTheme.colorScheme.dropBox, RoundedCornerShape(15.dp)),
+                        .background(MooiTheme.colorScheme.backgroundElevated, RoundedCornerShape(15.dp)),
             )
         }
 
@@ -168,7 +168,7 @@ private fun PreviewWheelSpinner() {
         Box(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(10.dp),
         ) {
             WheelSpinner(

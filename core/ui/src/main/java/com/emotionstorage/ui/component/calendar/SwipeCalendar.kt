@@ -144,7 +144,7 @@ private fun SwipeCalendarPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .padding(horizontal = 16.dp, vertical = 30.dp),
         ) {
             SwipeCalendar(

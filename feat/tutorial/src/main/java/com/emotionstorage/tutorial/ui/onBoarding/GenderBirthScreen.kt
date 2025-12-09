@@ -89,7 +89,7 @@ private fun StatelessGenderBirthScreen(
     Scaffold(
         modifier =
             modifier
-                .background(MooiTheme.colorScheme.background)
+                .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
@@ -102,7 +102,7 @@ private fun StatelessGenderBirthScreen(
         Column(
             modifier =
                 Modifier
-                    .background(MooiTheme.colorScheme.background)
+                    .background(MooiTheme.colorScheme.backgroundDefault)
                     .fillMaxSize()
                     .padding(padding)
                     .imePadding(),
@@ -225,7 +225,7 @@ private fun GenderInput(
                 ) {
                     Text(
                         style = MooiTheme.typography.body8,
-                        color = if (isSelected) MooiTheme.colorScheme.primary else Color.White,
+                        color = if (isSelected) MooiTheme.colorScheme.primaryBlue500 else Color.White,
                         text =
                             when (it) {
                                 GENDER.MALE -> stringResource(tutorialR.string.on_boarding_p1_gender_male)

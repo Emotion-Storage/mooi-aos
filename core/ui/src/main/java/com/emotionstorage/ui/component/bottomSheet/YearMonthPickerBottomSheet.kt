@@ -70,7 +70,7 @@ private fun YearMonthPickerBottomSheetPreview() {
             modifier =
                 Modifier
                     .fillMaxSize()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             YearMonthPickerBottomSheet(
                 // open sheet state for preview

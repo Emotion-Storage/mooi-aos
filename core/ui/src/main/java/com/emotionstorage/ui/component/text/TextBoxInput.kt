@@ -38,7 +38,7 @@ fun TextBoxInput(
         modifier =
             modifier
                 .fillMaxWidth()
-                .background(MooiTheme.colorScheme.background, RoundedCornerShape(15.dp))
+                .background(MooiTheme.colorScheme.backgroundDefault, RoundedCornerShape(15.dp))
                 .background(Color(0xFF0E0C12).copy(alpha = 0.5f), RoundedCornerShape(15.dp))
                 .padding(18.dp),
         textStyle =
@@ -47,7 +47,7 @@ fun TextBoxInput(
             ),
         value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
         onValueChange = onValueChange,
-        cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
+        cursorBrush = SolidColor(MooiTheme.colorScheme.primaryBlue500),
     ) {
         Column(
             modifier =
@@ -77,8 +77,22 @@ fun TextBoxInput(
                 ) {
                     Text(
                         style = MooiTheme.typography.caption3,
-                        color = if (value.length == 0) MooiTheme.colorScheme.gray300 else MooiTheme.colorScheme.primary,
-                        text = if (value.length > maxCharCount) maxCharCount.toString() else value.length.toString(),
+                        color =
+                            if (value.length ==
+                                0
+                            ) {
+                                MooiTheme.colorScheme.gray300
+                            } else {
+                                MooiTheme.colorScheme.primaryBlue500
+                            },
+                        text =
+                            if (value.length >
+                                maxCharCount
+                            ) {
+                                maxCharCount.toString()
+                            } else {
+                                value.length.toString()
+                            },
                     )
                     Text(
                         style = MooiTheme.typography.caption3,

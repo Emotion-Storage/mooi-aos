@@ -39,7 +39,7 @@ fun TimeCapsuleEmotionComments(
             text = "내가 느낀 감정은\n아래와 같이 분석할 수 있어요.",
             style = MooiTheme.typography.body1,
             textAlign = TextAlign.Center,
-            color = MooiTheme.colorScheme.primary,
+            color = MooiTheme.colorScheme.primaryBlue500,
         )
         Emotions(emotions = emotions)
         Comments(comments = comments)
@@ -89,7 +89,7 @@ private fun Emotions(
                         Text(
                             text = emotion.label,
                             style = MooiTheme.typography.body8,
-                            color = MooiTheme.colorScheme.primary,
+                            color = MooiTheme.colorScheme.primaryBlue500,
                         )
                     }
                     Text(
@@ -130,7 +130,7 @@ private fun EmotionsPreview() {
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {

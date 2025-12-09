@@ -44,7 +44,7 @@ fun BottomAppNavBar(
             modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp, 10.dp, 0.dp, 0.dp)),
-        containerColor = MooiTheme.colorScheme.bottomBarBackground,
+        containerColor = MooiTheme.colorScheme.backgroundElevated,
         contentColor = Color.White,
         contentPadding = PaddingValues(horizontal = 44.dp, vertical = 8.dp),
     ) {

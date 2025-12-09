@@ -50,7 +50,7 @@ fun DailyReportEmotionScores(
                     Text(
                         text = score.toString(),
                         style = MooiTheme.typography.body5,
-                        color = MooiTheme.colorScheme.secondary,
+                        color = MooiTheme.colorScheme.secondaryBlue700,
                     )
                 }
                 ScoreSteps(
@@ -85,7 +85,7 @@ private fun ScoreSteps(
                         .height(12.dp)
                         .background(
                             if (score > 0 && score > it * 20) {
-                                MooiTheme.colorScheme.secondary
+                                MooiTheme.colorScheme.secondaryBlue700
                             } else {
                                 MooiTheme.colorScheme.gray300
                             },
@@ -109,7 +109,7 @@ private fun ScoreStepsPreview() {
             modifier =
                 Modifier
                     .padding(20.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             ScoreSteps(score = 0)
@@ -134,7 +134,7 @@ private fun DailyReportEmotionScoresPreview() {
             modifier =
                 Modifier
                     .padding(20.dp)
-                    .background(MooiTheme.colorScheme.background),
+                    .background(MooiTheme.colorScheme.backgroundDefault),
         ) {
             DailyReportEmotionScores(
                 scores =

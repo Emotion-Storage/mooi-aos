@@ -54,7 +54,7 @@ fun TextInput(
     placeHolder: String = "",
     state: TextInputState = TextInputState.Empty(),
 ) {
-    Column(modifier = modifier.background(MooiTheme.colorScheme.background)) {
+    Column(modifier = modifier.background(MooiTheme.colorScheme.backgroundDefault)) {
         Box(modifier = Modifier.fillMaxWidth()) {
             if (!label.isNullOrEmpty()) {
                 Text(
@@ -76,7 +76,7 @@ fun TextInput(
                 ) {
                     Text(
                         style = MooiTheme.typography.body6,
-                        color = MooiTheme.colorScheme.primary,
+                        color = MooiTheme.colorScheme.primaryBlue500,
                         text = if (value.length > maxCharCount) maxCharCount.toString() else value.length.toString(),
                     )
                     Text(
@@ -96,7 +96,7 @@ fun TextInput(
             textStyle = MooiTheme.typography.body7.copy(color = Color.White),
             value = if (value.length > maxCharCount) value.substring(0, maxCharCount) else value,
             onValueChange = onValueChange,
-            cursorBrush = SolidColor(MooiTheme.colorScheme.primary),
+            cursorBrush = SolidColor(MooiTheme.colorScheme.primaryBlue500),
             maxLines = 1,
         ) {
             Column(
@@ -121,8 +121,8 @@ fun TextInput(
                             .background(
                                 when (state) {
                                     is TextInputState.Empty -> MooiTheme.colorScheme.gray600
-                                    is TextInputState.Error -> MooiTheme.colorScheme.errorRed
-                                    is TextInputState.Success -> MooiTheme.colorScheme.primary
+                                    is TextInputState.Error -> MooiTheme.colorScheme.error
+                                    is TextInputState.Success -> MooiTheme.colorScheme.primaryBlue500
                                 },
                             ),
                 )
@@ -164,7 +164,7 @@ private fun TextInputMessage(
             colorFilter =
                 when (state) {
                     is TextInputState.Empty -> null
-                    is TextInputState.Error -> ColorFilter.tint(MooiTheme.colorScheme.errorRed)
+                    is TextInputState.Error -> ColorFilter.tint(MooiTheme.colorScheme.error)
                     is TextInputState.Success -> null
                 },
             contentDescription = null,
@@ -173,9 +173,9 @@ private fun TextInputMessage(
             style = MooiTheme.typography.caption6,
             color =
                 if (state is TextInputState.Error) {
-                    MooiTheme.colorScheme.errorRed
+                    MooiTheme.colorScheme.error
                 } else {
-                    MooiTheme.colorScheme.primary
+                    MooiTheme.colorScheme.primaryBlue500
                 },
             text = state.message,
         )

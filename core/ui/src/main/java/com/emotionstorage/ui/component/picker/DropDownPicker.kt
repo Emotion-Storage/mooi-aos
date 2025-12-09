@@ -141,7 +141,7 @@ private fun DropDownPickerPreview() {
     val (pickerValue, setPickerValue) = remember { mutableStateOf<String>(options[0]) }
 
     MooiTheme {
-        Column(modifier = Modifier.background(MooiTheme.colorScheme.background)) {
+        Column(modifier = Modifier.background(MooiTheme.colorScheme.backgroundDefault)) {
             DropDownPicker(
                 modifier = Modifier.width(102.dp),
                 selectedValue = pickerValue,
