@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.isAuthError
-import com.orhanobut.logger.Logger
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus

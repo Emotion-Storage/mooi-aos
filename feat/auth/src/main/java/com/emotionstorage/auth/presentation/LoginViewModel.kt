@@ -30,51 +30,52 @@ sealed class LoginSideEffect : BaseSideEffect {
 
 @HiltViewModel
 class LoginViewModel
-@Inject
-constructor(
-    private val login: LoginUseCase,
-) : BaseViewModel<LoginState>(
-    LoginState(),
-) {
-    fun onAction(action: LoginAction) {
-        when (action) {
-            is LoginAction.Login -> {
-                handleLogin(action.provider)
+    @Inject
+    constructor(
+        private val login: LoginUseCase,
+    ) : BaseViewModel<LoginState>(
+            LoginState(),
+        ) {
+        fun onAction(action: LoginAction) {
+            when (action) {
+                is LoginAction.Login -> {
+                    handleLogin(action.provider)
+                }
             }
         }
-    }
 
-    private fun handleLogin(provider: User.AuthProvider) =
-        baseIntent {
-            reduce {
-                state.copy(isLoading = true)
+        private fun handleLogin(provider: User.AuthProvider) =
+            baseIntent {
+                reduce {
+                    state.copy(isLoading = true)
+                }
+                login(provider).handle(
+                    onSuccess = {
+                        reduce {
+                            state.copy(isLoading = false)
+                        }
+                        postSideEffect(LoginSideEffect.LoginSuccess)
+                    },
+                    onError = { throwable, code, data ->
+                        reduce {
+                            state.copy(isLoading = false)
+                        }
+                        if (code == ErrorCode.NEED_SIGN_UP) {
+                            val idToken =
+                                (data as? String) ?: throw BaseException(
+                                    message = "idToken is null or not a String",
+                                    code = ErrorCode.UNKNOWN,
+                                    cause = IllegalStateException(),
+                                )
+                            postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
+                        } else {
+                            throw BaseException(
+                                message = throwable.message,
+                                code = code,
+                                cause = throwable,
+                            )
+                        }
+                    },
+                )
             }
-            login(provider).handle(
-                onSuccess = {
-                    reduce {
-                        state.copy(isLoading = false)
-                    }
-                    postSideEffect(LoginSideEffect.LoginSuccess)
-                },
-                onError = { throwable, code, data ->
-                    reduce {
-                        state.copy(isLoading = false)
-                    }
-                    if (code == ErrorCode.NEED_SIGN_UP) {
-                        val idToken = (data as? String) ?: throw BaseException(
-                            message = "idToken is null or not a String",
-                            code = ErrorCode.UNKNOWN,
-                            cause = IllegalStateException()
-                        )
-                        postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
-                    } else {
-                        throw BaseException(
-                            message = throwable.message,
-                            code = code,
-                            cause = throwable,
-                        )
-                    }
-                },
-            )
-        }
-}
+    }

@@ -22,44 +22,44 @@ sealed class SplashSideEffect : BaseSideEffect {
 
 @HiltViewModel
 class SplashViewModel
-@Inject
-constructor(
-    private val automaticLogin: AutomaticLoginUseCase,
-) : BaseViewModel<Unit>(
-    initialState = Unit,
-) {
-    suspend fun onAction(action: SplashAction) {
-        when (action) {
-            SplashAction.Init -> {
-                delay(SPLASH_DURATION)
-                handleAutoLogin()
-            }
-        }
-    }
-
-    private fun handleAutoLogin() =
-        baseIntent {
-            automaticLogin().collect { result ->
-                Logger.d("SplashViewModel handleAutoLogin, result: $result")
-
-                when (result) {
-                    is DataState.Loading -> {
-                        // do nothing
-                    }
-
-                    is DataState.Success -> {
-                        Logger.i("Auto login success")
-                        postSideEffect(SplashSideEffect.AutoLoginSuccess)
-                    }
-
-                    is DataState.Error -> {
-                        throw BaseException(
-                            message = result.throwable.message,
-                            code = result.code,
-                            cause = result.throwable,
-                        )
-                    }
+    @Inject
+    constructor(
+        private val automaticLogin: AutomaticLoginUseCase,
+    ) : BaseViewModel<Unit>(
+            initialState = Unit,
+        ) {
+        suspend fun onAction(action: SplashAction) {
+            when (action) {
+                SplashAction.Init -> {
+                    delay(SPLASH_DURATION)
+                    handleAutoLogin()
                 }
             }
         }
-}
+
+        private fun handleAutoLogin() =
+            baseIntent {
+                automaticLogin().collect { result ->
+                    Logger.d("SplashViewModel handleAutoLogin, result: $result")
+
+                    when (result) {
+                        is DataState.Loading -> {
+                            // do nothing
+                        }
+
+                        is DataState.Success -> {
+                            Logger.i("Auto login success")
+                            postSideEffect(SplashSideEffect.AutoLoginSuccess)
+                        }
+
+                        is DataState.Error -> {
+                            throw BaseException(
+                                message = result.throwable.message,
+                                code = result.code,
+                                cause = result.throwable,
+                            )
+                        }
+                    }
+                }
+            }
+    }
