@@ -2,7 +2,7 @@ package com.emotionstorage.time_capsule_detail.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.common._collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
@@ -164,7 +164,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleInit(id: Long) =
         intent {
-            collectDataState(
+            _collectDataState(
                 flow = getTimeCapsuleById(id),
                 onSuccess = {
                     reduce {
@@ -193,7 +193,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleOpenTimeCapsule(id: Long) =
         intent {
-            collectDataState(
+            _collectDataState(
                 flow = openTimeCapsule(id),
                 onSuccess = {
                     Logger.d("openArrivedTimeCapsule success")
@@ -219,7 +219,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
 
             // get required key count
-            collectDataState(
+            _collectDataState(
                 flow = getRequiredKeyCount(state.timeCapsule?.openAt!!.toLocalDate()),
                 onSuccess = { requiredKeyCount ->
                     // get key count
@@ -245,7 +245,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
 
     private fun handleDeleteTimeCapsule(id: Long) =
         intent {
-            collectDataState(
+            _collectDataState(
                 flow = deleteTimeCapsule(id),
                 onSuccess = {
                     postSideEffect(DeleteTimeCapsuleSuccess)
@@ -270,7 +270,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         intent {
             if (!state.isNoteChanged) return@intent
 
-            collectDataState(
+            _collectDataState(
                 flow = saveNote(id, state.note),
                 onSuccess = {
                     reduce {

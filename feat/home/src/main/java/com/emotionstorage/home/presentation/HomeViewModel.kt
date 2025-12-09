@@ -1,21 +1,23 @@
 package com.emotionstorage.home.presentation
 
-import androidx.lifecycle.ViewModel
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.useCase.chat.GetChatRoomIdUseCase
+import com.emotionstorage.domain.common._collectDataState
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
 import com.emotionstorage.domain.useCase.home.GetHomeUseCase
 import com.orhanobut.logger.Logger
+import com.sunjoolee.presentation.BaseException
+import com.sunjoolee.presentation.BaseViewModel
+import com.sunjoolee.presentation.BaseSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.ContainerHost
+import kotlinx.coroutines.joinAll
+import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.annotation.OrbitExperimental
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class HomeState(
-    val isNicknameLoading: Boolean = false,
-    val isHomeLoading: Boolean = false,
-    val isEnterChatLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val nickname: String = "",
     val keyCount: Int? = null,
     val ticketCount: Int = 0,
@@ -32,8 +34,12 @@ sealed class HomeAction {
     object EnterChat : HomeAction()
 }
 
-sealed class HomeSideEffect {
-    data class EnterCharRoomSuccess(
+sealed class HomeSideEffect : BaseSideEffect {
+    object TicketNotEnough : HomeSideEffect()
+
+    object EnterChatRoomError : HomeSideEffect()
+
+    data class EnterChatRoom(
         val roomId: Long,
     ) : HomeSideEffect()
 }
@@ -41,98 +47,116 @@ sealed class HomeSideEffect {
 @OptIn(OrbitExperimental::class)
 @HiltViewModel
 class HomeViewModel
-    @Inject
-    constructor(
-        private val getUserNickname: GetUserNicknameUseCase,
-        private val getHome: GetHomeUseCase,
-        private val getChatRoomId: GetChatRoomIdUseCase,
-    ) : ViewModel(),
-        ContainerHost<HomeState, HomeSideEffect> {
-        override val container = container<HomeState, HomeSideEffect>(HomeState())
+@Inject
+constructor(
+    private val getUserNickname: GetUserNicknameUseCase,
+    private val getHome: GetHomeUseCase,
+    private val getChatRoomId: GetChatRoomIdUseCase,
+) : BaseViewModel<HomeState>(
+    HomeState()
+) {
+    fun onAction(action: HomeAction) {
+        when (action) {
+            is HomeAction.Initiate -> {
+                handleInitiate()
+            }
 
-        fun onAction(action: HomeAction) {
-            when (action) {
-                is HomeAction.Initiate -> {
-                    handleInitiate()
-                }
+            is HomeAction.EnterChat -> {
+                handleEnterChat()
+            }
+        }
+    }
 
-                is HomeAction.EnterChat -> {
-                    handleEnterChat()
-                }
+    private fun handleInitiate() =
+        baseIntent {
+            reduce {
+                state.copy(isLoading = true)
+            }
+            val job1 = baseViewModelScope.launch {
+                initNickname()
+            }
+            val job2 = baseViewModelScope.launch {
+                initHomeState()
+            }
+            joinAll(job1, job2)
+            reduce {
+                state.copy(isLoading = false)
             }
         }
 
-        private fun handleInitiate() =
-            intent {
-                initNickname()
-                initHomeState()
-            }
+    private suspend fun initHomeState() =
+        subIntent {
+            collectDataState(
+                flow = getHome(),
+                onSuccess = {
+                    reduce {
+                        state.copy(
+                            keyCount = it.keyCount,
+                            ticketCount = it.ticketCount,
+                            ticketLimit = it.ticketLimit,
+                            newNotificationArrived = it.hasNewNotification,
+                            newTimeCapsuleArrived = it.hasNewTimeCapsule,
+                            newReportArrived = it.hasNewReport,
+                            newReportId = it.newReportId,
+                        )
+                    }
+                },
+                onError = { throwable, code, data ->
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    Logger.e("HomeViewModel: init home state error: $throwable")
+                    throw BaseException(
+                        throwable = throwable,
+                        code = code,
+                        message = throwable.message ?: "Home init error",
+                    )
+                },
+            )
+        }
 
-        private suspend fun initHomeState() =
-            subIntent {
-                collectDataState(
-                    flow = getHome(),
-                    onLoading = {
-                        reduce {
-                            state.copy(isHomeLoading = it)
-                        }
-                    },
-                    onSuccess = {
-                        reduce {
-                            state.copy(
-                                keyCount = it.keyCount,
-                                ticketCount = it.ticketCount,
-                                ticketLimit = it.ticketLimit,
-                                newNotificationArrived = it.hasNewNotification,
-                                newTimeCapsuleArrived = it.hasNewTimeCapsule,
-                                newReportArrived = it.hasNewReport,
-                                newReportId = it.newReportId,
-                            )
-                        }
-                    },
-                    onError = { throwable, _ ->
-                        Logger.e("HomeViewModel: handleUpdateState error: $throwable")
-                    },
-                )
-            }
+    private suspend fun initNickname() =
+        subIntent {
+            collectDataState(
+                flow = getUserNickname(),
+                onSuccess = {
+                    reduce {
+                        state.copy(nickname = it)
+                    }
+                },
+                onError = { throwable, code, data ->
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    Logger.e("HomeViewModel: init nickname error: $throwable")
+                    throw BaseException(
+                        throwable = throwable,
+                        code = code,
+                        message = throwable.message ?: "Home nickname init error",
+                    )
+                },
+            )
+        }
 
-        private suspend fun initNickname() =
-            subIntent {
-                collectDataState(
-                    flow = getUserNickname(),
-                    onLoading = {
-                        reduce {
-                            state.copy(isNicknameLoading = it)
-                        }
-                    },
-                    onSuccess = {
-                        reduce {
-                            state.copy(nickname = it)
-                        }
-                    },
-                    onError = { throwable, _ ->
-                        Logger.e("HomeViewModel: handleInitNickname error: $throwable")
-                    },
-                )
-            }
-
-        private fun handleEnterChat() =
-            intent {
-                require(state.ticketCount > 0)
+    private fun handleEnterChat() =
+        baseIntent {
+            if (state.ticketCount <= 0) {
+                postSideEffect(HomeSideEffect.TicketNotEnough)
+            } else {
                 collectDataState(
                     flow = getChatRoomId(),
-                    onLoading = {
-                        reduce {
-                            state.copy(isEnterChatLoading = it)
-                        }
-                    },
                     onSuccess = {
-                        postSideEffect(HomeSideEffect.EnterCharRoomSuccess(it))
+                        postSideEffect(HomeSideEffect.EnterChatRoom(it))
                     },
-                    onError = { throwable, _ ->
-                        Logger.e("HomeViewModel: handleEnterChat error: $throwable")
-                        // todo: add error popup
+                    onError = { throwable, code, data ->
+                        Logger.e("HomeViewModel: handleEnterChat error: $throwable $code $data")
+                        if (code == ErrorCode.TICKET_NOT_ENOUGH) {
+                            postSideEffect(HomeSideEffect.TicketNotEnough)
+                        } else {
+                            postSideEffect(HomeSideEffect.EnterChatRoomError)
+                        }
                     },
                 )
             }
-    }
+        }
+}

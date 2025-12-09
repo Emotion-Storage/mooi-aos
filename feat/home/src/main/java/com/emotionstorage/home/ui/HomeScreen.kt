@@ -18,14 +18,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,6 +53,7 @@ import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.RequestPermission
+import com.sunjoolee.presentation.BaseSideEffect
 
 @Composable
 fun HomeScreen(
@@ -63,8 +67,11 @@ fun HomeScreen(
     navToChat: (Long) -> Unit = {},
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
+    val snackbarState = remember { SnackbarHostState() }
 
     LaunchedEffect("init") {
         // load attendance state
@@ -73,8 +80,25 @@ fun HomeScreen(
         // collect side effect
         viewModel.container.sideEffectFlow.collect {
             when (it) {
-                is HomeSideEffect.EnterCharRoomSuccess -> {
+                is HomeSideEffect.TicketNotEnough -> {
+                    // todo: 티켓 개수 부족한 경우 에러 처리
+                    snackbarState.showSnackbar("감정 대화 티켓이 부족해요 😢")
+                }
+
+                is HomeSideEffect.EnterChatRoom -> {
                     navToChat(it.roomId)
+                }
+
+                is HomeSideEffect.EnterChatRoomError -> {
+                    // todo: show temp error modal
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    snackbarState.showSnackbar(context.getString(R.string.toast_network_error))
+                }
+
+                else -> {
+                // todo: show temp error modal
                 }
             }
         }
@@ -157,13 +181,13 @@ private fun StatelessHomeScreen(
                         .zIndex(-9f)
                         .align(Alignment.BottomCenter)
                         .size(245.dp, 198.dp)
-                        .offset(y = -36.dp),
+                        .offset(y = (-36).dp),
                 painter = painterResource(id = R.drawable.graphic_home_mooi),
                 contentDescription = null,
             )
 
             // loading overlay
-            if (state.isNicknameLoading || state.isHomeLoading || state.isEnterChatLoading) {
+            if (state.isLoading) {
                 LoadingOverlay()
             }
 
@@ -313,7 +337,8 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.common._collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedTimeCapsulesOfDateUseCase
@@ -120,7 +120,7 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
         intent {
-            collectDataState(
+            _collectDataState(
                 flow = getTimeCapsuleDates(yearMonth),
                 onSuccess = { data ->
                     reduce {
