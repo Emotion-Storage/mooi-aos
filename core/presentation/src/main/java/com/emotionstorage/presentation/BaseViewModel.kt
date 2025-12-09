@@ -18,7 +18,9 @@ interface BaseSideEffect {
 
     object SessionExpired : BaseSideEffect
 
-    object TemporalError : BaseSideEffect
+    data class TemporalError(
+        val code: ErrorCode? = null,
+    ) : BaseSideEffect
 }
 
 @OptIn(OrbitExperimental::class)
@@ -61,15 +63,9 @@ open class BaseViewModel<STATE : Any>(
                     // handle auth expiration error
                     // todo: refresh token here? or in remote interceptor?
                     postSideEffect(BaseSideEffect.SessionExpired)
-                } else if (code == ErrorCode.INTERNAL_SERVER_ERROR) {
-                    // handle server error
-                    postSideEffect(BaseSideEffect.TemporalError)
-                } else if (code == ErrorCode.UNKNOWN) {
-                    // handle unknown error
-                    postSideEffect(BaseSideEffect.TemporalError)
                 } else {
-                    Logger.e("Error could not be handled in BaseViewModel, $this")
-                    throw this
+                    // handle internal server error / unknown error / etc
+                    postSideEffect(BaseSideEffect.TemporalError(code))
                 }
             }
         }
