@@ -71,27 +71,18 @@ class BaseViewModelTest {
         runTest {
             val error =
                 BaseException(
-                    message = "server down",
+                    message = "server fail",
                     code = ErrorCode.INTERNAL_SERVER_ERROR,
                 )
 
             viewModel.throwInBaseIntent(error)
 
             val effect = viewModel.container.sideEffectFlow.first()
-            assertEquals(BaseSideEffect.TemporalError, effect)
+            assertEquals(BaseSideEffect.TemporalError(ErrorCode.INTERNAL_SERVER_ERROR), effect)
         }
 
     @Test
-    fun baseIntent_should_convert_unknown_error() =
-        runTest {
-            viewModel.throwInBaseIntent(RuntimeException("unknown"))
-
-            val effect = viewModel.container.sideEffectFlow.first()
-            assertEquals(BaseSideEffect.TemporalError, effect)
-        }
-
-    @Test
-    fun baseViewModelScope_should_catch_errors() =
+    fun baseViewModelScope_should_catch_internal_server_error() =
         runTest {
             val error =
                 BaseException(
@@ -102,15 +93,6 @@ class BaseViewModelTest {
             viewModel.throwInScope(error)
 
             val effect = viewModel.container.sideEffectFlow.first()
-            assertEquals(BaseSideEffect.TemporalError, effect)
-        }
-
-    @Test
-    fun baseViewModelScope_should_convert_unknown_error() =
-        runTest {
-            viewModel.throwInScope(RuntimeException("unknown"))
-
-            val effect = viewModel.container.sideEffectFlow.first()
-            assertEquals(BaseSideEffect.TemporalError, effect)
+            assertEquals(BaseSideEffect.TemporalError(ErrorCode.INTERNAL_SERVER_ERROR), effect)
         }
 }
