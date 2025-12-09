@@ -1,16 +1,12 @@
 package com.emotionstorage.auth.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
-import com.orhanobut.logger.Logger
 import com.sunjoolee.presentation.BaseException
 import com.sunjoolee.presentation.BaseSideEffect
 import com.sunjoolee.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class LoginState(
@@ -38,9 +34,8 @@ class LoginViewModel
 constructor(
     private val login: LoginUseCase,
 ) : BaseViewModel<LoginState>(
-    LoginState()
+    LoginState(),
 ) {
-
     fun onAction(action: LoginAction) {
         when (action) {
             is LoginAction.Login -> {
@@ -72,7 +67,7 @@ constructor(
                         throw BaseException(
                             message = throwable.message,
                             code = code,
-                            throwable = throwable
+                            throwable = throwable,
                         )
                     }
                 },

@@ -21,7 +21,6 @@ import com.emotionstorage.tutorial.presentation.SplashSideEffect
 import com.emotionstorage.tutorial.presentation.SplashViewModel
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
-import com.sunjoolee.presentation.BaseSideEffect
 
 @Composable
 fun SplashScreen(

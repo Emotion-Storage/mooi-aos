@@ -1,8 +1,7 @@
 package com.emotionstorage.tutorial.presentation
 
-import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.common.isAuthError
+import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.orhanobut.logger.Logger
 import com.sunjoolee.presentation.BaseException
 import com.sunjoolee.presentation.BaseSideEffect
@@ -27,7 +26,7 @@ class SplashViewModel
 constructor(
     private val automaticLogin: AutomaticLoginUseCase,
 ) : BaseViewModel<Unit>(
-    initialState = Unit
+    initialState = Unit,
 ) {
     suspend fun onAction(action: SplashAction) {
         when (action) {
