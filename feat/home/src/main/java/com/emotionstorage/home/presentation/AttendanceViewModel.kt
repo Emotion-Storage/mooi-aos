@@ -30,6 +30,7 @@ class AttendanceViewModel @Inject constructor(
                             _uiState.value.copy(
                                 summary = s.data,
                                 loading = false,
+                                showDialog = s.data.canClaimToday,
                             )
                         }
 
