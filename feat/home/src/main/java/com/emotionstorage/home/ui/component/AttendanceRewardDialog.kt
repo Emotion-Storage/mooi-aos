@@ -35,11 +35,12 @@ fun AttendanceRewardDialog(
     onConfirm: () -> Unit,
 ) {
     Dialog(
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false
-        ),
-        onDismissRequest = {}
+        properties =
+            DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+            ),
+        onDismissRequest = {},
     ) {
         Column(
             modifier =
@@ -47,8 +48,7 @@ fun AttendanceRewardDialog(
                     .background(
                         color = MooiTheme.colorScheme.backgroundDefault,
                         shape = RoundedCornerShape(15.dp),
-                    )
-                    .fillMaxWidth()
+                    ).fillMaxWidth()
                     .widthIn(min = 328.dp)
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
