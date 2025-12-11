@@ -136,7 +136,6 @@ fun HomeScreen(
         AttendanceRewardDialog(
             summary = summary,
             onConfirm = { attendanceViewModel.claimToday() },
-            onDismiss = { attendanceViewModel.dismiss() },
         )
     }
 }

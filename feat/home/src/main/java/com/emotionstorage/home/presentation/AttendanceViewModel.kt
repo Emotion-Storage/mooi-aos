@@ -71,10 +71,6 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
-    fun dismiss() {
-        _uiState.value = _uiState.value.copy(showDialog = false)
-    }
-
     data class UiState(
         val summary: AttendanceSummary? = null,
         val showDialog: Boolean = false,

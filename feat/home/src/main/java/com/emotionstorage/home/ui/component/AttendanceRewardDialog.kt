@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.emotionstorage.domain.model.AttendanceSummary
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.button.CtaButton
@@ -32,16 +33,22 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun AttendanceRewardDialog(
     summary: AttendanceSummary,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit,
 ) {
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false
+        ),
+        onDismissRequest = {}
+    ) {
         Column(
             modifier =
                 Modifier
                     .background(
                         color = MooiTheme.colorScheme.backgroundDefault,
                         shape = RoundedCornerShape(15.dp),
-                    ).fillMaxWidth()
+                    )
+                    .fillMaxWidth()
                     .widthIn(min = 328.dp)
                     .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.Center,
@@ -226,7 +233,6 @@ private fun AttendanceRewardDialogPreview() {
                     true,
                 ),
             onConfirm = {},
-            onDismiss = {},
         )
     }
 }
