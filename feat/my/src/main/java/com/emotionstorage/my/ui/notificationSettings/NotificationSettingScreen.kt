@@ -1,6 +1,8 @@
 package com.emotionstorage.my.ui.notificationSettings
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -17,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,20 +31,21 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.domain.model.NotificationPermissionStatus
 import com.emotionstorage.my.presentation.NotificationSettingState
 import com.emotionstorage.my.presentation.NotificationSettingViewModel
 import com.emotionstorage.my.ui.notificationSettings.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.notificationSettings.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.notificationSettings.component.ToggleRow
 import com.emotionstorage.my.ui.notificationSettings.component.RequestPermissionBottomSheet
+import com.emotionstorage.presentation.notification.NotificationPermissionGateViewModel
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.RequestPermission
-import com.emotionstorage.ui.util.RequestPermissionEvent
 import com.orhanobut.logger.Logger
 import java.time.DayOfWeek
 
@@ -51,56 +55,36 @@ enum class Sheet { None, Permission, TimePicker }
 @Composable
 fun NotificationSettingScreen(
     viewModel: NotificationSettingViewModel = hiltViewModel(),
+    permissionGateViewModel: NotificationPermissionGateViewModel = hiltViewModel(),
     navToBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState()
-    var activeSheet by remember {
-        mutableStateOf(Sheet.None)
-    }
+    val permissionInfo by permissionGateViewModel.info.collectAsState()
 
-    var systemEnabled by remember {
-        mutableStateOf(
-            NotificationManagerCompat.from(context).areNotificationsEnabled(),
-        )
-    }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        // request run time permission, if build version >= 33
-        RequestPermission(
-            permission = Manifest.permission.POST_NOTIFICATIONS,
-            onEvent = RequestPermissionEvent.ON_START,
-            onPermissionGranted = {
-                Logger.d("Notification permission granted, init settings")
-            },
-            onPermissionDenied = { showRationale ->
-                if (!showRationale) {
-                    Logger.d("Notification permission denied permanently, open permission bottom sheet")
-                    activeSheet = Sheet.Permission
-                }
-            },
-        )
-    } else {
-        if (!systemEnabled) {
-            Logger.d("Notification system permission denied, open permission bottom sheet")
-            activeSheet = Sheet.Permission
-        }
-    }
+    var activeSheet by remember { mutableStateOf(Sheet.None) }
 
-    LifecycleResumeEffect("onResume") {
-        systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
-        Logger.d("onResume - systemEnabled: $systemEnabled")
-        if (!systemEnabled) {
+    val locallyAllowed = permissionInfo.status == NotificationPermissionStatus.Granted
+
+    LifecycleResumeEffect(Unit) {
+        val canPost = computeCanPostNotifications(context)
+        permissionGateViewModel.syncFromSystem(canPost)
+
+        if (!canPost) {
             viewModel.setAppPush(isOn = false)
-            activeSheet = Sheet.Permission
         }
 
         onPauseOrDispose { }
     }
 
+    LaunchedEffect(locallyAllowed) {
+        activeSheet = if (locallyAllowed) Sheet.None else Sheet.Permission
+    }
+
     StatelessNotificationSettingScreen(
         state = state.value,
         onToggleAppPush = { isOn ->
-            if (systemEnabled) {
+            if (locallyAllowed) {
                 viewModel.setAppPush(isOn)
             } else {
                 activeSheet = Sheet.Permission
@@ -291,6 +275,21 @@ private fun StatelessNotificationSettingScreen(
             }
         }
     }
+}
+
+private fun computeCanPostNotifications(context: Context): Boolean {
+    val systemEnabled = NotificationManagerCompat.from(context).areNotificationsEnabled()
+    val runtimeGranted =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS,
+            ) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true
+        }
+
+    return systemEnabled && runtimeGranted
 }
 
 @Preview

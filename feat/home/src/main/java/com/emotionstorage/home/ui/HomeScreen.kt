@@ -1,7 +1,5 @@
 package com.emotionstorage.home.ui
 
-import android.Manifest
-import android.os.Build
 import android.view.Gravity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,13 +46,13 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
+import com.emotionstorage.home.ui.component.NotificationPermissionAutoRequest
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.RequestPermission
 import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
@@ -74,6 +72,8 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState
     val snackbarState = remember { SnackbarHostState() }
+
+    NotificationPermissionAutoRequest()
 
     LaunchedEffect("init") {
         // load attendance state
@@ -113,12 +113,6 @@ fun HomeScreen(
         // init screen state on resume
         viewModel.onAction(HomeAction.Initiate)
         onPauseOrDispose {}
-    }
-
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        RequestPermission(
-            permission = Manifest.permission.POST_NOTIFICATIONS,
-        )
     }
 
     StatelessHomeScreen(
