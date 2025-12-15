@@ -31,13 +31,15 @@ class NotificationPermissionGateViewModel @Inject constructor(
 
     fun syncFromSystem(canPostNotifications: Boolean) {
         viewModelScope.launch {
-            updateStatus(
-                if (canPostNotifications) {
-                    NotificationPermissionStatus.Granted
-                } else {
-                    NotificationPermissionStatus.Denied
-                },
-            )
+            val nextStatus = if (canPostNotifications) {
+                NotificationPermissionStatus.Granted
+            } else {
+                when (info.value.status) {
+                    NotificationPermissionStatus.DeniedAlways -> NotificationPermissionStatus.DeniedAlways
+                    else -> NotificationPermissionStatus.Denied
+                }
+            }
+            updateStatus(nextStatus)
         }
     }
 
