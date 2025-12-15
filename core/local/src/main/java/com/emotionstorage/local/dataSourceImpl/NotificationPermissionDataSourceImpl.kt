@@ -28,12 +28,15 @@ class NotificationPermissionDataSourceImpl @Inject constructor(
     }
 
     override fun observeInfo(): Flow<NotificationPermissionInfo> =
-        context.dataStore.data
+        context
+            .dataStore
+            .data
             .catch { emit(emptyPreferences()) }
             .map { pref ->
                 val statusName = pref[Keys.STATUS] ?: NotificationPermissionStatus.Unknown.name
-                val status = NotificationPermissionStatus.entries.firstOrNull { it.name == statusName }
-                    ?: NotificationPermissionStatus.Unknown
+                val status =
+                    NotificationPermissionStatus.entries.firstOrNull { it.name == statusName }
+                        ?: NotificationPermissionStatus.Unknown
                 val prompted = pref[Keys.PROMPTED] ?: false
                 NotificationPermissionInfo(status = status, hasPrompted = prompted)
             }
@@ -42,7 +45,7 @@ class NotificationPermissionDataSourceImpl @Inject constructor(
         try {
             context.dataStore.edit { it[Keys.STATUS] = status.name }
         } catch (e: IOException) {
-            Logger.e("Update Notification Setting value Error ${e.message.toString()}")
+            Logger.e("Update Notification Setting value Error ${e.message}")
         }
     }
 
@@ -50,7 +53,7 @@ class NotificationPermissionDataSourceImpl @Inject constructor(
         try {
             context.dataStore.edit { it[Keys.PROMPTED] = value }
         } catch (e: IOException) {
-            Logger.e("Update Notification Setting value Error ${e.message.toString()}")
+            Logger.e("Update Notification Setting value Error ${e.message}")
         }
     }
 }
