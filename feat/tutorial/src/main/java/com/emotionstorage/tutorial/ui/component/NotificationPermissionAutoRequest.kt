@@ -22,8 +22,6 @@ fun NotificationPermissionAutoRequest(
     val info by viewModel.info.collectAsState()
 
     if (info.status != NotificationPermissionStatus.Granted && info.hasPrompted.not()) {
-        LaunchedEffect(Unit) { viewModel.markPrompted() }
-
         RequestPermission(
             permission = Manifest.permission.POST_NOTIFICATIONS,
             onEvent = onEvent,
