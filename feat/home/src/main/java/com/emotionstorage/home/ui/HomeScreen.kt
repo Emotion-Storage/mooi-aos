@@ -72,8 +72,9 @@ fun HomeScreen(
     val context = LocalContext.current
 
     val state = viewModel.container.stateFlow.collectAsState()
-    val attendanceState = attendanceViewModel.uiState
+    val attendanceState = attendanceViewModel.uiState.collectAsState()
     val snackbarState = remember { SnackbarHostState() }
+    val summary = attendanceState.value.summary
 
     LaunchedEffect("init") {
         // load attendance state
@@ -107,9 +108,6 @@ fun HomeScreen(
     }
 
     LifecycleResumeEffect("onResume") {
-        // show attendance dialog, if needed
-        attendanceViewModel.tryShowOnce()
-
         // init screen state on resume
         viewModel.onAction(HomeAction.Initiate)
         onPauseOrDispose {}
@@ -133,12 +131,11 @@ fun HomeScreen(
         navToArrivedTimeCapsules = navToArrivedTimeCapsules,
     )
 
-    if (attendanceState.showDialog && attendanceState.summary != null) {
+    if (attendanceState.value.showDialog && summary != null) {
         // todo: refresh attendance dialog on 23:59
         AttendanceRewardDialog(
-            summary = attendanceState.summary,
+            summary = summary,
             onConfirm = { attendanceViewModel.claimToday() },
-            onDismiss = { attendanceViewModel.dismiss() },
         )
     }
 }
