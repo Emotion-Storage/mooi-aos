@@ -25,12 +25,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.tutorial.R
+import com.emotionstorage.tutorial.ui.util.TutorialResponsiveTokens
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.mainBackground
 import kotlinx.coroutines.launch
@@ -43,8 +43,9 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun PagerWithIndicator(
-    pageCount: Int,
     modifier: Modifier = Modifier,
+    pageCount: Int,
+    tokens: TutorialResponsiveTokens,
     pageContent: @Composable (ColumnScope.(page: Int) -> Unit),
 ) {
     val pagerState =
@@ -53,32 +54,33 @@ fun PagerWithIndicator(
         )
     val coroutineScope = rememberCoroutineScope()
 
-    Column(
+    Box(
         modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        HorizontalPager(state = pagerState, modifier = Modifier.weight(1f)) { page ->
-            pageContent(page)
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize(),
+        ) { page ->
+            Column(modifier = Modifier.fillMaxSize()) {
+                pageContent(page)
+            }
         }
 
         Box(
             modifier =
                 Modifier
-                    .background(Color.Transparent)
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = tokens.bottomPadding)
                     .fillMaxWidth()
                     .height(48.dp)
                     .padding(top = 30.dp),
         ) {
             PagerIndicator(
-                modifier =
-                    Modifier
-                        .align(Alignment.Center),
+                modifier = Modifier.align(Alignment.Center),
                 pageCount = pageCount,
                 currentPage = pagerState.currentPage,
                 onPageSelected = {
-                    coroutineScope.launch {
-                        pagerState.scrollToPage(it)
-                    }
+                    coroutineScope.launch { pagerState.scrollToPage(it) }
                 },
             )
 
@@ -88,13 +90,11 @@ fun PagerWithIndicator(
                         Modifier
                             .align(Alignment.CenterEnd)
                             .padding(end = 16.dp)
-                            .clickable(
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.scrollToPage(pageCount - 1)
-                                    }
-                                },
-                            ),
+                            .clickable {
+                                coroutineScope.launch {
+                                    pagerState.scrollToPage(pageCount - 1)
+                                }
+                            },
                     color = MooiTheme.colorScheme.gray600,
                     text = stringResource(R.string.pager_btn_skip),
                     style = MooiTheme.typography.caption2.copy(lineHeight = 22.sp),
