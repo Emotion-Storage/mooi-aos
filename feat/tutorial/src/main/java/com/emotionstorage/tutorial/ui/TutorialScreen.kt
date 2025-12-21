@@ -111,6 +111,7 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier.align(Alignment.Center),
                                     resId = R.drawable.graphic_tutorial_greeting,
+                                    safeHeight = safeHeight,
                                     isTablet = isTablet,
                                 )
                             }
@@ -129,6 +130,7 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_chat,
+                                    safeHeight = safeHeight,
                                     isTablet = isTablet,
                                 )
                             }
@@ -147,6 +149,7 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_timecapsule,
+                                    safeHeight = safeHeight,
                                     isTablet = isTablet,
                                 )
                             }
@@ -155,6 +158,7 @@ fun TutorialScreen(
                         3 -> {
                             TutorialPage(
                                 tokens = tokens,
+                                contentLift = ctaBottomPadding,
                                 description = stringResource(tutorialR.string.tutorial_p3_desc),
                                 title = stringResource(tutorialR.string.tutorial_p3_title),
                                 titleHighlights =
@@ -165,6 +169,7 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_report,
+                                    safeHeight = safeHeight,
                                     isTablet = isTablet,
                                 )
 
@@ -202,7 +207,7 @@ private fun ColumnScope.TutorialPage(
     title: String,
     modifier: Modifier = Modifier,
     titleHighlights: List<String> = emptyList(),
-    contentLift: Dp = 30.dp,
+    contentLift: Dp = 18.dp,
     content: @Composable BoxScope.() -> Unit = {},
 ) {
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
@@ -248,22 +253,23 @@ private fun ColumnScope.TutorialPage(
     }
 }
 
+@SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 private fun BoxScope.TutorialGraphicImage(
     modifier: Modifier = Modifier,
     @DrawableRes resId: Int,
+    safeHeight: Dp,
     isTablet: Boolean,
 ) {
     BoxWithConstraints(modifier.fillMaxSize()) {
-        val safePadding = WindowInsets.safeDrawing.asPaddingValues()
-        val safeHeight = maxHeight - safePadding.calculateTopPadding() - safePadding.calculateBottomPadding()
-
         Image(
             modifier =
                 Modifier
-                    .fillMaxWidth()
-                    .aspectRatio(360f / 752f)
-                    .sizeIn(maxHeight = if (isTablet) safeHeight * 0.5f else safeHeight * 0.75f),
+                    .sizeIn(
+                        maxWidth = Dp.Unspecified,
+                        maxHeight = if (isTablet) safeHeight * 0.83f else safeHeight * 1.1f,
+                    ).fillMaxWidth()
+                    .aspectRatio(360f / 752f),
             painter = painterResource(resId),
             contentScale = ContentScale.Crop,
             contentDescription = null,
