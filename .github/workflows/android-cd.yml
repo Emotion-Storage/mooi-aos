@@ -13,6 +13,7 @@ jobs:
             MOOI_REPLY_EMAIL: ${{ secrets.MOOI_REPLY_EMAIL }}
             GOOGLE_SERVER_CLIENT_ID: ${{ secrets.GOOGLE_SERVER_CLIENT_ID }}
             KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
+            TITLE: ${{ github.event.pull_request.title }}
 
         steps:
             - uses: actions/checkout@v4
@@ -40,4 +41,4 @@ jobs:
                   serviceCredentialsFileContent: ${{ secrets.CREDENTIAL_FILE_CONTENT }}
                   groups: "testersteam"
                   file: app/build/outputs/apk/debug/app-debug.apk
-                  releaseNotes: ${{ inputs.release_notes }}
+                  releaseNotes: $TITLE
