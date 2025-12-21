@@ -68,6 +68,8 @@ fun TutorialScreen(
         val safeHeight = (maxHeight - topInset - bottomInset).coerceAtLeast(0.dp)
         val scaleY = (safeHeight / GUIDE_HEIGHT.dp).coerceAtLeast(0f)
 
+        val isTablet = maxWidth >= 600.dp
+
         val topFromStatus = 78.dp.scaledBy(scaleY).clamp(56.dp, 120.dp)
         val bottomFromNav = 41.dp.scaledBy(scaleY).clamp(28.dp, 72.dp)
 
@@ -107,7 +109,9 @@ fun TutorialScreen(
                                     ),
                             ) {
                                 TutorialGraphicImage(
+                                    modifier = Modifier.align(Alignment.Center),
                                     resId = R.drawable.graphic_tutorial_greeting,
+                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -123,7 +127,9 @@ fun TutorialScreen(
                                     ),
                             ) {
                                 TutorialGraphicImage(
+                                    modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_chat,
+                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -139,7 +145,9 @@ fun TutorialScreen(
                                     ),
                             ) {
                                 TutorialGraphicImage(
+                                    modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_timecapsule,
+                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -155,7 +163,9 @@ fun TutorialScreen(
                                     ),
                             ) {
                                 TutorialGraphicImage(
+                                    modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_report,
+                                    isTablet = isTablet,
                                 )
 
                                 CtaButton(
@@ -240,10 +250,11 @@ private fun ColumnScope.TutorialPage(
 
 @Composable
 private fun BoxScope.TutorialGraphicImage(
-    @DrawableRes resId: Int,
     modifier: Modifier = Modifier,
+    @DrawableRes resId: Int,
+    isTablet: Boolean,
 ) {
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier.fillMaxSize()) {
         val safePadding = WindowInsets.safeDrawing.asPaddingValues()
         val safeHeight = maxHeight - safePadding.calculateTopPadding() - safePadding.calculateBottomPadding()
 
@@ -252,7 +263,7 @@ private fun BoxScope.TutorialGraphicImage(
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(360f / 752f)
-                    .sizeIn(maxHeight = safeHeight * 0.75f),
+                    .sizeIn(maxHeight = if (isTablet) safeHeight * 0.5f else safeHeight * 0.75f),
             painter = painterResource(resId),
             contentScale = ContentScale.Crop,
             contentDescription = null,

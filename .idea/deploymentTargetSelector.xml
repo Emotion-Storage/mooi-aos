@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="EmotionStorage.app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-04T08:39:26.094675200Z">
+        <DropdownSelection timestamp="2025-12-21T06:52:30.630748700Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=R3CX500B4TE" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=R54R101RE6H" />
             </handle>
           </Target>
         </DropdownSelection>
