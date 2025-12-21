@@ -39,3 +39,4 @@ google-services.json
 
 /build-logic/.kotlin/errors/*
 /.kotlin/errors/*
+*.idea
