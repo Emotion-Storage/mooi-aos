@@ -47,6 +47,7 @@ fun ChatMessageInputBox(
     enabled: Boolean = true,
     sendEnabled: Boolean = true,
     showSendingDisabled: Boolean = false,
+    forceShowSendAsEnabled: Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onTextChange: (String) -> Unit,
     onSendMessage: () -> Unit = {},
@@ -56,7 +57,7 @@ fun ChatMessageInputBox(
     val canSend = text.isNotBlank() && enabled && !readOnly && sendEnabled
     val shape = RoundedCornerShape(100.dp)
 
-    val sendButtonEnabled = canSend && !showSendingDisabled
+    val sendButtonEnabled = (canSend || forceShowSendAsEnabled) && !showSendingDisabled
 
     Row(
         modifier =
@@ -113,7 +114,7 @@ fun ChatMessageInputBox(
             },
         )
 
-        if (canSend || readOnly || showSendingDisabled) {
+        if (canSend || readOnly || showSendingDisabled || forceShowSendAsEnabled) {
             Box(
                 modifier =
                     Modifier

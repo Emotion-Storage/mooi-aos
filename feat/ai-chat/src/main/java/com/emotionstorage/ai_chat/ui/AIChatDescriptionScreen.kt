@@ -169,6 +169,8 @@ private fun StatelessAIChatDescriptionScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = false,
                         readOnly = true,
+                        sendEnabled = true,
+                        forceShowSendAsEnabled = true,
                         onTextChange = {},
                         onSendMessage = {},
                     )
