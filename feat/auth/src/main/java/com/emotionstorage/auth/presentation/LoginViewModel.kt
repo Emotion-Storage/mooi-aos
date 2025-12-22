@@ -60,7 +60,8 @@ class LoginViewModel
                         reduce {
                             state.copy(isLoading = false)
                         }
-                        if (code == ErrorCode.NEED_SIGN_UP) {
+                        // TODO : OR로 2번째로 붙는 조건 관련 로직 수정 필요 (온보딩으로 넘어가지 않는 이슈 임시 해결)
+                        if (code == ErrorCode.NEED_SIGN_UP || code == ErrorCode.NETWORK_ERROR) {
                             val idToken =
                                 (data as? String) ?: throw BaseException(
                                     message = "idToken is null or not a String",
