@@ -7,6 +7,7 @@ import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
+import io.github.aakira.napier.Napier
 import javax.inject.Inject
 
 class LoginUseCase @Inject
@@ -16,19 +17,33 @@ class LoginUseCase @Inject
         private val userRepository: UserRepository,
         private val fcmRepository: FcmRepository,
     ) {
-        suspend operator fun invoke(provider: User.AuthProvider): DataState<String> =
-            authRepository.login(provider).also {
-                if (it is DataState.Success) {
-                    sessionRepository.saveSession(Session(it.data))
+        suspend operator fun invoke(provider: User.AuthProvider): DataState<String> {
+            val loginResult = authRepository.login(provider)
+
+            // todo: handle login success handling logic
+            if (loginResult is DataState.Success) {
+                sessionRepository.saveSession(Session(loginResult.data))
+                try {
                     fcmRepository.getToken()?.let {
                         fcmRepository.registerToken(it)
                     }
-                    userRepository.getAccountInfo()
+                } catch (e: Exception) {
+                    Napier.e("fcm token get/register error", e)
                 }
-                if (it is DataState.Error) {
-                    sessionRepository.deleteSession()
-                    userRepository.deleteUser()
+                userRepository.getAccountInfo()
+            }
+
+            // todo: handle login error handling logic
+            if (loginResult is DataState.Error) {
+                sessionRepository.deleteSession()
+                userRepository.deleteUser()
+                try {
                     fcmRepository.deleteToken()
+                } catch (e: Exception) {
+                    Napier.e("fcm token delete error", e)
                 }
             }
+
+            return loginResult
+        }
     }

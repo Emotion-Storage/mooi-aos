@@ -45,13 +45,15 @@ class AuthRemoteDataSourceImpl
                     DataState.Success(this)
                 } ?: DataState.Error(Throwable("No access token received"))
             } catch (e: IOException) {
-                // handle network error
-                Logger.e("Login network exception, $e")
-                DataState.Error(e, ErrorCode.NETWORK_ERROR, data = idToken)
-            } catch (e: CustomHttpException) {
-                // handle http response error
-                Logger.e("Login http exception, $e")
-                DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""), data = idToken)
+                if (e !is CustomHttpException) {
+                    // handle network error
+                    Logger.e("Login network exception, $e")
+                    DataState.Error(e, ErrorCode.NETWORK_ERROR, data = idToken)
+                } else {
+                    // handle http response error
+                    Logger.e("Login http exception, $e")
+                    DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""), data = idToken)
+                }
             } catch (e: Exception) {
                 // handle unknown error
                 Logger.e("Login exception, $e")

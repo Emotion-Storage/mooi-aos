@@ -20,9 +20,11 @@ class ChatRemoteDataSourceImpl
                     DataState.Success(this)
                 } ?: DataState.Error(Throwable("getChatRoomId() failed, no room id received!"))
             } catch (e: IOException) {
-                DataState.Error(e, code = ErrorCode.NETWORK_ERROR)
-            } catch (e: CustomHttpException) {
-                DataState.Error(e, code = ErrorCode.toErrorCode(e.code ?: ""), data = e.data)
+                if (e !is CustomHttpException) {
+                    DataState.Error(e, code = ErrorCode.NETWORK_ERROR)
+                } else {
+                    DataState.Error(e, code = ErrorCode.toErrorCode(e.code ?: ""), data = e.data)
+                }
             } catch (e: Exception) {
                 DataState.Error(e)
             }
