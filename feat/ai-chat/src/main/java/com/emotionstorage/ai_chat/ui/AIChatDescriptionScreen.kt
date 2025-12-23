@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.only
@@ -148,20 +149,33 @@ private fun StatelessAIChatDescriptionScreen(
                 )
             }
 
-            ChatMessageInputBox(
-                text = "",
+            Box(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .padding(all = 16.dp)
-                        .onGloballyPositioned {
-                            onInputBoxRect(it.boundsInParent())
-                        },
-                enabled = false,
-                readOnly = true,
-                onTextChange = {},
-                onSendMessage = {},
-            )
+                        .height(78.dp)
+                        .onGloballyPositioned { onInputBoxRect(it.boundsInParent()) },
+            ) {
+                // 실제 InputBox는 밴드 안에서 padding 주고 배치
+                Box(
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.Center)
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                ) {
+                    ChatMessageInputBox(
+                        text = "",
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = false,
+                        readOnly = true,
+                        sendEnabled = true,
+                        forceShowSendAsEnabled = true,
+                        onTextChange = {},
+                        onSendMessage = {},
+                    )
+                }
+            }
         }
     }
 }

@@ -19,7 +19,9 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,9 +34,14 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.theme.MooiTheme
@@ -47,6 +54,7 @@ fun ChatMessageInputBox(
     enabled: Boolean = true,
     sendEnabled: Boolean = true,
     showSendingDisabled: Boolean = false,
+    forceShowSendAsEnabled: Boolean = false,
     focusRequester: FocusRequester = remember { FocusRequester() },
     onTextChange: (String) -> Unit,
     onSendMessage: () -> Unit = {},
@@ -54,9 +62,42 @@ fun ChatMessageInputBox(
 ) {
     val interaction = remember { MutableInteractionSource() }
     val canSend = text.isNotBlank() && enabled && !readOnly && sendEnabled
-    val shape = RoundedCornerShape(100.dp)
+    val sendButtonEnabled = (canSend || forceShowSendAsEnabled) && !showSendingDisabled
 
-    val sendButtonEnabled = canSend && !showSendingDisabled
+    val textMeasurer = rememberTextMeasurer()
+    val density = LocalDensity.current
+
+    var textFieldWidthPx by remember { mutableIntStateOf(0) }
+
+    var renderedLineCount by remember { mutableIntStateOf(1) }
+    val startPaddingPx = with(density) { 19.dp.roundToPx() }
+
+    val inputTextStyle = MooiTheme.typography.caption3.copy(color = Color.White)
+
+    LaunchedEffect(text, textFieldWidthPx) {
+        if (textFieldWidthPx <= 0) return@LaunchedEffect
+
+        if (text.isEmpty()) {
+            renderedLineCount = 1
+            return@LaunchedEffect
+        }
+
+        val maxWidth = (textFieldWidthPx - startPaddingPx).coerceAtLeast(1)
+
+        val result =
+            textMeasurer.measure(
+                text = text,
+                style = inputTextStyle,
+                constraints = Constraints(maxWidth = maxWidth),
+                overflow = TextOverflow.Clip,
+                maxLines = 8,
+            )
+
+        renderedLineCount = result.lineCount.coerceAtLeast(1).coerceAtMost(8)
+    }
+
+    val isMultiline = renderedLineCount >= 2
+    val shape = if (isMultiline) RoundedCornerShape(25.dp) else RoundedCornerShape(100.dp)
 
     Row(
         modifier =
@@ -65,21 +106,22 @@ fun ChatMessageInputBox(
                 .background(Color(0xFF26262C), shape)
                 .border(1.dp, MooiTheme.colorScheme.gray800, shape)
                 .animateContentSize(),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.Top,
     ) {
         BasicTextField(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .weight(1f)
-                    .heightIn(min = 46.dp, max = 100.dp)
+                    .onSizeChanged { textFieldWidthPx = it.width }
+                    .heightIn(min = 46.dp, max = 200.dp)
                     .focusRequester(focusRequester)
                     .background(color = Color.Transparent, shape)
                     .onFocusChanged { onFocusChanged(it.isFocused) },
             value = text,
             onValueChange = { if (enabled && !readOnly) onTextChange(it) },
             singleLine = false,
-            maxLines = 6,
+            maxLines = 8,
             readOnly = readOnly,
             enabled = enabled,
             textStyle = MooiTheme.typography.caption3.copy(color = Color.White),
@@ -113,13 +155,14 @@ fun ChatMessageInputBox(
             },
         )
 
-        if (canSend || readOnly || showSendingDisabled) {
+        if (canSend || readOnly || showSendingDisabled || forceShowSendAsEnabled) {
             Box(
                 modifier =
                     Modifier
                         .padding(end = 7.dp, bottom = 7.dp, top = 7.dp)
                         .size(33.dp)
                         .clip(CircleShape)
+                        .align(Alignment.Bottom)
                         .clickable(
                             interactionSource = remember { MutableInteractionSource() },
                             indication = null,

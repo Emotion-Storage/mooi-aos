@@ -93,8 +93,8 @@ fun DescriptionOverlay(
                 HighlightType.TOPBAR -> {
                     if (area != Rect.Zero) {
                         val backButtonRadius = with(density) { 22.dp.toPx() }
-                        val backButtonCenterX = area.left + with(density) { 22.dp.toPx() }
-                        val backButtonCenterY = area.center.y
+                        val backButtonCenterX = area.left + with(density) { 24.dp.toPx() }
+                        val backButtonCenterY = area.center.y + with(density) { 12.dp.toPx() }
 
                         drawCircle(
                             color = Color.Transparent,
