@@ -51,10 +51,7 @@ fun LoginScreen(
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    val context = LocalContext.current
-
     val state = viewModel.container.stateFlow.collectAsState()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { effect ->
@@ -67,13 +64,12 @@ fun LoginScreen(
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
-                is BaseSideEffect.NetworkError -> {
-                    snackbarHostState.showSnackbar(context.getString(R.string.toast_network_error))
+                is LoginSideEffect.LoginErrorWithRetry -> {
+                    // todo: show login retry modal
                 }
 
-                else -> {
-                    Logger.e("Unknown side effect: $effect")
-                    // todo: add error modal
+                is LoginSideEffect.LoginErrorWithInquiry -> {
+                    // todo: show login error inquiry modal
                 }
             }
         }
