@@ -1,10 +1,8 @@
 package com.emotionstorage.auth.presentation
 
 import com.emotionstorage.domain.common.ErrorCode
-import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
-import com.emotionstorage.presentation.BaseException
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.presentation.BaseViewModel
 import com.orhanobut.logger.Logger
@@ -24,9 +22,9 @@ sealed class LoginAction {
 sealed class LoginSideEffect : BaseSideEffect {
     object LoginSuccess : LoginSideEffect()
 
-    object LoginErrorWithRetry : LoginSideEffect()
+    object RetryLogin : LoginSideEffect()
 
-    object LoginErrorWithInquiry : LoginSideEffect()
+    object InquireLoginError : LoginSideEffect()
 
     data class NeedSignUp(
         val provider: AuthProvider,
@@ -74,9 +72,9 @@ class LoginViewModel
             // show login error modal on any login errors
             if (retryCount < 3) {
                 retryCount++
-                postSideEffect(LoginSideEffect.LoginErrorWithRetry)
+                postSideEffect(LoginSideEffect.RetryLogin)
             } else {
-                postSideEffect(LoginSideEffect.LoginErrorWithInquiry)
+                postSideEffect(LoginSideEffect.InquireLoginError)
             }
         })
     }

@@ -13,16 +13,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -41,8 +38,6 @@ import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
-import com.orhanobut.logger.Logger
-import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
 fun LoginScreen(
@@ -64,11 +59,11 @@ fun LoginScreen(
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
-                is LoginSideEffect.LoginErrorWithRetry -> {
+                is LoginSideEffect.RetryLogin -> {
                     // todo: show login retry modal
                 }
 
-                is LoginSideEffect.LoginErrorWithInquiry -> {
+                is LoginSideEffect.InquireLoginError -> {
                     // todo: show login error inquiry modal
                 }
             }
