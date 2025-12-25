@@ -122,6 +122,7 @@ class LoginViewModel
                 retryCount++
                 postSideEffect(LoginSideEffect.RetryLogin(provider, idToken))
             } else {
+                retryCount = 0
                 postSideEffect(LoginSideEffect.InquireLoginError(provider))
             }
         }

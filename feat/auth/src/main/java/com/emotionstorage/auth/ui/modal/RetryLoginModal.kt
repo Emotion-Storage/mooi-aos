@@ -31,6 +31,7 @@ import com.emotionstorage.ui.component.Modal
 fun RetryLoginModal(
     onConfirm: () -> Unit
 ) {
+    // todo: disable back press to dismiss
     Modal(
         onDismissRequest = {
             // disable bg click to dismiss

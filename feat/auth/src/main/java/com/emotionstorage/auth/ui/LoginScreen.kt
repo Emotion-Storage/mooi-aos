@@ -39,6 +39,7 @@ import com.emotionstorage.auth.presentation.LoginSideEffect
 import com.emotionstorage.auth.presentation.LoginState
 import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
+import com.emotionstorage.auth.ui.modal.InquireLoginErrorModal
 import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.loading.LoadingOverlay
@@ -128,7 +129,9 @@ fun LoginScreen(
         }
 
         is LoginModalState.InquireLoginError -> {
-            // todo: add login error inquiry modal
+            InquireLoginErrorModal {
+                modalState = LoginModalState.None
+            }
         }
     }
 }
