@@ -9,8 +9,8 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.NotificationPermissionStatus
 import com.emotionstorage.presentation.notification.NotificationPermissionGateViewModel
-import com.emotionstorage.ui.util.RequestPermission
-import com.emotionstorage.ui.util.RequestPermissionEvent
+import com.emotionstorage.ui.feature.RequestPermission
+import com.emotionstorage.ui.feature.RequestPermissionEvent
 
 @Composable
 fun NotificationPermissionAutoRequest(

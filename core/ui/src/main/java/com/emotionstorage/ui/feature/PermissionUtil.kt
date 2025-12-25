@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.util
+package com.emotionstorage.ui.feature
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
