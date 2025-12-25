@@ -5,13 +5,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingAction
 import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingState
@@ -40,6 +46,18 @@ enum class OnBoardingRoute(
     MARKETING_DETAIL("on_boarding/agree_terms/marketing_detail"),
 }
 
+private sealed class OnBoardingModalState {
+    object None : OnBoardingModalState()
+
+    object SocialTokenExpired : OnBoardingModalState()
+
+    object DuplicateAccount : OnBoardingModalState()
+
+    data class SignupError(
+        val errorCode: ErrorCode?
+    ) : OnBoardingModalState()
+}
+
 @Composable
 fun OnBoardingNavHost(
     provider: AuthProvider,
@@ -51,6 +69,7 @@ fun OnBoardingNavHost(
 ) {
     val navController = rememberNavController()
     val state = sharedViewModel.container.stateFlow.collectAsState()
+    var modalState by remember { mutableStateOf<OnBoardingModalState>(OnBoardingModalState.None) }
 
     LaunchedEffect(provider, idToken) {
         sharedViewModel.onAction(OnBoardingAction.Initiate(provider, idToken))
@@ -62,8 +81,20 @@ fun OnBoardingNavHost(
                     navToSignupComplete(sideEffect.provider, sideEffect.idToken)
                 }
 
-                is OnBoardingSideEffect.SignupFailed -> {
-                    // todo: handle signup failure
+                is OnBoardingSideEffect.SocialTokenExpired -> {
+                    modalState = OnBoardingModalState.SocialTokenExpired
+                }
+
+                is OnBoardingSideEffect.DuplicateAccount -> {
+                    modalState = OnBoardingModalState.DuplicateAccount
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    modalState = OnBoardingModalState.SignupError(sideEffect.code)
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    // todo: add network toast
                 }
             }
         }
@@ -76,6 +107,21 @@ fun OnBoardingNavHost(
         onAction = sharedViewModel::onAction,
         navToBack = navToBack,
     )
+
+    when (modalState) {
+        OnBoardingModalState.None -> {}
+        OnBoardingModalState.SocialTokenExpired -> {
+            // todo: add social token expired modal
+        }
+
+        OnBoardingModalState.DuplicateAccount -> {
+            // todo: add duplicate account modal
+        }
+
+        is OnBoardingModalState.SignupError -> {
+            // todo: add signup error modal
+        }
+    }
 }
 
 @Composable

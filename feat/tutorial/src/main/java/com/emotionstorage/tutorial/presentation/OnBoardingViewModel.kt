@@ -64,8 +64,6 @@ sealed class OnBoardingSideEffect : BaseSideEffect {
     object SocialTokenExpired : OnBoardingSideEffect()
 
     object DuplicateAccount : OnBoardingSideEffect()
-
-    object SignupFailed : OnBoardingSideEffect()
 }
 
 @HiltViewModel
