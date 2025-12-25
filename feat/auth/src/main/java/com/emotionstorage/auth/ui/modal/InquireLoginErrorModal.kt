@@ -25,9 +25,7 @@ import com.emotionstorage.ui.component.Modal
  *   - 스크롤 X
  */
 @Composable
-fun InquireLoginErrorModal(
-    onDismissRequest: () -> Unit,
-) {
+fun InquireLoginErrorModal(onDismissRequest: () -> Unit) {
     Modal(
         onDismissRequest = onDismissRequest,
         topDescription = "여러 번 시도했지만\n로그인에 계속 문제가 있어요.",

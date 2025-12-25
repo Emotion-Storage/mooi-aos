@@ -6,7 +6,6 @@ import com.emotionstorage.domain.useCase.auth.LoginUseCase
 import com.emotionstorage.domain.useCase.auth.LoginWithIdTokenUseCase
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.presentation.BaseViewModel
-import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import javax.inject.Inject
@@ -23,7 +22,7 @@ sealed class LoginAction {
     data class LoginWithIdToken(
         val provider: AuthProvider,
         val idToken: String,
-    ): LoginAction()
+    ) : LoginAction()
 }
 
 sealed class LoginSideEffect : BaseSideEffect {
@@ -40,7 +39,7 @@ sealed class LoginSideEffect : BaseSideEffect {
     ) : LoginSideEffect()
 
     data class InquireLoginError(
-        val provider: AuthProvider
+        val provider: AuthProvider,
     ) : LoginSideEffect()
 
     object LoginSuccess : LoginSideEffect()
@@ -49,82 +48,90 @@ sealed class LoginSideEffect : BaseSideEffect {
 @OptIn(OrbitExperimental::class)
 @HiltViewModel
 class LoginViewModel
-@Inject constructor(
-    private val login: LoginUseCase,
-    private val loginWithIdToken: LoginWithIdTokenUseCase
-) : BaseViewModel<LoginState>(
-    LoginState(),
-) {
-    private var retryCount: Int = 0
+    @Inject constructor(
+        private val login: LoginUseCase,
+        private val loginWithIdToken: LoginWithIdTokenUseCase,
+    ) : BaseViewModel<LoginState>(
+            LoginState(),
+        ) {
+        private var retryCount: Int = 0
 
-    fun onAction(action: LoginAction) {
-        when (action) {
-            is LoginAction.Login -> {
-                handleLogin(action.provider)
-            }
-            is LoginAction.LoginWithIdToken -> {
-                handleLogin(action.provider, action.idToken)
-            }
-        }
-    }
-
-    private fun handleLogin(provider: AuthProvider) = baseIntent {
-        reduce {
-            state.copy(isLoading = true)
-        }
-        login(provider).handle(onSuccess = {
-            reduce {
-                state.copy(isLoading = false)
-            }
-            retryCount = 0
-            postSideEffect(LoginSideEffect.LoginSuccess)
-        }, onError = { throwable, code, data ->
-            reduce {
-                state.copy(isLoading = false)
-            }
-            handleLoginError(code, provider, data as? String)
-        })
-    }
-
-    private fun handleLogin(provider: AuthProvider, idToken: String) = baseIntent {
-        reduce {
-            state.copy(isLoading = true)
-        }
-        loginWithIdToken(provider, idToken).handle(
-            onSuccess = {
-                reduce {
-                    state.copy(isLoading = false)
+        fun onAction(action: LoginAction) {
+            when (action) {
+                is LoginAction.Login -> {
+                    handleLogin(action.provider)
                 }
+                is LoginAction.LoginWithIdToken -> {
+                    handleLogin(action.provider, action.idToken)
+                }
+            }
+        }
+
+        private fun handleLogin(provider: AuthProvider) =
+            baseIntent {
+                reduce {
+                    state.copy(isLoading = true)
+                }
+                login(provider).handle(onSuccess = {
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.LoginSuccess)
+                }, onError = { throwable, code, data ->
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    handleLoginError(code, provider, data as? String)
+                })
+            }
+
+        private fun handleLogin(
+            provider: AuthProvider,
+            idToken: String,
+        ) = baseIntent {
+            reduce {
+                state.copy(isLoading = true)
+            }
+            loginWithIdToken(provider, idToken).handle(
+                onSuccess = {
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.LoginSuccess)
+                },
+                onError = { throwable, code, data ->
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    handleLoginError(code, provider, idToken)
+                },
+            )
+        }
+
+        private suspend fun handleLoginError(
+            code: ErrorCode,
+            provider: AuthProvider,
+            idToken: String?,
+        ) = subIntent {
+            if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN || idToken == null) {
+                // invalid social id - show toast
                 retryCount = 0
-                postSideEffect(LoginSideEffect.LoginSuccess)
-            },
-            onError = { throwable, code, data ->
-                reduce {
-                    state.copy(isLoading = false)
-                }
-                handleLoginError(code, provider, idToken)
-            }
-        )
-    }
-
-    private suspend fun handleLoginError(code: ErrorCode, provider: AuthProvider, idToken: String?) = subIntent {
-        if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN || idToken == null) {
-            // invalid social id - show toast
-            retryCount = 0
-            postSideEffect(LoginSideEffect.SocialLoginError)
-        } else if (code == ErrorCode.NEED_SIGN_UP) {
-            // need sign up - nav to on boarding
-            retryCount = 0
-            postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
-        } else {
-            // show login error modal on any login errors
-            if (retryCount < 3) {
-                retryCount++
-                postSideEffect(LoginSideEffect.RetryLogin(provider, idToken))
+                postSideEffect(LoginSideEffect.SocialLoginError)
+            } else if (code == ErrorCode.NEED_SIGN_UP) {
+                // need sign up - nav to on boarding
+                retryCount = 0
+                postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
             } else {
-                retryCount = 0
-                postSideEffect(LoginSideEffect.InquireLoginError(provider))
+                // show login error modal on any login errors
+                if (retryCount < 3) {
+                    retryCount++
+                    postSideEffect(LoginSideEffect.RetryLogin(provider, idToken))
+                } else {
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.InquireLoginError(provider))
+                }
             }
         }
     }
-}

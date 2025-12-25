@@ -28,9 +28,7 @@ import com.emotionstorage.ui.component.Modal
  *     - 스크롤 X
  */
 @Composable
-fun RetryLoginModal(
-    onConfirm: () -> Unit
-) {
+fun RetryLoginModal(onConfirm: () -> Unit) {
     // todo: disable back press to dismiss
     Modal(
         onDismissRequest = {
