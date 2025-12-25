@@ -18,10 +18,10 @@ constructor(
         if (loginResult is DataState.Success) {
             val handleLoginResult = handleLogin(accessToken = loginResult.data)
 
-            if (handleLoginResult is DataState.Success) {
-                return loginResult
+            return if (handleLoginResult is DataState.Success) {
+                loginResult
             } else {
-                return handleLoginResult
+                handleLoginResult
             }
         }
 
