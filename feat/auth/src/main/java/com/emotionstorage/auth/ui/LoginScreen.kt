@@ -17,6 +17,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,10 +38,17 @@ import com.emotionstorage.auth.presentation.LoginSideEffect
 import com.emotionstorage.auth.presentation.LoginState
 import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
+import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
+
+private enum class LoginModalState {
+    NONE,
+    RETRY_LOGIN,
+    INQUIRE_LOGIN_ERROR
+}
 
 @Composable
 fun LoginScreen(
@@ -47,6 +58,9 @@ fun LoginScreen(
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    var modalState by remember {
+        mutableStateOf(LoginModalState.NONE)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { effect ->
@@ -60,11 +74,11 @@ fun LoginScreen(
                 }
 
                 is LoginSideEffect.RetryLogin -> {
-                    // todo: show login retry modal
+                    modalState = LoginModalState.RETRY_LOGIN
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
-                    // todo: show login error inquiry modal
+                    modalState = LoginModalState.INQUIRE_LOGIN_ERROR
                 }
             }
         }
@@ -75,6 +89,21 @@ fun LoginScreen(
         state = state.value,
         onAction = viewModel::onAction,
     )
+
+    when (modalState) {
+        LoginModalState.NONE -> {}
+
+        LoginModalState.RETRY_LOGIN -> {
+            RetryLoginModal {
+                viewModel.onAction(LoginAction.Login(AuthProvider.KAKAO))
+                modalState = LoginModalState.NONE
+            }
+        }
+
+        LoginModalState.INQUIRE_LOGIN_ERROR -> {
+            // todo: add login error inquiry modal
+        }
+    }
 }
 
 @Composable
@@ -154,7 +183,8 @@ private fun StatelessLoginScreen(
                         .background(
                             MooiTheme.colorScheme.backgroundTinted,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                        ).padding(top = 26.dp, bottom = 36.dp)
+                        )
+                        .padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
