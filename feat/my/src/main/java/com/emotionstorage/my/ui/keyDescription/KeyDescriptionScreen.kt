@@ -31,6 +31,7 @@ import com.emotionstorage.my.ui.keyDescription.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.rememberAdaptiveHeightDp
 
 @Composable
 fun KeyDescriptionScreen(
@@ -62,6 +63,14 @@ fun StatelessKeyDescriptionScreen(
     onDismissDialog: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
+    val adaptiveHeight =
+        rememberAdaptiveHeightDp(
+            baseDp = 93.dp,
+            referenceHeightDp = 800,
+            minDp = 60.dp,
+            maxDp = 140.dp,
+        )
+
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -100,11 +109,20 @@ fun StatelessKeyDescriptionScreen(
                     color = MooiTheme.colorScheme.gray400,
                 )
 
-                Spacer(modifier = Modifier.padding(58.dp))
+                Spacer(
+                    modifier =
+                        Modifier.padding(
+                            rememberAdaptiveHeightDp(
+                                baseDp = 58.dp,
+                                minDp = 45.dp,
+                                maxDp = 80.dp,
+                            ),
+                        ),
+                )
                 Image(
                     modifier =
                         Modifier
-                            .size(149.dp)
+                            .size(147.dp)
                             .align(Alignment.CenterHorizontally),
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
@@ -115,7 +133,7 @@ fun StatelessKeyDescriptionScreen(
                 modifier =
                     Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 48.dp),
+                        .padding(bottom = 47.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -125,12 +143,22 @@ fun StatelessKeyDescriptionScreen(
                     color = Color.White,
                     textAlign = TextAlign.Center,
                 )
-                Spacer(modifier = Modifier.size(12.dp))
+                Spacer(modifier = Modifier.size(11.dp))
                 CountRow(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     count = state.keyCount,
                 )
-                Spacer(modifier = Modifier.padding(93.dp))
+                Spacer(
+                    modifier =
+                        Modifier.padding(
+                            top =
+                                rememberAdaptiveHeightDp(
+                                    baseDp = 93.dp,
+                                    minDp = 70.dp,
+                                    maxDp = 120.dp,
+                                ),
+                        ),
+                )
                 Row(
                     modifier =
                         Modifier.clickable {
