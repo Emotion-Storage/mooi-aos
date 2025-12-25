@@ -1,11 +1,19 @@
 package com.emotionstorage.auth.ui.modal
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.emotionstorage.auth.BuildConfig
 import com.emotionstorage.ui.component.modal.Modal
+import com.emotionstorage.ui.component.toast.Toast
+import com.orhanobut.logger.Logger
+import androidx.core.net.toUri
 
 /**
  * login_02
@@ -26,13 +34,26 @@ import com.emotionstorage.ui.component.modal.Modal
  */
 @Composable
 fun InquireLoginErrorModal(onDismissRequest: () -> Unit) {
+    val context = LocalContext.current
     Modal(
         onDismissRequest = onDismissRequest,
         topDescription = "여러 번 시도했지만\n로그인에 계속 문제가 있어요.",
         title = "잠시 후 다시 시도하거나\n메일로 문의해주세요.",
         confirmLabel = "이메일로 문의하기",
         onConfirm = {
-            // todo: start email intent
+            // todo: set email subject & title
+            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
+                data = "mailto:".toUri()
+                putExtra(Intent.EXTRA_EMAIL, arrayOf("mooi.reply@gmail.com"))
+                putExtra(Intent.EXTRA_SUBJECT, "문의 제목")
+                putExtra(Intent.EXTRA_TEXT, "문의 내용")
+            }
+
+            try {
+                context.startActivity(Intent.createChooser(emailIntent, "이메일 앱을 선택해주세요."))
+            } catch (e: Exception) {
+                Logger.e("이메일 앱 선택 불가능", e)
+            }
             onDismissRequest()
         },
         dismissLabel = "닫기",
