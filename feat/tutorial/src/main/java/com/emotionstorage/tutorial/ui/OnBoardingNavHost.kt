@@ -65,18 +65,6 @@ fun OnBoardingNavHost(
                 is OnBoardingSideEffect.SignupFailed -> {
                     // todo: handle signup failure
                 }
-
-                is OnBoardingSideEffect.TermDetail -> {
-                    navController.navigate(OnBoardingRoute.TERM_DETAIL.route)
-                }
-
-                is OnBoardingSideEffect.PrivacyDetail -> {
-                    navController.navigate(OnBoardingRoute.PRIVACY_DETAIL.route)
-                }
-
-                is OnBoardingSideEffect.MarketingDetail -> {
-                    navController.navigate(OnBoardingRoute.MARKETING_DETAIL.route)
-                }
             }
         }
     }
@@ -194,13 +182,13 @@ private fun StatelessOnBoardingNavHost(
                                 navToSignupComplete(AuthProvider.KAKAO, "")
                             },
                             navToTermDetail = {
-                                onAction(OnBoardingAction.TermDetail)
+                                navController.navigate(OnBoardingRoute.TERM_DETAIL.route)
                             },
                             navToPrivacyDetail = {
-                                onAction(OnBoardingAction.PrivacyDetail)
+                                navController.navigate(OnBoardingRoute.PRIVACY_DETAIL.route)
                             },
                             navToMarketingDetail = {
-                                onAction(OnBoardingAction.MarketingDetail)
+                                navController.navigate(OnBoardingRoute.MARKETING_DETAIL.route)
                             },
                         )
                     }

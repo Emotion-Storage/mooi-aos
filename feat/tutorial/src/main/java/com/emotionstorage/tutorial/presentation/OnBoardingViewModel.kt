@@ -48,12 +48,6 @@ sealed class OnBoardingAction {
         val isAgeAgreed: Boolean,
     ) : OnBoardingAction()
 
-    object TermDetail : OnBoardingAction()
-
-    object PrivacyDetail : OnBoardingAction()
-
-    object MarketingDetail : OnBoardingAction()
-
     object Signup : OnBoardingAction()
 }
 
@@ -63,11 +57,9 @@ sealed class OnBoardingSideEffect {
         val idToken: String,
     ) : OnBoardingSideEffect()
 
-    object TermDetail : OnBoardingSideEffect()
-
-    object PrivacyDetail : OnBoardingSideEffect()
-
-    object MarketingDetail : OnBoardingSideEffect()
+//    object SocialTokenExpired: OnBoardingSideEffect()
+//
+//    object DuplicateAccount: OnBoardingSideEffect()
 
     object SignupFailed : OnBoardingSideEffect()
 }
@@ -107,18 +99,6 @@ class OnBoardingViewModel
                         action.isMarketingAgreed,
                         action.isAgeAgreed,
                     )
-                }
-
-                is OnBoardingAction.TermDetail -> {
-                    handleTermDetail()
-                }
-
-                is OnBoardingAction.PrivacyDetail -> {
-                    handlePrivacyDetail()
-                }
-
-                is OnBoardingAction.MarketingDetail -> {
-                    handleMarketingDetail()
                 }
 
                 is OnBoardingAction.Signup -> {
@@ -179,21 +159,6 @@ class OnBoardingViewModel
                 )
             }
         }
-
-        private fun handleTermDetail() =
-            intent {
-                postSideEffect(OnBoardingSideEffect.TermDetail)
-            }
-
-        private fun handlePrivacyDetail() =
-            intent {
-                postSideEffect(OnBoardingSideEffect.PrivacyDetail)
-            }
-
-        private fun handleMarketingDetail() =
-            intent {
-                postSideEffect(OnBoardingSideEffect.MarketingDetail)
-            }
 
         private fun handleSignup() =
             intent {
