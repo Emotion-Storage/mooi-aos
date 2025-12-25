@@ -2,7 +2,7 @@ package com.emotionstorage.ai_chat.ui.component
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable

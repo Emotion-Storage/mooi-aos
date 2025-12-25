@@ -38,7 +38,7 @@ import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.keyDescription.component.KeyCard
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
-import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 

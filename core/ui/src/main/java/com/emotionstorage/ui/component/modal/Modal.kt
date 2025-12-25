@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.modal
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
