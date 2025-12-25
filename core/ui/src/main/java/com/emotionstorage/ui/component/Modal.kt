@@ -1,5 +1,6 @@
 package com.emotionstorage.ui.component
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +35,7 @@ import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 @Composable
 fun Modal(
     onDismissRequest: () -> Unit,
+    disableBackPress: Boolean = false,
     topDescription: String? = null,
     topDescriptionHighlights: List<String>? = emptyList(),
     title: String? = null,
@@ -49,6 +51,12 @@ fun Modal(
     topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
 ) {
+    if(disableBackPress){
+        BackHandler{
+            // do nothing
+        }
+    }
+
     if (showBackground) {
         // set bg color to black with 0.8 alpha (80% opacity)
         Box(

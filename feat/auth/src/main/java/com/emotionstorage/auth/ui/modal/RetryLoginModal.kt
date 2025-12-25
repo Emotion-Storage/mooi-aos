@@ -29,11 +29,11 @@ import com.emotionstorage.ui.component.Modal
  */
 @Composable
 fun RetryLoginModal(onConfirm: () -> Unit) {
-    // todo: disable back press to dismiss
     Modal(
         onDismissRequest = {
             // disable bg click to dismiss
         },
+        disableBackPress = true,
         title = "일시적인 문제로\n로그인이 완료되지 않았어요.\n잠시 후 다시 시도해주세요.",
         bottomDescription = "네트워크가 불안정한 경우에도\n이런 현상이 발생할 수 있어요.",
         confirmLabel = "다시 로그인하기",
