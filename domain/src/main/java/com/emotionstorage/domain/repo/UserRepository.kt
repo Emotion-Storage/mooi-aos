@@ -10,6 +10,8 @@ interface UserRepository {
 
     suspend fun getUser(): Flow<DataState<User>>
 
+    suspend fun getAndSaveUser(): Boolean
+
     suspend fun deleteUser(): Boolean
 
     suspend fun updateUserNickname(nickname: String): DataState<Unit?>
