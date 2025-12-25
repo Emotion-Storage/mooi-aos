@@ -42,6 +42,7 @@ import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.auth.ui.modal.InquireLoginErrorModal
 import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
@@ -51,13 +52,10 @@ private sealed class LoginModalState {
     object None : LoginModalState()
 
     data class RetryLogin(
-        val provider: AuthProvider,
-        val idToken: String
+        val accessToken: String
     ) : LoginModalState()
 
-    data class InquireLoginError(
-        val provider: AuthProvider
-    ) : LoginModalState()
+    object InquireLoginError : LoginModalState()
 }
 
 @Composable
@@ -90,15 +88,20 @@ fun LoginScreen(
 
                 is LoginSideEffect.RetryLogin -> {
                     modalState = LoginModalState.RetryLogin(
-                        effect.provider,
-                        effect.idToken
+                        effect.accessToken
                     )
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
-                    modalState = LoginModalState.InquireLoginError(
-                        effect.provider
-                    )
+                    modalState = LoginModalState.InquireLoginError
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    snackbarHostState.showSnackbar("로그인 실패")
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    snackbarHostState.showSnackbar("네트워크 연결 실패")
                 }
             }
         }
@@ -118,9 +121,8 @@ fun LoginScreen(
             RetryLoginModal {
                 // retry login with same provider & id token
                 viewModel.onAction(
-                    LoginAction.LoginWithIdToken(
-                        (modalState as LoginModalState.RetryLogin).provider,
-                        (modalState as LoginModalState.RetryLogin).idToken,
+                    LoginAction.RetryLogin(
+                        (modalState as LoginModalState.RetryLogin).accessToken
                     )
                 )
                 modalState = LoginModalState.None
