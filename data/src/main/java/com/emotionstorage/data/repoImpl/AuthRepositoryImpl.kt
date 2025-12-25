@@ -51,23 +51,17 @@ class AuthRepositoryImpl @Inject constructor(
             DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
         }
 
-    override suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>> =
-        flow {
-            emit(DataState.Loading(true))
-            try {
-                if (signupForm.provider == null) throw Exception("provider is null")
-                if (signupForm.idToken == null) throw Exception("idToken is null")
+    override suspend fun signup(signupForm: SignupForm): DataState<Unit> =
+        try {
+            if (signupForm.provider == null) throw Exception("provider is null")
+            if (signupForm.idToken == null) throw Exception("idToken is null")
 
-                authRemoteDataSource.signup(
-                    signupForm.provider!!,
-                    SignupFormMapper.toData(signupForm),
-                )
-                emit(DataState.Success(true))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+            authRemoteDataSource.signup(
+                signupForm.provider!!,
+                SignupFormMapper.toData(signupForm),
+            )
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
 
     override suspend fun checkSession(): DataState<Boolean> =

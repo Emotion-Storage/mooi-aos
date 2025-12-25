@@ -13,7 +13,7 @@ interface AuthRepository {
         idToken: String,
     ): DataState<String>
 
-    suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>>
+    suspend fun signup(signupForm: SignupForm): DataState<Unit>
 
     suspend fun checkSession(): DataState<Boolean>
 

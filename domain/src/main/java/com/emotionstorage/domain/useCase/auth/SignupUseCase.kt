@@ -16,6 +16,6 @@ class SignupUseCase
     constructor(
         private val authRepository: AuthRepository,
     ) {
-        suspend operator fun invoke(signupForm: SignupForm): Flow<DataState<Boolean>> =
+        suspend operator fun invoke(signupForm: SignupForm): DataState<Unit> =
             authRepository.signup(signupForm)
     }
