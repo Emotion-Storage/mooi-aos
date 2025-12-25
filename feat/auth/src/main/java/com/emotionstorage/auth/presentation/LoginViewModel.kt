@@ -4,6 +4,7 @@ import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
 import com.emotionstorage.domain.useCase.auth.LoginWithIdTokenUseCase
+import com.emotionstorage.presentation.BaseException
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -82,7 +83,7 @@ class LoginViewModel
                     reduce {
                         state.copy(isLoading = false)
                     }
-                    handleLoginError(code, provider, data as? String)
+                    handleLoginError(throwable, code, provider, data as? String)
                 })
             }
 
@@ -105,12 +106,13 @@ class LoginViewModel
                     reduce {
                         state.copy(isLoading = false)
                     }
-                    handleLoginError(code, provider, idToken)
+                    handleLoginError(throwable, code, provider, idToken)
                 },
             )
         }
 
         private suspend fun handleLoginError(
+            throwable: Throwable,
             code: ErrorCode,
             provider: AuthProvider,
             idToken: String?,
@@ -123,8 +125,8 @@ class LoginViewModel
                 // need sign up - nav to on boarding
                 retryCount = 0
                 postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
-            } else {
-                // show login error modal on any login errors
+            } else if(code == ErrorCode.LOGIN_CLIENT_ERROR){
+                // client login handling error - show login error modal
                 if (retryCount < 3) {
                     retryCount++
                     postSideEffect(LoginSideEffect.RetryLogin(provider, idToken))
@@ -132,6 +134,13 @@ class LoginViewModel
                     retryCount = 0
                     postSideEffect(LoginSideEffect.InquireLoginError(provider))
                 }
+            } else{
+                // throw base exception for base viewmodel to handle
+                throw BaseException(
+                    code = code,
+                    message = throwable.message,
+                    cause = throwable,
+                )
             }
         }
     }
