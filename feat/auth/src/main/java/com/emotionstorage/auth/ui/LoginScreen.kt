@@ -96,7 +96,6 @@ fun LoginScreen(
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
-                    snackbarHostState.showSnackbar("로그인 에러 문의 팝업 표시")
                     modalState = LoginModalState.InquireLoginError(
                         effect.provider
                     )
