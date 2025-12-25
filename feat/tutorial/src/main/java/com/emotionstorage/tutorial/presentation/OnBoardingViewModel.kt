@@ -6,7 +6,11 @@ import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.SignupForm.GENDER
 import com.emotionstorage.domain.useCase.auth.SignupUseCase
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
@@ -51,149 +55,147 @@ sealed class OnBoardingAction {
     object Signup : OnBoardingAction()
 }
 
-sealed class OnBoardingSideEffect {
+sealed class OnBoardingSideEffect : BaseSideEffect {
     data class SignupSuccess(
         val provider: AuthProvider,
         val idToken: String,
     ) : OnBoardingSideEffect()
 
-//    object SocialTokenExpired: OnBoardingSideEffect()
-//
-//    object DuplicateAccount: OnBoardingSideEffect()
+    object SocialTokenExpired : OnBoardingSideEffect()
+
+    object DuplicateAccount : OnBoardingSideEffect()
 
     object SignupFailed : OnBoardingSideEffect()
 }
 
 @HiltViewModel
 class OnBoardingViewModel
-    @Inject
-    constructor(
-        private val signup: SignupUseCase,
-    ) : ViewModel(),
-        ContainerHost<OnBoardingState, OnBoardingSideEffect> {
-        override val container = container<OnBoardingState, OnBoardingSideEffect>(OnBoardingState())
+@Inject
+constructor(
+    private val signup: SignupUseCase,
+) : BaseViewModel<OnBoardingState>(
+    OnBoardingState()
+) {
+    fun onAction(action: OnBoardingAction) {
+        when (action) {
+            is OnBoardingAction.Initiate -> {
+                handleInitiate(action.provider, action.idToken)
+            }
 
-        fun onAction(action: OnBoardingAction) {
-            when (action) {
-                is OnBoardingAction.Initiate -> {
-                    handleInitiate(action.provider, action.idToken)
-                }
+            is OnBoardingAction.InputNickname -> {
+                handleInputNickname(action.nickname)
+            }
 
-                is OnBoardingAction.InputNickname -> {
-                    handleInputNickname(action.nickname)
-                }
+            is OnBoardingAction.InputGenderAndBirth -> {
+                handleInputGenderAndBirth(action.gender, action.birth)
+            }
 
-                is OnBoardingAction.InputGenderAndBirth -> {
-                    handleInputGenderAndBirth(action.gender, action.birth)
-                }
+            is OnBoardingAction.InputExpectations -> {
+                handleInputExpectations(action.expectations)
+            }
 
-                is OnBoardingAction.InputExpectations -> {
-                    handleInputExpectations(action.expectations)
-                }
+            is OnBoardingAction.InputAgreedTerms -> {
+                handleInputAgreedTerms(
+                    action.isAllAgreed,
+                    action.isTermAgreed,
+                    action.isPrivacyAgreed,
+                    action.isMarketingAgreed,
+                    action.isAgeAgreed,
+                )
+            }
 
-                is OnBoardingAction.InputAgreedTerms -> {
-                    handleInputAgreedTerms(
-                        action.isAllAgreed,
-                        action.isTermAgreed,
-                        action.isPrivacyAgreed,
-                        action.isMarketingAgreed,
-                        action.isAgeAgreed,
-                    )
-                }
+            is OnBoardingAction.Signup -> {
+                handleSignup()
+            }
+        }
+    }
 
-                is OnBoardingAction.Signup -> {
-                    handleSignup()
-                }
+    private fun handleInitiate(
+        provider: AuthProvider,
+        idToken: String,
+    ) = intent {
+        reduce {
+            state.copy(signupForm = state.signupForm.copy(provider = provider, idToken = idToken))
+        }
+    }
+
+    private fun handleInputNickname(nickname: String) =
+        intent {
+            reduce {
+                state.copy(signupForm = state.signupForm.copy(nickname = nickname))
             }
         }
 
-        private fun handleInitiate(
-            provider: AuthProvider,
-            idToken: String,
-        ) = intent {
+    private fun handleInputGenderAndBirth(
+        gender: GENDER,
+        birth: LocalDate,
+    ) = intent {
+        reduce {
+            state.copy(signupForm = state.signupForm.copy(gender = gender, birthday = birth))
+        }
+    }
+
+    private fun handleInputExpectations(expectations: List<Expectation>) =
+        intent {
             reduce {
-                state.copy(signupForm = state.signupForm.copy(provider = provider, idToken = idToken))
+                state.copy(signupForm = state.signupForm.copy(expectations = expectations))
             }
         }
 
-        private fun handleInputNickname(nickname: String) =
-            intent {
-                reduce {
-                    state.copy(signupForm = state.signupForm.copy(nickname = nickname))
-                }
-            }
-
-        private fun handleInputGenderAndBirth(
-            gender: GENDER,
-            birth: LocalDate,
-        ) = intent {
-            reduce {
-                state.copy(signupForm = state.signupForm.copy(gender = gender, birthday = birth))
-            }
+    private fun handleInputAgreedTerms(
+        isAllAgreed: Boolean,
+        isTermAgreed: Boolean,
+        isPrivacyAgreed: Boolean,
+        isMarketingAgreed: Boolean,
+        isAgeAgreed: Boolean,
+    ) = intent {
+        reduce {
+            state.copy(
+                signupForm =
+                    state.signupForm.copy(
+                        isTermAgreed = isTermAgreed,
+                        isPrivacyAgreed = isPrivacyAgreed,
+                        isMarketingAgreed = isMarketingAgreed,
+                    ),
+                isAllAgreed = isAllAgreed,
+                isAgeAgreed = isAgeAgreed,
+            )
         }
+    }
 
-        private fun handleInputExpectations(expectations: List<Expectation>) =
-            intent {
-                reduce {
-                    state.copy(signupForm = state.signupForm.copy(expectations = expectations))
-                }
-            }
+    private fun handleSignup() =
+        baseIntent {
+            // snapshot state value
+            val provider = state.signupForm.provider
+            val idToken = state.signupForm.idToken
 
-        private fun handleInputAgreedTerms(
-            isAllAgreed: Boolean,
-            isTermAgreed: Boolean,
-            isPrivacyAgreed: Boolean,
-            isMarketingAgreed: Boolean,
-            isAgeAgreed: Boolean,
-        ) = intent {
-            reduce {
-                state.copy(
-                    signupForm =
-                        state.signupForm.copy(
-                            isTermAgreed = isTermAgreed,
-                            isPrivacyAgreed = isPrivacyAgreed,
-                            isMarketingAgreed = isMarketingAgreed,
-                        ),
-                    isAllAgreed = isAllAgreed,
-                    isAgeAgreed = isAgeAgreed,
+            if (provider == null || idToken == null) {
+                postSideEffect(OnBoardingSideEffect.SocialTokenExpired)
+            } else {
+                signup(state.signupForm).handle(
+                    onSuccess = {
+                        postSideEffect(
+                            OnBoardingSideEffect.SignupSuccess(provider, idToken)
+                        )
+                    },
+                    onError = { throwable, code, data ->
+                        if (code == ErrorCode.INVALID_ID_TOKEN ||
+                            code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN
+                        ) {
+                            postSideEffect(OnBoardingSideEffect.SocialTokenExpired)
+                        } else if (code == ErrorCode.ALREADY_REGISTERED_WITH_GOOGLE ||
+                            code == ErrorCode.ALREADY_REGISTERED_WITH_KAKAO
+                        ) {
+                            postSideEffect(OnBoardingSideEffect.DuplicateAccount)
+                        } else {
+                            throw BaseException(
+                                message = throwable.message,
+                                code = code,
+                                cause = throwable,
+                            )
+                        }
+                    }
                 )
             }
         }
-
-        private fun handleSignup() =
-            intent {
-                if (state.signupForm.provider == null) {
-                    Logger.e("provider is null")
-                    postSideEffect(OnBoardingSideEffect.SignupFailed)
-                    return@intent
-                }
-                if (state.signupForm.idToken == null) {
-                    Logger.e("idToken is null")
-                    postSideEffect(OnBoardingSideEffect.SignupFailed)
-                    return@intent
-                }
-
-                signup(state.signupForm).collect { result ->
-                    when (result) {
-                        is DataState.Loading -> {
-                            // do nothing
-                        }
-
-                        is DataState.Success -> {
-                            Logger.i(result.toString())
-                            postSideEffect(
-                                OnBoardingSideEffect.SignupSuccess(
-                                    state.signupForm.provider!!,
-                                    state.signupForm.idToken!!,
-                                ),
-                            )
-                        }
-
-                        is DataState.Error -> {
-                            Logger.e(result.toString())
-                            postSideEffect(OnBoardingSideEffect.SignupFailed)
-                        }
-                    }
-                }
-            }
-    }
+}
