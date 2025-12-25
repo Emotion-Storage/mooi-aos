@@ -15,16 +15,12 @@ class DeleteAccountUseCase
     @Inject
     constructor(
         private val authRepository: AuthRepository,
-        private val userRepository: UserRepository,
-        private val sessionRepository: SessionRepository,
-        private val fcmRepository: FcmRepository,
+        private val handleLogout: HandleLogoutUseCase
     ) {
         suspend operator fun invoke(): Boolean {
             val result = authRepository.deleteAccount()
             if (result) {
-                sessionRepository.deleteSession()
-                userRepository.deleteUser()
-                fcmRepository.deleteToken()
+                handleLogout()
             }
             return result
         }
