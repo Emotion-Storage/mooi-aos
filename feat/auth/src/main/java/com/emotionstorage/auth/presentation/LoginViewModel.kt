@@ -66,6 +66,7 @@ class LoginViewModel
             reduce {
                 state.copy(isLoading = false)
             }
+            retryCount = 0
             postSideEffect(LoginSideEffect.LoginSuccess)
         }, onError = { throwable, code, data ->
             reduce {
@@ -84,6 +85,7 @@ class LoginViewModel
                 reduce {
                     state.copy(isLoading = false)
                 }
+                retryCount = 0
                 postSideEffect(LoginSideEffect.LoginSuccess)
             },
             onError = { throwable, code, data ->
@@ -98,9 +100,11 @@ class LoginViewModel
     private suspend fun handleLoginError(code: ErrorCode, provider: AuthProvider, idToken: String?) = subIntent {
         if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN || idToken == null) {
             // invalid social id - show toast
+            retryCount = 0
             postSideEffect(LoginSideEffect.SocialLoginError)
         } else if (code == ErrorCode.NEED_SIGN_UP) {
             // need sign up - nav to on boarding
+            retryCount = 0
             postSideEffect(LoginSideEffect.NeedSignUp(provider, idToken))
         } else {
             // show login error modal on any login errors
