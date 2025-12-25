@@ -66,8 +66,6 @@ fun AgreeTermsScreen(
     navToTermDetail: () -> Unit = {},
     navToPrivacyDetail: () -> Unit = {},
     navToMarketingDetail: () -> Unit = {},
-    // todo: delete test navigations
-    navToSignupComplete: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -93,7 +91,6 @@ fun AgreeTermsScreen(
         navToTermDetail = navToTermDetail,
         navToPrivacyDetail = navToPrivacyDetail,
         navToMarketingDetail = navToMarketingDetail,
-        navToSignupComplete = navToSignupComplete,
     )
 }
 
@@ -253,15 +250,6 @@ private fun StatelessAgreeTermsScreen(
                         color = MooiTheme.colorScheme.primaryBlue500,
                         text = stringResource(tutorialR.string.on_boarding_p3_info2),
                     )
-                }
-
-                // todo: delete test navigatyion button
-                Button(
-                    onClick = {
-                        navToSignupComplete()
-                    },
-                ) {
-                    Text("회원가입 성공 화면 이동")
                 }
             }
 
