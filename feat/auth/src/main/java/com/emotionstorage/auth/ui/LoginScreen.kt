@@ -44,6 +44,7 @@ import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
@@ -56,6 +57,8 @@ private sealed class LoginModalState {
     ) : LoginModalState()
 
     object InquireLoginError : LoginModalState()
+
+    object TempError: LoginModalState()
 }
 
 @Composable
@@ -97,12 +100,12 @@ fun LoginScreen(
                     modalState = LoginModalState.InquireLoginError
                 }
 
-                is BaseSideEffect.TemporalError -> {
-                    snackbarHostState.showSnackbar("로그인 실패")
-                }
-
                 is BaseSideEffect.NetworkError -> {
                     snackbarHostState.showSnackbar("연결이 잠시 불안정해요. \uD83D\uDE22\n인터넷 연결을 확인 후 다시 시도해주세요.")
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    modalState = LoginModalState.TempError
                 }
             }
         }
@@ -132,6 +135,12 @@ fun LoginScreen(
 
         is LoginModalState.InquireLoginError -> {
             InquireLoginErrorModal {
+                modalState = LoginModalState.None
+            }
+        }
+
+        is LoginModalState.TempError -> {
+            TempErrorModal {
                 modalState = LoginModalState.None
             }
         }
