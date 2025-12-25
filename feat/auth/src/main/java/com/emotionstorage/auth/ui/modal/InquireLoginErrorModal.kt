@@ -1,17 +1,13 @@
 package com.emotionstorage.auth.ui.modal
 
-import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.emotionstorage.auth.BuildConfig
 import com.emotionstorage.ui.component.modal.Modal
-import com.emotionstorage.ui.component.toast.Toast
 import com.orhanobut.logger.Logger
 import androidx.core.net.toUri
 
@@ -42,12 +38,13 @@ fun InquireLoginErrorModal(onDismissRequest: () -> Unit) {
         confirmLabel = "이메일로 문의하기",
         onConfirm = {
             // todo: set email subject & title
-            val emailIntent = Intent(Intent.ACTION_SENDTO).apply {
-                data = "mailto:".toUri()
-                putExtra(Intent.EXTRA_EMAIL, arrayOf("mooi.reply@gmail.com"))
-                putExtra(Intent.EXTRA_SUBJECT, "문의 제목")
-                putExtra(Intent.EXTRA_TEXT, "문의 내용")
-            }
+            val emailIntent =
+                Intent(Intent.ACTION_SENDTO).apply {
+                    data = "mailto:".toUri()
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf("mooi.reply@gmail.com"))
+                    putExtra(Intent.EXTRA_SUBJECT, "문의 제목")
+                    putExtra(Intent.EXTRA_TEXT, "문의 내용")
+                }
 
             try {
                 context.startActivity(Intent.createChooser(emailIntent, "이메일 앱을 선택해주세요."))

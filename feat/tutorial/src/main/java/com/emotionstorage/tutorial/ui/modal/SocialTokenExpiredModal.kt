@@ -22,9 +22,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - 스크롤 X
  */
 @Composable
-fun SocialTokenExpiredModal (
-    onConfirm: () -> Unit
-){
+fun SocialTokenExpiredModal(onConfirm: () -> Unit)  {
     Modal(
         onDismissRequest = {
             // disable bg click to dismiss
@@ -36,7 +34,6 @@ fun SocialTokenExpiredModal (
         onConfirm = onConfirm,
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable
