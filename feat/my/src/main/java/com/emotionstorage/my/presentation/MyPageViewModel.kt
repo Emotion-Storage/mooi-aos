@@ -17,6 +17,7 @@ data class MyPageState(
     val keyCount: Int = 0,
     val replyEmail: String = BuildConfig.MOOI_REPLY_EMAIL,
     val versionName: String = "0.0.0",
+    val isLoading: Boolean = false,
 )
 
 sealed class MyPageAction {
@@ -116,16 +117,18 @@ class MyPageViewModel @Inject constructor(
                                 nickname = result.data.nickname,
                                 signupDday = result.data.days,
                                 keyCount = result.data.keys,
+                                isLoading = false,
                             )
                         }
                     }
 
                     is DataState.Error -> {
+                        reduce { state.copy(isLoading = false) }
                         postSideEffect(MyPageSideEffect.ShowToast(result.throwable.message ?: "마이페이지 불러오기 실패"))
                     }
 
                     is DataState.Loading -> {
-                        // do nothing
+                        reduce { state.copy(isLoading = true) }
                     }
                 }
             }
