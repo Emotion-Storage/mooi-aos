@@ -58,7 +58,7 @@ private sealed class LoginModalState {
 
     object InquireLoginError : LoginModalState()
 
-    object TempError: LoginModalState()
+    object TempError : LoginModalState()
 }
 
 @Composable
@@ -230,8 +230,7 @@ private fun StatelessLoginScreen(
                         .background(
                             MooiTheme.colorScheme.backgroundTinted,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                        )
-                        .padding(top = 26.dp, bottom = 36.dp)
+                        ).padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
