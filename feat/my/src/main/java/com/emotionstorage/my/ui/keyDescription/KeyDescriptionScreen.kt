@@ -63,13 +63,6 @@ fun StatelessKeyDescriptionScreen(
     onDismissDialog: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val adaptiveHeight =
-        rememberAdaptiveHeightDp(
-            baseDp = 93.dp,
-            referenceHeightDp = 800,
-            minDp = 60.dp,
-            maxDp = 140.dp,
-        )
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
