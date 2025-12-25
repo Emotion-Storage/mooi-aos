@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,13 +42,21 @@ import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
-private enum class LoginModalState {
-    NONE,
-    RETRY_LOGIN,
-    INQUIRE_LOGIN_ERROR
+private sealed class LoginModalState {
+    object None : LoginModalState()
+
+    data class RetryLogin(
+        val provider: AuthProvider,
+        val idToken: String
+    ) : LoginModalState()
+
+    data class InquireLoginError(
+        val provider: AuthProvider
+    ) : LoginModalState()
 }
 
 @Composable
@@ -58,8 +67,9 @@ fun LoginScreen(
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
     var modalState by remember {
-        mutableStateOf(LoginModalState.NONE)
+        mutableStateOf<LoginModalState>(LoginModalState.None)
     }
 
     LaunchedEffect(Unit) {
@@ -73,12 +83,22 @@ fun LoginScreen(
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
+                is LoginSideEffect.SocialLoginError -> {
+                    snackbarHostState.showSnackbar("소셜 로그인 실패")
+                }
+
                 is LoginSideEffect.RetryLogin -> {
-                    modalState = LoginModalState.RETRY_LOGIN
+                    modalState = LoginModalState.RetryLogin(
+                        effect.provider,
+                        effect.idToken
+                    )
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
-                    modalState = LoginModalState.INQUIRE_LOGIN_ERROR
+                    snackbarHostState.showSnackbar("로그인 에러 문의 팝업 표시")
+                    modalState = LoginModalState.InquireLoginError(
+                        effect.provider
+                    )
                 }
             }
         }
@@ -86,21 +106,28 @@ fun LoginScreen(
 
     StatelessLoginScreen(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         state = state.value,
         onAction = viewModel::onAction,
     )
 
     when (modalState) {
-        LoginModalState.NONE -> {}
+        is LoginModalState.None -> {}
 
-        LoginModalState.RETRY_LOGIN -> {
+        is LoginModalState.RetryLogin -> {
             RetryLoginModal {
-                viewModel.onAction(LoginAction.Login(AuthProvider.KAKAO))
-                modalState = LoginModalState.NONE
+                // retry login with same provider & id token
+                viewModel.onAction(
+                    LoginAction.LoginWithIdToken(
+                        (modalState as LoginModalState.RetryLogin).provider,
+                        (modalState as LoginModalState.RetryLogin).idToken,
+                    )
+                )
+                modalState = LoginModalState.None
             }
         }
 
-        LoginModalState.INQUIRE_LOGIN_ERROR -> {
+        is LoginModalState.InquireLoginError -> {
             // todo: add login error inquiry modal
         }
     }
@@ -109,6 +136,7 @@ fun LoginScreen(
 @Composable
 private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
 ) {
@@ -117,6 +145,11 @@ private fun StatelessLoginScreen(
             modifier
                 .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackbarHostState,
+            )
+        }
     ) { padding ->
         Box(
             modifier =

@@ -19,6 +19,11 @@ sealed class LoginAction {
     data class Login(
         val provider: AuthProvider,
     ) : LoginAction()
+
+    data class LoginWithIdToken(
+        val provider: AuthProvider,
+        val idToken: String,
+    ): LoginAction()
 }
 
 sealed class LoginSideEffect : BaseSideEffect {
@@ -34,7 +39,9 @@ sealed class LoginSideEffect : BaseSideEffect {
         val idToken: String,
     ) : LoginSideEffect()
 
-    object InquireLoginError : LoginSideEffect()
+    data class InquireLoginError(
+        val provider: AuthProvider
+    ) : LoginSideEffect()
 
     object LoginSuccess : LoginSideEffect()
 }
@@ -54,6 +61,9 @@ class LoginViewModel
         when (action) {
             is LoginAction.Login -> {
                 handleLogin(action.provider)
+            }
+            is LoginAction.LoginWithIdToken -> {
+                handleLogin(action.provider, action.idToken)
             }
         }
     }
@@ -112,7 +122,7 @@ class LoginViewModel
                 retryCount++
                 postSideEffect(LoginSideEffect.RetryLogin(provider, idToken))
             } else {
-                postSideEffect(LoginSideEffect.InquireLoginError)
+                postSideEffect(LoginSideEffect.InquireLoginError(provider))
             }
         }
     }
