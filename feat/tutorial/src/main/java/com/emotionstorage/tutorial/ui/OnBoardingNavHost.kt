@@ -22,6 +22,7 @@ import com.emotionstorage.tutorial.presentation.OnBoardingAction
 import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingState
 import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
+import com.emotionstorage.tutorial.ui.modal.SocialTokenExpiredModal
 import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.GenderBirthScreen
@@ -111,7 +112,11 @@ fun OnBoardingNavHost(
     when (modalState) {
         OnBoardingModalState.None -> {}
         OnBoardingModalState.SocialTokenExpired -> {
-            // todo: add social token expired modal
+            SocialTokenExpiredModal {
+                // nav back to login screen
+                navToBack()
+                modalState = OnBoardingModalState.None
+            }
         }
 
         OnBoardingModalState.DuplicateAccount -> {
