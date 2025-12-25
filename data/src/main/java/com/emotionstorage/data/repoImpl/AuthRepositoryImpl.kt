@@ -70,17 +70,13 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
 
-    override suspend fun checkSession(): Flow<DataState<Boolean>> =
-        flow {
-            emit(DataState.Loading(true))
-            try {
-                emit(DataState.Success(authRemoteDataSource.checkSession()))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+    override suspend fun checkSession(): DataState<Boolean> =
+        try {
+            DataState.Success(authRemoteDataSource.checkSession())
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
+
 
     override suspend fun logout(): Boolean = authRemoteDataSource.logout()
 
