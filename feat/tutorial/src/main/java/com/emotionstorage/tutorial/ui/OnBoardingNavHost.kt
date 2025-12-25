@@ -22,6 +22,7 @@ import com.emotionstorage.tutorial.presentation.OnBoardingAction
 import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingState
 import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
+import com.emotionstorage.tutorial.ui.modal.DuplicateAccountModal
 import com.emotionstorage.tutorial.ui.modal.SocialTokenExpiredModal
 import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
@@ -55,7 +56,7 @@ private sealed class OnBoardingModalState {
     object DuplicateAccount : OnBoardingModalState()
 
     data class SignupError(
-        val errorCode: ErrorCode?
+        val errorCode: ErrorCode?,
     ) : OnBoardingModalState()
 }
 
@@ -120,7 +121,11 @@ fun OnBoardingNavHost(
         }
 
         OnBoardingModalState.DuplicateAccount -> {
-            // todo: add duplicate account modal
+            DuplicateAccountModal {
+                // nav back to login screen
+                navToBack()
+                modalState = OnBoardingModalState.None
+            }
         }
 
         is OnBoardingModalState.SignupError -> {
