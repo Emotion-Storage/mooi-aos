@@ -1,6 +1,5 @@
 package com.emotionstorage.tutorial.presentation
 
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.auth.AutomaticLoginUseCase
 import com.orhanobut.logger.Logger
 import com.emotionstorage.presentation.BaseException
@@ -22,35 +21,35 @@ sealed class SplashSideEffect : BaseSideEffect {
 
 @HiltViewModel
 class SplashViewModel
-@Inject
-constructor(
-    private val automaticLogin: AutomaticLoginUseCase,
-) : BaseViewModel<Unit>(
-    initialState = Unit,
-) {
-    suspend fun onAction(action: SplashAction) {
-        when (action) {
-            SplashAction.Init -> {
-                delay(SPLASH_DURATION)
-                handleAutoLogin()
+    @Inject
+    constructor(
+        private val automaticLogin: AutomaticLoginUseCase,
+    ) : BaseViewModel<Unit>(
+            initialState = Unit,
+        ) {
+        suspend fun onAction(action: SplashAction) {
+            when (action) {
+                SplashAction.Init -> {
+                    delay(SPLASH_DURATION)
+                    handleAutoLogin()
+                }
             }
         }
-    }
 
-    private fun handleAutoLogin() =
-        baseIntent {
-            automaticLogin().handle(
-                onSuccess = {
-                    Logger.i("Auto login success")
-                    postSideEffect(SplashSideEffect.AutoLoginSuccess)
-                },
-                onError = { throwable, code, data ->
-                    throw BaseException(
-                        message = throwable.message,
-                        code = code,
-                        cause = throwable,
-                    )
-                }
-            )
-        }
-}
+        private fun handleAutoLogin() =
+            baseIntent {
+                automaticLogin().handle(
+                    onSuccess = {
+                        Logger.i("Auto login success")
+                        postSideEffect(SplashSideEffect.AutoLoginSuccess)
+                    },
+                    onError = { throwable, code, data ->
+                        throw BaseException(
+                            message = throwable.message,
+                            code = code,
+                            cause = throwable,
+                        )
+                    },
+                )
+            }
+    }

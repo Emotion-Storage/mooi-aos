@@ -25,6 +25,7 @@ enum class ErrorCode {
     REFRESH_TOKEN_NOT_FOUND,
     UNAUTHORIZED,
     INVALID_NICKNAME,
+
     // auth client
     LOGIN_CLIENT_ERROR,
 

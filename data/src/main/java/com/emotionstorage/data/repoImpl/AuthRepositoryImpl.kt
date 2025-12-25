@@ -77,7 +77,6 @@ class AuthRepositoryImpl @Inject constructor(
             DataState.Error(e)
         }
 
-
     override suspend fun logout(): Boolean = authRemoteDataSource.logout()
 
     override suspend fun deleteAccount(): Boolean = authRemoteDataSource.deleteAccount()

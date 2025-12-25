@@ -4,15 +4,14 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
-import io.github.aakira.napier.Napier
 import javax.inject.Inject
 
 class HandleLogoutUseCase @Inject constructor(
     private val sessionRepository: SessionRepository,
     private val userRepository: UserRepository,
     private val fcmRepository: FcmRepository,
-){
-    suspend operator fun invoke() : DataState<Unit> {
+) {
+    suspend operator fun invoke(): DataState<Unit> {
         // ignore any client error on logout for now
         runCatching {
             sessionRepository.deleteSession()

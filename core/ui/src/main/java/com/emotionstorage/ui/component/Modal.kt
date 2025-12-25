@@ -51,11 +51,12 @@ fun Modal(
     topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
 ) {
-    if(disableBackPress){
-        BackHandler{
-            // do nothing
+    if (disableBackPress)
+        {
+            BackHandler {
+                // do nothing
+            }
         }
-    }
 
     if (showBackground) {
         // set bg color to black with 0.8 alpha (80% opacity)

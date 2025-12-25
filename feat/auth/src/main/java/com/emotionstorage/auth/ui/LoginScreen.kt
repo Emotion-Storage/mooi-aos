@@ -52,7 +52,7 @@ private sealed class LoginModalState {
     object None : LoginModalState()
 
     data class RetryLogin(
-        val accessToken: String
+        val accessToken: String,
     ) : LoginModalState()
 
     object InquireLoginError : LoginModalState()
@@ -87,9 +87,10 @@ fun LoginScreen(
                 }
 
                 is LoginSideEffect.RetryLogin -> {
-                    modalState = LoginModalState.RetryLogin(
-                        effect.accessToken
-                    )
+                    modalState =
+                        LoginModalState.RetryLogin(
+                            effect.accessToken,
+                        )
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
@@ -101,7 +102,7 @@ fun LoginScreen(
                 }
 
                 is BaseSideEffect.NetworkError -> {
-                    snackbarHostState.showSnackbar("네트워크 연결 실패")
+                    snackbarHostState.showSnackbar("연결이 잠시 불안정해요. \uD83D\uDE22\n인터넷 연결을 확인 후 다시 시도해주세요.")
                 }
             }
         }
@@ -122,8 +123,8 @@ fun LoginScreen(
                 // retry login with same provider & id token
                 viewModel.onAction(
                     LoginAction.RetryLogin(
-                        (modalState as LoginModalState.RetryLogin).accessToken
-                    )
+                        (modalState as LoginModalState.RetryLogin).accessToken,
+                    ),
                 )
                 modalState = LoginModalState.None
             }
@@ -153,7 +154,7 @@ private fun StatelessLoginScreen(
             AppSnackbarHost(
                 hostState = snackbarHostState,
             )
-        }
+        },
     ) { padding ->
         Box(
             modifier =

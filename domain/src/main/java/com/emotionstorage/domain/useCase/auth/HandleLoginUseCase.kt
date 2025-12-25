@@ -3,8 +3,6 @@ package com.emotionstorage.domain.useCase.auth
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.Session
-import com.emotionstorage.domain.model.User
-import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.UserRepository
