@@ -3,6 +3,7 @@ package com.emotionstorage.my.ui.myPage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -39,6 +40,7 @@ import com.emotionstorage.my.ui.keyDescription.component.KeyCard
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
 import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -145,71 +147,81 @@ private fun StatelessMyPageScreen(
                 .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
     ) { innerPadding ->
-        Column(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(MooiTheme.colorScheme.backgroundDefault)
-                    .padding(innerPadding)
-                    .padding(start = 16.dp, end = 16.dp, top = 35.dp)
-                    .consumeWindowInsets(WindowInsets.navigationBars),
-            verticalArrangement = Arrangement.Top,
-        ) {
-            ProfileHeader(
-                modifier = Modifier.offset(x = -9.dp),
-                nickname = state.nickname,
-                signupDday = state.signupDday,
-                onEditClick = {
-                    navToNickNameChange()
-                },
-            )
 
-            Spacer(modifier = Modifier.size(16.dp))
-
-            KeyCard(
-                keyCount = state.keyCount,
+        Box {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .background(MooiTheme.colorScheme.backgroundDefault)
+                        .padding(innerPadding)
+                        .padding(start = 16.dp, end = 16.dp, top = 35.dp)
+                        .consumeWindowInsets(WindowInsets.navigationBars),
+                verticalArrangement = Arrangement.Top,
             ) {
-                navToKeyDescription()
-            }
+                ProfileHeader(
+                    modifier = Modifier.offset(x = -9.dp),
+                    nickname = state.nickname,
+                    signupDday = state.signupDday,
+                    onEditClick = {
+                        navToNickNameChange()
+                    },
+                )
 
-            Spacer(modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.size(16.dp))
 
-            MenuSection(
-                versionInfo = state.versionName,
-                onAccountInfoClick = navToAccountInfo,
-                onEmailCopyClick = {
-                    clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
-                },
-                onTermsAndPrivacyClick = navToTermsAndPrivacy,
-                onLogoutClick = { showLogoutModal = true },
-                onNotificationClick = navToNotificationSetting,
-            )
+                KeyCard(
+                    keyCount = state.keyCount,
+                ) {
+                    navToKeyDescription()
+                }
 
-            if (showLogoutModal) {
-                Modal(
-                    title = "정말 로그아웃 하시겠어요?",
-                    confirmLabel = "아니요, 그냥 있을래요.",
-                    onDismissRequest = { showLogoutModal = false },
-                    topDescription = null,
-                    bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
-                    dismissLabel = "네, 로그아웃 할래요.",
-                    onDismiss = { onAction(MyPageAction.Logout) },
-                    onConfirm = { showLogoutModal = false },
+                Spacer(modifier = Modifier.size(24.dp))
+
+                MenuSection(
+                    versionInfo = state.versionName,
+                    onAccountInfoClick = navToAccountInfo,
+                    onEmailCopyClick = {
+                        clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
+                    },
+                    onTermsAndPrivacyClick = navToTermsAndPrivacy,
+                    onLogoutClick = { showLogoutModal = true },
+                    onNotificationClick = navToNotificationSetting,
+                )
+
+                if (showLogoutModal) {
+                    Modal(
+                        title = "정말 로그아웃 하시겠어요?",
+                        confirmLabel = "아니요, 그냥 있을래요.",
+                        onDismissRequest = { showLogoutModal = false },
+                        topDescription = null,
+                        bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
+                        dismissLabel = "네, 로그아웃 할래요.",
+                        onDismiss = { onAction(MyPageAction.Logout) },
+                        onConfirm = { showLogoutModal = false },
+                    )
+                }
+
+                Spacer(modifier = Modifier.size(8.dp))
+                Text(
+                    text = "계정 탈퇴하기",
+                    modifier =
+                        Modifier
+                            .wrapContentSize()
+                            .align(alignment = Alignment.End)
+                            .clickable { navToWithdraw() },
+                    textAlign = TextAlign.End,
+                    color = MooiTheme.colorScheme.gray600,
+                    style = MooiTheme.typography.caption7,
                 )
             }
 
-            Spacer(modifier = Modifier.size(8.dp))
-            Text(
-                text = "계정 탈퇴하기",
-                modifier =
-                    Modifier
-                        .wrapContentSize()
-                        .align(alignment = Alignment.End)
-                        .clickable { navToWithdraw() },
-                textAlign = TextAlign.End,
-                color = MooiTheme.colorScheme.gray600,
-                style = MooiTheme.typography.caption7,
-            )
+            if (state.nickname.isBlank()) {
+                LoadingOverlay(
+                    modifier = Modifier.align(Alignment.Center),
+                    delayDuration = 0L,
+                )
+            }
         }
     }
 }
