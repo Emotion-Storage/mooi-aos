@@ -53,7 +53,6 @@ class UserRepositoryImpl
                 val result = remoteDataSource.getUserAccountInfo()
                 if (result is DataState.Success) {
                     localDataSource.saveUser(UserMapper.toData(result.data.toUser()))
-                    true
                 } else {
                     false
                 }
