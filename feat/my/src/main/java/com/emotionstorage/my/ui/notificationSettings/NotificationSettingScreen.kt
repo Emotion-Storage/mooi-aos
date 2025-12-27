@@ -192,9 +192,9 @@ private fun StatelessNotificationSettingScreen(
                         thickness = 1.5.dp,
                     )
 
-                    Spacer(modifier = Modifier.size(29.dp))
-
                     if (state.emotionReminderNotify) {
+                        Spacer(modifier = Modifier.size(30.dp))
+
                         Text(
                             modifier = Modifier.padding(horizontal = 16.dp),
                             text = "감정 기록 알림 시간",
@@ -227,7 +227,7 @@ private fun StatelessNotificationSettingScreen(
 
                         Spacer(modifier = Modifier.size(14.dp))
 
-                        // TODO : 실 기기에서는 잘 보이는데 Preview에서는 가운데로 몰리는 것 같음
+                        // TODO : 실 기기에서는 잘 보이는데 Preview에서는 가운데로 몰리는 것 같음 -> Design QA에 올라온 상황
                         DayOfWeekSelector(
                             modifier = Modifier.fillMaxWidth(),
                             selected = state.emotionReminderDays,
@@ -251,9 +251,10 @@ private fun StatelessNotificationSettingScreen(
                             color = MooiTheme.colorScheme.gray800,
                             thickness = 1.5.dp,
                         )
+                        Spacer(modifier = Modifier.size(30.dp))
+                    } else {
+                        Spacer(modifier = Modifier.size(30.dp))
                     }
-
-                    Spacer(modifier = Modifier.size(30.dp))
 
                     ToggleRow(
                         title = "타임캡슐 및 일일리포트\n업데이트 알림",
