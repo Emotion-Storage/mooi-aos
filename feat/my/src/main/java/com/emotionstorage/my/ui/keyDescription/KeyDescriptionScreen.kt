@@ -63,7 +63,6 @@ fun StatelessKeyDescriptionScreen(
     onDismissDialog: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
