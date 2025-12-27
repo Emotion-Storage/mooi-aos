@@ -14,70 +14,70 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class UserRepositoryImpl
-@Inject
-constructor(
-    private val localDataSource: UserLocalDataSource,
-    private val remoteDataSource: UserRemoteDataSource,
-) : UserRepository {
-    override suspend fun saveUser(user: User): Boolean = localDataSource.saveUser(UserMapper.toData(user))
+    @Inject
+    constructor(
+        private val localDataSource: UserLocalDataSource,
+        private val remoteDataSource: UserRemoteDataSource,
+    ) : UserRepository {
+        override suspend fun saveUser(user: User): Boolean = localDataSource.saveUser(UserMapper.toData(user))
 
-    override suspend fun getUser(): Flow<DataState<User>> =
-        flow {
-            emit(DataState.Loading(isLoading = true))
+        override suspend fun getUser(): Flow<DataState<User>> =
+            flow {
+                emit(DataState.Loading(isLoading = true))
+                try {
+                    // return user from local data source first
+                    val localUser = localDataSource.getUser()
+                    if (localUser != null) {
+                        emit(DataState.Success(UserMapper.toDomain(localUser)))
+                    } else {
+                        // fetch user from remote & save to local & return
+                        remoteDataSource.getUserAccountInfo().handle(
+                            onSuccess = {
+                                localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                                emit(DataState.Success(it.toUser()))
+                            },
+                            onError = { throwable, code, message ->
+                                emit(DataState.Error(throwable, code, message))
+                            },
+                        )
+                    }
+                } catch (e: Exception) {
+                    emit(DataState.Error(e))
+                } finally {
+                    emit(DataState.Loading(isLoading = false))
+                }
+            }
+
+        override suspend fun getAndSaveUser(): Boolean =
             try {
-                // return user from local data source first
-                val localUser = localDataSource.getUser()
-                if (localUser != null) {
-                    emit(DataState.Success(UserMapper.toDomain(localUser)))
+                val result = remoteDataSource.getUserAccountInfo()
+                if (result is DataState.Success) {
+                    localDataSource.saveUser(UserMapper.toData(result.data.toUser()))
+                    true
                 } else {
-                    // fetch user from remote & save to local & return
-                    remoteDataSource.getUserAccountInfo().handle(
-                        onSuccess = {
-                            localDataSource.saveUser(UserMapper.toData(it.toUser()))
-                            emit(DataState.Success(it.toUser()))
-                        },
-                        onError = { throwable, code, message ->
-                            emit(DataState.Error(throwable, code, message))
-                        },
-                    )
+                    false
                 }
             } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(isLoading = false))
-            }
-        }
-
-    override suspend fun getAndSaveUser(): Boolean =
-        try {
-            val result = remoteDataSource.getUserAccountInfo()
-            if (result is DataState.Success) {
-                localDataSource.saveUser(UserMapper.toData(result.data.toUser()))
-                true
-            } else {
+                Napier.e("getAndSaveUser error", e)
                 false
             }
-        } catch (e: Exception) {
-            Napier.e("getAndSaveUser error", e)
-            false
-        }
 
-    override suspend fun deleteUser(): Boolean = localDataSource.deleteUser()
+        override suspend fun deleteUser(): Boolean = localDataSource.deleteUser()
 
-    override suspend fun updateUserNickname(nickname: String) =
-        remoteDataSource
-            .updateUserNickname(nickname)
-            .also { state ->
-                if (state is DataState.Success) {
-                    val localUpdateSuccess = localDataSource.updateUserNickname(nickname)
-                    if (!localUpdateSuccess) {
-                        // delete user on update error - fetch user on next get user call
-                        deleteUser()
+        override suspend fun updateUserNickname(nickname: String) =
+            remoteDataSource
+                .updateUserNickname(nickname)
+                .also { state ->
+                    if (state is DataState.Success) {
+                        val localUpdateSuccess = localDataSource.updateUserNickname(nickname)
+                        if (!localUpdateSuccess) {
+                            // delete user on update error - fetch user on next get user call
+                            deleteUser()
+                        }
                     }
                 }
-            }
 
-    override suspend fun getKeyCount(): DataState<Int> = remoteDataSource.getKeyCount()
+        override suspend fun getKeyCount(): DataState<Int> = remoteDataSource.getKeyCount()
 
-    override suspend fun getAccountInfo(): DataState<AccountInfo> = remoteDataSource.getUserAccountInfo()
-}
+        override suspend fun getAccountInfo(): DataState<AccountInfo> = remoteDataSource.getUserAccountInfo()
+    }
