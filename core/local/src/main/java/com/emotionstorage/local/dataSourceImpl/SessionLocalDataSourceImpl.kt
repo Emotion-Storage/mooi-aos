@@ -58,12 +58,16 @@ class SessionLocalDataSourceImpl
                 false
             }
 
-        override suspend fun saveRefreshToken(refreshToken: String): Boolean {
-            dataStore.edit { preferences ->
-                preferences[REFRESH_KEY] = refreshToken
+        override suspend fun saveRefreshToken(refreshToken: String): Boolean =
+            try {
+                dataStore.edit { preferences ->
+                    preferences[REFRESH_KEY] = refreshToken
+                }
+                true
+            } catch (e: Exception) {
+                Logger.e("saveRefreshToken error: $e")
+                false
             }
-            return true
-        }
 
         override suspend fun getRefreshToken(): String? =
             dataStore
