@@ -45,6 +45,7 @@ object ReissueApiServiceModule {
                     .Builder()
                     .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                    .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
                     .cookieJar(appCookieJar)
                     .build(),
             ).build()
