@@ -1,7 +1,6 @@
 package com.emotionstorage.remote.di
 
 import com.emotionstorage.remote.BuildConfig
-import com.emotionstorage.remote.api.AuthApiService
 import com.emotionstorage.remote.api.ReissueApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
@@ -35,22 +34,22 @@ object ReissueApiServiceModule {
     @Provides
     @Singleton
     @Named("AuthRetrofit")
-    fun provideAuthRetrofit(
-    ): Retrofit {
-        return Retrofit.Builder()
+    fun provideAuthRetrofit(): Retrofit =
+        Retrofit
+            .Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
             .client(
-                OkHttpClient.Builder()
+                OkHttpClient
+                    .Builder()
                     .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    .build())
-            .build()
-    }
+                    .build(),
+            ).build()
 
     @Provides
     @Singleton
     fun provideReissueApi(
-        @Named("AuthRetrofit") retrofit: Retrofit
+        @Named("AuthRetrofit") retrofit: Retrofit,
     ): ReissueApiService = retrofit.create(ReissueApiService::class.java)
 }

@@ -2,10 +2,8 @@ package com.emotionstorage.remote.cookieJar
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Cookie
@@ -13,9 +11,8 @@ import okhttp3.CookieJar
 import okhttp3.HttpUrl
 
 class AppCookieJar(
-    private val sessionLocalDataSource: SessionLocalDataSource
+    private val sessionLocalDataSource: SessionLocalDataSource,
 ) : CookieJar {
-
     private val scope = CoroutineScope(Dispatchers.IO)
     private val cookieStore = mutableMapOf<String, List<Cookie>>()
 
@@ -24,21 +21,25 @@ class AppCookieJar(
             // get refresh token from data store if reissue
             val refreshToken = runBlocking { sessionLocalDataSource.getRefreshToken() ?: "" }
             return listOf(
-                Cookie.Builder()
+                Cookie
+                    .Builder()
                     .name("refresh_token")
                     .value(refreshToken)
                     .domain(url.host)
                     .path("/")
                     .httpOnly()
                     .secure()
-                    .build()
+                    .build(),
             )
         } else {
             return cookieStore[url.host] ?: emptyList()
         }
     }
 
-    override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+    override fun saveFromResponse(
+        url: HttpUrl,
+        cookies: List<Cookie>,
+    ) {
         Logger.d("save cookies from response: $cookies")
         cookieStore[url.host] = cookies
 
@@ -50,4 +51,3 @@ class AppCookieJar(
         }
     }
 }
-

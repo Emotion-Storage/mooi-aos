@@ -58,23 +58,23 @@ class SessionLocalDataSourceImpl
                 false
             }
 
-    override suspend fun saveRefreshToken(refreshToken: String): Boolean {
-        dataStore.edit { preferences ->
-            preferences[REFRESH_KEY] = refreshToken
+        override suspend fun saveRefreshToken(refreshToken: String): Boolean {
+            dataStore.edit { preferences ->
+                preferences[REFRESH_KEY] = refreshToken
+            }
+            return true
         }
-        return true
-    }
 
-    override suspend fun getRefreshToken(): String? =
-        dataStore
-            .data
-            .catch { exception ->
-                if (exception is IOException) {
-                    emit(emptyPreferences())
-                } else {
-                    throw exception
-                }
-            }.map { preferences ->
-                preferences[REFRESH_KEY]
-            }.firstOrNull()
-}
+        override suspend fun getRefreshToken(): String? =
+            dataStore
+                .data
+                .catch { exception ->
+                    if (exception is IOException) {
+                        emit(emptyPreferences())
+                    } else {
+                        throw exception
+                    }
+                }.map { preferences ->
+                    preferences[REFRESH_KEY]
+                }.firstOrNull()
+    }

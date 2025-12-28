@@ -9,6 +9,5 @@ interface ReissueApiService {
      * send refresh token via HttpOnly Cookie
      */
     @POST("/auth/reissue")
-    suspend fun postReissue(
-    ): ResponseDto<ReissueResponseData>
+    suspend fun postReissue(): ResponseDto<ReissueResponseData>
 }

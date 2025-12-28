@@ -2,7 +2,6 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.remote.BuildConfig
-import com.emotionstorage.remote.api.AuthApiService
 import com.emotionstorage.remote.api.ReissueApiService
 import com.emotionstorage.remote.cookieJar.AppCookieJar
 import com.emotionstorage.remote.interceptor.FailResponseInterceptor
@@ -73,8 +72,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideAppCookieJar(sessionLocalDataSource: SessionLocalDataSource) =
-        AppCookieJar(sessionLocalDataSource)
+    fun provideAppCookieJar(sessionLocalDataSource: SessionLocalDataSource) = AppCookieJar(sessionLocalDataSource)
 
     @Singleton
     @Provides
@@ -83,13 +81,9 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideFailResponseHeaderInterceptor() =
-        FailResponseInterceptor()
-
+    fun provideFailResponseHeaderInterceptor() = FailResponseInterceptor()
 
     @Singleton
     @Provides
-    fun provideTokenAuthenticator(reissueApiService: ReissueApiService) =
-        TokenAuthenticator(reissueApiService)
-
+    fun provideTokenAuthenticator(reissueApiService: ReissueApiService) = TokenAuthenticator(reissueApiService)
 }
