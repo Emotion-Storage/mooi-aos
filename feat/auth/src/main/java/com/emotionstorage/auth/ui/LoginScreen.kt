@@ -18,11 +18,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -37,12 +39,27 @@ import com.emotionstorage.auth.presentation.LoginSideEffect
 import com.emotionstorage.auth.presentation.LoginState
 import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
+import com.emotionstorage.auth.ui.modal.InquireLoginErrorModal
+import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.TempErrorModal
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
-import com.orhanobut.logger.Logger
-import com.emotionstorage.presentation.BaseSideEffect
+
+private sealed class LoginModalState {
+    object None : LoginModalState()
+
+    data class RetryLogin(
+        val accessToken: String,
+    ) : LoginModalState()
+
+    object InquireLoginError : LoginModalState()
+
+    object TempError : LoginModalState()
+}
 
 @Composable
 fun LoginScreen(
@@ -51,10 +68,11 @@ fun LoginScreen(
     navToHome: () -> Unit = {},
     navToOnBoarding: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
-    val context = LocalContext.current
-
     val state = viewModel.container.stateFlow.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
+    var modalState by remember {
+        mutableStateOf<LoginModalState>(LoginModalState.None)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { effect ->
@@ -67,13 +85,27 @@ fun LoginScreen(
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
-                is BaseSideEffect.NetworkError -> {
-                    snackbarHostState.showSnackbar(context.getString(R.string.toast_network_error))
+                is LoginSideEffect.SocialLoginError -> {
+                    snackbarHostState.showSnackbar("소셜 로그인 실패")
                 }
 
-                else -> {
-                    Logger.e("Unknown side effect: $effect")
-                    // todo: add error modal
+                is LoginSideEffect.RetryLogin -> {
+                    modalState =
+                        LoginModalState.RetryLogin(
+                            effect.accessToken,
+                        )
+                }
+
+                is LoginSideEffect.InquireLoginError -> {
+                    modalState = LoginModalState.InquireLoginError
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    snackbarHostState.showSnackbar("연결이 잠시 불안정해요. \uD83D\uDE22\n인터넷 연결을 확인 후 다시 시도해주세요.")
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    modalState = LoginModalState.TempError
                 }
             }
         }
@@ -81,14 +113,44 @@ fun LoginScreen(
 
     StatelessLoginScreen(
         modifier = modifier,
+        snackbarHostState = snackbarHostState,
         state = state.value,
         onAction = viewModel::onAction,
     )
+
+    when (modalState) {
+        is LoginModalState.None -> {}
+
+        is LoginModalState.RetryLogin -> {
+            RetryLoginModal {
+                // retry login with same provider & id token
+                viewModel.onAction(
+                    LoginAction.RetryLogin(
+                        (modalState as LoginModalState.RetryLogin).accessToken,
+                    ),
+                )
+                modalState = LoginModalState.None
+            }
+        }
+
+        is LoginModalState.InquireLoginError -> {
+            InquireLoginErrorModal {
+                modalState = LoginModalState.None
+            }
+        }
+
+        is LoginModalState.TempError -> {
+            TempErrorModal {
+                modalState = LoginModalState.None
+            }
+        }
+    }
 }
 
 @Composable
 private fun StatelessLoginScreen(
     modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState = SnackbarHostState(),
     state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
 ) {
@@ -97,6 +159,11 @@ private fun StatelessLoginScreen(
             modifier
                 .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackbarHostState,
+            )
+        },
     ) { padding ->
         Box(
             modifier =

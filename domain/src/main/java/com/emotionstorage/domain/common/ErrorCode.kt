@@ -26,6 +26,9 @@ enum class ErrorCode {
     UNAUTHORIZED,
     INVALID_NICKNAME,
 
+    // auth client
+    LOGIN_CLIENT_ERROR,
+
     // chat remote
     CHAT_ROOM_NOT_FOUND,
     CHAT_ROOM_ACCESS_DENIED,
