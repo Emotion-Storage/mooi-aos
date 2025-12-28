@@ -83,7 +83,7 @@ fun WithDrawNoticeScreen(
         },
         onWithDrawClick = {
             showSuggestDialog = false
-            viewModel.onAction(MyPageAction.WithDrawConfirm)
+            viewModel.onAction(MyPageAction.WithDraw)
         },
         onFinalConfirmClick = {
             pendingNavigate = true

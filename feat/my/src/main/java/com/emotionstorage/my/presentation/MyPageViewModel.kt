@@ -25,17 +25,7 @@ sealed class MyPageAction {
 
     object Logout : MyPageAction()
 
-    object NicknameChange : MyPageAction()
-
-    object KeyDescription : MyPageAction()
-
-    object AccountInfo : MyPageAction()
-
-    object TermsAndPrivacy : MyPageAction()
-
-    object WithDrawConfirm : MyPageAction()
-
-    object NotificationSetting : MyPageAction()
+    object WithDraw : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
@@ -43,21 +33,7 @@ sealed class MyPageSideEffect {
 
     object LogoutError: MyPageSideEffect()
 
-    object NavigateToNicknameChange : MyPageSideEffect()
-
-    object NavigateToAccountInfo : MyPageSideEffect()
-
-    object NavigateToKeyDescription : MyPageSideEffect()
-
-    object NavigateToNotificationSetting : MyPageSideEffect()
-
-    object NavigateToTermsAndPrivacy : MyPageSideEffect()
-
-    object NavigateToWithDrawNotice : MyPageSideEffect()
-
     object WithDrawSuccess : MyPageSideEffect()
-
-    object NavigateToSplash : MyPageSideEffect()
 
     data class ShowToast(
         val message: String,
@@ -79,32 +55,12 @@ class MyPageViewModel @Inject constructor(
                 handleInitiate()
             }
 
-            is MyPageAction.NicknameChange -> {
-                handleNicknameChange()
-            }
-
             is MyPageAction.Logout -> {
                 handleLogout()
             }
 
-            is MyPageAction.KeyDescription -> {
-                handleKeyDescription()
-            }
-
-            is MyPageAction.AccountInfo -> {
-                handleAccountInfo()
-            }
-
-            is MyPageAction.TermsAndPrivacy -> {
-                handleTermsAndPrivacy()
-            }
-
-            is MyPageAction.WithDrawConfirm -> {
+            is MyPageAction.WithDraw -> {
                 handleWithDraw()
-            }
-
-            is MyPageAction.NotificationSetting -> {
-                handleNotificationSetting()
             }
         }
     }
@@ -146,39 +102,14 @@ class MyPageViewModel @Inject constructor(
             }
         }
 
-    private fun handleNicknameChange() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToNicknameChange)
-        }
-
-    private fun handleKeyDescription() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToKeyDescription)
-        }
-
-    private fun handleTermsAndPrivacy() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToTermsAndPrivacy)
-        }
-
     private fun handleWithDraw() =
         intent {
             try {
                 deleteAccountUseCase()
                 postSideEffect(MyPageSideEffect.WithDrawSuccess)
-                postSideEffect(MyPageSideEffect.NavigateToSplash)
             } catch (t: Throwable) {
                 postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
             }
         }
 
-    private fun handleAccountInfo() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToAccountInfo)
-        }
-
-    private fun handleNotificationSetting() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToNotificationSetting)
-        }
 }
