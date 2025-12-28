@@ -12,9 +12,10 @@ import javax.inject.Singleton
 object NetworkJsonModule {
     @Provides
     @Singleton
-    fun provideJson() = Json {
-        ignoreUnknownKeys = true // Common configuration
-        isLenient = true
-        prettyPrint = true // For debugging, optional
-    }
+    fun provideJson() =
+        Json {
+            ignoreUnknownKeys = true // Common configuration
+            isLenient = true
+            prettyPrint = true // For debugging, optional
+        }
 }

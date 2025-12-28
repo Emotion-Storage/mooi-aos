@@ -31,7 +31,7 @@ object ReissueApiServiceModule {
     fun provideAuthRetrofit(
         json: Json,
         appCookieJar: AppCookieJar,
-        ): Retrofit =
+    ): Retrofit =
         Retrofit
             .Builder()
             .baseUrl(BASE_URL)
