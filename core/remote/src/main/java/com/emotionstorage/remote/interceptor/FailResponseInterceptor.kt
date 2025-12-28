@@ -17,6 +17,8 @@ class FailResponseInterceptor @Inject constructor( ) : Interceptor {
         val httpResponse = chain.proceed(httpRequest)
         // return successful response
         if (httpResponse.code in 200..226) return httpResponse
+        // return 401 error for token authenticator to handle
+        if (httpResponse.code == 401) return httpResponse
 
         // parse error response body & throw custom error
         val httpResponseBody = httpResponse.peekBody(Long.MAX_VALUE).string()
