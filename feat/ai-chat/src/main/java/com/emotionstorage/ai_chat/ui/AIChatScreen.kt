@@ -81,6 +81,10 @@ fun AIChatScreen(
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
                     // TODO : SOMETHING
                 }
+
+                is AIChatSideEffect.NavigateBack -> {
+                    navToBack()
+                }
             }
         }
     }
@@ -114,7 +118,6 @@ private fun StatelessAIChatScreen(
     val density = LocalDensity.current
     val isKeyboardVisible = WindowInsets.ime.getBottom(density) > 0
 
-    // ✅ 메시지가 하나라도 있으면 이후부터는 Empty 화면 안 보이게
     val hasMessage = state.messages.isNotEmpty()
     val showEmptyScreen = !hasMessage
 
@@ -137,9 +140,12 @@ private fun StatelessAIChatScreen(
         isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
         onExit = {
-            onAction(AIChatAction.ExitChatRoom)
-            navToBack()
+            setExitModalOpen(false)
+            onAction(AIChatAction.TempSaveAndExitChatRoom)
         },
+        onContinue = {
+            setExitModalOpen(false)
+        }
     )
 
     Scaffold(

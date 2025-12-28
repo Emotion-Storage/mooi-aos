@@ -59,6 +59,8 @@ sealed class AIChatAction {
     object CreateTimeCapsule : AIChatAction()
 
     object DismissForceQuitSheet : AIChatAction()
+
+    object TempSaveAndExitChatRoom : AIChatAction()
 }
 
 sealed class AIChatSideEffect {
@@ -71,6 +73,8 @@ sealed class AIChatSideEffect {
     data class CreateTimeCapsuleSuccess(
         val capsuleId: Long,
     ) : AIChatSideEffect()
+
+    object NavigateBack : AIChatSideEffect()
 }
 
 @HiltViewModel
@@ -108,6 +112,11 @@ class AIChatViewModel @Inject constructor(
             is AIChatAction.DismissForceQuitSheet -> {
                 handleForceQuitSheet()
             }
+
+            is AIChatAction.TempSaveAndExitChatRoom -> {
+                handleTempSaveAndExit()
+            }
+
         }
     }
 
@@ -348,4 +357,32 @@ class AIChatViewModel @Inject constructor(
                 state.copy(showForceQuitBottomSheet = false)
             }
         }
+
+    private fun handleTempSaveAndExit() = intent {
+        chatMessageObserverJob?.cancel()
+
+        val roomId = state.roomId
+        // TODO : ToastMesage 추후 제거
+        if (roomId == 0L) {
+            postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
+            postSideEffect(AIChatSideEffect.NavigateBack)
+            return@intent
+        }
+
+        when (val save = tempSaveChatRoomUseCase(roomId)) {
+            is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
+            is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
+            else -> Unit
+        }
+
+        disconnectChatRoom(roomId).collect { result ->
+            when (result) {
+                is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
+                is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 실패"))
+                is DataState.Loading -> Unit
+            }
+        }
+
+        postSideEffect(AIChatSideEffect.NavigateBack)
+    }
 }

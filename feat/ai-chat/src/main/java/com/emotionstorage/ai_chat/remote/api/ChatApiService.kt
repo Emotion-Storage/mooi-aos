@@ -24,7 +24,7 @@ interface ChatApiService {
     ): ResponseDto<ExitChatRoomResponse>
 
     @AuthRequest
-    @PATCH("/api/v1/home/emotion-conversation/{roomId}")
+    @PATCH("/api/v1/chat/{roomId}/temp-save")
     suspend fun patchChatRoomTempSave(@Path("roomId") roomId: Long): ResponseDto<ChatMessageTempSaveResponse>
 
     @AuthRequest
