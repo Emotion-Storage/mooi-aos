@@ -32,6 +32,10 @@ class UserRepositoryImpl
                     // fetch user from remote & save to local & return
                     remoteDataSource.getUserAccountInfo().map {
                         it.toUser()
+                    }.also{
+                        if(it is DataState.Success){
+                            localDataSource.saveUser(UserMapper.toData(it.data))
+                        }
                     }
                 }
             } catch (e: Exception) {
