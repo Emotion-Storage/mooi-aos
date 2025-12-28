@@ -69,7 +69,6 @@ class UserRepositoryImpl
                                 }catch (e: Exception){
                                     Napier.e("save user failed", e)
                                 }
-
                                 // return success with remote user data, regardless of save success/failure
                                 emit(DataState.Success(it.toUser()))
                             },
@@ -91,6 +90,7 @@ class UserRepositoryImpl
                 if (result is DataState.Success) {
                     localDataSource.saveUser(UserMapper.toData(result.data.toUser()))
                 } else {
+                    Napier.e("getUser error in getAndSaveUser", (result as DataState.Error).throwable)
                     false
                 }
             } catch (e: Exception) {
