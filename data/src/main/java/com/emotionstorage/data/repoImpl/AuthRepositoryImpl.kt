@@ -71,38 +71,26 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun checkSession(): DataState<Unit> {
         try {
             val result = authRemoteDataSource.checkSession()
-            when (result) {
-                is DataState.Success -> {
-                    return result
-                }
+            if (result !is DataState.Error) {
+                return result
+            }
+            if (result.code != ErrorCode.ACCESS_TOKEN_EXPIRED && result.code != ErrorCode.USER_NOT_FOUND) {
+                return result
+            }
 
-                is DataState.Error -> {
-                    if (result.code == ErrorCode.ACCESS_TOKEN_EXPIRED || result.code == ErrorCode.USER_NOT_FOUND) {
-                        // refresh access token
-                        val reissueResult = reissueRemoteDataSource.reissueAccessToken()
-                        return if (reissueResult is DataState.Success) {
-                            // save new access token
-                            if (sessionLocalDataSource.saveSession(SessionEntity(reissueResult.data))) {
-                                //  retry check session
-                                authRemoteDataSource.checkSession()
-                            } else {
-                                DataState.Error(Throwable("failed to save new access token"))
-                            }
-                        } else {
-                            DataState.Error(
-                                Throwable("failed to reissue access token"),
-                                ErrorCode.REFRESH_TOKEN_EXPIRED
-                            )
-                        }
-                    } else {
-                        return result
-                    }
-                }
-
-                else -> {
-                    // fallback
-                    return result
-                }
+            // refresh access token
+            val reissueResult = reissueRemoteDataSource.reissueAccessToken()
+            if (reissueResult !is DataState.Success) {
+                return DataState.Error(
+                    Throwable("failed to reissue access token"),
+                    ErrorCode.REFRESH_TOKEN_NOT_FOUND
+                )
+            }
+            // save new access token & retry check session
+            return if (sessionLocalDataSource.saveSession(SessionEntity(reissueResult.data))) {
+                authRemoteDataSource.checkSession()
+            }else{
+                DataState.Error(Throwable("failed to save new access token"))
             }
         } catch (e: Exception) {
             return DataState.Error(e)
