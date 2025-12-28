@@ -121,6 +121,6 @@ class AuthRemoteDataSourceImpl
 
         override suspend fun deleteAccount(): Boolean {
             val response = authApiService.deleteAccount()
-            return response.status == ResponseStatus.OK.code
+            return response.status == ResponseStatus.NoContent.code
         }
     }
