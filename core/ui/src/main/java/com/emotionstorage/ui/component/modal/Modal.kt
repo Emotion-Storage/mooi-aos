@@ -48,20 +48,9 @@ fun Modal(
     onDismiss: () -> Unit = {},
     contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 30.dp, end = 30.dp),
     verticalSpacing: Dp = 18.dp,
-    showBackground: Boolean = true,
     topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
 ) {
-    if (showBackground) {
-        // set bg color to black with 0.8 alpha (80% opacity)
-        Box(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.8f)),
-        )
-    }
-
     Dialog(
         onDismissRequest = onDismissRequest,
         properties =
@@ -84,7 +73,7 @@ fun Modal(
                         .clip(RoundedCornerShape(15.dp))
                         .background(MooiTheme.colorScheme.backgroundDefault)
                         .padding(contentPadding)
-                        .widthIn(max = 293.dp),
+                        .widthIn(max = 298.dp),
                 verticalArrangement = Arrangement.spacedBy(verticalSpacing),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
