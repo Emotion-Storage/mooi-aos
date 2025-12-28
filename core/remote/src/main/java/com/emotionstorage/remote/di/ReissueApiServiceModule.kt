@@ -2,6 +2,7 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.remote.BuildConfig
 import com.emotionstorage.remote.api.AuthApiService
+import com.emotionstorage.remote.api.ReissueApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -17,7 +18,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AuthApiModule {
+object ReissueApiServiceModule {
     private const val BASE_URL = "http://${BuildConfig.MOOI_DEV_SERVER_URL}"
     private const val TIMEOUT = 20L
 
@@ -49,7 +50,7 @@ object AuthApiModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(
+    fun provideReissueApi(
         @Named("AuthRetrofit") retrofit: Retrofit
-    ): AuthApiService = retrofit.create(AuthApiService::class.java)
+    ): ReissueApiService = retrofit.create(ReissueApiService::class.java)
 }

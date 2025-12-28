@@ -37,13 +37,6 @@ interface AuthApiService {
     @GET("/auth/session")
     suspend fun getAuthSession(): ResponseDto<Unit>
 
-    /**
-     * send refresh token via HttpOnly Cookie
-     */
-    @POST("/auth/reissue")
-    suspend fun postReissue(
-    ): ResponseDto<ReissueResponseData>
-
     @DELETE("/api/v1/mypage/logout")
     suspend fun postLogout(): ResponseDto<Unit>
 

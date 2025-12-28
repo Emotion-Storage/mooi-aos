@@ -2,9 +2,12 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.remote.BuildConfig
+import com.emotionstorage.remote.api.AuthApiService
+import com.emotionstorage.remote.api.ReissueApiService
 import com.emotionstorage.remote.cookieJar.AppCookieJar
 import com.emotionstorage.remote.interceptor.FailResponseInterceptor
 import com.emotionstorage.remote.interceptor.RequestHeaderInterceptor
+import com.emotionstorage.remote.interceptor.TokenAuthenticator
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -34,9 +37,10 @@ object RetrofitModule {
     @Singleton
     @Provides
     fun provideRetrofit(
+        appCookieJar: AppCookieJar,
         requestHeaderInterceptor: RequestHeaderInterceptor,
         failResponseInterceptor: FailResponseInterceptor,
-        appCookieJar: AppCookieJar,
+        tokenAuthenticator: TokenAuthenticator,
     ): Retrofit {
         val loggingInterceptor =
             HttpLoggingInterceptor().apply {
@@ -62,9 +66,15 @@ object RetrofitModule {
                     .addNetworkInterceptor(loggingInterceptor)
                     .addInterceptor(requestHeaderInterceptor)
                     .addInterceptor(failResponseInterceptor)
+                    .authenticator(tokenAuthenticator)
                     .build(),
             ).build()
     }
+
+    @Singleton
+    @Provides
+    fun provideAppCookieJar(sessionLocalDataSource: SessionLocalDataSource) =
+        AppCookieJar(sessionLocalDataSource)
 
     @Singleton
     @Provides
@@ -73,12 +83,13 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideFailResponseHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
-        FailResponseInterceptor(sessionLocalDataSource)
+    fun provideFailResponseHeaderInterceptor() =
+        FailResponseInterceptor()
 
 
     @Singleton
     @Provides
-    fun provideAppCookieJar(sessionLocalDataSource: SessionLocalDataSource) =
-        AppCookieJar(sessionLocalDataSource)
+    fun provideTokenAuthenticator(reissueApiService: ReissueApiService) =
+        TokenAuthenticator(reissueApiService)
+
 }

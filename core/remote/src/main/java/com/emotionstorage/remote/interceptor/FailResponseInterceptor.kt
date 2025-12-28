@@ -1,6 +1,5 @@
 package com.emotionstorage.remote.interceptor
 
-import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.remote.response.CustomHttpException
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.ResponseStatus
@@ -10,13 +9,7 @@ import okhttp3.Response
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-private const val MAX_TRY_COUNT = 3
-
-// todo: refresh token & retry on UNAUTHORIZED error
-// todo: retry request for max 3 times on error
-class FailResponseInterceptor @Inject constructor(
-    private val sessionLocalDataSource: SessionLocalDataSource,
-) : Interceptor {
+class FailResponseInterceptor @Inject constructor( ) : Interceptor {
     private val json = Json { ignoreUnknownKeys = true }
 
     override fun intercept(chain: Interceptor.Chain): Response {
