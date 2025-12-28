@@ -14,6 +14,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 data class OnBoardingState(
+    val isLoading: Boolean = false,
     val signupForm: SignupForm = SignupForm(),
     // states not included in signup form
     val isAllAgreed: Boolean? = null,
@@ -165,13 +166,22 @@ class OnBoardingViewModel
                 if (provider == null || idToken == null) {
                     postSideEffect(OnBoardingSideEffect.SocialTokenExpired)
                 } else {
+                    reduce {
+                        state.copy(isLoading = true)
+                    }
                     signup(state.signupForm).handle(
                         onSuccess = {
+                            reduce {
+                                state.copy(isLoading = false)
+                            }
                             postSideEffect(
                                 OnBoardingSideEffect.SignupSuccess(provider, idToken),
                             )
                         },
                         onError = { throwable, code, data ->
+                            reduce {
+                                state.copy(isLoading = false)
+                            }
                             if (code == ErrorCode.INVALID_ID_TOKEN ||
                                 code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN
                             ) {

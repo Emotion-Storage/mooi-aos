@@ -32,6 +32,7 @@ import com.emotionstorage.tutorial.ui.terms.MarketingUsageDetailScreen
 import com.emotionstorage.tutorial.ui.onBoarding.NicknameScreen
 import com.emotionstorage.tutorial.ui.terms.PrivacyPolicyDetailScreen
 import com.emotionstorage.tutorial.ui.terms.TermDetailScreen
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**
@@ -105,6 +106,10 @@ fun OnBoardingNavHost(
         }
     }
 
+    if (state.value.isLoading)
+        {
+            LoadingOverlay()
+        }
     StatelessOnBoardingNavHost(
         modifier = modifier,
         navController = navController,
