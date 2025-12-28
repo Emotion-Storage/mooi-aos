@@ -130,6 +130,7 @@ fun LoginScreen(
         is LoginModalState.None -> {}
 
         is LoginModalState.RetryHandleLogin -> {
+            val retryState = modalState as LoginModalState.RetryHandleLogin
             RetryHandleLoginModal(
                 onDismissRequest = {
                     modalState = LoginModalState.None
@@ -137,7 +138,7 @@ fun LoginScreen(
                 onConfirm = {
                     viewModel.onAction(
                         LoginAction.RetryLogin(
-                            (modalState as LoginModalState.RetryHandleLogin).accessToken,
+                            retryState.accessToken,
                         ),
                     )
                 },

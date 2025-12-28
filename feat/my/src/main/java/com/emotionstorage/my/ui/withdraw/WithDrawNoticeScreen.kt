@@ -2,106 +2,138 @@ package com.emotionstorage.my.ui.withdraw
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.emotionstorage.my.presentation.MyPageAction
-import com.emotionstorage.my.presentation.MyPageSideEffect
-import com.emotionstorage.my.presentation.MyPageViewModel
-import com.emotionstorage.ui.component.modal.Modal
+import com.emotionstorage.domain.common.ErrorCode
+import com.emotionstorage.my.presentation.WithdrawNoticeAction
+import com.emotionstorage.my.presentation.WithdrawNoticeEffect
+import com.emotionstorage.my.presentation.WithdrawNoticeViewModel
+import com.emotionstorage.my.ui.modal.ConfirmWithdrawModal
+import com.emotionstorage.my.ui.modal.InquireWithdrawErrorModal
+import com.emotionstorage.my.ui.modal.WithdrawSuccessModal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
-import kotlinx.coroutines.delay
+
+private sealed class WithdrawNoticeModalState {
+    object None : WithdrawNoticeModalState()
+
+    object ConfirmWithdraw : WithdrawNoticeModalState()
+
+    object WithdrawSuccess : WithdrawNoticeModalState()
+
+    data class InquireWithdrawError(
+        val errorCode: ErrorCode,
+        val throwable: Throwable,
+        val userEmail: String? = null,
+        val userNickname: String? = null,
+    ) : WithdrawNoticeModalState()
+}
 
 @Composable
 fun WithDrawNoticeScreen(
-    viewModel: MyPageViewModel = hiltViewModel(),
+    viewModel: WithdrawNoticeViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToNotificationSetting: () -> Unit = {},
     navToLogin: () -> Unit = {},
 ) {
-    var showSuggestDialog by remember { mutableStateOf(false) }
-    var showDoneDialog by remember { mutableStateOf(false) }
-    var pendingNavigate by remember { mutableStateOf(false) }
+    val state by viewModel.container.stateFlow.collectAsState()
+    val (modalState, setModalState) =
+        remember {
+            mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.None)
+        }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                is MyPageSideEffect.WithDrawSuccess -> {
-                    showDoneDialog = true
+                is WithdrawNoticeEffect.WithDrawSuccess -> {
+                    setModalState(WithdrawNoticeModalState.WithdrawSuccess)
                 }
 
-                else -> {
-                    Unit
+                is WithdrawNoticeEffect.WithdrawError -> {
+                    setModalState(
+                        WithdrawNoticeModalState.InquireWithdrawError(
+                            sideEffect.errorCode,
+                            sideEffect.throwable,
+                            sideEffect.userEmail,
+                            sideEffect.userNickname,
+                        ),
+                    )
                 }
             }
         }
     }
 
-    LaunchedEffect(showDoneDialog) {
-        if (showDoneDialog) {
-            delay(5_000)
-            if (showDoneDialog) {
-                pendingNavigate = true
-                showDoneDialog = false
-            }
-        }
-    }
-
-    LaunchedEffect(showDoneDialog, pendingNavigate) {
-        if (!showDoneDialog && pendingNavigate) {
-            delay(250)
-            pendingNavigate = false
-            navToLogin()
-        }
+    if (state.isLoading) {
+        LoadingOverlay()
     }
 
     StatelessWithDrawNoticeScreen(
-        showSuggestDialog = showSuggestDialog,
-        showFinalConfirmDialog = showDoneDialog,
         onBackClick = navToBack,
-        onSuggestDismiss = { showSuggestDialog = false },
-        onWithDrawButtonClick = { showSuggestDialog = true },
-        onKeepClick = {
-            showSuggestDialog = false
-            navToNotificationSetting()
-        },
-        onWithDrawClick = {
-            showSuggestDialog = false
-            viewModel.onAction(MyPageAction.WithDrawConfirm)
-        },
-        onFinalConfirmClick = {
-            pendingNavigate = true
-            showDoneDialog = false
-        },
+        setModalState = setModalState,
     )
+
+    when (modalState) {
+        is WithdrawNoticeModalState.None -> {
+            // no modal
+        }
+
+        is WithdrawNoticeModalState.ConfirmWithdraw -> {
+            ConfirmWithdrawModal(
+                onDismissRequest = {
+                    setModalState(WithdrawNoticeModalState.None)
+                },
+                onChangeNotification = {
+                    navToNotificationSetting()
+                },
+                onWithDraw = {
+                    viewModel.onAction(WithdrawNoticeAction.WithDraw)
+                },
+            )
+        }
+
+        is WithdrawNoticeModalState.WithdrawSuccess -> {
+            WithdrawSuccessModal(
+                onDismissRequest = {
+                    setModalState(WithdrawNoticeModalState.None)
+                    navToLogin()
+                },
+            )
+        }
+
+        is WithdrawNoticeModalState.InquireWithdrawError -> {
+            InquireWithdrawErrorModal(
+                errorCode = modalState.errorCode,
+                throwable = modalState.throwable,
+                userEmail = modalState.userEmail,
+                userNickname = modalState.userNickname,
+                onDismissRequest = {
+                    setModalState(WithdrawNoticeModalState.None)
+                },
+            )
+        }
+    }
 }
 
 @Composable
-fun StatelessWithDrawNoticeScreen(
-    showSuggestDialog: Boolean,
-    showFinalConfirmDialog: Boolean,
-    onSuggestDismiss: () -> Unit,
-    onWithDrawButtonClick: () -> Unit,
+private fun StatelessWithDrawNoticeScreen(
     onBackClick: () -> Unit,
-    onKeepClick: () -> Unit,
-    onWithDrawClick: () -> Unit,
-    onFinalConfirmClick: () -> Unit,
+    setModalState: (WithdrawNoticeModalState) -> Unit,
 ) {
     Scaffold(
         modifier =
@@ -116,31 +148,6 @@ fun StatelessWithDrawNoticeScreen(
             )
         },
     ) { innerPadding ->
-        if (showSuggestDialog) {
-            Modal(
-                title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
-                confirmLabel = "알림을 끄고 쉬어갈래요.",
-                dismissLabel = "서비스를 탈퇴할래요.",
-                onDismissRequest = onSuggestDismiss,
-                onConfirm = onKeepClick,
-                onDismiss = onWithDrawClick,
-                topDescription = null,
-                contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 24.5.dp, end = 24.5.dp),
-            )
-        }
-
-        if (showFinalConfirmDialog) {
-            Modal(
-                title = "회원 탈퇴가\n완료되었습니다.",
-                confirmLabel = "확인",
-                onDismissRequest = {
-                    // cannot dismiss manually
-                },
-                onConfirm = onFinalConfirmClick,
-                topDescription = null,
-            )
-        }
-
         Box(
             Modifier
                 .fillMaxSize()
@@ -158,7 +165,9 @@ fun StatelessWithDrawNoticeScreen(
                         .padding(start = 16.dp, end = 16.dp, bottom = 28.dp),
                 type = CtaButtonType.OUTLINED,
                 labelString = "MOOI 서비스 탈퇴하기",
-                onClick = onWithDrawButtonClick,
+                onClick = {
+                    setModalState(WithdrawNoticeModalState.ConfirmWithdraw)
+                },
                 isDefaultWidth = false,
                 textStyle =
                     MooiTheme.typography.body7.copy(
@@ -174,14 +183,8 @@ fun StatelessWithDrawNoticeScreen(
 private fun WithDrawNoticeScreenPreview() {
     MooiTheme {
         StatelessWithDrawNoticeScreen(
-            showSuggestDialog = true,
-            showFinalConfirmDialog = false,
-            onSuggestDismiss = {},
-            onWithDrawButtonClick = {},
             onBackClick = {},
-            onKeepClick = {},
-            onWithDrawClick = {},
-            onFinalConfirmClick = {},
+            setModalState = {},
         )
     }
 }

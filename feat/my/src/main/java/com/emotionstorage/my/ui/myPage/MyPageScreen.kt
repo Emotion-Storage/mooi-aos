@@ -19,10 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -37,12 +35,19 @@ import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.keyDescription.component.KeyCard
+import com.emotionstorage.my.ui.modal.ConfirmLogoutModal
+import com.emotionstorage.my.ui.modal.LogoutErrorModal
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
-import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
+
+private enum class MyPageModalState {
+    NONE,
+    LOGOUT_CONFIRM,
+    LOGOUT_ERROR,
+}
 
 @Composable
 fun MyPageScreen(
@@ -58,6 +63,7 @@ fun MyPageScreen(
     navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val (modalState, setModalState) = remember { mutableStateOf<MyPageModalState>(MyPageModalState.NONE) }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("MyPageScreen: onResume triggered")
@@ -74,36 +80,12 @@ fun MyPageScreen(
                     navToLogin()
                 }
 
-                is MyPageSideEffect.NavigateToNicknameChange -> {
-                    navToNickNameChange()
-                }
-
-                is MyPageSideEffect.NavigateToKeyDescription -> {
-                    navToKeyDescription()
+                is MyPageSideEffect.LogoutError -> {
+                    setModalState(MyPageModalState.LOGOUT_ERROR)
                 }
 
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
-                }
-
-                is MyPageSideEffect.NavigateToTermsAndPrivacy -> {
-                    navToTermsAndPrivacy()
-                }
-
-                is MyPageSideEffect.NavigateToWithDrawNotice -> {
-                    navToWithdrawNotice()
-                }
-
-                is MyPageSideEffect.NavigateToAccountInfo -> {
-                    navToAccountInfo()
-                }
-
-                is MyPageSideEffect.NavigateToNotificationSetting -> {
-                    navToNotificationSetting()
-                }
-
-                else -> {
-                    Unit
                 }
             }
         }
@@ -112,8 +94,8 @@ fun MyPageScreen(
     StatelessMyPageScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
+        setModalState = setModalState,
         state = state.value,
-        onAction = viewModel::onAction,
         navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
@@ -121,14 +103,40 @@ fun MyPageScreen(
         navToTermsAndPrivacy = navToTermsAndPrivacy,
         navToNotificationSetting = navToNotificationSetting,
     )
+
+    when (modalState) {
+        MyPageModalState.NONE -> {
+            // no modal
+        }
+
+        MyPageModalState.LOGOUT_CONFIRM -> {
+            ConfirmLogoutModal(
+                onDismissRequest = {
+                    setModalState(MyPageModalState.NONE)
+                },
+                onLogout = { viewModel.onAction(MyPageAction.Logout) },
+            )
+        }
+
+        MyPageModalState.LOGOUT_ERROR -> {
+            LogoutErrorModal(
+                onDismissRequest = {
+                    setModalState(MyPageModalState.NONE)
+                },
+                onRetry = {
+                    viewModel.onAction(MyPageAction.Logout)
+                },
+            )
+        }
+    }
 }
 
 @Composable
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
+    setModalState: (MyPageModalState) -> Unit = {},
     state: MyPageState = MyPageState(),
-    onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: () -> Unit = {},
@@ -137,7 +145,6 @@ private fun StatelessMyPageScreen(
     navToNotificationSetting: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
-    var showLogoutModal by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier =
@@ -160,7 +167,7 @@ private fun StatelessMyPageScreen(
                 verticalArrangement = Arrangement.Top,
             ) {
                 ProfileHeader(
-                    modifier = Modifier.offset(x = -9.dp),
+                    modifier = Modifier.offset(x = (-9).dp),
                     nickname = state.nickname,
                     signupDday = state.signupDday,
                     onEditClick = {
@@ -185,22 +192,9 @@ private fun StatelessMyPageScreen(
                         clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
                     },
                     onTermsAndPrivacyClick = navToTermsAndPrivacy,
-                    onLogoutClick = { showLogoutModal = true },
+                    onLogoutClick = { setModalState(MyPageModalState.LOGOUT_CONFIRM) },
                     onNotificationClick = navToNotificationSetting,
                 )
-
-                if (showLogoutModal) {
-                    Modal(
-                        title = "정말 로그아웃 하시겠어요?",
-                        confirmLabel = "아니요, 그냥 있을래요.",
-                        onDismissRequest = { showLogoutModal = false },
-                        topDescription = null,
-                        bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
-                        dismissLabel = "네, 로그아웃 할래요.",
-                        onDismiss = { onAction(MyPageAction.Logout) },
-                        onConfirm = { showLogoutModal = false },
-                    )
-                }
 
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(
