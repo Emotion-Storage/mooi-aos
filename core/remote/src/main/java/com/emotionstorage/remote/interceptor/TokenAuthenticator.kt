@@ -32,12 +32,13 @@ class TokenAuthenticator @Inject constructor(
                 }.data?.accessToken
             if (newAccessToken == null) return null
 
-            // save new access token & retry request
-            CoroutineScope(Dispatchers.IO).launch {
+            // save new access token
+            runBlocking{
                 sessionLocalDataSource.saveSession(
                     SessionEntity(newAccessToken),
                 )
             }
+            // retry request with new access token
             return response
                 .request
                 .newBuilder()
