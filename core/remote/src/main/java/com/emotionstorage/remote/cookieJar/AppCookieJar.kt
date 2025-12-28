@@ -10,9 +10,12 @@ import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
 
+private const val REFRESH_TOKEN_NAME = "refreshToken"
+
 class AppCookieJar(
     private val sessionLocalDataSource: SessionLocalDataSource,
 ) : CookieJar {
+
     private val scope = CoroutineScope(Dispatchers.IO)
     private val cookieStore = mutableMapOf<String, List<Cookie>>()
 
@@ -23,7 +26,7 @@ class AppCookieJar(
             return listOf(
                 Cookie
                     .Builder()
-                    .name("refresh_token")
+                    .name(REFRESH_TOKEN_NAME)
                     .value(refreshToken)
                     .domain(url.host)
                     .path("/")
@@ -44,7 +47,7 @@ class AppCookieJar(
         cookieStore[url.host] = cookies
 
         // save refresh token to data store
-        cookies.find { it.name == "refreshToken" }?.let { cookie ->
+        cookies.find { it.name == REFRESH_TOKEN_NAME }?.let { cookie ->
             scope.launch {
                 sessionLocalDataSource.saveRefreshToken(cookie.value)
             }
