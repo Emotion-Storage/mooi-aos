@@ -15,21 +15,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.WithdrawNoticeAction
 import com.emotionstorage.my.presentation.WithdrawNoticeEffect
 import com.emotionstorage.my.presentation.WithdrawNoticeViewModel
 import com.emotionstorage.my.ui.modal.ConfirmWithdrawModal
+import com.emotionstorage.my.ui.modal.InquireWithdrawErrorModal
 import com.emotionstorage.my.ui.modal.WithdrawSuccessModal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class WithdrawNoticeModalState {
-    NONE,
-    CONFIRM_WITHDRAW,
-    WITHDRAW_SUCCESS,
+private sealed class WithdrawNoticeModalState {
+    object None : WithdrawNoticeModalState()
+
+    object ConfirmWithdraw : WithdrawNoticeModalState()
+
+    object WithdrawSuccess : WithdrawNoticeModalState()
+
+    data class InquireWithdrawError(
+        val errorCode: ErrorCode,
+        val throwable: Throwable,
+    ) : WithdrawNoticeModalState()
 }
 
 @Composable
@@ -40,18 +49,23 @@ fun WithDrawNoticeScreen(
     navToLogin: () -> Unit = {},
 ) {
     val (modalState, setModalState) = remember {
-        mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.NONE)
+        mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.None)
     }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is WithdrawNoticeEffect.WithDrawSuccess -> {
-                    setModalState(WithdrawNoticeModalState.WITHDRAW_SUCCESS)
+                    setModalState(WithdrawNoticeModalState.WithdrawSuccess)
                 }
 
                 is WithdrawNoticeEffect.WithdrawError -> {
-                    // todo: add error modal
+                    setModalState(
+                        WithdrawNoticeModalState.InquireWithdrawError(
+                            sideEffect.errorCode,
+                            sideEffect.throwable,
+                        ),
+                    )
                 }
             }
         }
@@ -63,14 +77,14 @@ fun WithDrawNoticeScreen(
     )
 
     when (modalState) {
-        WithdrawNoticeModalState.NONE -> {
+        is WithdrawNoticeModalState.None -> {
             // no modal
         }
 
-        WithdrawNoticeModalState.CONFIRM_WITHDRAW -> {
+        is WithdrawNoticeModalState.ConfirmWithdraw -> {
             ConfirmWithdrawModal(
                 onDismissRequest = {
-                    setModalState(WithdrawNoticeModalState.NONE)
+                    setModalState(WithdrawNoticeModalState.None)
                 },
                 onChangeNotification = {
                     navToNotificationSetting()
@@ -81,11 +95,21 @@ fun WithDrawNoticeScreen(
             )
         }
 
-        WithdrawNoticeModalState.WITHDRAW_SUCCESS -> {
+        is WithdrawNoticeModalState.WithdrawSuccess -> {
             WithdrawSuccessModal(
                 onDismissRequest = {
-                    setModalState(WithdrawNoticeModalState.NONE)
+                    setModalState(WithdrawNoticeModalState.None)
                     navToLogin()
+                },
+            )
+        }
+
+        is WithdrawNoticeModalState.InquireWithdrawError -> {
+            InquireWithdrawErrorModal(
+                errorCode = modalState.errorCode,
+                throwable = modalState.throwable,
+                onDismissRequest = {
+                    setModalState(WithdrawNoticeModalState.None)
                 },
             )
         }
@@ -128,7 +152,7 @@ private fun StatelessWithDrawNoticeScreen(
                 type = CtaButtonType.OUTLINED,
                 labelString = "MOOI 서비스 탈퇴하기",
                 onClick = {
-                    setModalState(WithdrawNoticeModalState.CONFIRM_WITHDRAW)
+                    setModalState(WithdrawNoticeModalState.ConfirmWithdraw)
                 },
                 isDefaultWidth = false,
                 textStyle =
