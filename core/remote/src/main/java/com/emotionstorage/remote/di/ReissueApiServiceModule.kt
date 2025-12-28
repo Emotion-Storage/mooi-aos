@@ -2,6 +2,7 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.remote.BuildConfig
 import com.emotionstorage.remote.api.ReissueApiService
+import com.emotionstorage.remote.cookieJar.AppCookieJar
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -34,7 +35,9 @@ object ReissueApiServiceModule {
     @Provides
     @Singleton
     @Named("AuthRetrofit")
-    fun provideAuthRetrofit(): Retrofit =
+    fun provideAuthRetrofit(
+        appCookieJar: AppCookieJar,
+    ): Retrofit =
         Retrofit
             .Builder()
             .baseUrl(BASE_URL)
@@ -44,6 +47,7 @@ object ReissueApiServiceModule {
                     .Builder()
                     .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
                     .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                    .cookieJar(appCookieJar)
                     .build(),
             ).build()
 

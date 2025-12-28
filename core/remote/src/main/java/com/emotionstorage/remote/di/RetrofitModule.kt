@@ -72,10 +72,6 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideAppCookieJar(sessionLocalDataSource: SessionLocalDataSource) = AppCookieJar(sessionLocalDataSource)
-
-    @Singleton
-    @Provides
     fun provideRequestHeaderInterceptor(sessionLocalDataSource: SessionLocalDataSource) =
         RequestHeaderInterceptor(sessionLocalDataSource)
 
