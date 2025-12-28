@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageViewModel
+import com.emotionstorage.my.ui.modal.ConfirmWithdrawModal
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
@@ -117,15 +118,10 @@ fun StatelessWithDrawNoticeScreen(
         },
     ) { innerPadding ->
         if (showSuggestDialog) {
-            Modal(
-                title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
-                confirmLabel = "알림을 끄고 쉬어갈래요.",
-                dismissLabel = "서비스를 탈퇴할래요.",
+            ConfirmWithdrawModal(
                 onDismissRequest = onSuggestDismiss,
-                onConfirm = onKeepClick,
-                onDismiss = onWithDrawClick,
-                topDescription = null,
-                contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 24.5.dp, end = 24.5.dp),
+                onChangeNotification = onKeepClick,
+                onWithDraw = onWithDrawClick,
             )
         }
 
