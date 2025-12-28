@@ -88,10 +88,9 @@ class MyPageViewModel @Inject constructor(
             try {
                 if (logoutUseCase()) {
                     postSideEffect(MyPageSideEffect.LogoutSuccess)
-                } else
-                    {
-                        postSideEffect(MyPageSideEffect.LogoutError)
-                    }
+                } else {
+                    postSideEffect(MyPageSideEffect.LogoutError)
+                }
             } catch (t: Throwable) {
                 Logger.e("LogoutUseCase error: $t")
                 postSideEffect(MyPageSideEffect.LogoutError)

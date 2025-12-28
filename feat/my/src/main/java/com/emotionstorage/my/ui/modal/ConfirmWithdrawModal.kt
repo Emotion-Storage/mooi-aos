@@ -38,7 +38,7 @@ fun ConfirmWithdrawModal(
 
 @Preview
 @Composable
-private fun ConfirmWithdrawModalPreview()  {
+private fun ConfirmWithdrawModalPreview() {
     ConfirmWithdrawModal(
         onDismissRequest = {},
         onChangeNotification = {},

@@ -5,7 +5,7 @@ import com.emotionstorage.domain.repo.UserRepository
 import javax.inject.Inject
 
 class GetUserEmailAndNicknameUseCase @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(): Pair<String, String>? {
         val userResult = userRepository.getUserSnapshot()

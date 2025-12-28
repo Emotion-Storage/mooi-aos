@@ -127,13 +127,11 @@ private fun ErrorCodeBox(
                 .background(
                     MooiTheme.colorScheme.primaryBlue500.copy(alpha = 0.04f),
                     RoundedCornerShape(16.dp),
-                )
-                .border(
+                ).border(
                     1.dp,
                     MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.2f),
                     RoundedCornerShape(16.dp),
-                )
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                ).padding(vertical = 16.dp, horizontal = 8.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
