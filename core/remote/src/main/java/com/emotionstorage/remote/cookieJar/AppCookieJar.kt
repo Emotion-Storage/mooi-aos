@@ -1,6 +1,7 @@
 package com.emotionstorage.remote.cookieJar
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
+import com.orhanobut.logger.Logger
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
@@ -18,6 +19,7 @@ class AppCookieJar(
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
         cookieStore[url.host] = cookies
+        Logger.d("saveFromResponse: $cookies")
         // todo: save refresh token to data store
     }
 }
