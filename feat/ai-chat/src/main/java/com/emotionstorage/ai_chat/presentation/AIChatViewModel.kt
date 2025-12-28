@@ -116,7 +116,6 @@ class AIChatViewModel @Inject constructor(
             is AIChatAction.TempSaveAndExitChatRoom -> {
                 handleTempSaveAndExit()
             }
-
         }
     }
 
@@ -358,31 +357,32 @@ class AIChatViewModel @Inject constructor(
             }
         }
 
-    private fun handleTempSaveAndExit() = intent {
-        chatMessageObserverJob?.cancel()
+    private fun handleTempSaveAndExit() =
+        intent {
+            chatMessageObserverJob?.cancel()
 
-        val roomId = state.roomId
-        // TODO : ToastMesage 추후 제거
-        if (roomId == 0L) {
-            postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
-            postSideEffect(AIChatSideEffect.NavigateBack)
-            return@intent
-        }
-
-        when (val save = tempSaveChatRoomUseCase(roomId)) {
-            is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
-            is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
-            else -> Unit
-        }
-
-        disconnectChatRoom(roomId).collect { result ->
-            when (result) {
-                is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
-                is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 실패"))
-                is DataState.Loading -> Unit
+            val roomId = state.roomId
+            // TODO : ToastMesage 추후 제거
+            if (roomId == 0L) {
+                postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
+                postSideEffect(AIChatSideEffect.NavigateBack)
+                return@intent
             }
-        }
 
-        postSideEffect(AIChatSideEffect.NavigateBack)
-    }
+            when (val save = tempSaveChatRoomUseCase(roomId)) {
+                is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
+                is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
+                else -> Unit
+            }
+
+            disconnectChatRoom(roomId).collect { result ->
+                when (result) {
+                    is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
+                    is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 실패"))
+                    is DataState.Loading -> Unit
+                }
+            }
+
+            postSideEffect(AIChatSideEffect.NavigateBack)
+        }
 }

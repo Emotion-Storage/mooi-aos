@@ -145,7 +145,7 @@ private fun StatelessAIChatScreen(
         },
         onContinue = {
             setExitModalOpen(false)
-        }
+        },
     )
 
     Scaffold(

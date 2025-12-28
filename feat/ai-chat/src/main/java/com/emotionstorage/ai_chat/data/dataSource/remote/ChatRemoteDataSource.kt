@@ -7,5 +7,5 @@ interface ChatRemoteDataSource {
 
     suspend fun exitChatRoom(roomId: Long): DataState<Boolean>
 
-    suspend fun tempSaveChatRoom(roomId: Long) : DataState<Long>
+    suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
 }
