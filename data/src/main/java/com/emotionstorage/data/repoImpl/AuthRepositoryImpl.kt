@@ -88,7 +88,7 @@ class AuthRepositoryImpl @Inject constructor(
             return if (sessionLocalDataSource.saveSession(SessionEntity(reissueResult.data))) {
                 authRemoteDataSource.checkSession()
             } else {
-                    DataState.Error(Throwable("failed to save new access token"))
+                DataState.Error(Throwable("failed to save new access token"))
             }
         } catch (e: Exception) {
             return DataState.Error(e)

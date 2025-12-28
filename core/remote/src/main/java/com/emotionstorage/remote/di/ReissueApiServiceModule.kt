@@ -35,9 +35,7 @@ object ReissueApiServiceModule {
     @Provides
     @Singleton
     @Named("AuthRetrofit")
-    fun provideAuthRetrofit(
-        appCookieJar: AppCookieJar,
-    ): Retrofit =
+    fun provideAuthRetrofit(appCookieJar: AppCookieJar): Retrofit =
         Retrofit
             .Builder()
             .baseUrl(BASE_URL)
