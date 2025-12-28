@@ -43,6 +43,21 @@ constructor(
             }
         } catch (e: Exception) {
             DataState.Error(e)
+        }
 
+    override suspend fun tempSaveChatRoom(roomId: Long): DataState<Long> =
+        try {
+            val response = chatApiService.patchChatRoomTempSave(roomId)
+            response.data?.chatRoomId?.run {
+                DataState.Success(this)
+            } ?: DataState.Error(Throwable("tempSaveChatRoom() failed, no chatRoomId received!"))
+        } catch (e: IOException) {
+            if (e !is CustomHttpException) {
+                DataState.Error(e, code = ErrorCode.NETWORK_ERROR)
+            } else {
+                DataState.Error(e, code = ErrorCode.toErrorCode(e.code ?: ""), data = e.data)
+            }
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
 }

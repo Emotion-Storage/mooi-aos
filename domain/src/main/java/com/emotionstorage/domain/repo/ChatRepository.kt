@@ -1,7 +1,7 @@
 package com.emotionstorage.domain.repo
 
-import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.ChatMessage
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
@@ -17,4 +17,6 @@ interface ChatRepository {
         roomId: Long,
         chatMessage: ChatMessage,
     ): Flow<DataState<Boolean>>
+
+    suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
 }

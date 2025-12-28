@@ -8,6 +8,7 @@ import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
+import com.emotionstorage.domain.useCase.chat.TempSaveChatRoomUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.CreateTimeCapsuleUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,6 +80,7 @@ class AIChatViewModel @Inject constructor(
     private val sendChatMessage: SendChatMessageUseCase,
     private val observeChatMessages: ObserveChatMessagesUseCase,
     private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
+    private val tempSaveChatRoomUseCase: TempSaveChatRoomUseCase,
 ) : ViewModel(),
     ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
