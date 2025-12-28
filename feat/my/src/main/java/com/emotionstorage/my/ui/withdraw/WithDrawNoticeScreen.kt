@@ -79,9 +79,10 @@ fun WithDrawNoticeScreen(
         }
     }
 
-    if(state.isLoading){
-        LoadingOverlay()
-    }
+    if (state.isLoading)
+        {
+            LoadingOverlay()
+        }
 
     StatelessWithDrawNoticeScreen(
         onBackClick = navToBack,

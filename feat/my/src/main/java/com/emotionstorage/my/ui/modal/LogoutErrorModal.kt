@@ -35,7 +35,7 @@ fun LogoutErrorModal(
 
 @Preview
 @Composable
-private fun LogoutErrorModalPreview()  {
+private fun LogoutErrorModalPreview() {
     LogoutErrorModal(
         onDismissRequest = {},
         onRetry = {},

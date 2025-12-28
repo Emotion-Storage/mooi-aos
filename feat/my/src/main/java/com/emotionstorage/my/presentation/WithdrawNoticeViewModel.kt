@@ -31,10 +31,10 @@ sealed class WithdrawNoticeEffect : BaseSideEffect {
 @HiltViewModel
 class WithdrawNoticeViewModel @Inject constructor(
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val getUserEmailAndNickname: GetUserEmailAndNicknameUseCase
+    private val getUserEmailAndNickname: GetUserEmailAndNicknameUseCase,
 ) : BaseViewModel<WithdrawNoticeState>(
-    WithdrawNoticeState(),
-) {
+        WithdrawNoticeState(),
+    ) {
     fun onAction(action: WithdrawNoticeAction) {
         when (action) {
             is WithdrawNoticeAction.WithDraw -> {
@@ -43,40 +43,44 @@ class WithdrawNoticeViewModel @Inject constructor(
         }
     }
 
-    private fun handleWithDraw() = intent {
-        reduce {
-            state.copy(isLoading = true)
-        }
-        try {
-            if (deleteAccountUseCase()) {
-                postSideEffect(WithdrawNoticeEffect.WithDrawSuccess)
+    private fun handleWithDraw() =
+        intent {
+            reduce {
+                state.copy(isLoading = true)
+            }
+            try {
+                if (deleteAccountUseCase()) {
+                    postSideEffect(WithdrawNoticeEffect.WithDrawSuccess)
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                } else {
+                    throw Throwable("deleteAccountUseCase failed")
+                }
+            } catch (t: Throwable) {
+                Logger.e("deleteAccountUseCase error $t")
+
+                // get user email & nickname if possible
+                var email: String? = null
+                var nickname: String? = null
+                runCatching {
+                    getUserEmailAndNickname()?.let {
+                        email = it.first
+                        nickname = it.second
+                    }
+                }
+
                 reduce {
                     state.copy(isLoading = false)
                 }
-            } else {
-                throw Throwable("deleteAccountUseCase failed")
-            }
-        } catch (t: Throwable) {
-            Logger.e("deleteAccountUseCase error $t")
-
-            // get user email & nickname if possible
-            var email: String? = null
-            var nickname: String? = null
-            runCatching {
-                getUserEmailAndNickname()?.let {
-                    email = it.first
-                    nickname = it.second
-                }
-            }
-
-            reduce {
-                state.copy(isLoading = false)
-            }
-            postSideEffect(
-                WithdrawNoticeEffect.WithdrawError(
-                    ErrorCode.UNKNOWN, t, email, nickname
+                postSideEffect(
+                    WithdrawNoticeEffect.WithdrawError(
+                        ErrorCode.UNKNOWN,
+                        t,
+                        email,
+                        nickname,
+                    ),
                 )
-            )
+            }
         }
-    }
 }

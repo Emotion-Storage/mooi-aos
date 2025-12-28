@@ -24,7 +24,7 @@ import com.emotionstorage.ui.component.modal.Modal
 fun ConfirmLogoutModal(
     onDismissRequest: () -> Unit,
     onLogout: () -> Unit,
-)  {
+) {
     Modal(
         onDismissRequest = onDismissRequest,
         title = "정말 로그아웃 하시겠어요?",
@@ -40,7 +40,7 @@ fun ConfirmLogoutModal(
 
 @Preview
 @Composable
-private fun ConfirmLogoutModalPreview()  {
+private fun ConfirmLogoutModalPreview() {
     ConfirmLogoutModal(
         onDismissRequest = {},
         onLogout = {},
