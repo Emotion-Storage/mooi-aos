@@ -15,7 +15,6 @@ private const val REFRESH_TOKEN_NAME = "refreshToken"
 class AppCookieJar(
     private val sessionLocalDataSource: SessionLocalDataSource,
 ) : CookieJar {
-
     private val scope = CoroutineScope(Dispatchers.IO)
     private val cookieStore = mutableMapOf<String, List<Cookie>>()
 

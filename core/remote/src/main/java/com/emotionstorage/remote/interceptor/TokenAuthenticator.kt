@@ -4,9 +4,6 @@ import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.model.SessionEntity
 import com.emotionstorage.remote.api.ReissueApiService
 import com.orhanobut.logger.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
@@ -33,7 +30,7 @@ class TokenAuthenticator @Inject constructor(
             if (newAccessToken == null) return null
 
             // save new access token
-            runBlocking{
+            runBlocking {
                 sessionLocalDataSource.saveSession(
                     SessionEntity(newAccessToken),
                 )
