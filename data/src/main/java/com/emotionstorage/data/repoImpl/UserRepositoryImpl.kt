@@ -29,14 +29,20 @@ class UserRepositoryImpl
                 if (localUser != null) {
                     DataState.Success(UserMapper.toDomain(localUser))
                 } else {
-                    // fetch user from remote & save to local & return
+                    // fetch user from remote
                     remoteDataSource
                         .getUserAccountInfo()
                         .map {
                             it.toUser()
                         }.also {
                             if (it is DataState.Success) {
-                                localDataSource.saveUser(UserMapper.toData(it.data))
+                                // save to local if successful
+                                try {
+                                    val isSaveSuccess = localDataSource.saveUser(UserMapper.toData(it.data))
+                                    if(!isSaveSuccess) throw Exception("save user failed")
+                                }catch (e: Exception){
+                                    Napier.e("save user failed", e)
+                                }
                             }
                         }
                 }
@@ -53,10 +59,18 @@ class UserRepositoryImpl
                     if (localUser != null) {
                         emit(DataState.Success(UserMapper.toDomain(localUser)))
                     } else {
-                        // fetch user from remote & save to local & return
+                        // fetch user from remote
                         remoteDataSource.getUserAccountInfo().handle(
                             onSuccess = {
-                                localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                                // save to local if successful
+                                try {
+                                    val isSaveSuccess = localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                                    if(!isSaveSuccess) throw Exception("save user failed")
+                                }catch (e: Exception){
+                                    Napier.e("save user failed", e)
+                                }
+
+                                // return success with remote user data, regardless of save success/failure
                                 emit(DataState.Success(it.toUser()))
                             },
                             onError = { throwable, code, message ->
