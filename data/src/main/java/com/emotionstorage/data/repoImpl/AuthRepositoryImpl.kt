@@ -81,7 +81,8 @@ class AuthRepositoryImpl @Inject constructor(
             if (reissueResult !is DataState.Success) {
                 return DataState.Error(
                     Throwable("failed to reissue access token"),
-                    ErrorCode.REFRESH_TOKEN_NOT_FOUND,
+                    if (reissueResult is DataState.Error) reissueResult.code
+                    else ErrorCode.UNKNOWN,
                 )
             }
             // save new access token & retry check session
