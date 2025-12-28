@@ -78,7 +78,7 @@ class BaseViewModelTest {
             viewModel.throwInBaseIntent(error)
 
             val effect = viewModel.container.sideEffectFlow.first()
-            assertEquals(BaseSideEffect.TemporalError(ErrorCode.INTERNAL_SERVER_ERROR), effect)
+            assertEquals(BaseSideEffect.TemporalError(ErrorCode.INTERNAL_SERVER_ERROR, error), effect)
         }
 
     @Test
@@ -93,6 +93,6 @@ class BaseViewModelTest {
             viewModel.throwInScope(error)
 
             val effect = viewModel.container.sideEffectFlow.first()
-            assertEquals(BaseSideEffect.TemporalError(ErrorCode.INTERNAL_SERVER_ERROR), effect)
+            assertEquals(BaseSideEffect.TemporalError(ErrorCode.INTERNAL_SERVER_ERROR, error), effect)
         }
 }
