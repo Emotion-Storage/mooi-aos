@@ -13,6 +13,7 @@ class MyPageRepositoryImpl @Inject constructor(
 ) : MyPageRepository {
     override suspend fun getMyPageOverview(): Flow<DataState<MyPage>> =
         flow {
+            emit(DataState.Loading(isLoading = true))
             emit(myPageRemoteDataSource.getMyPageOverview())
         }
 }

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,8 +65,6 @@ fun AgreeTermsScreen(
     navToTermDetail: () -> Unit = {},
     navToPrivacyDetail: () -> Unit = {},
     navToMarketingDetail: () -> Unit = {},
-    // todo: delete test navigations
-    navToSignupComplete: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState().value
 
@@ -93,7 +90,6 @@ fun AgreeTermsScreen(
         navToTermDetail = navToTermDetail,
         navToPrivacyDetail = navToPrivacyDetail,
         navToMarketingDetail = navToMarketingDetail,
-        navToSignupComplete = navToSignupComplete,
     )
 }
 
@@ -114,8 +110,6 @@ private fun StatelessAgreeTermsScreen(
     navToTermDetail: () -> Unit = {},
     navToPrivacyDetail: () -> Unit = {},
     navToMarketingDetail: () -> Unit = {},
-    // todo: delete test navigations
-    navToSignupComplete: () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
     val onNavBack: () -> Unit = {
@@ -139,6 +133,7 @@ private fun StatelessAgreeTermsScreen(
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
+                showBackground = false,
                 showBackButton = true,
                 onBackClick = onNavBack,
                 handleBackPress = true,
@@ -253,15 +248,6 @@ private fun StatelessAgreeTermsScreen(
                         color = MooiTheme.colorScheme.primaryBlue500,
                         text = stringResource(tutorialR.string.on_boarding_p3_info2),
                     )
-                }
-
-                // todo: delete test navigatyion button
-                Button(
-                    onClick = {
-                        navToSignupComplete()
-                    },
-                ) {
-                    Text("회원가입 성공 화면 이동")
                 }
             }
 

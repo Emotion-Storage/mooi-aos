@@ -5,12 +5,12 @@ import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.emotionstorage.data.modelMapper.SignupFormMapper
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User
+import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.domain.repo.AuthRepository
 import io.github.aakira.napier.Napier
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -23,18 +23,24 @@ class AuthRepositoryImpl @Inject constructor(
             // get id token from providers
             val idToken =
                 when (provider) {
-                    User.AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-                    User.AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
+                    AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
+                    AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                 }
             Napier.d("GetIdToken success, provider: $provider, idToken: ${idToken.take(6) + "..."}")
 
             loginWithIdToken(provider, idToken)
         } catch (e: Exception) {
-            DataState.Error(Throwable("failed to get social id token, $e"))
+            DataState.Error(
+                e,
+                when (provider) {
+                    AuthProvider.GOOGLE -> ErrorCode.INVALID_ID_TOKEN
+                    AuthProvider.KAKAO -> ErrorCode.INVALID_KAKAO_ACCESS_TOKEN
+                },
+            )
         }
 
     override suspend fun loginWithIdToken(
-        provider: User.AuthProvider,
+        provider: AuthProvider,
         idToken: String,
     ): DataState<String> =
         try {
@@ -43,35 +49,24 @@ class AuthRepositoryImpl @Inject constructor(
             DataState.Error(Throwable("failed to login with id token, $e"), data = idToken)
         }
 
-    override suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>> =
-        flow {
-            emit(DataState.Loading(true))
-            try {
-                if (signupForm.provider == null) throw Exception("provider is null")
-                if (signupForm.idToken == null) throw Exception("idToken is null")
+    override suspend fun signup(signupForm: SignupForm): DataState<Unit> =
+        try {
+            if (signupForm.provider == null) throw Exception("provider is null")
+            if (signupForm.idToken == null) throw Exception("idToken is null")
 
-                authRemoteDataSource.signup(
-                    signupForm.provider!!,
-                    SignupFormMapper.toData(signupForm),
-                )
-                emit(DataState.Success(true))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+            authRemoteDataSource.signup(
+                signupForm.provider!!,
+                SignupFormMapper.toData(signupForm),
+            )
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
 
-    override suspend fun checkSession(): Flow<DataState<Boolean>> =
-        flow {
-            emit(DataState.Loading(true))
-            try {
-                emit(DataState.Success(authRemoteDataSource.checkSession()))
-            } catch (e: Exception) {
-                emit(DataState.Error(e))
-            } finally {
-                emit(DataState.Loading(false))
-            }
+    override suspend fun checkSession(): DataState<Boolean> =
+        try {
+            DataState.Success(authRemoteDataSource.checkSession())
+        } catch (e: Exception) {
+            DataState.Error(e)
         }
 
     override suspend fun logout(): Boolean = authRemoteDataSource.logout()

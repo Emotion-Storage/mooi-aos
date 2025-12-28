@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.google.accompanist.drawablepainter.rememberDrawablePainter
 import com.emotionstorage.ui.R

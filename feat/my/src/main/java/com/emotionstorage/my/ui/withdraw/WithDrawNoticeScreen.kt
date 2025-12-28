@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageViewModel
-import com.emotionstorage.ui.component.Modal
+import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType

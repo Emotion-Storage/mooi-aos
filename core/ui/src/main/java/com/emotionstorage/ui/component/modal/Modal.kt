@@ -1,4 +1,4 @@
-package com.emotionstorage.ui.component
+package com.emotionstorage.ui.component.modal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
@@ -34,6 +35,8 @@ import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 @Composable
 fun Modal(
     onDismissRequest: () -> Unit,
+    dismissOnBackPress: Boolean = true,
+    dismissOnClickOutside: Boolean = true,
     topDescription: String? = null,
     topDescriptionHighlights: List<String>? = emptyList(),
     title: String? = null,
@@ -59,7 +62,15 @@ fun Modal(
         )
     }
 
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties =
+            DialogProperties(
+                dismissOnBackPress = dismissOnBackPress,
+                dismissOnClickOutside = dismissOnClickOutside,
+                usePlatformDefaultWidth = false,
+            ),
+    ) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
 

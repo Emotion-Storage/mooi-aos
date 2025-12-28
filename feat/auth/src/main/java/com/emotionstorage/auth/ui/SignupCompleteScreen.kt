@@ -11,6 +11,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +30,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.auth.presentation.SignupCompleteAction
 import com.emotionstorage.auth.presentation.SignupCompleteSideEffect
 import com.emotionstorage.auth.presentation.SignupCompleteViewModel
+import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.appBar.TopAppBar
@@ -40,6 +45,8 @@ fun SignupCompleteScreen(
     navToHome: () -> Unit = {},
     navToLogin: () -> Unit = {},
 ) {
+    var showRetryLoginModal by remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
@@ -48,7 +55,7 @@ fun SignupCompleteScreen(
                 }
 
                 is SignupCompleteSideEffect.LoginFailed -> {
-                    navToLogin()
+                    showRetryLoginModal = true
                 }
             }
         }
@@ -58,6 +65,17 @@ fun SignupCompleteScreen(
         modifier = modifier,
         onLogin = { viewModel.onAction(SignupCompleteAction.LoginWithIdToken(provider, idToken)) },
     )
+
+    if (showRetryLoginModal) {
+        RetryLoginModal(
+            onDismissRequest = {
+                showRetryLoginModal = false
+            },
+            onConfirm = {
+                navToLogin()
+            },
+        )
+    }
 }
 
 @Composable

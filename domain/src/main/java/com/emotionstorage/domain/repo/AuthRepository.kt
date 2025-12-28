@@ -3,7 +3,6 @@ package com.emotionstorage.domain.repo
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User
-import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun login(provider: User.AuthProvider): DataState<String>
@@ -13,9 +12,9 @@ interface AuthRepository {
         idToken: String,
     ): DataState<String>
 
-    suspend fun signup(signupForm: SignupForm): Flow<DataState<Boolean>>
+    suspend fun signup(signupForm: SignupForm): DataState<Unit>
 
-    suspend fun checkSession(): Flow<DataState<Boolean>>
+    suspend fun checkSession(): DataState<Boolean>
 
     suspend fun logout(): Boolean
 
