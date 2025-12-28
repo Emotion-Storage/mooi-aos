@@ -28,7 +28,7 @@ fun LogoutErrorModal(
         onDismissRequest = onDismissRequest,
         topDescription = "로그아웃에 실패했어요.",
         title = "연결 상태를 확인한 뒤\n다시 시도해주세요.",
-        confirmLabel = "다시 로그인하기",
+        confirmLabel = "다시 로그아웃하기",
         onConfirm = onRetry,
     )
 }
