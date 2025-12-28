@@ -23,6 +23,7 @@ import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingState
 import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
 import com.emotionstorage.tutorial.ui.modal.DuplicateAccountModal
+import com.emotionstorage.tutorial.ui.modal.InquireSignupErrorModal
 import com.emotionstorage.tutorial.ui.modal.SocialTokenExpiredModal
 import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
@@ -56,7 +57,8 @@ private sealed class OnBoardingModalState {
     object DuplicateAccount : OnBoardingModalState()
 
     data class SignupError(
-        val errorCode: ErrorCode?,
+        val errorCode: ErrorCode,
+        val throwable: Throwable,
     ) : OnBoardingModalState()
 }
 
@@ -92,7 +94,8 @@ fun OnBoardingNavHost(
                 }
 
                 is BaseSideEffect.TemporalError -> {
-                    modalState = OnBoardingModalState.SignupError(sideEffect.code)
+                    modalState =
+                        OnBoardingModalState.SignupError(sideEffect.code, sideEffect.throwable)
                 }
 
                 is BaseSideEffect.NetworkError -> {
@@ -129,7 +132,14 @@ fun OnBoardingNavHost(
         }
 
         is OnBoardingModalState.SignupError -> {
-            // todo: add signup error modal
+            val inquireModalState = modalState as OnBoardingModalState.SignupError
+            InquireSignupErrorModal(
+                inquireModalState.errorCode,
+                inquireModalState.throwable,
+                onDismissRequest = {
+                    modalState = OnBoardingModalState.None
+                },
+            )
         }
     }
 }
