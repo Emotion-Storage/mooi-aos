@@ -35,10 +35,9 @@ class UserRepositoryImpl
                         .map {
                             it.toUser()
                         }.also {
-                            if (it is DataState.Success)
-                                {
-                                    localDataSource.saveUser(UserMapper.toData(it.data))
-                                }
+                            if (it is DataState.Success) {
+                                localDataSource.saveUser(UserMapper.toData(it.data))
+                            }
                         }
                 }
             } catch (e: Exception) {
