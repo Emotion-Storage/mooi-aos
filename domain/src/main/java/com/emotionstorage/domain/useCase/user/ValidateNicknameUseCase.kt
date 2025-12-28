@@ -23,18 +23,18 @@ enum class NicknameState(
  * - 금칙어 입력 시(이 부분은 추후 정리 필요!!!)
  */
 class ValidateNicknameUseCase
-    @Inject
-    constructor() {
-        operator fun invoke(nickname: String): DataState<NicknameState> {
-            if (nickname.isNullOrEmpty()) {
-                return DataState.Success(NicknameState.INVALID_EMPTY)
-            }
-            if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$"))) {
-                return DataState.Success(NicknameState.INVALID_CHAR)
-            }
-            if (nickname.length < 2) {
-                return DataState.Success(NicknameState.INVALID_LENGTH)
-            }
-            return DataState.Success(NicknameState.VALID)
+@Inject
+constructor() {
+    operator fun invoke(nickname: String): DataState<NicknameState> {
+        if (nickname.isNullOrEmpty()) {
+            return DataState.Success(NicknameState.INVALID_EMPTY)
         }
+        if (!nickname.matches(Regex("^[a-zA-Z가-힣]*$"))) {
+            return DataState.Success(NicknameState.INVALID_CHAR)
+        }
+        if (nickname.length < 2) {
+            return DataState.Success(NicknameState.INVALID_LENGTH)
+        }
+        return DataState.Success(NicknameState.VALID)
     }
+}
