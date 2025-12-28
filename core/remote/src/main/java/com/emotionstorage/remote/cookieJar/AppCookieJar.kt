@@ -2,6 +2,12 @@ package com.emotionstorage.remote.cookieJar
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.HttpUrl
@@ -10,17 +16,38 @@ class AppCookieJar(
     private val sessionLocalDataSource: SessionLocalDataSource
 ) : CookieJar {
 
+    private val scope = CoroutineScope(Dispatchers.IO)
     private val cookieStore = mutableMapOf<String, List<Cookie>>()
 
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
-        return cookieStore[url.host] ?: emptyList()
-        // todo: add refresh token to cookie
+        if (url.encodedPath.contains("/auth/reissue")) {
+            // get refresh token from data store if reissue
+            val refreshToken = runBlocking { sessionLocalDataSource.getRefreshToken() ?: "" }
+            return listOf(
+                Cookie.Builder()
+                    .name("refresh_token")
+                    .value(refreshToken)
+                    .domain(url.host)
+                    .path("/")
+                    .httpOnly()
+                    .secure()
+                    .build()
+            )
+        } else {
+            return cookieStore[url.host] ?: emptyList()
+        }
     }
 
     override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {
+        Logger.d("save cookies from response: $cookies")
         cookieStore[url.host] = cookies
-        Logger.d("saveFromResponse: $cookies")
-        // todo: save refresh token to data store
+
+        // save refresh token to data store
+        cookies.find { it.name == "refreshToken" }?.let { cookie ->
+            scope.launch {
+                sessionLocalDataSource.saveRefreshToken(cookie.value)
+            }
+        }
     }
 }
 
