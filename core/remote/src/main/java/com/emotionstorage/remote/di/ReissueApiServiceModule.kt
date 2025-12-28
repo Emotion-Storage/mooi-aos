@@ -22,20 +22,16 @@ object ReissueApiServiceModule {
     private const val BASE_URL = "http://${BuildConfig.MOOI_DEV_SERVER_URL}"
     private const val TIMEOUT = 20L
 
-    private val json =
-        Json {
-            ignoreUnknownKeys = true // Common configuration
-            isLenient = true
-            prettyPrint = true // For debugging, optional
-        }
-
     /**
      * auth retrofit to prevent dependency cycle
      */
     @Provides
     @Singleton
     @Named("AuthRetrofit")
-    fun provideAuthRetrofit(appCookieJar: AppCookieJar): Retrofit =
+    fun provideAuthRetrofit(
+        json: Json,
+        appCookieJar: AppCookieJar,
+        ): Retrofit =
         Retrofit
             .Builder()
             .baseUrl(BASE_URL)
