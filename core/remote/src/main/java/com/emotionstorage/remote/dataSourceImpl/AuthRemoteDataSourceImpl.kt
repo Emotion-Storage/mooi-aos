@@ -88,11 +88,11 @@ class AuthRemoteDataSourceImpl
             } catch (e: IOException) {
                 if (e !is CustomHttpException) {
                     // handle network error
-                    Logger.e("Login network exception, $e")
+                    Logger.e("Signup network exception, $e")
                     DataState.Error(e, ErrorCode.NETWORK_ERROR)
                 } else {
                     // handle http response error
-                    Logger.e("Login http exception, $e")
+                    Logger.e("Signup http exception, $e")
                     DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""))
                 }
             } catch (e: Exception) {
