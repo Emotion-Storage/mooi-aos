@@ -281,7 +281,7 @@ class AIChatViewModel @Inject constructor(
             disconnectChatRoom(state.roomId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
-                        Logger.i("chat room disconnected")
+                        Logger.d("chat room disconnected + $result")
                         postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
                     }
 

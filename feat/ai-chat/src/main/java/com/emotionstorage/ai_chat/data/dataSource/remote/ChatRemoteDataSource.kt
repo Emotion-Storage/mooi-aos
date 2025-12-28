@@ -5,5 +5,5 @@ import com.emotionstorage.domain.common.DataState
 interface ChatRemoteDataSource {
     suspend fun getChatRoomId(): DataState<Long>
 
-    suspend fun exitChatRoom(roomId: Long): Boolean
+    suspend fun exitChatRoom(roomId: Long): DataState<Boolean>
 }
