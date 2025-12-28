@@ -6,7 +6,7 @@ import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.remote.api.ReissueApiService
 import com.emotionstorage.remote.response.CustomHttpException
 import com.orhanobut.logger.Logger
-import okio.IOException
+import java.io.IOException
 import javax.inject.Inject
 
 class ReissueRemoteDataSourceImpl @Inject constructor(
