@@ -1,6 +1,5 @@
 package com.emotionstorage.ui.component.modal
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -64,11 +63,13 @@ fun Modal(
     }
 
     Dialog(
-        onDismissRequest = onDismissRequest, properties = DialogProperties(
-            dismissOnBackPress = dismissOnBackPress,
-            dismissOnClickOutside = dismissOnClickOutside,
-            usePlatformDefaultWidth = false,
-        )
+        onDismissRequest = onDismissRequest,
+        properties =
+            DialogProperties(
+                dismissOnBackPress = dismissOnBackPress,
+                dismissOnClickOutside = dismissOnClickOutside,
+                usePlatformDefaultWidth = false,
+            ),
     ) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)

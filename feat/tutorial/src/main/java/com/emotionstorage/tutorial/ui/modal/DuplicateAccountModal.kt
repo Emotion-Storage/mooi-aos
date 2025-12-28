@@ -23,7 +23,8 @@ import com.emotionstorage.ui.component.modal.Modal
 @Composable
 fun DuplicateAccountModal(
     onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit) {
+    onConfirm: () -> Unit,
+) {
     Modal(
         onDismissRequest = onDismissRequest,
         dismissOnBackPress = false,
