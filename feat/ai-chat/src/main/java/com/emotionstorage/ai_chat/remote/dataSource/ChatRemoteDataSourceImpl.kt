@@ -31,7 +31,7 @@ constructor(
 
     override suspend fun exitChatRoom(roomId: Long): DataState<Boolean> =
         try {
-            val response = chatApiService.exitEmotionConversation(roomId)
+            val response = chatApiService.deleteExitEmotionConversation(roomId)
             response.data?.finished?.run {
                 DataState.Success(this)
             } ?: DataState.Error(Throwable("exitChatRoom() failed, no room id received!"))
