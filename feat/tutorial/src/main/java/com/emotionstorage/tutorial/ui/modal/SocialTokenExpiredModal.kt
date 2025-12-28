@@ -2,7 +2,6 @@ package com.emotionstorage.tutorial.ui.modal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
 import com.emotionstorage.ui.component.modal.Modal
 
 /**
