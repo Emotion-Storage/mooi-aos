@@ -73,7 +73,7 @@ fun OnBoardingNavHost(
     navToBack: () -> Unit = {},
 ) {
     val navController = rememberNavController()
-    val state = sharedViewModel.container.stateFlow.collectAsState()
+    val state by sharedViewModel.container.stateFlow.collectAsState()
     var modalState by remember { mutableStateOf<OnBoardingModalState>(OnBoardingModalState.None) }
 
     LaunchedEffect(provider, idToken) {
@@ -106,20 +106,19 @@ fun OnBoardingNavHost(
         }
     }
 
-    if (state.value.isLoading)
-        {
-            LoadingOverlay()
-        }
+    if (state.isLoading) {
+        LoadingOverlay()
+    }
     StatelessOnBoardingNavHost(
         modifier = modifier,
         navController = navController,
-        state = state.value,
+        state = state,
         onAction = sharedViewModel::onAction,
         navToBack = navToBack,
     )
 
     when (modalState) {
-        OnBoardingModalState.None -> { }
+        OnBoardingModalState.None -> {}
 
         OnBoardingModalState.SocialTokenExpired -> {
             SocialTokenExpiredModal {
