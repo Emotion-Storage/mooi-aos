@@ -24,9 +24,9 @@ interface AuthRemoteDataSource {
 
     /**
      * Check session
-     * @return success
+     * @return access token
      */
-    suspend fun checkSession(): Boolean
+    suspend fun checkSession(): DataState<Unit>
 
     suspend fun logout(): Boolean
 
