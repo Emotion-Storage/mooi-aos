@@ -24,7 +24,7 @@ import com.emotionstorage.ui.component.modal.Modal
 fun ConfirmWithdrawModal(
     onDismissRequest: () -> Unit,
     onChangeNotification: () -> Unit,
-    onWithDraw: () -> Unit
+    onWithDraw: () -> Unit,
 ) {
     Modal(
         onDismissRequest = onDismissRequest,
@@ -38,7 +38,7 @@ fun ConfirmWithdrawModal(
 
 @Preview
 @Composable
-private fun ConfirmWithdrawModalPreview(){
+private fun ConfirmWithdrawModalPreview()  {
     ConfirmWithdrawModal(
         onDismissRequest = {},
         onChangeNotification = {},

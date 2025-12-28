@@ -50,7 +50,7 @@ fun InquireWithdrawErrorModal(
         onDismissRequest = onDismissRequest,
         topDescription = "회원탈퇴에 실패했어요.",
         title = "잠시 후 다시 시도하거나\n같은 문제가 반복되면\n문의해주세요.",
-        content = @Composable{
+        content = @Composable {
             ErrorCodeBox(errorCode)
         },
         confirmLabel = "이메일로 문의하기",

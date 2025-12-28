@@ -17,7 +17,6 @@ sealed class WithdrawNoticeAction {
 }
 
 sealed class WithdrawNoticeEffect : BaseSideEffect {
-
     object WithDrawSuccess : WithdrawNoticeEffect()
 
     data class WithdrawError(
@@ -30,8 +29,8 @@ sealed class WithdrawNoticeEffect : BaseSideEffect {
 class WithdrawNoticeViewModel @Inject constructor(
     private val deleteAccountUseCase: DeleteAccountUseCase,
 ) : BaseViewModel<WithdrawNoticeState>(
-    WithdrawNoticeState()
-) {
+        WithdrawNoticeState(),
+    ) {
     fun onAction(action: WithdrawNoticeAction) {
         when (action) {
             is WithdrawNoticeAction.WithDraw -> {
@@ -42,18 +41,26 @@ class WithdrawNoticeViewModel @Inject constructor(
 
     private fun handleWithDraw() =
         intent {
+            postSideEffect(
+                WithdrawNoticeEffect.WithdrawError(
+                    ErrorCode.UNKNOWN,
+                    Throwable(
+                        "deleteAccountUseCase failed",
+                    ),
+                ),
+            )
             try {
-                if (deleteAccountUseCase()) {
-                    postSideEffect(WithdrawNoticeEffect.WithDrawSuccess)
-                } else {
-                    postSideEffect(
-                        WithdrawNoticeEffect.WithdrawError(
-                            ErrorCode.UNKNOWN, Throwable(
-                                "deleteAccountUseCase failed"
-                            )
-                        )
-                    )
-                }
+//                if (deleteAccountUseCase()) {
+//                    postSideEffect(WithdrawNoticeEffect.WithDrawSuccess)
+//                } else {
+//                    postSideEffect(
+//                        WithdrawNoticeEffect.WithdrawError(
+//                            ErrorCode.UNKNOWN, Throwable(
+//                                "deleteAccountUseCase failed"
+//                            )
+//                        )
+//                    )
+//                }
             } catch (t: Throwable) {
                 Logger.e("deleteAccountUseCase error $t")
                 postSideEffect(WithdrawNoticeEffect.WithdrawError(ErrorCode.UNKNOWN, t))

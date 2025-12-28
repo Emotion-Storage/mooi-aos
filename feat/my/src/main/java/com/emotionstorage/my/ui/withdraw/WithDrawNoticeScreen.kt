@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.common.ErrorCode
-import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.my.presentation.WithdrawNoticeAction
 import com.emotionstorage.my.presentation.WithdrawNoticeEffect
 import com.emotionstorage.my.presentation.WithdrawNoticeViewModel
@@ -48,9 +47,10 @@ fun WithDrawNoticeScreen(
     navToNotificationSetting: () -> Unit = {},
     navToLogin: () -> Unit = {},
 ) {
-    val (modalState, setModalState) = remember {
-        mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.None)
-    }
+    val (modalState, setModalState) =
+        remember {
+            mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.None)
+        }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->

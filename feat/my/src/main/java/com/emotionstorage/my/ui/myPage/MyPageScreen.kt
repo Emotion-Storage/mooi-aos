@@ -114,7 +114,7 @@ fun MyPageScreen(
                 onDismissRequest = {
                     setModalState(MyPageModalState.NONE)
                 },
-                onLogout = { viewModel.onAction(MyPageAction.Logout) }
+                onLogout = { viewModel.onAction(MyPageAction.Logout) },
             )
         }
 
@@ -125,7 +125,7 @@ fun MyPageScreen(
                 },
                 onRetry = {
                     viewModel.onAction(MyPageAction.Logout)
-                }
+                },
             )
         }
     }

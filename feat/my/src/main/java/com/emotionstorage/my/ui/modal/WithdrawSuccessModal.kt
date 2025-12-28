@@ -23,9 +23,7 @@ import kotlinx.coroutines.delay
  *      - 스크롤 X
  */
 @Composable
-fun WithdrawSuccessModal (
-    onDismissRequest: () -> Unit,
-){
+fun WithdrawSuccessModal(onDismissRequest: () -> Unit)  {
     // dismiss modal automatically after 5 sec
     LaunchedEffect(Unit) {
         delay(5_000)
@@ -46,10 +44,8 @@ fun WithdrawSuccessModal (
 
 @Preview
 @Composable
-private fun WithdrawSuccessModalPreview(){
+private fun WithdrawSuccessModalPreview()  {
     WithdrawSuccessModal(
         onDismissRequest = {},
     )
 }
-
-
