@@ -84,36 +84,13 @@ fun MyPageScreen(
                     setModalState(MyPageModalState.LOGOUT_ERROR)
                 }
 
-                is MyPageSideEffect.NavigateToNicknameChange -> {
-                    navToNickNameChange()
-                }
-
-                is MyPageSideEffect.NavigateToKeyDescription -> {
-                    navToKeyDescription()
-                }
-
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
                 }
 
-                is MyPageSideEffect.NavigateToTermsAndPrivacy -> {
-                    navToTermsAndPrivacy()
+                is MyPageSideEffect.WithDrawSuccess -> {
+                    navToLogin()
                 }
-
-                is MyPageSideEffect.NavigateToWithDrawNotice -> {
-                    navToWithdrawNotice()
-                }
-
-                is MyPageSideEffect.NavigateToAccountInfo -> {
-                    navToAccountInfo()
-                }
-
-                is MyPageSideEffect.NavigateToNotificationSetting -> {
-                    navToNotificationSetting()
-                }
-
-                MyPageSideEffect.NavigateToSplash -> {}
-                MyPageSideEffect.WithDrawSuccess -> {}
             }
         }
     }
