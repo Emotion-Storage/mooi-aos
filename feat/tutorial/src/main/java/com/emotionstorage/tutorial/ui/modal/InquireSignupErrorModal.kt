@@ -60,14 +60,15 @@ fun InquireSignupErrorModal(
                     data = "mailto:".toUri()
                     putExtra(
                         Intent.EXTRA_EMAIL,
-                        arrayOf("mooi.reply@gmail.com")
+                        arrayOf("mooi.reply@gmail.com"),
                     )
                     putExtra(
                         Intent.EXTRA_SUBJECT,
-                        "[MOOI] 회원가입 실패 문의 (자동생성 코드: ${LocalDateTime.now()})"
+                        "[MOOI] 회원가입 실패 문의 (자동생성 코드: ${LocalDateTime.now()})",
                     )
                     putExtra(
-                        Intent.EXTRA_TEXT, """
+                        Intent.EXTRA_TEXT,
+                        """
                         ────────────────────
                         📮 문의 유형: 회원가입 실패
                         ────────────────────
@@ -99,10 +100,10 @@ fun InquireSignupErrorModal(
 
 
                         📎 자동 포함 정보
-                        - 오류 코드: ${errorCode}
+                        - 오류 코드: $errorCode
                         - 오류 메세지: ${throwable.message}
                         - 오류 원인: ${throwable.cause}
-                    """.trimIndent()
+                        """.trimIndent(),
                     )
                 }
 
@@ -121,28 +122,27 @@ fun InquireSignupErrorModal(
 @Composable
 private fun ErrorCodeBox(
     errorCode: ErrorCode,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                MooiTheme.colorScheme.primaryBlue500.copy(alpha = 0.04f),
-                RoundedCornerShape(16.dp)
-            )
-            .border(
-                1.dp,
-                MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.2f),
-                RoundedCornerShape(16.dp)
-            )
-            .padding(vertical = 16.dp, horizontal = 8.dp),
-        contentAlignment = Alignment.Center
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    MooiTheme.colorScheme.primaryBlue500.copy(alpha = 0.04f),
+                    RoundedCornerShape(16.dp),
+                ).border(
+                    1.dp,
+                    MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.2f),
+                    RoundedCornerShape(16.dp),
+                ).padding(vertical = 16.dp, horizontal = 8.dp),
+        contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "오류 코드: ${errorCode}",
+            text = "오류 코드: $errorCode",
             modifier = Modifier.align(Alignment.Center),
             style = MooiTheme.typography.body5,
-            color = MooiTheme.colorScheme.gray500
+            color = MooiTheme.colorScheme.gray500,
         )
     }
 }

@@ -4,9 +4,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-fun LocalDateTime.formatToKorDateTime(
-    datePattern: String = "yyyy.MM.dd"
-): String =
+fun LocalDateTime.formatToKorDateTime(datePattern: String = "yyyy.MM.dd"): String =
     this.format(DateTimeFormatter.ofPattern(datePattern)) + " " + this.formatToKorTime()
 
 fun LocalDateTime.formatToKorTime(): String =

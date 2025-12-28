@@ -35,7 +35,7 @@ fun InquireLoginErrorModal(
     errorCode: ErrorCode,
     throwable: Throwable,
     onDismissRequest: () -> Unit,
-    ) {
+) {
     val context = LocalContext.current
     Modal(
         onDismissRequest = onDismissRequest,
@@ -48,14 +48,15 @@ fun InquireLoginErrorModal(
                     data = "mailto:".toUri()
                     putExtra(
                         Intent.EXTRA_EMAIL,
-                        arrayOf("mooi.reply@gmail.com")
+                        arrayOf("mooi.reply@gmail.com"),
                     )
                     putExtra(
                         Intent.EXTRA_SUBJECT,
-                        "[MOOI] 로그인 실패 문의 (자동생성 코드: ${LocalDateTime.now()})"
+                        "[MOOI] 로그인 실패 문의 (자동생성 코드: ${LocalDateTime.now()})",
                     )
                     putExtra(
-                        Intent.EXTRA_TEXT, """
+                        Intent.EXTRA_TEXT,
+                        """
                         ────────────────────
                         📮 문의 유형: 로그인 실패
                         ────────────────────
@@ -87,10 +88,10 @@ fun InquireLoginErrorModal(
 
 
                         📎 자동 포함 정보
-                        - 오류 코드: ${errorCode}
+                        - 오류 코드: $errorCode
                         - 오류 메세지: ${throwable.message}
                         - 오류 원인: ${throwable.cause}
-                    """.trimIndent()
+                        """.trimIndent(),
                     )
                 }
 

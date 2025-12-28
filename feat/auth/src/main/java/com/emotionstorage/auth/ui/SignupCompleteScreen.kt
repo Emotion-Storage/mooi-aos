@@ -66,12 +66,13 @@ fun SignupCompleteScreen(
         onLogin = { viewModel.onAction(SignupCompleteAction.LoginWithIdToken(provider, idToken)) },
     )
 
-    if(showRetryLoginModal){
-        RetryLoginModal {
-            showRetryLoginModal = false
-            navToLogin()
+    if (showRetryLoginModal)
+        {
+            RetryLoginModal {
+                showRetryLoginModal = false
+                navToLogin()
+            }
         }
-    }
 }
 
 @Composable

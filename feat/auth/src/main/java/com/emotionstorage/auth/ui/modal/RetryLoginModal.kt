@@ -5,6 +5,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.modal.Modal
 
 // todo: 알럿 정의서에 따라 코멘트 내용 수정하기
+
 /**
  * 로그인 재시도 팝업
  * 회원가입 완료 화면에서, 회원가입 성공 but 로그인 실패한 경우 표시
@@ -12,9 +13,7 @@ import com.emotionstorage.ui.component.modal.Modal
  * 배경 클릭 X, 뒤로가기 X
  */
 @Composable
-fun RetryLoginModal(
-    onConfirm: () -> Unit,
-) {
+fun RetryLoginModal(onConfirm: () -> Unit) {
     Modal(
         onDismissRequest = {
             // disable bg click to dismiss

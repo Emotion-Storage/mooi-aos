@@ -21,7 +21,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - 스크롤 X
  */
 @Composable
-fun DuplicateAccountModal(onConfirm: () -> Unit)  {
+fun DuplicateAccountModal(onConfirm: () -> Unit) {
     Modal(
         onDismissRequest = {
             // disable bg click to dismiss
@@ -36,6 +36,6 @@ fun DuplicateAccountModal(onConfirm: () -> Unit)  {
 
 @Preview
 @Composable
-private fun DuplicateAccountModalPreview()  {
+private fun DuplicateAccountModalPreview() {
     DuplicateAccountModal { }
 }
