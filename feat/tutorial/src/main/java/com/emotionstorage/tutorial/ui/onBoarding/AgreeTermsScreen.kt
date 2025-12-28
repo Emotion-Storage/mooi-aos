@@ -110,8 +110,6 @@ private fun StatelessAgreeTermsScreen(
     navToTermDetail: () -> Unit = {},
     navToPrivacyDetail: () -> Unit = {},
     navToMarketingDetail: () -> Unit = {},
-    // todo: delete test navigations
-    navToSignupComplete: () -> Unit = {},
 ) {
     val coroutineScope = rememberCoroutineScope()
     val onNavBack: () -> Unit = {
