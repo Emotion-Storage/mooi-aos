@@ -7,6 +7,7 @@ import com.emotionstorage.remote.request.auth.KakaoLoginRequestBody
 import com.emotionstorage.remote.request.auth.KakaoSignupRequestBody
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.auth.LoginResponseData
+import com.emotionstorage.remote.response.auth.ReissueResponseData
 import com.emotionstorage.remote.response.auth.SignupResponseData
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -37,6 +38,13 @@ interface AuthApiService {
     @AuthRequest
     @GET("/auth/session")
     suspend fun getAuthSession(): ResponseDto<Unit>
+
+    /**
+     * send refresh token via HttpOnly Cookie
+     */
+    @POST("/auth/reissue")
+    suspend fun postReissue(
+    ): ResponseDto<ReissueResponseData>
 
     @AuthRequest
     @DELETE("/api/v1/mypage/logout")
