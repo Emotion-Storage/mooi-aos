@@ -37,7 +37,10 @@ sealed class LoginSideEffect : BaseSideEffect {
         val accessToken: String,
     ) : LoginSideEffect()
 
-    object InquireLoginError : LoginSideEffect()
+    data class InquireLoginError(
+        val errorCode: ErrorCode,
+        val throwable: Throwable,
+    ) : LoginSideEffect()
 
     object LoginSuccess : LoginSideEffect()
 }
@@ -45,89 +48,94 @@ sealed class LoginSideEffect : BaseSideEffect {
 @OptIn(OrbitExperimental::class)
 @HiltViewModel
 class LoginViewModel
-    @Inject constructor(
-        private val login: LoginUseCase,
-        private val handleLoginUseCase: HandleLoginUseCase,
-    ) : BaseViewModel<LoginState>(
-            LoginState(),
-        ) {
-        private var retryCount: Int = 0
+@Inject constructor(
+    private val login: LoginUseCase,
+    private val handleLoginUseCase: HandleLoginUseCase,
+) : BaseViewModel<LoginState>(
+    LoginState(),
+) {
+    private var retryCount: Int = 0
 
-        fun onAction(action: LoginAction) {
-            when (action) {
-                is LoginAction.Login -> {
-                    handleLogin(action.provider)
-                }
+    fun onAction(action: LoginAction) {
+        when (action) {
+            is LoginAction.Login -> {
+                handleLogin(action.provider)
+            }
 
-                is LoginAction.RetryLogin -> {
-                    handleRetryLogin(action.accessToken)
-                }
+            is LoginAction.RetryLogin -> {
+                handleRetryLogin(action.accessToken)
             }
         }
+    }
 
-        private fun handleLogin(provider: AuthProvider) =
-            baseIntent {
+    private fun handleLogin(provider: AuthProvider) =
+        baseIntent {
+            reduce {
+                state.copy(isLoading = true)
+            }
+            retryCount = 0
+            login(provider).handle(onSuccess = {
                 reduce {
-                    state.copy(isLoading = true)
+                    state.copy(isLoading = false)
                 }
-                retryCount = 0
-                login(provider).handle(onSuccess = {
+                postSideEffect(LoginSideEffect.LoginSuccess)
+            }, onError = { throwable, code, data ->
+                reduce {
+                    state.copy(isLoading = false)
+                }
+                if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN) {
+                    // invalid social id - show toast
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.SocialLoginError)
+                } else if (code == ErrorCode.NEED_SIGN_UP) {
+                    // need sign up - nav to on boarding
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.NeedSignUp(provider, data as String))
+                } else if (code == ErrorCode.LOGIN_CLIENT_ERROR) {
+                    // client login handling error - show login error modal
+                    retryCount++
+                    postSideEffect(LoginSideEffect.RetryLogin(data as String))
+                } else {
+                    // throw base exception for base viewmodel to handle
+                    throw BaseException(
+                        code = code,
+                        message = throwable.message,
+                        cause = throwable,
+                    )
+                }
+            })
+        }
+
+    private fun handleRetryLogin(accessToken: String) =
+        baseIntent {
+            reduce {
+                state.copy(isLoading = true)
+            }
+            handleLoginUseCase(accessToken).handle(
+                onSuccess = {
                     reduce {
                         state.copy(isLoading = false)
                     }
+                    retryCount = 0
                     postSideEffect(LoginSideEffect.LoginSuccess)
-                }, onError = { throwable, code, data ->
+                },
+                onError = { throwable, code, data ->
                     reduce {
                         state.copy(isLoading = false)
                     }
-                    if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN) {
-                        // invalid social id - show toast
-                        retryCount = 0
-                        postSideEffect(LoginSideEffect.SocialLoginError)
-                    } else if (code == ErrorCode.NEED_SIGN_UP) {
-                        // need sign up - nav to on boarding
-                        retryCount = 0
-                        postSideEffect(LoginSideEffect.NeedSignUp(provider, data as String))
-                    } else if (code == ErrorCode.LOGIN_CLIENT_ERROR) {
-                        // client login handling error - show login error modal
+                    if (retryCount < 3) {
                         retryCount++
                         postSideEffect(LoginSideEffect.RetryLogin(data as String))
                     } else {
-                        // throw base exception for base viewmodel to handle
-                        throw BaseException(
-                            code = code,
-                            message = throwable.message,
-                            cause = throwable,
+                        retryCount = 0
+                        postSideEffect(
+                            LoginSideEffect.InquireLoginError(
+                                code,
+                                throwable
+                            )
                         )
                     }
-                })
-            }
-
-        private fun handleRetryLogin(accessToken: String) =
-            baseIntent {
-                reduce {
-                    state.copy(isLoading = true)
-                }
-                handleLoginUseCase(accessToken).handle(
-                    onSuccess = {
-                        reduce {
-                            state.copy(isLoading = false)
-                        }
-                        retryCount = 0
-                        postSideEffect(LoginSideEffect.LoginSuccess)
-                    },
-                    onError = { throwable, code, data ->
-                        reduce {
-                            state.copy(isLoading = false)
-                        }
-                        if (retryCount < 3) {
-                            retryCount++
-                            postSideEffect(LoginSideEffect.RetryLogin(data as String))
-                        } else {
-                            retryCount = 0
-                            postSideEffect(LoginSideEffect.InquireLoginError)
-                        }
-                    },
-                )
-            }
-    }
+                },
+            )
+        }
+}

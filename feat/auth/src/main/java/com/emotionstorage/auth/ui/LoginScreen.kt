@@ -41,6 +41,7 @@ import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.auth.ui.modal.InquireLoginErrorModal
 import com.emotionstorage.auth.ui.modal.RetryLoginModal
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.loading.LoadingOverlay
@@ -56,7 +57,10 @@ private sealed class LoginModalState {
         val accessToken: String,
     ) : LoginModalState()
 
-    object InquireLoginError : LoginModalState()
+    data class InquireLoginError(
+        val errorCode: ErrorCode,
+        val throwable: Throwable,
+    ) : LoginModalState()
 
     object TempError : LoginModalState()
 }
@@ -97,7 +101,10 @@ fun LoginScreen(
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
-                    modalState = LoginModalState.InquireLoginError
+                    modalState = LoginModalState.InquireLoginError(
+                        effect.errorCode,
+                        effect.throwable
+                    )
                 }
 
                 is BaseSideEffect.NetworkError -> {
@@ -123,7 +130,6 @@ fun LoginScreen(
 
         is LoginModalState.RetryLogin -> {
             RetryLoginModal {
-                // retry login with same provider & id token
                 viewModel.onAction(
                     LoginAction.RetryLogin(
                         (modalState as LoginModalState.RetryLogin).accessToken,
@@ -134,9 +140,14 @@ fun LoginScreen(
         }
 
         is LoginModalState.InquireLoginError -> {
-            InquireLoginErrorModal {
-                modalState = LoginModalState.None
-            }
+            val inquireModalState = modalState as LoginModalState.InquireLoginError
+            InquireLoginErrorModal(
+                inquireModalState.errorCode,
+                inquireModalState.throwable,
+                onDismissRequest = {
+                    modalState = LoginModalState.None
+                }
+            )
         }
 
         is LoginModalState.TempError -> {
@@ -230,7 +241,8 @@ private fun StatelessLoginScreen(
                         .background(
                             MooiTheme.colorScheme.backgroundTinted,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                        ).padding(top = 26.dp, bottom = 36.dp)
+                        )
+                        .padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
