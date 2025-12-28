@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.DialogWindowProvider
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
@@ -35,7 +36,8 @@ import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 @Composable
 fun Modal(
     onDismissRequest: () -> Unit,
-    disableBackPress: Boolean = false,
+    dismissOnBackPress: Boolean = true,
+    dismissOnClickOutside: Boolean = true,
     topDescription: String? = null,
     topDescriptionHighlights: List<String>? = emptyList(),
     title: String? = null,
@@ -51,12 +53,6 @@ fun Modal(
     topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
 ) {
-    if (disableBackPress) {
-        BackHandler {
-            // do nothing
-        }
-    }
-
     if (showBackground) {
         // set bg color to black with 0.8 alpha (80% opacity)
         Box(
@@ -67,7 +63,13 @@ fun Modal(
         )
     }
 
-    Dialog(onDismissRequest = onDismissRequest) {
+    Dialog(
+        onDismissRequest = onDismissRequest, properties = DialogProperties(
+            dismissOnBackPress = dismissOnBackPress,
+            dismissOnClickOutside = dismissOnClickOutside,
+            usePlatformDefaultWidth = false,
+        )
+    ) {
         // set dim amount to 0.8f
         (LocalView.current.parent as DialogWindowProvider).window.setDimAmount(0.8f)
 

@@ -13,12 +13,13 @@ import com.emotionstorage.ui.component.modal.Modal
  * 배경 클릭 X, 뒤로가기 X
  */
 @Composable
-fun RetryLoginModal(onConfirm: () -> Unit) {
+fun RetryLoginModal(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit) {
     Modal(
-        onDismissRequest = {
-            // disable bg click to dismiss
-        },
-        disableBackPress = true,
+        onDismissRequest = onDismissRequest,
+        dismissOnBackPress = false,
+        dismissOnClickOutside = false,
         topDescription = "가입은 정상적으로 완료되었어요!",
         title = "하지만 로그인 연결이 잠시\n불안정해 다시 시도해야해요.",
         confirmLabel = "다시 로그인하기",
@@ -30,6 +31,7 @@ fun RetryLoginModal(onConfirm: () -> Unit) {
 @Composable
 private fun RetryLoginModalPreview() {
     RetryLoginModal(
+        onDismissRequest = {},
         onConfirm = {},
     )
 }

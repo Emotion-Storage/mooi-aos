@@ -121,19 +121,27 @@ fun OnBoardingNavHost(
         OnBoardingModalState.None -> {}
 
         OnBoardingModalState.SocialTokenExpired -> {
-            SocialTokenExpiredModal {
-                // nav back to login screen
-                navToBack()
-                modalState = OnBoardingModalState.None
-            }
+            SocialTokenExpiredModal (
+                onDismissRequest = {
+                    modalState = OnBoardingModalState.None
+                },
+                onConfirm = {
+                    // nav back to login screen
+                    navToBack()
+                }
+            )
         }
 
         OnBoardingModalState.DuplicateAccount -> {
-            DuplicateAccountModal {
-                // nav back to login screen
-                navToBack()
-                modalState = OnBoardingModalState.None
-            }
+            DuplicateAccountModal (
+                onDismissRequest = {
+                    modalState = OnBoardingModalState.None
+                },
+                onConfirm = {
+                    // nav back to login screen
+                    navToBack()
+                }
+            )
         }
 
         is OnBoardingModalState.SignupError -> {

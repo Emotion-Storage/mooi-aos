@@ -67,10 +67,14 @@ fun SignupCompleteScreen(
     )
 
     if (showRetryLoginModal) {
-        RetryLoginModal {
-            showRetryLoginModal = false
-            navToLogin()
-        }
+        RetryLoginModal (
+            onDismissRequest = {
+                showRetryLoginModal = false
+            },
+            onConfirm = {
+                navToLogin()
+            }
+        )
     }
 }
 

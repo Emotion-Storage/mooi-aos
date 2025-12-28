@@ -21,12 +21,13 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - 스크롤 X
  */
 @Composable
-fun DuplicateAccountModal(onConfirm: () -> Unit) {
+fun DuplicateAccountModal(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit) {
     Modal(
-        onDismissRequest = {
-            // disable bg click to dismiss
-        },
-        disableBackPress = true,
+        onDismissRequest = onDismissRequest,
+        dismissOnBackPress = false,
+        dismissOnClickOutside = false,
         topDescription = "이미 가입된 계정이에요!",
         title = "로그인하면\n바로 이용할 수 있어요.",
         confirmLabel = "다시 로그인하기",
@@ -37,5 +38,8 @@ fun DuplicateAccountModal(onConfirm: () -> Unit) {
 @Preview
 @Composable
 private fun DuplicateAccountModalPreview() {
-    DuplicateAccountModal { }
+    DuplicateAccountModal(
+        onDismissRequest = {},
+        onConfirm = {},
+    )
 }

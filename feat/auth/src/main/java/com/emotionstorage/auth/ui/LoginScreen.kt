@@ -130,14 +130,18 @@ fun LoginScreen(
         is LoginModalState.None -> {}
 
         is LoginModalState.RetryHandleLogin -> {
-            RetryHandleLoginModal {
-                viewModel.onAction(
-                    LoginAction.RetryLogin(
-                        (modalState as LoginModalState.RetryHandleLogin).accessToken,
-                    ),
-                )
-                modalState = LoginModalState.None
-            }
+            RetryHandleLoginModal(
+                onDismissRequest = {
+                    modalState = LoginModalState.None
+                },
+                onConfirm = {
+                    viewModel.onAction(
+                        LoginAction.RetryLogin(
+                            (modalState as LoginModalState.RetryHandleLogin).accessToken,
+                        ),
+                    )
+                }
+            )
         }
 
         is LoginModalState.InquireLoginError -> {
@@ -242,7 +246,8 @@ private fun StatelessLoginScreen(
                         .background(
                             MooiTheme.colorScheme.backgroundTinted,
                             RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                        ).padding(top = 26.dp, bottom = 36.dp)
+                        )
+                        .padding(top = 26.dp, bottom = 36.dp)
                         .padding(horizontal = 16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {

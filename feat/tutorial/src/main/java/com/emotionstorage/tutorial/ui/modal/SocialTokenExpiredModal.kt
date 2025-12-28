@@ -21,12 +21,13 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - 스크롤 X
  */
 @Composable
-fun SocialTokenExpiredModal(onConfirm: () -> Unit) {
+fun SocialTokenExpiredModal(
+    onDismissRequest: () -> Unit,
+    onConfirm: () -> Unit) {
     Modal(
-        onDismissRequest = {
-            // disable bg click to dismiss
-        },
-        disableBackPress = true,
+        onDismissRequest = onDismissRequest,
+        dismissOnBackPress = false,
+        dismissOnClickOutside = false,
         topDescription = "소셜 로그인 인증이 만료되었어요.",
         title = "다시 시작하면\n곧 완료할 수 있어요!",
         confirmLabel = "다시 가입하기",
@@ -37,5 +38,8 @@ fun SocialTokenExpiredModal(onConfirm: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 private fun SocialTokenExpiredModalPreview() {
-    SocialTokenExpiredModal { }
+    SocialTokenExpiredModal(
+        onDismissRequest = {},
+        onConfirm = {},
+    )
 }
