@@ -29,7 +29,7 @@ fun DuplicateAccountModal(onConfirm: () -> Unit) {
         disableBackPress = true,
         topDescription = "이미 가입된 계정이에요!",
         title = "로그인하면\n바로 이용할 수 있어요.",
-        confirmLabel = "이미 가입된 계정이에요!",
+        confirmLabel = "다시 로그인하기",
         onConfirm = onConfirm,
     )
 }
