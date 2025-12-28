@@ -112,10 +112,11 @@ fun InquireSignupErrorModal(
             } catch (e: Exception) {
                 Logger.e("이메일 앱 선택 불가능", e)
             }
-            onDismissRequest()
         },
         dismissLabel = "닫기",
-        onDismiss = onDismissRequest,
+        onDismiss = {
+            // do nothing before dismiss
+        },
     )
 }
 

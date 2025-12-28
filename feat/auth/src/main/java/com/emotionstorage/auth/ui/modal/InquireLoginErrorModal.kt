@@ -94,16 +94,16 @@ fun InquireLoginErrorModal(
                         """.trimIndent(),
                     )
                 }
-
             try {
                 context.startActivity(Intent.createChooser(emailIntent, "이메일 앱을 선택해주세요."))
             } catch (e: Exception) {
                 Logger.e("이메일 앱 선택 불가능", e)
             }
-            onDismissRequest()
         },
         dismissLabel = "닫기",
-        onDismiss = onDismissRequest,
+        onDismiss = {
+            // do nothing before dismiss
+        },
     )
 }
 
