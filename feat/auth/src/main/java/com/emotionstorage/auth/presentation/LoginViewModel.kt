@@ -33,7 +33,7 @@ sealed class LoginSideEffect : BaseSideEffect {
         val idToken: String,
     ) : LoginSideEffect()
 
-    data class RetryLogin(
+    data class RetryHandleLogin(
         val accessToken: String,
     ) : LoginSideEffect()
 
@@ -94,7 +94,7 @@ class LoginViewModel
                 } else if (code == ErrorCode.LOGIN_CLIENT_ERROR) {
                     // client login handling error - show login error modal
                     retryCount++
-                    postSideEffect(LoginSideEffect.RetryLogin(data as String))
+                    postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
                 } else {
                     // throw base exception for base viewmodel to handle
                     throw BaseException(
@@ -125,7 +125,7 @@ class LoginViewModel
                     }
                     if (retryCount < 3) {
                         retryCount++
-                        postSideEffect(LoginSideEffect.RetryLogin(data as String))
+                        postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
                     } else {
                         retryCount = 0
                         postSideEffect(

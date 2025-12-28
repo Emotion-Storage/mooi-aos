@@ -27,7 +27,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - 스크롤 X
  */
 @Composable
-fun RetryLoginModal(onConfirm: () -> Unit) {
+fun RetryHandleLoginModal(onConfirm: () -> Unit) {
     Modal(
         onDismissRequest = {
             // disable bg click to dismiss
@@ -42,9 +42,9 @@ fun RetryLoginModal(onConfirm: () -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-private fun RetryLoginModalPreview() {
+private fun RetryHandleLoginModalPreview() {
     // background ui
     Box(modifier = Modifier.fillMaxSize())
 
-    RetryLoginModal { }
+    RetryHandleLoginModal { }
 }

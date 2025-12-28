@@ -40,7 +40,7 @@ import com.emotionstorage.auth.presentation.LoginState
 import com.emotionstorage.auth.presentation.LoginViewModel
 import com.emotionstorage.auth.ui.component.SocialLoginButton
 import com.emotionstorage.auth.ui.modal.InquireLoginErrorModal
-import com.emotionstorage.auth.ui.modal.RetryLoginModal
+import com.emotionstorage.auth.ui.modal.RetryHandleLoginModal
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.presentation.BaseSideEffect
@@ -53,7 +53,7 @@ import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 private sealed class LoginModalState {
     object None : LoginModalState()
 
-    data class RetryLogin(
+    data class RetryHandleLogin(
         val accessToken: String,
     ) : LoginModalState()
 
@@ -93,9 +93,9 @@ fun LoginScreen(
                     snackbarHostState.showSnackbar("소셜 로그인 실패")
                 }
 
-                is LoginSideEffect.RetryLogin -> {
+                is LoginSideEffect.RetryHandleLogin -> {
                     modalState =
-                        LoginModalState.RetryLogin(
+                        LoginModalState.RetryHandleLogin(
                             effect.accessToken,
                         )
                 }
@@ -128,11 +128,11 @@ fun LoginScreen(
     when (modalState) {
         is LoginModalState.None -> {}
 
-        is LoginModalState.RetryLogin -> {
-            RetryLoginModal {
+        is LoginModalState.RetryHandleLogin -> {
+            RetryHandleLoginModal {
                 viewModel.onAction(
                     LoginAction.RetryLogin(
-                        (modalState as LoginModalState.RetryLogin).accessToken,
+                        (modalState as LoginModalState.RetryHandleLogin).accessToken,
                     ),
                 )
                 modalState = LoginModalState.None
