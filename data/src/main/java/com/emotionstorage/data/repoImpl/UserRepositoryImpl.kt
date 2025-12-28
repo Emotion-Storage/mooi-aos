@@ -39,8 +39,8 @@ class UserRepositoryImpl
                                 // save to local if successful
                                 try {
                                     val isSaveSuccess = localDataSource.saveUser(UserMapper.toData(it.data))
-                                    if(!isSaveSuccess) throw Exception("save user failed")
-                                }catch (e: Exception){
+                                    if (!isSaveSuccess) throw Exception("save user failed")
+                                } catch (e: Exception) {
                                     Napier.e("save user failed", e)
                                 }
                             }
@@ -65,8 +65,8 @@ class UserRepositoryImpl
                                 // save to local if successful
                                 try {
                                     val isSaveSuccess = localDataSource.saveUser(UserMapper.toData(it.toUser()))
-                                    if(!isSaveSuccess) throw Exception("save user failed")
-                                }catch (e: Exception){
+                                    if (!isSaveSuccess) throw Exception("save user failed")
+                                } catch (e: Exception) {
                                     Napier.e("save user failed", e)
                                 }
                                 // return success with remote user data, regardless of save success/failure
