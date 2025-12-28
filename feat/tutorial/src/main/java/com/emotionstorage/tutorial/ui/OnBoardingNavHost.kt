@@ -114,7 +114,8 @@ fun OnBoardingNavHost(
     )
 
     when (modalState) {
-        OnBoardingModalState.None -> {}
+        OnBoardingModalState.None -> { }
+
         OnBoardingModalState.SocialTokenExpired -> {
             SocialTokenExpiredModal {
                 // nav back to login screen
