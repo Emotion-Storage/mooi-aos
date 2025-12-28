@@ -37,6 +37,7 @@ import com.emotionstorage.my.presentation.MyPageSideEffect
 import com.emotionstorage.my.presentation.MyPageState
 import com.emotionstorage.my.presentation.MyPageViewModel
 import com.emotionstorage.my.ui.keyDescription.component.KeyCard
+import com.emotionstorage.my.ui.modal.ConfirmLogoutModal
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
 import com.emotionstorage.ui.component.modal.Modal
@@ -58,6 +59,7 @@ fun MyPageScreen(
     navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val (showLogoutModal, setShowLogoutModal) = remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("MyPageScreen: onResume triggered")
@@ -112,8 +114,8 @@ fun MyPageScreen(
     StatelessMyPageScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
+        setShowLogoutModal = setShowLogoutModal,
         state = state.value,
-        onAction = viewModel::onAction,
         navToWithdraw = navToWithdrawNotice,
         navToNickNameChange = navToNickNameChange,
         navToKeyDescription = navToKeyDescription,
@@ -121,14 +123,21 @@ fun MyPageScreen(
         navToTermsAndPrivacy = navToTermsAndPrivacy,
         navToNotificationSetting = navToNotificationSetting,
     )
+
+    if (showLogoutModal) {
+        ConfirmLogoutModal(
+            onDismissRequest = { setShowLogoutModal(false) },
+            onLogout = { viewModel.onAction(MyPageAction.Logout) }
+        )
+    }
 }
 
 @Composable
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
+    setShowLogoutModal: (Boolean) -> Unit = {},
     state: MyPageState = MyPageState(),
-    onAction: (MyPageAction) -> Unit = {},
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
     navToKeyDescription: () -> Unit = {},
@@ -137,7 +146,6 @@ private fun StatelessMyPageScreen(
     navToNotificationSetting: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
-    var showLogoutModal by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier =
@@ -160,7 +168,7 @@ private fun StatelessMyPageScreen(
                 verticalArrangement = Arrangement.Top,
             ) {
                 ProfileHeader(
-                    modifier = Modifier.offset(x = -9.dp),
+                    modifier = Modifier.offset(x = (-9).dp),
                     nickname = state.nickname,
                     signupDday = state.signupDday,
                     onEditClick = {
@@ -185,22 +193,9 @@ private fun StatelessMyPageScreen(
                         clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
                     },
                     onTermsAndPrivacyClick = navToTermsAndPrivacy,
-                    onLogoutClick = { showLogoutModal = true },
+                    onLogoutClick = { setShowLogoutModal(true) },
                     onNotificationClick = navToNotificationSetting,
                 )
-
-                if (showLogoutModal) {
-                    Modal(
-                        title = "정말 로그아웃 하시겠어요?",
-                        confirmLabel = "아니요, 그냥 있을래요.",
-                        onDismissRequest = { showLogoutModal = false },
-                        topDescription = null,
-                        bottomDescription = "다시 돌아오실거죠? 기다리고있을게요 \uD83E\uDD7A",
-                        dismissLabel = "네, 로그아웃 할래요.",
-                        onDismiss = { onAction(MyPageAction.Logout) },
-                        onConfirm = { showLogoutModal = false },
-                    )
-                }
 
                 Spacer(modifier = Modifier.size(8.dp))
                 Text(

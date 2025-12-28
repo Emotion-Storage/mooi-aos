@@ -1,6 +1,7 @@
 package com.emotionstorage.my.ui.modal
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.modal.Modal
 
 /**
@@ -29,5 +30,15 @@ fun LogoutErrorModal(
         title = "연결 상태를 확인한 뒤\n다시 시도해주세요.",
         confirmLabel = "다시 로그인하기",
         onConfirm = onConfirm,
+    )
+}
+
+
+@Preview
+@Composable
+private fun LogoutErrorModalPreview(){
+    LogoutErrorModal(
+        onDismissRequest = {},
+        onConfirm = {},
     )
 }
