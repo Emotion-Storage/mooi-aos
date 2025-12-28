@@ -5,17 +5,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingAction
 import com.emotionstorage.tutorial.presentation.OnBoardingSideEffect
 import com.emotionstorage.tutorial.presentation.OnBoardingState
 import com.emotionstorage.tutorial.presentation.OnBoardingViewModel
+import com.emotionstorage.tutorial.ui.modal.DuplicateAccountModal
+import com.emotionstorage.tutorial.ui.modal.InquireSignupErrorModal
+import com.emotionstorage.tutorial.ui.modal.SocialTokenExpiredModal
 import com.emotionstorage.tutorial.ui.onBoarding.AgreeTermsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.ExpectationsScreen
 import com.emotionstorage.tutorial.ui.onBoarding.GenderBirthScreen
@@ -23,6 +32,7 @@ import com.emotionstorage.tutorial.ui.terms.MarketingUsageDetailScreen
 import com.emotionstorage.tutorial.ui.onBoarding.NicknameScreen
 import com.emotionstorage.tutorial.ui.terms.PrivacyPolicyDetailScreen
 import com.emotionstorage.tutorial.ui.terms.TermDetailScreen
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 
 /**
@@ -40,6 +50,19 @@ enum class OnBoardingRoute(
     MARKETING_DETAIL("on_boarding/agree_terms/marketing_detail"),
 }
 
+private sealed class OnBoardingModalState {
+    object None : OnBoardingModalState()
+
+    object SocialTokenExpired : OnBoardingModalState()
+
+    object DuplicateAccount : OnBoardingModalState()
+
+    data class SignupError(
+        val errorCode: ErrorCode,
+        val throwable: Throwable,
+    ) : OnBoardingModalState()
+}
+
 @Composable
 fun OnBoardingNavHost(
     provider: AuthProvider,
@@ -50,7 +73,8 @@ fun OnBoardingNavHost(
     navToBack: () -> Unit = {},
 ) {
     val navController = rememberNavController()
-    val state = sharedViewModel.container.stateFlow.collectAsState()
+    val state by sharedViewModel.container.stateFlow.collectAsState()
+    var modalState by remember { mutableStateOf<OnBoardingModalState>(OnBoardingModalState.None) }
 
     LaunchedEffect(provider, idToken) {
         sharedViewModel.onAction(OnBoardingAction.Initiate(provider, idToken))
@@ -62,33 +86,75 @@ fun OnBoardingNavHost(
                     navToSignupComplete(sideEffect.provider, sideEffect.idToken)
                 }
 
-                is OnBoardingSideEffect.SignupFailed -> {
-                    // todo: handle signup failure
+                is OnBoardingSideEffect.SocialTokenExpired -> {
+                    modalState = OnBoardingModalState.SocialTokenExpired
                 }
 
-                is OnBoardingSideEffect.TermDetail -> {
-                    navController.navigate(OnBoardingRoute.TERM_DETAIL.route)
+                is OnBoardingSideEffect.DuplicateAccount -> {
+                    modalState = OnBoardingModalState.DuplicateAccount
                 }
 
-                is OnBoardingSideEffect.PrivacyDetail -> {
-                    navController.navigate(OnBoardingRoute.PRIVACY_DETAIL.route)
+                is BaseSideEffect.TemporalError -> {
+                    modalState =
+                        OnBoardingModalState.SignupError(sideEffect.code, sideEffect.throwable)
                 }
 
-                is OnBoardingSideEffect.MarketingDetail -> {
-                    navController.navigate(OnBoardingRoute.MARKETING_DETAIL.route)
+                is BaseSideEffect.NetworkError -> {
+                    // todo: add network toast
                 }
             }
         }
     }
 
+    if (state.isLoading) {
+        LoadingOverlay()
+    }
     StatelessOnBoardingNavHost(
         modifier = modifier,
         navController = navController,
-        state = state.value,
+        state = state,
         onAction = sharedViewModel::onAction,
         navToBack = navToBack,
-        navToSignupComplete = navToSignupComplete,
     )
+
+    when (modalState) {
+        OnBoardingModalState.None -> {}
+
+        OnBoardingModalState.SocialTokenExpired -> {
+            SocialTokenExpiredModal(
+                onDismissRequest = {
+                    modalState = OnBoardingModalState.None
+                },
+                onConfirm = {
+                    // nav back to login screen
+                    navToBack()
+                },
+            )
+        }
+
+        OnBoardingModalState.DuplicateAccount -> {
+            DuplicateAccountModal(
+                onDismissRequest = {
+                    modalState = OnBoardingModalState.None
+                },
+                onConfirm = {
+                    // nav back to login screen
+                    navToBack()
+                },
+            )
+        }
+
+        is OnBoardingModalState.SignupError -> {
+            val inquireModalState = modalState as OnBoardingModalState.SignupError
+            InquireSignupErrorModal(
+                inquireModalState.errorCode,
+                inquireModalState.throwable,
+                onDismissRequest = {
+                    modalState = OnBoardingModalState.None
+                },
+            )
+        }
+    }
 }
 
 @Composable
@@ -98,8 +164,6 @@ private fun StatelessOnBoardingNavHost(
     state: OnBoardingState = OnBoardingState(),
     onAction: (OnBoardingAction) -> Unit = {},
     navToBack: () -> Unit = {},
-    // todo: delete test navigation
-    navToSignupComplete: (provider: AuthProvider, idToken: String) -> Unit = { _, _ -> },
 ) {
     NavHost(
         navController,
@@ -190,17 +254,14 @@ private fun StatelessOnBoardingNavHost(
                             navToBack = {
                                 navController.popBackStack()
                             },
-                            navToSignupComplete = {
-                                navToSignupComplete(AuthProvider.KAKAO, "")
-                            },
                             navToTermDetail = {
-                                onAction(OnBoardingAction.TermDetail)
+                                navController.navigate(OnBoardingRoute.TERM_DETAIL.route)
                             },
                             navToPrivacyDetail = {
-                                onAction(OnBoardingAction.PrivacyDetail)
+                                navController.navigate(OnBoardingRoute.PRIVACY_DETAIL.route)
                             },
                             navToMarketingDetail = {
-                                onAction(OnBoardingAction.MarketingDetail)
+                                navController.navigate(OnBoardingRoute.MARKETING_DETAIL.route)
                             },
                         )
                     }

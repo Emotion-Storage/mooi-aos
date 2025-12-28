@@ -8,10 +8,9 @@ import androidx.compose.ui.tooling.preview.Preview
 
 /**
  * common_error_02
- * - 표출 조건(트리거)
- *     - Case : 네트워크 최상위 계층 에러
- *     최상위 계층까지 오류가 전파되었을 경우 표시
- *     즉, 본 알럿은 네트워크 오류가 발생했으나 해당 화면에서 별도의 에러 처리가 존재하지 않아 공통 에러 처리 정책이 적용되는 경우에 노출됩니다.
+ * - Case : 네트워크 최상위 계층 에러
+ *     - 최상위 계층까지 오류가 전파되었을 경우 표시
+ *     - 즉, 본 알럿은 네트워크 오류가 발생했으나 해당 화면에서 별도의 에러 처리가 존재하지 않아 공통 에러 처리 정책이 적용되는 경우에 노출됩니다.
  *     1. 화면 전용 처리 실패 알럿 (화면별 지정된)
  *     2. 공통 네트워크 에러 알럿
  *     중에서 1번 조건에 해당하지 않는 경우 표출합니다.
@@ -30,7 +29,9 @@ fun TempErrorModal(onDismissRequest: () -> Unit) {
         onDismissRequest = onDismissRequest,
         title = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.",
         confirmLabel = "네, 확인했어요.",
-        onConfirm = onDismissRequest,
+        onConfirm = {
+            // do nothing before dismiss
+        },
     )
 }
 

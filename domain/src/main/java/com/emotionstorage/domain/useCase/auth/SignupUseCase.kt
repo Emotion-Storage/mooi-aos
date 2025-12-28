@@ -3,7 +3,6 @@ package com.emotionstorage.domain.useCase.auth
 import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.repo.AuthRepository
 import com.emotionstorage.domain.common.DataState
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -16,6 +15,5 @@ class SignupUseCase
     constructor(
         private val authRepository: AuthRepository,
     ) {
-        suspend operator fun invoke(signupForm: SignupForm): Flow<DataState<Boolean>> =
-            authRepository.signup(signupForm)
+        suspend operator fun invoke(signupForm: SignupForm): DataState<Unit> = authRepository.signup(signupForm)
     }

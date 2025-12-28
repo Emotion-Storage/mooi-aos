@@ -18,7 +18,8 @@ interface BaseSideEffect {
     object SessionExpired : BaseSideEffect
 
     data class TemporalError(
-        val code: ErrorCode? = null,
+        val code: ErrorCode,
+        val throwable: Throwable,
     ) : BaseSideEffect
 }
 
@@ -64,7 +65,7 @@ open class BaseViewModel<STATE : Any>(
                     postSideEffect(BaseSideEffect.SessionExpired)
                 } else {
                     // handle internal server error / unknown error / etc
-                    postSideEffect(BaseSideEffect.TemporalError(code))
+                    postSideEffect(BaseSideEffect.TemporalError(code, error))
                 }
             }
         }

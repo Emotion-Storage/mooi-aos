@@ -63,7 +63,7 @@ class AuthRemoteDataSourceImpl
         override suspend fun signup(
             provider: User.AuthProvider,
             signupFormEntity: SignupFormEntity,
-        ): Boolean {
+        ): DataState<Unit> =
             try {
                 val response =
                     when (provider) {
@@ -81,14 +81,25 @@ class AuthRemoteDataSourceImpl
                     }
 
                 if (response.status == ResponseStatus.Created.code) {
-                    return true
+                    DataState.Success(Unit)
                 } else {
                     throw Exception(response.code + "" + response.message)
                 }
+            } catch (e: IOException) {
+                if (e !is CustomHttpException) {
+                    // handle network error
+                    Logger.e("Signup network exception, $e")
+                    DataState.Error(e, ErrorCode.NETWORK_ERROR)
+                } else {
+                    // handle http response error
+                    Logger.e("Signup http exception, $e")
+                    DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""))
+                }
             } catch (e: Exception) {
-                throw Exception("Signup api failed", e)
+                // handle unknown error
+                Logger.e("Signup api failed", e)
+                DataState.Error(e)
             }
-        }
 
         override suspend fun checkSession(): Boolean {
             try {

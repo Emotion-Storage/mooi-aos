@@ -1,37 +1,46 @@
-package com.emotionstorage.auth.ui.modal
+package com.emotionstorage.tutorial.ui.modal
 
 import android.content.Intent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.emotionstorage.ui.component.modal.Modal
-import com.orhanobut.logger.Logger
+import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.domain.common.ErrorCode
+import com.emotionstorage.ui.component.modal.Modal
+import com.emotionstorage.ui.theme.MooiTheme
+import com.orhanobut.logger.Logger
 import java.time.LocalDateTime
 
 /**
- * login_02
- * - Case : 로그인 처리 최종 실패
- *     - login_01 알럿을 3번 표출 후 최종 실패 처리가 되었을 때 표시
+ * signup_02
+ * - Case : 회원가입 실패
+ *     - 특정 오류 코드로 인해 회원가입을 최종 실패했을 경우 표출
+ *     - (네트워크 오류 아님)
  * - 표시 화면
- *     - 2.1 로그인 화면
+ *     - 2.5 온보딩(4) - 약관 동의
  * - CTA 및 이동
  *     - [이메일로 문의하기] -> 팝업 닫히며 이메일 작성 인텐트 시작(화면 유지)
  *     - [닫기] -> 팝업 닫히며 이동 X(재시도 유도)
  * - 차단
- *   - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
- *   - push/pop X
- *   - 하단바 상호작용 X (하단바 없음)
- *   - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *   - 스크롤 X
+ *     - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
+ *     - push/pop X
+ *     - 하단바 상호작용 X (하단바 없음)
+ *     - 배경 터치 O (팝업 닫힘, 화면 제자리)
+ *     - 스크롤 X
  */
 @Composable
-fun InquireLoginErrorModal(
+fun InquireSignupErrorModal(
     errorCode: ErrorCode,
     throwable: Throwable,
     onDismissRequest: () -> Unit,
@@ -39,8 +48,11 @@ fun InquireLoginErrorModal(
     val context = LocalContext.current
     Modal(
         onDismissRequest = onDismissRequest,
-        topDescription = "여러 번 시도했지만\n로그인에 계속 문제가 있어요.",
-        title = "잠시 후 다시 시도하거나\n메일로 문의해주세요.",
+        topDescription = "회원가입에 실패했어요.",
+        title = "잠시 후 다시 시도하거나\n같은 문제가 반복되면\n문의해주세요.",
+        content = @Composable {
+            ErrorCodeBox(errorCode)
+        },
         confirmLabel = "이메일로 문의하기",
         onConfirm = {
             val emailIntent =
@@ -52,13 +64,13 @@ fun InquireLoginErrorModal(
                     )
                     putExtra(
                         Intent.EXTRA_SUBJECT,
-                        "[MOOI] 로그인 실패 문의 (자동생성 코드: ${LocalDateTime.now()})",
+                        "[MOOI] 회원가입 실패 문의 (자동생성 코드: ${LocalDateTime.now()})",
                     )
                     putExtra(
                         Intent.EXTRA_TEXT,
                         """
                         ────────────────────
-                        📮 문의 유형: 로그인 실패
+                        📮 문의 유형: 회원가입 실패
                         ────────────────────
 
                         ■ 사용하신 로그인 방식
@@ -67,11 +79,11 @@ fun InquireLoginErrorModal(
                         ( ) 애플 로그인
                         ( ) 기타: ________________________
 
-                        ■ 로그인 시도 시점
+                        ■ 회원가입을 시도한 시점
                         예: ${LocalDateTime.now().formatToKorDateTime("yyyy년 MM월 dd일")}경
 
-                        ■ 오류 발생 화면
-                        예: 회원가입 완료 단계 / 로그인 버튼 클릭 직후
+                        ■ 온보딩 중이던 단계
+                        예: 닉네임 입력 단계 / 생년월일 단계 / 약관 동의 단계 등
 
                         ■ 사용 기기 및 OS
                         예: Galaxy S22 / Android 14
@@ -94,6 +106,7 @@ fun InquireLoginErrorModal(
                         """.trimIndent(),
                     )
                 }
+
             try {
                 context.startActivity(Intent.createChooser(emailIntent, "이메일 앱을 선택해주세요."))
             } catch (e: Exception) {
@@ -107,13 +120,38 @@ fun InquireLoginErrorModal(
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun InquireLoginErrorModalPreview() {
-    // background ui
-    Box(modifier = Modifier.fillMaxSize())
+private fun ErrorCodeBox(
+    errorCode: ErrorCode,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .background(
+                    MooiTheme.colorScheme.primaryBlue500.copy(alpha = 0.04f),
+                    RoundedCornerShape(16.dp),
+                ).border(
+                    1.dp,
+                    MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.2f),
+                    RoundedCornerShape(16.dp),
+                ).padding(vertical = 16.dp, horizontal = 8.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = "오류 코드: $errorCode",
+            modifier = Modifier.align(Alignment.Center),
+            style = MooiTheme.typography.body5,
+            color = MooiTheme.colorScheme.gray500,
+        )
+    }
+}
 
-    InquireLoginErrorModal(
+@Preview
+@Composable
+private fun InquireSignupErrorModalPreview() {
+    InquireSignupErrorModal(
         errorCode = ErrorCode.UNKNOWN,
         throwable = Throwable("message"),
         onDismissRequest = {},

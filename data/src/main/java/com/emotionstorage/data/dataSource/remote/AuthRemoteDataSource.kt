@@ -16,12 +16,11 @@ interface AuthRemoteDataSource {
 
     /**
      * Signup with id token
-     * @return success
      */
     suspend fun signup(
         provider: User.AuthProvider,
         signupFormEntity: SignupFormEntity,
-    ): Boolean
+    ): DataState<Unit>
 
     /**
      * Check session
