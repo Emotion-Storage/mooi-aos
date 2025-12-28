@@ -29,7 +29,9 @@ fun TempErrorModal(onDismissRequest: () -> Unit) {
         onDismissRequest = onDismissRequest,
         title = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.",
         confirmLabel = "네, 확인했어요.",
-        onConfirm = onDismissRequest,
+        onConfirm = {
+            // do nothing before dismiss
+        },
     )
 }
 
