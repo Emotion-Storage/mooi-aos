@@ -6,6 +6,7 @@ import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.domain.useCase.myPage.GetMyPageOverviewUseCase
 import com.emotionstorage.my.BuildConfig
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -95,9 +96,13 @@ class MyPageViewModel @Inject constructor(
     private fun handleLogout() =
         intent {
             try {
-                logoutUseCase()
-                postSideEffect(MyPageSideEffect.LogoutSuccess)
+                if(logoutUseCase()) {
+                    postSideEffect(MyPageSideEffect.LogoutSuccess)
+                }else{
+                    postSideEffect(MyPageSideEffect.LogoutError)
+                }
             } catch (t: Throwable) {
+                Logger.e("LogoutUseCase error: $t")
                 postSideEffect(MyPageSideEffect.LogoutError)
             }
         }
