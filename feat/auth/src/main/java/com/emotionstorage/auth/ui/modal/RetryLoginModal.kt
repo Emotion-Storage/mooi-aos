@@ -4,13 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.modal.Modal
 
-// todo: 알럿 정의서에 따라 코멘트 내용 수정하기
-
 /**
- * 로그인 재시도 팝업
- * 회원가입 완료 화면에서, 회원가입 성공 but 로그인 실패한 경우 표시
- * [다시 로그인하기] -> 로그인 화면으로 이동
- * 배경 클릭 X, 뒤로가기 X
+ * login_03
+ * - Case : 가입 완료 직후 로그인 요청 실패(네트워크 오류 포함)
+ *      - 가입완료 화면에서 [메인 화면으로 이동]을 눌렀을 때, 로그인 실패 시 중앙 차단 팝업 표출
+ * - 표시 화면
+ *      - 2.6 온보딩(5) - 가입 완료 화면
+ * - CTA 및 이동
+ *      - [다시 로그인하기] -> 로그인 화면으로 이동
+ * - 차단
+ *      - 뒤로가기(Android) X
+ *      - push/pop X
+ *      - 하단바 상호작용 X (하단바 없음)
+ *      - 배경 터치 X
+ *      - 스크롤 X
  */
 @Composable
 fun RetryLoginModal(

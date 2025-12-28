@@ -8,6 +8,8 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository {
     suspend fun saveUser(user: User): Boolean
 
+    suspend fun getUserSnapshot(): DataState<User>
+
     suspend fun getUser(): Flow<DataState<User>>
 
     suspend fun getAndSaveUser(): Boolean

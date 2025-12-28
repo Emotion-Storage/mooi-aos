@@ -2,10 +2,10 @@ package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.domain.useCase.myPage.GetMyPageOverviewUseCase
 import com.emotionstorage.my.BuildConfig
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -24,38 +24,12 @@ sealed class MyPageAction {
     object Initiate : MyPageAction()
 
     object Logout : MyPageAction()
-
-    object NicknameChange : MyPageAction()
-
-    object KeyDescription : MyPageAction()
-
-    object AccountInfo : MyPageAction()
-
-    object TermsAndPrivacy : MyPageAction()
-
-    object WithDrawConfirm : MyPageAction()
-
-    object NotificationSetting : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
-    object NavigateToNicknameChange : MyPageSideEffect()
-
-    object NavigateToAccountInfo : MyPageSideEffect()
-
-    object NavigateToKeyDescription : MyPageSideEffect()
-
-    object NavigateToNotificationSetting : MyPageSideEffect()
-
-    object NavigateToTermsAndPrivacy : MyPageSideEffect()
-
-    object NavigateToWithDrawNotice : MyPageSideEffect()
-
-    object WithDrawSuccess : MyPageSideEffect()
-
-    object NavigateToSplash : MyPageSideEffect()
+    object LogoutError : MyPageSideEffect()
 
     data class ShowToast(
         val message: String,
@@ -65,7 +39,6 @@ sealed class MyPageSideEffect {
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    private val deleteAccountUseCase: DeleteAccountUseCase,
     private val myPageOverviewUseCase: GetMyPageOverviewUseCase,
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
@@ -77,32 +50,8 @@ class MyPageViewModel @Inject constructor(
                 handleInitiate()
             }
 
-            is MyPageAction.NicknameChange -> {
-                handleNicknameChange()
-            }
-
             is MyPageAction.Logout -> {
                 handleLogout()
-            }
-
-            is MyPageAction.KeyDescription -> {
-                handleKeyDescription()
-            }
-
-            is MyPageAction.AccountInfo -> {
-                handleAccountInfo()
-            }
-
-            is MyPageAction.TermsAndPrivacy -> {
-                handleTermsAndPrivacy()
-            }
-
-            is MyPageAction.WithDrawConfirm -> {
-                handleWithDraw()
-            }
-
-            is MyPageAction.NotificationSetting -> {
-                handleNotificationSetting()
             }
         }
     }
@@ -137,46 +86,14 @@ class MyPageViewModel @Inject constructor(
     private fun handleLogout() =
         intent {
             try {
-                logoutUseCase()
-                postSideEffect(MyPageSideEffect.LogoutSuccess)
+                if (logoutUseCase()) {
+                    postSideEffect(MyPageSideEffect.LogoutSuccess)
+                } else {
+                    postSideEffect(MyPageSideEffect.LogoutError)
+                }
             } catch (t: Throwable) {
-                postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "로그아웃 실패"))
+                Logger.e("LogoutUseCase error: $t")
+                postSideEffect(MyPageSideEffect.LogoutError)
             }
-        }
-
-    private fun handleNicknameChange() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToNicknameChange)
-        }
-
-    private fun handleKeyDescription() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToKeyDescription)
-        }
-
-    private fun handleTermsAndPrivacy() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToTermsAndPrivacy)
-        }
-
-    private fun handleWithDraw() =
-        intent {
-            try {
-                deleteAccountUseCase()
-                postSideEffect(MyPageSideEffect.WithDrawSuccess)
-                postSideEffect(MyPageSideEffect.NavigateToSplash)
-            } catch (t: Throwable) {
-                postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
-            }
-        }
-
-    private fun handleAccountInfo() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToAccountInfo)
-        }
-
-    private fun handleNotificationSetting() =
-        intent {
-            postSideEffect(MyPageSideEffect.NavigateToNotificationSetting)
         }
 }

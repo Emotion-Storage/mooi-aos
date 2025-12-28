@@ -4,6 +4,7 @@ import com.emotionstorage.data.dataSource.local.UserLocalDataSource
 import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.data.modelMapper.UserMapper
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.common.map
 import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.model.toUser
@@ -21,6 +22,34 @@ class UserRepositoryImpl
     ) : UserRepository {
         override suspend fun saveUser(user: User): Boolean = localDataSource.saveUser(UserMapper.toData(user))
 
+        override suspend fun getUserSnapshot(): DataState<User> =
+            try {
+                // return user from local data source first
+                val localUser = localDataSource.getUser()
+                if (localUser != null) {
+                    DataState.Success(UserMapper.toDomain(localUser))
+                } else {
+                    // fetch user from remote
+                    remoteDataSource
+                        .getUserAccountInfo()
+                        .map {
+                            it.toUser()
+                        }.also {
+                            if (it is DataState.Success) {
+                                // save to local if successful
+                                try {
+                                    val isSaveSuccess = localDataSource.saveUser(UserMapper.toData(it.data))
+                                    if (!isSaveSuccess) throw Exception("save user failed")
+                                } catch (e: Exception) {
+                                    Napier.e("save user failed", e)
+                                }
+                            }
+                        }
+                }
+            } catch (e: Exception) {
+                DataState.Error(e)
+            }
+
         override suspend fun getUser(): Flow<DataState<User>> =
             flow {
                 emit(DataState.Loading(isLoading = true))
@@ -30,10 +59,17 @@ class UserRepositoryImpl
                     if (localUser != null) {
                         emit(DataState.Success(UserMapper.toDomain(localUser)))
                     } else {
-                        // fetch user from remote & save to local & return
+                        // fetch user from remote
                         remoteDataSource.getUserAccountInfo().handle(
                             onSuccess = {
-                                localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                                // save to local if successful
+                                try {
+                                    val isSaveSuccess = localDataSource.saveUser(UserMapper.toData(it.toUser()))
+                                    if (!isSaveSuccess) throw Exception("save user failed")
+                                } catch (e: Exception) {
+                                    Napier.e("save user failed", e)
+                                }
+                                // return success with remote user data, regardless of save success/failure
                                 emit(DataState.Success(it.toUser()))
                             },
                             onError = { throwable, code, message ->
@@ -54,6 +90,7 @@ class UserRepositoryImpl
                 if (result is DataState.Success) {
                     localDataSource.saveUser(UserMapper.toData(result.data.toUser()))
                 } else {
+                    Napier.e("getUser error in getAndSaveUser", (result as DataState.Error).throwable)
                     false
                 }
             } catch (e: Exception) {
