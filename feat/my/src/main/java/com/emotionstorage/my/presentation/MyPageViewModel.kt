@@ -2,7 +2,6 @@ package com.emotionstorage.my.presentation
 
 import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
-import com.emotionstorage.domain.useCase.auth.DeleteAccountUseCase
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.domain.useCase.myPage.GetMyPageOverviewUseCase
 import com.emotionstorage.my.BuildConfig
@@ -30,7 +29,7 @@ sealed class MyPageAction {
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
-    object LogoutError: MyPageSideEffect()
+    object LogoutError : MyPageSideEffect()
 
     data class ShowToast(
         val message: String,
@@ -87,15 +86,15 @@ class MyPageViewModel @Inject constructor(
     private fun handleLogout() =
         intent {
             try {
-                if(logoutUseCase()) {
+                if (logoutUseCase()) {
                     postSideEffect(MyPageSideEffect.LogoutSuccess)
-                }else{
-                    postSideEffect(MyPageSideEffect.LogoutError)
-                }
+                } else
+                    {
+                        postSideEffect(MyPageSideEffect.LogoutError)
+                    }
             } catch (t: Throwable) {
                 Logger.e("LogoutUseCase error: $t")
                 postSideEffect(MyPageSideEffect.LogoutError)
             }
         }
-
 }
