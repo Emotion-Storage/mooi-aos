@@ -87,10 +87,6 @@ fun MyPageScreen(
                 is MyPageSideEffect.ShowToast -> {
                     // todo: add error toast
                 }
-
-                is MyPageSideEffect.WithDrawSuccess -> {
-                    navToLogin()
-                }
             }
         }
     }

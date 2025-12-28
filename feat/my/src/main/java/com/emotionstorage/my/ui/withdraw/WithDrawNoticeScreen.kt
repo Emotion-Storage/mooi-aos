@@ -7,10 +7,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,16 +16,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.MyPageAction
-import com.emotionstorage.my.presentation.MyPageSideEffect
-import com.emotionstorage.my.presentation.MyPageViewModel
+import com.emotionstorage.my.presentation.WithdrawNoticeAction
+import com.emotionstorage.my.presentation.WithdrawNoticeEffect
+import com.emotionstorage.my.presentation.WithdrawNoticeViewModel
 import com.emotionstorage.my.ui.modal.ConfirmWithdrawModal
 import com.emotionstorage.my.ui.modal.WithdrawSuccessModal
-import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.theme.MooiTheme
-import kotlinx.coroutines.delay
 
 private enum class WithdrawNoticeModalState {
     NONE,
@@ -37,7 +34,7 @@ private enum class WithdrawNoticeModalState {
 
 @Composable
 fun WithDrawNoticeScreen(
-    viewModel: MyPageViewModel = hiltViewModel(),
+    viewModel: WithdrawNoticeViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
     navToNotificationSetting: () -> Unit = {},
     navToLogin: () -> Unit = {},
@@ -49,12 +46,12 @@ fun WithDrawNoticeScreen(
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                is MyPageSideEffect.WithDrawSuccess -> {
+                is WithdrawNoticeEffect.WithDrawSuccess -> {
                     setModalState(WithdrawNoticeModalState.WITHDRAW_SUCCESS)
                 }
 
-                else -> {
-                    Unit
+                is WithdrawNoticeEffect.WithdrawError -> {
+                    // todo: add error modal
                 }
             }
         }
@@ -65,10 +62,11 @@ fun WithDrawNoticeScreen(
         setModalState = setModalState,
     )
 
-    when(modalState){
+    when (modalState) {
         WithdrawNoticeModalState.NONE -> {
             // no modal
         }
+
         WithdrawNoticeModalState.CONFIRM_WITHDRAW -> {
             ConfirmWithdrawModal(
                 onDismissRequest = {
@@ -78,10 +76,11 @@ fun WithDrawNoticeScreen(
                     navToNotificationSetting()
                 },
                 onWithDraw = {
-                    viewModel.onAction(MyPageAction.WithDraw)
+                    viewModel.onAction(WithdrawNoticeAction.WithDraw)
                 },
             )
         }
+
         WithdrawNoticeModalState.WITHDRAW_SUCCESS -> {
             WithdrawSuccessModal(
                 onDismissRequest = {

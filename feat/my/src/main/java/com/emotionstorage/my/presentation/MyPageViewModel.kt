@@ -25,16 +25,12 @@ sealed class MyPageAction {
     object Initiate : MyPageAction()
 
     object Logout : MyPageAction()
-
-    object WithDraw : MyPageAction()
 }
 
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
     object LogoutError: MyPageSideEffect()
-
-    object WithDrawSuccess : MyPageSideEffect()
 
     data class ShowToast(
         val message: String,
@@ -44,7 +40,6 @@ sealed class MyPageSideEffect {
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
-    private val deleteAccountUseCase: DeleteAccountUseCase,
     private val myPageOverviewUseCase: GetMyPageOverviewUseCase,
 ) : ViewModel(),
     ContainerHost<MyPageState, MyPageSideEffect> {
@@ -58,10 +53,6 @@ class MyPageViewModel @Inject constructor(
 
             is MyPageAction.Logout -> {
                 handleLogout()
-            }
-
-            is MyPageAction.WithDraw -> {
-                handleWithDraw()
             }
         }
     }
@@ -104,16 +95,6 @@ class MyPageViewModel @Inject constructor(
             } catch (t: Throwable) {
                 Logger.e("LogoutUseCase error: $t")
                 postSideEffect(MyPageSideEffect.LogoutError)
-            }
-        }
-
-    private fun handleWithDraw() =
-        intent {
-            try {
-                deleteAccountUseCase()
-                postSideEffect(MyPageSideEffect.WithDrawSuccess)
-            } catch (t: Throwable) {
-                postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "회원탈퇴 실패"))
             }
         }
 
