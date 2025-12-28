@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +27,7 @@ import com.emotionstorage.my.ui.modal.WithdrawSuccessModal
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 
 private sealed class WithdrawNoticeModalState {
@@ -37,6 +40,8 @@ private sealed class WithdrawNoticeModalState {
     data class InquireWithdrawError(
         val errorCode: ErrorCode,
         val throwable: Throwable,
+        val userEmail: String? = null,
+        val userNickname: String? = null,
     ) : WithdrawNoticeModalState()
 }
 
@@ -47,6 +52,7 @@ fun WithDrawNoticeScreen(
     navToNotificationSetting: () -> Unit = {},
     navToLogin: () -> Unit = {},
 ) {
+    val state by viewModel.container.stateFlow.collectAsState()
     val (modalState, setModalState) =
         remember {
             mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.None)
@@ -64,11 +70,17 @@ fun WithDrawNoticeScreen(
                         WithdrawNoticeModalState.InquireWithdrawError(
                             sideEffect.errorCode,
                             sideEffect.throwable,
+                            sideEffect.userEmail,
+                            sideEffect.userNickname,
                         ),
                     )
                 }
             }
         }
+    }
+
+    if(state.isLoading){
+        LoadingOverlay()
     }
 
     StatelessWithDrawNoticeScreen(
@@ -108,6 +120,8 @@ fun WithDrawNoticeScreen(
             InquireWithdrawErrorModal(
                 errorCode = modalState.errorCode,
                 throwable = modalState.throwable,
+                userEmail = modalState.userEmail,
+                userNickname = modalState.userNickname,
                 onDismissRequest = {
                     setModalState(WithdrawNoticeModalState.None)
                 },
