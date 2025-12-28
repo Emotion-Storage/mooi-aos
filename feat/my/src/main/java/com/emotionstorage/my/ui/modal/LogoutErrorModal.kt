@@ -22,14 +22,14 @@ import com.emotionstorage.ui.component.modal.Modal
 @Composable
 fun LogoutErrorModal(
     onDismissRequest: () -> Unit,
-    onConfirm: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     Modal(
         onDismissRequest = onDismissRequest,
         topDescription = "로그아웃에 실패했어요.",
         title = "연결 상태를 확인한 뒤\n다시 시도해주세요.",
         confirmLabel = "다시 로그인하기",
-        onConfirm = onConfirm,
+        onConfirm = onRetry,
     )
 }
 
@@ -39,6 +39,6 @@ fun LogoutErrorModal(
 private fun LogoutErrorModalPreview(){
     LogoutErrorModal(
         onDismissRequest = {},
-        onConfirm = {},
+        onRetry = {},
     )
 }

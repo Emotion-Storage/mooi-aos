@@ -41,6 +41,8 @@ sealed class MyPageAction {
 sealed class MyPageSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
+    object LogoutError: MyPageSideEffect()
+
     object NavigateToNicknameChange : MyPageSideEffect()
 
     object NavigateToAccountInfo : MyPageSideEffect()
@@ -140,7 +142,7 @@ class MyPageViewModel @Inject constructor(
                 logoutUseCase()
                 postSideEffect(MyPageSideEffect.LogoutSuccess)
             } catch (t: Throwable) {
-                postSideEffect(MyPageSideEffect.ShowToast(t.message ?: "로그아웃 실패"))
+                postSideEffect(MyPageSideEffect.LogoutError)
             }
         }
 

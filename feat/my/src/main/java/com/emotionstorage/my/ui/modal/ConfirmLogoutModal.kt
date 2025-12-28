@@ -2,7 +2,6 @@ package com.emotionstorage.my.ui.modal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.emotionstorage.my.presentation.MyPageAction
 import com.emotionstorage.ui.component.modal.Modal
 
 /**
