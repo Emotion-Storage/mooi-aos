@@ -43,8 +43,9 @@ fun InquireWithdrawErrorModal(
     errorCode: ErrorCode,
     throwable: Throwable,
     onDismissRequest: () -> Unit,
+    userEmail: String?,
+    userNickname: String?,
 ) {
-    // todo: 유저 이메일 & 닉네임 자동 채우기
     val context = LocalContext.current
     Modal(
         onDismissRequest = onDismissRequest,
@@ -80,7 +81,7 @@ fun InquireWithdrawErrorModal(
                         ( ) 기타: ________________________
 
                         ■ 계정에 등록된 이메일과 닉네임
-                        예: hello_user@naver.com / 닉네임 ‘moodlover’
+                        예: ${userEmail ?: "hello_user@naver.com"} / 닉네임 ‘${userNickname ?: "moodlover"}’
 
                         ■ 탈퇴를 요청하시는 이유(선택)
                         ( ) 더 이상 앱을 사용하지 않아요
@@ -126,11 +127,13 @@ private fun ErrorCodeBox(
                 .background(
                     MooiTheme.colorScheme.primaryBlue500.copy(alpha = 0.04f),
                     RoundedCornerShape(16.dp),
-                ).border(
+                )
+                .border(
                     1.dp,
                     MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.2f),
                     RoundedCornerShape(16.dp),
-                ).padding(vertical = 16.dp, horizontal = 8.dp),
+                )
+                .padding(vertical = 16.dp, horizontal = 8.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
