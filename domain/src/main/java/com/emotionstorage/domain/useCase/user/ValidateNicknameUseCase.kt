@@ -26,10 +26,10 @@ class ValidateNicknameUseCase
     @Inject
     constructor() {
         operator fun invoke(nickname: String): DataState<NicknameState> {
-            if (nickname.isNullOrEmpty()) {
+            if (nickname.isEmpty()) {
                 return DataState.Success(NicknameState.INVALID_EMPTY)
             }
-            if (!nickname.matches(Regex("^[a-zA-Zㄱ-ㅎㅏ-ㅣ가-힣]*$"))) {
+            if (!nickname.matches(Regex("^[a-zA-Z가-힣]*$"))) {
                 return DataState.Success(NicknameState.INVALID_CHAR)
             }
             if (nickname.length < 2) {

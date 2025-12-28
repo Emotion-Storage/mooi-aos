@@ -133,6 +133,7 @@ private fun StatelessAgreeTermsScreen(
                 .fillMaxSize(),
         topBar = {
             TopAppBar(
+                showBackground = false,
                 showBackButton = true,
                 onBackClick = onNavBack,
                 handleBackPress = true,
