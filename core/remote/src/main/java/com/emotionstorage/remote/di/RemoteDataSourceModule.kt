@@ -47,9 +47,7 @@ abstract class RemoteDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindGoogleRemoteDataSource(
-        impl: GoogleRemoteDataSourceImpl,
-    ): GoogleRemoteDataSource
+    abstract fun bindGoogleRemoteDataSource(impl: GoogleRemoteDataSourceImpl): GoogleRemoteDataSource
 
     @Binds
     @Singleton

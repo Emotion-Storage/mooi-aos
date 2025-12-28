@@ -9,7 +9,6 @@ import com.emotionstorage.data.model.SessionEntity
 import com.emotionstorage.data.modelMapper.SignupFormMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
-import com.emotionstorage.domain.common.map
 import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.domain.repo.AuthRepository
@@ -23,7 +22,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-
     override suspend fun login(provider: AuthProvider): DataState<String> =
         try {
             // get id token from providers
@@ -83,15 +81,16 @@ class AuthRepositoryImpl @Inject constructor(
             if (reissueResult !is DataState.Success) {
                 return DataState.Error(
                     Throwable("failed to reissue access token"),
-                    ErrorCode.REFRESH_TOKEN_NOT_FOUND
+                    ErrorCode.REFRESH_TOKEN_NOT_FOUND,
                 )
             }
             // save new access token & retry check session
             return if (sessionLocalDataSource.saveSession(SessionEntity(reissueResult.data))) {
                 authRemoteDataSource.checkSession()
-            }else{
-                DataState.Error(Throwable("failed to save new access token"))
-            }
+            } else
+                {
+                    DataState.Error(Throwable("failed to save new access token"))
+                }
         } catch (e: Exception) {
             return DataState.Error(e)
         }

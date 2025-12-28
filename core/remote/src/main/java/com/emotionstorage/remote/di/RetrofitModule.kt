@@ -87,6 +87,6 @@ object RetrofitModule {
     @Provides
     fun provideTokenAuthenticator(
         reissueApiService: ReissueApiService,
-        sessionLocalDataSource: SessionLocalDataSource
+        sessionLocalDataSource: SessionLocalDataSource,
     ) = TokenAuthenticator(reissueApiService, sessionLocalDataSource)
 }

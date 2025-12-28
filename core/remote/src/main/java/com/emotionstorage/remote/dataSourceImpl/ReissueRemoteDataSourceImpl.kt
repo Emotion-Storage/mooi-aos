@@ -8,15 +8,16 @@ import javax.inject.Inject
 
 class ReissueRemoteDataSourceImpl @Inject constructor(
     private val reissueApiService: ReissueApiService,
-): ReissueRemoteDataSource {
-    override suspend fun reissueAccessToken(): DataState<String> = try{
-        reissueApiService.postReissue().data?.accessToken?.run{
-            DataState.Success(this)
-        }?: DataState.Error(
-            Throwable("No access token received")
-        )
-    }catch(e: Exception){
-        Logger.e("Reissue api failed", e)
-        DataState.Error(e)
-    }
+) : ReissueRemoteDataSource {
+    override suspend fun reissueAccessToken(): DataState<String> =
+        try {
+            reissueApiService.postReissue().data?.accessToken?.run {
+                DataState.Success(this)
+            } ?: DataState.Error(
+                Throwable("No access token received"),
+            )
+        } catch (e: Exception) {
+            Logger.e("Reissue api failed", e)
+            DataState.Error(e)
+        }
 }
