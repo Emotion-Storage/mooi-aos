@@ -8,6 +8,7 @@ import com.emotionstorage.domain.model.AccountInfo
 import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.model.toUser
 import com.emotionstorage.domain.repo.UserRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -49,16 +50,14 @@ class UserRepositoryImpl
 
         override suspend fun getAndSaveUser(): Boolean =
             try {
-                remoteDataSource.getUserAccountInfo().handle(
-                    onSuccess = {
-                        localDataSource.saveUser(UserMapper.toData(it.toUser()))
-                    },
-                    onError = { throwable, code, message ->
-                        false
-                    },
-                )
-                true
+                val result = remoteDataSource.getUserAccountInfo()
+                if (result is DataState.Success) {
+                    localDataSource.saveUser(UserMapper.toData(result.data.toUser()))
+                } else {
+                    false
+                }
             } catch (e: Exception) {
+                Napier.e("getAndSaveUser error", e)
                 false
             }
 
