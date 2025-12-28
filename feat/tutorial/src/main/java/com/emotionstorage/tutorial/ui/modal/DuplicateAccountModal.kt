@@ -6,8 +6,7 @@ import com.emotionstorage.ui.component.modal.Modal
 
 /**
  * signup_01
- * - 표출 조건(트리거)
- *     - Case : 중복 가입
+ * - Case : 중복 가입
  *     - 동시에 타 디바이스에서 똑같은 소셜 id로 가입을 시도할 때, 먼저 가입한 기기 및 ID가 존재하는 경우
  *     - 온보딩 마지막에서 [가입 완료하기]를 누르면 ID 유무 체크하며 알럿 표출
  * - 표시 화면
