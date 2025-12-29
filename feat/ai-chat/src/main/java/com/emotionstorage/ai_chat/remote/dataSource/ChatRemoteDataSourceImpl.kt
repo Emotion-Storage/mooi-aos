@@ -2,6 +2,7 @@ package com.emotionstorage.ai_chat.remote.dataSource
 
 import com.emotionstorage.ai_chat.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.ai_chat.remote.api.ChatApiService
+import com.emotionstorage.ai_chat.remote.response.ChatRoomMessagesResponse
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.remote.response.CustomHttpException
@@ -60,4 +61,14 @@ class ChatRemoteDataSourceImpl
             } catch (e: Exception) {
                 DataState.Error(e)
             }
+
+
+    override suspend fun getChatRoomMessages(cursor: Long?): DataState<ChatRoomMessagesResponse> =
+        try {
+            val res = chatApiService.getChatRoomMessages(cursor)
+            val data = res.data ?: return DataState.Error(Throwable("getChatRoomMessages(): data is null"))
+            DataState.Success(data)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
     }

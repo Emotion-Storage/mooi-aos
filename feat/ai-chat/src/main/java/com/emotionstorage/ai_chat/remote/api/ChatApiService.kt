@@ -1,6 +1,7 @@
 package com.emotionstorage.ai_chat.remote.api
 
 import com.emotionstorage.ai_chat.remote.response.ChatMessageTempSaveResponse
+import com.emotionstorage.ai_chat.remote.response.ChatRoomMessagesResponse
 import com.emotionstorage.ai_chat.remote.response.ExitChatRoomResponse
 import com.emotionstorage.ai_chat.remote.response.StartEmotionConversationResponse
 import com.emotionstorage.remote.response.ResponseDto
@@ -27,6 +28,6 @@ interface ChatApiService {
 
     @GET("/api/v1/chat/rooms")
     suspend fun getChatRoomMessages(
-        @Query("cursor") cursor: Int,
-    )
+        @Query("cursor") cursor: Long? = null,
+    ): ResponseDto<ChatRoomMessagesResponse>
 }
