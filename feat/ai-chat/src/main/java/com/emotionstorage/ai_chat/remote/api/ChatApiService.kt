@@ -20,13 +20,11 @@ interface ChatApiService {
         @Path("roomId") roomId: Long,
     ): ResponseDto<ExitChatRoomResponse>
 
-    @AuthRequest
     @PATCH("/api/v1/chat/{roomId}/temp-save")
     suspend fun patchChatRoomTempSave(
         @Path("roomId") roomId: Long,
     ): ResponseDto<ChatMessageTempSaveResponse>
 
-    @AuthRequest
     @GET("/api/v1/chat/rooms")
     suspend fun getChatRoomMessages(
         @Query("cursor") cursor: Int,
