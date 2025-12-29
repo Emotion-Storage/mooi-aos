@@ -71,7 +71,8 @@ private fun Emotions(
                                 angleInDegrees = -18f,
                             ),
                             RoundedCornerShape(10.dp),
-                        ).padding(vertical = 17.dp, horizontal = 18.dp),
+                        )
+                        .padding(vertical = 17.dp, horizontal = 18.dp),
             ) {
                 Column(
                     modifier = Modifier.align(Alignment.Center),
@@ -103,6 +104,32 @@ private fun Emotions(
     }
 }
 
+
+@Composable
+private fun Comments(
+    modifier: Modifier = Modifier,
+    comments: List<String> = emptyList(),
+) {
+    Column(
+        modifier =
+            modifier
+                .background(Color(0x0AAECBFA), RoundedCornerShape(15.dp))
+                .border(1.dp, Color(0x33849BEA), RoundedCornerShape(15.dp))
+                .padding(18.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
+    ) {
+        for (comment in comments) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = comment,
+                style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
+                color = Color.White,
+            )
+        }
+    }
+}
+
+
 @Preview
 @Composable
 private fun EmotionsPreview() {
@@ -124,13 +151,13 @@ private fun EmotionsPreview() {
                 percentage = 80.0f,
             ),
         )
-
     MooiTheme {
         Column(
             modifier =
                 Modifier
                     .fillMaxWidth()
-                    .background(MooiTheme.colorScheme.backgroundDefault),
+                    .background(MooiTheme.colorScheme.backgroundDefault)
+                    .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -147,41 +174,38 @@ private fun EmotionsPreview() {
     }
 }
 
+@Preview
 @Composable
-private fun Comments(
-    modifier: Modifier = Modifier,
-    comments: List<String> = emptyList(),
-) {
-    Column(
-        modifier =
-            modifier
-                .background(Color(0x0AAECBFA), RoundedCornerShape(15.dp))
-                .border(1.dp, Color(0x33849BEA), RoundedCornerShape(15.dp))
-                .padding(18.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
-    ) {
-        for (comment in comments) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(11.dp),
-            ) {
-                Box(
-                    modifier = Modifier.padding(top = 5.dp),
-                ) {
-                    Box(
-                        modifier =
-                            Modifier
-                                .size(5.dp)
-                                .background(Color.White, CircleShape),
+private fun TimeCapsuleEmotionCommentsPreview() {
+    MooiTheme {
+        TimeCapsuleEmotionComments(
+            modifier = Modifier
+                .background(MooiTheme.colorScheme.backgroundDefault)
+                .padding(16.dp),
+            emotions =
+                listOf(
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83D\uDE14",
+                        label = "서운함",
+                        percentage = 30.0f,
+                    ),
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83D\uDE0A",
+                        label = "고마움",
+                        percentage = 30.0f,
+                    ),
+                    TimeCapsule.Emotion(
+                        emoji = "\uD83E\uDD70",
+                        label = "안정감",
+                        percentage = 80.0f,
                     )
-                }
-                Text(
-                    text = comment,
-                    style = MooiTheme.typography.caption3.copy(lineHeight = 22.sp),
-                    color = Color.White,
-                )
-            }
-        }
+                ),
+            comments = listOf(
+                "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
+                "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
+                "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요."
+            )
+        )
     }
 }
+
