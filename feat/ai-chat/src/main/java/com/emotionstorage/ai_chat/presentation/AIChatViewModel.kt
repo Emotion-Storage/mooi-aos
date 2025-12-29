@@ -7,6 +7,7 @@ import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
+import com.emotionstorage.domain.useCase.chat.SaveTempSaveRoomIdUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
 import com.emotionstorage.domain.useCase.chat.TempSaveChatRoomUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.CreateTimeCapsuleUseCase
@@ -85,6 +86,7 @@ class AIChatViewModel @Inject constructor(
     private val observeChatMessages: ObserveChatMessagesUseCase,
     private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
     private val tempSaveChatRoomUseCase: TempSaveChatRoomUseCase,
+    private val saveTempSaveRoomIdUseCase: SaveTempSaveRoomIdUseCase,
 ) : ViewModel(),
     ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
@@ -370,9 +372,18 @@ class AIChatViewModel @Inject constructor(
             }
 
             when (val save = tempSaveChatRoomUseCase(roomId)) {
-                is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
-                is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
-                else -> Unit
+                is DataState.Success -> {
+                    saveTempSaveRoomIdUseCase(save.data)
+                    postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
+                }
+
+                is DataState.Error -> {
+                    postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
+                }
+
+                else -> {
+                    Unit
+                }
             }
 
             disconnectChatRoom(roomId).collect { result ->

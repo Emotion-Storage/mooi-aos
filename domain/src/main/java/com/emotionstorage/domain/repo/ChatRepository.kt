@@ -19,4 +19,10 @@ interface ChatRepository {
     ): Flow<DataState<Boolean>>
 
     suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
+
+    val tempSavedRoomId: Flow<Long?>
+
+    suspend fun saveTempSavedRoomId(roomId: Long)
+
+    suspend fun clearTempSavedRoomId()
 }
