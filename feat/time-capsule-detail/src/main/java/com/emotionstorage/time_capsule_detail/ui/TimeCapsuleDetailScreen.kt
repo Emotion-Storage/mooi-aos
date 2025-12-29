@@ -58,6 +58,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.button.RoundedToggleButton
@@ -425,7 +426,7 @@ private fun ModalHandler(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun TimeCapsuleDetailScreenPreview() {
     MooiTheme {
@@ -436,8 +437,8 @@ private fun TimeCapsuleDetailScreenPreview() {
                     timeCapsule =
                         TimeCapsule(
                             id = 123L,
-                            status = TimeCapsule.Status.LOCKED,
-                            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어..",
+                            status = TimeCapsule.Status.OPENED,
+                            title = "오늘 아침에 친구를 만났는데, 친구가 늦었어...",
                             summary =
                                 "오늘 친구를 만났는데 친구가 지각해놓고 미안하단 말을 하지 않아서 집에 갈 때 기분이 좋지 않았어." +
                                     "그렇지만 집에서 엄마가 해주신 맛있는 저녁을 먹고 기분이 좋아지더라. " +
