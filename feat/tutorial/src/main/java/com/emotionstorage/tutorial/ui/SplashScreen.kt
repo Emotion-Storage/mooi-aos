@@ -13,13 +13,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.tutorial.presentation.SplashAction
 import com.emotionstorage.tutorial.presentation.SplashSideEffect
 import com.emotionstorage.tutorial.presentation.SplashViewModel
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -76,7 +76,7 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun SplashScreenPreview() {
     MooiTheme {

@@ -14,7 +14,7 @@ interface AuthRepository {
 
     suspend fun signup(signupForm: SignupForm): DataState<Unit>
 
-    suspend fun checkSession(): DataState<Boolean>
+    suspend fun checkSession(): DataState<Unit>
 
     suspend fun logout(): Boolean
 

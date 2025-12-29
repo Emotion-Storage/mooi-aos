@@ -14,19 +14,12 @@ interface AuthRemoteDataSource {
         idToken: String,
     ): DataState<String>
 
-    /**
-     * Signup with id token
-     */
     suspend fun signup(
         provider: User.AuthProvider,
         signupFormEntity: SignupFormEntity,
     ): DataState<Unit>
 
-    /**
-     * Check session
-     * @return success
-     */
-    suspend fun checkSession(): Boolean
+    suspend fun checkSession(): DataState<Unit>
 
     suspend fun logout(): Boolean
 

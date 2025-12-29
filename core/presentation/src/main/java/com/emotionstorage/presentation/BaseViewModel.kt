@@ -61,7 +61,6 @@ open class BaseViewModel<STATE : Any>(
                     postSideEffect(BaseSideEffect.NetworkError)
                 } else if (code.isAuthError()) {
                     // handle auth expiration error
-                    // todo: refresh token here? or in remote interceptor?
                     postSideEffect(BaseSideEffect.SessionExpired)
                 } else {
                     // handle internal server error / unknown error / etc

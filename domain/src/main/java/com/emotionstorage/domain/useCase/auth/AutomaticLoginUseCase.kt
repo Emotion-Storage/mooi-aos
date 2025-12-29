@@ -12,7 +12,7 @@ class AutomaticLoginUseCase
         private val fcmRepository: FcmRepository,
         private val handleLogout: HandleLogoutUseCase,
     ) {
-        suspend operator fun invoke(): DataState<Boolean> {
+        suspend operator fun invoke(): DataState<Unit> {
             val checkSessionResult = authRepository.checkSession()
 
             if (checkSessionResult is DataState.Success) {
