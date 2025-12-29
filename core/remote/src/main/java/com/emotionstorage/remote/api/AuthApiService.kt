@@ -1,6 +1,5 @@
 package com.emotionstorage.remote.api
 
-import com.emotionstorage.remote.interceptor.AuthRequest
 import com.emotionstorage.remote.request.auth.GoogleLoginRequestBody
 import com.emotionstorage.remote.request.auth.GoogleSignupRequestBody
 import com.emotionstorage.remote.request.auth.KakaoLoginRequestBody
@@ -34,15 +33,12 @@ interface AuthApiService {
         @Body signupRequestBody: KakaoSignupRequestBody,
     ): ResponseDto<SignupResponseData>
 
-    @AuthRequest
     @GET("/auth/session")
     suspend fun getAuthSession(): ResponseDto<Unit>
 
-    @AuthRequest
     @DELETE("/api/v1/mypage/logout")
     suspend fun postLogout(): ResponseDto<Unit>
 
-    @AuthRequest
     @DELETE("/api/v1/mypage/account")
     suspend fun deleteAccount(): ResponseDto<Unit>
 }

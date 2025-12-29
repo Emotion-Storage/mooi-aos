@@ -8,4 +8,8 @@ interface SessionLocalDataSource {
     suspend fun getSession(): SessionEntity?
 
     suspend fun deleteSession(): Boolean
+
+    suspend fun saveRefreshToken(refreshToken: String): Boolean
+
+    suspend fun getRefreshToken(): String?
 }

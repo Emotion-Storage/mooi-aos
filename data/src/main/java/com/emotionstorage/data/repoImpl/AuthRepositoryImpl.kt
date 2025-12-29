@@ -1,13 +1,15 @@
 package com.emotionstorage.data.repoImpl
 
+import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.ReissueRemoteDataSource
+import com.emotionstorage.data.model.SessionEntity
 import com.emotionstorage.data.modelMapper.SignupFormMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.SignupForm
-import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.domain.repo.AuthRepository
 import io.github.aakira.napier.Napier
@@ -15,10 +17,12 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val authRemoteDataSource: AuthRemoteDataSource,
+    private val sessionLocalDataSource: SessionLocalDataSource,
+    private val reissueRemoteDataSource: ReissueRemoteDataSource,
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-    override suspend fun login(provider: User.AuthProvider): DataState<String> =
+    override suspend fun login(provider: AuthProvider): DataState<String> =
         try {
             // get id token from providers
             val idToken =
@@ -62,12 +66,38 @@ class AuthRepositoryImpl @Inject constructor(
             DataState.Error(e)
         }
 
-    override suspend fun checkSession(): DataState<Boolean> =
+    override suspend fun checkSession(): DataState<Unit> {
         try {
-            DataState.Success(authRemoteDataSource.checkSession())
+            val result = authRemoteDataSource.checkSession()
+            if (result !is DataState.Error) {
+                return result
+            }
+            if (result.code != ErrorCode.ACCESS_TOKEN_EXPIRED && result.code != ErrorCode.USER_NOT_FOUND) {
+                return result
+            }
+
+            // refresh access token
+            val reissueResult = reissueRemoteDataSource.reissueAccessToken()
+            if (reissueResult !is DataState.Success) {
+                return DataState.Error(
+                    Throwable("failed to reissue access token"),
+                    if (reissueResult is DataState.Error) {
+                        reissueResult.code
+                    } else {
+                        ErrorCode.UNKNOWN
+                    },
+                )
+            }
+            // save new access token & retry check session
+            return if (sessionLocalDataSource.saveSession(SessionEntity(reissueResult.data))) {
+                authRemoteDataSource.checkSession()
+            } else {
+                DataState.Error(Throwable("failed to save new access token"))
+            }
         } catch (e: Exception) {
-            DataState.Error(e)
+            return DataState.Error(e)
         }
+    }
 
     override suspend fun logout(): Boolean = authRemoteDataSource.logout()
 

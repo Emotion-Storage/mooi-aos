@@ -9,6 +9,7 @@ import com.emotionstorage.data.dataSource.remote.HomeRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.MyPageRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.NotificationSettingRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.ReissueRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.remote.dataSourceImpl.AttendanceRemoteDataSourceImpl
@@ -20,6 +21,7 @@ import com.emotionstorage.remote.dataSourceImpl.HomeRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.KakaoRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.MyPageRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.NotificationSettingRemoteDataSourceImpl
+import com.emotionstorage.remote.dataSourceImpl.ReissueRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.TimeCapsuleRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.UserRemoteDataSourceImpl
 import dagger.Binds
@@ -33,17 +35,19 @@ import javax.inject.Singleton
 abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
-    abstract fun bindAuthRemoteDataSource(authRemoteDataSourceImpl: AuthRemoteDataSourceImpl): AuthRemoteDataSource
+    abstract fun bindAuthRemoteDataSource(impl: AuthRemoteDataSourceImpl): AuthRemoteDataSource
 
     @Binds
     @Singleton
-    abstract fun bindKakaoRemoteDataSource(kakaoRemoteDataSourceImpl: KakaoRemoteDataSourceImpl): KakaoRemoteDataSource
+    abstract fun bindReissueRemoteDataSource(impl: ReissueRemoteDataSourceImpl): ReissueRemoteDataSource
 
     @Binds
     @Singleton
-    abstract fun bindGoogleRemoteDataSource(
-        googleRemoteDataSourceImpl: GoogleRemoteDataSourceImpl,
-    ): GoogleRemoteDataSource
+    abstract fun bindKakaoRemoteDataSource(impl: KakaoRemoteDataSourceImpl): KakaoRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindGoogleRemoteDataSource(impl: GoogleRemoteDataSourceImpl): GoogleRemoteDataSource
 
     @Binds
     @Singleton

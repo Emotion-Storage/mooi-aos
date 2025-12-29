@@ -1,12 +1,12 @@
 package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.data.dataSource.local.NotificationPermissionDataSource
+import com.emotionstorage.data.dataSource.local.NotificationPermissionLocalDataSource
 import com.emotionstorage.domain.model.NotificationPermissionStatus
 import com.emotionstorage.domain.repo.NotificationPermissionRepository
 import javax.inject.Inject
 
 class NotificationPermissionRepositoryImpl @Inject constructor(
-    private val datsSource: NotificationPermissionDataSource,
+    private val datsSource: NotificationPermissionLocalDataSource,
 ) : NotificationPermissionRepository {
     override fun observeInfo() = datsSource.observeInfo()
 

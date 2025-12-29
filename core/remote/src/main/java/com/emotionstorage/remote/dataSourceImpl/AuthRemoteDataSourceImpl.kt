@@ -101,18 +101,29 @@ class AuthRemoteDataSourceImpl
                 DataState.Error(e)
             }
 
-        override suspend fun checkSession(): Boolean {
+        override suspend fun checkSession(): DataState<Unit> =
             try {
                 val response = authApiService.getAuthSession()
                 if (response.status == ResponseStatus.OK.code) {
-                    return true
+                    DataState.Success(Unit)
                 } else {
                     throw Exception(response.code + "" + response.message)
                 }
+            } catch (e: IOException) {
+                if (e !is CustomHttpException) {
+                    // handle network error
+                    Logger.e("check session network exception, $e")
+                    DataState.Error(e, ErrorCode.NETWORK_ERROR)
+                } else {
+                    // handle http response error
+                    Logger.e("check session http exception, $e")
+                    DataState.Error(e, ErrorCode.toErrorCode(e.code ?: ""))
+                }
             } catch (e: Exception) {
-                throw Exception("Check session api failed", e)
+                // handle unknown error
+                Logger.e("check session api failed", e)
+                DataState.Error(e)
             }
-        }
 
         override suspend fun logout(): Boolean {
             val response = authApiService.postLogout()
