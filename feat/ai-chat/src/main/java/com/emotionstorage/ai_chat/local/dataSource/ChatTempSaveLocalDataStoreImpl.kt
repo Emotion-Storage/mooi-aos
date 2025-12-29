@@ -10,9 +10,13 @@ import javax.inject.Inject
 class ChatTempSaveLocalDataStoreImpl @Inject constructor(
     private val dataStore: DataStore<Preferences>,
 ) : ChatTempSaveLocalDataSource {
-
     private object Keys {
-        val TEMP_SAVED_ROOM_ID = androidx.datastore.preferences.core.longPreferencesKey("temp_saved_room_id")
+        val TEMP_SAVED_ROOM_ID =
+            androidx
+                .datastore
+                .preferences
+                .core
+                .longPreferencesKey("temp_saved_room_id")
     }
 
     override val tempSavedRoomId: kotlinx.coroutines.flow.Flow<Long?> =

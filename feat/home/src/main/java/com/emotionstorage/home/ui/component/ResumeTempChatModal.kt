@@ -32,6 +32,5 @@ fun ResumeTempChatModal(
 private fun ResumeTempChatModalPreview() {
     MooiTheme {
         ResumeTempChatModal(isModalOpen = true)
-
     }
 }

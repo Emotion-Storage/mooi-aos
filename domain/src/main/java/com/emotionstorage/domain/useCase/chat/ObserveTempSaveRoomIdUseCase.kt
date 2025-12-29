@@ -7,5 +7,5 @@ import javax.inject.Inject
 class ObserveTempSaveRoomIdUseCase @Inject constructor(
     private val chatRepository: ChatRepository,
 ) {
-    operator fun invoke() : Flow<Long?> = chatRepository.tempSavedRoomId
+    operator fun invoke(): Flow<Long?> = chatRepository.tempSavedRoomId
 }
