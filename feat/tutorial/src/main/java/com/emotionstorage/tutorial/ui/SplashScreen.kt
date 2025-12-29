@@ -20,6 +20,7 @@ import com.emotionstorage.tutorial.presentation.SplashAction
 import com.emotionstorage.tutorial.presentation.SplashSideEffect
 import com.emotionstorage.tutorial.presentation.SplashViewModel
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewDevices
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -76,7 +77,7 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview
+@PreviewDevices
 @Composable
 private fun SplashScreenPreview() {
     MooiTheme {

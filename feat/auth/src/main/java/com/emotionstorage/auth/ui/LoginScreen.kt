@@ -44,6 +44,7 @@ import com.emotionstorage.auth.ui.modal.RetryHandleLoginModal
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.ui.annotation.PreviewDevices
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
@@ -280,7 +281,7 @@ private fun StatelessLoginScreen(
     }
 }
 
-@PreviewScreenSizes
+@PreviewDevices
 @Composable
 private fun LoginScreenPreview() {
     MooiTheme {
