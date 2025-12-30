@@ -37,16 +37,14 @@ fun ExitTempTimeCapsuleModal(
         },
         dismissLabel = "네, 그냥 나갈래요.",
         onDismiss = onExit,
-        modalWidth = 298.dp
+        modalWidth = 298.dp,
     ) {
         ModalContent()
     }
 }
 
 @Composable
-private fun ModalContent(
-    modifier: Modifier = Modifier,
-) {
+private fun ModalContent(modifier: Modifier = Modifier) {
     Column(
         modifier =
             modifier
@@ -87,16 +85,19 @@ private fun ModalContent(
     }
 }
 
-
 @Preview
 @Composable
 private fun ExitTempTimeCapsuleModalContentPreview() {
     ModalContent(
-        modifier = Modifier
-            .width(298.dp)
-            .background(MooiTheme.colorScheme.backgroundDefault)
-            .padding(
-                top = 23.dp, bottom = 18.dp, start = 25.dp, end = 25.dp
-            ),
+        modifier =
+            Modifier
+                .width(298.dp)
+                .background(MooiTheme.colorScheme.backgroundDefault)
+                .padding(
+                    top = 23.dp,
+                    bottom = 18.dp,
+                    start = 25.dp,
+                    end = 25.dp,
+                ),
     )
 }

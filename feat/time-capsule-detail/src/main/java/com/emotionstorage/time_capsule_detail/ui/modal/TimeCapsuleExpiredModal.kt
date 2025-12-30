@@ -1,9 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.modal.Modal
@@ -28,7 +25,7 @@ import com.emotionstorage.ui.component.modal.Modal
 fun TimeCapsuleExpiredModal(
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    ) {
+) {
     Modal(
         onDismissRequest = onDismissRequest,
         dismissOnClickOutside = false,
@@ -38,7 +35,7 @@ fun TimeCapsuleExpiredModal(
         bottomDescription = "새로운 감정은 새 타임캡슐에 담아보세요.",
         confirmLabel = "네, 확인했어요.",
         onConfirm = onConfirm,
-        modalWidth = 298.dp
+        modalWidth = 298.dp,
     )
 }
 

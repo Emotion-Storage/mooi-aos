@@ -197,7 +197,6 @@ fun TimeCapsuleDetailScreen(
         navToBack = navToBack,
     )
 
-
     when (modalState) {
         TimeCapsuleDetailModal.NONE -> {
             // no modal
