@@ -20,10 +20,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *      - [네, 삭제할게요.] -> 팝업 닫히며 타임캡슐 삭제 api 호출, 이전 페이지로 이동
  *  - 차단
  *      - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
- *      - push/pop X
- *      - 하단바 상호작용 X (하단바 없음)
  *      - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *      - 스크롤 X
  */
 @Composable
 fun DeleteTimeCapsuleModal(
@@ -32,7 +29,6 @@ fun DeleteTimeCapsuleModal(
 ) {
     Modal(
         onDismissRequest = onDismissRequest,
-        dismissOnClickOutside = false,
         title =
             "타임캡슐은 삭제하면\n" +
                 "다시 되돌릴 수 없어요.\n" +
