@@ -18,7 +18,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *      - [네, 확인했어요.] -> 팝업 닫히며 타임캡슐 삭제 api 호출, 이전 페이지로 이동
  *      - (4.1 바텀시트 화면에서는 리스트만 사라지며 화면 이동 X)
  * - 차단
- *      - 뒤로가기 X,
+ *      - 뒤로가기 X
  *      - 배경 터치 X
  */
 @Composable
