@@ -230,6 +230,9 @@ fun TimeCapsuleDetailScreen(
 
         TimeCapsuleDetailModal.EXPIRED -> {
             TimeCapsuleExpiredModal(
+                onDismissRequest = {
+                    setModalState(TimeCapsuleDetailModal.NONE)
+                },
                 onConfirm = {
                     navToBack()
                 },
