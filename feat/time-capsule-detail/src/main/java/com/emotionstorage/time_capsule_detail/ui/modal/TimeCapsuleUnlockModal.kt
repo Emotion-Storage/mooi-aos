@@ -36,14 +36,16 @@ import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
 /**
- * capsule_open_01
+ * capsule_open_01 & capsule_open_02
  * - Case : 타임캡슐 열기 시도
  *      - 잠김 상태(도착일이 도래하지 않은)의 타임캡슐 목록을 클릭했을 때 상세페이지에서 표시
  * - 표시 화면
  *      - 4.4 타임캡슐 - 도착한 타임캡슐
- * - CTA 및 이동
+ * - CTA 및 이동 1
  *      - [열쇠 n개 사용하기] -> 열쇠 차감되며 타임캡슐 오픈(열림 상태로 변경)
  *      - [지금은 열지 않을래요.] -> 팝업 닫히며 이전 페이지로 이동
+ * - CTA 및 이동 2
+ *      - [뒤로가기] -> 팝업 닫히며 이전 페이지로 이동
  * - 차단
  *      - 뒤로가기(Android) O
  *      - push/pop X
