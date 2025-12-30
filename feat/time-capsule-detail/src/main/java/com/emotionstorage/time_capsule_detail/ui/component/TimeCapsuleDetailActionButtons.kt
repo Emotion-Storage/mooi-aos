@@ -85,7 +85,7 @@ private fun SaveTimeCapsuleButton(
                 style = MooiTheme.typography.caption7,
                 color = MooiTheme.colorScheme.gray400,
             )
-        } else if(expireAt != null) {
+        } else if (expireAt != null) {
             CountDownTimer(
                 modifier = Modifier.padding(bottom = 15.dp),
                 deadline = expireAt,
