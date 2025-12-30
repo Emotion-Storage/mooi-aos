@@ -30,20 +30,20 @@ import java.time.LocalDateTime
 @Composable
 fun TimeCapsuleDetailActionButtons(
     status: TimeCapsule.Status,
+    onSaveTimeCapsule: () -> Unit,
+    onTimeCapsuleExpired: () -> Unit,
+    onSaveMindNote: () -> Unit,
+    onDeleteTimeCapsule: () -> Unit,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = false,
     expireAt: LocalDateTime? = null,
-    onSaveTimeCapsule: () -> Unit = {},
-    onTimeCapsuleExpired: () -> Unit = {},
-    onSaveMindNote: () -> Unit = {},
-    onDeleteTimeCapsule: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(16.7.dp),
         horizontalAlignment = Alignment.End,
     ) {
-        if (status == TimeCapsule.Status.TEMPORARY && expireAt != null) {
+        if (status == TimeCapsule.Status.TEMPORARY) {
             SaveTimeCapsuleButton(
                 modifier = Modifier.padding(top = 79.dp),
                 expireAt = expireAt,
@@ -68,11 +68,11 @@ fun TimeCapsuleDetailActionButtons(
 
 @Composable
 private fun SaveTimeCapsuleButton(
-    expireAt: LocalDateTime,
+    expireAt: LocalDateTime?,
+    isNewTimeCapsule: Boolean,
+    onTimeCapsuleExpired: () -> Unit,
+    onSaveTimeCapsule: () -> Unit,
     modifier: Modifier = Modifier,
-    isNewTimeCapsule: Boolean = false,
-    onTimeCapsuleExpired: () -> Unit = {},
-    onSaveTimeCapsule: () -> Unit = {},
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -85,7 +85,7 @@ private fun SaveTimeCapsuleButton(
                 style = MooiTheme.typography.caption7,
                 color = MooiTheme.colorScheme.gray400,
             )
-        } else {
+        } else if(expireAt != null) {
             CountDownTimer(
                 modifier = Modifier.padding(bottom = 15.dp),
                 deadline = expireAt,
@@ -127,7 +127,7 @@ private fun SaveNoteButton(
     ) {
         CtaButton(
             modifier = Modifier.fillMaxWidth(),
-            labelString = "타임캡슐 저장하기",
+            labelString = "변경사항 저장하기",
             onClick = {
                 onSaveNote()
             },
@@ -175,17 +175,38 @@ private fun TimeCapsuleDetailActionButtonsPreview() {
             TimeCapsuleDetailActionButtons(
                 status = TimeCapsule.Status.TEMPORARY,
                 isNewTimeCapsule = true,
+                expireAt = null,
+                onSaveTimeCapsule = {},
+                onTimeCapsuleExpired = {},
+                onSaveMindNote = {},
+                onDeleteTimeCapsule = {},
             )
             TimeCapsuleDetailActionButtons(
-                expireAt = LocalDateTime.now().plusMinutes(25),
                 status = TimeCapsule.Status.TEMPORARY,
+                isNewTimeCapsule = false,
+                expireAt = LocalDateTime.now().plusMinutes(25),
+                onSaveTimeCapsule = {},
+                onTimeCapsuleExpired = {},
+                onSaveMindNote = {},
+                onDeleteTimeCapsule = {},
             )
             TimeCapsuleDetailActionButtons(
                 status = TimeCapsule.Status.LOCKED,
+                isNewTimeCapsule = false,
+                expireAt = null,
+                onSaveMindNote = {},
+                onDeleteTimeCapsule = {},
+                onTimeCapsuleExpired = {},
+                onSaveTimeCapsule = {},
             )
             TimeCapsuleDetailActionButtons(
                 status = TimeCapsule.Status.OPENED,
                 isNewTimeCapsule = false,
+                expireAt = null,
+                onSaveMindNote = {},
+                onDeleteTimeCapsule = {},
+                onTimeCapsuleExpired = {},
+                onSaveTimeCapsule = {},
             )
         }
     }
