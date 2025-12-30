@@ -74,7 +74,8 @@ private fun Emotions(
                                 angleInDegrees = -18f,
                             ),
                             RoundedCornerShape(10.dp),
-                        ).padding(18.dp),
+                        )
+                        .padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(7.dp),
             ) {
@@ -94,16 +95,11 @@ private fun Emotions(
                         textAlign = TextAlign.Center,
                     )
                 }
-                Box(
-                    modifier = Modifier.height(30.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = "${emotion.percentage?.toInt() ?: "- "}%",
-                        style = MooiTheme.typography.head3,
-                        color = Color.White,
-                    )
-                }
+                Text(
+                    text = "${emotion.percentage?.toInt() ?: "- "}%",
+                    style = MooiTheme.typography.head3.copy(lineHeight = 30.sp),
+                    color = Color.White,
+                )
             }
         }
     }
