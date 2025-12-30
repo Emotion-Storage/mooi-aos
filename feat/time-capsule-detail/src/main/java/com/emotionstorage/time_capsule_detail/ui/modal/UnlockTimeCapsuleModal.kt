@@ -147,7 +147,7 @@ private fun ModalContent(
                 Text(
                     modifier = Modifier.height(30.dp),
                     text = "남은 기간 : ${
-                        LocalDate.now().getDaysBetween(openAt.toLocalDate()).absoluteValue
+                        LocalDate.now().getDaysBetween(openAt.toLocalDate())
                     }일",
                     style = MooiTheme.typography.head2.copy(lineHeight = 30.sp),
                     color = Color.White,
@@ -206,7 +206,7 @@ private fun UnlockTimeCapsuleModalContentPreview() {
                 .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 18.dp),
         keyCount = 3,
         requiredKeyCount = 1,
-        openAt = LocalDateTime.now().plusMinutes(30),
+        openAt = LocalDateTime.now().plusDays(3),
     )
 }
 
