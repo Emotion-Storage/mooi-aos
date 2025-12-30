@@ -7,23 +7,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
@@ -80,8 +74,7 @@ private fun Emotions(
                                 angleInDegrees = -18f,
                             ),
                             RoundedCornerShape(10.dp),
-                        )
-                        .padding(18.dp),
+                        ).padding(18.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(7.dp),
             ) {
@@ -116,7 +109,6 @@ private fun Emotions(
     }
 }
 
-
 @Composable
 private fun Comments(
     modifier: Modifier = Modifier,
@@ -146,30 +138,32 @@ private fun Comments(
 private fun TimeCapsuleEmotionCommentsPreview() {
     MooiTheme {
         Column(
-            modifier = Modifier
-                .background(MooiTheme.colorScheme.backgroundDefault)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .background(MooiTheme.colorScheme.backgroundDefault)
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             Emotions(
-                emotions = listOf(
-                    TimeCapsule.Emotion(
-                        emoji = "\uD83D\uDE14",
-                        label = "자격지심",
-                        percentage = 30.0f,
+                emotions =
+                    listOf(
+                        TimeCapsule.Emotion(
+                            emoji = "\uD83D\uDE14",
+                            label = "자격지심",
+                            percentage = 30.0f,
+                        ),
+                        TimeCapsule.Emotion(
+                            emoji = "\uD83D\uDE0A",
+                            label = "시원 섭섭함",
+                            percentage = 30.0f,
+                        ),
+                        TimeCapsule.Emotion(
+                            emoji = "\uD83E\uDD70",
+                            label = "자랑스러움",
+                            percentage = 80.0f,
+                        ),
                     ),
-                    TimeCapsule.Emotion(
-                        emoji = "\uD83D\uDE0A",
-                        label = "시원 섭섭함",
-                        percentage = 30.0f,
-                    ),
-                    TimeCapsule.Emotion(
-                        emoji = "\uD83E\uDD70",
-                        label = "자랑스러움",
-                        percentage = 80.0f,
-                    ),
-                ),
             )
 
             TimeCapsuleEmotionComments(
@@ -189,15 +183,15 @@ private fun TimeCapsuleEmotionCommentsPreview() {
                             emoji = "\uD83E\uDD70",
                             label = "안정감",
                             percentage = 80.0f,
-                        )
+                        ),
                     ),
-                comments = listOf(
-                    "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
-                    "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
-                    "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요."
-                )
+                comments =
+                    listOf(
+                        "오늘은 조금 힘든 일이 있었지만, 가족과의 따뜻한 시간 덕분에 긍정적인 감정으로 마무리했어요.",
+                        "귀가 후 가족애와 안정감을 느끼면서, 부정적 감정을 회복할 수 있었어요.",
+                        "감정이 복잡하게 얽힌 하루였네요. 하지만 작은 부분에서 감사함을 느끼는 모습이 멋져요.",
+                    ),
             )
         }
     }
 }
-

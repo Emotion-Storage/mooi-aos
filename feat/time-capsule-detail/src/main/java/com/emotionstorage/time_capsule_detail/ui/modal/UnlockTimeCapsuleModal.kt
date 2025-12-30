@@ -70,7 +70,7 @@ fun UnlockTimeCapsuleModal(
         },
         modalWidth = 298.dp,
         contentPadding = PaddingValues(top = 16.dp, bottom = 28.dp),
-        verticalSpacing = if (canUnlock) 18.dp else 12.dp
+        verticalSpacing = if (canUnlock) 18.dp else 12.dp,
     ) {
         ModalContent(
             keyCount = keyCount,
@@ -200,10 +200,11 @@ private fun ModalContent(
 @Composable
 private fun UnlockTimeCapsuleModalContentPreview() {
     ModalContent(
-        modifier = Modifier
-            .background(MooiTheme.colorScheme.backgroundDefault)
-            .width(298.dp)
-            .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 18.dp),
+        modifier =
+            Modifier
+                .background(MooiTheme.colorScheme.backgroundDefault)
+                .width(298.dp)
+                .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 18.dp),
         keyCount = 3,
         requiredKeyCount = 1,
         openAt = LocalDateTime.now().plusMinutes(30),
@@ -214,10 +215,11 @@ private fun UnlockTimeCapsuleModalContentPreview() {
 @Composable
 private fun UnlockTimeCapsuleModalContentPreview2() {
     ModalContent(
-        modifier = Modifier
-            .background(MooiTheme.colorScheme.backgroundDefault)
-            .width(298.dp)
-            .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 12.dp),
+        modifier =
+            Modifier
+                .background(MooiTheme.colorScheme.backgroundDefault)
+                .width(298.dp)
+                .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 12.dp),
         keyCount = 1,
         requiredKeyCount = 3,
         openAt = LocalDateTime.now().plusMinutes(30),
