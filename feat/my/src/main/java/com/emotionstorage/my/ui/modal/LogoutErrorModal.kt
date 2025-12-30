@@ -14,10 +14,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *      - [다시 시도하기] -> 로딩 애니메이션 띄우며 로그아웃 api 재호출
  * - 차단
  *      - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
- *      - push/pop X
- *      - 하단바 상호작용 X (하단바 없음)
  *      - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *      - 스크롤 X
  */
 @Composable
 fun LogoutErrorModal(

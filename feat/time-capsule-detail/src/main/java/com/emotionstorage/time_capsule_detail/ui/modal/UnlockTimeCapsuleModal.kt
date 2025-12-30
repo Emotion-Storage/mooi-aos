@@ -47,10 +47,7 @@ import kotlin.math.absoluteValue
  *      - [뒤로가기] -> 팝업 닫히며 이전 페이지로 이동
  * - 차단
  *      - 뒤로가기(Android) O
- *      - push/pop X
- *      - 하단바 상호작용 X (하단바 없음)
  *      - 배경 터치 X
- *      - 스크롤 X
  */
 @Composable
 fun UnlockTimeCapsuleModal(
@@ -65,7 +62,6 @@ fun UnlockTimeCapsuleModal(
     Modal(
         onDismissRequest = onDismissRequest,
         dismissOnClickOutside = false,
-        dismissOnBackPress = true,
         confirmLabel = if (canUnlock) "열쇠 ${requiredKeyCount}개 사용하기" else null,
         onConfirm = onConfirm,
         dismissLabel = if (canUnlock) "지금은 열지 않을래요." else "뒤로 가기",
