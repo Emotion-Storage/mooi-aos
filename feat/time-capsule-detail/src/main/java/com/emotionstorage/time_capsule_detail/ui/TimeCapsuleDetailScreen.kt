@@ -55,7 +55,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.SaveChangesModal
 import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
-import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleUnlockModal
+import com.emotionstorage.time_capsule_detail.ui.modal.UnlockTimeCapsuleModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
@@ -394,7 +394,7 @@ private fun ModalHandler(
         }
 
         TimeCapsuleDetailModal.UNLOCK -> {
-            TimeCapsuleUnlockModal(
+            UnlockTimeCapsuleModal(
                 onDismissRequest = dismissModal,
                 keyCount = unlockModalState.keyCount,
                 requiredKeyCount = unlockModalState.requiredKeyCount,

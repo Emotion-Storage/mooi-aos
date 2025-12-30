@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -54,7 +53,7 @@ import kotlin.math.absoluteValue
  *      - 스크롤 X
  */
 @Composable
-fun TimeCapsuleUnlockModal(
+fun UnlockTimeCapsuleModal(
     onDismissRequest: () -> Unit,
     keyCount: Int,
     requiredKeyCount: Int,
