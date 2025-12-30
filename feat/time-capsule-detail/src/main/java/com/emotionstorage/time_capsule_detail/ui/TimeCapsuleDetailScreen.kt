@@ -239,7 +239,7 @@ fun TimeCapsuleDetailScreen(
                     setModalState(TimeCapsuleDetailModal.NONE)
                 },
                 onConfirm = {
-                    navToBack()
+                    viewModel.onAction(OnDeleteTimeCapsule(id))
                 },
             )
         }
