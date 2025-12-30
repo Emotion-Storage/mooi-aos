@@ -12,18 +12,11 @@ import com.emotionstorage.domain.useCase.timeCapsule.OpenTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.SaveChangesBeforeExitSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
@@ -60,15 +53,8 @@ sealed class TimeCapsuleDetailAction {
 
     data class OnSaveNote(
         val id: Long,
+        val exitAfterSave: Boolean,
     ) : TimeCapsuleDetailAction()
-
-    object OnDeleteTrigger : TimeCapsuleDetailAction()
-
-    object OnExitTrigger : TimeCapsuleDetailAction()
-
-    object OnExpireTrigger : TimeCapsuleDetailAction()
-
-    object OnSaveChangeTrigger : TimeCapsuleDetailAction()
 }
 
 sealed class TimeCapsuleDetailSideEffect {
@@ -77,6 +63,8 @@ sealed class TimeCapsuleDetailSideEffect {
     object OpenTimeCapsuleFail : TimeCapsuleDetailSideEffect()
 
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
+
+    object SaveChangesBeforeExitSuccess: TimeCapsuleDetailSideEffect()
 
     data class ShowUnlockModal(
         val modalState: UnlockModalState,
@@ -87,14 +75,6 @@ sealed class TimeCapsuleDetailSideEffect {
             val openAt: LocalDateTime = LocalDateTime.now(),
         )
     }
-
-    object ShowExitModal : TimeCapsuleDetailSideEffect()
-
-    object ShowExpiredModal : TimeCapsuleDetailSideEffect()
-
-    object ShowDeleteModal : TimeCapsuleDetailSideEffect()
-
-    object ShowSaveChangesModal : TimeCapsuleDetailSideEffect()
 }
 
 @HiltViewModel
@@ -129,35 +109,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
 
             is OnSaveNote -> {
-                handleSaveNote(action.id)
-            }
-
-            is OnDeleteTrigger -> {
-                // trigger side effect
-                intent {
-                    postSideEffect(ShowDeleteModal)
-                }
-            }
-
-            is OnExitTrigger -> {
-                // trigger side effect
-                intent {
-                    postSideEffect(ShowExitModal)
-                }
-            }
-
-            is OnExpireTrigger -> {
-                // trigger side effect
-                intent {
-                    postSideEffect(ShowExpiredModal)
-                }
-            }
-
-            is OnSaveChangeTrigger -> {
-                // trigger side effect
-                intent {
-                    postSideEffect(ShowSaveChangesModal)
-                }
+                handleSaveNote(action.id, action.exitAfterSave)
             }
         }
     }
@@ -266,7 +218,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
         }
 
-    private fun handleSaveNote(id: Long) =
+    private fun handleSaveNote(id: Long, exitAfterSave: Boolean) =
         intent {
             if (!state.isNoteChanged) return@intent
 
@@ -279,6 +231,9 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                             timeCapsule = state.timeCapsule?.copy(note = state.note),
                             isNoteChanged = false,
                         )
+                    }
+                    if(exitAfterSave){
+                        postSideEffect(SaveChangesBeforeExitSuccess)
                     }
                 },
                 onError = { throwable, code, data ->

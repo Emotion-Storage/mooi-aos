@@ -24,20 +24,13 @@ import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTrigger
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowDeleteModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExitModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowExpiredModal
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowSaveChangesModal
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.SaveChangesBeforeExitSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
@@ -127,6 +120,10 @@ fun TimeCapsuleDetailScreen(
                     navToBack()
                 }
 
+                is SaveChangesBeforeExitSuccess -> {
+                    navToBack()
+                }
+
                 is DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
@@ -134,24 +131,6 @@ fun TimeCapsuleDetailScreen(
                 is ShowUnlockModal -> {
                     setUnlockModalState(sideEffect.modalState)
                     setModalState(TimeCapsuleDetailModal.UNLOCK)
-                }
-
-                is ShowExitModal -> {
-                    if (isNewTimeCapsule) {
-                        setModalState(TimeCapsuleDetailModal.EXIT)
-                    }
-                }
-
-                is ShowExpiredModal -> {
-                    setModalState(TimeCapsuleDetailModal.EXPIRED)
-                }
-
-                is ShowDeleteModal -> {
-                    setModalState(TimeCapsuleDetailModal.DELETE)
-                }
-
-                is ShowSaveChangesModal -> {
-                    setModalState(TimeCapsuleDetailModal.SAVE_CHANGES)
                 }
             }
         }
@@ -191,6 +170,7 @@ fun TimeCapsuleDetailScreen(
             snackState = snackState,
             snackbarController = snackbarController,
             isNewTimeCapsule = isNewTimeCapsule,
+            setModalState = setModalState,
             state = state.value,
             favoriteState = favoriteState.value,
             onAction = viewModel::onAction,
@@ -261,7 +241,7 @@ fun TimeCapsuleDetailScreen(
                     setModalState(TimeCapsuleDetailModal.NONE)
                 },
                 onSave = {
-                    viewModel.onAction(OnSaveNote(id))
+                    viewModel.onAction(OnSaveNote(id, true))
                     navToBack()
                 },
                 onDismiss = {
@@ -279,6 +259,7 @@ private fun StatelessTimeCapsuleDetailScreen(
     snackState: SnackbarHostState = SnackbarHostState(),
     snackbarController: AppSnackbarController? = null,
     isNewTimeCapsule: Boolean = false,
+    setModalState: (TimeCapsuleDetailModal) -> Unit = {},
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     favoriteState: ToggleSingleFavoriteState = ToggleSingleFavoriteState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
@@ -307,13 +288,13 @@ private fun StatelessTimeCapsuleDetailScreen(
             topBar = {
                 val onTimeCapsuleExit = {
                     if (state.isNoteChanged) {
-                        onAction(OnSaveChangeTrigger)
+                        setModalState(TimeCapsuleDetailModal.SAVE_CHANGES)
                     } else {
                         navToBack()
                     }
                 }
                 val onNewTimeCapsuleExit = {
-                    onAction(OnExitTrigger)
+                    setModalState(TimeCapsuleDetailModal.EXIT)
                 }
                 TopAppBar(
                     title = state.timeCapsule.createdAt.format(DateTimeFormatter.ofPattern("yyyy. MM. dd  HH:mm")),
@@ -374,7 +355,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                 if (state.timeCapsule.status == TimeCapsule.Status.OPENED) {
                     TimeCapsuleNote(
                         modifier = Modifier.padding(top = 53.dp),
-                        note = state.timeCapsule.note ?: "",
+                        note = state.timeCapsule.note,
                         onNoteChange = {
                             onAction(OnNoteChanged(it))
                         },
@@ -390,13 +371,13 @@ private fun StatelessTimeCapsuleDetailScreen(
                         navToSaveTimeCapsule()
                     },
                     onTimeCapsuleExpired = {
-                        onAction(OnExpireTrigger)
+                        setModalState(TimeCapsuleDetailModal.EXPIRED)
                     },
                     onSaveMindNote = {
-                        onAction(OnSaveNote(id))
+                        onAction(OnSaveNote(id, false))
                     },
                     onDeleteTimeCapsule = {
-                        onAction(OnDeleteTrigger)
+                        setModalState(TimeCapsuleDetailModal.DELETE)
                     },
                 )
             }
