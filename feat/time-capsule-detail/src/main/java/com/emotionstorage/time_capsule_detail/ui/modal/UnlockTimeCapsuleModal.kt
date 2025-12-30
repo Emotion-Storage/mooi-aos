@@ -32,7 +32,6 @@ import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.math.absoluteValue
 
 /**
  * capsule_open_01 & capsule_open_02

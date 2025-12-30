@@ -64,7 +64,7 @@ sealed class TimeCapsuleDetailSideEffect {
 
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
 
-    object SaveChangesBeforeExitSuccess: TimeCapsuleDetailSideEffect()
+    object SaveChangesBeforeExitSuccess : TimeCapsuleDetailSideEffect()
 
     data class ShowUnlockModal(
         val modalState: UnlockModalState,
@@ -218,27 +218,30 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             }
         }
 
-    private fun handleSaveNote(id: Long, exitAfterSave: Boolean) =
-        intent {
-            if (!state.isNoteChanged) return@intent
+    private fun handleSaveNote(
+        id: Long,
+        exitAfterSave: Boolean,
+    ) = intent {
+        if (!state.isNoteChanged) return@intent
 
-            collectDataState(
-                flow = saveNote(id, state.note),
-                onSuccess = {
-                    reduce {
-                        state.copy(
-                            // stub logic for note save
-                            timeCapsule = state.timeCapsule?.copy(note = state.note),
-                            isNoteChanged = false,
-                        )
-                    }
-                    if(exitAfterSave){
+        collectDataState(
+            flow = saveNote(id, state.note),
+            onSuccess = {
+                reduce {
+                    state.copy(
+                        // stub logic for note save
+                        timeCapsule = state.timeCapsule?.copy(note = state.note),
+                        isNoteChanged = false,
+                    )
+                }
+                if (exitAfterSave)
+                    {
                         postSideEffect(SaveChangesBeforeExitSuccess)
                     }
-                },
-                onError = { throwable, code, data ->
-                    Logger.e("saveNote error: $throwable")
-                },
-            )
-        }
+            },
+            onError = { throwable, code, data ->
+                Logger.e("saveNote error: $throwable")
+            },
+        )
+    }
 }
