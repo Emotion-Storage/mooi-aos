@@ -58,6 +58,7 @@ import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.UnlockTimeCapsuleModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
+import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.button.RoundedToggleButton
@@ -183,19 +184,21 @@ fun TimeCapsuleDetailScreen(
         }
     }
 
-    StatelessTimeCapsuleDetailScreen(
-        id = id,
-        modifier = modifier,
-        snackState = snackState,
-        snackbarController = snackbarController,
-        isNewTimeCapsule = isNewTimeCapsule,
-        state = state.value,
-        favoriteState = favoriteState.value,
-        onAction = viewModel::onAction,
-        onFavoriteAction = favoriteViewModel::onAction,
-        navToSaveTimeCapsule = navToSaveTimeCapsule,
-        navToBack = navToBack,
-    )
+    HideKeyboard {
+        StatelessTimeCapsuleDetailScreen(
+            id = id,
+            modifier = modifier,
+            snackState = snackState,
+            snackbarController = snackbarController,
+            isNewTimeCapsule = isNewTimeCapsule,
+            state = state.value,
+            favoriteState = favoriteState.value,
+            onAction = viewModel::onAction,
+            onFavoriteAction = favoriteViewModel::onAction,
+            navToSaveTimeCapsule = navToSaveTimeCapsule,
+            navToBack = navToBack,
+        )
+    }
 
     when (modalState) {
         TimeCapsuleDetailModal.NONE -> {
