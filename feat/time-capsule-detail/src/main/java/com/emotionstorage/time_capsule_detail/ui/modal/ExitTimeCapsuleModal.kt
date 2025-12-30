@@ -26,14 +26,15 @@ import com.emotionstorage.ui.theme.MooiTheme
 @Composable
 fun ExitTimeCapsuleModal(
     onDismissRequest: () -> Unit = {},
-    onContinue: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
     Modal(
         onDismissRequest = onDismissRequest,
         contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
         confirmLabel = "아니요, 계속할래요.",
-        onConfirm = onContinue,
+        onConfirm = {
+            // do nothing on dismiss
+        },
         dismissLabel = "네, 그냥 나갈래요.",
         onDismiss = onExit,
     ) {

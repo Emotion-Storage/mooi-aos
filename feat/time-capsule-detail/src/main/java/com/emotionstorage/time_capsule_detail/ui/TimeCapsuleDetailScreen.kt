@@ -28,7 +28,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnOpenTimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
@@ -188,18 +188,80 @@ fun TimeCapsuleDetailScreen(
         modifier = modifier,
         snackState = snackState,
         snackbarController = snackbarController,
-        modalState = modalState,
-        dismissModal = { setModalState(TimeCapsuleDetailModal.NONE) },
         isNewTimeCapsule = isNewTimeCapsule,
-        unlockModalState = unlockModalState,
         state = state.value,
         favoriteState = favoriteState.value,
         onAction = viewModel::onAction,
         onFavoriteAction = favoriteViewModel::onAction,
-        navToHome = navToHome,
         navToSaveTimeCapsule = navToSaveTimeCapsule,
         navToBack = navToBack,
     )
+
+
+    when (modalState) {
+        TimeCapsuleDetailModal.NONE -> {
+            // no modal
+        }
+
+        TimeCapsuleDetailModal.EXIT -> {
+            ExitTimeCapsuleModal(
+                onDismissRequest = {
+                    setModalState(TimeCapsuleDetailModal.NONE)
+                },
+                onExit = {
+                    navToHome()
+                },
+            )
+        }
+
+        TimeCapsuleDetailModal.UNLOCK -> {
+            UnlockTimeCapsuleModal(
+                onDismissRequest = {
+                    setModalState(TimeCapsuleDetailModal.NONE)
+                },
+                keyCount = unlockModalState.keyCount,
+                requiredKeyCount = unlockModalState.requiredKeyCount,
+                openAt = unlockModalState.openAt,
+                onConfirm = {
+                    viewModel.onAction(OnUnlockTimeCapsule(id))
+                },
+            )
+        }
+
+        TimeCapsuleDetailModal.EXPIRED -> {
+            TimeCapsuleExpiredModal(
+                onConfirm = {
+                    navToBack()
+                },
+            )
+        }
+
+        TimeCapsuleDetailModal.DELETE -> {
+            DeleteTimeCapsuleModal(
+                onDismissRequest = {
+                    setModalState(TimeCapsuleDetailModal.NONE)
+                },
+                onDelete = {
+                    viewModel.onAction(OnDeleteTimeCapsule(id))
+                },
+            )
+        }
+
+        TimeCapsuleDetailModal.SAVE_CHANGES -> {
+            SaveChangesModal(
+                onDismissRequest = {
+                    setModalState(TimeCapsuleDetailModal.NONE)
+                },
+                onSave = {
+                    viewModel.onAction(OnSaveNote(id))
+                    navToBack()
+                },
+                onDismiss = {
+                    navToBack()
+                },
+            )
+        }
+    }
 }
 
 @Composable
@@ -208,49 +270,15 @@ private fun StatelessTimeCapsuleDetailScreen(
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
     snackbarController: AppSnackbarController? = null,
-    modalState: TimeCapsuleDetailModal = TimeCapsuleDetailModal.NONE,
-    dismissModal: () -> Unit = {},
-    unlockModalState: UnlockModalState = UnlockModalState(),
     isNewTimeCapsule: Boolean = false,
     state: TimeCapsuleDetailState = TimeCapsuleDetailState(),
     favoriteState: ToggleSingleFavoriteState = ToggleSingleFavoriteState(),
     onAction: (TimeCapsuleDetailAction) -> Unit = {},
     onFavoriteAction: (ToggleSingleFavoriteAction) -> Unit = {},
-    navToHome: () -> Unit = {},
     navToSaveTimeCapsule: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val scrollState = rememberScrollState()
-
-    ModalHandler(
-        modalState = modalState,
-        dismissModal = dismissModal,
-        onExit = {
-            dismissModal()
-            navToHome()
-        },
-        unlockModalState = unlockModalState,
-        onUnlock = {
-            onAction(OnOpenTimeCapsule(id))
-            dismissModal()
-        },
-        onDelete = {
-            onAction(OnDeleteTimeCapsule(id))
-        },
-        onExpire = {
-            dismissModal()
-            navToBack()
-        },
-        onSaveConfirm = {
-            onAction(OnSaveNote(id))
-            dismissModal()
-            navToBack()
-        },
-        onSaveDismiss = {
-            dismissModal()
-            navToBack()
-        },
-    )
 
     if (state.timeCapsule == null) {
         LoadingScreen()
@@ -364,64 +392,6 @@ private fun StatelessTimeCapsuleDetailScreen(
                     },
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun ModalHandler(
-    modalState: TimeCapsuleDetailModal,
-    dismissModal: () -> Unit,
-    onExit: () -> Unit,
-    unlockModalState: UnlockModalState,
-    onUnlock: () -> Unit,
-    onDelete: () -> Unit,
-    onExpire: () -> Unit,
-    onSaveConfirm: () -> Unit,
-    onSaveDismiss: () -> Unit,
-) {
-    when (modalState) {
-        TimeCapsuleDetailModal.NONE -> {
-            // no modal
-        }
-
-        TimeCapsuleDetailModal.EXIT -> {
-            ExitTimeCapsuleModal(
-                onDismissRequest = dismissModal,
-                onContinue = dismissModal,
-                onExit = onExit,
-            )
-        }
-
-        TimeCapsuleDetailModal.UNLOCK -> {
-            UnlockTimeCapsuleModal(
-                onDismissRequest = dismissModal,
-                keyCount = unlockModalState.keyCount,
-                requiredKeyCount = unlockModalState.requiredKeyCount,
-                openAt = unlockModalState.openAt,
-                onConfirm = onUnlock,
-            )
-        }
-
-        TimeCapsuleDetailModal.EXPIRED -> {
-            TimeCapsuleExpiredModal(
-                onConfirm = onExpire,
-            )
-        }
-
-        TimeCapsuleDetailModal.DELETE -> {
-            DeleteTimeCapsuleModal(
-                onDismissRequest = dismissModal,
-                onDelete = onDelete,
-            )
-        }
-
-        TimeCapsuleDetailModal.SAVE_CHANGES -> {
-            SaveChangesModal(
-                onDismissRequest = dismissModal,
-                onSave = onSaveConfirm,
-                onDismiss = onSaveDismiss,
-            )
         }
     }
 }

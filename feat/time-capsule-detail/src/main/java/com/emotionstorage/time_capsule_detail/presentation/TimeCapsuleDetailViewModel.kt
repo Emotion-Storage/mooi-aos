@@ -16,7 +16,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExitTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnExpireTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnOpenTimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveChangeTrigger
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
@@ -46,7 +46,7 @@ sealed class TimeCapsuleDetailAction {
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
-    data class OnOpenTimeCapsule(
+    data class OnUnlockTimeCapsule(
         val id: Long,
     ) : TimeCapsuleDetailAction()
 
@@ -116,7 +116,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 handleInit(action.id)
             }
 
-            is OnOpenTimeCapsule -> {
+            is OnUnlockTimeCapsule -> {
                 handleOpenTimeCapsule(action.id)
             }
 
