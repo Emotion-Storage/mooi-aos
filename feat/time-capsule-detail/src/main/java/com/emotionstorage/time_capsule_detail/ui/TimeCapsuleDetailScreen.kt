@@ -224,6 +224,9 @@ fun TimeCapsuleDetailScreen(
                 onConfirm = {
                     viewModel.onAction(OnUnlockTimeCapsule(id))
                 },
+                onDismiss = {
+                    navToBack()
+                },
             )
         }
 

@@ -55,7 +55,8 @@ fun UnlockTimeCapsuleModal(
     keyCount: Int,
     requiredKeyCount: Int,
     openAt: LocalDateTime,
-    onConfirm: () -> Unit = {},
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val canUnlock = keyCount >= requiredKeyCount
 
@@ -65,11 +66,9 @@ fun UnlockTimeCapsuleModal(
         confirmLabel = if (canUnlock) "열쇠 ${requiredKeyCount}개 사용하기" else null,
         onConfirm = onConfirm,
         dismissLabel = if (canUnlock) "지금은 열지 않을래요." else "뒤로 가기",
-        onDismiss = {
-            // do nothing before dismiss
-        },
+        onDismiss = onDismiss,
         modalWidth = 298.dp,
-        contentPadding = PaddingValues(top = 16.dp, bottom = 28.dp),
+        contentPadding = PaddingValues(top = 16.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
         verticalSpacing = if (canUnlock) 18.dp else 12.dp,
     ) {
         ModalContent(
