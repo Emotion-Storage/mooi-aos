@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
@@ -396,10 +395,11 @@ private fun ModalHandler(
 
         TimeCapsuleDetailModal.UNLOCK -> {
             TimeCapsuleUnlockModal(
+                onDismissRequest = dismissModal,
                 keyCount = unlockModalState.keyCount,
                 requiredKeyCount = unlockModalState.requiredKeyCount,
                 openAt = unlockModalState.openAt,
-                onUnlock = onUnlock,
+                onConfirm = onUnlock,
             )
         }
 

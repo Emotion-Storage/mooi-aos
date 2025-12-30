@@ -1,15 +1,18 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,144 +25,204 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.emotionstorage.common.getDaysBetween
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.CountDownTimer
-import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.math.absoluteValue
 
+/**
+ * capsule_open_01
+ * - Case : 타임캡슐 열기 시도
+ *      - 잠김 상태(도착일이 도래하지 않은)의 타임캡슐 목록을 클릭했을 때 상세페이지에서 표시
+ * - 표시 화면
+ *      - 4.4 타임캡슐 - 도착한 타임캡슐
+ * - CTA 및 이동
+ *      - [열쇠 n개 사용하기] -> 열쇠 차감되며 타임캡슐 오픈(열림 상태로 변경)
+ *      - [지금은 열지 않을래요.] -> 팝업 닫히며 이전 페이지로 이동
+ * - 차단
+ *      - 뒤로가기(Android) O
+ *      - push/pop X
+ *      - 하단바 상호작용 X (하단바 없음)
+ *      - 배경 터치 X
+ *      - 스크롤 X
+ */
 @Composable
 fun TimeCapsuleUnlockModal(
+    onDismissRequest: () -> Unit,
     keyCount: Int,
     requiredKeyCount: Int,
     openAt: LocalDateTime,
-    onUnlock: () -> Unit = {},
+    onConfirm: () -> Unit = {},
 ) {
     val canUnlock = keyCount >= requiredKeyCount
+
     Modal(
-        onDismissRequest = {
-            // cannot dismiss unless confirm button clicked
+        onDismissRequest = onDismissRequest,
+        dismissOnClickOutside = false,
+        dismissOnBackPress = true,
+        confirmLabel = if (canUnlock) "열쇠 ${requiredKeyCount}개 사용하기" else null,
+        onConfirm = onConfirm,
+        dismissLabel = if (canUnlock) "지금은 열지 않을래요." else "뒤로 가기",
+        onDismiss = {
+            // do nothing before dismiss
         },
-        contentPadding = PaddingValues(top = 19.dp, bottom = 29.dp, start = 27.dp, end = 27.dp),
+        modalWidth = 298.dp,
+        contentPadding = PaddingValues(top = 16.dp, bottom = 28.dp),
+        verticalSpacing = if (canUnlock) 18.dp else 12.dp
     ) {
+        ModalContent(
+            keyCount = keyCount,
+            requiredKeyCount = requiredKeyCount,
+            openAt = openAt,
+        )
+    }
+}
+
+@Composable
+private fun ModalContent(
+    keyCount: Int,
+    requiredKeyCount: Int,
+    openAt: LocalDateTime,
+    modifier: Modifier = Modifier,
+) {
+    val canUnlock = keyCount >= requiredKeyCount
+
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        // icon
+        Image(
+            modifier = Modifier.size(17.dp, 25.dp),
+            painter = painterResource(id = R.drawable.ic_lock),
+            contentDescription = "lock",
+        )
+        // title & descriptions
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center,
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // icon
-            Image(
-                modifier = Modifier.size(17.dp, 20.dp),
-                painter = painterResource(id = R.drawable.ic_lock),
-                contentDescription = "lock",
+            Text(
+                modifier = Modifier.padding(bottom = 8.dp),
+                text =
+                    buildAnnotatedString {
+                        append("이 타임캡슐을 미리 열려면\n")
+                        withStyle(
+                            SpanStyle(
+                                color = MooiTheme.colorScheme.primaryBlue500,
+                            ),
+                        ) {
+                            append("열쇠 ${requiredKeyCount}개")
+                        }
+                        append("가 필요해요!")
+                    },
+                style = MooiTheme.typography.body5,
+                color = MooiTheme.colorScheme.gray500,
+                textAlign = TextAlign.Center,
             )
-            // title & descriptions
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(top = 13.dp, bottom = 20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    text =
-                        buildAnnotatedString {
-                            append("이 타임캡슐을 미리 열려면\n")
-                            withStyle(
-                                SpanStyle(
-                                    color = MooiTheme.colorScheme.primaryBlue500,
-                                ),
-                            ) {
-                                append("열쇠 ${requiredKeyCount}개")
-                            }
-                            append("가 필요해요!")
-                        },
-                    style = MooiTheme.typography.body5,
-                    color = MooiTheme.colorScheme.gray500,
-                    textAlign = TextAlign.Center,
-                )
-                if (openAt.toLocalDate() == LocalDate.now()) {
-                    // run countdown timer, if openAt is within an day
-                    CountDownTimer(
-                        deadline = openAt,
-                        optimizeMinuteTick = true,
-                        optimizeSecondTick = true,
-                    ) { hours, minutes, seconds ->
-                        Text(
-                            modifier = Modifier.height(30.dp),
-                            text =
-                                "남은 기간 : " +
-                                    (if (hours == 0L) "" else "${hours}시간 ") +
-                                    (if (hours != 0L && minutes == 0L) "" else "${minutes}분"),
-                            style = MooiTheme.typography.head2,
-                            color = Color.White,
-                        )
-                    }
-                } else {
+
+            if (openAt.toLocalDate() == LocalDate.now()) {
+                // run countdown timer, if openAt is within an day
+                CountDownTimer(
+                    deadline = openAt,
+                    optimizeMinuteTick = true,
+                    optimizeSecondTick = true,
+                ) { hours, minutes, seconds ->
                     Text(
                         modifier = Modifier.height(30.dp),
-                        text = "남은 기간 : ${
-                            LocalDate.now().getDaysBetween(openAt.toLocalDate()).absoluteValue
-                        }일",
-                        style = MooiTheme.typography.head2,
+                        text =
+                            "남은 기간 : " +
+                                (if (hours == 0L) "" else "${hours}시간 ") +
+                                (if (hours != 0L && minutes == 0L) "" else "${minutes}분"),
+                        style = MooiTheme.typography.head2.copy(lineHeight = 30.sp),
                         color = Color.White,
                     )
                 }
+            } else {
                 Text(
                     modifier = Modifier.height(30.dp),
-                    text = "현재 보유 열쇠 : ${keyCount}개",
-                    style = MooiTheme.typography.head2,
+                    text = "남은 기간 : ${
+                        LocalDate.now().getDaysBetween(openAt.toLocalDate()).absoluteValue
+                    }일",
+                    style = MooiTheme.typography.head2.copy(lineHeight = 30.sp),
                     color = Color.White,
                 )
             }
-            // button
-            CtaButton(
-                modifier =
-                    Modifier
-                        .height(
-                            if (canUnlock) 50.dp else 65.dp,
-                        ).fillMaxWidth(),
-                enabled = canUnlock,
-                onClick = {
-                    onUnlock()
-                },
-                radius = 10,
-                isDefaultHeight = false,
-                isDefaultWidth = false,
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
+
+            Text(
+                modifier = Modifier.height(30.dp),
+                text =
+                    buildAnnotatedString {
+                        append("현재 보유 열쇠 : ")
+                        withStyle(
+                            SpanStyle(
+                                color = if (canUnlock) Color.White else MooiTheme.colorScheme.error,
+                            ),
+                        ) {
+                            append("${keyCount}개")
+                        }
+                    },
+                style = MooiTheme.typography.head2,
+                color = Color.White,
+            )
+
+            if (!canUnlock) {
+                Row(
+                    modifier = Modifier.padding(top = 18.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(7.dp),
                 ) {
-                    Text(
-                        text = "열쇠 ${requiredKeyCount}개 사용해서 열기",
-                        style = MooiTheme.typography.mainButton,
+                    Icon(
+                        modifier =
+                            Modifier
+                                .size(18.dp),
+                        painter = painterResource(id = R.drawable.ic_caution),
+                        contentDescription = "경고 아이콘",
+                        tint = MooiTheme.colorScheme.error,
                     )
-                    if (!canUnlock) {
-                        Text(
-                            text = "(보유 열쇠 부족)",
-                            style = MooiTheme.typography.caption3,
-                        )
-                    }
+                    Text(
+                        text = "지금 사용할 수 있는 열쇠가 부족해요.",
+                        color = MooiTheme.colorScheme.error,
+                    )
                 }
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-private fun TimeCapsuleUnlockModalPreview() {
-    // background ui
-    Box(modifier = Modifier.fillMaxSize())
+private fun UnlockTimeCapsuleModalContentPreview() {
+    ModalContent(
+        modifier = Modifier
+            .background(MooiTheme.colorScheme.backgroundDefault)
+            .width(298.dp)
+            .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 18.dp),
+        keyCount = 3,
+        requiredKeyCount = 1,
+        openAt = LocalDateTime.now().plusMinutes(30),
+    )
+}
 
-    TimeCapsuleUnlockModal(
+@Preview
+@Composable
+private fun UnlockTimeCapsuleModalContentPreview2() {
+    ModalContent(
+        modifier = Modifier
+            .background(MooiTheme.colorScheme.backgroundDefault)
+            .width(298.dp)
+            .padding(start = 27.dp, end = 27.dp, top = 16.dp, bottom = 12.dp),
         keyCount = 1,
-        requiredKeyCount = 5,
-        openAt = LocalDateTime.now().plusMinutes(1),
+        requiredKeyCount = 3,
+        openAt = LocalDateTime.now().plusMinutes(30),
     )
 }
