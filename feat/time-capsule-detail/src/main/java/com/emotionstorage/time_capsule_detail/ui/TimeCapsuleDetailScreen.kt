@@ -53,7 +53,7 @@ import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleNote
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
 import com.emotionstorage.time_capsule_detail.ui.modal.SaveChangesModal
 import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
-import com.emotionstorage.time_capsule_detail.ui.modal.ExitTimeCapsuleModal
+import com.emotionstorage.time_capsule_detail.ui.modal.ExitTempTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.UnlockTimeCapsuleModal
 import com.emotionstorage.ui.R
@@ -204,7 +204,7 @@ fun TimeCapsuleDetailScreen(
         }
 
         TimeCapsuleDetailModal.EXIT -> {
-            ExitTimeCapsuleModal(
+            ExitTempTimeCapsuleModal(
                 onDismissRequest = {
                     setModalState(TimeCapsuleDetailModal.NONE)
                 },
