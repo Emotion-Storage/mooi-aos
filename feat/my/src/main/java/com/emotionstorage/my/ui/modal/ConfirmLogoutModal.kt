@@ -15,10 +15,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *      - [네, 로그아웃 할래요.] -> 팝업 닫히며 로그아웃 api 호출, 로그인 페이지로 이동
  * - 차단
  *      - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
- *      - push/pop X
- *      - 하단바 상호작용 X (하단바 없음)
  *      - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *      - 스크롤 X
  */
 @Composable
 fun ConfirmLogoutModal(

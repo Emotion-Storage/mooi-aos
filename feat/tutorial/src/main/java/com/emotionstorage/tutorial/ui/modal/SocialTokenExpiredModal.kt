@@ -15,10 +15,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - [다시 가입하기] -> 팝업 닫히며 로그인 화면으로 이동
  * - 차단
  *     - 뒤로가기(Android) X
- *     - push/pop X
- *     - 하단바 상호작용 X (하단바 없음)
  *     - 배경 터치 X
- *     - 스크롤 X
  */
 @Composable
 fun SocialTokenExpiredModal(
