@@ -1,6 +1,5 @@
-package com.emotionstorage.ai_chat.data.dataSource.remote
+package com.emotionstorage.data.dataSource.remote
 
-import com.emotionstorage.ai_chat.remote.response.ChatRoomMessagesResponse
 import com.emotionstorage.domain.common.DataState
 
 interface ChatRemoteDataSource {
@@ -9,6 +8,4 @@ interface ChatRemoteDataSource {
     suspend fun exitChatRoom(roomId: Long): DataState<Boolean>
 
     suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
-
-    suspend fun getChatRoomMessages(cursor: Long? = null) : DataState<ChatRoomMessagesResponse>
 }

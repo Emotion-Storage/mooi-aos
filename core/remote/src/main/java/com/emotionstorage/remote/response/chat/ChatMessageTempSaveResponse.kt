@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.remote.response
+package com.emotionstorage.remote.response.chat
 
 import kotlinx.serialization.Serializable
 

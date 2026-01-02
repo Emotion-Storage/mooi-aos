@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.remote.response
+package com.emotionstorage.remote.response.chat
 
 import kotlinx.serialization.Serializable
 
@@ -14,15 +14,13 @@ data class RoomWithChatsResponse(
     val chatRoomId: Long,
     val firstChatTime: String,
     val totalChatCount: Int,
-    val chats: List<ChatMessageResponse>,
+    val chats: List<ChatMessagesResponse>,
 )
 
 @Serializable
-data class ChatMessageResponse(
+data class ChatMessagesResponse(
     val id: Long,
     val sender: String,
     val message: String,
     val chatTime: String,
 )
-
-

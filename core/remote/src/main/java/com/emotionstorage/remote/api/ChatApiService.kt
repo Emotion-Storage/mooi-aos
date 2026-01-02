@@ -1,10 +1,10 @@
-package com.emotionstorage.ai_chat.remote.api
+package com.emotionstorage.remote.api
 
-import com.emotionstorage.ai_chat.remote.response.ChatMessageTempSaveResponse
-import com.emotionstorage.ai_chat.remote.response.ChatRoomMessagesResponse
-import com.emotionstorage.ai_chat.remote.response.ExitChatRoomResponse
-import com.emotionstorage.ai_chat.remote.response.StartEmotionConversationResponse
 import com.emotionstorage.remote.response.ResponseDto
+import com.emotionstorage.remote.response.chat.ChatMessageTempSaveResponse
+import com.emotionstorage.remote.response.chat.ChatRoomMessagesResponse
+import com.emotionstorage.remote.response.chat.ExitChatRoomResponse
+import com.emotionstorage.remote.response.chat.StartEmotionConversationResponse
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH

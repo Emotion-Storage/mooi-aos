@@ -1,7 +1,7 @@
-package com.emotionstorage.ai_chat.remote.modelMapper
+package com.emotionstorage.remote.modelMapper
 
 import com.emotionstorage.domain.model.ChatMessage
-import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
+import com.emotionstorage.remote.request.chat.ChatMessageRequestBody
 import java.time.format.DateTimeFormatter
 
 object ChatMessageMapper {

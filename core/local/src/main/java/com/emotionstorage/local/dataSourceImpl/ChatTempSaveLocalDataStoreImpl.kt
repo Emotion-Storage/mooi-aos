@@ -1,9 +1,11 @@
-package com.emotionstorage.ai_chat.local.dataSource
+package com.emotionstorage.local.dataSourceImpl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
-import com.emotionstorage.ai_chat.data.dataSource.local.ChatTempSaveLocalDataSource
+import androidx.datastore.preferences.core.longPreferencesKey
+import com.emotionstorage.data.dataSource.local.ChatTempSaveLocalDataSource
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -12,14 +14,10 @@ class ChatTempSaveLocalDataStoreImpl @Inject constructor(
 ) : ChatTempSaveLocalDataSource {
     private object Keys {
         val TEMP_SAVED_ROOM_ID =
-            androidx
-                .datastore
-                .preferences
-                .core
-                .longPreferencesKey("temp_saved_room_id")
+            longPreferencesKey("temp_saved_room_id")
     }
 
-    override val tempSavedRoomId: kotlinx.coroutines.flow.Flow<Long?> =
+    override val tempSavedRoomId: Flow<Long?> =
         dataStore.data.map { prefs -> prefs[Keys.TEMP_SAVED_ROOM_ID] }
 
     override suspend fun setTempSavedRoomId(roomId: Long) {

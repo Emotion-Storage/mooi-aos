@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.local.dataSource
+package com.emotionstorage.local.dataSourceImpl
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.IOException
@@ -6,7 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
-import com.emotionstorage.ai_chat.data.dataSource.local.AiChatIntroLocalDataSource
+import com.emotionstorage.data.dataSource.local.AiChatIntroLocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map

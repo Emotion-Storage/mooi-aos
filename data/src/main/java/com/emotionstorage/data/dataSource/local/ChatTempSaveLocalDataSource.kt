@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.data.dataSource.local
+package com.emotionstorage.data.dataSource.local
 
 import kotlinx.coroutines.flow.Flow
 

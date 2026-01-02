@@ -1,16 +1,18 @@
-package com.emotionstorage.ai_chat.remote.dataSource
+package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.ai_chat.data.dataSource.remote.ChatWSDataSource
-import com.emotionstorage.ai_chat.remote.modelMapper.ChatMessageMapper
-import com.emotionstorage.ai_chat.remote.response.ChatMessageRequestBody
-import com.emotionstorage.ai_chat.remote.response.ChatMessageResponse
+import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
+import com.emotionstorage.remote.modelMapper.ChatMessageMapper
+import com.emotionstorage.remote.request.chat.ChatMessageRequestBody
+import com.emotionstorage.remote.response.chat.ChatMessageResponse
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
@@ -68,7 +70,7 @@ class ChatWSDataSourceImpl @Inject constructor(
         session
             .subscribeText("/sub/chatroom/$roomId")
             .flatMapConcat { raw ->
-                kotlinx.coroutines.flow.flow {
+                flow {
                     raw
                         .lines()
                         // 응답에 문제가 없다면 필요 없는 부분
@@ -84,7 +86,7 @@ class ChatWSDataSourceImpl @Inject constructor(
                                 if (content.isBlank() && !isComplete) return@forEach
 
                                 if (!isComplete) {
-                                    kotlinx.coroutines.delay(1500L)
+                                    delay(1500L)
                                 }
 
                                 emit(

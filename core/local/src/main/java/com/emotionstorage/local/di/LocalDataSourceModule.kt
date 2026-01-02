@@ -1,10 +1,16 @@
 package com.emotionstorage.local.di
 
+import com.emotionstorage.data.dataSource.local.AiChatIntroLocalDataSource
+import com.emotionstorage.data.dataSource.local.ChatTempSaveLocalDataSource
 import com.emotionstorage.data.dataSource.local.FcmLocalDataSource
 import com.emotionstorage.data.dataSource.local.NotificationPermissionLocalDataSource
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.local.UserLocalDataSource
+import com.emotionstorage.data.repoImpl.AiChatIntroRepositoryImpl
+import com.emotionstorage.domain.repo.ChatIntroRepository
+import com.emotionstorage.local.dataSourceImpl.AiChatIntroLocalDataSourceImpl
+import com.emotionstorage.local.dataSourceImpl.ChatTempSaveLocalDataStoreImpl
 import com.emotionstorage.local.dataSourceImpl.FcmLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.NotificationPermissionLocalLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.SessionLocalDataSourceImpl
@@ -40,4 +46,16 @@ abstract class LocalDataSourceModule {
     abstract fun bindNotificationPermissionDataSource(
         impl: NotificationPermissionLocalLocalDataSourceImpl,
     ): NotificationPermissionLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAiChatIntroLocalDataSource(impl: AiChatIntroLocalDataSourceImpl): AiChatIntroLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAiChatIntroRepository(impl: AiChatIntroRepositoryImpl): ChatIntroRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindChatTempSaveLocalDataSource(impl: ChatTempSaveLocalDataStoreImpl): ChatTempSaveLocalDataSource
 }

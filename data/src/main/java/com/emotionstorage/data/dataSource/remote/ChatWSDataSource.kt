@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.data.dataSource.remote
+package com.emotionstorage.data.dataSource.remote
 
 import com.emotionstorage.domain.model.ChatMessage
 import kotlinx.coroutines.flow.Flow

@@ -1,6 +1,6 @@
-package com.emotionstorage.ai_chat.data.repoImpl
+package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.ai_chat.data.dataSource.local.AiChatIntroLocalDataSource
+import com.emotionstorage.data.dataSource.local.AiChatIntroLocalDataSource
 import com.emotionstorage.domain.repo.ChatIntroRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

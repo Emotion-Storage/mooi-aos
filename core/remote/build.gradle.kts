@@ -54,4 +54,5 @@ dependencies {
 
     implementation(libs.bundles.credentials)
     implementation(libs.kakao.sdk.user)
+    implementation(libs.bundles.krossbow)
 }
