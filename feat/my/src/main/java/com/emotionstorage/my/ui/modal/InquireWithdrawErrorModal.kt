@@ -33,10 +33,7 @@ import java.time.LocalDateTime
  *      - [닫기] -> 팝업 닫히며 이동 X(재시도 유도)
  * - 차단
  *      - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
- *      - push/pop X
- *      - 하단바 상호작용 X (하단바 없음)
  *      - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *      - 스크롤 X
  */
 @Composable
 fun InquireWithdrawErrorModal(

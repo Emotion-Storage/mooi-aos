@@ -46,7 +46,7 @@ sealed class CalendarAction {
     ) : CalendarAction()
 
     // set calendar date & get bottom sheet states
-    data class SelectCalendarDate(
+    data class OpenCalendarBottomSheet(
         val date: LocalDate,
     ) : CalendarAction()
 
@@ -80,7 +80,7 @@ class CalendarViewModel @Inject constructor(
                 handleSelectCalendarYearMonth(action.yearMonth)
             }
 
-            is CalendarAction.SelectCalendarDate -> {
+            is CalendarAction.OpenCalendarBottomSheet -> {
                 handleSelectCalendarDate(action.date)
             }
 
@@ -94,11 +94,6 @@ class CalendarViewModel @Inject constructor(
         intent {
             initKeyCount()
             handleSelectCalendarYearMonth(YearMonth.from(LocalDate.now()))
-
-            // show bottom sheet if calendarDate is not null
-            if (state.calendarSelectedDate != null) {
-                postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
-            }
         }
 
     private suspend fun initKeyCount() =

@@ -18,10 +18,7 @@ import androidx.compose.ui.tooling.preview.Preview
  *     - [네, 확인했어요.] -> 팝업 닫히며 이동 X
  * - 차단
  *     - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
- *     - push/pop X
- *     - 하단바 상호작용 X (하단바 없음)
  *     - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *     - 스크롤 X
  */
 @Composable
 fun TempErrorModal(onDismissRequest: () -> Unit) {

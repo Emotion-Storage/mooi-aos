@@ -21,10 +21,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *     -> 최종 실패 시 login_02 팝업 표출
  * - 차단
  *     - 뒤로가기(Android) X
- *     - push/pop X
- *     - 하단바 상호작용 X (하단바 없음)
  *     - 배경 터치 X
- *     - 스크롤 X
  */
 @Composable
 fun RetryHandleLoginModal(

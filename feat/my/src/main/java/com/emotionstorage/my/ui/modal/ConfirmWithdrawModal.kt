@@ -15,10 +15,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *      - [서비스를 탈퇴할래요.] -> 회원 탈퇴 api 호출하며 withdraw_success 팝업 표출
  * - 차단
  *      - 뒤로가기(Android) O
- *      - push/pop X
- *      - 하단바 상호작용 X (하단바 없음)
  *      - 배경 터치 O (팝업 닫힘, 화면 제자리)
- *      - 스크롤 X
  */
 @Composable
 fun ConfirmWithdrawModal(

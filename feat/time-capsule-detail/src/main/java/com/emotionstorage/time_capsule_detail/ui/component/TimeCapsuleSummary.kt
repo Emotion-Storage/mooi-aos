@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -27,9 +28,11 @@ fun TimeCapsuleSummary(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         Text(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp),
             text = title,
             style = MooiTheme.typography.body1,
             color = Color.White,
+            textAlign = TextAlign.Center,
         )
         Box(
             modifier =

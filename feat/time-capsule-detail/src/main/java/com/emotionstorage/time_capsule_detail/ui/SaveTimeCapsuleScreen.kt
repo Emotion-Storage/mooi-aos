@@ -138,8 +138,10 @@ private fun StatelessSaveTimeCapsuleScreen(
 
     if (!showSavedModal && showExpiredModal) {
         TimeCapsuleExpiredModal(
-            onConfirm = {
+            onDismissRequest = {
                 setShowExpiredModal(false)
+            },
+            onConfirm = {
                 navToPrevious()
             },
         )
