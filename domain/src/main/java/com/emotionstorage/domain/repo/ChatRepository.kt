@@ -27,5 +27,5 @@ interface ChatRepository {
 
     suspend fun clearTempSavedRoomId()
 
-    suspend fun getChatRoomMessages(cursor: Long? = null): DataState<List<ChatMessage>>
+//    suspend fun getChatRoomMessages(cursor: Long? = null): DataState<List<ChatMessage>>
 }

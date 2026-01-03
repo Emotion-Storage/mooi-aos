@@ -100,4 +100,4 @@ class ChatRepositoryImpl
         override suspend fun clearTempSavedRoomId() {
             chatTempSaveLocal.clearTempSavedRoomId()
         }
-    }
+}
