@@ -2,10 +2,11 @@ package com.emotionstorage.domain.repo
 
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
+import com.emotionstorage.domain.model.EmotionConversation
 import kotlinx.coroutines.flow.Flow
 
 interface ChatRepository {
-    suspend fun getChatRoomId(): DataState<Long>
+    suspend fun startEmotionConversation(): DataState<EmotionConversation>
 
     suspend fun connectChatRoom(roomId: Long): Flow<DataState<Boolean>>
 

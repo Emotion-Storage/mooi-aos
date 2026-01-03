@@ -1,7 +1,8 @@
 package com.emotionstorage.domain.useCase.chat
 
-import com.emotionstorage.domain.repo.ChatRepository
 import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.EmotionConversation
+import com.emotionstorage.domain.repo.ChatRepository
 import javax.inject.Inject
 
 class GetChatRoomIdUseCase
@@ -9,5 +10,5 @@ class GetChatRoomIdUseCase
     constructor(
         private val chatRepository: ChatRepository,
     ) {
-        suspend operator fun invoke(): DataState<Long> = chatRepository.getChatRoomId()
+        suspend operator fun invoke(): DataState<EmotionConversation> = chatRepository.startEmotionConversation()
     }

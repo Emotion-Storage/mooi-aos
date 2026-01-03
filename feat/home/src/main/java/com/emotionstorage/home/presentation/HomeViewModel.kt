@@ -183,7 +183,7 @@ class HomeViewModel
 
                 getChatRoomId().handle(
                     onSuccess = {
-                        postSideEffect(HomeSideEffect.EnterChatRoom(it))
+                        postSideEffect(HomeSideEffect.EnterChatRoom(it.roomId))
                     },
                     onError = { throwable, code, data ->
                         Logger.e("HomeViewModel: handleEnterChat error: $throwable $code $data")
@@ -233,7 +233,7 @@ class HomeViewModel
                 // 우선 boiler-plate code로 테스트
                 getChatRoomId().handle(
                     onSuccess = {
-                        postSideEffect(HomeSideEffect.EnterChatRoom(it))
+                        postSideEffect(HomeSideEffect.EnterChatRoom(it.roomId))
                     },
                     onError = { throwable, code, data ->
                         Logger.e("HomeViewModel: handleEnterChat error: $throwable $code $data")

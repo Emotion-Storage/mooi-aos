@@ -3,8 +3,10 @@ package com.emotionstorage.data.repoImpl
 import com.emotionstorage.data.dataSource.local.ChatTempSaveLocalDataSource
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
+import com.emotionstorage.data.modelMapper.StartEmotionConversationMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
+import com.emotionstorage.domain.model.EmotionConversation
 import com.emotionstorage.domain.repo.ChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,9 +19,21 @@ class ChatRepositoryImpl
         private val chatWSDataSource: ChatWSDataSource,
         private val chatTempSaveLocal: ChatTempSaveLocalDataSource,
     ) : ChatRepository {
-        override suspend fun getChatRoomId(): DataState<Long> =
+        override suspend fun startEmotionConversation(): DataState<EmotionConversation> =
             try {
-                chatRemoteDataSource.getChatRoomId()
+                when (val result = chatRemoteDataSource.startEmotionConversation()) {
+                    is DataState.Success -> {
+                        DataState.Success(StartEmotionConversationMapper.toDomain(result.data))
+                    }
+
+                    is DataState.Loading -> {
+                        DataState.Loading(result.isLoading)
+                    }
+
+                    is DataState.Error -> {
+                        DataState.Error(result.throwable, result.code, result.data)
+                    }
+                }
             } catch (e: Exception) {
                 DataState.Error(e)
             }
