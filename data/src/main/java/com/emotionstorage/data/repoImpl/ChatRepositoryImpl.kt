@@ -17,9 +17,9 @@ class ChatRepositoryImpl
         private val chatRemoteDataSource: ChatRemoteDataSource,
         private val chatWSDataSource: ChatWSDataSource,
     ) : ChatRepository {
-        override suspend fun startEmotionConversation(): DataState<EmotionChatSession> =
+        override suspend fun startEmotionChat(): DataState<EmotionChatSession> =
             try {
-                when (val result = chatRemoteDataSource.startEmotionConversation()) {
+                when (val result = chatRemoteDataSource.startEmotionChat()) {
                     is DataState.Success -> {
                         DataState.Success(StartEmotionConversationMapper.toDomain(result.data))
                     }

@@ -12,5 +12,5 @@ class GetChatRoomIdUseCase
     ) {
         suspend operator fun invoke(): DataState<EmotionChatSession> =
             chatRepository
-                .startEmotionConversation()
+                .startEmotionChat()
     }

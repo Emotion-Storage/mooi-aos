@@ -15,7 +15,7 @@ class ChatRemoteDataSourceImpl
     constructor(
         private val chatApiService: ChatApiService,
     ) : ChatRemoteDataSource {
-        override suspend fun startEmotionConversation(): DataState<EmotionChatSessionEntity> =
+        override suspend fun startEmotionChat(): DataState<EmotionChatSessionEntity> =
             try {
                 val response = chatApiService.postEmotionConversationStart()
                 response.data?.run {
