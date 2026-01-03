@@ -31,9 +31,9 @@ class ChatRemoteDataSourceImpl
                 DataState.Error(e)
             }
 
-        override suspend fun exitChatRoom(roomId: Long): DataState<Boolean> =
+        override suspend fun deleteChatRoom(roomId: Long): DataState<Boolean> =
             try {
-                val response = chatApiService.deleteEmotionConversationQuit(roomId)
+                val response = chatApiService.deleteEmotionConversation(roomId)
                 response.data?.finished?.run {
                     DataState.Success(this)
                 } ?: DataState.Error(Throwable("exitChatRoom() failed, no room id received!"))

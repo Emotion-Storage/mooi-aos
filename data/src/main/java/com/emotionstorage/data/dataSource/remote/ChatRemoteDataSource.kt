@@ -6,7 +6,7 @@ import com.emotionstorage.domain.common.DataState
 interface ChatRemoteDataSource {
     suspend fun startEmotionChat(): DataState<EmotionChatSessionEntity>
 
-    suspend fun exitChatRoom(roomId: Long): DataState<Boolean>
+    suspend fun deleteChatRoom(roomId: Long): DataState<Boolean>
 
     suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
 }

@@ -1,7 +1,9 @@
 package com.emotionstorage.home.presentation
 
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.useCase.chat.DeleteChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.GetChatRoomSessionUseCase
 import com.emotionstorage.domain.useCase.home.GetHomeUseCase
 import com.emotionstorage.domain.useCase.user.GetUserNicknameUseCase
@@ -55,6 +57,7 @@ class HomeViewModel
         private val getUserNickname: GetUserNicknameUseCase,
         private val getHome: GetHomeUseCase,
         private val getChatRoomSession: GetChatRoomSessionUseCase,
+        private val deleteChatRoom: DeleteChatRoomUseCase,
     ) : BaseViewModel<HomeState>(
             HomeState(),
         ) {
@@ -212,6 +215,8 @@ class HomeViewModel
 
         private fun handleDismissResumeChat() =
             baseIntent {
+                val roomId = state.pendingChatRoomId ?: return@baseIntent
+
                 reduce {
                     state.copy(
                         showResumeChatModal = false,
@@ -219,6 +224,17 @@ class HomeViewModel
                     )
                 }
 
-                // TODO : 채팅방 삭제 API 호출 필요
+                when (val result = deleteChatRoom(roomId)) {
+                    is DataState.Success -> {
+                        Logger.d("HomeViewModel: exitChatRoom success")
+                    }
+
+                    is DataState.Loading -> {
+                    }
+
+                    is DataState.Error -> {
+                        Logger.e("HomeViewModel: exitChatRoom failed ${result.throwable}")
+                    }
+                }
             }
     }

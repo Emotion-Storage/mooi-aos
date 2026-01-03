@@ -11,7 +11,7 @@ interface ChatRepository {
     // Chat websocket 연결 용
     suspend fun connectChatRoom(roomId: Long): Flow<DataState<Boolean>>
 
-    // Chat websocket 해제 용
+    // Chat websocket 해제 용 + API 해제
     suspend fun disconnectChatRoom(roomId: Long): Flow<DataState<Boolean>>
 
     suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage>
@@ -22,6 +22,8 @@ interface ChatRepository {
     ): Flow<DataState<Boolean>>
 
     suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
+
+    suspend fun deleteChatRoom(roomId: Long): DataState<Boolean>
 
 //    suspend fun getChatRoomMessages(cursor: Long? = null): DataState<List<ChatMessage>>
 }

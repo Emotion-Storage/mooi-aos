@@ -53,7 +53,7 @@ class ChatRepositoryImpl
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
-                    chatRemoteDataSource.exitChatRoom(roomId)
+                    chatRemoteDataSource.deleteChatRoom(roomId)
                     val isDisconnected = chatWSDataSource.disconnectChatRoom()
                     emit(DataState.Success(isDisconnected))
                 } catch (e: Exception) {
@@ -85,6 +85,13 @@ class ChatRepositoryImpl
         override suspend fun tempSaveChatRoom(roomId: Long): DataState<Long> =
             try {
                 chatRemoteDataSource.tempSaveChatRoom(roomId)
+            } catch (e: Exception) {
+                DataState.Error(e)
+            }
+
+        override suspend fun deleteChatRoom(roomId: Long): DataState<Boolean> =
+            try {
+                chatRemoteDataSource.deleteChatRoom(roomId)
             } catch (e: Exception) {
                 DataState.Error(e)
             }
