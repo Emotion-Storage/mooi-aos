@@ -17,7 +17,7 @@ interface ChatApiService {
     suspend fun postEmotionConversationStart(): ResponseDto<StartEmotionConversationResponse>
 
     @DELETE("/api/v1/home/emotion-conversation/{roomId}")
-    suspend fun deleteExitEmotionConversation(
+    suspend fun deleteEmotionConversationQuit(
         @Path("roomId") roomId: Long,
     ): ResponseDto<ExitChatRoomResponse>
 
