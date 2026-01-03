@@ -21,11 +21,5 @@ interface ChatRepository {
 
     suspend fun tempSaveChatRoom(roomId: Long): DataState<Long>
 
-    val tempSavedRoomId: Flow<Long?>
-
-    suspend fun saveTempSavedRoomId(roomId: Long)
-
-    suspend fun clearTempSavedRoomId()
-
 //    suspend fun getChatRoomMessages(cursor: Long? = null): DataState<List<ChatMessage>>
 }

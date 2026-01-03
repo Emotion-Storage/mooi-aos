@@ -4,7 +4,7 @@ import com.emotionstorage.domain.repo.ChatRepository
 import javax.inject.Inject
 
 class GetChatRoomMessagesUseCase @Inject constructor(
-    private val chatRepository: ChatRepository
+    private val chatRepository: ChatRepository,
 ) {
 //    suspend operator fun invoke(cursor: Long? = null) = chatRepository.getChatRoomMessages(cursor)
 }

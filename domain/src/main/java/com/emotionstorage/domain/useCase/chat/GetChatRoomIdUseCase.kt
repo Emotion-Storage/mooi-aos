@@ -10,5 +10,7 @@ class GetChatRoomIdUseCase
     constructor(
         private val chatRepository: ChatRepository,
     ) {
-        suspend operator fun invoke(): DataState<EmotionConversationStartInfo> = chatRepository.startEmotionConversation()
+        suspend operator fun invoke(): DataState<EmotionConversationStartInfo> =
+            chatRepository
+                .startEmotionConversation()
     }

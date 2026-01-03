@@ -1,6 +1,5 @@
 package com.emotionstorage.data.repoImpl
 
-import com.emotionstorage.data.dataSource.local.ChatTempSaveLocalDataSource
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
 import com.emotionstorage.data.modelMapper.StartEmotionConversationMapper
@@ -17,7 +16,6 @@ class ChatRepositoryImpl
     constructor(
         private val chatRemoteDataSource: ChatRemoteDataSource,
         private val chatWSDataSource: ChatWSDataSource,
-        private val chatTempSaveLocal: ChatTempSaveLocalDataSource,
     ) : ChatRepository {
         override suspend fun startEmotionConversation(): DataState<EmotionConversationStartInfo> =
             try {
@@ -90,14 +88,4 @@ class ChatRepositoryImpl
             } catch (e: Exception) {
                 DataState.Error(e)
             }
-
-        override val tempSavedRoomId = chatTempSaveLocal.tempSavedRoomId
-
-        override suspend fun saveTempSavedRoomId(roomId: Long) {
-            chatTempSaveLocal.setTempSavedRoomId(roomId)
-        }
-
-        override suspend fun clearTempSavedRoomId() {
-            chatTempSaveLocal.clearTempSavedRoomId()
-        }
-}
+    }
