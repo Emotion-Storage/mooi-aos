@@ -5,7 +5,7 @@ import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
 import com.emotionstorage.data.modelMapper.StartEmotionConversationMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
-import com.emotionstorage.domain.model.EmotionConversationStartInfo
+import com.emotionstorage.domain.model.EmotionChatSession
 import com.emotionstorage.domain.repo.ChatRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -17,7 +17,7 @@ class ChatRepositoryImpl
         private val chatRemoteDataSource: ChatRemoteDataSource,
         private val chatWSDataSource: ChatWSDataSource,
     ) : ChatRepository {
-        override suspend fun startEmotionConversation(): DataState<EmotionConversationStartInfo> =
+        override suspend fun startEmotionConversation(): DataState<EmotionChatSession> =
             try {
                 when (val result = chatRemoteDataSource.startEmotionConversation()) {
                     is DataState.Success -> {

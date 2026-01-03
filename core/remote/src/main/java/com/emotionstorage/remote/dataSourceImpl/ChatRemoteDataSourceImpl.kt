@@ -1,12 +1,12 @@
 package com.emotionstorage.remote.dataSourceImpl
 
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
-import com.emotionstorage.data.model.StartEmotionConversationEntity
+import com.emotionstorage.data.model.EmotionChatSessionEntity
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.remote.api.ChatApiService
+import com.emotionstorage.remote.modelMapper.EmotionChatSessionMapper
 import com.emotionstorage.remote.response.CustomHttpException
-import com.emotionstorage.remote.response.chat.toEntity
 import java.io.IOException
 import javax.inject.Inject
 
@@ -15,11 +15,11 @@ class ChatRemoteDataSourceImpl
     constructor(
         private val chatApiService: ChatApiService,
     ) : ChatRemoteDataSource {
-        override suspend fun startEmotionConversation(): DataState<StartEmotionConversationEntity> =
+        override suspend fun startEmotionConversation(): DataState<EmotionChatSessionEntity> =
             try {
                 val response = chatApiService.postEmotionConversationStart()
                 response.data?.run {
-                    DataState.Success(this.toEntity())
+                    DataState.Success(EmotionChatSessionMapper.toData(this))
                 } ?: DataState.Error(Throwable("getChatRoomId() failed, no room id received!"))
             } catch (e: IOException) {
                 if (e !is CustomHttpException) {

@@ -1,6 +1,6 @@
-package com.emotionstorage.domain.model
+package com.emotionstorage.data.model
 
-data class EmotionConversationStartInfo(
+data class EmotionChatSessionEntity(
     val roomId: Long,
     val isTempSave: Boolean,
     val isFirstChatOfDay: Boolean,
