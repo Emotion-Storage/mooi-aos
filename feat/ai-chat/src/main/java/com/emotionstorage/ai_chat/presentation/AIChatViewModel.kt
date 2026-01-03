@@ -60,7 +60,7 @@ sealed class AIChatAction {
 
     object DismissForceQuitSheet : AIChatAction()
 
-    object TempSaveAndExitChatRoom : AIChatAction()
+    object TempSaveChatRoom : AIChatAction()
 }
 
 sealed class AIChatSideEffect {
@@ -113,8 +113,8 @@ class AIChatViewModel @Inject constructor(
                 handleForceQuitSheet()
             }
 
-            is AIChatAction.TempSaveAndExitChatRoom -> {
-                handleTempSaveAndExit()
+            is AIChatAction.TempSaveChatRoom -> {
+                handleTempSave()
             }
         }
     }
@@ -357,7 +357,7 @@ class AIChatViewModel @Inject constructor(
             }
         }
 
-    private fun handleTempSaveAndExit() =
+    private fun handleTempSave() =
         intent {
             chatMessageObserverJob?.cancel()
 
@@ -380,14 +380,6 @@ class AIChatViewModel @Inject constructor(
 
                 else -> {
                     Unit
-                }
-            }
-
-            disconnectChatRoom(roomId).collect { result ->
-                when (result) {
-                    is DataState.Success -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
-                    is DataState.Error -> postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 실패"))
-                    is DataState.Loading -> Unit
                 }
             }
 

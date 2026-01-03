@@ -5,7 +5,7 @@ import com.emotionstorage.domain.model.EmotionChatSession
 import com.emotionstorage.domain.repo.ChatRepository
 import javax.inject.Inject
 
-class GetChatRoomIdUseCase
+class GetChatRoomSessionUseCase
     @Inject
     constructor(
         private val chatRepository: ChatRepository,

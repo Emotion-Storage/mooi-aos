@@ -141,7 +141,7 @@ private fun StatelessAIChatScreen(
         onDismissRequest = { setExitModalOpen(false) },
         onExit = {
             setExitModalOpen(false)
-            onAction(AIChatAction.TempSaveAndExitChatRoom)
+            onAction(AIChatAction.TempSaveChatRoom)
         },
         onContinue = {
             setExitModalOpen(false)

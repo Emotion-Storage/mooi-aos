@@ -6,7 +6,7 @@ import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun ResumeTempChatModal(
+fun ResumeChatModal(
     isModalOpen: Boolean,
     onDismissRequest: () -> Unit = {},
     onResume: () -> Unit = {},
@@ -29,8 +29,8 @@ fun ResumeTempChatModal(
 
 @Preview
 @Composable
-private fun ResumeTempChatModalPreview() {
+private fun ResumeChatModalPreview() {
     MooiTheme {
-        ResumeTempChatModal(isModalOpen = true)
+        ResumeChatModal(isModalOpen = true)
     }
 }

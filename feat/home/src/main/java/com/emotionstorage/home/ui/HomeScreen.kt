@@ -47,6 +47,7 @@ import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
 import com.emotionstorage.home.ui.component.NotificationPermissionAutoRequest
+import com.emotionstorage.home.ui.component.ResumeChatModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
@@ -132,6 +133,19 @@ fun HomeScreen(
             onConfirm = { attendanceViewModel.claimToday() },
         )
     }
+
+    ResumeChatModal(
+        isModalOpen = state.value.showResumeChatModal && state.value.pendingChatRoomId != null,
+        onDismissRequest = {
+            viewModel.onAction(HomeAction.DismissResumeChat)
+        },
+        onResume = {
+            viewModel.onAction(HomeAction.ConfirmResumeChat)
+        },
+        onDropAndStartNew = {
+            viewModel.onAction(HomeAction.DismissResumeChat)
+        },
+    )
 }
 
 @Composable
