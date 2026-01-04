@@ -2,6 +2,7 @@ package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
+import com.emotionstorage.data.modelMapper.ChatMessageMapper
 import com.emotionstorage.data.modelMapper.StartEmotionConversationMapper
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
@@ -78,7 +79,7 @@ class ChatRepositoryImpl
                 } catch (e: Exception) {
                     emit(DataState.Error(e))
                 } finally {
-                    emit(DataState.Loading(isLoading = true))
+                    emit(DataState.Loading(isLoading = false))
                 }
             }
 
@@ -92,6 +93,20 @@ class ChatRepositoryImpl
         override suspend fun deleteChatRoom(roomId: Long): DataState<Boolean> =
             try {
                 chatRemoteDataSource.deleteChatRoom(roomId)
+            } catch (e: Exception) {
+                DataState.Error(e)
+            }
+
+        override suspend fun getChatRoomMessages(cursor: Long?): DataState<List<ChatMessage>> =
+            try {
+                when (val result = chatRemoteDataSource.getChatRoomMessages(cursor)) {
+                    is DataState.Success -> {
+                        val messages = ChatMessageMapper.toDomainMessages(result.data)
+                        DataState.Success(messages)
+                    }
+                    is DataState.Loading -> DataState.Loading(result.isLoading)
+                    is DataState.Error -> DataState.Error(result.throwable, result.code, result.data)
+                }
             } catch (e: Exception) {
                 DataState.Error(e)
             }

@@ -14,6 +14,7 @@ data class RoomWithChatsResponse(
     val chatRoomId: Long,
     val firstChatTime: String,
     val totalChatCount: Int,
+    val gauge: Int,
     val chats: List<ChatMessagesResponse>,
 )
 

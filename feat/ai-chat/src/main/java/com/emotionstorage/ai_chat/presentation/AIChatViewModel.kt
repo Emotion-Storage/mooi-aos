@@ -6,6 +6,7 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
+import com.emotionstorage.domain.useCase.chat.GetChatRoomMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
 import com.emotionstorage.domain.useCase.chat.TempSaveChatRoomUseCase
@@ -85,6 +86,7 @@ class AIChatViewModel @Inject constructor(
     private val observeChatMessages: ObserveChatMessagesUseCase,
     private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
     private val tempSaveChatRoomUseCase: TempSaveChatRoomUseCase,
+    private val getChatRoomMessagesUseCase: GetChatRoomMessagesUseCase,
 ) : ViewModel(),
     ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
@@ -134,6 +136,17 @@ class AIChatViewModel @Inject constructor(
                     is DataState.Success -> {
                         Logger.i("chat room connected")
                         postSideEffect(AIChatSideEffect.ToastMessage("채팅방 연결 성공"))
+
+                        when (val history = getChatRoomMessagesUseCase(cursor = null)) {
+                            is DataState.Success -> {
+                                reduce { state.copy(messages = history.data) }
+                            }
+                            is DataState.Error -> {
+                                Logger.e("history load failed: ${history.throwable}")
+                                postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
+                            }
+                            is DataState.Loading -> Unit
+                        }
 
                         // start observing chat messages
                         launchChatMessageObserver(roomId)

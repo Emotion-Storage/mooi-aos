@@ -6,5 +6,5 @@ import javax.inject.Inject
 class GetChatRoomMessagesUseCase @Inject constructor(
     private val chatRepository: ChatRepository,
 ) {
-//    suspend operator fun invoke(cursor: Long? = null) = chatRepository.getChatRoomMessages(cursor)
+    suspend operator fun invoke(cursor: Long? = null) = chatRepository.getChatRoomMessages(cursor)
 }
