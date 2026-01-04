@@ -22,7 +22,7 @@ class ChatRemoteDataSourceImpl
                 val response = chatApiService.postEmotionConversationStart()
                 response.data?.run {
                     DataState.Success(EmotionChatSessionMapper.toData(this))
-                } ?: DataState.Error(Throwable("startEmotionChat() failed, no room id received!"))
+                } ?: DataState.Error(Throwable("startEmotionChat() failed"))
             } catch (e: IOException) {
                 if (e !is CustomHttpException) {
                     DataState.Error(e, code = ErrorCode.NETWORK_ERROR)
@@ -38,7 +38,7 @@ class ChatRemoteDataSourceImpl
                 val response = chatApiService.deleteEmotionConversation(roomId)
                 response.data?.finished?.run {
                     DataState.Success(this)
-                } ?: DataState.Error(Throwable("deleteChatRoom() failed, no room id received!"))
+                } ?: DataState.Error(Throwable("deleteChatRoom() failed"))
             } catch (e: IOException) {
                 if (e !is CustomHttpException) {
                     DataState.Error(e, code = ErrorCode.NETWORK_ERROR)
