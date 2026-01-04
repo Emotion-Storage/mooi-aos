@@ -69,7 +69,6 @@ class ChatRemoteDataSourceImpl
         override suspend fun getChatRoomMessages(cursor: Long?): DataState<ChatRoomMessagesEntity> =
             try {
                 val response = chatApiService.getChatRoomMessages(cursor = cursor)
-                Logger.d(response.data.toString())
                 response.data?.let { DataState.Success(ChatRoomMessagesMapper.toData(it)) }
                     ?: DataState.Error(Throwable("getChatRoomMessages() failed, no data received!"))
             } catch (e: IOException) {
