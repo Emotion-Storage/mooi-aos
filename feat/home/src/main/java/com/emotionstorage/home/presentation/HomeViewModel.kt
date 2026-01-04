@@ -61,7 +61,6 @@ class HomeViewModel
     ) : BaseViewModel<HomeState>(
             HomeState(),
         ) {
-        private var observeRoomIdJobStarted = false
 
         fun onAction(action: HomeAction) {
             when (action) {
