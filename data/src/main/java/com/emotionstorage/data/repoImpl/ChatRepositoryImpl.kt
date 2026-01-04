@@ -104,6 +104,7 @@ class ChatRepositoryImpl
                         val messages = ChatMessageMapper.toDomainMessages(result.data)
                         DataState.Success(messages)
                     }
+
                     is DataState.Loading -> {
                         DataState.Loading(result.isLoading)
                     }
