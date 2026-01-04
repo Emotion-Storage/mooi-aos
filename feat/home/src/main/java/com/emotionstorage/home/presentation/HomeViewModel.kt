@@ -61,7 +61,6 @@ class HomeViewModel
     ) : BaseViewModel<HomeState>(
             HomeState(),
         ) {
-
         fun onAction(action: HomeAction) {
             when (action) {
                 is HomeAction.Initiate -> {

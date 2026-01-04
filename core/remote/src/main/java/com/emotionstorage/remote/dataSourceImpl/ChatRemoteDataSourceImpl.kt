@@ -9,7 +9,6 @@ import com.emotionstorage.remote.api.ChatApiService
 import com.emotionstorage.remote.modelMapper.ChatRoomMessagesMapper
 import com.emotionstorage.remote.modelMapper.EmotionChatSessionMapper
 import com.emotionstorage.remote.response.CustomHttpException
-import com.orhanobut.logger.Logger
 import java.io.IOException
 import javax.inject.Inject
 
