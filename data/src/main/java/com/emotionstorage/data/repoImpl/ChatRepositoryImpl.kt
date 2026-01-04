@@ -43,10 +43,9 @@ class ChatRepositoryImpl
                 try {
                     val isConnected = chatWSDataSource.connectChatRoom()
                     emit(DataState.Success(isConnected))
+                    emit(DataState.Loading(isLoading = false))
                 } catch (e: Exception) {
                     emit(DataState.Error(e))
-                } finally {
-                    emit(DataState.Loading(isLoading = false))
                 }
             }
 
@@ -57,10 +56,9 @@ class ChatRepositoryImpl
                     chatRemoteDataSource.deleteChatRoom(roomId)
                     val isDisconnected = chatWSDataSource.disconnectChatRoom()
                     emit(DataState.Success(isDisconnected))
+                    emit(DataState.Loading(isLoading = false))
                 } catch (e: Exception) {
                     emit(DataState.Error(e))
-                } finally {
-                    emit(DataState.Loading(isLoading = false))
                 }
             }
 
@@ -76,10 +74,9 @@ class ChatRepositoryImpl
                 try {
                     val isSent = chatWSDataSource.sendChatMessage(chatMessage)
                     emit(DataState.Success(isSent))
+                    emit(DataState.Loading(isLoading = false))
                 } catch (e: Exception) {
                     emit(DataState.Error(e))
-                } finally {
-                    emit(DataState.Loading(isLoading = false))
                 }
             }
 
