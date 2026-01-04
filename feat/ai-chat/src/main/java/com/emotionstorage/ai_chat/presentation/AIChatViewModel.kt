@@ -161,7 +161,9 @@ class AIChatViewModel @Inject constructor(
                                 postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
                             }
 
-                            is DataState.Loading -> Unit
+                            is DataState.Loading -> {
+                                Unit
+                            }
                         }
 
                         // start observing chat messages
