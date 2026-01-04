@@ -19,7 +19,7 @@ object ChatMessageMapper {
                     roomId = roomId,
                     source = toMessageSource(chat.sender),
                     content = chat.message,
-                    gaugeScore = null,
+                    gaugeScore = entity.roomWithChats.gauge,
                     turnCountScore = null,
                     isComplete = true,
                     timestamp = parseToLocalDateTime(chat.chatTime),

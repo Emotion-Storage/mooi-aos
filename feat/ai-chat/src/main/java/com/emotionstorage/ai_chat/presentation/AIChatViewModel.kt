@@ -32,6 +32,7 @@ data class AIChatState(
     val canCreateTimesCapsule: Boolean = false,
     val chatProgress: Float = 0.03f,
     val turnScore: Int = 0,
+    val gaugeScore: Int = 0,
     val isWaitingReply: Boolean = false,
     val isCreatingTimeCapsule: Boolean = false,
     val forceQuitTriggerTurn: Int? = null,
@@ -139,12 +140,27 @@ class AIChatViewModel @Inject constructor(
 
                         when (val history = getChatRoomMessagesUseCase(cursor = null)) {
                             is DataState.Success -> {
-                                reduce { state.copy(messages = history.data) }
+                                val historyMessages: List<ChatMessage> = history.data
+
+                                val gauge: Int = historyMessages.lastOrNull()?.gaugeScore ?: 0
+                                val progress: Float = (gauge / 70f).coerceIn(0f, 1f)
+                                val canCreate: Boolean = gauge >= TIME_CAPSULE_CREATE_SCORE
+
+                                reduce {
+                                    state.copy(
+                                        messages = historyMessages,
+                                        gaugeScore = gauge,
+                                        chatProgress = progress,
+                                        canCreateTimesCapsule = canCreate,
+                                    )
+                                }
                             }
+
                             is DataState.Error -> {
                                 Logger.e("history load failed: ${history.throwable}")
                                 postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
                             }
+
                             is DataState.Loading -> Unit
                         }
 
@@ -174,15 +190,9 @@ class AIChatViewModel @Inject constructor(
                     observeChatMessages(roomId)
                         .onEach { message ->
                             val isComplete = message.isComplete
-                            val gaugeScore = message.gaugeScore
-                            val newProgress =
-                                gaugeScore
-                                    ?.let { score -> (score / 70f).coerceIn(0f, 1f) }
-                                    ?: state.chatProgress
-
-                            val canCreate =
-                                gaugeScore?.let { it >= TIME_CAPSULE_CREATE_SCORE }
-                                    ?: state.canCreateTimesCapsule
+                            val nextGauge: Int = message.gaugeScore ?: state.gaugeScore
+                            val newProgress: Float = (nextGauge / 70f).coerceIn(0f, 1f)
+                            val canCreate: Boolean = nextGauge >= TIME_CAPSULE_CREATE_SCORE
 
                             if (state.isWaitingReply && isComplete) {
                                 reduce {
@@ -220,9 +230,10 @@ class AIChatViewModel @Inject constructor(
                                 state.copy(
                                     messages =
                                         if (isComplete) state.messages else state.messages + message,
+                                    gaugeScore = nextGauge,
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
-                                    turnScore = nextTurnScore!!,
+                                    turnScore = nextTurnScore,
                                     forceQuitTriggerTurn = quitTriggerTurn,
                                     hasShownForceQuitBottomSheet =
                                         state.hasShownForceQuitBottomSheet ||

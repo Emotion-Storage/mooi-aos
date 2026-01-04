@@ -10,6 +10,7 @@ data class RoomWithChatsEntity(
     val chatRoomId: Long,
     val firstChatTime: String,
     val totalChatCount: Int,
+    val gauge: Int,
     val chats: List<ChatMessageEntity>,
 )
 

@@ -13,6 +13,7 @@ object ChatRoomMessagesMapper {
                     chatRoomId = response.roomWithChats.chatRoomId,
                     firstChatTime = response.roomWithChats.firstChatTime,
                     totalChatCount = response.roomWithChats.totalChatCount,
+                    gauge = response.roomWithChats.gauge,
                     chats =
                         response.roomWithChats.chats.map { chat ->
                             ChatMessageEntity(
