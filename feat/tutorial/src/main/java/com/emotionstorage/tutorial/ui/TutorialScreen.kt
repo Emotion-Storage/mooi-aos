@@ -33,7 +33,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.tutorial.ui.component.NotificationPermissionAutoRequest
 import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
 import com.emotionstorage.tutorial.ui.util.TutorialResponsiveTokens
 import com.emotionstorage.tutorial.ui.util.clamp
@@ -53,7 +52,7 @@ fun TutorialScreen(
     modifier: Modifier = Modifier,
     navToLogin: () -> Unit = {},
 ) {
-    NotificationPermissionAutoRequest()
+//    NotificationPermissionAutoRequest()
 
     BoxWithConstraints(
         modifier =
