@@ -327,9 +327,9 @@ internal fun AppNavHost(
                 navToTermsAndPrivacy = {
                     navController.navigate(AppDestination.TermsAndPrivacy)
                 },
-                navToNotificationSetting = {
+               /* navToNotificationSetting = {
                     navController.navigate(AppDestination.NotificationSetting)
-                },
+                },*/
             )
         }
 
