@@ -1,5 +1,6 @@
 package com.emotionstorage.my.ui.myPage
 
+import android.content.ClipData
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,8 +22,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -42,6 +46,7 @@ import com.emotionstorage.my.ui.myPage.component.ProfileHeader
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
+import kotlinx.coroutines.launch
 
 private enum class MyPageModalState {
     NONE,
@@ -153,7 +158,8 @@ private fun StatelessMyPageScreen(
     navToTermsAndPrivacy: () -> Unit = {},
 //    navToNotificationSetting: () -> Unit = {},
 ) {
-    val clipboardManager = LocalClipboardManager.current
+    val clipboardManager = LocalClipboard.current
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier =
@@ -198,7 +204,16 @@ private fun StatelessMyPageScreen(
                     versionInfo = state.versionName,
                     onAccountInfoClick = navToAccountInfo,
                     onEmailCopyClick = {
-                        clipboardManager.setText(AnnotatedString("mooi.reply@gmail.com"))
+                        scope.launch {
+                            clipboardManager.setClipEntry(
+                                ClipEntry(
+                                    ClipData.newPlainText(
+                                        "mooi.reply@gmail.com",
+                                        "mooi.reply@gmail.com"
+                                    )
+                                )
+                            )
+                        }
                     },
                     onTermsAndPrivacyClick = navToTermsAndPrivacy,
                     onLogoutClick = { setModalState(MyPageModalState.LOGOUT_CONFIRM) },
