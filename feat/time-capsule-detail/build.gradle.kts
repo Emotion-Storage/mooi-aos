@@ -12,7 +12,20 @@ android {
 //        consumerProguardFiles("consumer-rules.pro")
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("$rootDir/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("debug")
+        }
+
         release {
             isMinifyEnabled = false
             proguardFiles(
