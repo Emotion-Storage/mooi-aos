@@ -43,15 +43,14 @@ fun DropDownPicker(
     val (isScrollPickerOpen, setScrollPickerOpen) = remember { mutableStateOf(false) }
 
     Column(
-        modifier = modifier.background(Color.Transparent),
-        verticalArrangement = Arrangement.spacedBy(5.dp),
+        modifier = modifier.background(Color.Transparent).width(102.dp),
     ) {
         Row(
             modifier =
                 Modifier
                     .fillMaxWidth()
                     .height(40.dp)
-                    .background(Color.Black, RoundedCornerShape(10.dp))
+                    .background(MooiTheme.colorScheme.backgroundElevated, RoundedCornerShape(10.dp))
                     .padding(horizontal = 12.dp)
                     .clickable(enabled = enabled) {
                         // toggle scroll picker open/close
@@ -82,47 +81,45 @@ fun DropDownPicker(
                 contentDescription = null,
             )
         }
-
-        // todo: set drop down menu width same as parent
+        Spacer(modifier = Modifier.height(5.dp))
         DropdownMenu(
+            modifier = Modifier
+                .width(102.dp)
+                .padding(top = 5.dp),
             expanded = isScrollPickerOpen,
             onDismissRequest = { setScrollPickerOpen(false) },
             shape = RoundedCornerShape(10.dp),
-            containerColor = Color.Black,
+            containerColor = MooiTheme.colorScheme.backgroundElevated,
         ) {
             options.forEachIndexed { index, it ->
-                DropdownMenuItem(
-                    contentPadding = PaddingValues(horizontal = 12.dp),
-                    text = {
-                        Text(
-                            style =
-                                MooiTheme.typography.body3.copy(
-                                    fontSize = 14.sp,
+                Box(
+                    modifier = Modifier
+                        .background(Color.Transparent)
+                        .fillMaxWidth()
+                        .padding(12.dp)
+                ) {
+                    Text(
+                        style =
+                            MooiTheme.typography.caption3,
+                        color = Color.White,
+                        text = it,
+                        modifier =
+                            Modifier
+                                .clickable(
+                                    onClick = {
+                                        onSelect(it)
+                                        setScrollPickerOpen(false)
+                                    },
                                 ),
-                            color = Color.White,
-                            text = it,
-                            modifier =
-                                Modifier
-                                    .clickable(
-                                        onClick = {
-                                            onSelect(it)
-                                            setScrollPickerOpen(false)
-                                        },
-                                    ),
-                        )
-                    },
-                    onClick = {
-                        onSelect(it)
-                        setScrollPickerOpen(false)
-                    },
-                )
+                    )
+                }
                 if (index != options.lastIndex) {
                     Spacer(
                         modifier =
                             Modifier
                                 .height(1.5.dp)
                                 .fillMaxWidth()
-                                .padding(horizontal = 10.dp)
+                                .padding(horizontal = 9.dp)
                                 .background(
                                     MooiTheme.colorScheme.gray900,
                                     RoundedCornerShape(10.dp),
