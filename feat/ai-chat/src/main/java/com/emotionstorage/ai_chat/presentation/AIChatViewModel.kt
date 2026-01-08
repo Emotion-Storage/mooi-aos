@@ -6,8 +6,10 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
+import com.emotionstorage.domain.useCase.chat.GetChatRoomMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
+import com.emotionstorage.domain.useCase.chat.TempSaveChatRoomUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.CreateTimeCapsuleUseCase
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +32,7 @@ data class AIChatState(
     val canCreateTimesCapsule: Boolean = false,
     val chatProgress: Float = 0.03f,
     val turnScore: Int = 0,
+    val gaugeScore: Int = 0,
     val isWaitingReply: Boolean = false,
     val isCreatingTimeCapsule: Boolean = false,
     val forceQuitTriggerTurn: Int? = null,
@@ -58,6 +61,8 @@ sealed class AIChatAction {
     object CreateTimeCapsule : AIChatAction()
 
     object DismissForceQuitSheet : AIChatAction()
+
+    object TempSaveChatRoom : AIChatAction()
 }
 
 sealed class AIChatSideEffect {
@@ -70,6 +75,8 @@ sealed class AIChatSideEffect {
     data class CreateTimeCapsuleSuccess(
         val capsuleId: Long,
     ) : AIChatSideEffect()
+
+    object NavigateBack : AIChatSideEffect()
 }
 
 @HiltViewModel
@@ -79,6 +86,8 @@ class AIChatViewModel @Inject constructor(
     private val sendChatMessage: SendChatMessageUseCase,
     private val observeChatMessages: ObserveChatMessagesUseCase,
     private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
+    private val tempSaveChatRoomUseCase: TempSaveChatRoomUseCase,
+    private val getChatRoomMessagesUseCase: GetChatRoomMessagesUseCase,
 ) : ViewModel(),
     ContainerHost<AIChatState, AIChatSideEffect> {
     private var chatMessageObserverJob: Job? = null
@@ -106,6 +115,10 @@ class AIChatViewModel @Inject constructor(
             is AIChatAction.DismissForceQuitSheet -> {
                 handleForceQuitSheet()
             }
+
+            is AIChatAction.TempSaveChatRoom -> {
+                handleTempSave()
+            }
         }
     }
 
@@ -124,6 +137,34 @@ class AIChatViewModel @Inject constructor(
                     is DataState.Success -> {
                         Logger.i("chat room connected")
                         postSideEffect(AIChatSideEffect.ToastMessage("채팅방 연결 성공"))
+
+                        when (val history = getChatRoomMessagesUseCase(cursor = null)) {
+                            is DataState.Success -> {
+                                val historyMessages: List<ChatMessage> = history.data
+
+                                val gauge: Int = historyMessages.lastOrNull()?.gaugeScore ?: 0
+                                val progress: Float = (gauge / 70f).coerceIn(0f, 1f)
+                                val canCreate: Boolean = gauge >= TIME_CAPSULE_CREATE_SCORE
+
+                                reduce {
+                                    state.copy(
+                                        messages = historyMessages,
+                                        gaugeScore = gauge,
+                                        chatProgress = progress,
+                                        canCreateTimesCapsule = canCreate,
+                                    )
+                                }
+                            }
+
+                            is DataState.Error -> {
+                                Logger.e("history load failed: ${history.throwable}")
+                                postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
+                            }
+
+                            is DataState.Loading -> {
+                                Unit
+                            }
+                        }
 
                         // start observing chat messages
                         launchChatMessageObserver(roomId)
@@ -151,15 +192,9 @@ class AIChatViewModel @Inject constructor(
                     observeChatMessages(roomId)
                         .onEach { message ->
                             val isComplete = message.isComplete
-                            val gaugeScore = message.gaugeScore
-                            val newProgress =
-                                gaugeScore
-                                    ?.let { score -> (score / 70f).coerceIn(0f, 1f) }
-                                    ?: state.chatProgress
-
-                            val canCreate =
-                                gaugeScore?.let { it >= TIME_CAPSULE_CREATE_SCORE }
-                                    ?: state.canCreateTimesCapsule
+                            val nextGauge: Int = message.gaugeScore ?: state.gaugeScore
+                            val newProgress: Float = (nextGauge / 70f).coerceIn(0f, 1f)
+                            val canCreate: Boolean = nextGauge >= TIME_CAPSULE_CREATE_SCORE
 
                             if (state.isWaitingReply && isComplete) {
                                 reduce {
@@ -197,9 +232,10 @@ class AIChatViewModel @Inject constructor(
                                 state.copy(
                                     messages =
                                         if (isComplete) state.messages else state.messages + message,
+                                    gaugeScore = nextGauge,
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
-                                    turnScore = nextTurnScore!!,
+                                    turnScore = nextTurnScore,
                                     forceQuitTriggerTurn = quitTriggerTurn,
                                     hasShownForceQuitBottomSheet =
                                         state.hasShownForceQuitBottomSheet ||
@@ -281,7 +317,7 @@ class AIChatViewModel @Inject constructor(
             disconnectChatRoom(state.roomId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
-                        Logger.i("chat room disconnected")
+                        Logger.d("chat room disconnected + $result")
                         postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
                     }
 
@@ -345,5 +381,34 @@ class AIChatViewModel @Inject constructor(
             reduce {
                 state.copy(showForceQuitBottomSheet = false)
             }
+        }
+
+    private fun handleTempSave() =
+        intent {
+            chatMessageObserverJob?.cancel()
+
+            val roomId = state.roomId
+            // TODO : ToastMesage 추후 제거
+            if (roomId == 0L) {
+                postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
+                postSideEffect(AIChatSideEffect.NavigateBack)
+                return@intent
+            }
+
+            when (val save = tempSaveChatRoomUseCase(roomId)) {
+                is DataState.Success -> {
+                    postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
+                }
+
+                is DataState.Error -> {
+                    postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
+                }
+
+                else -> {
+                    Unit
+                }
+            }
+
+            postSideEffect(AIChatSideEffect.NavigateBack)
         }
 }

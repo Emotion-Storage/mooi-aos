@@ -234,10 +234,9 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         isNoteChanged = false,
                     )
                 }
-                if (exitAfterSave)
-                    {
-                        postSideEffect(SaveChangesBeforeExitSuccess)
-                    }
+                if (exitAfterSave) {
+                    postSideEffect(SaveChangesBeforeExitSuccess)
+                }
             },
             onError = { throwable, code, data ->
                 Logger.e("saveNote error: $throwable")
