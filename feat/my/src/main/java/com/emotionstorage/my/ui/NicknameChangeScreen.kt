@@ -215,7 +215,7 @@ private val PreviewInvalid =
     NicknameChangeViewModel.State(
         nickname = "??",
         inputState = InputState.INVALID,
-        helperMessage = "이름은 한글 또는 영문만 사용해주세요",
+        helperMessage = "사용할 수 없는 이름입니다",
     )
 
 private val PreviewValid =
