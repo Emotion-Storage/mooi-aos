@@ -9,6 +9,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun AIChatExitModal(
     isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
+    onContinue: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
     if (isModalOpen) {
@@ -19,6 +20,7 @@ fun AIChatExitModal(
             confirmLabel = "대화를 계속 진행할게요.",
             dismissLabel = "메인 화면으로 나갈래요.",
             onDismissRequest = onDismissRequest,
+            onConfirm = onContinue,
             onDismiss = onExit,
         )
     }

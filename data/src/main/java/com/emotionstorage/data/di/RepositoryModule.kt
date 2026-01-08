@@ -2,6 +2,7 @@ package com.emotionstorage.data.di
 
 import com.emotionstorage.data.repoImpl.AuthRepositoryImpl
 import com.emotionstorage.data.repoImpl.AttendanceRepositoryImpl
+import com.emotionstorage.data.repoImpl.ChatRepositoryImpl
 import com.emotionstorage.data.repoImpl.HomeRepositoryImpl
 import com.emotionstorage.data.repoImpl.DailyReportRepositoryImpl
 import com.emotionstorage.data.repoImpl.FcmRepositoryImpl
@@ -13,6 +14,7 @@ import com.emotionstorage.data.repoImpl.TimeCapsuleRepositoryImpl
 import com.emotionstorage.data.repoImpl.UserRepositoryImpl
 import com.emotionstorage.domain.repo.AttendanceRepository
 import com.emotionstorage.domain.repo.AuthRepository
+import com.emotionstorage.domain.repo.ChatRepository
 import com.emotionstorage.domain.repo.DailyReportRepository
 import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.HomeRepository
@@ -78,4 +80,8 @@ abstract class RepositoryModule {
     abstract fun bindNotificationPermissionRepository(
         impl: NotificationPermissionRepositoryImpl,
     ): NotificationPermissionRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindChatRepository(impl: ChatRepositoryImpl): ChatRepository
 }
