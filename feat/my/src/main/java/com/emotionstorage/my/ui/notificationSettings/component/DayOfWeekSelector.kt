@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,8 +41,8 @@ fun DayOfWeekSelector(
             DayOfWeek.SUNDAY,
         )
     Row(
-        modifier = modifier.widthIn(331.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.5.dp, Alignment.CenterHorizontally),
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(4.5.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         days.forEach { day ->

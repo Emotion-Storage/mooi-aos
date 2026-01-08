@@ -42,6 +42,7 @@ import com.emotionstorage.my.ui.notificationSettings.component.ReminderTimeCompo
 import com.emotionstorage.my.ui.notificationSettings.component.ToggleRow
 import com.emotionstorage.my.ui.notificationSettings.component.RequestPermissionBottomSheet
 import com.emotionstorage.presentation.notification.NotificationPermissionGateViewModel
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.component.loading.LoadingOverlay
@@ -229,7 +230,7 @@ private fun StatelessNotificationSettingScreen(
 
                         // TODO : 실 기기에서는 잘 보이는데 Preview에서는 가운데로 몰리는 것 같음 -> Design QA에 올라온 상황
                         DayOfWeekSelector(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.padding(horizontal = 16.dp),
                             selected = state.emotionReminderDays,
                             enabled = state.emotionReminderNotify,
                             onToggle = onDayClick,
@@ -293,12 +294,15 @@ private fun computeCanPostNotifications(context: Context): Boolean {
     return systemEnabled && runtimeGranted
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun NotificationSettingScreenPreview() {
     MooiTheme {
         StatelessNotificationSettingScreen(
-            state = NotificationSettingState(),
+            state = NotificationSettingState(
+                appPushNotify = true,
+                emotionReminderNotify = true,
+            ),
             onToggleAppPush = { },
             onToggleEmotionReminder = {},
             onToggleTimeCapsuleAndReport = {},
