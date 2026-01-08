@@ -126,7 +126,7 @@ private fun StatelessArrivedTimeCapsulesScreen(
                             timeCapsules[it]?.let {
                                 Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                                     Text(
-                                        text = it.createdAt.formatToKorDateTime(),
+                                        text = it.createdAt.formatToKorDateTime(addDoubleSpacing = true),
                                         style = MooiTheme.typography.caption4,
                                         color = MooiTheme.colorScheme.gray300,
                                     )

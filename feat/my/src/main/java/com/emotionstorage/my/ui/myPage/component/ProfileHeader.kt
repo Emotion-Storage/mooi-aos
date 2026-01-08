@@ -135,7 +135,7 @@ fun ProfileHeader(
                                 .toSpanStyle()
                                 .copy(color = MooiTheme.colorScheme.gray500),
                     ) {
-                        append("째에요.")
+                        append("째예요.")
                     }
                 },
             )
