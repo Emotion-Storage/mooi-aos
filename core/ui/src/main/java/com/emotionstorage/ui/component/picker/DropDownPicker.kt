@@ -137,7 +137,7 @@ fun DropDownPicker(
 @Preview(showBackground = true)
 @Composable
 private fun DropDownPickerPreview() {
-    val options = listOf("최신 날짜순", "즐겨찾기순")
+    val options = listOf("최신 날짜순", "최근 담은순")
     val (pickerValue, setPickerValue) = remember { mutableStateOf<String>(options[0]) }
 
     MooiTheme {
