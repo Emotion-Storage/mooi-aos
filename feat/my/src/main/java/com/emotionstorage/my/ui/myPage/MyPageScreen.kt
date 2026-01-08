@@ -49,6 +49,9 @@ private enum class MyPageModalState {
     LOGOUT_ERROR,
 }
 
+// TODO : Screen 전환 방지를 위한 임시 상수
+private const val ENABLE_NOTIFICATION_SETTING_NAVIGATION = false
+
 @Composable
 fun MyPageScreen(
     modifier: Modifier = Modifier,
@@ -60,7 +63,7 @@ fun MyPageScreen(
     navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
-    navToNotificationSetting: () -> Unit = {},
+//    navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val (modalState, setModalState) = remember { mutableStateOf<MyPageModalState>(MyPageModalState.NONE) }
@@ -101,7 +104,13 @@ fun MyPageScreen(
         navToKeyDescription = navToKeyDescription,
         navToAccountInfo = navToAccountInfo,
         navToTermsAndPrivacy = navToTermsAndPrivacy,
-        navToNotificationSetting = navToNotificationSetting,
+        /*navToNotificationSetting = {
+            if (ENABLE_NOTIFICATION_SETTING_NAVIGATION) {
+                navToNotificationSetting()
+            } else {
+                // TODO : 사용자에게 줄 피드백 필요
+            }
+        },*/
     )
 
     when (modalState) {
@@ -142,7 +151,7 @@ private fun StatelessMyPageScreen(
     navToKeyDescription: () -> Unit = {},
     navToAccountInfo: () -> Unit = {},
     navToTermsAndPrivacy: () -> Unit = {},
-    navToNotificationSetting: () -> Unit = {},
+//    navToNotificationSetting: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboardManager.current
 
@@ -193,7 +202,7 @@ private fun StatelessMyPageScreen(
                     },
                     onTermsAndPrivacyClick = navToTermsAndPrivacy,
                     onLogoutClick = { setModalState(MyPageModalState.LOGOUT_CONFIRM) },
-                    onNotificationClick = navToNotificationSetting,
+//                    onNotificationClick = navToNotificationSetting,
                 )
 
                 Spacer(modifier = Modifier.size(8.dp))

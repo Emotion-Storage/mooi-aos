@@ -31,10 +31,10 @@ enum class ClickArea { Row, Text, Icon, None }
 fun MenuSection(
     versionInfo: String,
     onAccountInfoClick: () -> Unit = {},
-    onNotificationClick: () -> Unit = {},
     onEmailCopyClick: () -> Unit = {},
     onTermsAndPrivacyClick: () -> Unit = {},
     onLogoutClick: () -> Unit = {},
+//    onNotificationClick: () -> Unit = {},
 ) {
     Column(
         modifier =
@@ -52,11 +52,11 @@ fun MenuSection(
             onClick = onAccountInfoClick,
         )
 
-        MenuItem(
-            title = "알림 설정",
-            clickArea = ClickArea.Row,
-            onClick = onNotificationClick,
-        )
+        /*   MenuItem(
+               title = "알림 설정",
+               clickArea = ClickArea.Row,
+               onClick = onNotificationClick,
+           )*/
 
         Spacer(modifier = Modifier.size(8.dp))
         DividerLine()

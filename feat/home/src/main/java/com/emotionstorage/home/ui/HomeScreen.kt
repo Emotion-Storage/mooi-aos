@@ -46,7 +46,6 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
-import com.emotionstorage.home.ui.component.NotificationPermissionAutoRequest
 import com.emotionstorage.home.ui.component.ResumeChatModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
@@ -75,7 +74,7 @@ fun HomeScreen(
     val snackbarState = remember { SnackbarHostState() }
     val summary = attendanceState.value.summary
 
-    NotificationPermissionAutoRequest()
+//    NotificationPermissionAutoRequest()
 
     LaunchedEffect("init") {
         // load attendance state
