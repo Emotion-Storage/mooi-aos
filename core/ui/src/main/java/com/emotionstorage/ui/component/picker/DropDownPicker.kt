@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -83,9 +81,10 @@ fun DropDownPicker(
         }
         Spacer(modifier = Modifier.height(5.dp))
         DropdownMenu(
-            modifier = Modifier
-                .width(102.dp)
-                .padding(top = 5.dp),
+            modifier =
+                Modifier
+                    .width(102.dp)
+                    .padding(top = 5.dp),
             expanded = isScrollPickerOpen,
             onDismissRequest = { setScrollPickerOpen(false) },
             shape = RoundedCornerShape(10.dp),
@@ -93,10 +92,11 @@ fun DropDownPicker(
         ) {
             options.forEachIndexed { index, it ->
                 Box(
-                    modifier = Modifier
-                        .background(Color.Transparent)
-                        .fillMaxWidth()
-                        .padding(12.dp)
+                    modifier =
+                        Modifier
+                            .background(Color.Transparent)
+                            .fillMaxWidth()
+                            .padding(12.dp),
                 ) {
                     Text(
                         style =
