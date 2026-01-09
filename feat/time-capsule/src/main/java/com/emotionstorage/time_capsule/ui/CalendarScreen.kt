@@ -58,6 +58,7 @@ import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleBottomSheet
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.toast.AppSnackbarController
@@ -255,8 +256,7 @@ private fun StatelessCalendarScreen(
                     CalendarNavButton(
                         modifier = Modifier.weight(1f),
                         label = "도착한 타임캡슐",
-                        // todo: add new arrived timecapsules logic
-                        showNewBadge = true,
+                        showNewBadge = state.hsNewTimeCapsule,
                         onClick = navToArrived,
                     )
 
@@ -426,7 +426,7 @@ private fun CalendarTodayButton(
     }
 }
 
-@PreviewScreenSizes
+@PreviewScreenRatios
 @Composable
 private fun CalendarScreenPreview() {
     MooiTheme {
