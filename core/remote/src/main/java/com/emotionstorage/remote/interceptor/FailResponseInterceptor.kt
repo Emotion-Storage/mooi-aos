@@ -9,8 +9,9 @@ import okhttp3.Response
 import java.time.LocalDateTime
 import javax.inject.Inject
 
-class FailResponseInterceptor @Inject constructor() : Interceptor {
-    private val json = Json { ignoreUnknownKeys = true }
+class FailResponseInterceptor @Inject constructor(
+    private val json: Json
+) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val httpRequest = chain.request()

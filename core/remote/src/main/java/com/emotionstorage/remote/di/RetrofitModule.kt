@@ -71,7 +71,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideFailResponseHeaderInterceptor() = FailResponseInterceptor()
+    fun provideFailResponseHeaderInterceptor(json: Json) = FailResponseInterceptor(json)
 
     @Singleton
     @Provides

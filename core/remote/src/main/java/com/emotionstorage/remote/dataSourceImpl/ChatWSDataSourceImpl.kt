@@ -27,9 +27,9 @@ import javax.inject.Inject
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
 class ChatWSDataSourceImpl @Inject constructor(
+    private val json: Json,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWSDataSource {
-    private val json = Json { ignoreUnknownKeys = true }
 
     private val client =
         StompClient(
