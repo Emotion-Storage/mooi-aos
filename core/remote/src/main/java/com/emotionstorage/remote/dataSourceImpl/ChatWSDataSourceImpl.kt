@@ -30,7 +30,6 @@ class ChatWSDataSourceImpl @Inject constructor(
     private val json: Json,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWSDataSource {
-
     private val client =
         StompClient(
             webSocketClient =
