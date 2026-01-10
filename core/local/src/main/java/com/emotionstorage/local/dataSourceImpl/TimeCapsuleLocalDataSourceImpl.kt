@@ -12,9 +12,12 @@ import javax.inject.Inject
 class TimeCapsuleLocalDataSourceImpl @Inject constructor(
     private val timeCapsuleDao: TimeCapsuleDao,
 ) : TimeCapsuleLocalDataSource {
+    private var lastUpdated: Long = System.currentTimeMillis()
+
     override suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean {
         try {
             timeCapsuleDao.upsertAll(timeCapsules.map { TimeCapsuleMapper.toLocal(it) })
+            lastUpdated = System.currentTimeMillis()
             return true
         } catch (e: Exception) {
             Logger.e("saveTimeCapsules error: $e")
@@ -29,9 +32,12 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun lastUpdated(): Long = lastUpdated
+
     override suspend fun clearAll(): Boolean {
         try {
             timeCapsuleDao.clearAll()
+            lastUpdated = System.currentTimeMillis()
             return true
         } catch (e: Exception) {
             Logger.e("clearAll error: $e")

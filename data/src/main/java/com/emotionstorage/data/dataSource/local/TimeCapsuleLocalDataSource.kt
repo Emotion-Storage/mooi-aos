@@ -8,5 +8,7 @@ interface TimeCapsuleLocalDataSource {
 
     suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean
 
+    suspend fun lastUpdated(): Long
+
     suspend fun clearAll(): Boolean
 }
