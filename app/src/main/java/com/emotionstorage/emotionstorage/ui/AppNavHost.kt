@@ -338,7 +338,7 @@ internal fun AppNavHost(
             AIChatScreen(
                 roomId = arguments.roomId,
                 navToTimeCapsuleDetail = { id ->
-                    navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = true))
+                    navController.navigateWithClearStack(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = true))
                 },
                 navToBack = {
                     navController.popBackStack()
@@ -409,7 +409,10 @@ internal fun AppNavHost(
                 id = arguments.id,
                 isNewTimeCapsule = arguments.isNewTimeCapsule,
                 navToMain = {
-                    navController.navigateWithClearStack(AppDestination.Home)
+                    navController.navigate(AppDestination.Home) {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                        launchSingleTop = true
+                    }
                 },
                 navToPrevious = {
                     // pop twice, to navigate to previous screen
