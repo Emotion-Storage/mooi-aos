@@ -448,9 +448,9 @@ internal fun AppNavHost(
                 navToLogin = {
                     navController.navigateWithClearStack(AppDestination.Login)
                 },
-                navToNotificationSetting = {
+              /*  navToNotificationSetting = {
                     navController.navigateWithClearStack(AppDestination.NotificationSetting)
-                },
+                },*/
             )
         }
 
