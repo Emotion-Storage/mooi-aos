@@ -7,7 +7,7 @@ enum class NicknameState(
     val message: String,
 ) {
     INVALID_EMPTY("2~8자리의 한글 또는 영문을 사용해주세요"),
-    INVALID_CHAR("이름은 한글 또는 영문만 사용해주세요"),
+    INVALID_CHAR("사용할 수 없는 이름입니다"),
     INVALID_LENGTH("이름은 최소 2글자 이상이어야 합니다"),
     VALID("사용 가능한 이름입니다."),
 }
