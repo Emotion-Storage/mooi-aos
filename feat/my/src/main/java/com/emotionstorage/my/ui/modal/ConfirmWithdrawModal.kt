@@ -20,16 +20,19 @@ import com.emotionstorage.ui.component.modal.Modal
 @Composable
 fun ConfirmWithdrawModal(
     onDismissRequest: () -> Unit,
-    onChangeNotification: () -> Unit,
     onWithDraw: () -> Unit,
+//    onChangeNotification: () -> Unit,
 ) {
     Modal(
         onDismissRequest = onDismissRequest,
-        title = "기록을 잠시 멈추고 싶다면,\n알림을 끄거나\n앱을 쉬어가보는 건 어떨까요?",
-        confirmLabel = "알림을 끄고 쉬어갈래요.",
-        onConfirm = onChangeNotification,
+        title = "정말 탈퇴하시겠어요?",
+        bottomDescription = "저장된 감정 기록을 다시는 볼 수 없어요",
+        confirmLabel = "아니요, 그냥 있을래요.",
+        onConfirm = onDismissRequest,
         dismissLabel = "서비스를 탈퇴할래요.",
         onDismiss = onWithDraw,
+        dismissOnBackPress = true,
+        dismissOnClickOutside = true,
     )
 }
 
@@ -38,7 +41,7 @@ fun ConfirmWithdrawModal(
 private fun ConfirmWithdrawModalPreview() {
     ConfirmWithdrawModal(
         onDismissRequest = {},
-        onChangeNotification = {},
         onWithDraw = {},
+//        onChangeNotification = {},
     )
 }
