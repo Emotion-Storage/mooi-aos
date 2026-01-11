@@ -22,7 +22,7 @@ class AttendanceViewModel @Inject constructor(
 
     fun load() =
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(loading = true, error = null)
+            _uiState.value = _uiState.value.copy(loading = true, error = null, isClaiming = false)
             getAttendanceUseCase().collect { s ->
                 _uiState.value =
                     when (s) {
@@ -50,6 +50,18 @@ class AttendanceViewModel @Inject constructor(
 
     fun claimToday() =
         viewModelScope.launch {
+            val currentState = _uiState.value
+
+            if (currentState.isClaiming) return@launch
+
+            val canClaim = currentState.summary?.canClaimToday == true
+            if (!canClaim) {
+                _uiState.value = currentState.copy(showDialog = false)
+                return@launch
+            }
+
+            _uiState.value = currentState.copy(isClaiming = true, showDialog = false, error = null)
+
             claimAttendanceRewardUseCase().collect { s ->
                 when (s) {
                     is DataState.Success -> {
@@ -75,6 +87,7 @@ class AttendanceViewModel @Inject constructor(
     data class UiState(
         val summary: AttendanceSummary? = null,
         val showDialog: Boolean = false,
+        val isClaiming: Boolean = false,
         val loading: Boolean = false,
         val error: String? = null,
     )

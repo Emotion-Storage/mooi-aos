@@ -49,8 +49,8 @@ private sealed class WithdrawNoticeModalState {
 fun WithDrawNoticeScreen(
     viewModel: WithdrawNoticeViewModel = hiltViewModel(),
     navToBack: () -> Unit = {},
-    navToNotificationSetting: () -> Unit = {},
     navToLogin: () -> Unit = {},
+//    navToNotificationSetting: () -> Unit = {},
 ) {
     val state by viewModel.container.stateFlow.collectAsState()
     val (modalState, setModalState) =
@@ -98,12 +98,12 @@ fun WithDrawNoticeScreen(
                 onDismissRequest = {
                     setModalState(WithdrawNoticeModalState.None)
                 },
-                onChangeNotification = {
-                    navToNotificationSetting()
-                },
                 onWithDraw = {
                     viewModel.onAction(WithdrawNoticeAction.WithDraw)
                 },
+               /* onChangeNotification = {
+                    navToNotificationSetting()
+                },*/
             )
         }
 
