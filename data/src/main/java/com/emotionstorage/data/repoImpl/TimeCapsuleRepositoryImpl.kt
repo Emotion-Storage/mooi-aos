@@ -4,11 +4,14 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.PagingSource
 import androidx.paging.map
 import com.emotionstorage.data.dataSource.local.FavoriteTimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
+import com.emotionstorage.data.model.TimeCapsuleLocal
+import com.emotionstorage.data.modelMapper.TimeCapsuleLocalMapper
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.data.remoteMediator.FavoriteTimeCapsuleRemoteMediator
 import com.emotionstorage.data.remoteMediator.TimeCapsuleRemoteMediator
@@ -89,7 +92,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> =
-        Pager(
+        Pager<Int, TimeCapsuleLocal>(
             config =
                 PagingConfig(
                     pageSize = PAGE_SIZE,
@@ -106,8 +109,10 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 timeCapsuleLocal.getFavoritePagingSource(sortBy.value)
             },
         ).flow.map {
-            it.map { entity ->
-                TimeCapsuleMapper.toDomain(entity)
+            it.map { local ->
+                TimeCapsuleMapper.toDomain(
+                    TimeCapsuleLocalMapper.toData(local)
+                )
             }
         }
 
@@ -136,8 +141,10 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 timeCapsuleLocal.getPagingSource(status, startDate, endDate)
             },
         ).flow.map {
-            it.map { entity ->
-                TimeCapsuleMapper.toDomain(entity)
+            it.map { local ->
+                TimeCapsuleMapper.toDomain(
+                    TimeCapsuleLocalMapper.toData(local)
+                )
             }
         }
 

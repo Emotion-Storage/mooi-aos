@@ -8,7 +8,9 @@ import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
+import com.emotionstorage.data.model.TimeCapsuleLocal
 import com.emotionstorage.data.model.TimeCapsuleRemoteKeyEntity
+import com.orhanobut.logger.Logger
 import io.github.aakira.napier.Napier
 import java.time.LocalDate
 import java.util.concurrent.TimeUnit
@@ -21,7 +23,7 @@ class TimeCapsuleRemoteMediator(
     private val startDate: LocalDate,
     private val endDate: LocalDate,
     private val status: String,
-) : RemoteMediator<Int, TimeCapsuleEntity>() {
+) : RemoteMediator<Int, TimeCapsuleLocal>() {
     private val queryKey = TimeCapsuleRemoteKeyEntity.generateQueryKey(status, startDate, endDate)
 
     override suspend fun initialize(): InitializeAction {
@@ -33,20 +35,20 @@ class TimeCapsuleRemoteMediator(
         ) {
             // Cached data is up-to-date, so there is no need to re-fetch
             // from the network.
-            Napier.d("initialize - Cache timeout not reached; InitializeAction.SKIP_INITIAL_REFRESH")
+            Logger.d("initialize - Cache timeout not reached; InitializeAction.SKIP_INITIAL_REFRESH")
             InitializeAction.SKIP_INITIAL_REFRESH
         } else {
             // Need to refresh cached data from network; returning
             // LAUNCH_INITIAL_REFRESH here will also block RemoteMediator's
             // APPEND and PREPEND from running until REFRESH succeeds.
-            Napier.d("initialize - Cache timeout reached; InitializeAction.LAUNCH_INITIAL_REFRESH")
+            Logger.d("initialize - Cache timeout reached; InitializeAction.LAUNCH_INITIAL_REFRESH")
             InitializeAction.LAUNCH_INITIAL_REFRESH
         }
     }
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, TimeCapsuleEntity>,
+        state: PagingState<Int, TimeCapsuleLocal>,
     ): MediatorResult {
         return try {
             val page =
@@ -80,7 +82,7 @@ class TimeCapsuleRemoteMediator(
                     page = page,
                     limit = state.config.pageSize,
                 )
-            Napier.d("load - timeCapsules: $timeCapsules")
+            Logger.d("load - timeCapsules: $timeCapsules")
 
             val endOfPaginationReached = timeCapsules.isEmpty()
 

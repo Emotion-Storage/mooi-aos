@@ -1,9 +1,11 @@
 package com.emotionstorage.data.modelMapper
 
 import com.emotionstorage.data.model.TimeCapsuleEntity
+import com.emotionstorage.data.model.TimeCapsuleLocal
 import com.emotionstorage.domain.model.TimeCapsule
 
 internal object TimeCapsuleMapper {
+
     fun toDomain(entity: TimeCapsuleEntity) =
         TimeCapsule(
             id = entity.id,

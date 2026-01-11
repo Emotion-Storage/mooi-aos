@@ -1,15 +1,16 @@
-package com.emotionstorage.local.model
+package com.emotionstorage.data.model
 
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.emotionstorage.common.LocalDateTimeSerializer
-import com.emotionstorage.local.room.database.AppDatabaseConstant
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
+
+// moved TimeCapsuleLocal to data module for PagingSource
 @Entity(
-    tableName = AppDatabaseConstant.TableName.TIME_CAPSULE_TABLE,
+    tableName = "time_capsule",
     indices = [
         Index(value = ["status"]),
         Index(value = ["isFavorite"]),

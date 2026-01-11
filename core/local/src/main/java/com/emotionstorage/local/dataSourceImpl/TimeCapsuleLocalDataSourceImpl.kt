@@ -3,9 +3,9 @@ package com.emotionstorage.local.dataSourceImpl
 import androidx.paging.PagingSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import com.emotionstorage.local.modelMapper.TimeCapsuleMapper
+import com.emotionstorage.data.model.TimeCapsuleLocal
+import com.emotionstorage.data.modelMapper.TimeCapsuleLocalMapper
 import com.emotionstorage.local.room.dao.TimeCapsuleDao
-import com.emotionstorage.local.util.mapValue
 import com.orhanobut.logger.Logger
 import java.time.LocalDate
 import java.time.LocalTime
@@ -16,7 +16,7 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
 ) : TimeCapsuleLocalDataSource {
     override suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean {
         try {
-            timeCapsuleDao.upsertAll(timeCapsules.map { TimeCapsuleMapper.toLocal(it) })
+            timeCapsuleDao.upsertAll(timeCapsules.map { TimeCapsuleLocalMapper.toLocal(it) })
             return true
         } catch (e: Exception) {
             Logger.e("saveTimeCapsules error: $e")
@@ -28,25 +28,22 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         status: String,
         startDate: LocalDate,
         endDate: LocalDate,
-    ): PagingSource<Int, TimeCapsuleEntity> {
+    ): PagingSource<Int, TimeCapsuleLocal> {
         return timeCapsuleDao
             .pagingSource(
                 status = status,
                 startDate = startDate.atStartOfDay(),
                 endDate = endDate.atTime(LocalTime.MAX),
-            ).mapValue {
-                TimeCapsuleMapper.toData(it)
-            }
+            )
     }
 
-    override fun getFavoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleEntity> {
+    override fun getFavoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleLocal> {
         return timeCapsuleDao
             .favoritePagingSource(
                 sortBy = sortBy,
-            ).mapValue {
-                TimeCapsuleMapper.toData(it)
-            }
+            )
     }
+
 
     override suspend fun clearByCondition(
         status: String,
@@ -66,7 +63,7 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun clearFavorites(): Boolean  {
+    override suspend fun clearFavorites(): Boolean {
         try {
             timeCapsuleDao.clearFavorites()
             return true
