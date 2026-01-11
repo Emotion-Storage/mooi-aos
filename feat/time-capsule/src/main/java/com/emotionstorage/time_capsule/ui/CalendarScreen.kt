@@ -255,7 +255,7 @@ private fun StatelessCalendarScreen(
                     CalendarNavButton(
                         modifier = Modifier.weight(1f),
                         label = "도착한 타임캡슐",
-                        showNewBadge = state.hsNewTimeCapsule,
+                        showNewBadge = state.hasNewTimeCapsule,
                         onClick = navToArrived,
                     )
 

@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 data class CalendarState(
     val keyCount: Int? = null,
-    val hsNewTimeCapsule: Boolean = false,
+    val hasNewTimeCapsule: Boolean = false,
     // calendar states
     val calendarYearMonth: YearMonth = YearMonth.now(),
     val calendarTimeCapsuleDates: List<LocalDate> = emptyList(),
@@ -123,13 +123,13 @@ class CalendarViewModel @Inject constructor(
                 flow = getHasNewTimeCapsule(),
                 onSuccess = { data ->
                     reduce {
-                        state.copy(hsNewTimeCapsule = data)
+                        state.copy(hasNewTimeCapsule = data)
                     }
                 },
                 onError = { throwable, code, data ->
                     Logger.e("handleInitHasNewTimeCapsule error: $throwable")
                     reduce {
-                        state.copy(hsNewTimeCapsule = false)
+                        state.copy(hasNewTimeCapsule = false)
                     }
                 },
             )
