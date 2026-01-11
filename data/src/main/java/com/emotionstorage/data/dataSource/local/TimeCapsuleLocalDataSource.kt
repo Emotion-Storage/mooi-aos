@@ -2,7 +2,6 @@ package com.emotionstorage.data.dataSource.local
 
 import androidx.paging.PagingSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import com.emotionstorage.data.model.TimeCapsuleLocal
 import java.time.LocalDate
 
 interface TimeCapsuleLocalDataSource {
@@ -10,9 +9,9 @@ interface TimeCapsuleLocalDataSource {
         status: String,
         startDate: LocalDate,
         endDate: LocalDate,
-    ): PagingSource<Int, TimeCapsuleLocal>
+    ): PagingSource<Int, TimeCapsuleEntity>
 
-    fun getFavoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleLocal>
+    fun getFavoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleEntity>
 
     suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean
 

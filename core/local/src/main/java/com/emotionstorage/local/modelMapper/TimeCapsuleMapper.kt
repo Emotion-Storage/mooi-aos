@@ -1,9 +1,9 @@
-package com.emotionstorage.data.modelMapper
+package com.emotionstorage.local.modelMapper
 
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import com.emotionstorage.data.model.TimeCapsuleLocal
+import com.emotionstorage.local.model.TimeCapsuleLocal
 
-object TimeCapsuleLocalMapper {
+internal object TimeCapsuleMapper {
     fun toLocal(entity: TimeCapsuleEntity) =
         TimeCapsuleLocal(
             id = entity.id,

@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Upsert
-import com.emotionstorage.data.model.TimeCapsuleLocal
+import com.emotionstorage.local.model.TimeCapsuleLocal
 import java.time.LocalDateTime
 
 @Dao
