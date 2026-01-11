@@ -80,6 +80,7 @@ class TimeCapsuleRemoteMediator(
                     page = page,
                     limit = state.config.pageSize,
                 )
+            Napier.d("load - timeCapsules: $timeCapsules")
 
             val endOfPaginationReached = timeCapsules.isEmpty()
 

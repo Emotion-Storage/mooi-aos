@@ -69,14 +69,15 @@ class FavoriteTimeCapsuleRemoteMediator(
                 }
 
             // get from remote
-            val timeCapsules =
+            val favoriteTimeCapsules =
                 timeCapsuleRemote.getFavoriteTimeCapsules(
                     sortBy = sortBy,
                     page = page,
                     limit = state.config.pageSize,
                 )
+            Napier.d("load - favorite timeCapsules: $favoriteTimeCapsules")
 
-            val endOfPaginationReached = timeCapsules.isEmpty()
+            val endOfPaginationReached = favoriteTimeCapsules.isEmpty()
 
             // clear cache on refresh
             if (loadType == LoadType.REFRESH) {
@@ -87,7 +88,7 @@ class FavoriteTimeCapsuleRemoteMediator(
             // save to cache
             val now = System.currentTimeMillis()
             val keys =
-                timeCapsules.map {
+                favoriteTimeCapsules.map {
                     FavoriteTimeCapsuleRemoteKeyEntity(
                         id = it.id,
                         queryKey = queryKey,
@@ -97,7 +98,7 @@ class FavoriteTimeCapsuleRemoteMediator(
                     )
                 }
             favoriteRemoteKeyLocal.insertAll(keys)
-            timeCapsuleLocal.saveTimeCapsules(timeCapsules)
+            timeCapsuleLocal.saveTimeCapsules(favoriteTimeCapsules)
 
             MediatorResult.Success(endOfPaginationReached)
         } catch (e: Exception) {

@@ -30,7 +30,7 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         endDate: LocalDate,
     ): PagingSource<Int, TimeCapsuleEntity> {
         return timeCapsuleDao
-            .favoritePagingSource(
+            .pagingSource(
                 status = status,
                 startDate = startDate.atStartOfDay(),
                 endDate = endDate.atTime(LocalTime.MAX),

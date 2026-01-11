@@ -20,7 +20,7 @@ interface TimeCapsuleDao {
         ORDER BY historyDate DESC
     """,
     )
-    fun favoritePagingSource(
+    fun pagingSource(
         status: String,
         startDate: LocalDateTime,
         endDate: LocalDateTime,
