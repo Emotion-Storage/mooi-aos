@@ -12,17 +12,10 @@ import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
-data class ToggleFavoriteState(
-    val favoriteIds: List<Long> = emptyList(),
-)
-
 sealed class ToggleFavoriteAction {
-    data class Init(
-        val favoriteIds: List<Long>,
-    ) : ToggleFavoriteAction()
-
     data class OnToggle(
         val id: Long,
+        val newFavoriteState: Boolean,
     ) : ToggleFavoriteAction()
 }
 
@@ -38,36 +31,23 @@ sealed class ToggleFavoriteSideEffect {
 class ToggleFavoriteViewModel @Inject constructor(
     private val setFavorite: SetFavoriteTimeCapsuleUseCase,
 ) : ViewModel(),
-    ContainerHost<ToggleFavoriteState, ToggleFavoriteSideEffect> {
-    override val container: Container<ToggleFavoriteState, ToggleFavoriteSideEffect> =
-        container(ToggleFavoriteState())
+    ContainerHost<Unit, ToggleFavoriteSideEffect> {
+    override val container: Container<Unit, ToggleFavoriteSideEffect> =
+        container(Unit)
 
     fun onAction(action: ToggleFavoriteAction) {
         when (action) {
-            is ToggleFavoriteAction.Init -> {
-                intent {
-                    reduce {
-                        state.copy(favoriteIds = action.favoriteIds)
-                    }
-                }
-            }
-
             is ToggleFavoriteAction.OnToggle -> {
-                handleToggleFavorite(action.id)
+                handleToggleFavorite(action.id, action.newFavoriteState)
             }
         }
     }
 
-    private fun handleToggleFavorite(id: Long) =
+    private fun handleToggleFavorite(id: Long, newFavoriteState: Boolean) =
         intent {
-            setFavorite(id, id !in state.favoriteIds).handle(
+            setFavorite(id, newFavoriteState).handle(
                 onSuccess = {
-                    reduce {
-                        state.copy(
-                            favoriteIds = if (it) state.favoriteIds + id else state.favoriteIds - id,
-                        )
-                    }
-                    postSideEffect(ShowFavoriteSuccessToast(it))
+                    postSideEffect(ShowFavoriteSuccessToast(newFavoriteState))
                 },
                 onError = { throwable, code, data ->
                     when (code) {

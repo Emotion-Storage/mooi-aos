@@ -75,6 +75,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     ): DataState<Boolean> =
         try {
             timeCapsuleRemoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
+            // todo: update local favorite state
         } catch (e: Exception) {
             DataState.Error(e)
         }
