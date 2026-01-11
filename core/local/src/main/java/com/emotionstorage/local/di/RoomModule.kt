@@ -41,4 +41,8 @@ internal object RoomModule {
     @Provides
     @Singleton
     fun provideTimeCapsuleDao(appDatabase: AppDatabase) = appDatabase.timeCapsuleDao()
+
+    @Provides
+    @Singleton
+    fun provideTimeCapsuleRemoteKetDao(appDatabase: AppDatabase) = appDatabase.timeCapsuleRemoteKeyDao()
 }

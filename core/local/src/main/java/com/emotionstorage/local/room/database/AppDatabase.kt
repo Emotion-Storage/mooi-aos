@@ -19,6 +19,7 @@ object AppDatabaseConstant {
         const val USER_TABLE = "user"
         const val SESSION_TABLE = "session"
         const val TIME_CAPSULE_TABLE = "time_capsule"
+        const val TIME_CAPSULE_REMOTE_KEY_TABLE = "time_capsule_remote_key"
     }
 }
 
@@ -35,4 +36,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun sessionDao(): SessionDao
 
     abstract fun timeCapsuleDao(): TimeCapsuleDao
+
+    abstract fun timeCapsuleRemoteKeyDao(): TimeCapsuleDao
 }
