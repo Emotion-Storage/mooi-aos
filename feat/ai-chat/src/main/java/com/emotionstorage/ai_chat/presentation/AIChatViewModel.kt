@@ -230,7 +230,8 @@ class AIChatViewModel @Inject constructor(
                                         nextTurnScore >= quitTriggerTurn
 
                                 state.copy(
-                                    messages = state.messages.upsertById(message),
+                                    messages =
+                                        if (isComplete) state.messages else state.messages + message,
                                     gaugeScore = nextGauge,
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
@@ -406,42 +407,4 @@ class AIChatViewModel @Inject constructor(
 
             postSideEffect(AIChatSideEffect.NavigateBack)
         }
-
-    private fun List<ChatMessage>.upsertById(incomingMessage: ChatMessage): List<ChatMessage> {
-        val idx = indexOfFirst { it.clientId == incomingMessage.clientId && it.source == incomingMessage.source }
-        if (idx == -1) return this + incomingMessage
-
-        val existing = this[idx]
-
-        val mergedContent =
-            when {
-                incomingMessage.isComplete -> {
-                    incomingMessage.content
-                }
-
-                incomingMessage.content.startsWith(existing.content) -> {
-                    incomingMessage.content
-                }
-
-                existing.content.length >= incomingMessage.content.length &&
-                    incomingMessage.content.isNotBlank() -> {
-                    existing.content
-                }
-
-                else -> {
-                    existing.content + incomingMessage.content
-                }
-            }
-
-        val merged =
-            existing.copy(
-                content = mergedContent,
-                isComplete = existing.isComplete || incomingMessage.isComplete,
-                gaugeScore = incomingMessage.gaugeScore ?: existing.gaugeScore,
-                turnCountScore = incomingMessage.turnCountScore ?: existing.turnCountScore,
-                timestamp = incomingMessage.timestamp,
-            )
-
-        return toMutableList().apply { set(idx, merged) }
-    }
 }
