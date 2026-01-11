@@ -29,9 +29,9 @@ interface TimeCapsuleRepository {
     fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>>
 
     fun getPagedTimeCapsules(
+        status: String,
         startDate: LocalDate,
         endDate: LocalDate,
-        status: String,
     ): Flow<PagingData<TimeCapsule>>
 
     suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>>
