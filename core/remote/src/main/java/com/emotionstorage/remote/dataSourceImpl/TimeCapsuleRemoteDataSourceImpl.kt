@@ -88,16 +88,30 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         sortBy: String,
     ): List<TimeCapsuleEntity> {
         try {
-            val response =
-                apiService.getFavoriteTimeCapsules(
-                    page = page,
-                    limit = limit,
-                    sortBy = sortBy,
+//            val response =
+//                apiService.getFavoriteTimeCapsules(
+//                    page = page,
+//                    limit = limit,
+//                    sortBy = sortBy,
+//                )
+//            if (response.data != null) {
+//                return TimeCapsuleResponseMapper.toData(response.data)
+//            } else {
+//                throw Exception("getFavoriteTimeCapsules response data is empty, $response")
+//            }
+
+            // mock response for paging test
+            return (0..limit).map { i ->
+                TimeCapsuleEntity(
+                    id = (page * 100 + i).toLong(),
+                    title = "TimeCapsule page-$page index-$i",
+                    status = "OPEN",
+                    isFavorite = true,
+                    favoriteAt = LocalDateTime.now(),
+                    historyDate = LocalDateTime.now(),
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
                 )
-            if (response.data != null) {
-                return TimeCapsuleResponseMapper.toData(response.data)
-            } else {
-                throw Exception("getFavoriteTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getFavoriteTimeCapsules api fail, ${e.message}", e)
@@ -112,18 +126,30 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         status: String,
     ): List<TimeCapsuleEntity> {
         try {
-            val response =
-                apiService.getTimeCapsules(
-                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                    page = page,
-                    limit = limit,
-                    status = status,
+//            val response =
+//                apiService.getTimeCapsules(
+//                    startDate = startDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+//                    endDate = endDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+//                    page = page,
+//                    limit = limit,
+//                    status = status,
+//                )
+//            if (response.data != null) {
+//                return TimeCapsuleResponseMapper.toData(response.data)
+//            } else {
+//                throw Exception("getTimeCapsules response data is empty, $response")
+//            }
+
+            // mock response for paging test
+            return (0..limit).map { i ->
+                TimeCapsuleEntity(
+                    id = (page * 100 + i).toLong(),
+                    title = "TimeCapsule page-$page index-$i",
+                    status = "OPEN",
+                    historyDate = startDate.atStartOfDay(),
+                    createdAt = LocalDateTime.now(),
+                    updatedAt = LocalDateTime.now(),
                 )
-            if (response.data != null) {
-                return TimeCapsuleResponseMapper.toData(response.data)
-            } else {
-                throw Exception("getTimeCapsules response data is empty, $response")
             }
         } catch (e: Exception) {
             throw Exception("getTimeCapsules api fail, ${e.message}", e)
@@ -145,11 +171,16 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate> {
         try {
-            val response = apiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
-            if (response.data != null) {
-                return response.data.dates.map { LocalDate.parse(it) }
-            } else {
-                throw Exception("getTimeCapsuleDates response data is empty, $response")
+//            val response = apiService.getTimeCapsuleDates(yearMonth.year, yearMonth.monthValue)
+//            if (response.data != null) {
+//                return response.data.dates.map { LocalDate.parse(it) }
+//            } else {
+//                throw Exception("getTimeCapsuleDates response data is empty, $response")
+//            }
+
+            // mock response for paging test
+            return (1..28).map { i ->
+                LocalDate.of(yearMonth.year, yearMonth.month, i)
             }
         } catch (e: Exception) {
             throw Exception("getTimeCapsuleDates api fail, ${e.message}", e)
