@@ -1,5 +1,6 @@
 package com.emotionstorage.data.repoImpl
 
+import com.emotionstorage.data.dataSource.local.AttendanceClaimLocalDataSource
 import com.emotionstorage.data.dataSource.remote.AttendanceRemoteDataSource
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.AttendanceSummary
@@ -12,13 +13,19 @@ import javax.inject.Inject
 
 class AttendanceRepositoryImpl @Inject constructor(
     private val remote: AttendanceRemoteDataSource,
+    private val local: AttendanceClaimLocalDataSource,
 ) : AttendanceRepository {
     override fun getAttendanceSummary(): Flow<DataState<AttendanceSummary>> =
         flow {
             try {
+                val today = LocalDate.now()
+                val rewardDate = today.format(DateTimeFormatter.ISO_DATE)
+                val lastClaim = local.getLastClaimDate()
+                val claimedByLocal = (lastClaim == rewardDate)
+
                 val entity = remote.getAttendanceStatus()
                 val streak = entity.streak.toInt()
-                val alreadyClaimedToday = entity.isAttendedToday
+                val alreadyClaimedToday = entity.isAttendedToday || claimedByLocal
 
                 val days = buildDays(streak, alreadyClaimedToday)
                 val canClaimToday = !alreadyClaimedToday
@@ -35,10 +42,21 @@ class AttendanceRepositoryImpl @Inject constructor(
                 val today = LocalDate.now()
                 val rewardDate = today.format(DateTimeFormatter.ISO_DATE)
 
+                if (local.getLastClaimDate() == rewardDate) {
+                    val entity = remote.getAttendanceStatus()
+                    val streak = entity.streak.toInt()
+                    val alreadyClaimedToday = true
+                    val days = buildDays(streak, alreadyClaimedToday)
+                    emit(DataState.Success(AttendanceSummary(days, canClaimToday = false)))
+                    return@flow
+                }
+
                 val entity = remote.requestAttendance(rewardDate)
+
+                local.setLastClaimDate(rewardDate)
+
                 val streak = entity.streak.toInt()
                 val alreadyClaimedToday = entity.isAttendedToday
-
                 val days = buildDays(streak, alreadyClaimedToday)
                 val canClaimToday = !alreadyClaimedToday
 
