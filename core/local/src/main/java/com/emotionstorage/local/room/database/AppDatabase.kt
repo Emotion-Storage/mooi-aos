@@ -3,8 +3,10 @@ package com.emotionstorage.local.room.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.emotionstorage.local.model.FavoriteTimeCapsuleRemoteKeyLocal
 import com.emotionstorage.local.model.SessionLocal
 import com.emotionstorage.local.model.TimeCapsuleLocal
+import com.emotionstorage.local.model.TimeCapsuleRemoteKeyLocal
 import com.emotionstorage.local.model.UserLocal
 import com.emotionstorage.local.room.DtoConverter
 import com.emotionstorage.local.room.dao.FavoriteTimeCapsuleRemoteKeyDao
@@ -27,7 +29,13 @@ object AppDatabaseConstant {
 }
 
 @Database(
-    entities = [UserLocal::class, SessionLocal::class, TimeCapsuleLocal::class],
+    entities = [
+        UserLocal::class,
+        SessionLocal::class,
+        TimeCapsuleLocal::class,
+        TimeCapsuleRemoteKeyLocal::class,
+        FavoriteTimeCapsuleRemoteKeyLocal::class
+    ],
     version = AppDatabaseConstant.VERSION,
 )
 @TypeConverters(
