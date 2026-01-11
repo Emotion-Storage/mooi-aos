@@ -33,12 +33,9 @@ interface TimeCapsuleDao {
         ORDER BY
             CASE WHEN :sortBy = 'latest' THEN createdAt END DESC,
             CASE WHEN :sortBy = 'favorite' THEN favoriteAt END DESC
-    """
+    """,
     )
-    fun favoritePagingSource(
-        sortBy: String
-    ): PagingSource<Int, TimeCapsuleLocal>
-
+    fun favoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleLocal>
 
     @Query(
         """
@@ -57,7 +54,7 @@ interface TimeCapsuleDao {
         """
         DELETE FROM time_capsule
         WHERE isFavorite = 1
-        """
+        """,
     )
     suspend fun clearFavorites()
 

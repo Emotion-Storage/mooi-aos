@@ -8,8 +8,6 @@ data class FavoriteTimeCapsuleRemoteKeyEntity(
     val lastUpdated: Long,
 ) {
     companion object {
-        fun generateQueryKey(
-            sortBy: String
-        ) = "favorite-$sortBy"
+        fun generateQueryKey(sortBy: String) = "favorite-$sortBy"
     }
 }

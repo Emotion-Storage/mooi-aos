@@ -55,7 +55,6 @@ abstract class LocalDataSourceModule {
         impl: FavoriteTimeCapsuleRemoteKeyLocalDataSourceImpl,
     ): FavoriteTimeCapsuleRemoteKeyLocalDataSource
 
-
     @Binds
     @Singleton
     abstract fun bindNotificationPermissionDataSource(

@@ -7,20 +7,18 @@ import com.emotionstorage.local.room.dao.FavoriteTimeCapsuleRemoteKeyDao
 import javax.inject.Inject
 
 class FavoriteTimeCapsuleRemoteKeyLocalDataSourceImpl @Inject constructor(
-    private val dao: FavoriteTimeCapsuleRemoteKeyDao
+    private val dao: FavoriteTimeCapsuleRemoteKeyDao,
 ) : FavoriteTimeCapsuleRemoteKeyLocalDataSource {
     override suspend fun remoteKeyById(
         id: Long,
-        queryKey: String
+        queryKey: String,
     ): FavoriteTimeCapsuleRemoteKeyEntity? =
         dao.remoteKeyById(id, queryKey)?.let { FavoriteTimeCapsuleRemoteKeyMapper.toEntity(it) }
 
     override suspend fun insertAll(keys: List<FavoriteTimeCapsuleRemoteKeyEntity>) =
         dao.insertAll(keys.map { FavoriteTimeCapsuleRemoteKeyMapper.toLocal(it) })
 
-    override suspend fun clearByQueryKey(queryKey: String) =
-        dao.clearByQueryKey(queryKey)
+    override suspend fun clearByQueryKey(queryKey: String) = dao.clearByQueryKey(queryKey)
 
-    override suspend fun lastUpdated(queryKey: String): Long? =
-        dao.lastUpdated(queryKey)
+    override suspend fun lastUpdated(queryKey: String): Long? = dao.lastUpdated(queryKey)
 }

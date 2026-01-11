@@ -5,7 +5,6 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import com.emotionstorage.local.room.database.AppDatabaseConstant
 
-
 /**
  *  queryKey = "favorite-$sortBy"
  */

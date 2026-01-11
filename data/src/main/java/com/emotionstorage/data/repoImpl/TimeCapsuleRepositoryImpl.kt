@@ -88,19 +88,20 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         }
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> {
-        return Pager(
+    override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> =
+        Pager(
             config =
                 PagingConfig(
                     pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
                 ),
-            remoteMediator = FavoriteTimeCapsuleRemoteMediator(
-                timeCapsuleRemote = timeCapsuleRemote,
-                timeCapsuleLocal = timeCapsuleLocal,
-                favoriteRemoteKeyLocal = favoriteRemoteKeyLocal,
-                sortBy = sortBy.value,
-            ),
+            remoteMediator =
+                FavoriteTimeCapsuleRemoteMediator(
+                    timeCapsuleRemote = timeCapsuleRemote,
+                    timeCapsuleLocal = timeCapsuleLocal,
+                    favoriteRemoteKeyLocal = favoriteRemoteKeyLocal,
+                    sortBy = sortBy.value,
+                ),
             pagingSourceFactory = {
                 timeCapsuleLocal.getFavoritePagingSource(sortBy.value)
             },
@@ -109,7 +110,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 TimeCapsuleMapper.toDomain(entity)
             }
         }
-    }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedTimeCapsules(
