@@ -19,5 +19,7 @@ interface TimeCapsuleLocalDataSource {
         endDate: LocalDate,
     ): Boolean
 
+    suspend fun clearFavorites(): Boolean
+
     suspend fun clearAll(): Boolean
 }

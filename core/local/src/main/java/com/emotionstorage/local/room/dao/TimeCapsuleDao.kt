@@ -39,6 +39,14 @@ interface TimeCapsuleDao {
         endDate: LocalDateTime,
     )
 
+    @Query(
+        """
+        DELETE FROM time_capsule
+        WHERE isFavorite = 1
+        """
+    )
+    suspend fun clearFavorites()
+
     @Query("DELETE FROM time_capsule")
     suspend fun clearAll()
 }

@@ -57,6 +57,16 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun clearFavorites(): Boolean{
+        try {
+            timeCapsuleDao.clearFavorites()
+            return true
+        } catch (e: Exception) {
+            Logger.e("clearFavorites error: $e")
+            return false
+        }
+    }
+
     override suspend fun clearAll(): Boolean {
         try {
             timeCapsuleDao.clearAll()
