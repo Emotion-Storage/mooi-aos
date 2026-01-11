@@ -31,8 +31,8 @@ interface TimeCapsuleDao {
         SELECT * FROM time_capsule
         WHERE isFavorite = 1
         ORDER BY
-            CASE WHEN :sortBy = 'createdAt' THEN createdAt END DESC,
-            CASE WHEN :sortBy = 'favoriteAt' THEN favoriteAt END DESC
+            CASE WHEN :sortBy = 'latest' THEN createdAt END DESC,
+            CASE WHEN :sortBy = 'favorite' THEN favoriteAt END DESC
     """
     )
     fun favoritePagingSource(
