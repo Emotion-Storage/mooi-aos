@@ -230,8 +230,7 @@ class AIChatViewModel @Inject constructor(
                                         nextTurnScore >= quitTriggerTurn
 
                                 state.copy(
-                                    messages =
-                                        if (isComplete) state.messages else state.messages + message,
+                                    messages = state.messages.upsertById(message),
                                     gaugeScore = nextGauge,
                                     chatProgress = newProgress,
                                     canCreateTimesCapsule = canCreate,
@@ -262,16 +261,14 @@ class AIChatViewModel @Inject constructor(
     private fun handleSendMessage(message: String) =
         intent {
             if (message.isBlank() || state.isWaitingReply) return@intent
-            val newMessage =
-                ChatMessage(
+            val outgoing =
+                ChatMessage.newClientMessage(
                     roomId = state.roomId,
-                    source = ChatMessage.MessageSource.CLIENT,
                     content = message,
                 )
-
             reduce {
                 state.copy(
-                    messages = state.messages + newMessage,
+                    messages = state.messages + outgoing,
                     isWaitingReply = true,
                     isMooiTyping = true,
                 )
@@ -279,11 +276,7 @@ class AIChatViewModel @Inject constructor(
 
             sendChatMessage(
                 state.roomId,
-                ChatMessage(
-                    roomId = state.roomId,
-                    source = ChatMessage.MessageSource.CLIENT,
-                    content = message,
-                ),
+                outgoing,
             ).collect { result ->
                 when (result) {
                     is DataState.Success -> {
@@ -296,7 +289,9 @@ class AIChatViewModel @Inject constructor(
 
                         reduce {
                             state.copy(
-                                messages = state.messages.filterNot { it == newMessage },
+                                messages = state.messages.filterNot { it.clientId == outgoing.clientId },
+                                isWaitingReply = false,
+                                isMooiTyping = false,
                             )
                         }
                     }
@@ -411,4 +406,31 @@ class AIChatViewModel @Inject constructor(
 
             postSideEffect(AIChatSideEffect.NavigateBack)
         }
+
+    private fun List<ChatMessage>.upsertById(incomingMessage: ChatMessage): List<ChatMessage> {
+        val idx = indexOfFirst { it.clientId == incomingMessage.clientId && it.source == incomingMessage.source }
+        if (idx == -1) return this + incomingMessage
+
+        val existing = this[idx]
+
+        val mergedContent =
+            when {
+                incomingMessage.isComplete -> incomingMessage.content
+                incomingMessage.content.startsWith(existing.content) -> incomingMessage.content
+                existing.content.length >= incomingMessage.content.length &&
+                    incomingMessage.content.isNotBlank() -> existing.content
+                else -> existing.content + incomingMessage.content
+            }
+
+        val merged =
+            existing.copy(
+                content = mergedContent,
+                isComplete = existing.isComplete || incomingMessage.isComplete,
+                gaugeScore = incomingMessage.gaugeScore ?: existing.gaugeScore,
+                turnCountScore = incomingMessage.turnCountScore ?: existing.turnCountScore,
+                timestamp = incomingMessage.timestamp,
+            )
+
+        return toMutableList().apply { set(idx, merged) }
+    }
 }

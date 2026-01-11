@@ -52,7 +52,7 @@ fun ChatMessageList(
                 .fillMaxSize(),
         state = listState,
     ) {
-        itemsIndexed(items = chatMessages, key = { _, item -> item.clientId }) { index, item ->
+        itemsIndexed(items = chatMessages, key = { _, item -> "${item.source.name}-${item.clientId}" }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 DateDivider(
