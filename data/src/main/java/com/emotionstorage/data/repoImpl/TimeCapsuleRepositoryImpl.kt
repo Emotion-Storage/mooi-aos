@@ -5,17 +5,17 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.emotionstorage.data.dataSource.local.FavoriteTimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
-import com.emotionstorage.data.pagingSource.GetFavoriteTimeCapsulesPagingSource
+import com.emotionstorage.data.remoteMediator.FavoriteTimeCapsuleRemoteMediator
 import com.emotionstorage.data.remoteMediator.TimeCapsuleRemoteMediator
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
@@ -30,6 +30,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     private val timeCapsuleRemote: TimeCapsuleRemoteDataSource,
     private val timeCapsuleLocal: TimeCapsuleLocalDataSource,
     private val remoteKeyLocal: TimeCapsuleRemoteKeyLocalDataSource,
+    private val favoriteRemoteKeyLocal: FavoriteTimeCapsuleRemoteKeyLocalDataSource,
 ) : TimeCapsuleRepository {
     override suspend fun setTimeCapsuleOpenAt(
         id: Long,
@@ -86,25 +87,23 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             DataState.Error(e)
         }
 
+    @OptIn(ExperimentalPagingApi::class)
     override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> {
-        Napier.d("getPagedFavoriteTimeCapsules: sortBy: $sortBy")
         return Pager(
             config =
                 PagingConfig(
                     pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
                 ),
-            pagingSourceFactory =
-                {
-                    GetFavoriteTimeCapsulesPagingSource(
-                        remoteDataSource = timeCapsuleRemote,
-                        sortBy =
-                            when (sortBy) {
-                                FavoriteSortBy.FAVORITE_AT -> "favorite"
-                                FavoriteSortBy.NEWEST -> "latest"
-                            },
-                    )
-                },
+            remoteMediator = FavoriteTimeCapsuleRemoteMediator(
+                timeCapsuleRemote = timeCapsuleRemote,
+                timeCapsuleLocal = timeCapsuleLocal,
+                favoriteRemoteKeyLocal = favoriteRemoteKeyLocal,
+                sortBy = sortBy.value,
+            ),
+            pagingSourceFactory = {
+                timeCapsuleLocal.getFavoritePagingSource(sortBy.value)
+            },
         ).flow.map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)
