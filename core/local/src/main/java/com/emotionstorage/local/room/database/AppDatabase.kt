@@ -17,7 +17,7 @@ import com.emotionstorage.local.room.dao.UserDao
 
 object AppDatabaseConstant {
     const val NAME = "mooi-room-database"
-    const val VERSION = 4
+    const val VERSION = 5
 
     object TableName {
         const val USER_TABLE = "user"

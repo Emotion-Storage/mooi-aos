@@ -6,6 +6,7 @@ import com.emotionstorage.local.room.database.AppDatabase
 import com.emotionstorage.local.room.database.AppDatabaseConstant
 import com.emotionstorage.local.room.migration.Migration2to3
 import com.emotionstorage.local.room.migration.Migration3to4
+import com.emotionstorage.local.room.migration.Migration4to5
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,7 +28,7 @@ internal object RoomModule {
                 AppDatabase::class.java,
                 AppDatabaseConstant.NAME,
             ).fallbackToDestructiveMigration(false)
-            .addMigrations(Migration2to3, Migration3to4)
+            .addMigrations(Migration2to3, Migration3to4, Migration4to5)
             .build()
 
     @Provides
