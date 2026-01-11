@@ -18,6 +18,7 @@ object ChatRoomMessagesMapper {
                         response.roomWithChats.chats.map { chat ->
                             ChatMessageEntity(
                                 id = chat.id,
+                                clientId = chat.clientId,
                                 sender = chat.sender,
                                 message = chat.message,
                                 chatTime = chat.chatTime,
