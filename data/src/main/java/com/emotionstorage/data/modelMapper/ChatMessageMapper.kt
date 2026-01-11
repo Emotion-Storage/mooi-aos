@@ -16,6 +16,7 @@ object ChatMessageMapper {
             .map { chat ->
                 ChatMessage(
                     id = chat.id.toString(),
+                    clientId = chat.clientId,
                     roomId = roomId,
                     source = toMessageSource(chat.sender),
                     content = chat.message,

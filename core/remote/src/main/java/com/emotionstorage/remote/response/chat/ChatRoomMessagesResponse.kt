@@ -21,6 +21,7 @@ data class RoomWithChatsResponse(
 @Serializable
 data class ChatMessagesResponse(
     val id: Long,
+    val clientId: String,
     val sender: String,
     val message: String,
     val chatTime: String,
