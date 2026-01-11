@@ -11,6 +11,11 @@ interface TimeCapsuleLocalDataSource {
         endDate: LocalDate,
     ): PagingSource<Int, TimeCapsuleEntity>
 
+    fun getFavoritePagingSource(
+        sortBy: String,
+    ): PagingSource<Int, TimeCapsuleEntity>
+
+
     suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean
 
     suspend fun clearByCondition(

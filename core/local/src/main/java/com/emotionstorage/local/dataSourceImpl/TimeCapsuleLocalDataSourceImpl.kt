@@ -30,10 +30,19 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         endDate: LocalDate,
     ): PagingSource<Int, TimeCapsuleEntity> {
         return timeCapsuleDao
-            .pagingSource(
+            .favoritePagingSource(
                 status = status,
                 startDate = startDate.atStartOfDay(),
                 endDate = endDate.atTime(LocalTime.MAX),
+            ).mapValue {
+                TimeCapsuleMapper.toData(it)
+            }
+    }
+
+    override fun getFavoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleEntity> {
+        return timeCapsuleDao
+            .favoritePagingSource(
+                sortBy = sortBy,
             ).mapValue {
                 TimeCapsuleMapper.toData(it)
             }
