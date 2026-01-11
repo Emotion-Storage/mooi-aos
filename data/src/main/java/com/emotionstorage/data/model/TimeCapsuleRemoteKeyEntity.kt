@@ -1,6 +1,6 @@
 package com.emotionstorage.data.model
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class TimeCapsuleRemoteKeyEntity(
     val id: Long,
@@ -12,8 +12,8 @@ data class TimeCapsuleRemoteKeyEntity(
     companion object {
         fun generateQueryKey(
             status: String,
-            startDate: LocalDateTime,
-            endDate: LocalDateTime,
+            startDate: LocalDate,
+            endDate: LocalDate,
         ) =
             "$status-$startDate-$endDate"
     }
