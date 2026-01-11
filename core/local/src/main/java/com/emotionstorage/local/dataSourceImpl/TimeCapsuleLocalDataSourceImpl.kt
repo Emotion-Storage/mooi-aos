@@ -1,11 +1,9 @@
 package com.emotionstorage.local.dataSourceImpl
 
-import androidx.paging.PagingSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import com.emotionstorage.local.modelMapper.TimeCapsuleMapper
+import com.emotionstorage.local.modelMapper.TimeCapsuleLocalMapper
 import com.emotionstorage.local.room.dao.TimeCapsuleDao
-import com.emotionstorage.local.util.mapValue
 import com.orhanobut.logger.Logger
 import java.time.LocalDate
 import java.time.LocalTime
@@ -16,36 +14,12 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
 ) : TimeCapsuleLocalDataSource {
     override suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean {
         try {
-            timeCapsuleDao.upsertAll(timeCapsules.map { TimeCapsuleMapper.toLocal(it) })
+            timeCapsuleDao.upsertAll(timeCapsules.map { TimeCapsuleLocalMapper.toLocal(it) })
             return true
         } catch (e: Exception) {
             Logger.e("saveTimeCapsules error: $e")
             return false
         }
-    }
-
-    override fun getPagingSource(
-        status: String,
-        startDate: LocalDate,
-        endDate: LocalDate,
-    ): PagingSource<Int, TimeCapsuleEntity> {
-        return timeCapsuleDao
-            .pagingSource(
-                status = status,
-                startDate = startDate.atStartOfDay(),
-                endDate = endDate.atTime(LocalTime.MAX),
-            ).mapValue {
-                TimeCapsuleMapper.toData(it)
-            }
-    }
-
-    override fun getFavoritePagingSource(sortBy: String): PagingSource<Int, TimeCapsuleEntity> {
-        return timeCapsuleDao
-            .favoritePagingSource(
-                sortBy = sortBy,
-            ).mapValue {
-                TimeCapsuleMapper.toData(it)
-            }
     }
 
     override suspend fun clearByCondition(

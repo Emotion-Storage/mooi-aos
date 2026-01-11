@@ -1,17 +1,12 @@
 package com.emotionstorage.data.repoImpl
 
 import androidx.paging.ExperimentalPagingApi
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.emotionstorage.data.dataSource.local.FavoriteTimeCapsuleRemoteKeyLocalDataSource
+import com.emotionstorage.data.dataSource.local.PagedTimeCapsuleDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
-import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
-import com.emotionstorage.data.remoteMediator.FavoriteTimeCapsuleRemoteMediator
-import com.emotionstorage.data.remoteMediator.TimeCapsuleRemoteMediator
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.repo.FavoriteSortBy
@@ -24,20 +19,17 @@ import java.time.LocalDateTime
 import java.time.YearMonth
 import javax.inject.Inject
 
-private const val PAGE_SIZE = 15
-
 class TimeCapsuleRepositoryImpl @Inject constructor(
-    private val timeCapsuleRemote: TimeCapsuleRemoteDataSource,
-    private val timeCapsuleLocal: TimeCapsuleLocalDataSource,
-    private val remoteKeyLocal: TimeCapsuleRemoteKeyLocalDataSource,
-    private val favoriteRemoteKeyLocal: FavoriteTimeCapsuleRemoteKeyLocalDataSource,
+    private val timeCapsuleRemoteDataSource: TimeCapsuleRemoteDataSource,
+    private val timeCapsuleLocalDataSource: TimeCapsuleLocalDataSource,
+    private val pagedTimeCapsuleDataSource: PagedTimeCapsuleDataSource,
 ) : TimeCapsuleRepository {
     override suspend fun setTimeCapsuleOpenAt(
         id: Long,
         openAt: LocalDateTime,
     ): DataState<Unit> =
         try {
-            if (timeCapsuleRemote.postTimeCapsuleOpenAt(id, openAt)) {
+            if (timeCapsuleRemoteDataSource.postTimeCapsuleOpenAt(id, openAt)) {
                 DataState.Success(Unit)
             } else {
                 DataState.Error(Throwable("Failed to set time capsule open at"))
@@ -50,7 +42,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                if (timeCapsuleRemote.patchTimeCapsuleOpen(id)) {
+                if (timeCapsuleRemoteDataSource.patchTimeCapsuleOpen(id)) {
                     emit(DataState.Success(Unit))
                 } else {
                     emit(DataState.Error(Throwable("Failed to open time capsule")))
@@ -69,7 +61,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                emit(DataState.Success(timeCapsuleRemote.patchTimeCapsuleNote(id, note)))
+                emit(DataState.Success(timeCapsuleRemoteDataSource.patchTimeCapsuleNote(id, note)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
@@ -82,34 +74,19 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         isFavorite: Boolean,
     ): DataState<Boolean> =
         try {
-            timeCapsuleRemote.patchTimeCapsuleFavorite(id, isFavorite)
+            timeCapsuleRemoteDataSource.patchTimeCapsuleFavorite(id, isFavorite)
         } catch (e: Exception) {
             DataState.Error(e)
         }
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsule>> =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = PAGE_SIZE,
-                    enablePlaceholders = false,
-                ),
-            remoteMediator =
-                FavoriteTimeCapsuleRemoteMediator(
-                    timeCapsuleRemote = timeCapsuleRemote,
-                    timeCapsuleLocal = timeCapsuleLocal,
-                    favoriteRemoteKeyLocal = favoriteRemoteKeyLocal,
-                    sortBy = sortBy.value,
-                ),
-            pagingSourceFactory = {
-                timeCapsuleLocal.getFavoritePagingSource(sortBy.value)
-            },
-        ).flow.map {
+        pagedTimeCapsuleDataSource.getPagedFavoriteTimeCapsules(sortBy).map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)
             }
         }
+
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedTimeCapsules(
@@ -117,35 +94,18 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         startDate: LocalDate,
         endDate: LocalDate,
     ): Flow<PagingData<TimeCapsule>> =
-        Pager(
-            config =
-                PagingConfig(
-                    pageSize = PAGE_SIZE,
-                    enablePlaceholders = false,
-                ),
-            remoteMediator =
-                TimeCapsuleRemoteMediator(
-                    timeCapsuleRemote = timeCapsuleRemote,
-                    timeCapsuleLocal = timeCapsuleLocal,
-                    remoteKeyLocal = remoteKeyLocal,
-                    status = status,
-                    startDate = startDate,
-                    endDate = endDate,
-                ),
-            pagingSourceFactory = {
-                timeCapsuleLocal.getPagingSource(status, startDate, endDate)
-            },
-        ).flow.map {
+        pagedTimeCapsuleDataSource.getPagedTimeCapsules(status, startDate, endDate).map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)
             }
         }
 
+
     override suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>> =
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                val result = timeCapsuleRemote.getTimeCapsuleDetail(id)
+                val result = timeCapsuleRemoteDataSource.getTimeCapsuleDetail(id)
                 emit(DataState.Success(TimeCapsuleMapper.toDomain(result)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
@@ -158,7 +118,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                emit(DataState.Success(timeCapsuleRemote.getTimeCapsuleDates(yearMonth)))
+                emit(DataState.Success(timeCapsuleRemoteDataSource.getTimeCapsuleDates(yearMonth)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
@@ -170,7 +130,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         flow {
             emit(DataState.Loading(isLoading = true))
             try {
-                emit(DataState.Success(timeCapsuleRemote.deleteTimeCapsule(id)))
+                emit(DataState.Success(timeCapsuleRemoteDataSource.deleteTimeCapsule(id)))
             } catch (e: Exception) {
                 emit(DataState.Error(e))
             } finally {
@@ -180,7 +140,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
 
     override suspend fun createTimeCapsule(id: Long): DataState<Long> =
         try {
-            val timeCapsuleId = timeCapsuleRemote.createTimeCapsule(id)
+            val timeCapsuleId = timeCapsuleRemoteDataSource.createTimeCapsule(id)
             DataState.Success(timeCapsuleId)
         } catch (e: Exception) {
             DataState.Error(e)

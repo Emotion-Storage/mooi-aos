@@ -1,5 +1,6 @@
 package com.emotionstorage.remote.di
 
+import com.emotionstorage.data.dataSource.local.PagedTimeCapsuleDataSource
 import com.emotionstorage.data.dataSource.remote.AttendanceRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
@@ -25,6 +26,7 @@ import com.emotionstorage.remote.dataSourceImpl.HomeRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.KakaoRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.MyPageRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.NotificationSettingRemoteDataSourceImpl
+import com.emotionstorage.remote.dataSourceImpl.PagedTimeCapsuleDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.ReissueRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.TimeCapsuleRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.UserRemoteDataSourceImpl
@@ -37,6 +39,10 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RemoteDataSourceModule {
+    @Binds
+    @Singleton
+    abstract fun bindPagedTimeCapsuleDataSource(impl: PagedTimeCapsuleDataSourceImpl): PagedTimeCapsuleDataSource
+
     @Binds
     @Singleton
     abstract fun bindAuthRemoteDataSource(impl: AuthRemoteDataSourceImpl): AuthRemoteDataSource

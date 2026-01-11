@@ -1,49 +1,53 @@
-package com.emotionstorage.data.remoteMediator
+package com.emotionstorage.remote.remoteMediator
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
-import com.emotionstorage.data.dataSource.local.FavoriteTimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
+import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
-import com.emotionstorage.data.model.FavoriteTimeCapsuleRemoteKeyEntity
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import io.github.aakira.napier.Napier
+import com.emotionstorage.data.model.TimeCapsuleRemoteKeyEntity
+import com.emotionstorage.local.model.TimeCapsuleLocal
+import com.orhanobut.logger.Logger
+import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
-class FavoriteTimeCapsuleRemoteMediator(
+class TimeCapsuleRemoteMediator(
     private val timeCapsuleRemote: TimeCapsuleRemoteDataSource,
     private val timeCapsuleLocal: TimeCapsuleLocalDataSource,
-    private val favoriteRemoteKeyLocal: FavoriteTimeCapsuleRemoteKeyLocalDataSource,
-    private val sortBy: String,
-) : RemoteMediator<Int, TimeCapsuleEntity>() {
-    private val queryKey = FavoriteTimeCapsuleRemoteKeyEntity.generateQueryKey(sortBy)
+    private val remoteKeyLocal: TimeCapsuleRemoteKeyLocalDataSource,
+    private val startDate: LocalDate,
+    private val endDate: LocalDate,
+    private val status: String,
+) : RemoteMediator<Int, TimeCapsuleLocal>() {
+    private val queryKey = TimeCapsuleRemoteKeyEntity.generateQueryKey(status, startDate, endDate)
 
     override suspend fun initialize(): InitializeAction {
         val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
-        val lastUpdated = favoriteRemoteKeyLocal.lastUpdated(queryKey)
+        val lastUpdated = remoteKeyLocal.lastUpdated(queryKey)
 
         return if (lastUpdated != null &&
             System.currentTimeMillis() - lastUpdated <= cacheTimeout
         ) {
             // Cached data is up-to-date, so there is no need to re-fetch
             // from the network.
-            Napier.d("initialize - Cache timeout not reached; InitializeAction.SKIP_INITIAL_REFRESH")
+            Logger.d("initialize - Cache timeout not reached; InitializeAction.SKIP_INITIAL_REFRESH")
             InitializeAction.SKIP_INITIAL_REFRESH
         } else {
             // Need to refresh cached data from network; returning
             // LAUNCH_INITIAL_REFRESH here will also block RemoteMediator's
             // APPEND and PREPEND from running until REFRESH succeeds.
-            Napier.d("initialize - Cache timeout reached; InitializeAction.LAUNCH_INITIAL_REFRESH")
+            Logger.d("initialize - Cache timeout reached; InitializeAction.LAUNCH_INITIAL_REFRESH")
             InitializeAction.LAUNCH_INITIAL_REFRESH
         }
     }
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, TimeCapsuleEntity>,
+        state: PagingState<Int, TimeCapsuleLocal>,
     ): MediatorResult {
         return try {
             val page =
@@ -61,7 +65,7 @@ class FavoriteTimeCapsuleRemoteMediator(
                             state.lastItemOrNull()
                                 ?: return MediatorResult.Success(false)
 
-                        val remoteKey = favoriteRemoteKeyLocal.remoteKeyById(lastItem.id, queryKey)
+                        val remoteKey = remoteKeyLocal.remoteKeyById(lastItem.id, queryKey)
 
                         remoteKey?.nextPage
                             ?: return MediatorResult.Success(true)
@@ -69,27 +73,29 @@ class FavoriteTimeCapsuleRemoteMediator(
                 }
 
             // get from remote
-            val favoriteTimeCapsules =
-                timeCapsuleRemote.getFavoriteTimeCapsules(
-                    sortBy = sortBy,
+            val timeCapsules =
+                timeCapsuleRemote.getTimeCapsules(
+                    status = status,
+                    startDate = startDate,
+                    endDate = endDate,
                     page = page,
                     limit = state.config.pageSize,
                 )
-            Napier.d("load - favorite timeCapsules: $favoriteTimeCapsules")
+            Logger.d("load - timeCapsules: $timeCapsules")
 
-            val endOfPaginationReached = favoriteTimeCapsules.isEmpty()
+            val endOfPaginationReached = timeCapsules.isEmpty()
 
             // clear cache on refresh
             if (loadType == LoadType.REFRESH) {
-                favoriteRemoteKeyLocal.clearByQueryKey(queryKey)
-                timeCapsuleLocal.clearFavorites()
+                remoteKeyLocal.clearByQueryKey(queryKey)
+                timeCapsuleLocal.clearByCondition(status, startDate, endDate)
             }
 
             // save to cache
             val now = System.currentTimeMillis()
             val keys =
-                favoriteTimeCapsules.map {
-                    FavoriteTimeCapsuleRemoteKeyEntity(
+                timeCapsules.map {
+                    TimeCapsuleRemoteKeyEntity(
                         id = it.id,
                         queryKey = queryKey,
                         prevPage = if (page == 1) null else page - 1,
@@ -97,8 +103,8 @@ class FavoriteTimeCapsuleRemoteMediator(
                         lastUpdated = now,
                     )
                 }
-            favoriteRemoteKeyLocal.insertAll(keys)
-            timeCapsuleLocal.saveTimeCapsules(favoriteTimeCapsules)
+            remoteKeyLocal.insertAll(keys)
+            timeCapsuleLocal.saveTimeCapsules(timeCapsules)
 
             MediatorResult.Success(endOfPaginationReached)
         } catch (e: Exception) {
