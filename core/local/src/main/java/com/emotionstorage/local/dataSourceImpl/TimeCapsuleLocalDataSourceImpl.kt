@@ -35,7 +35,6 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
         startDate: LocalDateTime,
         endDate: LocalDateTime,
     ): PagingSource<Int, TimeCapsuleEntity> {
-        Logger.d("getPagingSource called - status: $status, startDate: $startDate, endDate: $endDate")
         return timeCapsuleDao.pagingSource(
             status = status,
             startDate = startDate,
@@ -44,6 +43,21 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
             TimeCapsuleMapper.toData(it)
         }
     }
+
+    override suspend fun clearByCondition(status: String, startDate: LocalDateTime, endDate: LocalDateTime): Boolean {
+        try {
+            timeCapsuleDao.clearByCondition(
+                status = status,
+                startDate = startDate,
+                endDate = endDate,
+            )
+            return true
+        } catch (e: Exception) {
+            Logger.e("clearByCondition error: $e")
+            return false
+        }
+    }
+
 
     override suspend fun clearAll(): Boolean {
         try {

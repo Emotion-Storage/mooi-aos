@@ -14,5 +14,11 @@ interface TimeCapsuleLocalDataSource {
 
     suspend fun saveTimeCapsules(timeCapsules: List<TimeCapsuleEntity>): Boolean
 
+    suspend fun clearByCondition(
+        status: String,
+        startDate: LocalDateTime,
+        endDate: LocalDateTime,
+    ): Boolean
+
     suspend fun clearAll(): Boolean
 }
