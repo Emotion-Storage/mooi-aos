@@ -16,15 +16,9 @@ data class TimeCapsuleEntity(
     val updatedAt: LocalDateTime,
     val openAt: LocalDateTime? = null,
     val favoriteAt: LocalDateTime? = null,
-    val pageData: PageData? = null,
 ) {
     data class Emotion(
         val emotion: String,
         val percentage: Float? = null,
-    )
-
-    data class PageData(
-        val page: Int,
-        val hasNextPage: Boolean,
     )
 }
