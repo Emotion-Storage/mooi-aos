@@ -13,7 +13,9 @@ import com.emotionstorage.local.modelMapper.TimeCapsuleMapper
 import com.emotionstorage.local.room.dao.TimeCapsuleDao
 import com.emotionstorage.local.util.mapValue
 import com.orhanobut.logger.Logger
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import javax.inject.Inject
 
 class TimeCapsuleLocalDataSourceImpl @Inject constructor(
@@ -32,24 +34,24 @@ class TimeCapsuleLocalDataSourceImpl @Inject constructor(
 
     override fun getPagingSource(
         status: String,
-        startDate: LocalDateTime,
-        endDate: LocalDateTime,
+        startDate: LocalDate,
+        endDate: LocalDate,
     ): PagingSource<Int, TimeCapsuleEntity> {
         return timeCapsuleDao.pagingSource(
             status = status,
-            startDate = startDate,
-            endDate = endDate,
+            startDate = startDate.atStartOfDay(),
+            endDate = endDate.atTime(LocalTime.MAX),
         ).mapValue {
             TimeCapsuleMapper.toData(it)
         }
     }
 
-    override suspend fun clearByCondition(status: String, startDate: LocalDateTime, endDate: LocalDateTime): Boolean {
+    override suspend fun clearByCondition(status: String, startDate: LocalDate, endDate: LocalDate): Boolean {
         try {
             timeCapsuleDao.clearByCondition(
                 status = status,
-                startDate = startDate,
-                endDate = endDate,
+                startDate = startDate.atStartOfDay(),
+                endDate = endDate.atTime(LocalTime.MAX),
             )
             return true
         } catch (e: Exception) {
