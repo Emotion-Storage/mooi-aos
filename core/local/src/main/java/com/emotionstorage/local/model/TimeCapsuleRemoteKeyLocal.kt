@@ -14,7 +14,7 @@ import com.emotionstorage.local.room.database.AppDatabaseConstant
         Index("queryKey"),
     ],
 )
-data class TimeCapsuleRemoteKey(
+data class TimeCapsuleRemoteKeyLocal(
     @PrimaryKey
     val id: Long,
     val queryKey: String,

@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.emotionstorage.local.model.TimeCapsuleRemoteKey
+import com.emotionstorage.local.model.TimeCapsuleRemoteKeyLocal
 
 @Dao
 interface TimeCapsuleRemoteKeyDao {
@@ -18,10 +18,10 @@ interface TimeCapsuleRemoteKeyDao {
     suspend fun remoteKeyById(
         id: Long,
         queryKey: String,
-    ): TimeCapsuleRemoteKey?
+    ): TimeCapsuleRemoteKeyLocal?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(keys: List<TimeCapsuleRemoteKey>)
+    suspend fun insertAll(keys: List<TimeCapsuleRemoteKeyLocal>)
 
     @Query("DELETE FROM time_capsule_remote_key WHERE queryKey = :queryKey")
     suspend fun clearByQueryKey(queryKey: String)

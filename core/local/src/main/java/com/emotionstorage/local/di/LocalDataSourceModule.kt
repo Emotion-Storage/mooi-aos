@@ -5,6 +5,7 @@ import com.emotionstorage.data.dataSource.local.FcmLocalDataSource
 import com.emotionstorage.data.dataSource.local.NotificationPermissionLocalDataSource
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
+import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.local.UserLocalDataSource
 import com.emotionstorage.data.repoImpl.AiChatIntroRepositoryImpl
 import com.emotionstorage.domain.repo.ChatIntroRepository
@@ -13,6 +14,7 @@ import com.emotionstorage.local.dataSourceImpl.FcmLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.NotificationPermissionLocalLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.SessionLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.TimeCapsuleLocalDataSourceImpl
+import com.emotionstorage.local.dataSourceImpl.TimeCapsuleRemoteKeyLocalDataSourceImpl
 import com.emotionstorage.local.dataSourceImpl.UserLocalDataSourceImpl
 import dagger.Binds
 import dagger.Module
@@ -38,6 +40,12 @@ abstract class LocalDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindTimeCapsuleLocalDataSource(impl: TimeCapsuleLocalDataSourceImpl): TimeCapsuleLocalDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindTimeCapsuleRemoteKeyLocalDataSource(
+        impl: TimeCapsuleRemoteKeyLocalDataSourceImpl,
+    ): TimeCapsuleRemoteKeyLocalDataSource
 
     @Binds
     @Singleton
