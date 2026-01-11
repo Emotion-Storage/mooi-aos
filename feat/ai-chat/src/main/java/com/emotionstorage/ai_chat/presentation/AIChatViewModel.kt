@@ -415,11 +415,22 @@ class AIChatViewModel @Inject constructor(
 
         val mergedContent =
             when {
-                incomingMessage.isComplete -> incomingMessage.content
-                incomingMessage.content.startsWith(existing.content) -> incomingMessage.content
+                incomingMessage.isComplete -> {
+                    incomingMessage.content
+                }
+
+                incomingMessage.content.startsWith(existing.content) -> {
+                    incomingMessage.content
+                }
+
                 existing.content.length >= incomingMessage.content.length &&
-                    incomingMessage.content.isNotBlank() -> existing.content
-                else -> existing.content + incomingMessage.content
+                    incomingMessage.content.isNotBlank() -> {
+                    existing.content
+                }
+
+                else -> {
+                    existing.content + incomingMessage.content
+                }
             }
 
         val merged =
