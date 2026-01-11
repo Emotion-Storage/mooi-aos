@@ -12,22 +12,37 @@ import javax.inject.Inject
 class AttendanceClaimLocalDataSourceImpl @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : AttendanceClaimLocalDataSource {
-    override suspend fun getLastClaimDate(): String? = context.attendanceDataStore.data.first()[KEY_LAST_CLAIM_DATE]
+    private val Context.attendanceDataStore by preferencesDataStore(name = "attendance_prefs")
+
+    override suspend fun getLastClaimDate(): String? =
+        try {
+            context.attendanceDataStore.data.first()[KEY_LAST_CLAIM_DATE]
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
 
     override suspend fun setLastClaimDate(date: String) {
-        context.attendanceDataStore.edit { prefs ->
-            prefs[KEY_LAST_CLAIM_DATE] = date
+        try {
+            context.attendanceDataStore.edit { prefs ->
+                prefs[KEY_LAST_CLAIM_DATE] = date
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     override suspend fun clear() {
-        context.attendanceDataStore.edit { prefs ->
-            prefs.remove(KEY_LAST_CLAIM_DATE)
+        try {
+            context.attendanceDataStore.edit { prefs ->
+                prefs.remove(KEY_LAST_CLAIM_DATE)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
     companion object {
-        private val Context.attendanceDataStore by preferencesDataStore(name = "attendance_prefs")
         private val KEY_LAST_CLAIM_DATE = stringPreferencesKey("last_claim_date")
     }
 }
