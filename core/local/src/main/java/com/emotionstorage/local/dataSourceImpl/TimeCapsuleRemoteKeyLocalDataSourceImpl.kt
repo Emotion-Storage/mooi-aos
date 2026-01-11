@@ -11,20 +11,19 @@ class TimeCapsuleRemoteKeyLocalDataSourceImpl @Inject constructor(
 ) : TimeCapsuleRemoteKeyLocalDataSource {
     override suspend fun remoteKeyById(
         id: Long,
-        queryKey: String
+        queryKey: String,
     ): TimeCapsuleRemoteKeyEntity? =
         dao.remoteKeyById(id, queryKey)?.let {
             TimeCapsuleRemoteKeyMapper.toEntity(
-                it
+                it,
             )
         }
-
 
     override suspend fun insertAll(keys: List<TimeCapsuleRemoteKeyEntity>) {
         dao.insertAll(
             keys.map {
                 TimeCapsuleRemoteKeyMapper.toLocal(it)
-            }
+            },
         )
     }
 
@@ -32,6 +31,5 @@ class TimeCapsuleRemoteKeyLocalDataSourceImpl @Inject constructor(
         dao.clearByQueryKey(queryKey)
     }
 
-    override suspend fun lastUpdated(queryKey: String): Long? =
-        dao.lastUpdated(queryKey)
+    override suspend fun lastUpdated(queryKey: String): Long? = dao.lastUpdated(queryKey)
 }

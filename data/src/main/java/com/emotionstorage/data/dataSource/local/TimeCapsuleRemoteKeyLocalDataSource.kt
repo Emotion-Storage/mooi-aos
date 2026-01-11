@@ -12,6 +12,5 @@ interface TimeCapsuleRemoteKeyLocalDataSource {
 
     suspend fun clearByQueryKey(queryKey: String)
 
-
     suspend fun lastUpdated(queryKey: String): Long?
 }

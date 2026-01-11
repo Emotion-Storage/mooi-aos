@@ -22,7 +22,6 @@ class TimeCapsuleRemoteMediator(
     private val endDate: LocalDate,
     private val status: String,
 ) : RemoteMediator<Int, TimeCapsuleEntity>() {
-
     private val queryKey = TimeCapsuleRemoteKeyEntity.generateQueryKey(status, startDate, endDate)
 
     override suspend fun initialize(): InitializeAction {
@@ -61,8 +60,9 @@ class TimeCapsuleRemoteMediator(
                     }
 
                     LoadType.APPEND -> {
-                        val lastItem = state.lastItemOrNull()
-                            ?: return MediatorResult.Success(false)
+                        val lastItem =
+                            state.lastItemOrNull()
+                                ?: return MediatorResult.Success(false)
 
                         val remoteKey = remoteKeyLocal.remoteKeyById(lastItem.id, queryKey)
 
@@ -91,15 +91,16 @@ class TimeCapsuleRemoteMediator(
 
             // save to cache
             val now = System.currentTimeMillis()
-            val keys = timeCapsules.map{
-                TimeCapsuleRemoteKeyEntity(
-                    id = it.id,
-                    queryKey = queryKey,
-                    prevPage = if (page == 1) null else page - 1,
-                    nextPage = if (endOfPaginationReached) null else page + 1,
-                    lastUpdated = now,
-                )
-            }
+            val keys =
+                timeCapsules.map {
+                    TimeCapsuleRemoteKeyEntity(
+                        id = it.id,
+                        queryKey = queryKey,
+                        prevPage = if (page == 1) null else page - 1,
+                        nextPage = if (endOfPaginationReached) null else page + 1,
+                        lastUpdated = now,
+                    )
+                }
             remoteKeyLocal.insertAll(keys)
             timeCapsuleLocal.saveTimeCapsules(timeCapsules)
 

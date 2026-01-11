@@ -8,12 +8,11 @@ import com.emotionstorage.local.model.TimeCapsuleRemoteKeyLocal
 
 @Dao
 interface TimeCapsuleRemoteKeyDao {
-
     @Query(
         """
         SELECT * FROM time_capsule_remote_key
         WHERE id = :id AND queryKey = :queryKey
-    """
+    """,
     )
     suspend fun remoteKeyById(
         id: Long,
@@ -31,7 +30,7 @@ interface TimeCapsuleRemoteKeyDao {
         SELECT MAX(lastUpdated)
         FROM time_capsule_remote_key
         WHERE queryKey = :queryKey
-    """
+    """,
     )
     suspend fun lastUpdated(queryKey: String): Long?
 }

@@ -18,7 +18,7 @@ interface TimeCapsuleDao {
         WHERE status = :status
           AND historyDate BETWEEN :startDate AND :endDate
         ORDER BY historyDate DESC
-    """
+    """,
     )
     fun pagingSource(
         status: String,
@@ -31,7 +31,7 @@ interface TimeCapsuleDao {
         DELETE FROM time_capsule
         WHERE status = :status
           AND historyDate BETWEEN :startDate AND :endDate
-    """
+    """,
     )
     suspend fun clearByCondition(
         status: String,

@@ -14,8 +14,6 @@ data class TimeCapsuleRemoteKeyEntity(
             status: String,
             startDate: LocalDate,
             endDate: LocalDate,
-        ) =
-            "$status-$startDate-$endDate"
+        ) = "$status-$startDate-$endDate"
     }
 }
-

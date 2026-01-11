@@ -46,4 +46,3 @@ interface TimeCapsuleRemoteDataSource {
 
     suspend fun createTimeCapsule(id: Long): Long
 }
-

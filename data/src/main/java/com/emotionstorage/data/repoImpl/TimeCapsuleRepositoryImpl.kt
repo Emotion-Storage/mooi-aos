@@ -30,8 +30,7 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
     private val timeCapsuleRemote: TimeCapsuleRemoteDataSource,
     private val timeCapsuleLocal: TimeCapsuleLocalDataSource,
     private val remoteKeyLocal: TimeCapsuleRemoteKeyLocalDataSource,
-
-    ) : TimeCapsuleRepository {
+) : TimeCapsuleRepository {
     override suspend fun setTimeCapsuleOpenAt(
         id: Long,
         openAt: LocalDateTime,
@@ -118,32 +117,30 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
         status: String,
         startDate: LocalDate,
         endDate: LocalDate,
-    ): Flow<PagingData<TimeCapsule>> {
-        return Pager(
+    ): Flow<PagingData<TimeCapsule>> =
+        Pager(
             config =
                 PagingConfig(
                     pageSize = PAGE_SIZE,
                     enablePlaceholders = false,
                 ),
-            remoteMediator = TimeCapsuleRemoteMediator(
-                timeCapsuleRemote = timeCapsuleRemote,
-                timeCapsuleLocal = timeCapsuleLocal,
-                remoteKeyLocal = remoteKeyLocal,
-                status = status,
-                startDate = startDate,
-                endDate = endDate,
-            ),
+            remoteMediator =
+                TimeCapsuleRemoteMediator(
+                    timeCapsuleRemote = timeCapsuleRemote,
+                    timeCapsuleLocal = timeCapsuleLocal,
+                    remoteKeyLocal = remoteKeyLocal,
+                    status = status,
+                    startDate = startDate,
+                    endDate = endDate,
+                ),
             pagingSourceFactory = {
                 timeCapsuleLocal.getPagingSource(status, startDate, endDate)
-            }
+            },
         ).flow.map {
             it.map { entity ->
                 TimeCapsuleMapper.toDomain(entity)
             }
         }
-    }
-
-
 
     override suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>> =
         flow {
