@@ -12,6 +12,8 @@ import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
@@ -19,7 +21,6 @@ import javax.inject.Inject
 
 data class FavoriteTimeCapsulesState(
     val sortOrder: FavoriteSortBy = FavoriteSortBy.NEWEST,
-    val timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
 )
 
 sealed class FavoriteTimeCapsulesAction {
@@ -40,6 +41,19 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
             FavoriteTimeCapsulesState(),
         )
 
+    // manage paging flow outside of orbit state
+    val pagingFlow: Flow<PagingData<TimeCapsuleItemState>> =
+        container.stateFlow
+            .map { it.sortOrder }
+            .distinctUntilChanged()
+            .flatMapLatest { sortOrder ->
+                getFavoriteTimeCapsules(sortOrder)
+                    .map { pagingData ->
+                        pagingData.map(TimeCapsuleMapper::toUi)
+                    }
+            }
+            .cachedIn(viewModelScope)
+
     fun onAction(action: FavoriteTimeCapsulesAction) {
         when (action) {
             is FavoriteTimeCapsulesAction.Init -> {
@@ -52,24 +66,20 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
         }
     }
 
-    private fun handleInit() = setSortOrder(FavoriteSortBy.NEWEST)
+    private fun handleInit() = intent {
+        reduce {
+            state.copy(
+                sortOrder = FavoriteSortBy.NEWEST,
+            )
+        }
+    }
 
-    private fun handleSetSortOrder(sortOrderLabel: String) = setSortOrder(FavoriteSortBy.getByLabel(sortOrderLabel))
-
-    private fun setSortOrder(sortOrder: FavoriteSortBy) =
+    private fun handleSetSortOrder(sortOrderLabel: String) =
         intent {
             try {
                 reduce {
                     state.copy(
-                        sortOrder = sortOrder,
-                        timeCapsulesFlow =
-                            getFavoriteTimeCapsules(sortOrder)
-                                .cachedIn(viewModelScope)
-                                .map { pagingData ->
-                                    pagingData.map {
-                                        TimeCapsuleMapper.toUi(it)
-                                    }
-                                },
+                        sortOrder = FavoriteSortBy.getByLabel(sortOrderLabel),
                     )
                 }
             } catch (e: Exception) {

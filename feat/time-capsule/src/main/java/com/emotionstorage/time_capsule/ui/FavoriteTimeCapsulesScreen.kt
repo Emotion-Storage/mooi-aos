@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.domain.repo.FavoriteSortBy
@@ -39,9 +40,9 @@ import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewMode
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteAction
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteFailToast
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteSuccessToast
-import com.emotionstorage.time_capsule.presentation.ToggleFavoriteState
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
+import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
@@ -62,31 +63,10 @@ fun FavoriteTimeCapsulesScreen(
     val context = LocalContext.current
 
     val state = viewModel.container.stateFlow.collectAsState()
-    val timeCapsulesState = state.value.timeCapsulesFlow?.collectAsLazyPagingItems()
-    val favoriteState = favoriteViewModel.container.stateFlow.collectAsState()
+    val timeCapsulesState = viewModel.pagingFlow.collectAsLazyPagingItems()
 
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
-
-    // init state
-    LaunchedEffect(Unit) {
-        // initial load, triggered on launch
-        viewModel.onAction(FavoriteTimeCapsulesAction.Init)
-    }
-
-    // init favorite state
-    LaunchedEffect(timeCapsulesState?.itemSnapshotList) {
-        val favorites =
-            timeCapsulesState
-                ?.itemSnapshotList
-                ?.items
-                ?.filter { it.isFavorite }
-                ?.map { it.id } ?: emptyList()
-
-        favoriteViewModel.onAction(
-            ToggleFavoriteAction.Init(favorites),
-        )
-    }
 
     // collect favorite side effect
     LaunchedEffect("init") {
@@ -120,7 +100,7 @@ fun FavoriteTimeCapsulesScreen(
         snackState = snackState,
         snackbarController = snackbarController,
         state = state.value,
-        favoriteState = favoriteState.value,
+        timeCapsulesState = timeCapsulesState,
         onAction = viewModel::onAction,
         onFavoriteAction = favoriteViewModel::onAction,
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
@@ -133,15 +113,13 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     snackState: SnackbarHostState = SnackbarHostState(),
     snackbarController: AppSnackbarController? = null,
+    timeCapsulesState: LazyPagingItems<TimeCapsuleItemState>? = null,
     state: FavoriteTimeCapsulesState = FavoriteTimeCapsulesState(),
-    favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
     onAction: (FavoriteTimeCapsulesAction) -> Unit = {},
     onFavoriteAction: (ToggleFavoriteAction) -> Unit = {},
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val timeCapsules = state.timeCapsulesFlow?.collectAsLazyPagingItems()
-
     Scaffold(
         modifier =
             modifier
@@ -193,8 +171,8 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     )
                 }
             }
-            if (timeCapsules != null && timeCapsules.loadState.refresh is LoadState.NotLoading) {
-                if (timeCapsules.itemCount == 0) {
+            if (timeCapsulesState != null && timeCapsulesState.loadState.refresh is LoadState.NotLoading) {
+                if (timeCapsulesState.itemCount == 0) {
                     item {
                         Text(
                             modifier = Modifier.padding(top = 224.dp),
@@ -222,8 +200,8 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                             )
                         }
                     }
-                    items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                        timeCapsules[it]?.let {
+                    items(count = timeCapsulesState.itemCount, key = { timeCapsulesState[it]?.id ?: it }) {
+                        timeCapsulesState[it]?.let {
                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                 Row(
                                     modifier =
@@ -239,10 +217,10 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                                     )
                                     RoundedToggleButton(
                                         modifier = Modifier.size(36.dp),
-                                        isSelected = favoriteState.favoriteIds.contains(it.id),
+                                        isSelected = it.isFavorite,
                                         onSelect = {
                                             onFavoriteAction(
-                                                ToggleFavoriteAction.OnToggle(it.id),
+                                                ToggleFavoriteAction.OnToggle(it.id, !it.isFavorite),
                                             )
                                         },
                                     )
