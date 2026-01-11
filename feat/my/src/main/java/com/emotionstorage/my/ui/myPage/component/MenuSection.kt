@@ -158,7 +158,8 @@ fun EmailMenuItem(
         modifier =
             Modifier
                 .padding(horizontal = 18.dp, vertical = 16.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .clickable(onClick = onCopyClick),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(
@@ -185,10 +186,7 @@ fun EmailMenuItem(
             modifier =
                 Modifier
                     .align(Alignment.Bottom)
-                    .offset(x = 0.dp, y = (-6).dp)
-                    .clickable {
-                        onCopyClick()
-                    },
+                    .offset(x = 0.dp, y = (-6).dp),
         )
     }
 }

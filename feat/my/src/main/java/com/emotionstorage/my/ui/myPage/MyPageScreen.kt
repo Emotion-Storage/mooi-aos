@@ -1,6 +1,8 @@
 package com.emotionstorage.my.ui.myPage
 
 import android.content.ClipData
+import android.os.Build
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -157,6 +160,7 @@ private fun StatelessMyPageScreen(
 //    navToNotificationSetting: () -> Unit = {},
 ) {
     val clipboardManager = LocalClipboard.current
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
     Scaffold(
@@ -211,6 +215,12 @@ private fun StatelessMyPageScreen(
                                     ),
                                 ),
                             )
+
+                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+                                Toast
+                                    .makeText(context, "이메일이 복사되었습니다.", Toast.LENGTH_SHORT)
+                                    .show()
+                            }
                         }
                     },
                     onTermsAndPrivacyClick = navToTermsAndPrivacy,
