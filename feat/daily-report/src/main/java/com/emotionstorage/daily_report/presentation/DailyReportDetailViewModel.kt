@@ -76,7 +76,7 @@ class DailyReportDetailViewModel @Inject constructor(
         subIntent {
             try {
                 openDailyReport.invoke(id)
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 Logger.e("openDailyReport onError: $e")
                 postSideEffect(DailyReportDetailSideEffect.ShowDailyReportError)
             }
