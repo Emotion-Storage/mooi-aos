@@ -12,7 +12,7 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import okio.IOException
+import java.io.IOException
 import javax.inject.Inject
 
 private val Context.attendanceDataStore by preferencesDataStore(name = "attendance_prefs")
@@ -36,8 +36,8 @@ class AttendanceClaimLocalDataSourceImpl @Inject constructor(
             }
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Exception) {
-            Logger.e("Failed setLastClaimDate")
+        } catch (e: IOException) {
+            Logger.e("Failed setLastClaimDate ${e.message}")
         }
     }
 
@@ -48,8 +48,8 @@ class AttendanceClaimLocalDataSourceImpl @Inject constructor(
             }
         } catch (e: CancellationException) {
             throw e
-        } catch (e: Exception) {
-            Logger.e("Failed clear preferences")
+        } catch (e: IOException) {
+            Logger.e("Failed clear preferences ${e.message}")
         }
     }
 
