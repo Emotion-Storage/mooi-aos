@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -42,8 +41,7 @@ fun ArrivedTimeCapsulesScreen(
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val context = LocalContext.current
-    val timeCapsulesState = viewModel.arrivedTimeCapsules.collectAsLazyPagingItems()
+    val timeCapsulesState = viewModel.pagingFlow.collectAsLazyPagingItems()
 
     StatelessArrivedTimeCapsulesScreen(
         modifier = modifier,

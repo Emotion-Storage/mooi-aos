@@ -19,7 +19,8 @@ import javax.inject.Inject
 class ArrivedTimeCapsulesViewModel @Inject constructor(
     getArrivedTimeCapsules: GetPagedArrivedTimeCapsulesUseCase,
 ) : ViewModel() {
-    val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
+    // manage paging flow outside of orbit state
+    val pagingFlow: Flow<PagingData<TimeCapsuleItemState>> =
         getArrivedTimeCapsules()
             .map { pagingData ->
                 pagingData.map {
