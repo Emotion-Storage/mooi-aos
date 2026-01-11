@@ -15,6 +15,9 @@ import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.viewmodel.container
@@ -31,7 +34,6 @@ data class CalendarState(
     val calendarTimeCapsuleDates: List<LocalDate> = emptyList(),
     val calendarSelectedDate: LocalDate? = null,
     // bottom sheet states
-    val timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
     val dailyReportId: Long? = null,
     val isNewDailyReport: Boolean = false,
 )
@@ -69,6 +71,20 @@ class CalendarViewModel @Inject constructor(
     ContainerHost<CalendarState, CalendarSideEffect> {
     override val container: Container<CalendarState, CalendarSideEffect> =
         container(CalendarState())
+
+    // manage paging flow outside of orbit state
+    val pagingFlow: Flow<PagingData<TimeCapsuleItemState>> =
+        container.stateFlow
+            .map { it.calendarSelectedDate }
+            .distinctUntilChanged()
+            .filterNotNull()
+            .flatMapLatest { date ->
+                getTimeCapsulesOfDate(date)
+                    .map { pagingData ->
+                        pagingData.map(TimeCapsuleMapper::toUi)
+                    }
+            }
+            .cachedIn(viewModelScope)
 
     fun onAction(action: CalendarAction) {
         when (action) {
@@ -144,33 +160,9 @@ class CalendarViewModel @Inject constructor(
             reduce {
                 state.copy(calendarSelectedDate = date)
             }
-            setTimeCapsulesFlow(date)
             setDailyReportState(date)
 
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
-        }
-
-    private suspend fun setTimeCapsulesFlow(date: LocalDate) =
-        subIntent {
-            try {
-                reduce {
-                    state.copy(
-                        timeCapsulesFlow =
-                            getTimeCapsulesOfDate(date)
-                                .cachedIn(viewModelScope)
-                                .map {
-                                    it.map { timeCapsule ->
-                                        TimeCapsuleMapper.toUi(timeCapsule)
-                                    }
-                                },
-                    )
-                }
-            } catch (e: Exception) {
-                Logger.e("CalendarViewModel: handleGetTimeCapsulesOfDate error: $e")
-                reduce {
-                    state.copy(timeCapsulesFlow = null)
-                }
-            }
         }
 
     private suspend fun setDailyReportState(date: LocalDate) =
@@ -202,7 +194,6 @@ class CalendarViewModel @Inject constructor(
             reduce {
                 state.copy(
                     calendarSelectedDate = null,
-                    timeCapsulesFlow = null,
                     dailyReportId = null,
                     isNewDailyReport = false,
                 )
