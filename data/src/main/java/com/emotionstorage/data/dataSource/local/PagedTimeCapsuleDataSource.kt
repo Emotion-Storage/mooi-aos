@@ -13,7 +13,5 @@ interface PagedTimeCapsuleDataSource {
         endDate: LocalDate,
     ): Flow<PagingData<TimeCapsuleEntity>>
 
-    fun getPagedFavoriteTimeCapsules(
-        sortBy: FavoriteSortBy,
-    ): Flow<PagingData<TimeCapsuleEntity>>
+    fun getPagedFavoriteTimeCapsules(sortBy: FavoriteSortBy): Flow<PagingData<TimeCapsuleEntity>>
 }

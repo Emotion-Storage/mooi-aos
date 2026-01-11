@@ -87,7 +87,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
-
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedTimeCapsules(
         status: String,
@@ -99,7 +98,6 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
                 TimeCapsuleMapper.toDomain(entity)
             }
         }
-
 
     override suspend fun getTimeCapsuleById(id: Long): Flow<DataState<TimeCapsule>> =
         flow {

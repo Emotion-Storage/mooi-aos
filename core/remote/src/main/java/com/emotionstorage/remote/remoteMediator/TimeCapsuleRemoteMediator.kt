@@ -7,7 +7,6 @@ import androidx.paging.RemoteMediator
 import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.local.TimeCapsuleRemoteKeyLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
-import com.emotionstorage.data.model.TimeCapsuleEntity
 import com.emotionstorage.data.model.TimeCapsuleRemoteKeyEntity
 import com.emotionstorage.local.model.TimeCapsuleLocal
 import com.orhanobut.logger.Logger

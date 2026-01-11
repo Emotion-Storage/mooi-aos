@@ -31,13 +31,13 @@ class PagedTimeCapsuleDataSourceImpl @Inject constructor(
     private val timeCapsuleLocal: TimeCapsuleLocalDataSource,
     private val remoteKeyLocal: TimeCapsuleRemoteKeyLocalDataSource,
     private val favoriteRemoteKeyLocal: FavoriteTimeCapsuleRemoteKeyLocalDataSource,
-) : PagedTimeCapsuleDataSource{
+) : PagedTimeCapsuleDataSource {
 
     @OptIn(ExperimentalPagingApi::class)
     override fun getPagedTimeCapsules(
         status: String,
         startDate: LocalDate,
-        endDate: LocalDate
+        endDate: LocalDate,
     ): Flow<PagingData<TimeCapsuleEntity>> =
         Pager<Int, TimeCapsuleLocal>(
             config =

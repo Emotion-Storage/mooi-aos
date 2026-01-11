@@ -34,7 +34,7 @@ object AppDatabaseConstant {
         SessionLocal::class,
         TimeCapsuleLocal::class,
         TimeCapsuleRemoteKeyLocal::class,
-        FavoriteTimeCapsuleRemoteKeyLocal::class
+        FavoriteTimeCapsuleRemoteKeyLocal::class,
     ],
     version = AppDatabaseConstant.VERSION,
 )
