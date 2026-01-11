@@ -45,9 +45,10 @@ interface TimeCapsuleRepository {
 
 enum class FavoriteSortBy(
     val label: String,
+    val value: String,
 ) {
-    NEWEST("최신 날짜순"),
-    FAVORITE_AT("즐겨찾기순"),
+    NEWEST("최신 날짜순", "latest"),
+    FAVORITE_AT("최근 담은순", "favorite"),
     ;
 
     companion object {
