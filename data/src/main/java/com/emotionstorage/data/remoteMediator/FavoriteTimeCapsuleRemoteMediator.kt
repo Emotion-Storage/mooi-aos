@@ -9,23 +9,21 @@ import com.emotionstorage.data.dataSource.local.TimeCapsuleLocalDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.model.FavoriteTimeCapsuleRemoteKeyEntity
 import com.emotionstorage.data.model.TimeCapsuleEntity
-import com.emotionstorage.data.model.TimeCapsuleRemoteKeyEntity
 import io.github.aakira.napier.Napier
-import java.time.LocalDate
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
 class FavoriteTimeCapsuleRemoteMediator(
     private val timeCapsuleRemote: TimeCapsuleRemoteDataSource,
     private val timeCapsuleLocal: TimeCapsuleLocalDataSource,
-    private val remoteKeyLocal: FavoriteTimeCapsuleRemoteKeyLocalDataSource,
+    private val favoriteRemoteKeyLocal: FavoriteTimeCapsuleRemoteKeyLocalDataSource,
     private val sortBy: String,
 ) : RemoteMediator<Int, TimeCapsuleEntity>() {
     private val queryKey = FavoriteTimeCapsuleRemoteKeyEntity.generateQueryKey(sortBy)
 
     override suspend fun initialize(): InitializeAction {
         val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
-        val lastUpdated = remoteKeyLocal.lastUpdated(queryKey)
+        val lastUpdated = favoriteRemoteKeyLocal.lastUpdated(queryKey)
 
         return if (lastUpdated != null &&
             System.currentTimeMillis() - lastUpdated <= cacheTimeout
@@ -63,7 +61,7 @@ class FavoriteTimeCapsuleRemoteMediator(
                             state.lastItemOrNull()
                                 ?: return MediatorResult.Success(false)
 
-                        val remoteKey = remoteKeyLocal.remoteKeyById(lastItem.id, queryKey)
+                        val remoteKey = favoriteRemoteKeyLocal.remoteKeyById(lastItem.id, queryKey)
 
                         remoteKey?.nextPage
                             ?: return MediatorResult.Success(true)
@@ -82,7 +80,7 @@ class FavoriteTimeCapsuleRemoteMediator(
 
             // clear cache on refresh
             if (loadType == LoadType.REFRESH) {
-                remoteKeyLocal.clearByQueryKey(queryKey)
+                favoriteRemoteKeyLocal.clearByQueryKey(queryKey)
                 timeCapsuleLocal.clearFavorites()
             }
 
@@ -98,7 +96,7 @@ class FavoriteTimeCapsuleRemoteMediator(
                         lastUpdated = now,
                     )
                 }
-            remoteKeyLocal.insertAll(keys)
+            favoriteRemoteKeyLocal.insertAll(keys)
             timeCapsuleLocal.saveTimeCapsules(timeCapsules)
 
             MediatorResult.Success(endOfPaginationReached)
