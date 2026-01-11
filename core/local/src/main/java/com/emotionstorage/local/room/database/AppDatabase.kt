@@ -7,8 +7,10 @@ import com.emotionstorage.local.model.SessionLocal
 import com.emotionstorage.local.model.TimeCapsuleLocal
 import com.emotionstorage.local.model.UserLocal
 import com.emotionstorage.local.room.DtoConverter
+import com.emotionstorage.local.room.dao.FavoriteTimeCapsuleRemoteKeyDao
 import com.emotionstorage.local.room.dao.SessionDao
 import com.emotionstorage.local.room.dao.TimeCapsuleDao
+import com.emotionstorage.local.room.dao.TimeCapsuleRemoteKeyDao
 import com.emotionstorage.local.room.dao.UserDao
 
 object AppDatabaseConstant {
@@ -20,6 +22,7 @@ object AppDatabaseConstant {
         const val SESSION_TABLE = "session"
         const val TIME_CAPSULE_TABLE = "time_capsule"
         const val TIME_CAPSULE_REMOTE_KEY_TABLE = "time_capsule_remote_key"
+        const val FAVORITE_TIME_CAPSULE_REMOTE_KEY_TABLE = "favorite_time_capsule_remote_key"
     }
 }
 
@@ -37,5 +40,7 @@ abstract class AppDatabase : RoomDatabase() {
 
     abstract fun timeCapsuleDao(): TimeCapsuleDao
 
-    abstract fun timeCapsuleRemoteKeyDao(): TimeCapsuleDao
+    abstract fun timeCapsuleRemoteKeyDao(): TimeCapsuleRemoteKeyDao
+
+    abstract fun favoriteTimeCapsuleRemoteKeyDao(): FavoriteTimeCapsuleRemoteKeyDao
 }
