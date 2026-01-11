@@ -20,6 +20,7 @@ class DailyReportRepositoryImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
+            Napier.e("getDailyReport error: $e")
             DataState.Error(e)
         }
 
@@ -31,6 +32,7 @@ class DailyReportRepositoryImpl @Inject constructor(
                 )
             }
         } catch (e: Exception) {
+            Napier.e("getDailyReport error: $e")
             DataState.Error(e)
         }
 
@@ -38,7 +40,7 @@ class DailyReportRepositoryImpl @Inject constructor(
         try {
             return remoteDataSource.openDailyReport(id)
         } catch (e: Exception) {
-            Napier.e("DailyReportRepositoryImpl: openDailyReport error: $e")
+            Napier.e("openDailyReport error: $e")
             return false
         }
     }

@@ -4,6 +4,7 @@ import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.model.DailyReportEntity
 import com.emotionstorage.remote.api.DailyReportApiService
 import com.emotionstorage.remote.modelMapper.DailyReportResponseMapper
+import com.orhanobut.logger.Logger
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
@@ -18,11 +19,13 @@ class DailyReportRemoteDataSourceImpl @Inject constructor(
                     date = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 )
             if (response.data != null) {
-                return DailyReportResponseMapper.toData(response.data!!)
+                return DailyReportResponseMapper.toData(response.data)
             } else {
+                Logger.e("getDailyReport response data is empty, $response")
                 throw Exception("getDailyReport response data is empty, $response")
             }
         } catch (e: Exception) {
+            Logger.e("getDailyReport error: $e")
             throw Exception("getDailyReport api fail", e)
         }
     }
@@ -32,11 +35,13 @@ class DailyReportRemoteDataSourceImpl @Inject constructor(
             val response =
                 apiService.getDailyReport(id)
             if (response.data != null) {
-                return DailyReportResponseMapper.toData(response.data!!)
+                return DailyReportResponseMapper.toData(response.data)
             } else {
+                Logger.e("getDailyReport response data is empty, $response")
                 throw Exception("getDailyReport response data is empty, $response")
             }
         } catch (e: Exception) {
+            Logger.e("getDailyReport api error: $e")
             throw Exception("getDailyReport api fail", e)
         }
     }
