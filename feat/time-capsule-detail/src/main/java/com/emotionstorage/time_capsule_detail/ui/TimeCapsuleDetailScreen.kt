@@ -21,18 +21,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.SaveChangesBeforeExitSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailViewModel
 import com.emotionstorage.time_capsule_detail.presentation.ToggleSingleFavoriteAction
 import com.emotionstorage.time_capsule_detail.presentation.ToggleSingleFavoriteSideEffect.ShowFavoriteFailToast
@@ -44,19 +44,19 @@ import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleEmotionComments
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleNote
 import com.emotionstorage.time_capsule_detail.ui.component.TimeCapsuleSummary
-import com.emotionstorage.time_capsule_detail.ui.modal.SaveChangesModal
 import com.emotionstorage.time_capsule_detail.ui.modal.DeleteTimeCapsuleModal
 import com.emotionstorage.time_capsule_detail.ui.modal.ExitTempTimeCapsuleModal
+import com.emotionstorage.time_capsule_detail.ui.modal.SaveChangesModal
 import com.emotionstorage.time_capsule_detail.ui.modal.TimeCapsuleExpiredModal
 import com.emotionstorage.time_capsule_detail.ui.modal.UnlockTimeCapsuleModal
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.HideKeyboard
-import com.emotionstorage.ui.component.toast.AppSnackbarHost
-import com.emotionstorage.ui.component.loading.LoadingScreen
-import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.appBar.TopAppBar
+import com.emotionstorage.ui.component.button.RoundedToggleButton
+import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.toast.AppSnackbarController
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -367,6 +367,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     expireAt = state.timeCapsule.expireAt,
                     status = state.timeCapsule.status,
                     isNewTimeCapsule = isNewTimeCapsule,
+                    saveNoteEnabled = state.isNoteChanged,
                     onSaveTimeCapsule = {
                         navToSaveTimeCapsule()
                     },
