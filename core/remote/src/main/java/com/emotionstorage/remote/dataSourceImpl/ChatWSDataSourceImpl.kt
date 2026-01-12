@@ -22,6 +22,7 @@ import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.subscribeText
 import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
 import java.time.Duration
+import java.util.UUID
 import javax.inject.Inject
 
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
@@ -30,6 +31,7 @@ class ChatWSDataSourceImpl @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWSDataSource {
     private val json = Json { ignoreUnknownKeys = true }
+    private var currentServerClientId: String? = null
 
     private val client =
         StompClient(
@@ -73,32 +75,40 @@ class ChatWSDataSourceImpl @Inject constructor(
                 flow {
                     raw
                         .lines()
-                        // 응답에 문제가 없다면 필요 없는 부분
-                        .map { it.replace("\uFFFD", "").trim() }
                         .filter { it.isNotBlank() }
                         .forEach { line ->
                             Logger.d("observeChatMessages() line: $line")
                             try {
                                 val dto = json.decodeFromString<ChatMessageResponse>(line)
                                 val isComplete = dto.messageType == "chat.complete"
-
                                 val content = dto.content.orEmpty()
-                                if (content.isBlank() && !isComplete) return@forEach
 
+                                if (content.isBlank() && !isComplete) return@forEach
                                 if (!isComplete) {
                                     delay(1500L)
                                 }
 
+                                // Server에서 내려오는 값이 없어 UUID로 식별
+                                val serverClientId =
+                                    currentServerClientId ?: UUID
+                                        .randomUUID()
+                                        .toString()
+                                        .also { currentServerClientId = it }
+
                                 emit(
-                                    ChatMessage(
+                                    ChatMessage.newServerMessage(
                                         roomId = roomId,
-                                        source = ChatMessage.MessageSource.SERVER,
+                                        clientId = serverClientId,
                                         content = content,
                                         gaugeScore = dto.gauge?.gaugeScore,
                                         turnCountScore = dto.gauge?.turnCountScore,
                                         isComplete = isComplete,
                                     ),
                                 )
+
+                                if (isComplete) {
+                                    currentServerClientId = null
+                                }
                             } catch (e: Exception) {
                                 Logger.e("observeChatMessages() decode failed. line=$line", e)
                             }

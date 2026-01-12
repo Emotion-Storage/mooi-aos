@@ -30,14 +30,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.common.toKorDateWithWeekDay
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.model.ChatMessage.MessageSource
-import com.emotionstorage.common.toKorDateWithWeekDay
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.LocalDateTime
-import com.emotionstorage.ui.R
 
 @Composable
 fun ChatMessageList(
@@ -52,7 +52,7 @@ fun ChatMessageList(
                 .fillMaxSize(),
         state = listState,
     ) {
-        itemsIndexed(items = chatMessages, key = { _, item -> item.id }) { index, item ->
+        itemsIndexed(items = chatMessages, key = { _, item -> "${item.source.name}-${item.clientId}" }) { index, item ->
             if (index == 0 || chatMessages[index - 1].timestamp.toLocalDate() != item.timestamp.toLocalDate()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 DateDivider(
@@ -251,6 +251,7 @@ private fun ChatMessageListPreview() {
         List(6, init = { it }).map { it ->
             ChatMessage(
                 roomId = 1L,
+                clientId = "1234",
                 source = if (it % 3 == 0) MessageSource.CLIENT else MessageSource.SERVER,
                 content = "안녕하세요",
                 timestamp = LocalDateTime.of(2025, 9, 2, 17, it, 1, 1),
@@ -261,6 +262,7 @@ private fun ChatMessageListPreview() {
             listOf(
                 ChatMessage(
                     roomId = 1L,
+                    clientId = "1234",
                     source = MessageSource.SERVER,
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
@@ -273,6 +275,7 @@ private fun ChatMessageListPreview() {
                     content = "안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요. 안녕하세요.",
                     timestamp = LocalDateTime.of(2025, 9, 3, 17, 1, 1, 1),
                     gaugeScore = 40,
+                    clientId = "1234",
                     turnCountScore = 6,
                 ),
             ) +
@@ -280,6 +283,7 @@ private fun ChatMessageListPreview() {
                 ChatMessage(
                     roomId = 1L,
                     source = if (it % 3 == 0) MessageSource.SERVER else MessageSource.CLIENT,
+                    clientId = "1234",
                     content = "안녕하세요",
                     timestamp = LocalDateTime.of(2025, 9, 4, 17, it, 1, 1),
                     gaugeScore = 60,
