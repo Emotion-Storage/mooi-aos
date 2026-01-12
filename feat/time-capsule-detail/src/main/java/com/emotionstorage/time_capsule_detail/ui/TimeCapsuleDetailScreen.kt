@@ -1,7 +1,9 @@
 package com.emotionstorage.time_capsule_detail.ui
 
+import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.platform.LocalContext
@@ -26,6 +29,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowChangeSavedToast
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
@@ -57,7 +61,9 @@ import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -96,6 +102,8 @@ fun TimeCapsuleDetailScreen(
             mutableStateOf(UnlockModalState())
         }
 
+    val scope = rememberCoroutineScope()
+
     // init states
     LaunchedEffect(id) {
         viewModel.onAction(TimeCapsuleDetailAction.Init(id))
@@ -131,6 +139,28 @@ fun TimeCapsuleDetailScreen(
                 is ShowUnlockModal -> {
                     setUnlockModalState(sideEffect.modalState)
                     setModalState(TimeCapsuleDetailModal.UNLOCK)
+                }
+
+                is ShowChangeSavedToast -> {
+                    setModalState(TimeCapsuleDetailModal.NONE)
+
+                    snackState.currentSnackbarData?.dismiss()
+
+                    scope.launch {
+                        snackbarController.showSnackbar(
+                            message = "나의 회고 일기가 저장되었어요.",
+                            iconResId = R.drawable.ic_success_filled,
+                        )
+                    }
+
+                    scope.launch {
+                        kotlinx.coroutines.delay(2000)
+                        snackState.currentSnackbarData?.dismiss()
+
+                        if (sideEffect.exitAfterSave) {
+                            navToBack()
+                        }
+                    }
                 }
             }
         }
@@ -242,7 +272,6 @@ fun TimeCapsuleDetailScreen(
                 },
                 onSave = {
                     viewModel.onAction(OnSaveNote(id, true))
-                    navToBack()
                 },
                 onDismiss = {
                     navToBack()
@@ -326,7 +355,14 @@ private fun StatelessTimeCapsuleDetailScreen(
                 AppSnackbarHost(
                     hostState = snackState,
                     customDataFlow = snackbarController?.currentData,
-                )
+                    gravity = Gravity.BOTTOM,
+                ) { message, iconId ->
+                    Toast(
+                        message = message,
+                        iconId = iconId,
+                        paddingValues = PaddingValues(horizontal = 25.dp, vertical = 16.dp),
+                    )
+                }
             },
         ) { innerPadding ->
             Column(

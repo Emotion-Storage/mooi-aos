@@ -5,18 +5,17 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
-import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.key.GetRequiredKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.SaveChangesBeforeExitSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
@@ -75,6 +74,10 @@ sealed class TimeCapsuleDetailSideEffect {
             val openAt: LocalDateTime = LocalDateTime.now(),
         )
     }
+
+    data class ShowChangeSavedToast(
+        val exitAfterSave: Boolean,
+    ) : TimeCapsuleDetailSideEffect()
 }
 
 @HiltViewModel
@@ -234,9 +237,10 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                         isNoteChanged = false,
                     )
                 }
-                if (exitAfterSave) {
-                    postSideEffect(SaveChangesBeforeExitSuccess)
-                }
+
+                postSideEffect(
+                    TimeCapsuleDetailSideEffect.ShowChangeSavedToast(exitAfterSave = exitAfterSave),
+                )
             },
             onError = { throwable, code, data ->
                 Logger.e("saveNote error: $throwable")
