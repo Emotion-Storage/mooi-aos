@@ -31,7 +31,6 @@ class ChatWSDataSourceImpl @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWSDataSource {
     private val json = Json { ignoreUnknownKeys = true }
-    private var currentServerClientId: String? = null
 
     private val client =
         StompClient(
@@ -89,26 +88,18 @@ class ChatWSDataSourceImpl @Inject constructor(
                                 }
 
                                 // Server에서 내려오는 값이 없어 UUID로 식별
-                                val serverClientId =
-                                    currentServerClientId ?: UUID
-                                        .randomUUID()
-                                        .toString()
-                                        .also { currentServerClientId = it }
+                                val chunkClientId = UUID.randomUUID().toString()
 
                                 emit(
                                     ChatMessage.newServerMessage(
                                         roomId = roomId,
-                                        clientId = serverClientId,
+                                        clientId = chunkClientId,
                                         content = content,
                                         gaugeScore = dto.gauge?.gaugeScore,
                                         turnCountScore = dto.gauge?.turnCountScore,
                                         isComplete = isComplete,
                                     ),
                                 )
-
-                                if (isComplete) {
-                                    currentServerClientId = null
-                                }
                             } catch (e: Exception) {
                                 Logger.e("observeChatMessages() decode failed. line=$line", e)
                             }
