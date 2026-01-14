@@ -59,17 +59,6 @@ class AgreeTermsViewModel @Inject constructor() :
 
         init {
             viewModelScope.launch {
-                pIsAllAgreed.collect { isAllAgree ->
-                    if (isAllAgree) {
-                        pIsTermAgreed.update { true }
-                        pIsPrivacyAgreed.update { true }
-                        pIsMarketingAgreed.update { true }
-                        pIsAgeAgreed.update { true }
-                    }
-                }
-            }
-
-            viewModelScope.launch {
                 combine(
                     pIsTermAgreed,
                     pIsPrivacyAgreed,
@@ -96,7 +85,15 @@ class AgreeTermsViewModel @Inject constructor() :
         }
 
         override fun onToggleAllAgreed() {
-            pIsAllAgreed.update { !it }
+            (!state.value.isAllAgreed).run{
+                pIsAllAgreed.update { this }
+                // update all terms
+                pIsTermAgreed.update { this }
+                pIsPrivacyAgreed.update { this }
+                pIsMarketingAgreed.update { this }
+                pIsAgeAgreed.update { this }
+            }
+
         }
 
         override fun onToggleTermAgreed() {
