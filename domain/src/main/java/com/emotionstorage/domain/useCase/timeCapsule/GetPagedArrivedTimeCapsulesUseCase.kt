@@ -12,11 +12,8 @@ class GetPagedArrivedTimeCapsulesUseCase @Inject constructor(
 ) {
     operator fun invoke(): Flow<PagingData<TimeCapsule>> =
         timeCapsuleRepository.getPagedTimeCapsules(
-            startDate = LocalDate.now(),
-            endDate = LocalDate.now().plusWeeks(3),
-            // test code:
-//            startDate = LocalDate.of(2024,1,1),
-//            endDate = LocalDate.of(2024,1,31),
+            startDate = LocalDate.now().minusWeeks(3),
+            endDate = LocalDate.now(),
             status = "arrived",
         )
 }

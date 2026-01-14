@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportByIdUseCase
 import com.emotionstorage.domain.useCase.dailyReport.OpenDailyReportUseCase
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
@@ -59,6 +60,7 @@ class DailyReportDetailViewModel @Inject constructor(
                     if (!it.isOpen) openNewReport(id)
                 },
                 onError = { throwable, _ ->
+                    Logger.e("getDailyReportById onError: $throwable")
                     reduce {
                         state.copy(
                             isLoading = false,
@@ -72,6 +74,11 @@ class DailyReportDetailViewModel @Inject constructor(
 
     private suspend fun openNewReport(id: Long) =
         subIntent {
-            openDailyReport.invoke(id)
+            try {
+                openDailyReport.invoke(id)
+            } catch (e: Exception) {
+                Logger.e("openDailyReport onError: $e")
+                postSideEffect(DailyReportDetailSideEffect.ShowDailyReportError)
+            }
         }
 }

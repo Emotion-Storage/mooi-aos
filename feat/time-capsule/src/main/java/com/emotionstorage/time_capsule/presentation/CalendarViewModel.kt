@@ -8,6 +8,7 @@ import androidx.paging.map
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.GetHasNewTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedTimeCapsulesOfDateUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
@@ -26,6 +27,7 @@ import javax.inject.Inject
 
 data class CalendarState(
     val keyCount: Int? = null,
+    val hasNewTimeCapsule: Boolean = false,
     // calendar states
     val calendarYearMonth: YearMonth = YearMonth.now(),
     val calendarTimeCapsuleDates: List<LocalDate> = emptyList(),
@@ -62,6 +64,7 @@ sealed class CalendarSideEffect {
 @HiltViewModel
 class CalendarViewModel @Inject constructor(
     private val getKeyCount: GetKeyCountUseCase,
+    private val getHasNewTimeCapsule: GetHasNewTimeCapsuleUseCase,
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetPagedTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
@@ -93,6 +96,7 @@ class CalendarViewModel @Inject constructor(
     private fun handleInitiate() =
         intent {
             initKeyCount()
+            initHasNewTimeCapsule()
             handleSelectCalendarYearMonth(YearMonth.from(LocalDate.now()))
         }
 
@@ -108,6 +112,24 @@ class CalendarViewModel @Inject constructor(
                     Logger.e("handleInitKey error: $throwable")
                     reduce {
                         state.copy(keyCount = null)
+                    }
+                },
+            )
+        }
+
+    private suspend fun initHasNewTimeCapsule() =
+        subIntent {
+            collectDataState(
+                flow = getHasNewTimeCapsule(),
+                onSuccess = { data ->
+                    reduce {
+                        state.copy(hasNewTimeCapsule = data)
+                    }
+                },
+                onError = { throwable, code, data ->
+                    Logger.e("handleInitHasNewTimeCapsule error: $throwable")
+                    reduce {
+                        state.copy(hasNewTimeCapsule = false)
                     }
                 },
             )
