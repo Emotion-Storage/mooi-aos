@@ -37,6 +37,7 @@ fun TimeCapsuleDetailActionButtons(
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = false,
     expireAt: LocalDateTime? = null,
+    saveNoteEnabled: Boolean = false,
 ) {
     Column(
         modifier = modifier.fillMaxWidth(),
@@ -55,6 +56,7 @@ fun TimeCapsuleDetailActionButtons(
             SaveNoteButton(
                 modifier = Modifier.padding(top = 85.dp),
                 onSaveNote = onSaveMindNote,
+                enabled = saveNoteEnabled,
             )
         }
         // delete button
@@ -119,6 +121,7 @@ private fun SaveTimeCapsuleButton(
 @Composable
 private fun SaveNoteButton(
     modifier: Modifier = Modifier,
+    enabled: Boolean = false,
     onSaveNote: () -> Unit = {},
 ) {
     Column(
@@ -128,6 +131,7 @@ private fun SaveNoteButton(
         CtaButton(
             modifier = Modifier.fillMaxWidth(),
             labelString = "변경사항 저장하기",
+            enabled = enabled,
             onClick = {
                 onSaveNote()
             },
