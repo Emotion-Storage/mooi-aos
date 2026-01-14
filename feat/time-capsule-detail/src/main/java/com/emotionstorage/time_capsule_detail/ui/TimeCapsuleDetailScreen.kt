@@ -29,11 +29,10 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailActi
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnSaveNote
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnUnlockTimeCapsule
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowChangeSavedToast
+import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.SaveChangesSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.DeleteTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.GetTimeCapsuleFail
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.OpenTimeCapsuleFail
-import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.SaveChangesBeforeExitSuccess
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailState
@@ -128,10 +127,6 @@ fun TimeCapsuleDetailScreen(
                     navToBack()
                 }
 
-                is SaveChangesBeforeExitSuccess -> {
-                    navToBack()
-                }
-
                 is DeleteTimeCapsuleSuccess -> {
                     navToBack()
                 }
@@ -141,7 +136,7 @@ fun TimeCapsuleDetailScreen(
                     setModalState(TimeCapsuleDetailModal.UNLOCK)
                 }
 
-                is ShowChangeSavedToast -> {
+                is SaveChangesSuccess -> {
                     setModalState(TimeCapsuleDetailModal.NONE)
 
                     snackState.currentSnackbarData?.dismiss()

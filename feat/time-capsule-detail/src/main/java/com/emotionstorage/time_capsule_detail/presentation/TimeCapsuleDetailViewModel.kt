@@ -63,8 +63,6 @@ sealed class TimeCapsuleDetailSideEffect {
 
     object DeleteTimeCapsuleSuccess : TimeCapsuleDetailSideEffect()
 
-    object SaveChangesBeforeExitSuccess : TimeCapsuleDetailSideEffect()
-
     data class ShowUnlockModal(
         val modalState: UnlockModalState,
     ) : TimeCapsuleDetailSideEffect() {
@@ -75,7 +73,7 @@ sealed class TimeCapsuleDetailSideEffect {
         )
     }
 
-    data class ShowChangeSavedToast(
+    data class SaveChangesSuccess(
         val exitAfterSave: Boolean,
     ) : TimeCapsuleDetailSideEffect()
 }
@@ -239,7 +237,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 }
 
                 postSideEffect(
-                    TimeCapsuleDetailSideEffect.ShowChangeSavedToast(exitAfterSave = exitAfterSave),
+                    TimeCapsuleDetailSideEffect.SaveChangesSuccess(exitAfterSave = exitAfterSave),
                 )
             },
             onError = { throwable, code, data ->
