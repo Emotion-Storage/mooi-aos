@@ -85,7 +85,7 @@ class AgreeTermsViewModel @Inject constructor() :
         }
 
         override fun onToggleAllAgreed() {
-            (!state.value.isAllAgreed).run{
+            (!state.value.isAllAgreed).run {
                 pIsAllAgreed.update { this }
                 // update all terms
                 pIsTermAgreed.update { this }
@@ -93,7 +93,6 @@ class AgreeTermsViewModel @Inject constructor() :
                 pIsMarketingAgreed.update { this }
                 pIsAgeAgreed.update { this }
             }
-
         }
 
         override fun onToggleTermAgreed() {
