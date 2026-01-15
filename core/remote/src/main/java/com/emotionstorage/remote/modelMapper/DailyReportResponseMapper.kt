@@ -16,23 +16,21 @@ internal object DailyReportResponseMapper {
                 response
                     .emotionChanges
                     .filter {
-                        // filter emotion changes with valid time format - HH:mm
                         try {
-                            val (h, m) = it.time.split(":")
-                            if (h.isBlank() || h.toInt() !in (0..24)) false
-                            if (m.isNotBlank() || m.toInt() !in (0..60)) false
-                            true
+                            // hh:mm
+                            val regex = "^(0\\d|1\\d|2[0-4])\\s*:\\s*(0\\d|[1-5]\\d|60)$".toRegex()
+                            regex.matches(it.time)
                         } catch (e: Exception) {
-                            Logger.e("Emotion log time format error: ${it.time}, $e")
+                            Logger.e("emotionChanges time parsing error: ${it.time}, $e")
                             false
                         }
                     }.filter {
-                        // filter emotion changes with valid label format - label (description)
                         try {
-                            val (label, desc) = it.label.split("(", ")").dropLast(1)
-                            !(label.isBlank() || desc.isBlank())
+                            // label (description)
+                            val regex = "^[^()]+ \\([^()]+\\)$".toRegex()
+                            regex.matches(it.label)
                         } catch (e: Exception) {
-                            Logger.e("Emotion log label format error: ${it.time}, $e")
+                            Logger.e("label parsing error: ${it.label}, $e")
                             false
                         }
                     }.map {
