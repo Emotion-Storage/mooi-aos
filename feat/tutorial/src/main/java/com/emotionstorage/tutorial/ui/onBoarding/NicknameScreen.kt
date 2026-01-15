@@ -33,6 +33,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.InputNicknameEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.tutorial.ui.component.OnBoardingTitle
+import com.emotionstorage.tutorial.ui.modal.OnBoardingExitModel
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.modal.Modal
@@ -59,14 +60,23 @@ fun NicknameScreen(
         if (nickname != null) viewModel.event.onNicknameChange(nickname)
     }
 
+    val (isExitModelOpen, setIsExitModelOpen) = remember { mutableStateOf(false) }
+
     StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
         event = viewModel.event,
         onNicknameInputComplete = onNicknameInputComplete,
+        onExit = { setIsExitModelOpen(true) },
         navToGenderBirth = navToGenderBirth,
-        navToBack = navToBack,
     )
+
+    if(isExitModelOpen) {
+        OnBoardingExitModel(
+            onDismissRequest = { setIsExitModelOpen(false) },
+            onExit = navToBack,
+        )
+    }
 }
 
 @Composable
@@ -75,16 +85,9 @@ private fun StatelessNicknameScreen(
     state: NicknameViewModel.State,
     event: InputNicknameEvent,
     onNicknameInputComplete: (nickname: String) -> Unit = {},
+    onExit: () -> Unit = {},
     navToGenderBirth: () -> Unit = {},
-    navToBack: () -> Unit = {},
 ) {
-    val (isExitModelOpen, setIsExitModelOpen) = remember { mutableStateOf(false) }
-    OnBoardingExitModel(
-        isModelOpen = isExitModelOpen,
-        onDismissRequest = { setIsExitModelOpen(false) },
-        onExit = navToBack,
-    )
-
     val focusManager = LocalFocusManager.current
     val imeVisible = WindowInsets.ime.getBottom(LocalDensity.current) > 0
 
@@ -94,13 +97,12 @@ private fun StatelessNicknameScreen(
                 .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
         topBar = {
-            val onBackClick = { setIsExitModelOpen(true) }
             TopAppBar(
                 showBackground = false,
                 showBackButton = true,
-                onBackClick = onBackClick,
+                onBackClick = onExit,
                 handleBackPress = true,
-                onHandleBackPress = onBackClick,
+                onHandleBackPress = onExit,
             )
         },
     ) { padding ->
@@ -182,24 +184,6 @@ private fun StatelessNicknameScreen(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun OnBoardingExitModel(
-    isModelOpen: Boolean = false,
-    onDismissRequest: () -> Unit = {},
-    onExit: () -> Unit = {},
-) {
-    if (isModelOpen) {
-        Modal(
-            topDescription = stringResource(tutorialR.string.on_boarding_exit_modal_desc),
-            title = stringResource(tutorialR.string.on_boarding_exit_modal_title),
-            confirmLabel = stringResource(tutorialR.string.on_boarding_exit_modal_confirm),
-            dismissLabel = stringResource(tutorialR.string.on_boarding_exit_modal_dismiss),
-            onDismissRequest = onDismissRequest,
-            onDismiss = onExit,
-        )
     }
 }
 
