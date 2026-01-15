@@ -59,20 +59,20 @@ fun NicknameScreen(
         if (nickname != null) viewModel.event.onNicknameChange(nickname)
     }
 
-    val (isExitModelOpen, setIsExitModelOpen) = remember { mutableStateOf(false) }
+    val (isExitModalOpen, setIsExitModalOpen) = remember { mutableStateOf(false) }
 
     StatelessNicknameScreen(
         modifier = modifier,
         state = viewModel.state.collectAsState().value,
         event = viewModel.event,
         onNicknameInputComplete = onNicknameInputComplete,
-        onExit = { setIsExitModelOpen(true) },
+        onExit = { setIsExitModalOpen(true) },
         navToGenderBirth = navToGenderBirth,
     )
 
-    if (isExitModelOpen) {
+    if (isExitModalOpen) {
         OnBoardingExitModal(
-            onDismissRequest = { setIsExitModelOpen(false) },
+            onDismissRequest = { setIsExitModalOpen(false) },
             onExit = navToBack,
         )
     }
