@@ -44,12 +44,11 @@ import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.bottomSheet.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.bottomSheet.ProposeQuitChatBottomSheet
-import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
+import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateAlert
 import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
-import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.delay
 

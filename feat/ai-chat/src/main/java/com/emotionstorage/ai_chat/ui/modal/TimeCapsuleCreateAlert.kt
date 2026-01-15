@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui.component
+package com.emotionstorage.ai_chat.ui.modal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
