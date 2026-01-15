@@ -29,6 +29,20 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 
+/**
+ * attendance_01
+ * - Case : 출석 보상
+ *     - 날짜 변경 후 앱 실행 -> 메인 진입 시 표출
+ *     - (1. 다른 화면에서 나간 후 백그라운드에서 복귀 시, 메인이 새로고침될 때 표출)
+ *     - (2. 다른 화면에 머무른 동안 날짜 변경 시, 메인으로 진입할 때 새로고침되며 표출)
+ * - 표시 화면
+ *     - 3.1 메인화면
+ * - CTA 및 이동
+ *     - [보상 받기] -> 팝업 닫힘 (출석 보상 원칙에 따른) 열쇠 보상 지급
+ * - 차단
+ *     - 뒤로가기(Android) X
+ *     - 배경 터치 X
+ */
 @Composable
 fun AttendanceRewardDialog(
     summary: AttendanceSummary,
