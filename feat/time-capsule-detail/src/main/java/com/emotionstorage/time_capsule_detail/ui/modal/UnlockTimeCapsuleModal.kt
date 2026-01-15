@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -62,6 +63,7 @@ fun UnlockTimeCapsuleModal(
     Modal(
         onDismissRequest = onDismissRequest,
         dismissOnClickOutside = false,
+        dismissOnBackPress = true,
         confirmLabel = if (canUnlock) "열쇠 ${requiredKeyCount}개 사용하기" else null,
         onConfirm = onConfirm,
         dismissLabel = if (canUnlock) "지금은 열지 않을래요." else "뒤로 가기",
@@ -70,6 +72,11 @@ fun UnlockTimeCapsuleModal(
         contentPadding = PaddingValues(top = 16.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
         verticalSpacing = if (canUnlock) 18.dp else 12.dp,
     ) {
+        // dismiss on back press
+        BackHandler {
+            onDismiss()
+        }
+
         ModalContent(
             keyCount = keyCount,
             requiredKeyCount = requiredKeyCount,
