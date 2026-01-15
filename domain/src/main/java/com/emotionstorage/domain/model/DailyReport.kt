@@ -1,9 +1,11 @@
 package com.emotionstorage.domain.model
 
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class DailyReport(
     val id: Long,
+    val date: LocalDate,
     val isOpen: Boolean = false,
     val summaries: List<String> = emptyList(),
     val keywords: List<String> = emptyList(),

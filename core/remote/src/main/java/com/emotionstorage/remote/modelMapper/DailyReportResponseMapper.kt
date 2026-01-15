@@ -3,7 +3,6 @@ package com.emotionstorage.remote.modelMapper
 import com.emotionstorage.data.model.DailyReportEntity
 import com.emotionstorage.remote.response.dailyReport.GetDailyReportResponse
 import com.orhanobut.logger.Logger
-import java.time.LocalDate
 
 internal object DailyReportResponseMapper {
     fun toData(response: GetDailyReportResponse): DailyReportEntity =
@@ -27,8 +26,7 @@ internal object DailyReportResponseMapper {
                             Logger.e("Emotion log time format error: ${it.time}, $e")
                             false
                         }
-                    }
-                    .filter {
+                    }.filter {
                         // filter emotion changes with valid label format - label (description)
                         try {
                             val (label, desc) = it.label.split("(", ")")

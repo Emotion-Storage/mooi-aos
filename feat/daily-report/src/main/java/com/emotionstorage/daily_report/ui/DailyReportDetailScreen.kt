@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +41,7 @@ import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
@@ -108,8 +108,7 @@ private fun StatelessDailyReportDetailScreen(
             TopAppBar(
                 title =
                     dailyReport
-                        .createdAt
-                        .toLocalDate()
+                        .date
                         .toKorDateWithWeekDay(),
                 showBackButton = true,
                 onBackClick = navToBack,
@@ -164,8 +163,7 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            )
-                            .padding(vertical = 15.dp, horizontal = 38.dp),
+                            ).padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -206,6 +204,7 @@ private fun DailyReportDetailScreenPreview() {
             dailyReport =
                 DailyReport(
                     id = 123L,
+                    date = LocalDate.now(),
                     summaries =
                         listOf(
                             "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
@@ -270,6 +269,7 @@ private fun DailyReportDetailScreenPreview2() {
             dailyReport =
                 DailyReport(
                     id = 123L,
+                    date = LocalDate.now(),
                     summaries =
                         listOf(
                             "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
