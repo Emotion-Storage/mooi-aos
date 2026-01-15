@@ -40,7 +40,7 @@ internal object DailyReportResponseMapper {
                         DailyReportEntity.EmotionLog(
                             emotion = label.trim(),
                             description = desc.trim(),
-                            time = response.createdAt.withHour(h.toInt()).withMinute(m.toInt()),
+                            time = response.createdAt.withHour(h.trim().toInt()).withMinute(m.trim().toInt()),
                         )
                     },
             stressScore = response.stressIndex,
