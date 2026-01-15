@@ -1,7 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 import kotlinx.coroutines.delay
 
 /**
@@ -60,7 +57,7 @@ fun TimeCapsuleSavedModal(
             dismissOnClickOutside = false,
             confirmLabel = "네, 확인했어요.",
             onConfirm = onConfirm,
-            contentPadding = PaddingValues(top = 9.dp, bottom = 28.dp, start = 27.dp, end = 27.dp)
+            contentPadding = PaddingValues(top = 9.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -69,8 +66,7 @@ fun TimeCapsuleSavedModal(
                 Image(
                     modifier = Modifier.size(82.dp, 67.dp),
                     painter = painterResource(id = R.drawable.graphic_ai_chat),
-                    contentDescription = null
-
+                    contentDescription = null,
                 )
                 Text(
                     modifier = Modifier.padding(top = 4.dp, bottom = 6.dp),

@@ -36,7 +36,6 @@ import com.emotionstorage.tutorial.ui.component.OnBoardingTitle
 import com.emotionstorage.tutorial.ui.modal.OnBoardingExitModel
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
-import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.text.TextInput
 import com.emotionstorage.ui.component.text.TextInputState
 import com.emotionstorage.ui.component.appBar.TopAppBar
@@ -71,7 +70,7 @@ fun NicknameScreen(
         navToGenderBirth = navToGenderBirth,
     )
 
-    if(isExitModelOpen) {
+    if (isExitModelOpen) {
         OnBoardingExitModel(
             onDismissRequest = { setIsExitModelOpen(false) },
             onExit = navToBack,

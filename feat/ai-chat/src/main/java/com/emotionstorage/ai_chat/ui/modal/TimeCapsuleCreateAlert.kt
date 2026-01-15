@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
 // TODO : Change To Toast
+
 /**
  * capsule_create_01
  * - Case : 대화 종료 가능 안내
