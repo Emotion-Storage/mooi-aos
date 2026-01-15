@@ -37,6 +37,7 @@ import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.appBar.TopAppBar
@@ -51,15 +52,13 @@ fun DailyReportDetailScreen(
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val (showErrorModal, setShowErrorModal) = remember { mutableStateOf(false) }
+
     LaunchedEffect(id) {
         viewModel.onAction(DailyReportDetailAction.Init(id))
     }
 
-    val (showErrorModal, setShowErrorModal) =
-        remember {
-            mutableStateOf(false)
-        }
-    LaunchedEffect("init") {
+    LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 DailyReportDetailSideEffect.ShowDailyReportError -> {
@@ -165,7 +164,8 @@ private fun StatelessDailyReportDetailScreen(
                             .background(
                                 color = Color(0xFF0E0C12).copy(alpha = 0.5f),
                                 shape = RoundedCornerShape(50),
-                            ).padding(vertical = 15.dp, horizontal = 38.dp),
+                            )
+                            .padding(vertical = 15.dp, horizontal = 38.dp),
                     verticalArrangement = Arrangement.spacedBy(2.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
@@ -198,7 +198,7 @@ private fun StatelessDailyReportDetailScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun DailyReportDetailScreenPreview() {
     MooiTheme {
@@ -262,7 +262,7 @@ private fun DailyReportDetailScreenPreview() {
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun DailyReportDetailScreenPreview2() {
     MooiTheme {
@@ -282,8 +282,8 @@ private fun DailyReportDetailScreenPreview2() {
                         listOf(
                             EmotionLog(
                                 emoji = "\uD83D\uDE20",
-                                label = "짜증남",
-                                description = "친구의 지각",
+                                label = "짜증남짜증남",
+                                description = "친구의 지각 친구의 지각 친구의 지각",
                                 time = LocalDateTime.now(),
                             ),
                         ),
