@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui.component
+package com.emotionstorage.ai_chat.ui.modal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,6 +16,12 @@ import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
 // TODO : Change To Toast
+
+/**
+ * capsule_create_01
+ * - Case : 대화 종료 가능 안내
+ *     - 감정 게이지가 다 찼을 때 표출
+ */
 @Composable
 fun TimeCapsuleCreateAlert(modifier: Modifier = Modifier) {
     Box(

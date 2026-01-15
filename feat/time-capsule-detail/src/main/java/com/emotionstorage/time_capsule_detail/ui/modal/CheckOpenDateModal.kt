@@ -30,6 +30,19 @@ import com.emotionstorage.ui.theme.MooiTheme
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
+/**
+ * capsule_save_confirm
+ * - Case : 타임캡슐 보관일 확인
+ *   - 임시저장 타임캡슐 보관 화면에서 [타임캡슐 보관하기]를 눌렀을 때 날짜 확인용 컨펌창 표출
+ * - 표시 화면
+ *   - 4.6 타임캡슐 - 임시저장 보관 설정
+ * - CTA 및 이동
+ *     - [네, 보관할래요.] -> 타임캡슐 저장되며 잠김 상태로 변경, 팝업 닫히며 이전 페이지로 이동
+ *     - [아니요, 다시 고를래요.] -> 팝업 닫히며 이동 X
+ * - 차단
+ *     - 뒤로가기(Android) O (팝업 닫힘, 화면 제자리)
+ *     - 배경 터치 O (팝업 닫힘, 화면 제자리)
+ */
 @Composable
 fun CheckOpenDateModal(
     createdAt: LocalDate,
