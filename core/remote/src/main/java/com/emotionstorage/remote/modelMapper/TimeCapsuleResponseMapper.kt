@@ -46,7 +46,7 @@ internal object TimeCapsuleResponseMapper {
                     )
                 },
             comments = response.comments,
-            note = response.note,
+            note = response.note ?: "",
             historyDate = response.historyDate,
             createdAt = response.createdAt,
             openAt = response.openAt,
