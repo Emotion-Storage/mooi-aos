@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui.component
+package com.emotionstorage.ai_chat.ui.bottomSheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,7 +14,19 @@ import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
 
 // TODO : 외부 화면을 눌렀을 때 반드시 Bottom Sheet Dismiss가 되지 않도록 해야한다
-// 그냥 Modal이라 Preview 확인이 어려움
+
+/**
+ * capsule_create_03
+ * - Case : 대화 강제 종료
+ *     - 감정 게이지가 다 찼음에도 불구하고 대화를 종료하지 않고 10턴을 초과했을 때 표시
+ * - 표시 화면
+ *     - 3.3 ai 감정대화
+ * - CTA 및 이동
+ *     - [타임캡슐 만들러 가기] -> 타임캡슐 생성 api 호출 및 capsule_create_04 로딩창 표출
+ * - 차단
+ *     - 뒤로가기(Android) X
+ *     - 배경 터치 X
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForceQuitChatBottomSheet(
