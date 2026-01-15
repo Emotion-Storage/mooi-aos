@@ -30,7 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.tutorial.ui.component.PagerWithIndicator
@@ -38,6 +37,7 @@ import com.emotionstorage.tutorial.ui.util.TutorialResponsiveTokens
 import com.emotionstorage.tutorial.ui.util.clamp
 import com.emotionstorage.tutorial.ui.util.scaledBy
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.GUIDE_HEIGHT
@@ -276,7 +276,7 @@ private fun BoxScope.TutorialGraphicImage(
     }
 }
 
-@PreviewScreenSizes
+@PreviewScreenRatios
 @Composable
 private fun TutorialPreview() {
     MooiTheme {
