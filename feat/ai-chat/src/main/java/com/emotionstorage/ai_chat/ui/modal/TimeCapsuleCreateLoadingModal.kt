@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui.component
+package com.emotionstorage.ai_chat.ui.modal
 
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.compose.foundation.Image

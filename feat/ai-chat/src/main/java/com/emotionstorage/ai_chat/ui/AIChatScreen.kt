@@ -37,14 +37,14 @@ import com.emotionstorage.ai_chat.presentation.AIChatAction
 import com.emotionstorage.ai_chat.presentation.AIChatSideEffect
 import com.emotionstorage.ai_chat.presentation.AIChatState
 import com.emotionstorage.ai_chat.presentation.AIChatViewModel
-import com.emotionstorage.ai_chat.ui.component.AIChatExitModal
+import com.emotionstorage.ai_chat.ui.modal.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.component.ChatMessageInputBox
 import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
-import com.emotionstorage.ai_chat.ui.component.ForceQuitChatBottomSheet
+import com.emotionstorage.ai_chat.ui.bottomSheet.ForceQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
-import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateLoadingModal
+import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar

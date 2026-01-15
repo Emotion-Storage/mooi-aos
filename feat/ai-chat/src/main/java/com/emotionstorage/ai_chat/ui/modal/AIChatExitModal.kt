@@ -1,4 +1,4 @@
-package com.emotionstorage.ai_chat.ui.component
+package com.emotionstorage.ai_chat.ui.modal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
