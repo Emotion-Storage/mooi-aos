@@ -1,13 +1,17 @@
 package com.emotionstorage.remote.response.dailyReport
 
+import com.emotionstorage.common.LocalDateSerializer
 import com.emotionstorage.common.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Serializable
 data class GetDailyReportResponse(
     val id: Long,
-    val isOpen: Boolean,
+    val opened: Boolean,
+    @Serializable(with = LocalDateSerializer::class)
+    val historyDate: LocalDate,
     @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
     @Serializable(with = LocalDateTimeSerializer::class)
@@ -24,6 +28,5 @@ data class GetDailyReportResponse(
         // HH:mm
         val time: String,
         val label: String,
-        val description: String,
     )
 }
