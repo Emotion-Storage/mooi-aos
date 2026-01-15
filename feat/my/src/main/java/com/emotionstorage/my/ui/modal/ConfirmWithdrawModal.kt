@@ -4,19 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.component.modal.Modal
 
-/**
- * withdraw_confirm_temp
- * - Case : 회원 탈퇴 확인
- *     - [MOOI 서비스 탈퇴하기]를 눌렀을 때 표출
- * - 표시 화면
- *     - 6.7 마이페이지 - 회원탈퇴
- * - CTA 및 이동
- *     - [아니요, 그냥 있을래요.] -> 팝업 닫힘, 화면 제자리
- *     - [서비스를 탈퇴할래요.] -> 회원 탈퇴 api 호출하며 withdraw_success 팝업 표출
- * - 차단
- *     - 뒤로가기 O
- *     - 배경 터치 O
- */
 // /**
 // * withdraw_confirm
 // * - Case : 회원 탈퇴 확인
@@ -30,6 +17,20 @@ import com.emotionstorage.ui.component.modal.Modal
 // *      - 뒤로가기(Android) O
 // *      - 배경 터치 O (팝업 닫힘, 화면 제자리)
 // */
+
+/**
+ * withdraw_confirm_temp
+ * - Case : 회원 탈퇴 확인
+ *     - [MOOI 서비스 탈퇴하기]를 눌렀을 때 표출
+ * - 표시 화면
+ *     - 6.7 마이페이지 - 회원탈퇴
+ * - CTA 및 이동
+ *     - [아니요, 그냥 있을래요.] -> 팝업 닫힘, 화면 제자리
+ *     - [서비스를 탈퇴할래요.] -> 회원 탈퇴 api 호출하며 withdraw_success 팝업 표출
+ * - 차단
+ *     - 뒤로가기 O
+ *     - 배경 터치 O
+ */
 @Composable
 fun ConfirmWithdrawModal(
     onDismissRequest: () -> Unit,
