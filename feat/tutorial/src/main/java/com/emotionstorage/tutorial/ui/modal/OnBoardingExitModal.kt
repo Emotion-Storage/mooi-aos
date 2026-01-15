@@ -20,7 +20,7 @@ import com.emotionstorage.ui.component.modal.Modal
  *     - 배경 터치 O (팝업 닫힘, 화면 제자리)
  */
 @Composable
-fun OnBoardingExitModel(
+fun OnBoardingExitModal(
     onDismissRequest: () -> Unit = {},
     onExit: () -> Unit = {},
 ) {
