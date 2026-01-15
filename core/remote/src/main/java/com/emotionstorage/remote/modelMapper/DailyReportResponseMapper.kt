@@ -19,7 +19,7 @@ internal object DailyReportResponseMapper {
                         // filter emotion changes with valid time format - HH:mm
                         try {
                             val (h, m) = it.time.split(":")
-                            if (h.isNullOrBlank() || h.toInt() !in (0..24)) false
+                            if (h.isBlank() || h.toInt() !in (0..24)) false
                             if (m.isNotBlank() || m.toInt() !in (0..60)) false
                             true
                         } catch (e: Exception) {
@@ -29,15 +29,15 @@ internal object DailyReportResponseMapper {
                     }.filter {
                         // filter emotion changes with valid label format - label (description)
                         try {
-                            val (label, desc) = it.label.split("(", ")")
-                            !(label.isNullOrBlank() || desc.isNullOrBlank())
+                            val (label, desc) = it.label.split("(", ")").dropLast(1)
+                            !(label.isBlank() || desc.isBlank())
                         } catch (e: Exception) {
-                            Logger.e("Emotion log time format error: ${it.time}, $e")
+                            Logger.e("Emotion log label format error: ${it.time}, $e")
                             false
                         }
                     }.map {
                         val (h, m) = it.time.split(":")
-                        val (label, desc) = it.label.split("(", ")")
+                        val (label, desc) = it.label.split("(", ")").dropLast(1)
 
                         DailyReportEntity.EmotionLog(
                             emotion = label.trim(),
