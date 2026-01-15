@@ -8,22 +8,21 @@ import kotlinx.serialization.encoding.Encoder
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatter.ISO_LOCAL_DATE
 
 object LocalDateSerializer : KSerializer<LocalDate> {
-    private val formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
-
     override val descriptor: SerialDescriptor =
         PrimitiveSerialDescriptor("LocalDate", PrimitiveKind.STRING)
 
     override fun deserialize(decoder: Decoder): LocalDate {
-        return LocalDate.parse(decoder.decodeString(), formatter) // Deserialize from "yyyy-MM-dd"
+        return LocalDate.parse(decoder.decodeString(), ISO_LOCAL_DATE) // Deserialize from "yyyy-MM-dd"
     }
 
     override fun serialize(
         encoder: Encoder,
         value: LocalDate,
     ) {
-        encoder.encodeString(value.format(formatter)) // Serialize to "yyyy-MM-dd"
+        encoder.encodeString(value.format(ISO_LOCAL_DATE)) // Serialize to "yyyy-MM-dd"
     }
 }
 
