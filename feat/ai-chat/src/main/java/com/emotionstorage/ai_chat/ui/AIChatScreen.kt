@@ -43,6 +43,7 @@ import com.emotionstorage.ai_chat.ui.component.ChatMessageList
 import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.bottomSheet.ForceQuitChatBottomSheet
+import com.emotionstorage.ai_chat.ui.bottomSheet.ProposeQuitChatBottomSheet
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateAlert
 import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
@@ -221,17 +222,10 @@ private fun StatelessAIChatScreen(
 
                 if (canMakeTimeCapsule && showFinishBottomSheet) {
                     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-                    BottomSheet(
+                    ProposeQuitChatBottomSheet(
                         onDismissRequest = { showFinishBottomSheet = false },
                         sheetState = sheetState,
-                        hideDragHandle = true,
-                        subTitle = "감정을 충분히 이야기했어요.",
-                        title = "대화를 종료하고,\n지금까지의 감정을 정리해볼까요?",
-                        confirmLabel = "네, 종료할래요.",
-                        dismissLabel = "아니요, 더 이야기할래요.",
-                        onDismiss = { showFinishBottomSheet = false },
                         onConfirm = {
-                            showFinishBottomSheet = false
                             onAction(AIChatAction.CreateTimeCapsule)
                         },
                     )
