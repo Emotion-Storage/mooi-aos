@@ -7,6 +7,7 @@ internal object DailyReportMapper {
     fun toDomain(entity: DailyReportEntity): DailyReport =
         DailyReport(
             id = entity.id,
+            date = entity.date,
             isOpen = entity.isOpen,
             summaries = entity.summaries,
             keywords = entity.keywords,

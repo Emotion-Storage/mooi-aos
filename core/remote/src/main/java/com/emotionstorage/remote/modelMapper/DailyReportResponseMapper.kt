@@ -8,30 +8,39 @@ internal object DailyReportResponseMapper {
     fun toData(response: GetDailyReportResponse): DailyReportEntity =
         DailyReportEntity(
             id = response.id,
-            isOpen = response.isOpen,
+            date = response.historyDate,
+            isOpen = response.opened,
             summaries = response.summaries,
             keywords = response.keywords,
             emotionLogs =
                 response
                     .emotionChanges
                     .filter {
-                        // filter emotion changes with valid time format
                         try {
-                            val (h, m) = it.time.split(":")
-                            if (h.isNullOrBlank() || h.toInt() !in (0..24)) false
-                            if (m.isNotBlank() || m.toInt() !in (0..60)) false
-                            true
+                            // hh:mm
+                            val regex = "^(0\\d|1\\d|2[0-4])\\s*:\\s*(0\\d|[1-5]\\d|60)$".toRegex()
+                            regex.matches(it.time)
                         } catch (e: Exception) {
-                            Logger.e("Emotion log time format error: ${it.time}, $e")
+                            Logger.e("emotionChanges time parsing error: ${it.time}, $e")
+                            false
+                        }
+                    }.filter {
+                        try {
+                            // label (description)
+                            val regex = "^[^()]+ \\([^()]+\\)$".toRegex()
+                            regex.matches(it.label)
+                        } catch (e: Exception) {
+                            Logger.e("label parsing error: ${it.label}, $e")
                             false
                         }
                     }.map {
                         val (h, m) = it.time.split(":")
+                        val (label, desc) = it.label.split("(", ")").dropLast(1)
 
                         DailyReportEntity.EmotionLog(
-                            emotion = it.label,
-                            description = it.description,
-                            time = response.createdAt.withHour(h.toInt()).withMinute(m.toInt()),
+                            emotion = label.trim(),
+                            description = desc.trim(),
+                            time = response.createdAt.withHour(h.trim().toInt()).withMinute(m.trim().toInt()),
                         )
                     },
             stressScore = response.stressIndex,

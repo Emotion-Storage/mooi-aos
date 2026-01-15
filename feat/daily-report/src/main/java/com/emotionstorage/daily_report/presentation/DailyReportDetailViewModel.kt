@@ -48,16 +48,13 @@ class DailyReportDetailViewModel @Inject constructor(
     private fun handleInit(id: Long) =
         intent {
             getDailyReportById(id).handle(
-                onLoading = {
-                    reduce {
-                        state.copy(isLoading = it)
-                    }
-                },
                 onSuccess = {
                     reduce {
-                        state.copy(dailyReport = it)
+                        state.copy(isLoading = false, dailyReport = it)
                     }
-                    if (!it.isOpen) openNewReport(id)
+                    if (!it.isOpen) {
+                        openNewDailyReport(id)
+                    }
                 },
                 onError = { throwable, _ ->
                     Logger.e("getDailyReportById onError: $throwable")
@@ -72,10 +69,11 @@ class DailyReportDetailViewModel @Inject constructor(
             )
         }
 
-    private suspend fun openNewReport(id: Long) =
+    private suspend fun openNewDailyReport(id: Long) =
         subIntent {
             try {
-                openDailyReport.invoke(id)
+                Logger.d("openDailyReport id: $id")
+                openDailyReport(id)
             } catch (e: Exception) {
                 Logger.e("openDailyReport onError: $e")
                 postSideEffect(DailyReportDetailSideEffect.ShowDailyReportError)

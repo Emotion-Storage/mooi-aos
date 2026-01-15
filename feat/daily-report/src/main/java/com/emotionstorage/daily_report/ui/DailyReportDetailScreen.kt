@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,10 +36,12 @@ import com.emotionstorage.daily_report.ui.component.DailyReportKeywords
 import com.emotionstorage.daily_report.ui.component.DailyReportSummaries
 import com.emotionstorage.domain.model.DailyReport
 import com.emotionstorage.domain.model.DailyReport.EmotionLog
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.component.loading.LoadingScreen
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Composable
@@ -51,15 +52,13 @@ fun DailyReportDetailScreen(
     navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val (showErrorModal, setShowErrorModal) = remember { mutableStateOf(false) }
+
     LaunchedEffect(id) {
         viewModel.onAction(DailyReportDetailAction.Init(id))
     }
 
-    val (showErrorModal, setShowErrorModal) =
-        remember {
-            mutableStateOf(false)
-        }
-    LaunchedEffect("init") {
+    LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 DailyReportDetailSideEffect.ShowDailyReportError -> {
@@ -109,8 +108,7 @@ private fun StatelessDailyReportDetailScreen(
             TopAppBar(
                 title =
                     dailyReport
-                        .createdAt
-                        .toLocalDate()
+                        .date
                         .toKorDateWithWeekDay(),
                 showBackButton = true,
                 onBackClick = navToBack,
@@ -198,7 +196,7 @@ private fun StatelessDailyReportDetailScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun DailyReportDetailScreenPreview() {
     MooiTheme {
@@ -206,6 +204,7 @@ private fun DailyReportDetailScreenPreview() {
             dailyReport =
                 DailyReport(
                     id = 123L,
+                    date = LocalDate.now(),
                     summaries =
                         listOf(
                             "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
@@ -262,7 +261,7 @@ private fun DailyReportDetailScreenPreview() {
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun DailyReportDetailScreenPreview2() {
     MooiTheme {
@@ -270,6 +269,7 @@ private fun DailyReportDetailScreenPreview2() {
             dailyReport =
                 DailyReport(
                     id = 123L,
+                    date = LocalDate.now(),
                     summaries =
                         listOf(
                             "아침에 출근길에 친구와 같이 출근하기로 했는데 친구가 지각해놓고 미안하단말을 하지 않아 기분이 좋지 않았어요.",
@@ -282,8 +282,8 @@ private fun DailyReportDetailScreenPreview2() {
                         listOf(
                             EmotionLog(
                                 emoji = "\uD83D\uDE20",
-                                label = "짜증남",
-                                description = "친구의 지각",
+                                label = "짜증남짜증남",
+                                description = "친구의 지각 친구의 지각 친구의 지각",
                                 time = LocalDateTime.now(),
                             ),
                         ),
