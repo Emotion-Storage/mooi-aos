@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,6 +38,8 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingDots
+import com.emotionstorage.ui.component.toast.AppSnackbarController
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -46,6 +50,9 @@ fun PushNotificationScreen(
     navToBack: () -> Unit = {},
 ) {
     val lazyNotifications = viewModel.notifications.collectAsLazyPagingItems()
+
+    val snackState = remember { SnackbarHostState() }
+    val snackbarController = remember { AppSnackbarController(snackState) }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
@@ -59,7 +66,9 @@ fun PushNotificationScreen(
                 }
 
                 is PushNotificationSideEffect.GetDetailError -> {
-                    // todo: add error toast
+                    snackbarController.showSnackbar(
+                        message = "아쉽지만 이 기록은 더 이상 열 수 없어요.",
+                    )
                 }
             }
         }
@@ -67,6 +76,8 @@ fun PushNotificationScreen(
 
     StatelessPushNotificationScreen(
         lazyNotifications = lazyNotifications,
+        snackState = snackState,
+        snackbarController = snackbarController,
         onAction = viewModel::onAction,
         navToBack = navToBack,
     )
@@ -78,6 +89,8 @@ private fun StatelessPushNotificationScreen(
     navToBack: () -> Unit,
     modifier: Modifier = Modifier,
     lazyNotifications: LazyPagingItems<Notification>? = null,
+    snackState: SnackbarHostState = SnackbarHostState(),
+    snackbarController: AppSnackbarController? = null,
 ) {
     Scaffold(
         modifier = modifier,
@@ -86,6 +99,12 @@ private fun StatelessPushNotificationScreen(
                 title = "알림 내역",
                 showBackButton = true,
                 onBackClick = navToBack,
+            )
+        },
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackState,
+                customDataFlow = snackbarController?.currentData,
             )
         },
     ) { innerPadding ->
