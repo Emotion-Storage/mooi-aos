@@ -47,7 +47,6 @@ interface TimeCapsuleApiService {
     @GET("api/v1/time-capsule/arrived/count")
     suspend fun getTimeCapsuleArrivedCount(): ResponseDto<GetTimeCapsuleArrivedCountResponse>
 
-
     /**
      * 즐겨찾기한 타임캡슐 목록 조회
      */

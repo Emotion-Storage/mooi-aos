@@ -8,13 +8,14 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetHasNewTimeCapsuleUseCase @Inject constructor(
-    private val timeCapsuleRepository: TimeCapsuleRepository
+    private val timeCapsuleRepository: TimeCapsuleRepository,
 ) {
-    operator fun invoke(): Flow<DataState<Boolean>> = flow {
-        emit(
-            timeCapsuleRepository.getNewTimeCapsuleCount().map {
-                it > 0
-            }
-        )
-    }
+    operator fun invoke(): Flow<DataState<Boolean>> =
+        flow {
+            emit(
+                timeCapsuleRepository.getNewTimeCapsuleCount().map {
+                    it > 0
+                },
+            )
+        }
 }
