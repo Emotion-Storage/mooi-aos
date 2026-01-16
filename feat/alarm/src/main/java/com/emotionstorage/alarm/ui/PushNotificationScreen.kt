@@ -34,7 +34,8 @@ import com.emotionstorage.alarm.presentation.PushNotificationViewModel
 import com.emotionstorage.alarm.ui.component.EmptyPushHolder
 import com.emotionstorage.alarm.ui.component.PushAlarmCard
 import com.emotionstorage.domain.model.Notification
-import com.emotionstorage.domain.model.NotificationType
+import com.emotionstorage.domain.model.NotificationType.DailyReportArrival
+import com.emotionstorage.domain.model.NotificationType.TimeCapsuleArrival
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
@@ -165,26 +166,26 @@ private fun StatelessPushNotificationScreen(
                                 val item = lazyNotifications[item] ?: return@items
 
                                 when (item.type) {
-                                    is NotificationType.DailyReportArrival -> {
+                                    is DailyReportArrival -> {
                                         PushAlarmCard(
                                             notification = item,
                                             onClick = {
                                                 onAction(
                                                     PushNotificationAction.GetDailyReportDetail(
-                                                        (item.type as NotificationType.DailyReportArrival).dailyReportId
+                                                        (item.type as DailyReportArrival).dailyReportId,
                                                     ),
                                                 )
                                             },
                                         )
                                     }
 
-                                    is NotificationType.TimeCapsuleArrival -> {
+                                    is TimeCapsuleArrival -> {
                                         PushAlarmCard(
                                             notification = item,
                                             onClick = {
                                                 onAction(
                                                     PushNotificationAction.GetTimeCapsuleDetail(
-                                                        (item.type as NotificationType.TimeCapsuleArrival).timeCapsuleId
+                                                        (item.type as TimeCapsuleArrival).timeCapsuleId,
                                                     ),
                                                 )
                                             },
