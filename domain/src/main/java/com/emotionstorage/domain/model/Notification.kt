@@ -21,4 +21,8 @@ sealed class NotificationType {
     ) : NotificationType()
 
     object RecordReminder : NotificationType()
+
+    data class UnKnown(
+        val data: Any? = null
+    ): NotificationType()
 }

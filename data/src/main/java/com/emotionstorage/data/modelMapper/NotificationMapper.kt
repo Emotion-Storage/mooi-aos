@@ -31,7 +31,8 @@ internal object NotificationMapper {
                     }
 
                     else -> {
-                        throw IllegalArgumentException("Invalid notification type")
+                        // fall back type
+                        NotificationType.UnKnown(entity.targetId)
                     }
                 },
             arrivedAt = entity.arrivedAt,
