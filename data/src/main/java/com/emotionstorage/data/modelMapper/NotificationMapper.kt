@@ -10,7 +10,10 @@ internal object NotificationMapper {
             id = entity.id,
             type =
                 when (entity.type) {
-                    "RECORD_SCHEDULE" -> NotificationType.RecordSchedule
+                    "RECORD_SCHEDULE" -> {
+                        NotificationType.RecordSchedule
+                    }
+
                     "DAILY_REPORT_ARRIVAL" -> {
                         entity.targetId?.let {
                             NotificationType.DailyReportArrival(it)
@@ -23,8 +26,13 @@ internal object NotificationMapper {
                         } ?: throw IllegalArgumentException("targetId is null")
                     }
 
-                    "RECORD_REMINDER" -> NotificationType.RecordReminder
-                    else -> throw IllegalArgumentException("Invalid notification type")
+                    "RECORD_REMINDER" -> {
+                        NotificationType.RecordReminder
+                    }
+
+                    else -> {
+                        throw IllegalArgumentException("Invalid notification type")
+                    }
                 },
             arrivedAt = entity.arrivedAt,
             isRead = entity.isRead,
