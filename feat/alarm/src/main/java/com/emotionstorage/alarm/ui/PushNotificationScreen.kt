@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -116,15 +117,19 @@ private fun StatelessPushNotificationScreen(
                     .padding(innerPadding),
         ) {
             LazyColumn(
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(13.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 item {
                     Row(
                         modifier =
                             Modifier
+                                .fillMaxWidth()
                                 .height(24.dp),
                         verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Start,
                     ) {
                         Icon(
                             modifier =
