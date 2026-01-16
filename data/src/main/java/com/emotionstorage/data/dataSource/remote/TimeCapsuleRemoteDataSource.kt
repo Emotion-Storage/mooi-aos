@@ -17,6 +17,8 @@ interface TimeCapsuleRemoteDataSource {
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): List<LocalDate>
 
+    suspend fun getNewTimeCapsuleCount(): Int
+
     suspend fun getFavoriteTimeCapsules(
         page: Int,
         limit: Int,

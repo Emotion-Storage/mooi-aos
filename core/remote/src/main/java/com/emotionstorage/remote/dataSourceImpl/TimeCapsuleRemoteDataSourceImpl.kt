@@ -156,6 +156,17 @@ class TimeCapsuleRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getNewTimeCapsuleCount(): Int = try {
+        val response = apiService.getTimeCapsuleArrivedCount()
+        if (response.data != null) {
+            response.data.unopenedCount
+        } else {
+            throw Exception("getNewTimeCapsuleCount response data is empty, $response")
+        }
+    } catch (e: Exception) {
+        throw Exception("getNewTimeCapsuleCount api fail, ${e.message}", e)
+    }
+
     override suspend fun deleteTimeCapsule(id: Long): Boolean {
         try {
             apiService.deleteTimeCapsule(id)

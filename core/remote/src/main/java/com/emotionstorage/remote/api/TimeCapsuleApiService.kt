@@ -6,6 +6,7 @@ import com.emotionstorage.remote.request.timeCapsule.PatchTimeCapsuleNoteRequest
 import com.emotionstorage.remote.request.timeCapsule.PostTimeCapsuleOpenAtRequest
 import com.emotionstorage.remote.response.ResponseDto
 import com.emotionstorage.remote.response.timeCapsule.CreateTimeCapsuleResponse
+import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleArrivedCountResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsulesResponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDatesReponse
 import com.emotionstorage.remote.response.timeCapsule.GetTimeCapsuleDetailResponse
@@ -39,6 +40,13 @@ interface TimeCapsuleApiService {
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): ResponseDto<GetTimeCapsuleDatesReponse>
+
+    /**
+     * 최근 3주 내 도착 타임캡슐 개수 조회
+     */
+    @GET("api/v1/time-capsule/arrived/count")
+    suspend fun getTimeCapsuleArrivedCount(): ResponseDto<GetTimeCapsuleArrivedCountResponse>
+
 
     /**
      * 즐겨찾기한 타임캡슐 목록 조회
