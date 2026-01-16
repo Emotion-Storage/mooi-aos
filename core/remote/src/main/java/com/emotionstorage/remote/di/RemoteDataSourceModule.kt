@@ -10,6 +10,7 @@ import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.HomeRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.MyPageRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.NotificationRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.NotificationSettingRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ReissueRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
@@ -24,6 +25,7 @@ import com.emotionstorage.remote.dataSourceImpl.GoogleRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.HomeRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.KakaoRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.MyPageRemoteDataSourceImpl
+import com.emotionstorage.remote.dataSourceImpl.NotificationRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.NotificationSettingRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.ReissueRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.TimeCapsuleRemoteDataSourceImpl
@@ -60,6 +62,11 @@ abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindFcmRemoteDataSource(impl: FcmRemoteDataSourceImpl): FcmRemoteDataSource
+
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRemoteDataSource(impl: NotificationRemoteDataSourceImpl): NotificationRemoteDataSource
 
     @Binds
     @Singleton
