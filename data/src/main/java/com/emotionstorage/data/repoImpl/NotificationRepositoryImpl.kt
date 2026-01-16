@@ -6,14 +6,9 @@ import androidx.paging.PagingData
 import androidx.paging.map
 import com.emotionstorage.data.dataSource.remote.NotificationRemoteDataSource
 import com.emotionstorage.data.modelMapper.NotificationMapper
-import com.emotionstorage.data.modelMapper.TimeCapsuleMapper
-import com.emotionstorage.data.pagingSource.GetFavoriteTimeCapsulesPagingSource
 import com.emotionstorage.data.pagingSource.GetNotificationsPagingSource
 import com.emotionstorage.domain.model.Notification
-import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.repo.NotificationRepository
-import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -23,9 +18,8 @@ private const val PAGE_SIZE = 20
 class NotificationRepositoryImpl @Inject constructor(
     private val remoteDataSource: NotificationRemoteDataSource,
 ) : NotificationRepository {
-
-    override fun getPagedNotifications(): Flow<PagingData<Notification>> {
-        return Pager(
+    override fun getPagedNotifications(): Flow<PagingData<Notification>> =
+        Pager(
             config =
                 PagingConfig(
                     pageSize = PAGE_SIZE,
@@ -42,5 +36,4 @@ class NotificationRepositoryImpl @Inject constructor(
                 NotificationMapper.toDomain(entity)
             }
         }
-    }
 }

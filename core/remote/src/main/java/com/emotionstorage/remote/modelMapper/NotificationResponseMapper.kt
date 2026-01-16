@@ -4,7 +4,6 @@ import com.emotionstorage.data.model.NotificationEntity
 import com.emotionstorage.data.model.NotificationEntity.PageData
 import com.emotionstorage.remote.response.notification.GetNotificationsResponse
 
-
 internal object NotificationResponseMapper {
     fun toData(response: GetNotificationsResponse): List<NotificationEntity> =
         response.notifications.map { it ->

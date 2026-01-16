@@ -21,7 +21,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.alarm.presentation.PushNotificationViewModel
@@ -118,8 +117,10 @@ private fun StatelessPushNotificationScreen(
                                     PushAlarmCard(
                                         notification = item,
                                         onClick = {
-                                            navToDailyReportDetail((item.type as NotificationType.DailyReportArrival).dailyReportId)
-                                        }
+                                            navToDailyReportDetail(
+                                                (item.type as NotificationType.DailyReportArrival).dailyReportId,
+                                            )
+                                        },
                                     )
                                 }
 
@@ -127,8 +128,10 @@ private fun StatelessPushNotificationScreen(
                                     PushAlarmCard(
                                         notification = item,
                                         onClick = {
-                                            navToTimeCapsuleDetail((item.type as NotificationType.TimeCapsuleArrival).timeCapsuleId)
-                                        }
+                                            navToTimeCapsuleDetail(
+                                                (item.type as NotificationType.TimeCapsuleArrival).timeCapsuleId,
+                                            )
+                                        },
                                     )
                                 }
 
@@ -144,7 +147,6 @@ private fun StatelessPushNotificationScreen(
     }
 }
 
-
 @PreviewScreenRatios
 @Composable
 fun EmptyPushNotificationScreenPreview() {
@@ -158,34 +160,34 @@ fun EmptyPushNotificationScreenPreview() {
     }
 }
 
-
 @PreviewScreenRatios
 @Composable
 fun PushNotificationScreenPreview() {
     MooiTheme {
         StatelessPushNotificationScreen(
-            value = listOf(
-                Notification(
-                    id = 0,
-                    type = NotificationType.RecordSchedule,
-                    arrivedAt = LocalDateTime.now().minusHours(1),
+            value =
+                listOf(
+                    Notification(
+                        id = 0,
+                        type = NotificationType.RecordSchedule,
+                        arrivedAt = LocalDateTime.now().minusHours(1),
+                    ),
+                    Notification(
+                        id = 1,
+                        type = NotificationType.DailyReportArrival(1),
+                        arrivedAt = LocalDateTime.now().minusHours(3),
+                    ),
+                    Notification(
+                        id = 2,
+                        type = NotificationType.TimeCapsuleArrival(1),
+                        arrivedAt = LocalDateTime.now().minusDays(0),
+                    ),
+                    Notification(
+                        id = 3,
+                        type = NotificationType.RecordReminder,
+                        arrivedAt = LocalDateTime.now().minusDays(3),
+                    ),
                 ),
-                Notification(
-                    id = 1,
-                    type = NotificationType.DailyReportArrival(1),
-                    arrivedAt = LocalDateTime.now().minusHours(3),
-                ),
-                Notification(
-                    id = 2,
-                    type = NotificationType.TimeCapsuleArrival(1),
-                    arrivedAt = LocalDateTime.now().minusDays(0),
-                ),
-                Notification(
-                    id = 3,
-                    type = NotificationType.RecordReminder,
-                    arrivedAt = LocalDateTime.now().minusDays(3),
-                )
-            ),
             navToBack = {},
             navToTimeCapsuleDetail = {},
             navToDailyReportDetail = {},

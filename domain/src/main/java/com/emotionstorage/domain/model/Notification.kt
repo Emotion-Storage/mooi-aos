@@ -13,11 +13,11 @@ sealed class NotificationType {
     object RecordSchedule : NotificationType()
 
     data class DailyReportArrival(
-        val dailyReportId: Long
+        val dailyReportId: Long,
     ) : NotificationType()
 
     data class TimeCapsuleArrival(
-        val timeCapsuleId: Long
+        val timeCapsuleId: Long,
     ) : NotificationType()
 
     object RecordReminder : NotificationType()

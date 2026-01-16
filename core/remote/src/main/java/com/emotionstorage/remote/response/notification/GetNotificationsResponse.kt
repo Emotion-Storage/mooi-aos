@@ -35,7 +35,7 @@ data class GetNotificationsResponse(
         @Serializable
         data class NotificationData(
             val type: String,
-            val targetId: Long? = null
+            val targetId: Long? = null,
         )
     }
 }

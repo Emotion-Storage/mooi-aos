@@ -63,7 +63,6 @@ abstract class RemoteDataSourceModule {
     @Singleton
     abstract fun bindFcmRemoteDataSource(impl: FcmRemoteDataSourceImpl): FcmRemoteDataSource
 
-
     @Binds
     @Singleton
     abstract fun bindNotificationRemoteDataSource(impl: NotificationRemoteDataSourceImpl): NotificationRemoteDataSource

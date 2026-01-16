@@ -12,9 +12,7 @@ import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class PushNotificationViewModel @Inject constructor(
-
-) : ViewModel() {
+class PushNotificationViewModel @Inject constructor() : ViewModel() {
     private val _state = MutableStateFlow<List<Notification>>(emptyList())
     val state: StateFlow<List<Notification>> = _state
 
@@ -30,27 +28,26 @@ class PushNotificationViewModel @Inject constructor(
     }
 }
 
-private fun mockItems() = listOf(
-    Notification(
-        id = 0,
-        type = NotificationType.RecordSchedule,
-        arrivedAt = LocalDateTime.now().minusHours(1),
-    ),
-    Notification(
-        id = 0,
-        type = NotificationType.DailyReportArrival(1),
-        arrivedAt = LocalDateTime.now().minusHours(3),
-    ),
-    Notification(
-        id = 0,
-        type = NotificationType.TimeCapsuleArrival(1),
-        arrivedAt = LocalDateTime.now().minusDays(0),
-    ),
-    Notification(
-        id = 0,
-        type = NotificationType.RecordReminder,
-        arrivedAt = LocalDateTime.now().minusDays(3),
-    ),
-)
-
-
+private fun mockItems() =
+    listOf(
+        Notification(
+            id = 0,
+            type = NotificationType.RecordSchedule,
+            arrivedAt = LocalDateTime.now().minusHours(1),
+        ),
+        Notification(
+            id = 0,
+            type = NotificationType.DailyReportArrival(1),
+            arrivedAt = LocalDateTime.now().minusHours(3),
+        ),
+        Notification(
+            id = 0,
+            type = NotificationType.TimeCapsuleArrival(1),
+            arrivedAt = LocalDateTime.now().minusDays(0),
+        ),
+        Notification(
+            id = 0,
+            type = NotificationType.RecordReminder,
+            arrivedAt = LocalDateTime.now().minusDays(3),
+        ),
+    )

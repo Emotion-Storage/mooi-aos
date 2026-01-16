@@ -76,11 +76,12 @@ fun PushAlarmCard(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = when (notification.type) {
-                            is NotificationType.DailyReportArrival -> "어제의 일일리포트가 업데이트 되었습니다."
-                            is NotificationType.TimeCapsuleArrival -> "새로운 타임캡슐이 도착했어요!"
-                            else -> ""
-                        },
+                        text =
+                            when (notification.type) {
+                                is NotificationType.DailyReportArrival -> "어제의 일일리포트가 업데이트 되었습니다."
+                                is NotificationType.TimeCapsuleArrival -> "새로운 타임캡슐이 도착했어요!"
+                                else -> ""
+                            },
                         style = MooiTheme.typography.caption2,
                         color = Color.White,
                         maxLines = 1,
@@ -120,19 +121,21 @@ fun PushAlarmCardPreview() {
             verticalArrangement = Arrangement.spacedBy(13.dp),
         ) {
             PushAlarmCard(
-                notification = Notification(
-                    id = 0,
-                    type = NotificationType.DailyReportArrival(1),
-                    arrivedAt = LocalDateTime.now().minusHours(2),
-                )
+                notification =
+                    Notification(
+                        id = 0,
+                        type = NotificationType.DailyReportArrival(1),
+                        arrivedAt = LocalDateTime.now().minusHours(2),
+                    ),
             )
 
             PushAlarmCard(
-                notification = Notification(
-                    id = 1,
-                    type = NotificationType.TimeCapsuleArrival(1),
-                    arrivedAt = LocalDateTime.now().minusDays(2),
-                )
+                notification =
+                    Notification(
+                        id = 1,
+                        type = NotificationType.TimeCapsuleArrival(1),
+                        arrivedAt = LocalDateTime.now().minusDays(2),
+                    ),
             )
         }
     }
