@@ -1,15 +1,11 @@
 package com.emotionstorage.domain.model
 
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 
 data class Notification(
     val id: Long,
     val type: NotificationType,
-    val title: String,
     val arrivedAt: LocalDateTime,
-    val body: String = "",
     val isRead: Boolean = false,
 )
 

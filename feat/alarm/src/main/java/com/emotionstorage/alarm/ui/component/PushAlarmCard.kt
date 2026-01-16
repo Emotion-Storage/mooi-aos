@@ -34,9 +34,7 @@ import java.time.LocalDateTime
 
 @Composable
 fun PushAlarmCard(
-    title: String,
-    body: String,
-    arrivedAt: LocalDateTime,
+    notification: Notification,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
 ) {
@@ -78,7 +76,11 @@ fun PushAlarmCard(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = title,
+                        text = when (notification.type) {
+                            is NotificationType.DailyReportArrival -> "어제의 일일리포트가 업데이트 되었습니다."
+                            is NotificationType.TimeCapsuleArrival -> "새로운 타임캡슐이 도착했어요!"
+                            else -> ""
+                        },
                         style = MooiTheme.typography.caption2,
                         color = Color.White,
                         maxLines = 1,
@@ -90,7 +92,7 @@ fun PushAlarmCard(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = arrivedAt.timeAgo(),
+                        text = notification.arrivedAt.timeAgo(),
                         style = MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.gray600,
                         maxLines = 1,
@@ -118,15 +120,19 @@ fun PushAlarmCardPreview() {
             verticalArrangement = Arrangement.spacedBy(13.dp),
         ) {
             PushAlarmCard(
-                title = "어제의 나, 리포트로 돌아왔어요",
-                body = "하루의 마음 여정을 한눈에 만나보세요.",
-                arrivedAt = LocalDateTime.now().minusHours(2),
+                notification = Notification(
+                    id = 0,
+                    type = NotificationType.DailyReportArrival(1),
+                    arrivedAt = LocalDateTime.now().minusHours(2),
+                )
             )
 
             PushAlarmCard(
-                title = "기다리던 타임캡슐 도착!",
-                body = "잠들어 있던 감정이 깨어났어요.",
-                arrivedAt = LocalDateTime.now().minusDays(3),
+                notification = Notification(
+                    id = 1,
+                    type = NotificationType.TimeCapsuleArrival(1),
+                    arrivedAt = LocalDateTime.now().minusDays(2),
+                )
             )
         }
     }
