@@ -169,7 +169,7 @@ private fun StatelessPushNotificationScreen(
                                                         item.id,
                                                     ),
                                                 )
-                                            }
+                                            },
                                         )
                                     }
 
@@ -209,7 +209,6 @@ private fun StatelessPushNotificationScreen(
         }
     }
 }
-
 
 @PreviewScreenRatios
 @Composable
