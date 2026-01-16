@@ -3,7 +3,7 @@ package com.emotionstorage.alarm.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,17 +12,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.emotionstorage.alarm.presentation.PushNotificationAction
+import com.emotionstorage.alarm.presentation.PushNotificationSideEffect
 import com.emotionstorage.alarm.presentation.PushNotificationViewModel
 import com.emotionstorage.alarm.ui.component.EmptyPushHolder
 import com.emotionstorage.alarm.ui.component.PushAlarmCard
@@ -31,8 +35,8 @@ import com.emotionstorage.domain.model.NotificationType
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
+import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.theme.MooiTheme
-import java.time.LocalDateTime
 
 @Composable
 fun PushNotificationScreen(
@@ -41,24 +45,42 @@ fun PushNotificationScreen(
     navToDailyReportDetail: (Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val state = viewModel.state.collectAsState()
+    val lazyNotifications = viewModel.notifications.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is PushNotificationSideEffect.GetDailyReportDetailSuccess -> {
+                    navToDailyReportDetail(it.id)
+                }
+
+                is PushNotificationSideEffect.GetTimeCapsuleDetailSuccess -> {
+                    navToTimeCapsuleDetail(it.id)
+                }
+
+                is PushNotificationSideEffect.GetDetailError -> {
+                    // todo: add error toast
+                }
+            }
+        }
+    }
 
     StatelessPushNotificationScreen(
-        value = state.value,
+        lazyNotifications = lazyNotifications,
+        onAction = viewModel::onAction,
         navToBack = navToBack,
-        navToTimeCapsuleDetail = navToTimeCapsuleDetail,
-        navToDailyReportDetail = navToDailyReportDetail,
     )
 }
 
 @Composable
 private fun StatelessPushNotificationScreen(
-    value: List<Notification> = emptyList(),
+    onAction: (action: PushNotificationAction) -> Unit,
     navToBack: () -> Unit,
-    navToTimeCapsuleDetail: (Long) -> Unit,
-    navToDailyReportDetail: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+    lazyNotifications: LazyPagingItems<Notification>? = null,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 title = "알림 내역",
@@ -74,72 +96,94 @@ private fun StatelessPushNotificationScreen(
                     .background(color = MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
-            Column(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 12.dp),
+            LazyColumn(
+                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(13.dp),
             ) {
-                Row(
-                    modifier =
-                        Modifier
-                            .height(24.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
+                item {
+                    Row(
                         modifier =
                             Modifier
-                                .size(18.dp),
-                        painter = painterResource(R.drawable.ic_alarm),
-                        contentDescription = "알림 아이콘",
-                        tint = MooiTheme.colorScheme.gray600,
-                    )
+                                .height(24.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            modifier =
+                                Modifier
+                                    .size(18.dp),
+                            painter = painterResource(R.drawable.ic_alarm),
+                            contentDescription = "알림 아이콘",
+                            tint = MooiTheme.colorScheme.gray600,
+                        )
 
-                    Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
 
-                    Text(
-                        text = "최근 3주간의 알림이 표시됩니다.",
-                        style = MooiTheme.typography.caption7,
-                        color = MooiTheme.colorScheme.gray500,
-                    )
+                        Text(
+                            text = "최근 3주간의 알림이 표시됩니다.",
+                            style = MooiTheme.typography.caption7,
+                            color = MooiTheme.colorScheme.gray500,
+                        )
+                    }
                 }
 
-                if (value.isEmpty()) {
-                    EmptyPushHolder()
-                } else {
-                    LazyColumn(
-                        modifier = Modifier.padding(top = 22.dp),
-                        verticalArrangement = Arrangement.spacedBy(13.dp),
-                    ) {
-                        itemsIndexed(
-                            items = value,
-                            key = { _, item -> item.id },
-                        ) { index, item ->
-                            when (item.type) {
-                                is NotificationType.DailyReportArrival -> {
-                                    PushAlarmCard(
-                                        notification = item,
-                                        onClick = {
-                                            navToDailyReportDetail(
-                                                (item.type as NotificationType.DailyReportArrival).dailyReportId,
-                                            )
-                                        },
-                                    )
-                                }
+                // update ui when load state is not loading
+                when (lazyNotifications?.loadState?.refresh) {
+                    is LoadState.NotLoading -> {
+                        if (lazyNotifications.itemCount == 0) {
+                            item {
+                                EmptyPushHolder()
+                            }
+                        } else {
+                            items(
+                                count = lazyNotifications.itemCount,
+                                key = { lazyNotifications[it]?.id ?: it },
+                            ) { item ->
+                                val item = lazyNotifications[item] ?: return@items
 
-                                is NotificationType.TimeCapsuleArrival -> {
-                                    PushAlarmCard(
-                                        notification = item,
-                                        onClick = {
-                                            navToTimeCapsuleDetail(
-                                                (item.type as NotificationType.TimeCapsuleArrival).timeCapsuleId,
-                                            )
-                                        },
-                                    )
-                                }
+                                when (item.type) {
+                                    is NotificationType.DailyReportArrival -> {
+                                        PushAlarmCard(
+                                            notification = item,
+                                            onClick = {
+                                                onAction(
+                                                    PushNotificationAction.GetDailyReportDetail(
+                                                        item.id,
+                                                    ),
+                                                )
+                                            }
+                                        )
+                                    }
 
-                                else -> {
-                                    // no ui
+                                    is NotificationType.TimeCapsuleArrival -> {
+                                        PushAlarmCard(
+                                            notification = item,
+                                            onClick = {
+                                                onAction(
+                                                    PushNotificationAction.GetTimeCapsuleDetail(
+                                                        item.id,
+                                                    ),
+                                                )
+                                            },
+                                        )
+                                    }
+
+                                    else -> {
+                                        // no ui
+                                    }
                                 }
                             }
                         }
+                    }
+
+                    else -> {
+                        item {
+                            LoadingDots(
+                                modifier = Modifier.padding(top = 244.dp),
+                                dotSize = 13.dp,
+                                dotSpacing = 10.dp,
+                            )
+                        }
+                        // todo: add error ui
                     }
                 }
             }
@@ -147,50 +191,15 @@ private fun StatelessPushNotificationScreen(
     }
 }
 
-@PreviewScreenRatios
-@Composable
-fun EmptyPushNotificationScreenPreview() {
-    MooiTheme {
-        StatelessPushNotificationScreen(
-            value = listOf(),
-            navToBack = {},
-            navToTimeCapsuleDetail = {},
-            navToDailyReportDetail = {},
-        )
-    }
-}
 
 @PreviewScreenRatios
 @Composable
 fun PushNotificationScreenPreview() {
     MooiTheme {
         StatelessPushNotificationScreen(
-            value =
-                listOf(
-                    Notification(
-                        id = 0,
-                        type = NotificationType.RecordSchedule,
-                        arrivedAt = LocalDateTime.now().minusHours(1),
-                    ),
-                    Notification(
-                        id = 1,
-                        type = NotificationType.DailyReportArrival(1),
-                        arrivedAt = LocalDateTime.now().minusHours(3),
-                    ),
-                    Notification(
-                        id = 2,
-                        type = NotificationType.TimeCapsuleArrival(1),
-                        arrivedAt = LocalDateTime.now().minusDays(0),
-                    ),
-                    Notification(
-                        id = 3,
-                        type = NotificationType.RecordReminder,
-                        arrivedAt = LocalDateTime.now().minusDays(3),
-                    ),
-                ),
+            lazyNotifications = null,
+            onAction = {},
             navToBack = {},
-            navToTimeCapsuleDetail = {},
-            navToDailyReportDetail = {},
         )
     }
 }
