@@ -9,6 +9,7 @@ import com.emotionstorage.domain.model.Notification
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportByIdUseCase
 import com.emotionstorage.domain.useCase.notification.GetPagedNotificationsUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import org.orbitmvi.orbit.ContainerHost
@@ -68,12 +69,14 @@ class PushNotificationViewModel @Inject constructor(
     private fun handleGetDailyReportDetail(id: Long) =
         intent {
             reduce { state.copy(isLoading = true) }
+            Logger.d("Check daily report of id: $id")
             getDailyReportById(id).handle(
                 onSuccess = {
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(PushNotificationSideEffect.GetDailyReportDetailSuccess(it.id))
                 },
                 onError = { throwable, code, data ->
+                    Logger.d("Error: $throwable")
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(PushNotificationSideEffect.GetDetailError)
                 },
@@ -82,12 +85,14 @@ class PushNotificationViewModel @Inject constructor(
 
     private fun handleGetTimeCapsuleDetail(id: Long) =
         intent {
+            Logger.d("Check time capsule of id: $id")
             reduce { state.copy(isLoading = true) }
             getTimeCapsuleById(id).collect {
                 if (it is DataState.Success) {
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(PushNotificationSideEffect.GetTimeCapsuleDetailSuccess(it.data.id))
                 } else if (it is DataState.Error) {
+                    Logger.d("Error: $it")
                     reduce { state.copy(isLoading = false) }
                     postSideEffect(PushNotificationSideEffect.GetDetailError)
                 }

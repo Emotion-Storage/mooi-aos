@@ -171,7 +171,7 @@ private fun StatelessPushNotificationScreen(
                                             onClick = {
                                                 onAction(
                                                     PushNotificationAction.GetDailyReportDetail(
-                                                        item.id,
+                                                        (item.type as NotificationType.DailyReportArrival).dailyReportId
                                                     ),
                                                 )
                                             },
@@ -184,7 +184,7 @@ private fun StatelessPushNotificationScreen(
                                             onClick = {
                                                 onAction(
                                                     PushNotificationAction.GetTimeCapsuleDetail(
-                                                        item.id,
+                                                        (item.type as NotificationType.TimeCapsuleArrival).timeCapsuleId
                                                     ),
                                                 )
                                             },
