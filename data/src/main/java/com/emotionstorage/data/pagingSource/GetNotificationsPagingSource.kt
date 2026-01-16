@@ -6,7 +6,7 @@ import com.emotionstorage.data.dataSource.remote.NotificationRemoteDataSource
 import com.emotionstorage.data.model.NotificationEntity
 import io.github.aakira.napier.Napier
 
-class GetNotificationsPagingSource (
+class GetNotificationsPagingSource(
     private val remoteDataSource: NotificationRemoteDataSource,
 ) : PagingSource<Int, NotificationEntity>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NotificationEntity> {
