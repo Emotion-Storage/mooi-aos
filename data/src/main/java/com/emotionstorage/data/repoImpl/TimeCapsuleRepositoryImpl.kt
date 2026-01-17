@@ -163,6 +163,13 @@ class TimeCapsuleRepositoryImpl @Inject constructor(
             }
         }
 
+    override suspend fun getNewTimeCapsuleCount(): DataState<Int> =
+        try {
+            DataState.Success(remoteDataSource.getNewTimeCapsuleCount())
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+
     override suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>> =
         flow {
             emit(DataState.Loading(isLoading = true))

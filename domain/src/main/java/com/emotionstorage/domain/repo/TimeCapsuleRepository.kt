@@ -38,6 +38,8 @@ interface TimeCapsuleRepository {
 
     suspend fun getTimeCapsuleDates(yearMonth: YearMonth): Flow<DataState<List<LocalDate>>>
 
+    suspend fun getNewTimeCapsuleCount(): DataState<Int>
+
     suspend fun deleteTimeCapsule(id: Long): Flow<DataState<Boolean>>
 
     suspend fun createTimeCapsule(id: Long): DataState<Long>
