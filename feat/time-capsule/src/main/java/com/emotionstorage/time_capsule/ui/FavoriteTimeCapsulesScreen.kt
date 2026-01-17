@@ -62,7 +62,7 @@ fun FavoriteTimeCapsulesScreen(
     val context = LocalContext.current
 
     val state = viewModel.container.stateFlow.collectAsState()
-    val timeCapsulesState = state.value.timeCapsulesFlow?.collectAsLazyPagingItems()
+    val lazyTimeCapsules = state.value.timeCapsulesFlow?.collectAsLazyPagingItems()
     val favoriteState = favoriteViewModel.container.stateFlow.collectAsState()
 
     val snackState = remember { SnackbarHostState() }
@@ -75,9 +75,9 @@ fun FavoriteTimeCapsulesScreen(
     }
 
     // init favorite state
-    LaunchedEffect(timeCapsulesState?.itemSnapshotList) {
+    LaunchedEffect(lazyTimeCapsules?.itemSnapshotList) {
         val favorites =
-            timeCapsulesState
+            lazyTimeCapsules
                 ?.itemSnapshotList
                 ?.items
                 ?.filter { it.isFavorite }
@@ -140,7 +140,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
-    val timeCapsules = state.timeCapsulesFlow?.collectAsLazyPagingItems()
+    val lazyTimeCapsules = state.timeCapsulesFlow?.collectAsLazyPagingItems()
 
     Scaffold(
         modifier =
@@ -193,8 +193,8 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                     )
                 }
             }
-            if (timeCapsules != null && timeCapsules.loadState.refresh is LoadState.NotLoading) {
-                if (timeCapsules.itemCount == 0) {
+            if (lazyTimeCapsules != null && lazyTimeCapsules.loadState.refresh is LoadState.NotLoading) {
+                if (lazyTimeCapsules.itemCount == 0) {
                     item {
                         Text(
                             modifier = Modifier.padding(top = 224.dp),
@@ -222,8 +222,8 @@ private fun StatelessFavoriteTimeCapsulesScreen(
                             )
                         }
                     }
-                    items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                        timeCapsules[it]?.let {
+                    items(count = lazyTimeCapsules.itemCount, key = { lazyTimeCapsules[it]?.id ?: it }) {
+                        lazyTimeCapsules[it]?.let {
                             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                                 Row(
                                     modifier =
