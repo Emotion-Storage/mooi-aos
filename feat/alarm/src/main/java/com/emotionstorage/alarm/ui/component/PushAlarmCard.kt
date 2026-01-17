@@ -1,5 +1,6 @@
 package com.emotionstorage.alarm.ui.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,23 +25,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.common.timeAgo
+import com.emotionstorage.domain.model.Notification
+import com.emotionstorage.domain.model.NotificationType
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import java.time.LocalDateTime
 
 @Composable
 fun PushAlarmCard(
+    notification: Notification,
     modifier: Modifier = Modifier,
-    id: String,
-    title: String,
-    timeText: String,
-    onClick: () -> Unit,
+    onClick: () -> Unit = {},
 ) {
     Card(
         modifier =
             modifier
                 .widthIn(328.dp)
                 .heightIn(84.dp)
-                .clip(RoundedCornerShape(15.dp)),
+                .clip(RoundedCornerShape(15.dp))
+                .clickable(onClick = onClick),
         shape = RoundedCornerShape(15.dp),
         colors = CardDefaults.cardColors(MooiTheme.colorScheme.secondaryBlue700.copy(alpha = 0.1f)),
     ) {
@@ -72,7 +76,12 @@ fun PushAlarmCard(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = title,
+                        text =
+                            when (notification.type) {
+                                is NotificationType.DailyReportArrival -> "어제의 일일리포트가 업데이트 되었습니다."
+                                is NotificationType.TimeCapsuleArrival -> "새로운 타임캡슐이 도착했어요!"
+                                else -> ""
+                            },
                         style = MooiTheme.typography.caption2,
                         color = Color.White,
                         maxLines = 1,
@@ -84,7 +93,7 @@ fun PushAlarmCard(
                     contentAlignment = Alignment.CenterStart,
                 ) {
                     Text(
-                        text = timeText,
+                        text = notification.arrivedAt.timeAgo(),
                         style = MooiTheme.typography.caption7,
                         color = MooiTheme.colorScheme.gray600,
                         maxLines = 1,
@@ -96,7 +105,7 @@ fun PushAlarmCard(
                     Modifier
                         .align(Alignment.CenterVertically),
                 painter = painterResource(R.drawable.ic_big_arrow_front),
-                contentDescription = "상세 목록",
+                contentDescription = "상세 보기",
                 tint = MooiTheme.colorScheme.gray300,
             )
         }
@@ -107,12 +116,27 @@ fun PushAlarmCard(
 @Composable
 fun PushAlarmCardPreview() {
     MooiTheme {
-        PushAlarmCard(
-            id = "1",
-            title = "새로운 타임캡슐이 도착했어요!",
-            timeText = "22시간 전",
-            onClick = {
-            },
-        )
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(13.dp),
+        ) {
+            PushAlarmCard(
+                notification =
+                    Notification(
+                        id = 0,
+                        type = NotificationType.DailyReportArrival(1),
+                        arrivedAt = LocalDateTime.now().minusHours(2),
+                    ),
+            )
+
+            PushAlarmCard(
+                notification =
+                    Notification(
+                        id = 1,
+                        type = NotificationType.TimeCapsuleArrival(1),
+                        arrivedAt = LocalDateTime.now().minusDays(2),
+                    ),
+            )
+        }
     }
 }

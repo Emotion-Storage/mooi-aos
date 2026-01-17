@@ -327,9 +327,9 @@ internal fun AppNavHost(
                 navToTermsAndPrivacy = {
                     navController.navigate(AppDestination.TermsAndPrivacy)
                 },
-               /* navToNotificationSetting = {
-                    navController.navigate(AppDestination.NotificationSetting)
-                },*/
+                /* navToNotificationSetting = {
+                     navController.navigate(AppDestination.NotificationSetting)
+                 },*/
             )
         }
 
@@ -451,9 +451,9 @@ internal fun AppNavHost(
                 navToLogin = {
                     navController.navigateWithClearStack(AppDestination.Login)
                 },
-              /*  navToNotificationSetting = {
-                    navController.navigateWithClearStack(AppDestination.NotificationSetting)
-                },*/
+                /*  navToNotificationSetting = {
+                      navController.navigateWithClearStack(AppDestination.NotificationSetting)
+                  },*/
             )
         }
 
@@ -491,6 +491,12 @@ internal fun AppNavHost(
 
         composable<AppDestination.PushNotification> {
             PushNotificationScreen(
+                navToDailyReportDetail = { id ->
+                    navController.navigate(AppDestination.DailyReportDetail(id))
+                },
+                navToTimeCapsuleDetail = { id ->
+                    navController.navigate(AppDestination.TimeCapsuleDetail(id, isNewTimeCapsule = false))
+                },
                 navToBack = {
                     navController.popBackStack()
                 },

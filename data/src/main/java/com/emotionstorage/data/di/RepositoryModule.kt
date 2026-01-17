@@ -8,6 +8,7 @@ import com.emotionstorage.data.repoImpl.DailyReportRepositoryImpl
 import com.emotionstorage.data.repoImpl.FcmRepositoryImpl
 import com.emotionstorage.data.repoImpl.MyPageRepositoryImpl
 import com.emotionstorage.data.repoImpl.NotificationPermissionRepositoryImpl
+import com.emotionstorage.data.repoImpl.NotificationRepositoryImpl
 import com.emotionstorage.data.repoImpl.NotificationSettingsRepositoryImpl
 import com.emotionstorage.data.repoImpl.SessionRepositoryImpl
 import com.emotionstorage.data.repoImpl.TimeCapsuleRepositoryImpl
@@ -20,6 +21,7 @@ import com.emotionstorage.domain.repo.FcmRepository
 import com.emotionstorage.domain.repo.HomeRepository
 import com.emotionstorage.domain.repo.MyPageRepository
 import com.emotionstorage.domain.repo.NotificationPermissionRepository
+import com.emotionstorage.domain.repo.NotificationRepository
 import com.emotionstorage.domain.repo.NotificationSettingRepository
 import com.emotionstorage.domain.repo.SessionRepository
 import com.emotionstorage.domain.repo.TimeCapsuleRepository
@@ -48,6 +50,10 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindFcmRepository(impl: FcmRepositoryImpl): FcmRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
 
     @Binds
     @Singleton

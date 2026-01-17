@@ -58,7 +58,7 @@ fun TimeCapsuleBottomSheet(
     navToDailyReport: (() -> Unit)? = null,
     isNewDailyReport: Boolean = false,
 ) {
-    val timeCapsules = timeCapsulesFlow?.collectAsLazyPagingItems()
+    val lazyTimeCapsules = timeCapsulesFlow?.collectAsLazyPagingItems()
 
     BottomSheet(
         modifier = modifier,
@@ -89,10 +89,10 @@ fun TimeCapsuleBottomSheet(
             verticalArrangement = Arrangement.spacedBy(18.dp),
             contentPadding = PaddingValues(bottom = 51.dp),
         ) {
-            if (timeCapsules != null && timeCapsules.loadState.refresh is LoadState.NotLoading) {
-                if (timeCapsules.itemCount > 0) {
-                    items(count = timeCapsules.itemCount, key = { timeCapsules[it]?.id ?: it }) {
-                        timeCapsules[it]?.run {
+            if (lazyTimeCapsules != null && lazyTimeCapsules.loadState.refresh is LoadState.NotLoading) {
+                if (lazyTimeCapsules.itemCount > 0) {
+                    items(count = lazyTimeCapsules.itemCount, key = { lazyTimeCapsules[it]?.id ?: it }) {
+                        lazyTimeCapsules[it]?.run {
                             TimeCapsuleItem(
                                 modifier = Modifier.fillMaxWidth(),
                                 timeCapsule = this,

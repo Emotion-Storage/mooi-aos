@@ -3,6 +3,7 @@ package com.emotionstorage.common
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 fun LocalDateTime.formatToKorDateTime(
     datePattern: String = "yyyy.MM.dd",
@@ -17,3 +18,17 @@ fun LocalDateTime.formatToKorTime(addDoubleSpacing: Boolean = false): String =
 
 fun LocalDateTime.toEpochMillis(zoneId: String = "Asia/Seoul"): Long =
     this.atZone(ZoneId.of(zoneId)).toInstant().toEpochMilli()
+
+fun LocalDateTime.timeAgo(): String {
+    val now = LocalDateTime.now()
+
+    val minutes = ChronoUnit.MINUTES.between(this, now)
+    val hours = ChronoUnit.HOURS.between(this, now)
+    val days = ChronoUnit.DAYS.between(this, now)
+
+    return when {
+        minutes < 60 -> "${minutes}분 전"
+        hours < 24 -> "${hours}시간 전"
+        else -> "${days}일 전"
+    }
+}

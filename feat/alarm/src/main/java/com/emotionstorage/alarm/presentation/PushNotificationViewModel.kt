@@ -2,39 +2,100 @@ package com.emotionstorage.alarm.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.emotionstorage.domain.common.DataState
+import com.emotionstorage.domain.model.Notification
+import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportByIdUseCase
+import com.emotionstorage.domain.useCase.notification.GetPagedNotificationsUseCase
+import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
-@HiltViewModel
-class PushNotificationViewModel @Inject constructor() : ViewModel() {
-    private val _state = MutableStateFlow<List<PushNotificationState>>(emptyList())
-    val state: StateFlow<List<PushNotificationState>> = _state
+data class PushNotificationState(
+    val isLoading: Boolean = true,
+)
 
-    init {
-        // TODO : Mock Data 추후 삭제
-        loadData(useMock = true)
-    }
+sealed class PushNotificationSideEffect {
+    data class GetDailyReportDetailSuccess(
+        val id: Long,
+    ) : PushNotificationSideEffect()
 
-    fun loadData(useMock: Boolean) {
-        viewModelScope.launch {
-            _state.value = if (useMock) mockItems() else emptyList()
-        }
-    }
+    data class GetTimeCapsuleDetailSuccess(
+        val id: Long,
+    ) : PushNotificationSideEffect()
+
+    object GetDetailError : PushNotificationSideEffect()
 }
 
-private fun mockItems() =
-    listOf(
-        PushNotificationState("1", "어제의 일일리포트가 업데이트 되었습니다.", "0시간 전"),
-        PushNotificationState("2", "새로운 타임캡슐이 도착했어요!", "22시간 전"),
-        PushNotificationState("3", "어제의 일일리포트가 업데이트 되었습니다.", "1일 전"),
-        PushNotificationState("4", "새로운 타임캡슐이 도착했어요!", "21일 전"),
-    )
+sealed class PushNotificationAction {
+    data class GetDailyReportDetail(
+        val id: Long,
+    ) : PushNotificationAction()
 
-data class PushNotificationState(
-    val id: String = "0",
-    val title: String = "",
-    val timeText: String = "",
-)
+    data class GetTimeCapsuleDetail(
+        val id: Long,
+    ) : PushNotificationAction()
+}
+
+@HiltViewModel
+class PushNotificationViewModel @Inject constructor(
+    private val getPagedNotifications: GetPagedNotificationsUseCase,
+    private val getDailyReportById: GetDailyReportByIdUseCase,
+    private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
+) : ViewModel(),
+    ContainerHost<PushNotificationState, PushNotificationSideEffect> {
+    override val container = container<PushNotificationState, PushNotificationSideEffect>(PushNotificationState())
+
+    val notifications: Flow<PagingData<Notification>> =
+        getPagedNotifications().cachedIn(viewModelScope)
+
+    fun onAction(action: PushNotificationAction) {
+        when (action) {
+            is PushNotificationAction.GetDailyReportDetail -> {
+                handleGetDailyReportDetail(action.id)
+            }
+
+            is PushNotificationAction.GetTimeCapsuleDetail -> {
+                handleGetTimeCapsuleDetail(action.id)
+            }
+        }
+    }
+
+    private fun handleGetDailyReportDetail(id: Long) =
+        intent {
+            reduce { state.copy(isLoading = true) }
+            Logger.d("Check daily report of id: $id")
+            getDailyReportById(id).handle(
+                onSuccess = {
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(PushNotificationSideEffect.GetDailyReportDetailSuccess(it.id))
+                },
+                onError = { throwable, code, data ->
+                    Logger.d("Error: $throwable")
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(PushNotificationSideEffect.GetDetailError)
+                },
+            )
+        }
+
+    private fun handleGetTimeCapsuleDetail(id: Long) =
+        intent {
+            Logger.d("Check time capsule of id: $id")
+            reduce { state.copy(isLoading = true) }
+            getTimeCapsuleById(id).collect {
+                if (it is DataState.Success) {
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(PushNotificationSideEffect.GetTimeCapsuleDetailSuccess(it.data.id))
+                } else if (it is DataState.Error) {
+                    Logger.d("Error: $it")
+                    reduce { state.copy(isLoading = false) }
+                    postSideEffect(PushNotificationSideEffect.GetDetailError)
+                }
+            }
+        }
+}
