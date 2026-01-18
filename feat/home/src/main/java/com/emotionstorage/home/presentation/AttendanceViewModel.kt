@@ -21,9 +21,19 @@ class AttendanceViewModel @Inject constructor(
     val uiState: StateFlow<UiState> = _uiState
 
     private val kst = java.time.ZoneId.of("Asia/Seoul")
-    private val iso = java.time.format.DateTimeFormatter.ISO_DATE
-    private fun todayKst(): String = java.time.LocalDate.now(kst).format(iso)
+    private val iso =
+        java
+            .time
+            .format
+            .DateTimeFormatter
+            .ISO_DATE
 
+    private fun todayKst(): String =
+        java
+            .time
+            .LocalDate
+            .now(kst)
+            .format(iso)
 
     fun load() =
         viewModelScope.launch {
@@ -77,12 +87,16 @@ class AttendanceViewModel @Inject constructor(
                             _uiState.value.copy(
                                 summary = s.data,
                                 showDialog = false,
+                                isClaiming = false,
                             )
                     }
 
                     is DataState.Error -> {
                         _uiState.value =
-                            _uiState.value.copy(error = s.throwable.toString())
+                            _uiState.value.copy(
+                                error = s.throwable.toString(),
+                                isClaiming = false,
+                            )
                     }
 
                     is DataState.Loading -> {
@@ -92,32 +106,35 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
-    fun onConfirmReward() = viewModelScope.launch {
-        val currentState = _uiState.value
-        val now = todayKst()
-        val baseDate = currentState.dialogBaseDate
+    fun onConfirmReward() =
+        viewModelScope.launch {
+            val currentState = _uiState.value
+            val now = todayKst()
+            val baseDate = currentState.dialogBaseDate
 
-        if (baseDate == null) {
+            if (baseDate == null) {
+                load()
+                return@launch
+            }
+
+            if (now != baseDate) {
+                _uiState.value =
+                    currentState.copy(
+                        showDialog = false,
+                        showDayChangedAlert = true,
+                        dialogBaseDate = now,
+                    )
+                return@launch
+            }
+
+            claimToday()
+        }
+
+    fun confirmDayChangedAlert() =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(showDayChangedAlert = false)
             load()
-            return@launch
         }
-
-        if (now != baseDate) {
-            _uiState.value = currentState.copy(
-                showDialog = false,
-                showDayChangedAlert = true,
-                dialogBaseDate = now,
-            )
-            return@launch
-        }
-
-        claimToday()
-    }
-
-    fun confirmDayChangedAlert() = viewModelScope.launch {
-        _uiState.value = _uiState.value.copy(showDayChangedAlert = false)
-        load()
-    }
 
     data class UiState(
         val summary: AttendanceSummary? = null,

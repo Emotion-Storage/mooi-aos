@@ -46,6 +46,7 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
+import com.emotionstorage.home.ui.modal.AttendanceRefreshModal
 import com.emotionstorage.home.ui.modal.ResumeChatModal
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.R
@@ -132,7 +133,11 @@ fun HomeScreen(
         )
     }
 
-
+    if (attendanceState.value.showDayChangedAlert) {
+        AttendanceRefreshModal(
+            onConfirm = { attendanceViewModel.confirmDayChangedAlert() },
+        )
+    }
 
     ResumeChatModal(
         isModalOpen = state.value.showResumeChatModal && state.value.pendingChatRoomId != null,
@@ -349,8 +354,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
