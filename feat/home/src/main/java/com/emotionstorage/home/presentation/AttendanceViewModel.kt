@@ -20,6 +20,11 @@ class AttendanceViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState
 
+    private val kst = java.time.ZoneId.of("Asia/Seoul")
+    private val iso = java.time.format.DateTimeFormatter.ISO_DATE
+    private fun todayKst(): String = java.time.LocalDate.now(kst).format(iso)
+
+
     fun load() =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(loading = true, error = null, isClaiming = false)
@@ -27,10 +32,13 @@ class AttendanceViewModel @Inject constructor(
                 _uiState.value =
                     when (s) {
                         is DataState.Success -> {
+                            val today = todayKst()
                             _uiState.value.copy(
                                 summary = s.data,
                                 loading = false,
                                 showDialog = s.data.canClaimToday,
+                                dialogBaseDate = if (s.data.canClaimToday) today else null,
+                                showDayChangedAlert = false,
                             )
                         }
 
@@ -84,11 +92,40 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
+    fun onConfirmReward() = viewModelScope.launch {
+        val currentState = _uiState.value
+        val now = todayKst()
+        val baseDate = currentState.dialogBaseDate
+
+        if (baseDate == null) {
+            load()
+            return@launch
+        }
+
+        if (now != baseDate) {
+            _uiState.value = currentState.copy(
+                showDialog = false,
+                showDayChangedAlert = true,
+                dialogBaseDate = now,
+            )
+            return@launch
+        }
+
+        claimToday()
+    }
+
+    fun confirmDayChangedAlert() = viewModelScope.launch {
+        _uiState.value = _uiState.value.copy(showDayChangedAlert = false)
+        load()
+    }
+
     data class UiState(
         val summary: AttendanceSummary? = null,
         val showDialog: Boolean = false,
         val isClaiming: Boolean = false,
         val loading: Boolean = false,
         val error: String? = null,
+        val dialogBaseDate: String? = null,
+        val showDayChangedAlert: Boolean = false,
     )
 }

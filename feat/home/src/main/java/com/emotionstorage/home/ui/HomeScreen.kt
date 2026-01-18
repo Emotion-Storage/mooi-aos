@@ -47,13 +47,13 @@ import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
 import com.emotionstorage.home.ui.component.ResumeChatModal
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
 fun HomeScreen(
@@ -126,12 +126,13 @@ fun HomeScreen(
     )
 
     if (attendanceState.value.showDialog && summary != null) {
-        // todo: refresh attendance dialog on 23:59
         AttendanceRewardDialog(
             summary = summary,
-            onConfirm = { attendanceViewModel.claimToday() },
+            onConfirm = { attendanceViewModel.onConfirmReward() },
         )
     }
+
+
 
     ResumeChatModal(
         isModalOpen = state.value.showResumeChatModal && state.value.pendingChatRoomId != null,
@@ -348,7 +349,8 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
