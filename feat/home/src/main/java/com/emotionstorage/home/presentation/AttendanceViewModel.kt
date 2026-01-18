@@ -143,7 +143,6 @@ class AttendanceViewModel @Inject constructor(
             _uiState.value = _uiState.value.copy(showDayChangedAlert = false)
             load()
         }
-
 }
 
 data class UiState(
@@ -158,6 +157,8 @@ data class UiState(
 
 sealed interface AttendanceAction {
     data object Init : AttendanceAction
+
     data object ConfirmReward : AttendanceAction
+
     data object ConfirmDayChanged : AttendanceAction
 }
