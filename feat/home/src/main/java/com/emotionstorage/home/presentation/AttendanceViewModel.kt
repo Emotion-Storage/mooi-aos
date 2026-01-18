@@ -35,7 +35,15 @@ class AttendanceViewModel @Inject constructor(
             .now(kst)
             .format(iso)
 
-    fun load() =
+    fun onAction(action: AttendanceAction) {
+        when (action) {
+            AttendanceAction.Init -> load()
+            AttendanceAction.ConfirmReward -> onConfirmReward()
+            AttendanceAction.ConfirmDayChanged -> confirmDayChangedAlert()
+        }
+    }
+
+    private fun load() =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(loading = true, error = null, isClaiming = false)
             getAttendanceUseCase().collect { s ->
@@ -66,7 +74,7 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
-    fun claimToday() =
+    private fun claimToday() =
         viewModelScope.launch {
             val currentState = _uiState.value
 
@@ -106,7 +114,7 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
-    fun onConfirmReward() =
+    private fun onConfirmReward() =
         viewModelScope.launch {
             val currentState = _uiState.value
             val now = todayKst()
@@ -130,19 +138,26 @@ class AttendanceViewModel @Inject constructor(
             claimToday()
         }
 
-    fun confirmDayChangedAlert() =
+    private fun confirmDayChangedAlert() =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(showDayChangedAlert = false)
             load()
         }
 
-    data class UiState(
-        val summary: AttendanceSummary? = null,
-        val showDialog: Boolean = false,
-        val isClaiming: Boolean = false,
-        val loading: Boolean = false,
-        val error: String? = null,
-        val dialogBaseDate: String? = null,
-        val showDayChangedAlert: Boolean = false,
-    )
+}
+
+data class UiState(
+    val summary: AttendanceSummary? = null,
+    val showDialog: Boolean = false,
+    val isClaiming: Boolean = false,
+    val loading: Boolean = false,
+    val error: String? = null,
+    val dialogBaseDate: String? = null,
+    val showDayChangedAlert: Boolean = false,
+)
+
+sealed interface AttendanceAction {
+    data object Init : AttendanceAction
+    data object ConfirmReward : AttendanceAction
+    data object ConfirmDayChanged : AttendanceAction
 }

@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.home.presentation.AttendanceAction
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
@@ -79,7 +80,7 @@ fun HomeScreen(
 
     LaunchedEffect("init") {
         // load attendance state
-        attendanceViewModel.load()
+        attendanceViewModel.onAction(AttendanceAction.Init)
 
         // collect side effect
         viewModel.container.sideEffectFlow.collect {
@@ -129,13 +130,13 @@ fun HomeScreen(
     if (attendanceState.value.showDialog && summary != null) {
         AttendanceRewardDialog(
             summary = summary,
-            onConfirm = { attendanceViewModel.onConfirmReward() },
+            onConfirm = { attendanceViewModel.onAction(AttendanceAction.ConfirmReward) },
         )
     }
 
     if (attendanceState.value.showDayChangedAlert) {
         AttendanceRefreshModal(
-            onConfirm = { attendanceViewModel.confirmDayChangedAlert() },
+            onConfirm = { attendanceViewModel.onAction(AttendanceAction.ConfirmDayChanged) },
         )
     }
 
