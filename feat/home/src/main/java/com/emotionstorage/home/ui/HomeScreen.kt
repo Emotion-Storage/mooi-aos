@@ -46,7 +46,7 @@ import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
-import com.emotionstorage.home.ui.component.ResumeChatModal
+import com.emotionstorage.home.ui.modal.ResumeChatModal
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
