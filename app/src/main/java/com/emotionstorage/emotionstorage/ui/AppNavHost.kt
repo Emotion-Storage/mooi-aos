@@ -269,6 +269,7 @@ internal fun AppNavHost(
                         ChatEntry.Resume -> {
                             navController.navigate(AppDestination.AIChat(roomId))
                         }
+
                         ChatEntry.New -> {
                             val seen = introSeen.value
                             if (seen) {
