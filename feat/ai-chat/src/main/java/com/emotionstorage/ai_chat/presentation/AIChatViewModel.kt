@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import java.time.LocalDate
 import javax.inject.Inject
 
 private const val TIME_CAPSULE_CREATE_SCORE = 70
@@ -39,13 +38,8 @@ data class AIChatState(
     val hasShownForceQuitBottomSheet: Boolean = false,
     val showForceQuitBottomSheet: Boolean = false,
     val isMooiTyping: Boolean = false,
-) {
-    val isEmpty: Boolean get() = messages.isEmpty()
-    val hasTodayHistory: Boolean
-        get() = messages.any { it.timestamp.toLocalDate() == LocalDate.now() }
-    val isNewDayFirstChat: Boolean
-        get() = !isEmpty && !hasTodayHistory
-}
+    val isLoadingHistory: Boolean = false,
+)
 
 sealed class AIChatAction {
     data class ConnectChatRoom(
@@ -135,8 +129,7 @@ class AIChatViewModel @Inject constructor(
             connectChatRoom(roomId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
-                        Logger.i("chat room connected")
-                        postSideEffect(AIChatSideEffect.ToastMessage("채팅방 연결 성공"))
+                        reduce { state.copy(isLoadingHistory = true) }
 
                         when (val history = getChatRoomMessagesUseCase(cursor = null)) {
                             is DataState.Success -> {
@@ -152,11 +145,13 @@ class AIChatViewModel @Inject constructor(
                                         gaugeScore = gauge,
                                         chatProgress = progress,
                                         canCreateTimesCapsule = canCreate,
+                                        isLoadingHistory = false,
                                     )
                                 }
                             }
 
                             is DataState.Error -> {
+                                reduce { state.copy(isLoadingHistory = false) }
                                 Logger.e("history load failed: ${history.throwable}")
                                 postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
                             }
