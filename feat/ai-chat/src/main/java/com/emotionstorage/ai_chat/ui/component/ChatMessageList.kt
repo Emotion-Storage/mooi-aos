@@ -234,7 +234,10 @@ private fun ChatMessageItem(
     }
 }
 
-private fun topPaddingBetween(prev: ChatMessage?, curr: MessageSource): androidx.compose.ui.unit.Dp {
+private fun topPaddingBetween(
+    prev: ChatMessage?,
+    curr: MessageSource,
+): androidx.compose.ui.unit.Dp {
     if (prev == null) return 0.dp
     return when {
         prev.source == MessageSource.SERVER && curr == MessageSource.CLIENT -> 20.dp

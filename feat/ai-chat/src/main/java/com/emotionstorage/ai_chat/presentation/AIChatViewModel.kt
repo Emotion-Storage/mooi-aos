@@ -192,8 +192,11 @@ class AIChatViewModel @Inject constructor(
                             val nextGauge: Int = message.gaugeScore ?: state.gaugeScore
                             val computed = (nextGauge / TIME_CAPSULE_CREATE_SCORE).coerceIn(0f, 1f)
                             val newProgress: Float =
-                                if (nextGauge == 0) state.chatProgress
-                                else maxOf(MIN_PROGRESS, computed)
+                                if (nextGauge == 0) {
+                                    state.chatProgress
+                                } else {
+                                    maxOf(MIN_PROGRESS, computed)
+                                }
                             val canCreate: Boolean = nextGauge >= TIME_CAPSULE_CREATE_SCORE
 
                             if (state.isWaitingReply && isComplete) {
