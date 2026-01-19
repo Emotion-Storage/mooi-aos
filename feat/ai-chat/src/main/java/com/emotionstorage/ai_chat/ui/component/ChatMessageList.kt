@@ -62,13 +62,7 @@ fun ChatMessageList(
                 Spacer(modifier = Modifier.height(24.dp))
             } else {
                 val previousChat = chatMessages[index - 1]
-                val topPadding =
-                    when {
-                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.CLIENT -> 20.dp
-                        previousChat.source == MessageSource.CLIENT && item.source == MessageSource.SERVER -> 10.dp
-                        previousChat.source == MessageSource.SERVER && item.source == MessageSource.SERVER -> 8.dp
-                        else -> 20.dp
-                    }
+                val topPadding = topPaddingBetween(previousChat, item.source)
                 Spacer(Modifier.size(topPadding))
             }
 
@@ -90,11 +84,7 @@ fun ChatMessageList(
                 val showTypingProfile =
                     lastMessage == null || lastMessage.source != MessageSource.SERVER
 
-                val topPadding =
-                    when (lastMessage?.source) {
-                        MessageSource.SERVER -> 8.dp
-                        else -> 20.dp
-                    }
+                val topPadding = topPaddingBetween(lastMessage, MessageSource.SERVER)
 
                 Spacer(Modifier.height(topPadding))
 
@@ -241,6 +231,16 @@ private fun ChatMessageItem(
                 )
             }
         }
+    }
+}
+
+private fun topPaddingBetween(prev: ChatMessage?, curr: MessageSource): androidx.compose.ui.unit.Dp {
+    if (prev == null) return 0.dp
+    return when {
+        prev.source == MessageSource.SERVER && curr == MessageSource.CLIENT -> 20.dp
+        prev.source == MessageSource.CLIENT && curr == MessageSource.SERVER -> 10.dp
+        prev.source == MessageSource.SERVER && curr == MessageSource.SERVER -> 8.dp
+        else -> 20.dp
     }
 }
 
