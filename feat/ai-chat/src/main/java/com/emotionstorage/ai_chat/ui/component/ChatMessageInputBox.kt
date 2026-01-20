@@ -159,7 +159,7 @@ fun ChatMessageInputBox(
             Box(
                 modifier =
                     Modifier
-                        .padding(end = 7.dp, bottom = 7.dp, top = 7.dp)
+                        .padding(7.dp)
                         .size(33.dp)
                         .clip(CircleShape)
                         .align(Alignment.Bottom)

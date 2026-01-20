@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
@@ -64,7 +65,7 @@ fun HomeScreen(
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
     navToDailyReport: (Long) -> Unit = { },
-    navToChat: (Long) -> Unit = {},
+    navToChat: (Long, ChatEntry) -> Unit = { _, _ -> },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val context = LocalContext.current
@@ -89,7 +90,7 @@ fun HomeScreen(
                 }
 
                 is HomeSideEffect.EnterChatRoom -> {
-                    navToChat(it.roomId)
+                    navToChat(it.roomId, it.entry)
                 }
 
                 is BaseSideEffect.NetworkError -> {
