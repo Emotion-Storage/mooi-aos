@@ -25,9 +25,10 @@ class AttendanceViewModel @Inject constructor(
     private val kst = java.time.ZoneId.of("Asia/Seoul")
     private val iso = DateTimeFormatter.ISO_DATE
 
-    private fun todayKst(): String = LocalDate
-        .now(kst)
-        .format(iso)
+    private fun todayKst(): String =
+        LocalDate
+            .now(kst)
+            .format(iso)
 
     fun onAction(action: AttendanceAction) {
         when (action) {
