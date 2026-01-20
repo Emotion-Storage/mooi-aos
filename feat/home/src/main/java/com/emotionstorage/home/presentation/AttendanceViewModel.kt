@@ -10,6 +10,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,12 +22,7 @@ class AttendanceViewModel @Inject constructor(
     val uiState: StateFlow<UiState> = _uiState
 
     private val kst = java.time.ZoneId.of("Asia/Seoul")
-    private val iso =
-        java
-            .time
-            .format
-            .DateTimeFormatter
-            .ISO_DATE
+    private val iso = DateTimeFormatter.ISO_DATE
 
     private fun todayKst(): String =
         java
