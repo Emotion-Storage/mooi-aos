@@ -3,6 +3,7 @@ package com.emotionstorage.home.presentation
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.domain.useCase.chat.DeleteChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.GetChatRoomSessionUseCase
 import com.emotionstorage.domain.useCase.home.GetHomeUseCase
@@ -46,6 +47,7 @@ sealed class HomeSideEffect : BaseSideEffect {
 
     data class EnterChatRoom(
         val roomId: Long,
+        val entry: ChatEntry,
     ) : HomeSideEffect()
 }
 
@@ -178,7 +180,7 @@ class HomeViewModel
                                     pendingChatRoomId = null,
                                 )
                             }
-                            postSideEffect(HomeSideEffect.EnterChatRoom(session.roomId))
+                            postSideEffect(HomeSideEffect.EnterChatRoom(session.roomId, ChatEntry.New))
                         }
                     },
                     onError = { throwable, code, data ->
@@ -208,7 +210,7 @@ class HomeViewModel
                 }
 
                 // TODO : 채팅방 불러오기 작업
-                postSideEffect(HomeSideEffect.EnterChatRoom(roomId))
+                postSideEffect(HomeSideEffect.EnterChatRoom(roomId, ChatEntry.Resume))
             }
 
         private fun handleDismissResumeChat() =

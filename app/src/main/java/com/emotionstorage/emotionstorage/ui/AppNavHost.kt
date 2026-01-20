@@ -21,6 +21,7 @@ import com.emotionstorage.alarm.ui.PushNotificationScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
+import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
 import com.emotionstorage.my.ui.accountInfo.AccountInfoScreen
@@ -263,13 +264,20 @@ internal fun AppNavHost(
         composable<AppDestination.Home> {
             HomeScreen(
                 bottomAppBar = bottomAppBar,
-                navToChat = { roomId ->
-                    // DataStore 의 값에 따라 분기 처리
-                    val seen = introSeen.value
-                    if (seen) {
-                        navController.navigate(AppDestination.AIChat(roomId))
-                    } else {
-                        navController.navigate(AppDestination.AIChatDesc(roomId))
+                navToChat = { roomId, entry ->
+                    when (entry) {
+                        ChatEntry.Resume -> {
+                            navController.navigate(AppDestination.AIChat(roomId))
+                        }
+
+                        ChatEntry.New -> {
+                            val seen = introSeen.value
+                            if (seen) {
+                                navController.navigate(AppDestination.AIChat(roomId))
+                            } else {
+                                navController.navigate(AppDestination.AIChatDesc(roomId))
+                            }
+                        }
                     }
                 },
                 navToKey = {

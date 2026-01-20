@@ -21,10 +21,10 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.viewmodel.container
-import java.time.LocalDate
 import javax.inject.Inject
 
-private const val TIME_CAPSULE_CREATE_SCORE = 70
+private const val MIN_PROGRESS = 0.03f
+private const val TIME_CAPSULE_CREATE_SCORE = 70f
 
 data class AIChatState(
     val roomId: Long = 0L,
@@ -39,13 +39,8 @@ data class AIChatState(
     val hasShownForceQuitBottomSheet: Boolean = false,
     val showForceQuitBottomSheet: Boolean = false,
     val isMooiTyping: Boolean = false,
-) {
-    val isEmpty: Boolean get() = messages.isEmpty()
-    val hasTodayHistory: Boolean
-        get() = messages.any { it.timestamp.toLocalDate() == LocalDate.now() }
-    val isNewDayFirstChat: Boolean
-        get() = !isEmpty && !hasTodayHistory
-}
+    val isLoadingHistory: Boolean = false,
+)
 
 sealed class AIChatAction {
     data class ConnectChatRoom(
@@ -135,15 +130,15 @@ class AIChatViewModel @Inject constructor(
             connectChatRoom(roomId).collect { result ->
                 when (result) {
                     is DataState.Success -> {
-                        Logger.i("chat room connected")
-                        postSideEffect(AIChatSideEffect.ToastMessage("채팅방 연결 성공"))
+                        reduce { state.copy(isLoadingHistory = true) }
 
                         when (val history = getChatRoomMessagesUseCase(cursor = null)) {
                             is DataState.Success -> {
                                 val historyMessages: List<ChatMessage> = history.data
 
                                 val gauge: Int = historyMessages.lastOrNull()?.gaugeScore ?: 0
-                                val progress: Float = (gauge / 70f).coerceIn(0f, 1f)
+                                val computed = (gauge / TIME_CAPSULE_CREATE_SCORE).coerceIn(0f, 1f)
+                                val progress: Float = if (gauge == 0) MIN_PROGRESS else maxOf(MIN_PROGRESS, computed)
                                 val canCreate: Boolean = gauge >= TIME_CAPSULE_CREATE_SCORE
 
                                 reduce {
@@ -152,11 +147,13 @@ class AIChatViewModel @Inject constructor(
                                         gaugeScore = gauge,
                                         chatProgress = progress,
                                         canCreateTimesCapsule = canCreate,
+                                        isLoadingHistory = false,
                                     )
                                 }
                             }
 
                             is DataState.Error -> {
+                                reduce { state.copy(isLoadingHistory = false) }
                                 Logger.e("history load failed: ${history.throwable}")
                                 postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
                             }
@@ -193,7 +190,13 @@ class AIChatViewModel @Inject constructor(
                         .onEach { message ->
                             val isComplete = message.isComplete
                             val nextGauge: Int = message.gaugeScore ?: state.gaugeScore
-                            val newProgress: Float = (nextGauge / 70f).coerceIn(0f, 1f)
+                            val computed = (nextGauge / TIME_CAPSULE_CREATE_SCORE).coerceIn(0f, 1f)
+                            val newProgress: Float =
+                                if (nextGauge == 0) {
+                                    state.chatProgress
+                                } else {
+                                    maxOf(MIN_PROGRESS, computed)
+                                }
                             val canCreate: Boolean = nextGauge >= TIME_CAPSULE_CREATE_SCORE
 
                             if (state.isWaitingReply && isComplete) {
@@ -205,7 +208,6 @@ class AIChatViewModel @Inject constructor(
                                 }
                             }
 
-                            // TODO : gauge 값이 간헐적으로 null이 안들어오게 된다면 !! turnScore 값을 non-null type으로 변경
                             reduce {
                                 val rawTurnCountScore = message.turnCountScore
 

@@ -49,6 +49,7 @@ import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
+import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.delay
 
@@ -119,7 +120,7 @@ private fun StatelessAIChatScreen(
     val isKeyboardVisible = WindowInsets.ime.getBottom(density) > 0
 
     val hasMessage = state.messages.isNotEmpty()
-    val showEmptyScreen = !hasMessage
+    val showEmptyScreen = !hasMessage && !state.isLoadingHistory
 
     LaunchedEffect(state.messages.size) {
         val last = state.messages.lastIndex
@@ -216,6 +217,10 @@ private fun StatelessAIChatScreen(
                                 ),
                             isKeyboardVisible = isKeyboardVisible,
                         )
+                    }
+
+                    if (state.isLoadingHistory) {
+                        LoadingOverlay()
                     }
                 }
 

@@ -43,13 +43,14 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun AIChatDescriptionScreen(
     roomId: Long,
     modifier: Modifier = Modifier,
+    skipDescription: Boolean = false,
     onCheckboxChanged: (Boolean) -> Unit = {},
     onStartChat: (Long) -> Unit = {},
 ) {
     var progressRect by remember { mutableStateOf(Rect.Zero) }
     var inputRect by remember { mutableStateOf(Rect.Zero) }
     var topbarRect by remember { mutableStateOf(Rect.Zero) }
-    var showDescription by rememberSaveable { mutableStateOf(true) }
+    var showDescription by rememberSaveable(skipDescription) { mutableStateOf(!skipDescription) }
 
     StatelessAIChatDescriptionScreen(
         modifier = modifier,
