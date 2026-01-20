@@ -49,7 +49,7 @@ enum class FavoriteSortBy(
     val label: String,
 ) {
     NEWEST("최신 날짜순"),
-    FAVORITE_AT("즐겨찾기순"),
+    FAVORITE_AT("최근 담은순"),
     ;
 
     companion object {
