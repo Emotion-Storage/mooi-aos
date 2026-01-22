@@ -1,4 +1,4 @@
-package com.emotionstorage.home.ui.component
+package com.emotionstorage.home.ui.modal
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview

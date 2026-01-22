@@ -41,20 +41,22 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.domain.model.ChatEntry
+import com.emotionstorage.home.presentation.AttendanceAction
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
 import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
 import com.emotionstorage.home.ui.component.AttendanceRewardDialog
-import com.emotionstorage.home.ui.component.ResumeChatModal
+import com.emotionstorage.home.ui.modal.AttendanceRefreshModal
+import com.emotionstorage.home.ui.modal.ResumeChatModal
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
-import com.emotionstorage.presentation.BaseSideEffect
 
 @Composable
 fun HomeScreen(
@@ -79,7 +81,7 @@ fun HomeScreen(
 
     LaunchedEffect("init") {
         // load attendance state
-        attendanceViewModel.load()
+        attendanceViewModel.onAction(AttendanceAction.Init)
 
         // collect side effect
         viewModel.container.sideEffectFlow.collect {
@@ -127,10 +129,15 @@ fun HomeScreen(
     )
 
     if (attendanceState.value.showDialog && summary != null) {
-        // todo: refresh attendance dialog on 23:59
         AttendanceRewardDialog(
             summary = summary,
-            onConfirm = { attendanceViewModel.claimToday() },
+            onConfirm = { attendanceViewModel.onAction(AttendanceAction.ConfirmReward) },
+        )
+    }
+
+    if (attendanceState.value.showDayChangedAlert) {
+        AttendanceRefreshModal(
+            onConfirm = { attendanceViewModel.onAction(AttendanceAction.ConfirmDayChanged) },
         )
     }
 

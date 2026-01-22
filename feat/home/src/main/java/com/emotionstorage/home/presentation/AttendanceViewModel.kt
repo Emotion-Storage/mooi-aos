@@ -10,6 +10,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.format.DateTimeFormatter
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,17 +22,36 @@ class AttendanceViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState
 
-    fun load() =
+    private val kst = java.time.ZoneId.of("Asia/Seoul")
+    private val iso = DateTimeFormatter.ISO_DATE
+
+    private fun todayKst(): String =
+        LocalDate
+            .now(kst)
+            .format(iso)
+
+    fun onAction(action: AttendanceAction) {
+        when (action) {
+            AttendanceAction.Init -> load()
+            AttendanceAction.ConfirmReward -> onConfirmReward()
+            AttendanceAction.ConfirmDayChanged -> confirmDayChangedAlert()
+        }
+    }
+
+    private fun load() =
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(loading = true, error = null, isClaiming = false)
             getAttendanceUseCase().collect { s ->
                 _uiState.value =
                     when (s) {
                         is DataState.Success -> {
+                            val today = todayKst()
                             _uiState.value.copy(
                                 summary = s.data,
                                 loading = false,
                                 showDialog = s.data.canClaimToday,
+                                dialogBaseDate = if (s.data.canClaimToday) today else null,
+                                showDayChangedAlert = false,
                             )
                         }
 
@@ -48,7 +69,7 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
-    fun claimToday() =
+    private fun claimToday() =
         viewModelScope.launch {
             val currentState = _uiState.value
 
@@ -69,12 +90,16 @@ class AttendanceViewModel @Inject constructor(
                             _uiState.value.copy(
                                 summary = s.data,
                                 showDialog = false,
+                                isClaiming = false,
                             )
                     }
 
                     is DataState.Error -> {
                         _uiState.value =
-                            _uiState.value.copy(error = s.throwable.toString())
+                            _uiState.value.copy(
+                                error = s.throwable.toString(),
+                                isClaiming = false,
+                            )
                     }
 
                     is DataState.Loading -> {
@@ -84,11 +109,51 @@ class AttendanceViewModel @Inject constructor(
             }
         }
 
-    data class UiState(
-        val summary: AttendanceSummary? = null,
-        val showDialog: Boolean = false,
-        val isClaiming: Boolean = false,
-        val loading: Boolean = false,
-        val error: String? = null,
-    )
+    private fun onConfirmReward() =
+        viewModelScope.launch {
+            val currentState = _uiState.value
+            val now = todayKst()
+            val baseDate = currentState.dialogBaseDate
+
+            if (baseDate == null) {
+                load()
+                return@launch
+            }
+
+            if (now != baseDate) {
+                _uiState.value =
+                    currentState.copy(
+                        showDialog = false,
+                        showDayChangedAlert = true,
+                        dialogBaseDate = now,
+                    )
+                return@launch
+            }
+
+            claimToday()
+        }
+
+    private fun confirmDayChangedAlert() =
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(showDayChangedAlert = false)
+            load()
+        }
+}
+
+data class UiState(
+    val summary: AttendanceSummary? = null,
+    val showDialog: Boolean = false,
+    val isClaiming: Boolean = false,
+    val loading: Boolean = false,
+    val error: String? = null,
+    val dialogBaseDate: String? = null,
+    val showDayChangedAlert: Boolean = false,
+)
+
+sealed interface AttendanceAction {
+    data object Init : AttendanceAction
+
+    data object ConfirmReward : AttendanceAction
+
+    data object ConfirmDayChanged : AttendanceAction
 }
