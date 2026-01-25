@@ -192,7 +192,7 @@ private fun StatelessMyPageScreen(
                     },
                 )
 
-                Spacer(modifier = Modifier.size(16.dp))
+                Spacer(modifier = Modifier.size(8.dp))
 
                 KeyCard(
                     keyCount = state.keyCount,
@@ -200,7 +200,7 @@ private fun StatelessMyPageScreen(
                     navToKeyDescription()
                 }
 
-                Spacer(modifier = Modifier.size(24.dp))
+                Spacer(modifier = Modifier.size(12.dp))
 
                 MenuSection(
                     versionInfo = state.versionName,
@@ -256,6 +256,8 @@ private fun StatelessMyPageScreen(
 @Composable
 private fun MyPageScreenPreview() {
     MooiTheme {
-        StatelessMyPageScreen()
+        StatelessMyPageScreen(
+            state = MyPageState(isLoading = false)
+        )
     }
 }
