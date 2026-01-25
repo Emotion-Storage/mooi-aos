@@ -4,25 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
@@ -32,11 +24,11 @@ import com.emotionstorage.alarm.presentation.PushNotificationAction
 import com.emotionstorage.alarm.presentation.PushNotificationSideEffect
 import com.emotionstorage.alarm.presentation.PushNotificationViewModel
 import com.emotionstorage.alarm.ui.component.EmptyPushHolder
+import com.emotionstorage.alarm.ui.component.NotificationInfo
 import com.emotionstorage.alarm.ui.component.PushAlarmCard
 import com.emotionstorage.domain.model.Notification
 import com.emotionstorage.domain.model.NotificationType.DailyReportArrival
 import com.emotionstorage.domain.model.NotificationType.TimeCapsuleArrival
-import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingDots
@@ -54,7 +46,7 @@ fun PushNotificationScreen(
     val lazyNotifications = viewModel.notifications.collectAsLazyPagingItems()
 
     val snackState = remember { SnackbarHostState() }
-    val snackbarController = remember { AppSnackbarController(snackState) }
+    val snackBarController = remember { AppSnackbarController(snackState) }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
@@ -68,7 +60,7 @@ fun PushNotificationScreen(
                 }
 
                 is PushNotificationSideEffect.GetDetailError -> {
-                    snackbarController.showSnackbar(
+                    snackBarController.showSnackbar(
                         message = "아쉽지만 이 기록은 더 이상 열 수 없어요.",
                     )
                 }
@@ -79,7 +71,7 @@ fun PushNotificationScreen(
     StatelessPushNotificationScreen(
         lazyNotifications = lazyNotifications,
         snackState = snackState,
-        snackbarController = snackbarController,
+        snackbarController = snackBarController,
         onAction = viewModel::onAction,
         navToBack = navToBack,
     )
@@ -110,6 +102,8 @@ private fun StatelessPushNotificationScreen(
             )
         },
     ) { innerPadding ->
+        val refreshState = lazyNotifications?.loadState?.refresh
+
         Box(
             modifier =
                 Modifier
@@ -117,53 +111,40 @@ private fun StatelessPushNotificationScreen(
                     .background(color = MooiTheme.colorScheme.backgroundDefault)
                     .padding(innerPadding),
         ) {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(13.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                item {
-                    Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(24.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Start,
-                    ) {
-                        Icon(
+            when (refreshState) {
+                is LoadState.NotLoading -> {
+                    if (lazyNotifications.itemCount == 0) {
+                        Box(
                             modifier =
                                 Modifier
-                                    .size(18.dp),
-                            painter = painterResource(R.drawable.ic_alarm),
-                            contentDescription = "알림 아이콘",
-                            tint = MooiTheme.colorScheme.gray600,
-                        )
+                                    .fillMaxSize()
+                                    .padding(start = 16.dp, end = 16.dp, top = 12.dp),
+                        ) {
+                            EmptyPushHolder(modifier = Modifier.fillMaxSize())
 
-                        Spacer(modifier = Modifier.width(6.dp))
-
-                        Text(
-                            text = "최근 3주간의 알림이 표시됩니다.",
-                            style = MooiTheme.typography.caption7,
-                            color = MooiTheme.colorScheme.gray500,
-                        )
-                    }
-                }
-
-                // update ui when load state is not loading
-                when (lazyNotifications?.loadState?.refresh) {
-                    is LoadState.NotLoading -> {
-                        if (lazyNotifications.itemCount == 0) {
+                            NotificationInfo(
+                                modifier =
+                                    Modifier
+                                        .fillMaxWidth()
+                                        .align(Alignment.TopStart),
+                            )
+                        }
+                    } else {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxSize(),
+                            contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
+                            verticalArrangement = Arrangement.spacedBy(13.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
                             item {
-                                EmptyPushHolder()
+                                NotificationInfo()
                             }
-                        } else {
+
                             items(
                                 count = lazyNotifications.itemCount,
                                 key = { lazyNotifications[it]?.id ?: it },
-                            ) { item ->
-                                val item = lazyNotifications[item] ?: return@items
+                            ) { index ->
+                                val item = lazyNotifications[index] ?: return@items
 
                                 when (item.type) {
                                     is DailyReportArrival -> {
@@ -199,8 +180,18 @@ private fun StatelessPushNotificationScreen(
                             }
                         }
                     }
+                }
 
-                    else -> {
+                else -> {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(start = 16.dp, end = 16.dp, top = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(13.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        item {
+                            NotificationInfo()
+                        }
                         item {
                             LoadingDots(
                                 modifier = Modifier.padding(top = 244.dp),
