@@ -24,12 +24,12 @@ import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
 import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.home.ui.HomeScreen
+import com.emotionstorage.my.ui.NicknameChangeScreen
+import com.emotionstorage.my.ui.TermsAndPrivacyScreen
 import com.emotionstorage.my.ui.accountInfo.AccountInfoScreen
 import com.emotionstorage.my.ui.keyDescription.KeyDescriptionScreen
 import com.emotionstorage.my.ui.myPage.MyPageScreen
-import com.emotionstorage.my.ui.NicknameChangeScreen
 import com.emotionstorage.my.ui.notificationSettings.NotificationSettingScreen
-import com.emotionstorage.my.ui.TermsAndPrivacyScreen
 import com.emotionstorage.my.ui.withdraw.WithDrawNoticeScreen
 import com.emotionstorage.time_capsule.ui.ArrivedTimeCapsulesScreen
 import com.emotionstorage.time_capsule.ui.CalendarScreen
@@ -39,11 +39,12 @@ import com.emotionstorage.time_capsule_detail.ui.TimeCapsuleDetailScreen
 import com.emotionstorage.tutorial.ui.OnBoardingNavHost
 import com.emotionstorage.tutorial.ui.SplashScreen
 import com.emotionstorage.tutorial.ui.TutorialScreen
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.appBar.BottomAppNavBar
 import com.emotionstorage.ui.component.appBar.BottomNavDest
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.navigateAsRoot
 import com.emotionstorage.ui.util.navigateWithClearStack
-import com.emotionstorage.ui.R
 import kotlinx.serialization.Serializable
 
 /**
@@ -417,10 +418,7 @@ internal fun AppNavHost(
                 id = arguments.id,
                 isNewTimeCapsule = arguments.isNewTimeCapsule,
                 navToMain = {
-                    navController.navigate(AppDestination.Home) {
-                        popUpTo(navController.graph.id) { inclusive = true }
-                        launchSingleTop = true
-                    }
+                    navController.navigateAsRoot(AppDestination.Home)
                 },
                 navToPrevious = {
                     // pop twice, to navigate to previous screen
@@ -457,7 +455,7 @@ internal fun AppNavHost(
                     navController.popBackStack()
                 },
                 navToLogin = {
-                    navController.navigateWithClearStack(AppDestination.Login)
+                    navController.navigateAsRoot(AppDestination.Login)
                 },
                 /*  navToNotificationSetting = {
                       navController.navigateWithClearStack(AppDestination.NotificationSetting)
