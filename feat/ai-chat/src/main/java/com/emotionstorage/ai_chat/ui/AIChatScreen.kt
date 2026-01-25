@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -237,7 +238,14 @@ private fun StatelessAIChatScreen(
 
                 if (state.showForceQuitBottomSheet) {
                     ForceQuitChatBottomSheet(
-                        onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
+                        sheetState =
+                            rememberModalBottomSheetState(
+                                skipPartiallyExpanded = true,
+                                confirmValueChange = { next ->
+                                    next != SheetValue.Hidden
+                                },
+                            ),
+                        onDismissRequest = { /* no-op */ },
                         onConfirm = {
                             onAction(AIChatAction.DismissForceQuitSheet)
                             onAction(AIChatAction.CreateTimeCapsule)
