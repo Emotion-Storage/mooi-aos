@@ -1,7 +1,9 @@
 package com.emotionstorage.home.ui.modal
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -33,6 +35,7 @@ fun ResumeChatModal(
             onDismissRequest = onDismissRequest,
             dismissOnBackPress = false,
             dismissOnClickOutside = false,
+            contentPadding = PaddingValues(start = 19.dp, end = 19.dp, top = 23.dp, bottom = 28.dp),
             title = "이전 감정 대화를\n마치지 않았어요.\n이어서 계속 대화할까요?",
             bottomDescription = "'그만하기'를 누르면 이전 대화는 삭제돼요.",
             confirmLabel = "대화를 이어서 진행할게요.",
