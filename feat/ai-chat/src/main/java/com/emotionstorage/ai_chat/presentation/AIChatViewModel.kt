@@ -155,7 +155,6 @@ class AIChatViewModel @Inject constructor(
                             is DataState.Error -> {
                                 reduce { state.copy(isLoadingHistory = false) }
                                 Logger.e("history load failed: ${history.throwable}")
-                                postSideEffect(AIChatSideEffect.ToastMessage("이전 대화 불러오기 실패"))
                             }
 
                             is DataState.Loading -> {
@@ -169,7 +168,6 @@ class AIChatViewModel @Inject constructor(
 
                     is DataState.Error -> {
                         Logger.e("chat room connection failed, ${result.throwable}")
-                        postSideEffect(AIChatSideEffect.ToastMessage("채팅방 연결 실패"))
                     }
 
                     is DataState.Loading -> {
@@ -316,12 +314,10 @@ class AIChatViewModel @Inject constructor(
                 when (result) {
                     is DataState.Success -> {
                         Logger.d("chat room disconnected + $result")
-                        postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 성공"))
                     }
 
                     is DataState.Error -> {
                         Logger.e("chat room disconnection failed, ${result.throwable}")
-                        postSideEffect(AIChatSideEffect.ToastMessage("채팅방 나가기 실패"))
                     }
 
                     is DataState.Loading -> {
@@ -341,7 +337,6 @@ class AIChatViewModel @Inject constructor(
             val roomId = state.roomId
             if (roomId == 0L) {
                 Logger.e("Invalid roomId: $roomId")
-                postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
                 return@intent
             }
 
@@ -360,9 +355,6 @@ class AIChatViewModel @Inject constructor(
 
                     is DataState.Error -> {
                         Logger.e("createTimeCapsule error: ${result.throwable}")
-                        postSideEffect(
-                            AIChatSideEffect.ToastMessage("타임캡슐 생성 실패"),
-                        )
                     }
 
                     is DataState.Loading -> {
@@ -388,18 +380,17 @@ class AIChatViewModel @Inject constructor(
             val roomId = state.roomId
             // TODO : ToastMesage 추후 제거
             if (roomId == 0L) {
-                postSideEffect(AIChatSideEffect.ToastMessage("채팅방 정보가 올바르지 않아요"))
                 postSideEffect(AIChatSideEffect.NavigateBack)
                 return@intent
             }
 
             when (val save = tempSaveChatRoomUseCase(roomId)) {
                 is DataState.Success -> {
-                    postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
+
                 }
 
                 is DataState.Error -> {
-                    postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 실패"))
+                    Logger.e("temp save error: ${save.throwable}")
                 }
 
                 else -> {
