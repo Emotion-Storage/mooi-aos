@@ -76,21 +76,23 @@ fun StatelessKeyDescriptionScreen(
         containerColor = MooiTheme.colorScheme.backgroundDefault,
     ) { innerPadding ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
-        ) {
-
-            Column(
-                modifier = Modifier
+            modifier =
+                Modifier
                     .fillMaxSize()
-                    .padding(
-                        bottom = rememberAdaptiveHeightDp(
-                            baseDp = 47.dp,
-                            minDp = 28.dp,
-                            maxDp = 60.dp,
-                        )
-                    ),
+                    .padding(innerPadding),
+        ) {
+            Column(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(
+                            bottom =
+                                rememberAdaptiveHeightDp(
+                                    baseDp = 47.dp,
+                                    minDp = 28.dp,
+                                    maxDp = 60.dp,
+                                ),
+                        ),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
@@ -110,13 +112,14 @@ fun StatelessKeyDescriptionScreen(
                 )
 
                 Spacer(
-                    modifier = Modifier.size(
-                        rememberAdaptiveHeightDp(
-                            baseDp = 58.dp,
-                            minDp = 36.dp,
-                            maxDp = 90.dp,
-                        )
-                    )
+                    modifier =
+                        Modifier.size(
+                            rememberAdaptiveHeightDp(
+                                baseDp = 58.dp,
+                                minDp = 36.dp,
+                                maxDp = 90.dp,
+                            ),
+                        ),
                 )
 
                 Image(
@@ -126,15 +129,16 @@ fun StatelessKeyDescriptionScreen(
                 )
 
                 Spacer(
-                    modifier = Modifier
-                        .heightIn(
-                            min = rememberAdaptiveHeightDp(
-                                baseDp = 48.dp,
-                                minDp = 28.dp,
-                                maxDp = 72.dp,
-                            )
-                        )
-                        .weight(1f, fill = true)
+                    modifier =
+                        Modifier
+                            .heightIn(
+                                min =
+                                    rememberAdaptiveHeightDp(
+                                        baseDp = 48.dp,
+                                        minDp = 28.dp,
+                                        maxDp = 72.dp,
+                                    ),
+                            ).weight(1f, fill = true),
                 )
 
                 Text(
@@ -149,13 +153,14 @@ fun StatelessKeyDescriptionScreen(
                 CountRow(count = state.keyCount)
 
                 Spacer(
-                    modifier = Modifier.size(
-                        rememberAdaptiveHeightDp(
-                            baseDp = 93.dp,
-                            minDp = 60.dp,
-                            maxDp = 126.dp,
-                        )
-                    )
+                    modifier =
+                        Modifier.size(
+                            rememberAdaptiveHeightDp(
+                                baseDp = 93.dp,
+                                minDp = 60.dp,
+                                maxDp = 126.dp,
+                            ),
+                        ),
                 )
 
                 Row(

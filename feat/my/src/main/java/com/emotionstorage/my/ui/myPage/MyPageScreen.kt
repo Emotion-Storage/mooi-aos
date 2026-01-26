@@ -257,7 +257,7 @@ private fun StatelessMyPageScreen(
 private fun MyPageScreenPreview() {
     MooiTheme {
         StatelessMyPageScreen(
-            state = MyPageState(isLoading = false)
+            state = MyPageState(isLoading = false),
         )
     }
 }

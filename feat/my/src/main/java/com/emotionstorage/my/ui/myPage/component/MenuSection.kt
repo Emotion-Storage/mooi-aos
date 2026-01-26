@@ -45,8 +45,7 @@ fun MenuSection(
                 .background(
                     color = Color.Black.copy(alpha = 0.2f),
                     shape = RoundedCornerShape(10.dp),
-                )
-                .padding(vertical = 25.dp),
+                ).padding(vertical = 25.dp),
         verticalArrangement = Arrangement.spacedBy(25.dp),
     ) {
         MenuItem(
