@@ -188,7 +188,9 @@ fun StatelessKeyDescriptionScreen(
                     )
                 }
 
-                null -> Unit
+                null -> {
+                    Unit
+                }
             }
         }
     }
