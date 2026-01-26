@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun rememberAdaptiveHeightDp(
     baseDp: Dp,
-    referenceHeightDp: Int = 800,
+    referenceHeightDp: Int = 752,
     minDp: Dp = 0.dp,
     maxDp: Dp = 1000.dp,
 ): Dp {
