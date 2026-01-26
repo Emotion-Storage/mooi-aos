@@ -46,7 +46,7 @@ fun WhenToUseKeyDialog(
             tonalElevation = 6.dp,
             shadowElevation = 12.dp,
             color = MooiTheme.colorScheme.backgroundDefault,
-            modifier = Modifier.width(321.dp),
+            modifier = Modifier.width(328.dp),
         ) {
             Box(
                 contentAlignment = Alignment.TopCenter,
@@ -55,7 +55,7 @@ fun WhenToUseKeyDialog(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(top = 17.dp, start = 25.dp, end = 25.dp, bottom = 35.dp),
+                            .padding(top = 17.dp, start = 20.dp, end = 20.dp, bottom = 35.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Box(
@@ -65,7 +65,7 @@ fun WhenToUseKeyDialog(
                                 .height(28.dp),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_key),
+                            painter = painterResource(R.drawable.graphic__key),
                             contentDescription = "열쇠",
                             tint = MooiTheme.colorScheme.primaryBlue500,
                             modifier =
