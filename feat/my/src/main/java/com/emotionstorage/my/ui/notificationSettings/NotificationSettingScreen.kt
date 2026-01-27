@@ -39,30 +39,51 @@ import com.emotionstorage.my.ui.notificationSettings.component.DayOfWeekSelector
 import com.emotionstorage.my.ui.notificationSettings.component.ReminderTimeComponent
 import com.emotionstorage.my.ui.notificationSettings.component.ToggleRow
 import com.emotionstorage.my.ui.notificationSettings.component.RequestPermissionBottomSheet
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.presentation.notification.NotificationPermissionGateViewModel
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.TimePickerBottomSheet
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 import java.time.DayOfWeek
 
-enum class Sheet { None, Permission, TimePicker }
+private enum class ModalState { None, TempError, LoginSessionExpired }
+private enum class SheetState { None, Permission, TimePicker }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotificationSettingScreen(
+    navToBack: () -> Unit,
+    navToLogin: () -> Unit,
     viewModel: NotificationSettingViewModel = hiltViewModel(),
     permissionGateViewModel: NotificationPermissionGateViewModel = hiltViewModel(),
-    navToBack: () -> Unit,
 ) {
     val context = LocalContext.current
     val state = viewModel.state.collectAsState()
+
+    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
+    val (sheetState, setSheetState) = remember { mutableStateOf(SheetState.None) }
+
+    LaunchedEffect(Unit){
+        viewModel.container.sideEffectFlow.collect{
+            when(it){
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(ModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(ModalState.LoginSessionExpired)
+                }
+            }
+        }
+    }
+
     val permissionInfo by permissionGateViewModel.info.collectAsState()
-
-    var activeSheet by remember { mutableStateOf(Sheet.None) }
-
     val locallyAllowed = permissionInfo.status == NotificationPermissionStatus.Granted
 
     LifecycleResumeEffect(Unit) {
@@ -77,7 +98,9 @@ fun NotificationSettingScreen(
     }
 
     LaunchedEffect(locallyAllowed) {
-        activeSheet = if (locallyAllowed) Sheet.None else Sheet.Permission
+        setSheetState(
+            if (locallyAllowed) SheetState.None else SheetState.Permission
+        )
     }
 
     StatelessNotificationSettingScreen(
@@ -86,7 +109,7 @@ fun NotificationSettingScreen(
             if (locallyAllowed) {
                 viewModel.setAppPush(isOn)
             } else {
-                activeSheet = Sheet.Permission
+                setSheetState(SheetState.Permission)
             }
         },
         onToggleEmotionReminder = viewModel::setEmotionReminder,
@@ -95,38 +118,59 @@ fun NotificationSettingScreen(
         onDayClick = viewModel::toggleDay,
         onClickTime = {
             if (state.value.emotionReminderNotify) {
-                activeSheet = Sheet.TimePicker
+                setSheetState(SheetState.TimePicker)
             }
         },
         navToBack = navToBack,
     )
 
-    when (activeSheet) {
-        Sheet.Permission -> {
+    when(modalState){
+        ModalState.None -> {
+            // no modal
+        }
+
+        ModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(ModalState.None) },
+            )
+        }
+
+        ModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal (
+                onDismissRequest = { setModalState(ModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
+
+    when (sheetState) {
+        SheetState.Permission -> {
             Logger.d("Show RequestPermissionBottomSheet")
             RequestPermissionBottomSheet(
                 onDismiss = {
-                    activeSheet = Sheet.None
+                    setSheetState(SheetState.None)
                 },
                 sheetState =
                     rememberModalBottomSheetState(skipPartiallyExpanded = true),
             )
         }
 
-        Sheet.TimePicker -> {
+        SheetState.TimePicker -> {
             Logger.d("Show TimePickerBottomSheet")
             TimePickerBottomSheet(
                 sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
                 initialTime = state.value.emotionReminderTime,
-                onDismissRequest = { activeSheet = Sheet.None },
+                onDismissRequest = {
+                    setSheetState(SheetState.None)
+                },
                 onTimeSelected = {
                     viewModel.setTime(it)
-                    activeSheet = Sheet.None
+                    setSheetState(SheetState.None)
                 },
             )
         }
 
-        Sheet.None -> {
+        SheetState.None -> {
             Logger.d("Close Sheets")
         }
     }
