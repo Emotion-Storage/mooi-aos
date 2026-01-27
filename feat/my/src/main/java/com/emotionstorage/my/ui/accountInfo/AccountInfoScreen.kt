@@ -27,10 +27,9 @@ import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
-import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class AccountInfoModalState{
+private enum class AccountInfoModalState  {
     None,
     TempError,
     LoginSessionExpired,
@@ -43,11 +42,11 @@ fun AccountInfoScreen(
     viewModel: AccountInfoViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.collectAsState()
-    val (modalState, setModalState) = remember{ mutableStateOf(AccountInfoModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(AccountInfoModalState.None) }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
-            when(it){
+            when (it) {
                 is BaseSideEffect.SessionExpired -> {
                     setModalState(AccountInfoModalState.LoginSessionExpired)
                 }
@@ -63,7 +62,7 @@ fun AccountInfoScreen(
         navToBack = navToBack,
     )
 
-    when(modalState){
+    when (modalState) {
         AccountInfoModalState.None -> {
             // no modal
         }

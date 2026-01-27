@@ -102,7 +102,6 @@ fun MyPageScreen(
                 is BaseSideEffect.SessionExpired -> {
                     setModalState(MyPageModalState.LOGIN_EXPIRED)
                 }
-
             }
         }
     }

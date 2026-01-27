@@ -21,7 +21,6 @@ data class AccountInfoState(
 
 enum class AuthProvider { GOOGLE, KAKAO }
 
-
 @HiltViewModel
 class AccountInfoViewModel @Inject constructor(
     private val getAccountInfo: GetAccountInfoUseCase,

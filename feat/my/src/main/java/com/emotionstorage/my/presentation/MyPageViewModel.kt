@@ -27,7 +27,7 @@ sealed class MyPageAction {
     object Logout : MyPageAction()
 }
 
-sealed class MyPageSideEffect () : BaseSideEffect {
+sealed class MyPageSideEffect : BaseSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
     object LogoutError : MyPageSideEffect()
@@ -38,7 +38,6 @@ class MyPageViewModel @Inject constructor(
     private val logout: LogoutUseCase,
     private val getMyPageOverview: GetMyPageOverviewUseCase,
 ) : BaseViewModel<MyPageState>(MyPageState()) {
-
     fun onAction(action: MyPageAction) {
         when (action) {
             is MyPageAction.Initiate -> {
@@ -71,7 +70,7 @@ class MyPageViewModel @Inject constructor(
                         throw BaseException(
                             cause = result.throwable,
                             code = result.code,
-                            message = result.throwable.message ?: "MyPageViewModel: Initiate error"
+                            message = result.throwable.message ?: "MyPageViewModel: Initiate error",
                         )
                     }
 
