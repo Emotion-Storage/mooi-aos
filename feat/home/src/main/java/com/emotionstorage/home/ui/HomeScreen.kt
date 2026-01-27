@@ -167,6 +167,7 @@ fun HomeScreen(
         is HomeModalState.None -> {
             // no modal
         }
+
         is HomeModalState.ResumeChat -> {
             ResumeChatModal(
                 onDismissRequest = {
@@ -181,6 +182,7 @@ fun HomeScreen(
                 },
             )
         }
+
         is HomeModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
                 onDismissRequest = {
@@ -189,6 +191,7 @@ fun HomeScreen(
                 navToLogin = navToLogin,
             )
         }
+
         is HomeModalState.TempError -> {
             TempErrorModal(
                 onDismissRequest = {
