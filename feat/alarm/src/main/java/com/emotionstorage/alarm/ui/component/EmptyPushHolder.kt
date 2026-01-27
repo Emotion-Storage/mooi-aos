@@ -1,6 +1,5 @@
 package com.emotionstorage.alarm.ui.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
@@ -11,12 +10,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
-fun EmptyPushHolder() {
+fun EmptyPushHolder(modifier: Modifier = Modifier) {
     Box(
         modifier =
-            Modifier
-                .fillMaxSize()
-                .background(color = MooiTheme.colorScheme.backgroundDefault),
+            modifier
+                .fillMaxSize(),
         contentAlignment = Alignment.Center,
     ) {
         Text(

@@ -383,7 +383,7 @@ class AIChatViewModel @Inject constructor(
                 return@intent
             }
 
-            when (val save = tempSaveChatRoomUseCase(roomId)) {
+            when (tempSaveChatRoomUseCase(roomId)) {
                 is DataState.Success -> {
                 }
 

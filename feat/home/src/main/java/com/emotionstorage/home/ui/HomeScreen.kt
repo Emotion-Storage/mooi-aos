@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,26 +56,43 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.IconWithCount
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 
+private sealed class HomeModalState {
+    object None : HomeModalState()
+
+    data class ResumeChat(
+        val pendingRoomId: Long,
+    ) : HomeModalState()
+
+    object LoginSessionExpired : HomeModalState()
+
+    object TempError : HomeModalState()
+}
+
 @Composable
 fun HomeScreen(
+    navToKey: () -> Unit,
+    navToAlarm: () -> Unit,
+    navToDailyReport: (Long) -> Unit,
+    navToChat: (Long, ChatEntry) -> Unit,
+    navToArrivedTimeCapsules: () -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel(),
     attendanceViewModel: AttendanceViewModel = hiltViewModel(),
     bottomAppBar: @Composable (() -> Unit) = {},
-    navToKey: () -> Unit = {},
-    navToAlarm: () -> Unit = {},
-    navToDailyReport: (Long) -> Unit = { },
-    navToChat: (Long, ChatEntry) -> Unit = { _, _ -> },
-    navToArrivedTimeCapsules: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState.collectAsState()
     val snackbarState = remember { SnackbarHostState() }
+    val (modalState, setModalState) = remember { mutableStateOf<HomeModalState>(HomeModalState.None) }
+
     val summary = attendanceState.value.summary
 
 //    NotificationPermissionAutoRequest()
@@ -87,8 +105,12 @@ fun HomeScreen(
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is HomeSideEffect.TicketNotEnough -> {
-                    // todo: 티켓 개수 부족한 경우 에러 처리
+                    // todo: 티켓 개수 부족한 경우 에러 처리 - 기획과 상의 필요
                     snackbarState.showSnackbar("감정 대화 티켓이 부족해요 😢")
+                }
+
+                is HomeSideEffect.ShowResumeChatModal -> {
+                    setModalState(HomeModalState.ResumeChat(it.pendingRoomId))
                 }
 
                 is HomeSideEffect.EnterChatRoom -> {
@@ -100,11 +122,11 @@ fun HomeScreen(
                 }
 
                 is BaseSideEffect.SessionExpired -> {
-                    // todo: show session expired modal
+                    setModalState(HomeModalState.LoginSessionExpired)
                 }
 
                 is BaseSideEffect.TemporalError -> {
-                    // todo: show temporal error modal
+                    setModalState(HomeModalState.TempError)
                 }
             }
         }
@@ -141,18 +163,42 @@ fun HomeScreen(
         )
     }
 
-    ResumeChatModal(
-        isModalOpen = state.value.showResumeChatModal && state.value.pendingChatRoomId != null,
-        onDismissRequest = {
-            viewModel.onAction(HomeAction.DismissResumeChat)
-        },
-        onResume = {
-            viewModel.onAction(HomeAction.ConfirmResumeChat)
-        },
-        onDropAndStartNew = {
-            viewModel.onAction(HomeAction.DismissResumeChat)
-        },
-    )
+    when (modalState) {
+        is HomeModalState.None -> {
+            // no modal
+        }
+
+        is HomeModalState.ResumeChat -> {
+            ResumeChatModal(
+                onDismissRequest = {
+                    setModalState(HomeModalState.None)
+                },
+                onResume = {
+                    viewModel.onAction(HomeAction.ResumeChat(modalState.pendingRoomId))
+                },
+                onDropAndStartNew = {
+                    viewModel.onAction(HomeAction.DeleteAndEnterNewChat(modalState.pendingRoomId))
+                },
+            )
+        }
+
+        is HomeModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = {
+                    setModalState(HomeModalState.None)
+                },
+                navToLogin = navToLogin,
+            )
+        }
+
+        is HomeModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = {
+                    setModalState(HomeModalState.None)
+                },
+            )
+        }
+    }
 }
 
 @Composable

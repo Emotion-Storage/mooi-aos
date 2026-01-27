@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
@@ -18,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleStartEffect
@@ -29,6 +29,7 @@ import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import com.emotionstorage.my.ui.keyDescription.component.CountRow
 import com.emotionstorage.my.ui.keyDescription.component.WhenToUseKeyDialog
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.rememberAdaptiveHeightDp
@@ -83,7 +84,16 @@ fun StatelessKeyDescriptionScreen(
             Column(
                 modifier =
                     Modifier
-                        .align(Alignment.TopCenter),
+                        .fillMaxSize()
+                        .padding(
+                            bottom =
+                                rememberAdaptiveHeightDp(
+                                    baseDp = 47.dp,
+                                    minDp = 28.dp,
+                                    maxDp = 60.dp,
+                                ),
+                        ),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     modifier = Modifier.padding(top = 24.dp),
@@ -93,7 +103,7 @@ fun StatelessKeyDescriptionScreen(
                     textAlign = TextAlign.Center,
                 )
 
-                Spacer(modifier = Modifier.padding(10.dp))
+                Spacer(modifier = Modifier.size(10.dp))
 
                 Text(
                     text = "열쇠는 출석 보상을 통해 얻을 수 있어요.",
@@ -103,68 +113,65 @@ fun StatelessKeyDescriptionScreen(
 
                 Spacer(
                     modifier =
-                        Modifier.padding(
+                        Modifier.size(
                             rememberAdaptiveHeightDp(
                                 baseDp = 58.dp,
-                                minDp = 45.dp,
-                                maxDp = 80.dp,
+                                minDp = 36.dp,
+                                maxDp = 90.dp,
                             ),
                         ),
                 )
+
                 Image(
-                    modifier =
-                        Modifier
-                            .size(147.dp)
-                            .align(Alignment.CenterHorizontally),
+                    modifier = Modifier.size(157.dp),
                     painter = painterResource(R.drawable.graphic__key),
                     contentDescription = "열쇠",
                 )
-            }
 
-            Column(
-                modifier =
-                    Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 47.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+                Spacer(
+                    modifier =
+                        Modifier
+                            .heightIn(
+                                min =
+                                    rememberAdaptiveHeightDp(
+                                        baseDp = 48.dp,
+                                        minDp = 28.dp,
+                                        maxDp = 72.dp,
+                                    ),
+                            ).weight(1f, fill = true),
+                )
+
                 Text(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     text = "현재 보유한 열쇠",
                     style = MooiTheme.typography.head1,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                 )
+
                 Spacer(modifier = Modifier.size(11.dp))
-                CountRow(
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    count = state.keyCount,
-                )
+
+                CountRow(count = state.keyCount)
+
                 Spacer(
                     modifier =
-                        Modifier.padding(
-                            top =
-                                rememberAdaptiveHeightDp(
-                                    baseDp = 93.dp,
-                                    minDp = 70.dp,
-                                    maxDp = 120.dp,
-                                ),
+                        Modifier.size(
+                            rememberAdaptiveHeightDp(
+                                baseDp = 93.dp,
+                                minDp = 60.dp,
+                                maxDp = 126.dp,
+                            ),
                         ),
                 )
+
                 Row(
-                    modifier =
-                        Modifier.clickable {
-                            onOpenDialog()
-                        },
+                    modifier = Modifier.clickable { onOpenDialog() },
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Image(
                         painter = painterResource(R.drawable.ic_question_mark),
                         contentDescription = "물음표",
                     )
-
                     Spacer(modifier = Modifier.size(4.dp))
-
                     Text(
                         text = "열쇠는 언제 써야 좋을까요?",
                         style = MooiTheme.typography.caption4,
@@ -189,7 +196,7 @@ fun StatelessKeyDescriptionScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 fun KeyDescriptionScreenPreview() {
     MooiTheme {

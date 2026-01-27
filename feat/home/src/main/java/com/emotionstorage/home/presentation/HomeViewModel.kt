@@ -1,6 +1,5 @@
 package com.emotionstorage.home.presentation
 
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.ChatEntry
@@ -28,8 +27,6 @@ data class HomeState(
     val newTimeCapsuleArrived: Boolean = false,
     val newReportArrived: Boolean = false,
     val newReportId: Long? = null,
-    val showResumeChatModal: Boolean = false,
-    val pendingChatRoomId: Long? = null,
 )
 
 sealed class HomeAction {
@@ -37,13 +34,21 @@ sealed class HomeAction {
 
     object EnterChat : HomeAction()
 
-    object ConfirmResumeChat : HomeAction()
+    data class ResumeChat(
+        val roomId: Long,
+    ) : HomeAction()
 
-    object DismissResumeChat : HomeAction()
+    data class DeleteAndEnterNewChat(
+        val roomId: Long,
+    ) : HomeAction()
 }
 
 sealed class HomeSideEffect : BaseSideEffect {
     object TicketNotEnough : HomeSideEffect()
+
+    data class ShowResumeChatModal(
+        val pendingRoomId: Long,
+    ) : HomeSideEffect()
 
     data class EnterChatRoom(
         val roomId: Long,
@@ -73,12 +78,12 @@ class HomeViewModel
                     handleEnterChat()
                 }
 
-                is HomeAction.ConfirmResumeChat -> {
-                    handleConfirmResumeChat()
+                is HomeAction.ResumeChat -> {
+                    handleEnterPendingChat(action.roomId)
                 }
 
-                is HomeAction.DismissResumeChat -> {
-                    handleDismissResumeChat()
+                is HomeAction.DeleteAndEnterNewChat -> {
+                    handleDeletePendingChatAndEnterNewChat(action.roomId)
                 }
             }
         }
@@ -167,19 +172,8 @@ class HomeViewModel
                 getChatRoomSession().handle(
                     onSuccess = { session ->
                         if (session.isTempSave) {
-                            reduce {
-                                state.copy(
-                                    showResumeChatModal = true,
-                                    pendingChatRoomId = session.roomId,
-                                )
-                            }
+                            postSideEffect(HomeSideEffect.ShowResumeChatModal(session.roomId))
                         } else {
-                            reduce {
-                                state.copy(
-                                    showResumeChatModal = false,
-                                    pendingChatRoomId = null,
-                                )
-                            }
                             postSideEffect(HomeSideEffect.EnterChatRoom(session.roomId, ChatEntry.New))
                         }
                     },
@@ -198,43 +192,28 @@ class HomeViewModel
                 )
             }
 
-        private fun handleConfirmResumeChat() =
+        private fun handleEnterPendingChat(roomId: Long) =
             baseIntent {
-                val roomId = state.pendingChatRoomId ?: return@baseIntent
-
-                reduce {
-                    state.copy(
-                        showResumeChatModal = false,
-                        pendingChatRoomId = null,
-                    )
-                }
-
                 // TODO : 채팅방 불러오기 작업
                 postSideEffect(HomeSideEffect.EnterChatRoom(roomId, ChatEntry.Resume))
             }
 
-        private fun handleDismissResumeChat() =
+        private fun handleDeletePendingChatAndEnterNewChat(roomId: Long) =
             baseIntent {
-                val roomId = state.pendingChatRoomId ?: return@baseIntent
-
-                reduce {
-                    state.copy(
-                        showResumeChatModal = false,
-                        pendingChatRoomId = null,
-                    )
-                }
-
-                when (val result = deleteChatRoom(roomId)) {
-                    is DataState.Success -> {
+                deleteChatRoom(roomId).handle(
+                    onSuccess = {
                         Logger.d("HomeViewModel: exitChatRoom success")
-                    }
-
-                    is DataState.Loading -> {
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e("HomeViewModel: exitChatRoom failed ${result.throwable}")
-                    }
-                }
+                        // enter new chat
+                        handleEnterChat()
+                    },
+                    onError = { throwable, code, data ->
+                        Logger.e("HomeViewModel: exitChatRoom failed $throwable")
+                        throw BaseException(
+                            cause = throwable,
+                            code = code,
+                            message = throwable.message ?: "Home exit chat error",
+                        )
+                    },
+                )
             }
     }
