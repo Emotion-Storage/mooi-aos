@@ -1,12 +1,14 @@
 package com.emotionstorage.my.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.user.NicknameState
 import com.emotionstorage.domain.useCase.user.UpdateUserNicknameUseCase
 import com.emotionstorage.domain.useCase.user.ValidateNicknameUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
@@ -21,18 +23,18 @@ interface InputNicknameEvent {
     fun onNicknameChange(nickname: String)
 }
 
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class NicknameChangeViewModel @Inject constructor(
-    private val validateNicknameUseCase: ValidateNicknameUseCase,
-    private val updateNicknameUseCase: UpdateUserNicknameUseCase,
-) : ViewModel(),
+    private val validateNickname: ValidateNicknameUseCase,
+    private val updateNickname: UpdateUserNicknameUseCase,
+) : BaseViewModel<Unit>(Unit),
     InputNicknameEvent {
     data class State(
         val nickname: String = "",
         val inputState: InputState = InputState.EMPTY,
         val helperMessage: String? = null,
         val submitting: Boolean = false,
-        val submitError: String? = null,
     ) {
         enum class InputState { EMPTY, INVALID, VALID }
 
@@ -48,13 +50,13 @@ class NicknameChangeViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             state
                 .map { it.nickname }
                 .distinctUntilChanged()
                 .debounce(120)
                 .mapLatest { nickname ->
-                    validateNicknameUseCase(nickname)
+                    validateNickname(nickname)
                 }.collect { result ->
                     if (result is DataState.Success) {
                         val (st, msg) =
@@ -77,9 +79,9 @@ class NicknameChangeViewModel @Inject constructor(
     fun submit(onSuccess: (String) -> Unit = {}) {
         val state = _state.value
         if (!state.buttonEnabled) return
-        viewModelScope.launch {
-            _state.update { it.copy(submitting = true, submitError = null) }
-            when (updateNicknameUseCase(state.nickname)) {
+        baseViewModelScope.launch {
+            _state.update { it.copy(submitting = true) }
+            when (val result = updateNickname(state.nickname)) {
                 is DataState.Success -> {
                     _state.update { it.copy(submitting = false) }
                     onSuccess(state.nickname)
@@ -89,15 +91,19 @@ class NicknameChangeViewModel @Inject constructor(
                     _state.update {
                         it.copy(
                             submitting = false,
-                            submitError = null,
                             inputState = State.InputState.INVALID,
                             helperMessage = null,
                         )
                     }
+                    throw BaseException(
+                        message = result.throwable.message ?: "updateNickNameUseCase error",
+                        code = result.code,
+                        cause = result.throwable,
+                    )
                 }
 
-                else -> {
-                    _state.update { it.copy(submitting = false) }
+                is DataState.Loading -> {
+                    // do nothing
                 }
             }
         }

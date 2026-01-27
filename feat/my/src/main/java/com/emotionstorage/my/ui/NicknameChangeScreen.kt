@@ -18,8 +18,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
@@ -32,19 +35,44 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.InputNicknameEvent
 import com.emotionstorage.my.presentation.NicknameChangeViewModel
 import com.emotionstorage.my.presentation.NicknameChangeViewModel.State.InputState
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.text.TextInput
 import com.emotionstorage.ui.component.text.TextInputState
 import com.emotionstorage.ui.component.appBar.TopAppBar
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
+
+private enum class ModalState{
+    None,
+    TempError,
+    LoginSessionExpired,
+}
 
 @Composable
 fun NicknameChangeScreen(
+    navToBack: () -> Unit,
+    navToLogin: () -> Unit,
     viewModel: NicknameChangeViewModel = hiltViewModel(),
-    navToBack: () -> Unit = {},
 ) {
     val state = viewModel.state.collectAsState()
+    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(ModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(ModalState.LoginSessionExpired)
+                }
+            }
+        }
+    }
 
     StatelessNicknameChangeScreen(
         state = state.value,
@@ -56,6 +84,26 @@ fun NicknameChangeScreen(
         },
         navToBack = navToBack,
     )
+
+
+    when (modalState) {
+        ModalState.None -> {
+            // no modal
+        }
+
+        ModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(ModalState.None) },
+            )
+        }
+
+        ModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = { setModalState(ModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @Composable
