@@ -34,11 +34,11 @@ sealed class HomeAction {
 
     object EnterChat : HomeAction()
 
-    data class ConfirmResumeChat(
+    data class ResumePendingChat(
         val roomId: Long,
     ) : HomeAction()
 
-    data class DismissResumeChat(
+    data class DeletePendingChat(
         val roomId: Long,
     ) : HomeAction()
 }
@@ -48,7 +48,7 @@ sealed class HomeSideEffect : BaseSideEffect {
 
     data class ShowResumeChatModal(
         val pendingRoomId: Long,
-    ): HomeSideEffect()
+    ) : HomeSideEffect()
 
     data class EnterChatRoom(
         val roomId: Long,
@@ -78,12 +78,12 @@ class HomeViewModel
                     handleEnterChat()
                 }
 
-                is HomeAction.ConfirmResumeChat -> {
-                    handleConfirmResumeChat(action.roomId)
+                is HomeAction.ResumePendingChat -> {
+                    handleEnterPendingChat(action.roomId)
                 }
 
-                is HomeAction.DismissResumeChat -> {
-                    handleDismissResumeChat(action.roomId)
+                is HomeAction.DeletePendingChat -> {
+                    handleDeletePendingChat(action.roomId)
                 }
             }
         }
@@ -192,13 +192,13 @@ class HomeViewModel
                 )
             }
 
-        private fun handleConfirmResumeChat(roomId: Long) =
+        private fun handleEnterPendingChat(roomId: Long) =
             baseIntent {
                 // TODO : 채팅방 불러오기 작업
                 postSideEffect(HomeSideEffect.EnterChatRoom(roomId, ChatEntry.Resume))
             }
 
-        private fun handleDismissResumeChat(roomId: Long) =
+        private fun handleDeletePendingChat(roomId: Long) =
             baseIntent {
                 deleteChatRoom(roomId).handle(
                     onSuccess = {

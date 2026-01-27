@@ -45,7 +45,6 @@ import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.home.presentation.AttendanceAction
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
-import com.emotionstorage.home.presentation.HomeAction.*
 import com.emotionstorage.home.presentation.HomeSideEffect
 import com.emotionstorage.home.presentation.HomeState
 import com.emotionstorage.home.presentation.HomeViewModel
@@ -65,7 +64,9 @@ import com.emotionstorage.ui.theme.MooiTheme
 private sealed class HomeModalState {
     object None : HomeModalState()
 
-    data class ResumeChat(val pendingRoomId: Long) : HomeModalState()
+    data class ResumeChat(
+        val pendingRoomId: Long,
+    ) : HomeModalState()
 
     object LoginSessionExpired : HomeModalState()
 
@@ -133,7 +134,7 @@ fun HomeScreen(
 
     LifecycleResumeEffect("onResume") {
         // init screen state on resume
-        viewModel.onAction(Initiate)
+        viewModel.onAction(HomeAction.Initiate)
         onPauseOrDispose {}
     }
 
@@ -162,20 +163,20 @@ fun HomeScreen(
         )
     }
 
-    when(modalState){
+    when (modalState) {
         is HomeModalState.None -> {
             // no modal
         }
         is HomeModalState.ResumeChat -> {
             ResumeChatModal(
                 onDismissRequest = {
-                    viewModel.onAction(DismissResumeChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.DeletePendingChat(modalState.pendingRoomId))
                 },
                 onResume = {
-                    viewModel.onAction(ConfirmResumeChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.ResumePendingChat(modalState.pendingRoomId))
                 },
                 onDropAndStartNew = {
-                    viewModel.onAction(DismissResumeChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.DeletePendingChat(modalState.pendingRoomId))
                 },
             )
         }
@@ -195,7 +196,6 @@ fun HomeScreen(
             )
         }
     }
-
 }
 
 @Composable
@@ -399,8 +399,7 @@ private fun StartChatButton(
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
+                ).height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
