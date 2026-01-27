@@ -40,7 +40,7 @@ import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.rememberAdaptiveHeightDp
 
-private enum class KeyDescriptionModalState  {
+private enum class ModalState {
     None,
     TempError,
     LoginSessionExpired,
@@ -54,16 +54,16 @@ fun KeyDescriptionScreen(
     viewModel: KeyBalanceViewModel = hiltViewModel(),
 ) {
     val state by viewModel.keyCountState.collectAsStateWithLifecycle()
-    val (modalState, setModalState) = remember { mutableStateOf(KeyDescriptionModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is BaseSideEffect.TemporalError -> {
-                    setModalState(KeyDescriptionModalState.TempError)
+                    setModalState(ModalState.TempError)
                 }
                 is BaseSideEffect.SessionExpired -> {
-                    setModalState(KeyDescriptionModalState.LoginSessionExpired)
+                    setModalState(ModalState.LoginSessionExpired)
                 }
             }
         }
@@ -83,19 +83,19 @@ fun KeyDescriptionScreen(
     )
 
     when (modalState) {
-        KeyDescriptionModalState.None -> {
+        ModalState.None -> {
             // no modal
         }
 
-        KeyDescriptionModalState.TempError -> {
+        ModalState.TempError -> {
             TempErrorModal(
-                onDismissRequest = { setModalState(KeyDescriptionModalState.None) },
+                onDismissRequest = { setModalState(ModalState.None) },
             )
         }
 
-        KeyDescriptionModalState.LoginSessionExpired -> {
+        ModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
-                onDismissRequest = { setModalState(KeyDescriptionModalState.None) },
+                onDismissRequest = { setModalState(ModalState.None) },
                 navToLogin = navToLogin,
             )
         }

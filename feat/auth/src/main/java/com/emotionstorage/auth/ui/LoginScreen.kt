@@ -50,19 +50,19 @@ import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.buildHighlightAnnotatedString
 
-private sealed class LoginModalState {
-    object None : LoginModalState()
+private sealed class ModalState {
+    object None : ModalState()
 
     data class RetryHandleLogin(
         val accessToken: String,
-    ) : LoginModalState()
+    ) : ModalState()
 
     data class InquireLoginError(
         val errorCode: ErrorCode,
         val throwable: Throwable,
-    ) : LoginModalState()
+    ) : ModalState()
 
-    object TempError : LoginModalState()
+    object TempError : ModalState()
 }
 
 @Composable
@@ -75,7 +75,7 @@ fun LoginScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var modalState by remember {
-        mutableStateOf<LoginModalState>(LoginModalState.None)
+        mutableStateOf<ModalState>(ModalState.None)
     }
 
     LaunchedEffect(Unit) {
@@ -95,14 +95,14 @@ fun LoginScreen(
 
                 is LoginSideEffect.RetryHandleLogin -> {
                     modalState =
-                        LoginModalState.RetryHandleLogin(
+                        ModalState.RetryHandleLogin(
                             effect.accessToken,
                         )
                 }
 
                 is LoginSideEffect.InquireLoginError -> {
                     modalState =
-                        LoginModalState.InquireLoginError(
+                        ModalState.InquireLoginError(
                             effect.errorCode,
                             effect.throwable,
                         )
@@ -113,7 +113,7 @@ fun LoginScreen(
                 }
 
                 is BaseSideEffect.TemporalError -> {
-                    modalState = LoginModalState.TempError
+                    modalState = ModalState.TempError
                 }
             }
         }
@@ -127,13 +127,13 @@ fun LoginScreen(
     )
 
     when (modalState) {
-        is LoginModalState.None -> {}
+        is ModalState.None -> {}
 
-        is LoginModalState.RetryHandleLogin -> {
-            val retryState = modalState as LoginModalState.RetryHandleLogin
+        is ModalState.RetryHandleLogin -> {
+            val retryState = modalState as ModalState.RetryHandleLogin
             RetryHandleLoginModal(
                 onDismissRequest = {
-                    modalState = LoginModalState.None
+                    modalState = ModalState.None
                 },
                 onConfirm = {
                     viewModel.onAction(
@@ -145,20 +145,20 @@ fun LoginScreen(
             )
         }
 
-        is LoginModalState.InquireLoginError -> {
-            val inquireModalState = modalState as LoginModalState.InquireLoginError
+        is ModalState.InquireLoginError -> {
+            val inquireModalState = modalState as ModalState.InquireLoginError
             InquireLoginErrorModal(
                 inquireModalState.errorCode,
                 inquireModalState.throwable,
                 onDismissRequest = {
-                    modalState = LoginModalState.None
+                    modalState = ModalState.None
                 },
             )
         }
 
-        is LoginModalState.TempError -> {
+        is ModalState.TempError -> {
             TempErrorModal {
-                modalState = LoginModalState.None
+                modalState = ModalState.None
             }
         }
     }

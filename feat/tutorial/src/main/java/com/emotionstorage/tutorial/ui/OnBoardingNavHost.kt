@@ -50,17 +50,17 @@ enum class OnBoardingRoute(
     MARKETING_DETAIL("on_boarding/agree_terms/marketing_detail"),
 }
 
-private sealed class OnBoardingModalState {
-    object None : OnBoardingModalState()
+private sealed class ModalState {
+    object None : ModalState()
 
-    object SocialTokenExpired : OnBoardingModalState()
+    object SocialTokenExpired : ModalState()
 
-    object DuplicateAccount : OnBoardingModalState()
+    object DuplicateAccount : ModalState()
 
     data class SignupError(
         val errorCode: ErrorCode,
         val throwable: Throwable,
-    ) : OnBoardingModalState()
+    ) : ModalState()
 }
 
 @Composable
@@ -74,7 +74,7 @@ fun OnBoardingNavHost(
 ) {
     val navController = rememberNavController()
     val state by sharedViewModel.container.stateFlow.collectAsState()
-    var modalState by remember { mutableStateOf<OnBoardingModalState>(OnBoardingModalState.None) }
+    var modalState by remember { mutableStateOf<ModalState>(ModalState.None) }
 
     LaunchedEffect(provider, idToken) {
         sharedViewModel.onAction(OnBoardingAction.Initiate(provider, idToken))
@@ -87,16 +87,16 @@ fun OnBoardingNavHost(
                 }
 
                 is OnBoardingSideEffect.SocialTokenExpired -> {
-                    modalState = OnBoardingModalState.SocialTokenExpired
+                    modalState = ModalState.SocialTokenExpired
                 }
 
                 is OnBoardingSideEffect.DuplicateAccount -> {
-                    modalState = OnBoardingModalState.DuplicateAccount
+                    modalState = ModalState.DuplicateAccount
                 }
 
                 is BaseSideEffect.TemporalError -> {
                     modalState =
-                        OnBoardingModalState.SignupError(sideEffect.code, sideEffect.throwable)
+                        ModalState.SignupError(sideEffect.code, sideEffect.throwable)
                 }
 
                 is BaseSideEffect.NetworkError -> {
@@ -118,12 +118,12 @@ fun OnBoardingNavHost(
     )
 
     when (modalState) {
-        OnBoardingModalState.None -> {}
+        ModalState.None -> {}
 
-        OnBoardingModalState.SocialTokenExpired -> {
+        ModalState.SocialTokenExpired -> {
             SocialTokenExpiredModal(
                 onDismissRequest = {
-                    modalState = OnBoardingModalState.None
+                    modalState = ModalState.None
                 },
                 onConfirm = {
                     // nav back to login screen
@@ -132,10 +132,10 @@ fun OnBoardingNavHost(
             )
         }
 
-        OnBoardingModalState.DuplicateAccount -> {
+        ModalState.DuplicateAccount -> {
             DuplicateAccountModal(
                 onDismissRequest = {
-                    modalState = OnBoardingModalState.None
+                    modalState = ModalState.None
                 },
                 onConfirm = {
                     // nav back to login screen
@@ -144,13 +144,13 @@ fun OnBoardingNavHost(
             )
         }
 
-        is OnBoardingModalState.SignupError -> {
-            val inquireModalState = modalState as OnBoardingModalState.SignupError
+        is ModalState.SignupError -> {
+            val inquireModalState = modalState as ModalState.SignupError
             InquireSignupErrorModal(
                 inquireModalState.errorCode,
                 inquireModalState.throwable,
                 onDismissRequest = {
-                    modalState = OnBoardingModalState.None
+                    modalState = ModalState.None
                 },
             )
         }

@@ -29,7 +29,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class AccountInfoModalState {
+private enum class ModalState {
     None,
     TempError,
     LoginSessionExpired,
@@ -42,16 +42,16 @@ fun AccountInfoScreen(
     viewModel: AccountInfoViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.collectAsState()
-    val (modalState, setModalState) = remember { mutableStateOf(AccountInfoModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is BaseSideEffect.SessionExpired -> {
-                    setModalState(AccountInfoModalState.LoginSessionExpired)
+                    setModalState(ModalState.LoginSessionExpired)
                 }
                 is BaseSideEffect.TemporalError -> {
-                    setModalState(AccountInfoModalState.TempError)
+                    setModalState(ModalState.TempError)
                 }
             }
         }
@@ -63,19 +63,19 @@ fun AccountInfoScreen(
     )
 
     when (modalState) {
-        AccountInfoModalState.None -> {
+        ModalState.None -> {
             // no modal
         }
 
-        AccountInfoModalState.TempError -> {
+        ModalState.TempError -> {
             TempErrorModal(
-                onDismissRequest = { setModalState(AccountInfoModalState.None) },
+                onDismissRequest = { setModalState(ModalState.None) },
             )
         }
 
-        AccountInfoModalState.LoginSessionExpired -> {
+        ModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
-                onDismissRequest = { setModalState(AccountInfoModalState.None) },
+                onDismissRequest = { setModalState(ModalState.None) },
                 navToLogin = navToLogin,
             )
         }
