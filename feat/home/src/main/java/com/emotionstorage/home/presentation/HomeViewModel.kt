@@ -34,11 +34,11 @@ sealed class HomeAction {
 
     object EnterChat : HomeAction()
 
-    data class ResumePendingChat(
+    data class ResumeChat(
         val roomId: Long,
     ) : HomeAction()
 
-    data class DeletePendingChat(
+    data class DeleteAndEnterNewChat(
         val roomId: Long,
     ) : HomeAction()
 }
@@ -78,12 +78,12 @@ class HomeViewModel
                     handleEnterChat()
                 }
 
-                is HomeAction.ResumePendingChat -> {
+                is HomeAction.ResumeChat -> {
                     handleEnterPendingChat(action.roomId)
                 }
 
-                is HomeAction.DeletePendingChat -> {
-                    handleDeletePendingChat(action.roomId)
+                is HomeAction.DeleteAndEnterNewChat -> {
+                    handleDeletePendingChatAndEnterNewChat(action.roomId)
                 }
             }
         }
@@ -198,14 +198,21 @@ class HomeViewModel
                 postSideEffect(HomeSideEffect.EnterChatRoom(roomId, ChatEntry.Resume))
             }
 
-        private fun handleDeletePendingChat(roomId: Long) =
+        private fun handleDeletePendingChatAndEnterNewChat(roomId: Long) =
             baseIntent {
                 deleteChatRoom(roomId).handle(
                     onSuccess = {
                         Logger.d("HomeViewModel: exitChatRoom success")
+                        // enter new chat
+                        handleEnterChat()
                     },
                     onError = { throwable, code, data ->
                         Logger.e("HomeViewModel: exitChatRoom failed $throwable")
+                        throw BaseException(
+                            cause = throwable,
+                            code = code,
+                            message = throwable.message ?: "Home exit chat error",
+                        )
                     },
                 )
             }

@@ -174,11 +174,10 @@ fun HomeScreen(
                     setModalState(HomeModalState.None)
                 },
                 onResume = {
-                    viewModel.onAction(HomeAction.ResumePendingChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.ResumeChat(modalState.pendingRoomId))
                 },
                 onDropAndStartNew = {
-                    viewModel.onAction(HomeAction.DeletePendingChat(modalState.pendingRoomId))
-                    viewModel.onAction(HomeAction.EnterChat)
+                    viewModel.onAction(HomeAction.DeleteAndEnterNewChat(modalState.pendingRoomId))
                 },
             )
         }
