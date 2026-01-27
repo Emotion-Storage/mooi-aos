@@ -177,6 +177,7 @@ fun HomeScreen(
                 },
                 onDropAndStartNew = {
                     viewModel.onAction(HomeAction.DeletePendingChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.EnterChat)
                 },
             )
         }
