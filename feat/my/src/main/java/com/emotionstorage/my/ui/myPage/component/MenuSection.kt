@@ -3,6 +3,7 @@ package com.emotionstorage.my.ui.myPage.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,7 +45,8 @@ fun MenuSection(
                 .background(
                     color = Color.Black.copy(alpha = 0.2f),
                     shape = RoundedCornerShape(10.dp),
-                ),
+                ).padding(vertical = 25.dp),
+        verticalArrangement = Arrangement.spacedBy(25.dp),
     ) {
         MenuItem(
             title = "계정 정보",
@@ -58,9 +60,7 @@ fun MenuSection(
                onClick = onNotificationClick,
            )*/
 
-        Spacer(modifier = Modifier.size(8.dp))
         DividerLine()
-        Spacer(modifier = Modifier.size(8.dp))
 
         EmailMenuItem(
             title = "MOOI에게 의견 보내기",
@@ -76,9 +76,7 @@ fun MenuSection(
             onClick = onTermsAndPrivacyClick,
         )
 
-        Spacer(modifier = Modifier.size(8.dp))
         DividerLine()
-        Spacer(modifier = Modifier.size(8.dp))
 
         MenuItem(
             title = "버전정보",
@@ -108,7 +106,7 @@ fun MenuItem(
     Row(
         modifier =
             Modifier
-                .padding(horizontal = 18.dp, vertical = 16.dp)
+                .padding(horizontal = 18.dp)
                 .fillMaxWidth()
                 .let {
                     if (clickArea == ClickArea.Row) it.clickable { onClick() } else it
@@ -157,7 +155,7 @@ fun EmailMenuItem(
     Row(
         modifier =
             Modifier
-                .padding(horizontal = 18.dp, vertical = 16.dp)
+                .padding(horizontal = 18.dp)
                 .fillMaxWidth()
                 .clickable(onClick = onCopyClick),
         verticalAlignment = Alignment.CenterVertically,
@@ -171,7 +169,7 @@ fun EmailMenuItem(
                 color = MooiTheme.colorScheme.gray300,
             )
 
-            Spacer(modifier = Modifier.size(4.dp))
+            Spacer(modifier = Modifier.size(6.dp))
 
             Text(
                 text = email,
@@ -186,7 +184,7 @@ fun EmailMenuItem(
             modifier =
                 Modifier
                     .align(Alignment.Bottom)
-                    .offset(x = 0.dp, y = (-6).dp),
+                    .offset(x = 0.dp, y = (-1).dp),
         )
     }
 }
