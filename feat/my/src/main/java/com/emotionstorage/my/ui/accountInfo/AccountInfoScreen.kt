@@ -50,6 +50,7 @@ fun AccountInfoScreen(
                 is BaseSideEffect.SessionExpired -> {
                     setModalState(ModalState.LoginSessionExpired)
                 }
+
                 is BaseSideEffect.TemporalError -> {
                     setModalState(ModalState.TempError)
                 }

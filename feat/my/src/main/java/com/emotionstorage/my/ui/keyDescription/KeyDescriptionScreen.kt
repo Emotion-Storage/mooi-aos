@@ -62,6 +62,7 @@ fun KeyDescriptionScreen(
                 is BaseSideEffect.TemporalError -> {
                     setModalState(ModalState.TempError)
                 }
+
                 is BaseSideEffect.SessionExpired -> {
                     setModalState(ModalState.LoginSessionExpired)
                 }
