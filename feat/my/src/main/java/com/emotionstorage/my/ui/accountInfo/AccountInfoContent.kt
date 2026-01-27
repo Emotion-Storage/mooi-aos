@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.emotionstorage.my.presentation.AuthProvider
+import com.emotionstorage.domain.model.User
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 
@@ -35,7 +35,7 @@ enum class PillStyle { Start, Center }
 fun AccountInfoContent(
     modifier: Modifier = Modifier,
     email: String,
-    socialType: AuthProvider,
+    socialType: User.AuthProvider,
     gender: String,
     birthYear: Int,
     birthMonth: Int,
@@ -55,7 +55,7 @@ fun AccountInfoContent(
                 style = PillStyle.Start,
                 trailing = {
                     when (socialType) {
-                        AuthProvider.GOOGLE -> {
+                        User.AuthProvider.GOOGLE -> {
                             Image(
                                 modifier = Modifier.size(20.dp),
                                 painter = painterResource(R.drawable.ic_google),
@@ -63,7 +63,7 @@ fun AccountInfoContent(
                             )
                         }
 
-                        AuthProvider.KAKAO -> {
+                        User.AuthProvider.KAKAO -> {
                             Image(
                                 modifier = Modifier.size(20.dp),
                                 painter = painterResource(R.drawable.ic_kakao),
@@ -179,7 +179,7 @@ private fun AccountInfoContentPreview() {
             AccountInfoContent(
                 modifier = Modifier,
                 email = "mooi.reply@gmail.com",
-                socialType = AuthProvider.KAKAO,
+                socialType = User.AuthProvider.KAKAO,
                 gender = "남성",
                 birthYear = 1999,
                 birthMonth = 7,

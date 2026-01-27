@@ -1,5 +1,6 @@
 package com.emotionstorage.my.presentation
 
+import com.emotionstorage.domain.model.User
 import com.emotionstorage.domain.useCase.myPage.GetAccountInfoUseCase
 import com.emotionstorage.presentation.BaseException
 import com.emotionstorage.presentation.BaseViewModel
@@ -11,15 +12,13 @@ import javax.inject.Inject
 
 data class AccountInfoState(
     val email: String = "",
-    val authProvider: AuthProvider = AuthProvider.KAKAO,
+    val authProvider: User.AuthProvider = User.AuthProvider.KAKAO,
     val gender: String = "",
     val birthYear: Int = 0,
     val birthMonth: Int = 0,
     val birthDay: Int = 0,
     val isLoading: Boolean = false,
 )
-
-enum class AuthProvider { GOOGLE, KAKAO }
 
 @HiltViewModel
 class AccountInfoViewModel @Inject constructor(
@@ -35,7 +34,7 @@ class AccountInfoViewModel @Inject constructor(
                     _state.value =
                         _state.value.copy(
                             email = data.email,
-                            authProvider = AuthProvider.valueOf(data.socialType.uppercase()),
+                            authProvider = User.AuthProvider.valueOf(data.socialType.uppercase()),
                             gender =
                                 when (data.gender.uppercase()) {
                                     "MALE" -> "남성"
