@@ -1,14 +1,14 @@
 package com.emotionstorage.my.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.useCase.auth.LogoutUseCase
 import com.emotionstorage.domain.useCase.myPage.GetMyPageOverviewUseCase
 import com.emotionstorage.my.BuildConfig
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 data class MyPageState(
@@ -27,23 +27,17 @@ sealed class MyPageAction {
     object Logout : MyPageAction()
 }
 
-sealed class MyPageSideEffect {
+sealed class MyPageSideEffect () : BaseSideEffect {
     object LogoutSuccess : MyPageSideEffect()
 
     object LogoutError : MyPageSideEffect()
-
-    data class ShowToast(
-        val message: String,
-    ) : MyPageSideEffect()
 }
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
-    private val logoutUseCase: LogoutUseCase,
-    private val myPageOverviewUseCase: GetMyPageOverviewUseCase,
-) : ViewModel(),
-    ContainerHost<MyPageState, MyPageSideEffect> {
-    override val container = container<MyPageState, MyPageSideEffect>(MyPageState())
+    private val logout: LogoutUseCase,
+    private val getMyPageOverview: GetMyPageOverviewUseCase,
+) : BaseViewModel<MyPageState>(MyPageState()) {
 
     fun onAction(action: MyPageAction) {
         when (action) {
@@ -58,8 +52,8 @@ class MyPageViewModel @Inject constructor(
     }
 
     private fun handleInitiate() =
-        intent {
-            myPageOverviewUseCase().collect { result ->
+        baseIntent {
+            getMyPageOverview().collect { result ->
                 when (result) {
                     is DataState.Success -> {
                         reduce {
@@ -74,7 +68,11 @@ class MyPageViewModel @Inject constructor(
 
                     is DataState.Error -> {
                         reduce { state.copy(isLoading = false) }
-                        postSideEffect(MyPageSideEffect.ShowToast(result.throwable.message ?: "마이페이지 불러오기 실패"))
+                        throw BaseException(
+                            cause = result.throwable,
+                            code = result.code,
+                            message = result.throwable.message ?: "MyPageViewModel: Initiate error"
+                        )
                     }
 
                     is DataState.Loading -> {
@@ -85,9 +83,9 @@ class MyPageViewModel @Inject constructor(
         }
 
     private fun handleLogout() =
-        intent {
+        baseIntent {
             try {
-                if (logoutUseCase()) {
+                if (logout()) {
                     postSideEffect(MyPageSideEffect.LogoutSuccess)
                 } else {
                     postSideEffect(MyPageSideEffect.LogoutError)

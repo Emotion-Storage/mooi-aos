@@ -44,7 +44,10 @@ import com.emotionstorage.my.ui.modal.ConfirmLogoutModal
 import com.emotionstorage.my.ui.modal.LogoutErrorModal
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
@@ -53,10 +56,9 @@ private enum class MyPageModalState {
     NONE,
     LOGOUT_CONFIRM,
     LOGOUT_ERROR,
+    LOGIN_EXPIRED,
+    TEMP_ERROR,
 }
-
-// TODO : Screen 전환 방지를 위한 임시 상수
-private const val ENABLE_NOTIFICATION_SETTING_NAVIGATION = false
 
 @Composable
 fun MyPageScreen(
@@ -93,9 +95,14 @@ fun MyPageScreen(
                     setModalState(MyPageModalState.LOGOUT_ERROR)
                 }
 
-                is MyPageSideEffect.ShowToast -> {
-                    // todo: add error toast
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(MyPageModalState.TEMP_ERROR)
                 }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(MyPageModalState.LOGIN_EXPIRED)
+                }
+
             }
         }
     }
@@ -140,6 +147,23 @@ fun MyPageScreen(
                 },
                 onRetry = {
                     viewModel.onAction(MyPageAction.Logout)
+                },
+            )
+        }
+
+        MyPageModalState.LOGIN_EXPIRED -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = {
+                    setModalState(MyPageModalState.NONE)
+                },
+                navToLogin = navToLogin,
+            )
+        }
+
+        MyPageModalState.TEMP_ERROR -> {
+            TempErrorModal(
+                onDismissRequest = {
+                    setModalState(MyPageModalState.NONE)
                 },
             )
         }
