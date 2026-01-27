@@ -1,24 +1,37 @@
 package com.emotionstorage.my.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.useCase.myPage.GetAccountInfoUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+data class AccountInfoState(
+    val email: String = "",
+    val authProvider: AuthProvider = AuthProvider.KAKAO,
+    val gender: String = "",
+    val birthYear: Int = 0,
+    val birthMonth: Int = 0,
+    val birthDay: Int = 0,
+    val isLoading: Boolean = false,
+)
+
+enum class AuthProvider { GOOGLE, KAKAO }
+
+
 @HiltViewModel
 class AccountInfoViewModel @Inject constructor(
-    private val getAccountInfoUseCase: GetAccountInfoUseCase,
-) : ViewModel() {
+    private val getAccountInfo: GetAccountInfoUseCase,
+) : BaseViewModel<Unit>(Unit) {
     private val _state = MutableStateFlow(AccountInfoState())
     val state: StateFlow<AccountInfoState> = _state
 
     init {
-        viewModelScope.launch {
-            getAccountInfoUseCase().handle(
+        baseViewModelScope.launch {
+            getAccountInfo().handle(
                 onSuccess = { data ->
                     _state.value =
                         _state.value.copy(
@@ -35,12 +48,16 @@ class AccountInfoViewModel @Inject constructor(
                             birthDay = data.birthDay,
                         )
                 },
-                onError = { throwable, _ ->
+                onError = { throwable, code, data ->
                     _state.value =
                         _state.value.copy(
-                            error = throwable.message ?: "Unknown error",
                             isLoading = false,
                         )
+                    throw BaseException(
+                        message = throwable.message ?: "getAccountInfoUseCase Error",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
                 onLoading = { isLoading ->
                     // do Nothing
@@ -49,16 +66,3 @@ class AccountInfoViewModel @Inject constructor(
         }
     }
 }
-
-data class AccountInfoState(
-    val email: String = "",
-    val authProvider: AuthProvider = AuthProvider.KAKAO,
-    val gender: String = "",
-    val birthYear: Int = 0,
-    val birthMonth: Int = 0,
-    val birthDay: Int = 0,
-    val error: String? = null,
-    val isLoading: Boolean = false,
-)
-
-enum class AuthProvider { GOOGLE, KAKAO }
