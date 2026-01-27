@@ -388,7 +388,7 @@ class AIChatViewModel @Inject constructor(
                 }
 
                 is DataState.Error -> {
-                    Logger.e("temp save error: ${save.throwable}")
+                    Logger.e("temp save error")
                 }
 
                 else -> {
