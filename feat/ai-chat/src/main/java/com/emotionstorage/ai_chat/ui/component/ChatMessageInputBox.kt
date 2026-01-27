@@ -1,6 +1,8 @@
 package com.emotionstorage.ai_chat.ui.component
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -105,8 +107,15 @@ fun ChatMessageInputBox(
                 .fillMaxWidth()
                 .background(Color(0xFF26262C), shape)
                 .border(1.dp, MooiTheme.colorScheme.gray800, shape)
-                .animateContentSize(),
-        verticalAlignment = Alignment.Top,
+                .animateContentSize(
+                    alignment = Alignment.BottomStart,
+                    animationSpec =
+                        tween(
+                            durationMillis = 240,
+                            easing = FastOutSlowInEasing,
+                        ),
+                ),
+        verticalAlignment = Alignment.Bottom,
     ) {
         BasicTextField(
             modifier =

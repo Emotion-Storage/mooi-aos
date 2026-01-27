@@ -378,7 +378,6 @@ class AIChatViewModel @Inject constructor(
             chatMessageObserverJob?.cancel()
 
             val roomId = state.roomId
-            // TODO : ToastMesage 추후 제거
             if (roomId == 0L) {
                 postSideEffect(AIChatSideEffect.NavigateBack)
                 return@intent
