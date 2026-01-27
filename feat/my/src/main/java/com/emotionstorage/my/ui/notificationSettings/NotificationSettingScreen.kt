@@ -52,8 +52,8 @@ import com.orhanobut.logger.Logger
 import java.time.DayOfWeek
 
 private enum class ModalState { None, TempError, LoginSessionExpired }
-private enum class SheetState { None, Permission, TimePicker }
 
+private enum class SheetState { None, Permission, TimePicker }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,9 +69,9 @@ fun NotificationSettingScreen(
     val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
     val (sheetState, setSheetState) = remember { mutableStateOf(SheetState.None) }
 
-    LaunchedEffect(Unit){
-        viewModel.container.sideEffectFlow.collect{
-            when(it){
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
                 is BaseSideEffect.TemporalError -> {
                     setModalState(ModalState.TempError)
                 }
@@ -99,7 +99,7 @@ fun NotificationSettingScreen(
 
     LaunchedEffect(locallyAllowed) {
         setSheetState(
-            if (locallyAllowed) SheetState.None else SheetState.Permission
+            if (locallyAllowed) SheetState.None else SheetState.Permission,
         )
     }
 
@@ -124,7 +124,7 @@ fun NotificationSettingScreen(
         navToBack = navToBack,
     )
 
-    when(modalState){
+    when (modalState) {
         ModalState.None -> {
             // no modal
         }
@@ -136,7 +136,7 @@ fun NotificationSettingScreen(
         }
 
         ModalState.LoginSessionExpired -> {
-            LoginSessionExpiredModal (
+            LoginSessionExpiredModal(
                 onDismissRequest = { setModalState(ModalState.None) },
                 navToLogin = navToLogin,
             )

@@ -1,7 +1,5 @@
 package com.emotionstorage.my.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.NotificationSettings
 import com.emotionstorage.domain.useCase.myPage.GetNotificationSettingsUseCase

@@ -45,7 +45,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class ModalState  {
+private enum class ModalState {
     None,
     TempError,
     LoginSessionExpired,
