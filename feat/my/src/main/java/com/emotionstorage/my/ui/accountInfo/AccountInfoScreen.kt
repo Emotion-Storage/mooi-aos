@@ -29,7 +29,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class AccountInfoModalState  {
+private enum class AccountInfoModalState {
     None,
     TempError,
     LoginSessionExpired,

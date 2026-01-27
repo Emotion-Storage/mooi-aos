@@ -50,7 +50,8 @@ open class BaseViewModel<STATE : Any>(
     protected suspend fun handleError(error: Throwable) =
         subIntent {
             with(
-                error as? BaseException ?: BaseException(message = error.message, code = ErrorCode.UNKNOWN, cause = error),
+                error as? BaseException
+                    ?: BaseException(message = error.message, code = ErrorCode.UNKNOWN, cause = error),
             ) {
                 if (code == ErrorCode.NETWORK_ERROR) {
                     // handle network error

@@ -40,7 +40,7 @@ import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.rememberAdaptiveHeightDp
 
-private enum class KeyDescriptionModalState{
+private enum class KeyDescriptionModalState  {
     None,
     TempError,
     LoginSessionExpired,
@@ -54,11 +54,11 @@ fun KeyDescriptionScreen(
     viewModel: KeyBalanceViewModel = hiltViewModel(),
 ) {
     val state by viewModel.keyCountState.collectAsStateWithLifecycle()
-    val (modalState, setModalState) = remember{ mutableStateOf(KeyDescriptionModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(KeyDescriptionModalState.None) }
 
     LaunchedEffect(Unit) {
-        viewModel.container.sideEffectFlow.collect{
-            when(it){
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
                 is BaseSideEffect.TemporalError -> {
                     setModalState(KeyDescriptionModalState.TempError)
                 }
@@ -82,7 +82,7 @@ fun KeyDescriptionScreen(
         navToBack = navToBack,
     )
 
-    when(modalState){
+    when (modalState) {
         KeyDescriptionModalState.None -> {
             // no modal
         }
