@@ -238,14 +238,6 @@ private fun StatelessAIChatScreen(
 
                 if (state.showForceQuitBottomSheet) {
                     ForceQuitChatBottomSheet(
-                        sheetState =
-                            rememberModalBottomSheetState(
-                                skipPartiallyExpanded = true,
-                                confirmValueChange = { next ->
-                                    next != SheetValue.Hidden
-                                },
-                            ),
-                        onDismissRequest = { /* no-op */ },
                         onConfirm = {
                             onAction(AIChatAction.DismissForceQuitSheet)
                             onAction(AIChatAction.CreateTimeCapsule)

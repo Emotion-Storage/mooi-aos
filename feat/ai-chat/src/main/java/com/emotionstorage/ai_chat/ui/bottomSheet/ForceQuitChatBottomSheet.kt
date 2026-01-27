@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -14,8 +15,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.bottomSheet.BottomSheet
 import com.emotionstorage.ui.theme.MooiTheme
-
-// TODO : 외부 화면을 눌렀을 때 반드시 Bottom Sheet Dismiss가 되지 않도록 해야한다
 
 /**
  * capsule_create_03
@@ -32,13 +31,19 @@ import com.emotionstorage.ui.theme.MooiTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForceQuitChatBottomSheet(
-    sheetState: SheetState = rememberModalBottomSheetState(),
-    onDismissRequest: () -> Unit = {},
     onConfirm: () -> Unit = {},
 ) {
     BottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
+        sheetState =
+        rememberModalBottomSheetState(
+            skipPartiallyExpanded = true,
+            confirmValueChange = { next ->
+                next != SheetValue.Hidden
+            },
+        ),
+        onDismissRequest = {
+            // no operation
+        },
         hideDragHandle = true,
         shouldDismissOnBackPress = false,
         forbidDismiss = true,
