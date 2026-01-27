@@ -1,8 +1,8 @@
 package com.emotionstorage.my.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,23 +12,28 @@ import javax.inject.Inject
 
 @HiltViewModel
 class KeyBalanceViewModel @Inject constructor(
-    private val getKeyCountUseCase: GetKeyCountUseCase,
-) : ViewModel() {
+    private val getKeyCount: GetKeyCountUseCase,
+) : BaseViewModel<Unit>(Unit) {
     private val _keyCountState = MutableStateFlow(KeyCountState())
     val keyCountState: StateFlow<KeyCountState> = _keyCountState
 
     fun refreshKeyCount() =
-        viewModelScope.launch {
-            _keyCountState.update { it.copy(isLoading = true, error = null) }
-            getKeyCountUseCase.invoke().handle(
+        baseViewModelScope.launch {
+            _keyCountState.update { it.copy(isLoading = true) }
+            getKeyCount.invoke().handle(
                 onSuccess = { count ->
                     _keyCountState.update { it.copy(keyCount = count, isLoading = false) }
                 },
                 onLoading = {
                     _keyCountState.update { it.copy(isLoading = true) }
                 },
-                onError = { throwable, _ ->
-                    _keyCountState.update { it.copy(error = throwable.message, isLoading = false) }
+                onError = { throwable, code, data ->
+                    _keyCountState.update { it.copy(isLoading = false) }
+                    throw BaseException(
+                        message = throwable.message ?: "getKeyCount Error",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
             )
         }
@@ -49,7 +54,6 @@ class KeyBalanceViewModel @Inject constructor(
 data class KeyCountState(
     val keyCount: Int? = null,
     val isLoading: Boolean = false,
-    val error: String? = null,
     val dialog: KeyDescriptionDialog? = null,
 )
 

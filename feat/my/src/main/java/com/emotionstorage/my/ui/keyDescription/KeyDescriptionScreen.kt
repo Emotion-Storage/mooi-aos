@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,19 +31,43 @@ import com.emotionstorage.my.presentation.KeyCountState
 import com.emotionstorage.my.presentation.KeyDescriptionDialog
 import com.emotionstorage.my.ui.keyDescription.component.CountRow
 import com.emotionstorage.my.ui.keyDescription.component.WhenToUseKeyDialog
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.rememberAdaptiveHeightDp
 
+private enum class KeyDescriptionModalState{
+    None,
+    TempError,
+    LoginSessionExpired,
+}
+
 @Composable
 fun KeyDescriptionScreen(
+    navToBack: () -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: KeyBalanceViewModel = hiltViewModel(),
-    navToBack: () -> Unit,
 ) {
     val state by viewModel.keyCountState.collectAsStateWithLifecycle()
+    val (modalState, setModalState) = remember{ mutableStateOf(KeyDescriptionModalState.None) }
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect{
+            when(it){
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(KeyDescriptionModalState.TempError)
+                }
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(KeyDescriptionModalState.LoginSessionExpired)
+                }
+            }
+        }
+    }
 
     LifecycleStartEffect("onStart") {
         viewModel.refreshKeyCount()
@@ -54,6 +81,25 @@ fun KeyDescriptionScreen(
         onDismissDialog = viewModel::dismissDialog,
         navToBack = navToBack,
     )
+
+    when(modalState){
+        KeyDescriptionModalState.None -> {
+            // no modal
+        }
+
+        KeyDescriptionModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(KeyDescriptionModalState.None) },
+            )
+        }
+
+        KeyDescriptionModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = { setModalState(KeyDescriptionModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @Composable
