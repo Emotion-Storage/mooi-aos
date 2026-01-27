@@ -264,7 +264,6 @@ private fun StatelessAIChatScreen(
 
                 if (state.showForceQuitBottomSheet) {
                     ForceQuitChatBottomSheet(
-                        onDismissRequest = { onAction(AIChatAction.DismissForceQuitSheet) },
                         onConfirm = {
                             onAction(AIChatAction.DismissForceQuitSheet)
                             onAction(AIChatAction.CreateTimeCapsule)
