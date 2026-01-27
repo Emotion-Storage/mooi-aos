@@ -393,7 +393,7 @@ class AIChatViewModel @Inject constructor(
                 return@intent
             }
 
-            when (val save = tempSaveChatRoomUseCase(roomId)) {
+            when (tempSaveChatRoomUseCase(roomId)) {
                 is DataState.Success -> {
                     postSideEffect(AIChatSideEffect.ToastMessage("임시 저장 완료"))
                 }

@@ -293,6 +293,9 @@ internal fun AppNavHost(
                 navToDailyReport = { id ->
                     navController.navigate(AppDestination.DailyReportDetail(id))
                 },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
+                },
             )
         }
         composable<AppDestination.TimeCapsuleCalendar> {
