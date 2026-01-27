@@ -170,7 +170,7 @@ fun HomeScreen(
         is HomeModalState.ResumeChat -> {
             ResumeChatModal(
                 onDismissRequest = {
-                    viewModel.onAction(HomeAction.DeletePendingChat(modalState.pendingRoomId))
+                    setModalState(HomeModalState.None)
                 },
                 onResume = {
                     viewModel.onAction(HomeAction.ResumePendingChat(modalState.pendingRoomId))
