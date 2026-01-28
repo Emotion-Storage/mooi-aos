@@ -57,7 +57,7 @@ import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class AIModalState{None,TempError,LoginSessionExpired}
+private enum class AIModalState  { None, TempError, LoginSessionExpired }
 
 @Composable
 fun AIChatScreen(
@@ -69,7 +69,7 @@ fun AIChatScreen(
     viewModel: AIChatViewModel = hiltViewModel(),
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-    val (modalState, setModalState) = remember{mutableStateOf(AIModalState.None)}
+    val (modalState, setModalState) = remember { mutableStateOf(AIModalState.None) }
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
 
@@ -113,7 +113,7 @@ fun AIChatScreen(
         onAction = viewModel::onAction,
     )
 
-    when(modalState){
+    when (modalState) {
         AIModalState.None -> {
             // no modal
         }

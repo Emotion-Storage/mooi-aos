@@ -190,10 +190,9 @@ class AIChatViewModel @Inject constructor(
                             }
 
                             val isNewlyCreatable = canCreate && !state.canCreateTimesCapsule
-                            if (isNewlyCreatable)
-                                {
-                                    postSideEffect(AIChatSideEffect.CanCreateTimesCapsule)
-                                }
+                            if (isNewlyCreatable) {
+                                postSideEffect(AIChatSideEffect.CanCreateTimesCapsule)
+                            }
 
                             reduce {
                                 val rawTurnCountScore = message.turnCountScore
