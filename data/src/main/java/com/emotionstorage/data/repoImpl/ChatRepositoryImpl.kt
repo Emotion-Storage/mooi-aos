@@ -37,30 +37,23 @@ class ChatRepositoryImpl
                 DataState.Error(e)
             }
 
-        override suspend fun connectChatRoom(roomId: Long): Flow<DataState<Boolean>> =
-            flow {
-                emit(DataState.Loading(isLoading = true))
+        override suspend fun connectChatRoom(roomId: Long): DataState<Boolean> =
                 try {
                     val isConnected = chatWebSocket.connectChatRoom()
-                    emit(DataState.Success(isConnected))
-                    emit(DataState.Loading(isLoading = false))
+                    DataState.Success(isConnected)
                 } catch (e: Exception) {
-                    emit(DataState.Error(e))
+                    DataState.Error(e)
                 }
-            }
 
-        override suspend fun disconnectChatRoom(roomId: Long): Flow<DataState<Boolean>> =
-            flow {
-                emit(DataState.Loading(isLoading = true))
+
+        override suspend fun disconnectChatRoom(roomId: Long): DataState<Boolean> =
                 try {
                     chatRemote.deleteChatRoom(roomId)
                     val isDisconnected = chatWebSocket.disconnectChatRoom()
-                    emit(DataState.Success(isDisconnected))
-                    emit(DataState.Loading(isLoading = false))
+                    DataState.Success(isDisconnected)
                 } catch (e: Exception) {
-                    emit(DataState.Error(e))
+                    DataState.Error(e)
                 }
-            }
 
         override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
             chatWebSocket.observeChatMessages(roomId)
@@ -68,17 +61,14 @@ class ChatRepositoryImpl
         override suspend fun sendChatMessage(
             roomId: Long,
             chatMessage: ChatMessage,
-        ): Flow<DataState<Boolean>> =
-            flow {
-                emit(DataState.Loading(isLoading = true))
+        ): DataState<Boolean> =
                 try {
                     val isSent = chatWebSocket.sendChatMessage(chatMessage)
-                    emit(DataState.Success(isSent))
-                    emit(DataState.Loading(isLoading = false))
+                    DataState.Success(isSent)
                 } catch (e: Exception) {
-                    emit(DataState.Error(e))
+                    DataState.Error(e)
                 }
-            }
+
 
         override suspend fun tempSaveChatRoom(roomId: Long): DataState<Long> =
             try {
