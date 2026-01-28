@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -33,6 +34,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.common.formatToKorDateTime
 import com.emotionstorage.domain.repo.FavoriteSortBy
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesAction
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesState
 import com.emotionstorage.time_capsule.presentation.FavoriteTimeCapsulesViewModel
@@ -47,17 +49,22 @@ import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.loading.LoadingDots
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 
+private enum class FavoriteModalState { None, TempError, LoginSessionExpired }
+
 @Composable
 fun FavoriteTimeCapsulesScreen(
+    navToTimeCapsuleDetail: (id: Long) -> Unit,
+    navToBack: () -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: FavoriteTimeCapsulesViewModel = hiltViewModel(),
     favoriteViewModel: ToggleFavoriteViewModel = hiltViewModel(),
-    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToBack: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -67,11 +74,23 @@ fun FavoriteTimeCapsulesScreen(
 
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
+    val (modalState, setModalState) = remember { mutableStateOf(FavoriteModalState.None) }
 
     // init state
     LaunchedEffect(Unit) {
-        // initial load, triggered on launch
         viewModel.onAction(FavoriteTimeCapsulesAction.Init)
+
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(FavoriteModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(FavoriteModalState.LoginSessionExpired)
+                }
+            }
+        }
     }
 
     // init favorite state
@@ -126,6 +145,25 @@ fun FavoriteTimeCapsulesScreen(
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack,
     )
+
+    when (modalState) {
+        FavoriteModalState.None -> {
+            // no modal
+        }
+
+        FavoriteModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(FavoriteModalState.None) },
+            )
+        }
+
+        FavoriteModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = { setModalState(FavoriteModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @Composable

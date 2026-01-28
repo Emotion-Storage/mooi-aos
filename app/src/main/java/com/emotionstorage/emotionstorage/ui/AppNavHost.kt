@@ -316,6 +316,9 @@ internal fun AppNavHost(
                 navToDailyReportDetail = { id ->
                     navController.navigate(AppDestination.DailyReportDetail(id))
                 },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
+                },
             )
         }
         composable<AppDestination.MyPage> {
@@ -379,6 +382,9 @@ internal fun AppNavHost(
                 navToBack = {
                     navController.popBackStack()
                 },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
+                },
             )
         }
 
@@ -389,6 +395,9 @@ internal fun AppNavHost(
                 },
                 navToBack = {
                     navController.popBackStack()
+                },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
                 },
             )
         }
