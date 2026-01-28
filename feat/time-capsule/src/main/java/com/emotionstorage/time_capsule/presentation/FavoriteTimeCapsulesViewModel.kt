@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.repo.FavoriteSortBy
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedFavoriteTimeCapsulesUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseViewModel
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
@@ -33,12 +36,7 @@ sealed class FavoriteTimeCapsulesAction {
 @HiltViewModel
 class FavoriteTimeCapsulesViewModel @Inject constructor(
     private val getFavoriteTimeCapsules: GetPagedFavoriteTimeCapsulesUseCase,
-) : ViewModel(),
-    ContainerHost<FavoriteTimeCapsulesState, Unit> {
-    override val container =
-        container<FavoriteTimeCapsulesState, Unit>(
-            FavoriteTimeCapsulesState(),
-        )
+) : BaseViewModel<FavoriteTimeCapsulesState>(FavoriteTimeCapsulesState()) {
 
     fun onAction(action: FavoriteTimeCapsulesAction) {
         when (action) {
@@ -57,7 +55,7 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
     private fun handleSetSortOrder(sortOrderLabel: String) = setSortOrder(FavoriteSortBy.getByLabel(sortOrderLabel))
 
     private fun setSortOrder(sortOrder: FavoriteSortBy) =
-        intent {
+        baseIntent {
             try {
                 reduce {
                     state.copy(
@@ -74,6 +72,11 @@ class FavoriteTimeCapsulesViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 Logger.e("Failed to get favorite time capsules, $e")
+                throw BaseException(
+                    message = "Failed to get favorite time capsules",
+                    code = ErrorCode.UNKNOWN,
+                    cause = e,
+                )
             }
         }
 }
