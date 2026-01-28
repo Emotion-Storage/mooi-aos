@@ -44,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.map
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarAction
 import com.emotionstorage.time_capsule.presentation.CalendarSideEffect
 import com.emotionstorage.time_capsule.presentation.CalendarState
@@ -60,6 +61,8 @@ import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
@@ -71,15 +74,16 @@ private enum class SheetState{None, YearMonth, CalendarDate}
 
 @Composable
 fun CalendarScreen(
+    navToKey: () -> Unit,
+    navToArrived: () -> Unit,
+    navToFavorites: () -> Unit,
+    navToTimeCapsuleDetail: (id: Long) -> Unit,
+    navToDailyReportDetail: (id: Long) -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CalendarViewModel = hiltViewModel(),
     favoriteViewModel: ToggleFavoriteViewModel = hiltViewModel(),
     bottomAppBar: @Composable () -> Unit = {},
-    navToKey: () -> Unit = {},
-    navToArrived: () -> Unit = {},
-    navToFavorites: () -> Unit = {},
-    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToDailyReportDetail: (id: Long) -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -118,6 +122,16 @@ fun CalendarScreen(
                 is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
                     setSheetState(SheetState.CalendarDate)
                 }
+
+                is BaseSideEffect.TemporalError -> {
+                    setSheetState(SheetState.None)
+                    setModalState(ModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setSheetState(SheetState.None)
+                    setModalState(ModalState.LoginSessionExpired)
+                }
             }
         }
     }
@@ -145,6 +159,29 @@ fun CalendarScreen(
                         message = context.getString(R.string.toast_favorite_full),
                     )
                 }
+            }
+        }
+
+        when(modalState){
+            ModalState.None -> {
+                // no modal
+            }
+
+            ModalState.TempError -> {
+                TempErrorModal(
+                    onDismissRequest = {
+                        setModalState(ModalState.None)
+                    },
+                )
+            }
+
+            ModalState.LoginSessionExpired -> {
+                LoginSessionExpiredModal(
+                    onDismissRequest = {
+                        setModalState(ModalState.None)
+                    },
+                    navToLogin = navToLogin,
+                )
             }
         }
     }

@@ -5,12 +5,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetHasNewTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedTimeCapsulesOfDateUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleDatesUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import com.orhanobut.logger.Logger
@@ -56,7 +60,7 @@ sealed class CalendarAction {
     object ClearBottomSheet : CalendarAction()
 }
 
-sealed class CalendarSideEffect {
+sealed class CalendarSideEffect (): BaseSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
 }
 
@@ -68,10 +72,7 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetPagedTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
-) : ViewModel(),
-    ContainerHost<CalendarState, CalendarSideEffect> {
-    override val container: Container<CalendarState, CalendarSideEffect> =
-        container(CalendarState())
+) : BaseViewModel<CalendarState>(CalendarState()) {
 
     fun onAction(action: CalendarAction) {
         when (action) {
@@ -94,7 +95,7 @@ class CalendarViewModel @Inject constructor(
     }
 
     private fun handleInitiate() =
-        intent {
+        baseIntent {
             initKeyCount()
             initHasNewTimeCapsule()
             handleSelectCalendarYearMonth(YearMonth.from(LocalDate.now()))
@@ -108,11 +109,16 @@ class CalendarViewModel @Inject constructor(
                         state.copy(keyCount = data)
                     }
                 },
-                onError = { throwable, _ ->
+                onError = { throwable, code, data ->
                     Logger.e("handleInitKey error: $throwable")
                     reduce {
                         state.copy(keyCount = null)
                     }
+                    throw BaseException(
+                        message = "Failed to get key count",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
             )
         }
@@ -131,12 +137,17 @@ class CalendarViewModel @Inject constructor(
                     reduce {
                         state.copy(hasNewTimeCapsule = false)
                     }
+                    throw BaseException(
+                        message = "Failed to get has new time capsule",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
             )
         }
 
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
-        intent {
+        baseIntent {
             collectDataState(
                 flow = getTimeCapsuleDates(yearMonth),
                 onSuccess = { data ->
@@ -155,12 +166,17 @@ class CalendarViewModel @Inject constructor(
                             calendarTimeCapsuleDates = emptyList(),
                         )
                     }
+                    throw BaseException(
+                        message = "Failed to get time capsule dates",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
             )
         }
 
     private fun handleSelectCalendarDate(date: LocalDate) =
-        intent {
+        baseIntent {
             require(date in state.calendarTimeCapsuleDates)
 
             reduce {
@@ -179,7 +195,7 @@ class CalendarViewModel @Inject constructor(
                     state.copy(
                         timeCapsulesFlow =
                             getTimeCapsulesOfDate(date)
-                                .cachedIn(viewModelScope)
+                                .cachedIn(baseViewModelScope)
                                 .map {
                                     it.map { timeCapsule ->
                                         TimeCapsuleMapper.toUi(timeCapsule)
@@ -192,6 +208,11 @@ class CalendarViewModel @Inject constructor(
                 reduce {
                     state.copy(timeCapsulesFlow = null)
                 }
+                throw BaseException(
+                    message = "Failed to get time capsules of date",
+                    code = ErrorCode.UNKNOWN,
+                    cause = e,
+                )
             }
         }
 
@@ -214,12 +235,17 @@ class CalendarViewModel @Inject constructor(
                             isNewDailyReport = false,
                         )
                     }
+                    throw BaseException(
+                        message = "Failed to get daily report of date",
+                        code = ErrorCode.UNKNOWN,
+                        cause = throwable,
+                    )
                 },
             )
         }
 
     private fun handleClearBottomSheet() =
-        intent {
+        baseIntent {
             // clear bottom sheet states
             reduce {
                 state.copy(
