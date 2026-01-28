@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.common.toKorDateWithWeekDay
@@ -199,7 +200,6 @@ private fun ChatMessageItem(
             Box(
                 modifier =
                     Modifier
-                        // TODO : 너비 제한을 얼마나 두는게 좋을지 논의 필요
                         .widthIn(max = screenWidth.dp * 0.7f)
                         .heightIn(42.dp)
                         .background(
@@ -228,6 +228,7 @@ private fun ChatMessageItem(
                     text = chatMessage.content,
                     style = MooiTheme.typography.caption3,
                     color = Color.White,
+                    textAlign = TextAlign.End,
                 )
             }
         }

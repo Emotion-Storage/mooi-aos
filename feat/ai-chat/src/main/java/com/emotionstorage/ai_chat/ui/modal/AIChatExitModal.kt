@@ -1,7 +1,9 @@
 package com.emotionstorage.ai_chat.ui.modal
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.modal.Modal
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -28,6 +30,7 @@ fun AIChatExitModal(
     if (isModalOpen) {
         Modal(
             title = "잠시 감정 대화를\n이대로 중지할까요?",
+            contentPadding = PaddingValues(start = 25.dp, end = 25.dp, top = 22.dp, bottom = 28.dp),
             bottomDescription = "오늘의 감정 대화는\n오늘까지만 임시저장돼요!",
             bottomDescriptionHighlights = listOf("오늘까지만"),
             confirmLabel = "대화를 계속 진행할게요.",

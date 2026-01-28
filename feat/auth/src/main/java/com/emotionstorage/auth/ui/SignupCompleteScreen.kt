@@ -4,6 +4,7 @@ import SpeechBubble
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -45,7 +45,6 @@ import com.emotionstorage.auth.ui.modal.RetryLoginModal
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.button.CtaButton
-import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 
 @Composable
@@ -95,101 +94,104 @@ private fun StatelessSignupCompleteScreen(
     modifier: Modifier = Modifier,
     onLogin: () -> Unit = {},
 ) {
-    Scaffold(
+    BoxWithConstraints(
         modifier =
             modifier
                 .background(MooiTheme.colorScheme.backgroundDefault)
                 .fillMaxSize(),
-        topBar = {
-            TopAppBar(
-                showBackground = false,
-            )
-        },
-    ) { padding ->
-        BoxWithConstraints(
-            Modifier
-                .background(MooiTheme.colorScheme.backgroundDefault)
-                .fillMaxSize()
-                .padding(padding),
-        ) {
-            val safePadding = WindowInsets.safeDrawing.asPaddingValues()
-            val topInset = safePadding.calculateTopPadding()
-            val bottomInset = safePadding.calculateBottomPadding()
-            val safeHeight = (maxHeight - topInset - bottomInset).coerceAtLeast(0.dp)
+    ) {
+        val safePadding = WindowInsets.safeDrawing.asPaddingValues()
+        val topInset = safePadding.calculateTopPadding()
+        val bottomInset = safePadding.calculateBottomPadding()
 
-            Image(
+        val safeHeight = (maxHeight - topInset - bottomInset).coerceAtLeast(0.dp)
+
+        val guideHeight = 800.dp
+        val scaleY = (safeHeight / guideHeight).coerceAtLeast(0f)
+
+        val isTablet = maxWidth >= 600.dp
+
+        val topFromStatus = (78.dp * scaleY).coerceIn(56.dp, 120.dp)
+        val bottomFromNav = (39.dp * scaleY).coerceIn(28.dp, 72.dp)
+
+        Box(modifier = Modifier.fillMaxSize()) {
+            Box(
                 modifier =
                     Modifier
-                        .sizeIn(
-                            maxWidth = Dp.Unspecified,
-                            maxHeight = if (maxWidth >= 600.dp) safeHeight * 0.83f else safeHeight * 1.1f,
-                        ).fillMaxWidth()
-                        .aspectRatio(360f / 752f),
-                painter = painterResource(R.drawable.graphic_signup_complete),
-                contentScale = ContentScale.Fit,
-                contentDescription = null,
-            )
+                        .fillMaxSize(),
+            ) {
+                Image(
+                    modifier =
+                        Modifier
+                            .sizeIn(
+                                maxWidth = Dp.Unspecified,
+                                maxHeight = if (isTablet) safeHeight * 0.83f else safeHeight * 1.1f,
+                            ).fillMaxWidth()
+                            .aspectRatio(360f / 752f),
+                    painter = painterResource(R.drawable.graphic_signup_complete),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = null,
+                )
+            }
 
             Column(
                 modifier =
                     Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 15.dp),
-                verticalArrangement = Arrangement.SpaceBetween,
+                        .align(Alignment.TopStart)
+                        .padding(horizontal = 15.dp)
+                        .padding(top = topInset + topFromStatus),
+                horizontalAlignment = Alignment.Start,
+                verticalArrangement = Arrangement.spacedBy(10.dp),
             ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    Text(
-                        text =
-                            buildAnnotatedString {
-                                append("가입을 환영해요.\n")
-                                withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
-                                    append("당신의 감정")
-                                }
-                                append("을,\n")
-                                append("이곳에 천천히 담아보세요.")
-                            },
-                        style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
-                        color = Color.White,
-                    )
-                    Text(
-                        text = "여기부터 당신만의 기록이 시작돼요.",
-                        style = MooiTheme.typography.body2,
-                        color = MooiTheme.colorScheme.gray500,
-                    )
-                }
-
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(15.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    SpeechBubble(
-                        modifier =
-                            Modifier.background(
-                                MooiTheme.colorScheme.backgroundDefault.copy(alpha = 0.8f),
-                                RoundedCornerShape(16.dp),
-                            ),
-                        contentText = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
-                        textStyle = MooiTheme.typography.caption3.copy(lineHeight = 20.sp),
-                        tail = BubbleTail.BottomCenter,
-                        sizeParam = DpSize(265.dp, 84.dp),
-                    )
-
-                    CtaButton(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 39.dp),
-                        labelString = "메인 화면으로 이동",
-                        onClick = {
-                            onLogin()
+                Text(
+                    text =
+                        buildAnnotatedString {
+                            append("가입을 환영해요.\n")
+                            withStyle(SpanStyle(color = MooiTheme.colorScheme.primaryBlue500)) {
+                                append("당신의 감정")
+                            }
+                            append("을,\n")
+                            append("이곳에 천천히 담아보세요.")
                         },
-                        isDefaultWidth = false,
-                    )
-                }
+                    style = MooiTheme.typography.head1.copy(fontWeight = FontWeight.SemiBold),
+                    color = Color.White,
+                )
+
+                Text(
+                    text = "여기부터 당신만의 기록이 시작돼요.",
+                    style = MooiTheme.typography.body2,
+                    color = MooiTheme.colorScheme.gray500,
+                )
+            }
+
+            Column(
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .padding(horizontal = 15.dp)
+                        .padding(bottom = bottomInset + bottomFromNav),
+                verticalArrangement = Arrangement.spacedBy(15.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                SpeechBubble(
+                    modifier =
+                        Modifier.background(
+                            MooiTheme.colorScheme.backgroundDefault.copy(alpha = 0.8f),
+                            RoundedCornerShape(16.dp),
+                        ),
+                    contentText = "비밀은 지켜드릴게요,\n당신의 감정을 편하게 나누어보세요.",
+                    textStyle = MooiTheme.typography.caption3.copy(lineHeight = 20.sp),
+                    tail = BubbleTail.BottomCenter,
+                    sizeParam = DpSize(265.dp, 84.dp),
+                )
+
+                CtaButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    labelString = "메인 화면으로 이동",
+                    onClick = onLogin,
+                    isDefaultWidth = false,
+                )
             }
         }
     }
