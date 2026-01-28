@@ -55,7 +55,7 @@ sealed class TimeCapsuleDetailAction {
     ) : TimeCapsuleDetailAction()
 }
 
-sealed class TimeCapsuleDetailSideEffect(): BaseSideEffect {
+sealed class TimeCapsuleDetailSideEffect : BaseSideEffect {
     object GetTimeCapsuleFail : TimeCapsuleDetailSideEffect()
 
     object OpenTimeCapsuleFail : TimeCapsuleDetailSideEffect()
@@ -86,8 +86,8 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val saveNote: SaveTimeCapsuleNoteUseCase,
     private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
 ) : BaseViewModel<TimeCapsuleDetailState>(
-    TimeCapsuleDetailState()
-) {
+        TimeCapsuleDetailState(),
+    ) {
     fun onAction(action: TimeCapsuleDetailAction) {
         when (action) {
             is Init -> {

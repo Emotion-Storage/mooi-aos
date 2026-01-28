@@ -414,7 +414,7 @@ internal fun AppNavHost(
                 },
                 navToLogin = {
                     navController.navigateAsRoot(AppDestination.Login)
-                }
+                },
             )
         }
 

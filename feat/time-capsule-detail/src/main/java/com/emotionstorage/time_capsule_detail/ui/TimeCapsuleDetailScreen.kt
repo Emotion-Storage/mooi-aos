@@ -70,18 +70,25 @@ import java.time.format.DateTimeFormatter
 
 private sealed class TimeCapsuleDetailModal {
     object None : TimeCapsuleDetailModal()
+
     object Exit : TimeCapsuleDetailModal()
+
     data class Unlock(
         val keyCount: Int,
         val requiredKeyCount: Int,
         val openAt: LocalDateTime,
     ) : TimeCapsuleDetailModal()
+
     object Expired : TimeCapsuleDetailModal()
+
     object Delete : TimeCapsuleDetailModal()
+
     object SaveChanges : TimeCapsuleDetailModal()
+
     data class TempError(
         val shouldNavBack: Boolean = false,
     ) : TimeCapsuleDetailModal()
+
     object LoginSessionExpired : TimeCapsuleDetailModal()
 }
 
@@ -136,11 +143,13 @@ fun TimeCapsuleDetailScreen(
                 }
 
                 is ShowUnlockModal -> {
-                    setModalState(TimeCapsuleDetailModal.Unlock(
-                        keyCount = sideEffect.modalState.keyCount,
-                        requiredKeyCount = sideEffect.modalState.requiredKeyCount,
-                        openAt = sideEffect.modalState.openAt,
-                    ))
+                    setModalState(
+                        TimeCapsuleDetailModal.Unlock(
+                            keyCount = sideEffect.modalState.keyCount,
+                            requiredKeyCount = sideEffect.modalState.requiredKeyCount,
+                            openAt = sideEffect.modalState.openAt,
+                        ),
+                    )
                 }
 
                 is SaveChangesSuccess -> {
@@ -294,7 +303,7 @@ fun TimeCapsuleDetailScreen(
             TempErrorModal(
                 onDismissRequest = {
                     setModalState(TimeCapsuleDetailModal.None)
-                    if(modalState.shouldNavBack) navToBack()
+                    if (modalState.shouldNavBack) navToBack()
                 },
             )
         }
