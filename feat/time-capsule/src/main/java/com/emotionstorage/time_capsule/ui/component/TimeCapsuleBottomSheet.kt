@@ -59,12 +59,19 @@ fun TimeCapsuleBottomSheet(
     isNewDailyReport: Boolean = false,
 ) {
     val lazyTimeCapsules = timeCapsulesFlow?.collectAsLazyPagingItems()
+    val dailyReportButtonEnabled = navToDailyReport != null
 
     BottomSheet(
         modifier = modifier,
         onDismissRequest = onDismissRequest,
         sheetState = sheetState,
-        contentPadding = PaddingValues(top = 7.dp, start = 15.dp, end = 15.dp, bottom = (39.7).dp),
+        contentPadding =
+            PaddingValues(
+                top = 7.dp,
+                start = 15.dp,
+                end = 15.dp,
+                bottom = if (dailyReportButtonEnabled) 40.dp else 0.dp,
+            ),
     ) {
         Text(
             modifier =
@@ -118,6 +125,21 @@ fun TimeCapsuleBottomSheet(
             isNewDailyReport = isNewDailyReport,
             onClick = navToDailyReport,
         )
+
+        if (!dailyReportButtonEnabled) {
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Text(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 40.dp),
+                text = "일일 리포트는 자정이 지나서 확인할 수 있어요.",
+                style = MooiTheme.typography.caption5,
+                color = MooiTheme.colorScheme.gray700,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 
