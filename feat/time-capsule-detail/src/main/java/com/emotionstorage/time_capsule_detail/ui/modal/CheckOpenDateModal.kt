@@ -47,11 +47,9 @@ import java.time.format.DateTimeFormatter
 fun CheckOpenDateModal(
     createdAt: LocalDate,
     openAt: LocalDate,
-    isModalOpen: Boolean = false,
     onDismissRequest: () -> Unit = {},
     onSaveOpenDate: () -> Unit = {},
 ) {
-    if (isModalOpen) {
         Modal(
             onDismissRequest = onDismissRequest,
             contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
@@ -125,7 +123,7 @@ fun CheckOpenDateModal(
             }
         }
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -136,6 +134,5 @@ private fun CheckOpenDateModalPreview() {
     CheckOpenDateModal(
         createdAt = LocalDate.now(),
         openAt = LocalDate.now().plusDays(3),
-        isModalOpen = true,
     )
 }
