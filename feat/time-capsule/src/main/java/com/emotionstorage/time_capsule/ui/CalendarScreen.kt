@@ -66,6 +66,9 @@ import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
 import java.time.YearMonth
 
+private enum class ModalState{None, TempError, LoginSessionExpired}
+private enum class SheetState{None, YearMonth, CalendarDate}
+
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
@@ -105,15 +108,15 @@ fun CalendarScreen(
 
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
-    val (showYearMonthBottomSheet, setShowYearMonthBottomSheet) = remember { mutableStateOf(false) }
-    val (showTimeCapsuleBottomSheet, setShowTimeCapsuleBottomSheet) = remember { mutableStateOf(false) }
+    val (modalState, setModalState) = remember{mutableStateOf(ModalState.None)}
+    val (sheetState, setSheetState) = remember{mutableStateOf(SheetState.None)}
 
     // collect side effect
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is CalendarSideEffect.ShowTimeCapsuleBottomSheet -> {
-                    setShowTimeCapsuleBottomSheet(true)
+                    setSheetState(SheetState.CalendarDate)
                 }
             }
         }
@@ -151,10 +154,8 @@ fun CalendarScreen(
         bottomAppBar = bottomAppBar,
         snackState = snackState,
         snackbarController = snackbarController,
-        showYearMonthBottomSheet = showYearMonthBottomSheet,
-        setShowYearMonthBottomSheet = setShowYearMonthBottomSheet,
-        showTimeCapsuleBottomSheet = showTimeCapsuleBottomSheet,
-        setShowTimeCapsuleBottomSheet = setShowTimeCapsuleBottomSheet,
+        sheetState = sheetState,
+        setSheetState = setSheetState,
         state = state.value,
         favoriteState = favoriteState.value,
         onAction = viewModel::onAction,
@@ -174,10 +175,8 @@ private fun StatelessCalendarScreen(
     bottomAppBar: @Composable () -> Unit = {},
     snackState: SnackbarHostState = SnackbarHostState(),
     snackbarController: AppSnackbarController? = null,
-    showYearMonthBottomSheet: Boolean = false,
-    setShowYearMonthBottomSheet: (Boolean) -> Unit = {},
-    showTimeCapsuleBottomSheet: Boolean = false,
-    setShowTimeCapsuleBottomSheet: (Boolean) -> Unit = {},
+    sheetState: SheetState = SheetState.None,
+    setSheetState: (SheetState) -> Unit = {},
     state: CalendarState = CalendarState(),
     favoriteState: ToggleFavoriteState = ToggleFavoriteState(),
     onAction: (CalendarAction) -> Unit = {},
@@ -274,7 +273,7 @@ private fun StatelessCalendarScreen(
                         onAction(CalendarAction.SelectCalendarYearMonth(it))
                     },
                     onDropDownIconClick = {
-                        setShowYearMonthBottomSheet(true)
+                        setSheetState(SheetState.YearMonth)
                     },
                     timeCapsuleDates = state.calendarTimeCapsuleDates,
                     onDateSelect = {
@@ -296,52 +295,59 @@ private fun StatelessCalendarScreen(
                 },
             )
 
-            // calendar year month bottom sheet
-            if (showYearMonthBottomSheet) {
-                YearMonthPickerBottomSheet(
-                    onDismissRequest = {
-                        setShowYearMonthBottomSheet(false)
-                    },
-                    selectedYearMonth = state.calendarYearMonth,
-                    onYearMonthSelect = {
-                        setShowYearMonthBottomSheet(false)
-                        onAction(CalendarAction.SelectCalendarYearMonth(it))
-                    },
-                )
-            }
+            when(sheetState){
+                SheetState.None -> {
+                    // no bottom sheet
+                }
 
-            // calendar date's time capsule bottom sheet
-            if (showTimeCapsuleBottomSheet && state.calendarSelectedDate != null && state.timeCapsulesFlow != null) {
-                TimeCapsuleBottomSheet(
-                    date = state.calendarSelectedDate,
-                    onDismissRequest = {
-                        setShowTimeCapsuleBottomSheet(false)
-                        onAction(CalendarAction.ClearBottomSheet)
-                    },
-                    timeCapsulesFlow =
-                        state.timeCapsulesFlow.map {
-                            it.map {
-                                it.copy(
-                                    isFavorite = favoriteState.favoriteIds.contains(it.id),
-                                )
-                            }
+                SheetState.YearMonth -> {
+                    YearMonthPickerBottomSheet(
+                        onDismissRequest = {
+                            setSheetState(SheetState.None)
                         },
-                    onToggleFavorite = { id, prevFavorite ->
-                        onFavoriteAction(ToggleFavoriteAction.OnToggle(id))
-                    },
-                    navToTimeCapsuleDetail = {
-                        setShowTimeCapsuleBottomSheet(false)
-                        navToTimeCapsuleDetail(it)
-                    },
-                    navToDailyReport =
-                        state.dailyReportId?.run {
-                            {
-                                setShowTimeCapsuleBottomSheet(false)
-                                navToDailyReportDetail(this)
-                            }
+                        selectedYearMonth = state.calendarYearMonth,
+                        onYearMonthSelect = {
+                            setSheetState(SheetState.None)
+                            onAction(CalendarAction.SelectCalendarYearMonth(it))
                         },
-                    isNewDailyReport = state.isNewDailyReport,
-                )
+                    )
+                }
+
+                SheetState.CalendarDate -> {
+                    // calendar date's time capsule bottom sheet
+                    if (state.calendarSelectedDate != null && state.timeCapsulesFlow != null) {
+                        TimeCapsuleBottomSheet(
+                            date = state.calendarSelectedDate,
+                            onDismissRequest = {
+                                setSheetState(SheetState.None)
+                                onAction(CalendarAction.ClearBottomSheet)
+                            },
+                            timeCapsulesFlow =
+                                state.timeCapsulesFlow.map {
+                                    it.map {
+                                        it.copy(
+                                            isFavorite = favoriteState.favoriteIds.contains(it.id),
+                                        )
+                                    }
+                                },
+                            onToggleFavorite = { id, prevFavorite ->
+                                onFavoriteAction(ToggleFavoriteAction.OnToggle(id))
+                            },
+                            navToTimeCapsuleDetail = {
+                                setSheetState(SheetState.None)
+                                navToTimeCapsuleDetail(it)
+                            },
+                            navToDailyReport =
+                                state.dailyReportId?.run {
+                                    {
+                                        setSheetState(SheetState.None)
+                                        navToDailyReportDetail(this)
+                                    }
+                                },
+                            isNewDailyReport = state.isNewDailyReport,
+                        )
+                    }
+                }
             }
         }
     }
