@@ -160,7 +160,7 @@ fun FavoriteTimeCapsulesScreen(
         ModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
                 onDismissRequest = { setModalState(ModalState.None) },
-                navToLogin = navToLogin
+                navToLogin = navToLogin,
             )
         }
     }

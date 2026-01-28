@@ -40,7 +40,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class ModalState{None, TempError, LoginSessionExpired}
+private enum class ModalState { None, TempError, LoginSessionExpired }
 
 @Composable
 fun ArrivedTimeCapsulesScreen(
@@ -50,12 +50,12 @@ fun ArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: ArrivedTimeCapsulesViewModel = hiltViewModel(),
 ) {
-    val (modalState, setModalState) = remember{ mutableStateOf(ModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
     val timeCapsulesState = viewModel.arrivedTimeCapsules.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
-            when(it){
+            when (it) {
                 is BaseSideEffect.TemporalError -> {
                     setModalState(ModalState.TempError)
                 }
@@ -74,7 +74,7 @@ fun ArrivedTimeCapsulesScreen(
         navToBack = navToBack,
     )
 
-    when(modalState){
+    when (modalState) {
         ModalState.None -> {
             // no modal
         }

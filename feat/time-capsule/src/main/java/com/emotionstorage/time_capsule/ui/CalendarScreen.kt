@@ -69,8 +69,9 @@ import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
 import java.time.YearMonth
 
-private enum class ModalState{None, TempError, LoginSessionExpired}
-private enum class SheetState{None, YearMonth, CalendarDate}
+private enum class ModalState  { None, TempError, LoginSessionExpired }
+
+private enum class SheetState  { None, YearMonth, CalendarDate }
 
 @Composable
 fun CalendarScreen(
@@ -112,8 +113,8 @@ fun CalendarScreen(
 
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
-    val (modalState, setModalState) = remember{mutableStateOf(ModalState.None)}
-    val (sheetState, setSheetState) = remember{mutableStateOf(SheetState.None)}
+    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
+    val (sheetState, setSheetState) = remember { mutableStateOf(SheetState.None) }
 
     // collect side effect
     LaunchedEffect(Unit) {
@@ -162,7 +163,7 @@ fun CalendarScreen(
             }
         }
 
-        when(modalState){
+        when (modalState) {
             ModalState.None -> {
                 // no modal
             }
@@ -332,7 +333,7 @@ private fun StatelessCalendarScreen(
                 },
             )
 
-            when(sheetState){
+            when (sheetState) {
                 SheetState.None -> {
                     // no bottom sheet
                 }

@@ -1,7 +1,5 @@
 package com.emotionstorage.time_capsule.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
@@ -21,9 +19,6 @@ import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.viewmodel.container
-import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import java.time.LocalDate
 import java.time.YearMonth
@@ -60,7 +55,7 @@ sealed class CalendarAction {
     object ClearBottomSheet : CalendarAction()
 }
 
-sealed class CalendarSideEffect (): BaseSideEffect {
+sealed class CalendarSideEffect : BaseSideEffect {
     object ShowTimeCapsuleBottomSheet : CalendarSideEffect()
 }
 
@@ -73,7 +68,6 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsulesOfDate: GetPagedTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
 ) : BaseViewModel<CalendarState>(CalendarState()) {
-
     fun onAction(action: CalendarAction) {
         when (action) {
             is CalendarAction.Initiate -> {
