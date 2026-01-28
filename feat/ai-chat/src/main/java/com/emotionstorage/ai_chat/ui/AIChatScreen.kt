@@ -47,22 +47,29 @@ import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
 import com.emotionstorage.ai_chat.ui.modal.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 
+private enum class AIModalState{None,TempError,LoginSessionExpired}
+
 @Composable
 fun AIChatScreen(
     roomId: Long,
+    navToBack: () -> Unit,
+    navToTimeCapsuleDetail: (capsuleId: Long) -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
-    navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: Long) -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
+    val (modalState, setModalState) = remember{mutableStateOf(AIModalState.None)}
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
 
@@ -86,6 +93,14 @@ fun AIChatScreen(
                 is AIChatSideEffect.NavigateBack -> {
                     navToBack()
                 }
+
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(AIModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(AIModalState.LoginSessionExpired)
+                }
             }
         }
     }
@@ -97,6 +112,25 @@ fun AIChatScreen(
         state = state.value,
         onAction = viewModel::onAction,
     )
+
+    when(modalState){
+        AIModalState.None -> {
+            // no modal
+        }
+
+        AIModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(AIModalState.None) },
+            )
+        }
+
+        AIModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = { setModalState(AIModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
