@@ -3,12 +3,15 @@ package com.emotionstorage.time_capsule_detail.ui.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.emotionstorage.domain.model.TimeCapsule
@@ -50,53 +54,86 @@ private fun Emotions(
     modifier: Modifier = Modifier,
     emotions: List<TimeCapsule.Emotion> = emptyList(),
 ) {
-    FlowRow(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.CenterHorizontally),
-        verticalArrangement = Arrangement.spacedBy(11.dp),
-        itemVerticalAlignment = Alignment.CenterVertically,
-        maxItemsInEachRow = 3,
-    ) {
-        for (emotion in emotions) {
-            Column(
-                modifier =
-                    Modifier
-                        .background(
-                            LinearGradient(
-                                listOf(
-                                    // alpha = 0.5 * 0.2
-                                    Color(0xFF849BEA).copy(alpha = 0.1f),
-                                    // alpha = 0.08 * 0.2
-                                    Color(0xFF849BEA).copy(alpha = 0.016f),
+    BoxWithConstraints(modifier = modifier.fillMaxWidth()) {
+        val chipWidth = (maxWidth - 11.dp * 2) / 3
+
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(11.dp, Alignment.CenterHorizontally),
+            verticalArrangement = Arrangement.spacedBy(11.dp),
+            itemVerticalAlignment = Alignment.CenterVertically,
+            maxItemsInEachRow = 3,
+        ) {
+            for (emotion in emotions) {
+                val isLong = emotion.label.length >= 4
+
+                val heightRatio = (118f / 102f)
+                val chipHeight = (chipWidth.value * heightRatio).dp
+
+                val label =
+                    if (isLong) {
+                        emotion.label.take(3) + "\n" + emotion.label.drop(3)
+                    } else {
+                        emotion.label
+                    }
+
+                val horizontalPadding = minOf(14.dp, chipWidth * 0.12f)
+                val verticalPadding = minOf(16.dp, chipHeight * 0.14f)
+
+                Column(
+                    modifier =
+                        Modifier
+                            .width(chipWidth)
+                            .height(chipHeight)
+                            .background(
+                                LinearGradient(
+                                    listOf(
+                                        Color(0xFF849BEA).copy(alpha = 0.1f),
+                                        Color(0xFF849BEA).copy(alpha = 0.016f),
+                                    ),
+                                    angleInDegrees = -18f,
                                 ),
-                                angleInDegrees = -18f,
-                            ),
-                            RoundedCornerShape(10.dp),
-                        ).padding(18.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(7.dp),
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(5.dp),
+                                RoundedCornerShape(10.dp),
+                            ).padding(horizontal = horizontalPadding, vertical = verticalPadding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
                 ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        Text(
+                            text = emotion.emoji,
+                            style = MooiTheme.typography.head2,
+                        )
+
+                        Spacer(modifier = Modifier.width(5.dp))
+
+                        Text(
+                            modifier = Modifier.weight(1f, fill = false),
+                            text = label,
+                            style =
+                                MooiTheme.typography.body8.copy(
+                                    lineHeight = if (isLong) 18.sp else MooiTheme.typography.body8.lineHeight,
+                                ),
+                            color = MooiTheme.colorScheme.primaryBlue500,
+                            textAlign = TextAlign.Start,
+                            maxLines = if (isLong) 2 else 1,
+                            overflow = TextOverflow.Clip,
+                            softWrap = true,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(7.dp))
+
                     Text(
-                        text = emotion.emoji,
-                        style = MooiTheme.typography.head2,
-                    )
-                    Text(
-                        modifier = Modifier.widthIn(max = 40.dp),
-                        text = emotion.label,
-                        style = MooiTheme.typography.body8,
-                        color = MooiTheme.colorScheme.primaryBlue500,
-                        textAlign = TextAlign.Center,
+                        text = "${emotion.percentage?.toInt() ?: "- "}%",
+                        style = MooiTheme.typography.head3.copy(lineHeight = 30.sp),
+                        color = Color.White,
+                        textAlign = TextAlign.Start,
                     )
                 }
-                Text(
-                    text = "${emotion.percentage?.toInt() ?: "- "}%",
-                    style = MooiTheme.typography.head3.copy(lineHeight = 30.sp),
-                    color = Color.White,
-                )
             }
         }
     }
@@ -143,17 +180,17 @@ private fun TimeCapsuleEmotionCommentsPreview() {
                     listOf(
                         TimeCapsule.Emotion(
                             emoji = "\uD83D\uDE14",
-                            label = "자격지심",
+                            label = "가나다라",
                             percentage = 30.0f,
                         ),
                         TimeCapsule.Emotion(
                             emoji = "\uD83D\uDE0A",
-                            label = "시원 섭섭함",
+                            label = "가나다라마",
                             percentage = 30.0f,
                         ),
                         TimeCapsule.Emotion(
                             emoji = "\uD83E\uDD70",
-                            label = "자랑스러움",
+                            label = "가나다라마바",
                             percentage = 80.0f,
                         ),
                     ),
@@ -164,17 +201,17 @@ private fun TimeCapsuleEmotionCommentsPreview() {
                     listOf(
                         TimeCapsule.Emotion(
                             emoji = "\uD83D\uDE14",
-                            label = "서운함",
+                            label = "가",
                             percentage = 30.0f,
                         ),
                         TimeCapsule.Emotion(
                             emoji = "\uD83D\uDE0A",
-                            label = "고마움",
+                            label = "가나",
                             percentage = 30.0f,
                         ),
                         TimeCapsule.Emotion(
                             emoji = "\uD83E\uDD70",
-                            label = "안정감",
+                            label = "가나다",
                             percentage = 80.0f,
                         ),
                     ),
