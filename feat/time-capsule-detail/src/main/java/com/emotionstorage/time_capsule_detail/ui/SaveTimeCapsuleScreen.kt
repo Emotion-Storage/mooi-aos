@@ -178,6 +178,7 @@ fun SaveTimeCapsuleScreen(
                 },
             )
         }
+
         ModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
                 onDismissRequest = {
@@ -248,7 +249,8 @@ private fun StatelessSaveTimeCapsuleScreen(
                             .offset(
                                 x = 34.dp,
                                 y = 73.dp,
-                            ).size(310.dp, 144.dp),
+                            )
+                            .size(310.dp, 144.dp),
                     painter =
                         painterResource(
                             com
@@ -310,15 +312,14 @@ private fun StatelessSaveTimeCapsuleScreen(
                     onSave = {
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
-                        } else if (state.openDateTime != null)
-                            {
-                                setModalState(
-                                    ModalState.CheckOpenDate(
-                                        createdAt = state.createdAt.toLocalDate(),
-                                        openAt = state.openDateTime.toLocalDate(),
-                                    ),
-                                )
-                            }
+                        } else if (state.openDateTime != null) {
+                            setModalState(
+                                ModalState.CheckOpenDate(
+                                    createdAt = state.createdAt.toLocalDate(),
+                                    openAt = state.openDateTime.toLocalDate(),
+                                ),
+                            )
+                        }
                     },
                     onExpire = {
                         setModalState(ModalState.Expired)
@@ -486,7 +487,8 @@ private fun RowScope.OpenAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -506,7 +508,8 @@ private fun RowScope.OpenAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
