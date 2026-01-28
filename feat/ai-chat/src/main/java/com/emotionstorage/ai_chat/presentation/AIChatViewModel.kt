@@ -353,6 +353,7 @@ class AIChatViewModel @Inject constructor(
                 },
                 onError = { throwable, code, data ->
                     Logger.e("temp save error")
+                    // todo: 임시저장 실패 시, 처리 고민 (채팅 이어서 재시작 / 그냥 나가기)
                     throw BaseException(
                         message = throwable.message ?: "temp save error",
                         code = code,
