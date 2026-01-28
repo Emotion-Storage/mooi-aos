@@ -268,7 +268,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                     reduce { state.copy(isLoading = false) }
                     Logger.e("Error saving time capsule, $throwable")
                     throw BaseException(
-                        message = throwable.message ?: "Error getting time capsule by id",
+                        message = throwable.message ?: "Error saving time capsule",
                         code = code,
                         cause = throwable,
                     )
