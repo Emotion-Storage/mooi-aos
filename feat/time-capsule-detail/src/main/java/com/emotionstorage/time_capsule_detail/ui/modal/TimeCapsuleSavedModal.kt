@@ -38,53 +38,46 @@ import kotlinx.coroutines.delay
  *     - 배경 터치 X
  */
 @Composable
-fun TimeCapsuleSavedModal(
-    isModalOpen: Boolean = false,
-    onConfirm: () -> Unit = {},
-) {
-    LaunchedEffect(isModalOpen) {
-        if (isModalOpen) {
-            // confirm automatically after 5 seconds
-            delay(5000)
-            onConfirm()
-        }
+fun TimeCapsuleSavedModal(onConfirm: () -> Unit = {}) {
+    LaunchedEffect(Unit) {
+        // confirm automatically after 5 seconds
+        delay(5000)
+        onConfirm()
     }
 
-    if (isModalOpen) {
-        Modal(
-            onDismissRequest = {},
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
-            confirmLabel = "네, 확인했어요.",
-            onConfirm = onConfirm,
-            contentPadding = PaddingValues(top = 9.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
+    Modal(
+        onDismissRequest = {},
+        dismissOnBackPress = false,
+        dismissOnClickOutside = false,
+        confirmLabel = "네, 확인했어요.",
+        onConfirm = onConfirm,
+        contentPadding = PaddingValues(top = 9.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
+    ) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Image(
-                    modifier = Modifier.size(82.dp, 67.dp),
-                    painter = painterResource(id = R.drawable.graphic_ai_chat),
-                    contentDescription = null,
-                )
-                Text(
-                    modifier = Modifier.padding(top = 4.dp, bottom = 6.dp),
-                    text = "타임캡슐을\n안전하게 보관했어요.",
-                    style =
-                        MooiTheme.typography.head2.copy(
-                            lineHeight = 30.sp,
-                        ),
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                )
-                Text(
-                    text = "이 감정은 추후 더\n소중한 이야기가 될 거예요.",
-                    style = MooiTheme.typography.body5,
-                    color = MooiTheme.colorScheme.gray500,
-                    textAlign = TextAlign.Center,
-                )
-            }
+            Image(
+                modifier = Modifier.size(82.dp, 67.dp),
+                painter = painterResource(id = R.drawable.graphic_ai_chat),
+                contentDescription = null,
+            )
+            Text(
+                modifier = Modifier.padding(top = 4.dp, bottom = 6.dp),
+                text = "타임캡슐을\n안전하게 보관했어요.",
+                style =
+                    MooiTheme.typography.head2.copy(
+                        lineHeight = 30.sp,
+                    ),
+                color = Color.White,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "이 감정은 추후 더\n소중한 이야기가 될 거예요.",
+                style = MooiTheme.typography.body5,
+                color = MooiTheme.colorScheme.gray500,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
@@ -95,7 +88,5 @@ private fun TimeCapsuleSavedModalPreview() {
     // background ui
     Box(modifier = Modifier.fillMaxSize())
 
-    TimeCapsuleSavedModal(
-        isModalOpen = true,
-    )
+    TimeCapsuleSavedModal()
 }

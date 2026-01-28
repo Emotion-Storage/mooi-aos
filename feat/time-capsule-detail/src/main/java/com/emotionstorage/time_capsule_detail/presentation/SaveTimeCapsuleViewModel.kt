@@ -1,16 +1,15 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetTimeCapsuleOpenAtUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.OpenAfter
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -65,7 +64,7 @@ sealed class SaveTimeCapsuleAction {
     object SaveTimeCapsule : SaveTimeCapsuleAction()
 }
 
-sealed class SaveTimeCapsuleSideEffect {
+sealed class SaveTimeCapsuleSideEffect : BaseSideEffect {
     data class ShowToast(
         val toast: String = "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
     ) : SaveTimeCapsuleSideEffect()
@@ -77,11 +76,7 @@ sealed class SaveTimeCapsuleSideEffect {
 class SaveTimeCapsuleViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
     private val setTimeCapsuleOpenAt: SetTimeCapsuleOpenAtUseCase,
-) : ViewModel(),
-    ContainerHost<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> {
-    override val container: Container<SaveTimeCapsuleState, SaveTimeCapsuleSideEffect> =
-        container(SaveTimeCapsuleState())
-
+) : BaseViewModel<SaveTimeCapsuleState>(SaveTimeCapsuleState()) {
     fun onAction(action: SaveTimeCapsuleAction) {
         when (action) {
             is SaveTimeCapsuleAction.Init -> {
@@ -109,7 +104,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
     private fun handleInit(
         id: Long,
         isNewTimeCapsule: Boolean,
-    ) = intent {
+    ) = baseIntent {
         collectDataState(
             flow = getTimeCapsuleById(id),
             onSuccess = {
@@ -133,18 +128,22 @@ class SaveTimeCapsuleViewModel @Inject constructor(
             },
             onError = { throwable, code, data ->
                 Logger.e("Error getting time capsule by id, $throwable")
-                // todo: show error modal
                 reduce {
                     state.copy(
                         isLoading = false,
                     )
                 }
+                throw BaseException(
+                    message = throwable.message ?: "Error getting time capsule by id",
+                    code = code,
+                    cause = throwable,
+                )
             },
         )
     }
 
     private fun handleSelectOpenAfter(openAfter: OpenAfter?) =
-        intent {
+        baseIntent {
             when (openAfter) {
                 null -> {
                     reduce {
@@ -222,14 +221,14 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         }
 
     private fun handleSelectOpenDate(openDate: LocalDate) =
-        intent {
+        baseIntent {
             if (openDate.isBefore(state.saveAt.toLocalDate())) {
                 Logger.e("Timecapsule open date can not be before save date")
-                return@intent
+                return@baseIntent
             }
             if (openDate.isAfter(state.saveAt.toLocalDate().plusYears(1))) {
                 Logger.e("Timecapsule open date can not be after 1 year from save date")
-                return@intent
+                return@baseIntent
             }
 
             reduce {
@@ -242,7 +241,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         }
 
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
-        intent {
+        baseIntent {
             reduce {
                 state.copy(
                     calendarYearMonth = yearMonth,
@@ -251,8 +250,8 @@ class SaveTimeCapsuleViewModel @Inject constructor(
         }
 
     private fun handleSaveTimeCapsule() =
-        intent {
-            if (state.openDateTime == null) return@intent
+        baseIntent {
+            if (state.openDateTime == null) return@baseIntent
 
             reduce { state.copy(isLoading = true) }
             setTimeCapsuleOpenAt(
@@ -265,10 +264,14 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                         SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess,
                     )
                 },
-                onError = { throwable, _ ->
+                onError = { throwable, code, data ->
                     reduce { state.copy(isLoading = false) }
-                    // todo: show error modal
                     Logger.e("Error saving time capsule, $throwable")
+                    throw BaseException(
+                        message = throwable.message ?: "Error saving time capsule",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
             )
         }

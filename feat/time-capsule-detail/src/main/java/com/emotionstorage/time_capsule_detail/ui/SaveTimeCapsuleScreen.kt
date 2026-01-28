@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.common.toKorDate
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleAction
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEffect.ShowToast
@@ -55,24 +56,44 @@ import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import java.time.LocalDate
 import java.time.YearMonth
 
+private sealed class ModalState {
+    object None : ModalState()
+
+    data class CheckOpenDate(
+        val createdAt: LocalDate,
+        val openAt: LocalDate,
+    ) : ModalState()
+
+    object Expired : ModalState()
+
+    object SaveSuccess : ModalState()
+
+    object TempError : ModalState()
+
+    object LoginSessionExpired : ModalState()
+}
+
 @Composable
 fun SaveTimeCapsuleScreen(
     id: Long,
+    navToMain: () -> Unit,
+    navToPrevious: () -> Unit,
+    navToBack: () -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     isNewTimeCapsule: Boolean = true,
     viewModel: SaveTimeCapsuleViewModel = hiltViewModel(),
-    navToMain: () -> Unit = {},
-    navToPrevious: () -> Unit = {},
-    navToBack: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
     val snackState = remember { SnackbarHostState() }
-    val (showSavedModal, setShowSavedModal) = remember { mutableStateOf(false) }
+    val (modalState, setModalState) = remember { mutableStateOf<ModalState>(ModalState.None) }
 
     LaunchedEffect(id, isNewTimeCapsule) {
         viewModel.onAction(SaveTimeCapsuleAction.Init(id, isNewTimeCapsule))
@@ -80,12 +101,20 @@ fun SaveTimeCapsuleScreen(
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is SaveTimeCapsuleSuccess -> {
-                    setShowSavedModal(true)
+                    setModalState(ModalState.SaveSuccess)
                 }
 
                 is ShowToast -> {
                     snackState.currentSnackbarData?.dismiss()
                     snackState.showSnackbar(sideEffect.toast)
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(ModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(ModalState.LoginSessionExpired)
                 }
             }
         }
@@ -97,14 +126,68 @@ fun SaveTimeCapsuleScreen(
     StatelessSaveTimeCapsuleScreen(
         modifier = modifier,
         snackbarState = snackState,
+        setModalState = setModalState,
         state = state.value,
         onAction = viewModel::onAction,
-        showSavedModal = showSavedModal,
-        dismissSavedModal = { setShowSavedModal(false) },
-        navToMain = navToMain,
-        navToPrevious = navToPrevious,
         navToBack = navToBack,
     )
+
+    when (modalState) {
+        is ModalState.None -> {
+            // no modal
+        }
+
+        is ModalState.CheckOpenDate -> {
+            val snapShot = modalState
+            CheckOpenDateModal(
+                onDismissRequest = {
+                    setModalState(ModalState.None)
+                },
+                createdAt = snapShot.createdAt,
+                openAt = snapShot.openAt,
+                onSaveOpenDate = {
+                    viewModel.onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
+                },
+            )
+        }
+
+        ModalState.Expired -> {
+            TimeCapsuleExpiredModal(
+                onDismissRequest = {
+                    setModalState(ModalState.None)
+                },
+                onConfirm = {
+                    navToPrevious()
+                },
+            )
+        }
+
+        ModalState.SaveSuccess -> {
+            TimeCapsuleSavedModal(
+                onConfirm = {
+                    setModalState(ModalState.None)
+                    navToMain()
+                },
+            )
+        }
+
+        ModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = {
+                    setModalState(ModalState.None)
+                },
+            )
+        }
+
+        ModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = {
+                    setModalState(ModalState.None)
+                },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,54 +195,14 @@ fun SaveTimeCapsuleScreen(
 private fun StatelessSaveTimeCapsuleScreen(
     modifier: Modifier = Modifier,
     snackbarState: SnackbarHostState = remember { SnackbarHostState() },
+    setModalState: (ModalState) -> Unit = {},
     state: SaveTimeCapsuleState = SaveTimeCapsuleState(),
     onAction: (SaveTimeCapsuleAction) -> Unit = {},
-    showSavedModal: Boolean = false,
-    dismissSavedModal: () -> Unit = {},
-    navToMain: () -> Unit = {},
-    navToPrevious: () -> Unit = {},
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
-
-    val (showExpiredModal, setShowExpiredModal) = remember { mutableStateOf(false) }
-    val (showCheckOpenDateModal, setShowCheckOpenDateModal) = remember { mutableStateOf(false) }
-
     val (showYearMonthPicker, setShowYearMonthPicker) = remember { mutableStateOf(false) }
     val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
-
-    TimeCapsuleSavedModal(
-        isModalOpen = showSavedModal,
-        onConfirm = {
-            dismissSavedModal()
-            navToMain()
-        },
-    )
-
-    if (!showSavedModal && showExpiredModal) {
-        TimeCapsuleExpiredModal(
-            onDismissRequest = {
-                setShowExpiredModal(false)
-            },
-            onConfirm = {
-                navToPrevious()
-            },
-        )
-    }
-
-    if (state.openDateTime != null) {
-        CheckOpenDateModal(
-            createdAt = state.createdAt.toLocalDate(),
-            openAt = state.openDateTime.toLocalDate(),
-            isModalOpen = showCheckOpenDateModal,
-            onDismissRequest = {
-                setShowCheckOpenDateModal(false)
-            },
-            onSaveOpenDate = {
-                onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
-            },
-        )
-    }
 
     Scaffold(
         modifier =
@@ -206,7 +249,8 @@ private fun StatelessSaveTimeCapsuleScreen(
                             .offset(
                                 x = 34.dp,
                                 y = 73.dp,
-                            ).size(310.dp, 144.dp),
+                            )
+                            .size(310.dp, 144.dp),
                     painter =
                         painterResource(
                             com
@@ -268,12 +312,17 @@ private fun StatelessSaveTimeCapsuleScreen(
                     onSave = {
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
-                        } else {
-                            setShowCheckOpenDateModal(true)
+                        } else if (state.openDateTime != null) {
+                            setModalState(
+                                ModalState.CheckOpenDate(
+                                    createdAt = state.createdAt.toLocalDate(),
+                                    openAt = state.openDateTime.toLocalDate(),
+                                ),
+                            )
                         }
                     },
                     onExpire = {
-                        setShowExpiredModal(true)
+                        setModalState(ModalState.Expired)
                     },
                 )
             }
@@ -438,7 +487,8 @@ private fun RowScope.OpenAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                ).clickable {
+                )
+                .clickable {
                     onSelect()
                 },
     ) {
@@ -458,7 +508,8 @@ private fun RowScope.OpenAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }.padding(
+                    }
+                    .padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
