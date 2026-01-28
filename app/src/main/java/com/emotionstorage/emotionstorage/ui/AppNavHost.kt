@@ -471,6 +471,9 @@ internal fun AppNavHost(
                 navToBack = {
                     navController.popBackStack()
                 },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
+                },
             )
         }
 
@@ -478,6 +481,9 @@ internal fun AppNavHost(
             AccountInfoScreen(
                 navToBack = {
                     navController.popBackStack()
+                },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
                 },
             )
         }
@@ -487,6 +493,9 @@ internal fun AppNavHost(
                 navToBack = {
                     navController.popBackStack()
                 },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
+                },
             )
         }
 
@@ -494,6 +503,9 @@ internal fun AppNavHost(
             NotificationSettingScreen(
                 navToBack = {
                     navController.popBackStack()
+                },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
                 },
             )
         }

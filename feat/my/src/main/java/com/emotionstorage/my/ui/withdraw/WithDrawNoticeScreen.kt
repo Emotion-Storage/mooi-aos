@@ -30,19 +30,19 @@ import com.emotionstorage.ui.component.button.CtaButtonType
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.theme.MooiTheme
 
-private sealed class WithdrawNoticeModalState {
-    object None : WithdrawNoticeModalState()
+private sealed class ModalState {
+    object None : ModalState()
 
-    object ConfirmWithdraw : WithdrawNoticeModalState()
+    object ConfirmWithdraw : ModalState()
 
-    object WithdrawSuccess : WithdrawNoticeModalState()
+    object WithdrawSuccess : ModalState()
 
     data class InquireWithdrawError(
         val errorCode: ErrorCode,
         val throwable: Throwable,
         val userEmail: String? = null,
         val userNickname: String? = null,
-    ) : WithdrawNoticeModalState()
+    ) : ModalState()
 }
 
 @Composable
@@ -55,19 +55,19 @@ fun WithDrawNoticeScreen(
     val state by viewModel.container.stateFlow.collectAsState()
     val (modalState, setModalState) =
         remember {
-            mutableStateOf<WithdrawNoticeModalState>(WithdrawNoticeModalState.None)
+            mutableStateOf<ModalState>(ModalState.None)
         }
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is WithdrawNoticeEffect.WithDrawSuccess -> {
-                    setModalState(WithdrawNoticeModalState.WithdrawSuccess)
+                    setModalState(ModalState.WithdrawSuccess)
                 }
 
                 is WithdrawNoticeEffect.WithdrawError -> {
                     setModalState(
-                        WithdrawNoticeModalState.InquireWithdrawError(
+                        ModalState.InquireWithdrawError(
                             sideEffect.errorCode,
                             sideEffect.throwable,
                             sideEffect.userEmail,
@@ -89,14 +89,14 @@ fun WithDrawNoticeScreen(
     )
 
     when (modalState) {
-        is WithdrawNoticeModalState.None -> {
+        is ModalState.None -> {
             // no modal
         }
 
-        is WithdrawNoticeModalState.ConfirmWithdraw -> {
+        is ModalState.ConfirmWithdraw -> {
             ConfirmWithdrawModal(
                 onDismissRequest = {
-                    setModalState(WithdrawNoticeModalState.None)
+                    setModalState(ModalState.None)
                 },
                 onWithDraw = {
                     viewModel.onAction(WithdrawNoticeAction.WithDraw)
@@ -107,23 +107,23 @@ fun WithDrawNoticeScreen(
             )
         }
 
-        is WithdrawNoticeModalState.WithdrawSuccess -> {
+        is ModalState.WithdrawSuccess -> {
             WithdrawSuccessModal(
                 onDismissRequest = {
-                    setModalState(WithdrawNoticeModalState.None)
+                    setModalState(ModalState.None)
                     navToLogin()
                 },
             )
         }
 
-        is WithdrawNoticeModalState.InquireWithdrawError -> {
+        is ModalState.InquireWithdrawError -> {
             InquireWithdrawErrorModal(
                 errorCode = modalState.errorCode,
                 throwable = modalState.throwable,
                 userEmail = modalState.userEmail,
                 userNickname = modalState.userNickname,
                 onDismissRequest = {
-                    setModalState(WithdrawNoticeModalState.None)
+                    setModalState(ModalState.None)
                 },
             )
         }
@@ -133,7 +133,7 @@ fun WithDrawNoticeScreen(
 @Composable
 private fun StatelessWithDrawNoticeScreen(
     onBackClick: () -> Unit,
-    setModalState: (WithdrawNoticeModalState) -> Unit,
+    setModalState: (ModalState) -> Unit,
 ) {
     Scaffold(
         modifier =
@@ -166,7 +166,7 @@ private fun StatelessWithDrawNoticeScreen(
                 type = CtaButtonType.OUTLINED,
                 labelString = "MOOI 서비스 탈퇴하기",
                 onClick = {
-                    setModalState(WithdrawNoticeModalState.ConfirmWithdraw)
+                    setModalState(ModalState.ConfirmWithdraw)
                 },
                 isDefaultWidth = false,
                 textStyle =

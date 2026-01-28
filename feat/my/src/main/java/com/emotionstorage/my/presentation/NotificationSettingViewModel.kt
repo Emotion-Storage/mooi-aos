@@ -1,11 +1,10 @@
 package com.emotionstorage.my.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.NotificationSettings
 import com.emotionstorage.domain.useCase.myPage.GetNotificationSettingsUseCase
 import com.emotionstorage.domain.useCase.myPage.UpdateNotificationSettingsUseCase
+import com.emotionstorage.presentation.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,12 +18,12 @@ import javax.inject.Inject
 class NotificationSettingViewModel @Inject constructor(
     private val getNotificationSettings: GetNotificationSettingsUseCase,
     private val updateNotificationSettings: UpdateNotificationSettingsUseCase,
-) : ViewModel() {
+) : BaseViewModel<Unit>(Unit) {
     private val _state = MutableStateFlow(NotificationSettingState())
     val state: StateFlow<NotificationSettingState> = _state
 
     init {
-        viewModelScope.launch {
+        baseViewModelScope.launch {
             getNotificationSettings().collect { dataState ->
                 if (dataState is DataState.Success) {
                     val settings = dataState.data
@@ -94,7 +93,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
 
         val snapShot = state.value
-        viewModelScope
+        baseViewModelScope
             .launch {
                 updateNotificationSettings(
                     NotificationSettings(

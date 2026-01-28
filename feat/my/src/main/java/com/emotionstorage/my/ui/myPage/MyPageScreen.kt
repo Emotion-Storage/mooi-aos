@@ -44,19 +44,21 @@ import com.emotionstorage.my.ui.modal.ConfirmLogoutModal
 import com.emotionstorage.my.ui.modal.LogoutErrorModal
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 import kotlinx.coroutines.launch
 
-private enum class MyPageModalState {
+private enum class ModalState {
     NONE,
     LOGOUT_CONFIRM,
     LOGOUT_ERROR,
+    LOGIN_EXPIRED,
+    TEMP_ERROR,
 }
-
-// TODO : Screen 전환 방지를 위한 임시 상수
-private const val ENABLE_NOTIFICATION_SETTING_NAVIGATION = false
 
 @Composable
 fun MyPageScreen(
@@ -72,7 +74,7 @@ fun MyPageScreen(
 //    navToNotificationSetting: () -> Unit = {},
 ) {
     val state = viewModel.container.stateFlow.collectAsState()
-    val (modalState, setModalState) = remember { mutableStateOf<MyPageModalState>(MyPageModalState.NONE) }
+    val (modalState, setModalState) = remember { mutableStateOf<ModalState>(ModalState.NONE) }
 
     LifecycleResumeEffect(Unit) {
         Logger.d("MyPageScreen: onResume triggered")
@@ -90,11 +92,15 @@ fun MyPageScreen(
                 }
 
                 is MyPageSideEffect.LogoutError -> {
-                    setModalState(MyPageModalState.LOGOUT_ERROR)
+                    setModalState(ModalState.LOGOUT_ERROR)
                 }
 
-                is MyPageSideEffect.ShowToast -> {
-                    // todo: add error toast
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(ModalState.TEMP_ERROR)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(ModalState.LOGIN_EXPIRED)
                 }
             }
         }
@@ -120,26 +126,43 @@ fun MyPageScreen(
     )
 
     when (modalState) {
-        MyPageModalState.NONE -> {
+        ModalState.NONE -> {
             // no modal
         }
 
-        MyPageModalState.LOGOUT_CONFIRM -> {
+        ModalState.LOGOUT_CONFIRM -> {
             ConfirmLogoutModal(
                 onDismissRequest = {
-                    setModalState(MyPageModalState.NONE)
+                    setModalState(ModalState.NONE)
                 },
                 onLogout = { viewModel.onAction(MyPageAction.Logout) },
             )
         }
 
-        MyPageModalState.LOGOUT_ERROR -> {
+        ModalState.LOGOUT_ERROR -> {
             LogoutErrorModal(
                 onDismissRequest = {
-                    setModalState(MyPageModalState.NONE)
+                    setModalState(ModalState.NONE)
                 },
                 onRetry = {
                     viewModel.onAction(MyPageAction.Logout)
+                },
+            )
+        }
+
+        ModalState.LOGIN_EXPIRED -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = {
+                    setModalState(ModalState.NONE)
+                },
+                navToLogin = navToLogin,
+            )
+        }
+
+        ModalState.TEMP_ERROR -> {
+            TempErrorModal(
+                onDismissRequest = {
+                    setModalState(ModalState.NONE)
                 },
             )
         }
@@ -150,7 +173,7 @@ fun MyPageScreen(
 private fun StatelessMyPageScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
-    setModalState: (MyPageModalState) -> Unit = {},
+    setModalState: (ModalState) -> Unit = {},
     state: MyPageState = MyPageState(),
     navToWithdraw: () -> Unit = {},
     navToNickNameChange: () -> Unit = {},
@@ -224,7 +247,7 @@ private fun StatelessMyPageScreen(
                         }
                     },
                     onTermsAndPrivacyClick = navToTermsAndPrivacy,
-                    onLogoutClick = { setModalState(MyPageModalState.LOGOUT_CONFIRM) },
+                    onLogoutClick = { setModalState(ModalState.LOGOUT_CONFIRM) },
 //                    onNotificationClick = navToNotificationSetting,
                 )
 

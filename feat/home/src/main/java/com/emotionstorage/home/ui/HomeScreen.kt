@@ -61,16 +61,16 @@ import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 
-private sealed class HomeModalState {
-    object None : HomeModalState()
+private sealed class ModalState {
+    object None : ModalState()
 
     data class ResumeChat(
         val pendingRoomId: Long,
-    ) : HomeModalState()
+    ) : ModalState()
 
-    object LoginSessionExpired : HomeModalState()
+    object LoginSessionExpired : ModalState()
 
-    object TempError : HomeModalState()
+    object TempError : ModalState()
 }
 
 @Composable
@@ -91,7 +91,7 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState.collectAsState()
     val snackbarState = remember { SnackbarHostState() }
-    val (modalState, setModalState) = remember { mutableStateOf<HomeModalState>(HomeModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf<ModalState>(ModalState.None) }
 
     val summary = attendanceState.value.summary
 
@@ -110,7 +110,7 @@ fun HomeScreen(
                 }
 
                 is HomeSideEffect.ShowResumeChatModal -> {
-                    setModalState(HomeModalState.ResumeChat(it.pendingRoomId))
+                    setModalState(ModalState.ResumeChat(it.pendingRoomId))
                 }
 
                 is HomeSideEffect.EnterChatRoom -> {
@@ -122,11 +122,11 @@ fun HomeScreen(
                 }
 
                 is BaseSideEffect.SessionExpired -> {
-                    setModalState(HomeModalState.LoginSessionExpired)
+                    setModalState(ModalState.LoginSessionExpired)
                 }
 
                 is BaseSideEffect.TemporalError -> {
-                    setModalState(HomeModalState.TempError)
+                    setModalState(ModalState.TempError)
                 }
             }
         }
@@ -164,14 +164,14 @@ fun HomeScreen(
     }
 
     when (modalState) {
-        is HomeModalState.None -> {
+        is ModalState.None -> {
             // no modal
         }
 
-        is HomeModalState.ResumeChat -> {
+        is ModalState.ResumeChat -> {
             ResumeChatModal(
                 onDismissRequest = {
-                    setModalState(HomeModalState.None)
+                    setModalState(ModalState.None)
                 },
                 onResume = {
                     viewModel.onAction(HomeAction.ResumeChat(modalState.pendingRoomId))
@@ -182,19 +182,19 @@ fun HomeScreen(
             )
         }
 
-        is HomeModalState.LoginSessionExpired -> {
+        is ModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
                 onDismissRequest = {
-                    setModalState(HomeModalState.None)
+                    setModalState(ModalState.None)
                 },
                 navToLogin = navToLogin,
             )
         }
 
-        is HomeModalState.TempError -> {
+        is ModalState.TempError -> {
             TempErrorModal(
                 onDismissRequest = {
-                    setModalState(HomeModalState.None)
+                    setModalState(ModalState.None)
                 },
             )
         }

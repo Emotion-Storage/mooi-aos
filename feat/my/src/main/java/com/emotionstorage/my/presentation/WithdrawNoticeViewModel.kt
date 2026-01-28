@@ -44,7 +44,7 @@ class WithdrawNoticeViewModel @Inject constructor(
     }
 
     private fun handleWithDraw() =
-        intent {
+        baseIntent {
             reduce {
                 state.copy(isLoading = true)
             }
