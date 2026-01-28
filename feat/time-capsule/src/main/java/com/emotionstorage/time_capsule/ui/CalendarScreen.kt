@@ -69,8 +69,7 @@ import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
 import java.time.YearMonth
 
-private enum class ModalState  { None, TempError, LoginSessionExpired }
-
+private enum class CalendarModalState  { None, TempError, LoginSessionExpired }
 private enum class SheetState  { None, YearMonth, CalendarDate }
 
 @Composable
@@ -113,7 +112,7 @@ fun CalendarScreen(
 
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
-    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(CalendarModalState.None) }
     val (sheetState, setSheetState) = remember { mutableStateOf(SheetState.None) }
 
     // collect side effect
@@ -126,12 +125,12 @@ fun CalendarScreen(
 
                 is BaseSideEffect.TemporalError -> {
                     setSheetState(SheetState.None)
-                    setModalState(ModalState.TempError)
+                    setModalState(CalendarModalState.TempError)
                 }
 
                 is BaseSideEffect.SessionExpired -> {
                     setSheetState(SheetState.None)
-                    setModalState(ModalState.LoginSessionExpired)
+                    setModalState(CalendarModalState.LoginSessionExpired)
                 }
             }
         }
@@ -162,29 +161,6 @@ fun CalendarScreen(
                 }
             }
         }
-
-        when (modalState) {
-            ModalState.None -> {
-                // no modal
-            }
-
-            ModalState.TempError -> {
-                TempErrorModal(
-                    onDismissRequest = {
-                        setModalState(ModalState.None)
-                    },
-                )
-            }
-
-            ModalState.LoginSessionExpired -> {
-                LoginSessionExpiredModal(
-                    onDismissRequest = {
-                        setModalState(ModalState.None)
-                    },
-                    navToLogin = navToLogin,
-                )
-            }
-        }
     }
 
     StatelessCalendarScreen(
@@ -204,6 +180,29 @@ fun CalendarScreen(
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToDailyReportDetail = navToDailyReportDetail,
     )
+
+    when (modalState) {
+        CalendarModalState.None -> {
+            // no modal
+        }
+
+        CalendarModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = {
+                    setModalState(CalendarModalState.None)
+                },
+            )
+        }
+
+        CalendarModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = {
+                    setModalState(CalendarModalState.None)
+                },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

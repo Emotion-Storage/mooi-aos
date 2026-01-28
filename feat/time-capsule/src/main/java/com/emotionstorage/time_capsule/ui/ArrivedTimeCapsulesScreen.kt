@@ -40,7 +40,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class ModalState { None, TempError, LoginSessionExpired }
+private enum class ArrivedModalState { None, TempError, LoginSessionExpired }
 
 @Composable
 fun ArrivedTimeCapsulesScreen(
@@ -50,18 +50,18 @@ fun ArrivedTimeCapsulesScreen(
     modifier: Modifier = Modifier,
     viewModel: ArrivedTimeCapsulesViewModel = hiltViewModel(),
 ) {
-    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(ArrivedModalState.None) }
     val timeCapsulesState = viewModel.arrivedTimeCapsules.collectAsLazyPagingItems()
 
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is BaseSideEffect.TemporalError -> {
-                    setModalState(ModalState.TempError)
+                    setModalState(ArrivedModalState.TempError)
                 }
 
                 is BaseSideEffect.SessionExpired -> {
-                    setModalState(ModalState.LoginSessionExpired)
+                    setModalState(ArrivedModalState.LoginSessionExpired)
                 }
             }
         }
@@ -75,19 +75,19 @@ fun ArrivedTimeCapsulesScreen(
     )
 
     when (modalState) {
-        ModalState.None -> {
+        ArrivedModalState.None -> {
             // no modal
         }
 
-        ModalState.TempError -> {
+        ArrivedModalState.TempError -> {
             TempErrorModal(
-                onDismissRequest = { setModalState(ModalState.None) },
+                onDismissRequest = { setModalState(ArrivedModalState.None) },
             )
         }
 
-        ModalState.LoginSessionExpired -> {
+        ArrivedModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
-                onDismissRequest = { setModalState(ModalState.None) },
+                onDismissRequest = { setModalState(ArrivedModalState.None) },
                 navToLogin = navToLogin,
             )
         }

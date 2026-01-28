@@ -55,7 +55,7 @@ import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.picker.DropDownPicker
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 
-private enum class ModalState { None, TempError, LoginSessionExpired }
+private enum class FavoriteModalState { None, TempError, LoginSessionExpired }
 
 @Composable
 fun FavoriteTimeCapsulesScreen(
@@ -74,7 +74,7 @@ fun FavoriteTimeCapsulesScreen(
 
     val snackState = remember { SnackbarHostState() }
     val snackbarController = remember { AppSnackbarController(snackState) }
-    val (modalState, setModalState) = remember { mutableStateOf(ModalState.None) }
+    val (modalState, setModalState) = remember { mutableStateOf(FavoriteModalState.None) }
 
     // init state
     LaunchedEffect(Unit) {
@@ -83,11 +83,11 @@ fun FavoriteTimeCapsulesScreen(
         viewModel.container.sideEffectFlow.collect {
             when (it) {
                 is BaseSideEffect.TemporalError -> {
-                    setModalState(ModalState.TempError)
+                    setModalState(FavoriteModalState.TempError)
                 }
 
                 is BaseSideEffect.SessionExpired -> {
-                    setModalState(ModalState.LoginSessionExpired)
+                    setModalState(FavoriteModalState.LoginSessionExpired)
                 }
             }
         }
@@ -147,19 +147,19 @@ fun FavoriteTimeCapsulesScreen(
     )
 
     when (modalState) {
-        ModalState.None -> {
+        FavoriteModalState.None -> {
             // no modal
         }
 
-        ModalState.TempError -> {
+        FavoriteModalState.TempError -> {
             TempErrorModal(
-                onDismissRequest = { setModalState(ModalState.None) },
+                onDismissRequest = { setModalState(FavoriteModalState.None) },
             )
         }
 
-        ModalState.LoginSessionExpired -> {
+        FavoriteModalState.LoginSessionExpired -> {
             LoginSessionExpiredModal(
-                onDismissRequest = { setModalState(ModalState.None) },
+                onDismissRequest = { setModalState(FavoriteModalState.None) },
                 navToLogin = navToLogin,
             )
         }
