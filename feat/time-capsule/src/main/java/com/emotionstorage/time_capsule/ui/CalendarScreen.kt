@@ -69,8 +69,9 @@ import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
 import java.time.YearMonth
 
-private enum class CalendarModalState  { None, TempError, LoginSessionExpired }
-private enum class SheetState  { None, YearMonth, CalendarDate }
+private enum class CalendarModalState { None, TempError, LoginSessionExpired }
+
+private enum class SheetState { None, YearMonth, CalendarDate }
 
 @Composable
 fun CalendarScreen(
