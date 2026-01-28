@@ -50,80 +50,79 @@ fun CheckOpenDateModal(
     onDismissRequest: () -> Unit = {},
     onSaveOpenDate: () -> Unit = {},
 ) {
-        Modal(
-            onDismissRequest = onDismissRequest,
-            contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
-            confirmLabel = "네, 보관할래요.",
-            onConfirm = onSaveOpenDate,
-            dismissLabel = "아니요, 다시 고를래요.",
-            topOuterContent = {
-                Row(
-                    modifier = Modifier.padding(bottom = 20.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    Image(
-                        modifier = Modifier.size(18.dp),
-                        painter = painterResource(R.drawable.ic_search),
-                        contentDescription = null,
-                    )
-                    Text(
-                        text = "확인해주세요!",
-                        style = MooiTheme.typography.body1,
-                        color = Color.White,
-                    )
-                }
-            },
-        ) {
-            Column(
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 6.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+    Modal(
+        onDismissRequest = onDismissRequest,
+        contentPadding = PaddingValues(top = 23.dp, bottom = 28.dp, start = 25.dp, end = 25.dp),
+        confirmLabel = "네, 보관할래요.",
+        onConfirm = onSaveOpenDate,
+        dismissLabel = "아니요, 다시 고를래요.",
+        topOuterContent = {
+            Row(
+                modifier = Modifier.padding(bottom = 20.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
+                Image(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(R.drawable.ic_search),
+                    contentDescription = null,
+                )
                 Text(
-                    text =
-                        buildAnnotatedString {
-                            append("감정기록일: ")
-                            withStyle(
-                                SpanStyle(
-                                    color = MooiTheme.colorScheme.primaryBlue500,
-                                ),
-                            ) {
-                                append(createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-                            }
-                            append("\n타임캡슐 오픈일: ")
-                            withStyle(
-                                SpanStyle(
-                                    color = MooiTheme.colorScheme.primaryBlue500,
-                                ),
-                            ) {
-                                append(openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-                            }
-                        },
+                    text = "확인해주세요!",
                     style = MooiTheme.typography.body1,
-                    color = Color.White,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.height(9.dp))
-                Text(
-                    text = "* 임시저장 캡슐은 일일리포트에\n포함되지 않아요.",
-                    style = MooiTheme.typography.body8,
-                    color = MooiTheme.colorScheme.gray500,
-                    textAlign = TextAlign.Center,
-                )
-                Spacer(modifier = Modifier.height(15.dp))
-                Text(
-                    text = "이 일정으로 보관할까요?",
-                    style = MooiTheme.typography.head2,
                     color = Color.White,
                 )
             }
+        },
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 6.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Text(
+                text =
+                    buildAnnotatedString {
+                        append("감정기록일: ")
+                        withStyle(
+                            SpanStyle(
+                                color = MooiTheme.colorScheme.primaryBlue500,
+                            ),
+                        ) {
+                            append(createdAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                        }
+                        append("\n타임캡슐 오픈일: ")
+                        withStyle(
+                            SpanStyle(
+                                color = MooiTheme.colorScheme.primaryBlue500,
+                            ),
+                        ) {
+                            append(openAt.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                        }
+                    },
+                style = MooiTheme.typography.body1,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(9.dp))
+            Text(
+                text = "* 임시저장 캡슐은 일일리포트에\n포함되지 않아요.",
+                style = MooiTheme.typography.body8,
+                color = MooiTheme.colorScheme.gray500,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(modifier = Modifier.height(15.dp))
+            Text(
+                text = "이 일정으로 보관할까요?",
+                style = MooiTheme.typography.head2,
+                color = Color.White,
+            )
         }
     }
-
+}
 
 @Preview(showBackground = true)
 @Composable

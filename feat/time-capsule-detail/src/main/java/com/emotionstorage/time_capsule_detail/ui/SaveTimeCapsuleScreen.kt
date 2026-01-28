@@ -60,21 +60,23 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
-import kotlinx.coroutines.delay
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.YearMonth
 
 private sealed class ModalState {
     object None : ModalState()
+
     data class CheckOpenDate(
         val createdAt: LocalDate,
         val openAt: LocalDate,
     ) : ModalState()
 
     object Expired : ModalState()
+
     object SaveSuccess : ModalState()
+
     object TempError : ModalState()
+
     object LoginSessionExpired : ModalState()
 }
 
@@ -198,7 +200,6 @@ private fun StatelessSaveTimeCapsuleScreen(
     navToBack: () -> Unit = {},
 ) {
     val (showToolTip, setShowToolTip) = remember { mutableStateOf(false) }
-
     val (showYearMonthPicker, setShowYearMonthPicker) = remember { mutableStateOf(false) }
     val (showDatePicker, setShowDatePicker) = remember { mutableStateOf(false) }
 
@@ -247,8 +248,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                             .offset(
                                 x = 34.dp,
                                 y = 73.dp,
-                            )
-                            .size(310.dp, 144.dp),
+                            ).size(310.dp, 144.dp),
                     painter =
                         painterResource(
                             com
@@ -310,14 +310,15 @@ private fun StatelessSaveTimeCapsuleScreen(
                     onSave = {
                         if (state.isNewTimeCapsule) {
                             onAction(SaveTimeCapsuleAction.SaveTimeCapsule)
-                        } else if(state.openDateTime != null){
-                            setModalState(
-                                ModalState.CheckOpenDate(
-                                    createdAt = state.createdAt.toLocalDate(),
-                                    openAt = state.openDateTime.toLocalDate(),
-                                ),
-                            )
-                        }
+                        } else if (state.openDateTime != null)
+                            {
+                                setModalState(
+                                    ModalState.CheckOpenDate(
+                                        createdAt = state.createdAt.toLocalDate(),
+                                        openAt = state.openDateTime.toLocalDate(),
+                                    ),
+                                )
+                            }
                     },
                     onExpire = {
                         setModalState(ModalState.Expired)
@@ -485,8 +486,7 @@ private fun RowScope.OpenAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                )
-                .clickable {
+                ).clickable {
                     onSelect()
                 },
     ) {
@@ -506,8 +506,7 @@ private fun RowScope.OpenAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }
-                    .padding(
+                    }.padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),

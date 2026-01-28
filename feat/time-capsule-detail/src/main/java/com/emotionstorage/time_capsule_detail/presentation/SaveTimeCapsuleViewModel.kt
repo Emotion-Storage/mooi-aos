@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SetTimeCapsuleOpenAtUseCase
@@ -11,9 +10,6 @@ import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleSideEf
 import com.emotionstorage.time_capsule_detail.presentation.SaveTimeCapsuleState.OpenAfter
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -68,7 +64,7 @@ sealed class SaveTimeCapsuleAction {
     object SaveTimeCapsule : SaveTimeCapsuleAction()
 }
 
-sealed class SaveTimeCapsuleSideEffect() : BaseSideEffect {
+sealed class SaveTimeCapsuleSideEffect : BaseSideEffect {
     data class ShowToast(
         val toast: String = "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
     ) : SaveTimeCapsuleSideEffect()
@@ -81,7 +77,6 @@ class SaveTimeCapsuleViewModel @Inject constructor(
     private val getTimeCapsuleById: GetTimeCapsuleByIdUseCase,
     private val setTimeCapsuleOpenAt: SetTimeCapsuleOpenAtUseCase,
 ) : BaseViewModel<SaveTimeCapsuleState>(SaveTimeCapsuleState()) {
-
     fun onAction(action: SaveTimeCapsuleAction) {
         when (action) {
             is SaveTimeCapsuleAction.Init -> {
@@ -141,7 +136,7 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                 throw BaseException(
                     message = throwable.message ?: "Error getting time capsule by id",
                     code = code,
-                    cause = throwable
+                    cause = throwable,
                 )
             },
         )
@@ -269,13 +264,13 @@ class SaveTimeCapsuleViewModel @Inject constructor(
                         SaveTimeCapsuleSideEffect.SaveTimeCapsuleSuccess,
                     )
                 },
-                onError = { throwable, code, data, ->
+                onError = { throwable, code, data ->
                     reduce { state.copy(isLoading = false) }
                     Logger.e("Error saving time capsule, $throwable")
                     throw BaseException(
                         message = throwable.message ?: "Error getting time capsule by id",
                         code = code,
-                        cause = throwable
+                        cause = throwable,
                     )
                 },
             )

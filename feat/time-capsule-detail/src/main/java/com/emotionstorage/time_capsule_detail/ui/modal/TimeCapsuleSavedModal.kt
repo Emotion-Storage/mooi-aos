@@ -38,9 +38,7 @@ import kotlinx.coroutines.delay
  *     - 배경 터치 X
  */
 @Composable
-fun TimeCapsuleSavedModal(
-    onConfirm: () -> Unit = {},
-) {
+fun TimeCapsuleSavedModal(onConfirm: () -> Unit = {}) {
     LaunchedEffect(Unit) {
         // confirm automatically after 5 seconds
         delay(5000)
