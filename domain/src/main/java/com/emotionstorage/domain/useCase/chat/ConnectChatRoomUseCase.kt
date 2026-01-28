@@ -10,5 +10,5 @@ class ConnectChatRoomUseCase
     constructor(
         private val chatRepository: ChatRepository,
     ) {
-        suspend operator fun invoke(roomId: Long): Flow<DataState<Boolean>> = chatRepository.connectChatRoom(roomId)
+        suspend operator fun invoke(roomId: Long): DataState<Boolean> = chatRepository.connectChatRoom(roomId)
     }

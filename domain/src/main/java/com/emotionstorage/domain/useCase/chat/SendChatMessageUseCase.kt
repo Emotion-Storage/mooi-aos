@@ -14,5 +14,5 @@ class SendChatMessageUseCase
         suspend operator fun invoke(
             roomId: Long,
             chatMessage: ChatMessage,
-        ): Flow<DataState<Boolean>> = chatRepository.sendChatMessage(roomId, chatMessage)
+        ): DataState<Boolean> = chatRepository.sendChatMessage(roomId, chatMessage)
     }
