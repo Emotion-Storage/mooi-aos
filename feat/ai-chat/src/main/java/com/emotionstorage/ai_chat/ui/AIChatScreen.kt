@@ -57,7 +57,7 @@ import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 
-private enum class AIModalState  { None, TempError, LoginSessionExpired }
+private enum class AIModalState { None, TempError, LoginSessionExpired }
 
 @Composable
 fun AIChatScreen(
