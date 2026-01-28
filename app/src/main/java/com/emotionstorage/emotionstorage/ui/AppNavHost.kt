@@ -412,6 +412,9 @@ internal fun AppNavHost(
                 navToBack = {
                     navController.popBackStack()
                 },
+                navToLogin = {
+                    navController.navigateAsRoot(AppDestination.Login)
+                }
             )
         }
 
