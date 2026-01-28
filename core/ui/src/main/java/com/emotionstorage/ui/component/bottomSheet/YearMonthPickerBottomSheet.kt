@@ -51,7 +51,7 @@ fun YearMonthPickerBottomSheet(
     ) {
         YearMonthWheelSpinner(
             yearMonthRange = minYearMonth to maxYearMonth,
-            modifier = Modifier.padding(bottom = 48.dp),
+            modifier = Modifier.padding(top = 16.dp, bottom = 44.dp),
             selectedYearMonth = spinnerYearMonth,
             onYearMonthSelect = {
                 Logger.d("set spinner year month to $it")
