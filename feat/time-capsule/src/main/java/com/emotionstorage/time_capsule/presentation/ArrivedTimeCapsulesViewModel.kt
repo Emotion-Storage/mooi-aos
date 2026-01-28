@@ -1,11 +1,10 @@
 package com.emotionstorage.time_capsule.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.emotionstorage.domain.useCase.timeCapsule.GetPagedArrivedTimeCapsulesUseCase
+import com.emotionstorage.presentation.BaseViewModel
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.time_capsule.ui.modelMapper.TimeCapsuleMapper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,12 +17,12 @@ import javax.inject.Inject
 @HiltViewModel
 class ArrivedTimeCapsulesViewModel @Inject constructor(
     getArrivedTimeCapsules: GetPagedArrivedTimeCapsulesUseCase,
-) : ViewModel() {
+) : BaseViewModel<Unit>(Unit) {
     val arrivedTimeCapsules: Flow<PagingData<TimeCapsuleItemState>> =
         getArrivedTimeCapsules()
             .map { pagingData ->
                 pagingData.map {
                     TimeCapsuleMapper.toUi(it)
                 }
-            }.cachedIn(viewModelScope)
+            }.cachedIn(baseViewModelScope)
 }

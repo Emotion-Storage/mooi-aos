@@ -1,6 +1,5 @@
 package com.emotionstorage.time_capsule_detail.presentation
 
-import androidx.lifecycle.ViewModel
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.TimeCapsule
@@ -10,6 +9,9 @@ import com.emotionstorage.domain.useCase.timeCapsule.DeleteTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetTimeCapsuleByIdUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.OpenTimeCapsuleUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.SaveTimeCapsuleNoteUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.Init
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnDeleteTimeCapsule
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailAction.OnNoteChanged
@@ -20,10 +22,7 @@ import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSide
 import com.emotionstorage.time_capsule_detail.presentation.TimeCapsuleDetailSideEffect.ShowUnlockModal.UnlockModalState
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
-import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.annotation.OrbitExperimental
-import org.orbitmvi.orbit.viewmodel.container
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -56,7 +55,7 @@ sealed class TimeCapsuleDetailAction {
     ) : TimeCapsuleDetailAction()
 }
 
-sealed class TimeCapsuleDetailSideEffect {
+sealed class TimeCapsuleDetailSideEffect : BaseSideEffect {
     object GetTimeCapsuleFail : TimeCapsuleDetailSideEffect()
 
     object OpenTimeCapsuleFail : TimeCapsuleDetailSideEffect()
@@ -86,11 +85,9 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private val getRequiredKeyCount: GetRequiredKeyCountUseCase,
     private val saveNote: SaveTimeCapsuleNoteUseCase,
     private val deleteTimeCapsule: DeleteTimeCapsuleUseCase,
-) : ViewModel(),
-    ContainerHost<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> {
-    override val container: Container<TimeCapsuleDetailState, TimeCapsuleDetailSideEffect> =
-        container(TimeCapsuleDetailState())
-
+) : BaseViewModel<TimeCapsuleDetailState>(
+        TimeCapsuleDetailState(),
+    ) {
     fun onAction(action: TimeCapsuleDetailAction) {
         when (action) {
             is Init -> {
@@ -116,7 +113,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     }
 
     private fun handleInit(id: Long) =
-        intent {
+        baseIntent {
             collectDataState(
                 flow = getTimeCapsuleById(id),
                 onSuccess = {
@@ -145,7 +142,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         }
 
     private fun handleOpenTimeCapsule(id: Long) =
-        intent {
+        baseIntent {
             collectDataState(
                 flow = openTimeCapsule(id),
                 onSuccess = {
@@ -197,7 +194,7 @@ class TimeCapsuleDetailViewModel @Inject constructor(
         }
 
     private fun handleDeleteTimeCapsule(id: Long) =
-        intent {
+        baseIntent {
             collectDataState(
                 flow = deleteTimeCapsule(id),
                 onSuccess = {
@@ -205,12 +202,17 @@ class TimeCapsuleDetailViewModel @Inject constructor(
                 },
                 onError = { throwable, code, data ->
                     Logger.e("deleteTimeCapsule error: $throwable")
+                    throw BaseException(
+                        message = throwable.message ?: "deleteTimeCapsule error",
+                        code = code,
+                        cause = throwable,
+                    )
                 },
             )
         }
 
     private fun handleNoteChanged(note: String) =
-        intent {
+        baseIntent {
             reduce {
                 state.copy(
                     note = note,
@@ -222,8 +224,8 @@ class TimeCapsuleDetailViewModel @Inject constructor(
     private fun handleSaveNote(
         id: Long,
         exitAfterSave: Boolean,
-    ) = intent {
-        if (!state.isNoteChanged) return@intent
+    ) = baseIntent {
+        if (!state.isNoteChanged) return@baseIntent
 
         collectDataState(
             flow = saveNote(id, state.note),
@@ -242,6 +244,11 @@ class TimeCapsuleDetailViewModel @Inject constructor(
             },
             onError = { throwable, code, data ->
                 Logger.e("saveNote error: $throwable")
+                throw BaseException(
+                    message = throwable.message ?: "saveNote error",
+                    code = code,
+                    cause = throwable,
+                )
             },
         )
     }

@@ -14,10 +14,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,23 +29,43 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.emotionstorage.common.formatToKorDateTime
+import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingDots
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.theme.MooiTheme
+
+private enum class ArrivedModalState { None, TempError, LoginSessionExpired }
 
 @Composable
 fun ArrivedTimeCapsulesScreen(
+    navToTimeCapsuleDetail: (id: Long) -> Unit,
+    navToBack: () -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ArrivedTimeCapsulesViewModel = hiltViewModel(),
-    navToTimeCapsuleDetail: (id: Long) -> Unit = {},
-    navToBack: () -> Unit = {},
 ) {
-    val context = LocalContext.current
+    val (modalState, setModalState) = remember { mutableStateOf(ArrivedModalState.None) }
     val timeCapsulesState = viewModel.arrivedTimeCapsules.collectAsLazyPagingItems()
+
+    LaunchedEffect(Unit) {
+        viewModel.container.sideEffectFlow.collect {
+            when (it) {
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(ArrivedModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(ArrivedModalState.LoginSessionExpired)
+                }
+            }
+        }
+    }
 
     StatelessArrivedTimeCapsulesScreen(
         modifier = modifier,
@@ -51,6 +73,25 @@ fun ArrivedTimeCapsulesScreen(
         navToTimeCapsuleDetail = navToTimeCapsuleDetail,
         navToBack = navToBack,
     )
+
+    when (modalState) {
+        ArrivedModalState.None -> {
+            // no modal
+        }
+
+        ArrivedModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(ArrivedModalState.None) },
+            )
+        }
+
+        ArrivedModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = { setModalState(ArrivedModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @Composable
