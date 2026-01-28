@@ -30,6 +30,7 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,6 +49,7 @@ import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
 import com.emotionstorage.ai_chat.ui.modal.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingOverlay
@@ -68,6 +70,7 @@ fun AIChatScreen(
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
     val state = viewModel.container.stateFlow.collectAsState()
     val (modalState, setModalState) = remember { mutableStateOf(AIModalState.None) }
     val snackState = remember { SnackbarHostState() }
@@ -100,6 +103,10 @@ fun AIChatScreen(
 
                 is BaseSideEffect.SessionExpired -> {
                     setModalState(AIModalState.LoginSessionExpired)
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    snackState.showSnackbar(context.getString(R.string.toast_network_error))
                 }
             }
         }
