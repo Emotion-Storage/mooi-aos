@@ -1,7 +1,6 @@
 package com.emotionstorage.ai_chat.ui
 
 import android.view.Gravity
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,7 +30,6 @@ import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -81,7 +79,7 @@ fun AIChatScreen(
 
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
                     snackState.showSnackbar(
-                        "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요."
+                        "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
                     )
                 }
 
@@ -115,7 +113,6 @@ private fun StatelessAIChatScreen(
     val focusRequester = remember { FocusRequester() }
 
     val listState = remember { LazyListState() }
-
 
     var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
 

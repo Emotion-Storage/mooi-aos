@@ -16,10 +16,8 @@ import javax.inject.Singleton
 object StompWebSocketModule {
     @Singleton
     @Provides
-    fun provideWebSocketClient(
-        loggingInterceptor: HttpLoggingInterceptor,
-    ): StompClient {
-        return StompClient(
+    fun provideWebSocketClient(loggingInterceptor: HttpLoggingInterceptor): StompClient =
+        StompClient(
             webSocketClient =
                 OkHttpWebSocketClient(
                     OkHttpClient
@@ -29,5 +27,4 @@ object StompWebSocketModule {
                         .build(),
                 ),
         )
-    }
 }

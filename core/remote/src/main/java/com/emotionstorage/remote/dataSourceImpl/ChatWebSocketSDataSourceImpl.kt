@@ -14,14 +14,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.subscribeText
-import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
-import java.time.Duration
 import java.util.UUID
 import javax.inject.Inject
 

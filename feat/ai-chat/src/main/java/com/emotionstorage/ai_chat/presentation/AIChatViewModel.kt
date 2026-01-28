@@ -58,7 +58,7 @@ sealed class AIChatAction {
     object TempSaveChatRoom : AIChatAction()
 }
 
-sealed class AIChatSideEffect() : BaseSideEffect {
+sealed class AIChatSideEffect : BaseSideEffect {
     object CanCreateTimesCapsule : AIChatSideEffect()
 
     data class CreateTimeCapsuleSuccess(
@@ -144,7 +144,7 @@ class AIChatViewModel @Inject constructor(
                         onError = { throwable, code, data ->
                             reduce { state.copy(isLoadingHistory = false) }
                             Logger.e("history load failed: $throwable")
-                        }
+                        },
                     )
                     // start observing chat messages
                     launchChatMessageObserver(roomId)
@@ -154,11 +154,10 @@ class AIChatViewModel @Inject constructor(
                     throw BaseException(
                         message = throwable.message ?: "chat room connection failed",
                         code = code,
-                        cause = throwable
+                        cause = throwable,
                     )
-                }
+                },
             )
-
         }
 
     private fun launchChatMessageObserver(roomId: Long): Job =
@@ -191,9 +190,10 @@ class AIChatViewModel @Inject constructor(
                             }
 
                             val isNewlyCreatable = canCreate && !state.canCreateTimesCapsule
-                            if(isNewlyCreatable){
-                                postSideEffect(AIChatSideEffect.CanCreateTimesCapsule)
-                            }
+                            if (isNewlyCreatable)
+                                {
+                                    postSideEffect(AIChatSideEffect.CanCreateTimesCapsule)
+                                }
 
                             reduce {
                                 val rawTurnCountScore = message.turnCountScore
@@ -279,9 +279,9 @@ class AIChatViewModel @Inject constructor(
                     throw BaseException(
                         message = throwable.message ?: "chat message sending failed",
                         code = code,
-                        cause = throwable
+                        cause = throwable,
                     )
-                }
+                },
             )
             // updateChatProgress()
         }
@@ -359,7 +359,7 @@ class AIChatViewModel @Inject constructor(
                         code = code,
                         cause = throwable,
                     )
-                }
+                },
             )
         }
 }
