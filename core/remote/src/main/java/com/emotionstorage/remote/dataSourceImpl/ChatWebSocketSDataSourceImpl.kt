@@ -29,19 +29,9 @@ private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
 class ChatWebSocketSDataSourceImpl @Inject constructor(
     private val json: Json,
+    private val client: StompClient,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWebSocketDataSource {
-    private val client =
-        StompClient(
-            webSocketClient =
-                OkHttpWebSocketClient(
-                    OkHttpClient
-                        .Builder()
-                        .pingInterval(Duration.ofSeconds(10))
-                        .build(),
-                ),
-        )
-
     private lateinit var session: StompSession
 
     override suspend fun connectChatRoom(): Boolean {

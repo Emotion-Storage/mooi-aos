@@ -31,37 +31,38 @@ object RetrofitModule {
     fun provideRetrofit(
         json: Json,
         appCookieJar: AppCookieJar,
+        loggingInterceptor: HttpLoggingInterceptor,
         requestHeaderInterceptor: RequestHeaderInterceptor,
         failResponseInterceptor: FailResponseInterceptor,
         tokenAuthenticator: TokenAuthenticator,
-    ): Retrofit {
-        val loggingInterceptor =
-            HttpLoggingInterceptor().apply {
-                level =
-                    if (BuildConfig.DEBUG) {
-                        HttpLoggingInterceptor.Level.BODY
-                    } else {
-                        HttpLoggingInterceptor.Level.NONE
-                    }
-            }
+    ) = Retrofit
+        .Builder()
+        .baseUrl(BASE_URL)
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .client(
+            OkHttpClient
+                .Builder()
+                .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .cookieJar(appCookieJar)
+                .addNetworkInterceptor(loggingInterceptor)
+                .addInterceptor(requestHeaderInterceptor)
+                .addInterceptor(failResponseInterceptor)
+                .authenticator(tokenAuthenticator)
+                .build(),
+        ).build()
 
-        return Retrofit
-            .Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .client(
-                OkHttpClient
-                    .Builder()
-                    .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    .readTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
-                    .cookieJar(appCookieJar)
-                    .addNetworkInterceptor(loggingInterceptor)
-                    .addInterceptor(requestHeaderInterceptor)
-                    .addInterceptor(failResponseInterceptor)
-                    .authenticator(tokenAuthenticator)
-                    .build(),
-            ).build()
+
+    @Singleton
+    @Provides
+    fun provideLogginInterceptor() = HttpLoggingInterceptor().apply {
+        level =
+            if (BuildConfig.DEBUG) {
+                HttpLoggingInterceptor.Level.BODY
+            } else {
+                HttpLoggingInterceptor.Level.NONE
+            }
     }
 
     @Singleton
