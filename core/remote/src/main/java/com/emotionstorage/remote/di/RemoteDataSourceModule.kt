@@ -3,7 +3,7 @@ package com.emotionstorage.remote.di
 import com.emotionstorage.data.dataSource.remote.AttendanceRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
-import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
+import com.emotionstorage.data.dataSource.remote.ChatWebSocketDataSource
 import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.FcmRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
@@ -18,7 +18,7 @@ import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.remote.dataSourceImpl.AttendanceRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.AuthRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.ChatRemoteDataSourceImpl
-import com.emotionstorage.remote.dataSourceImpl.ChatWSDataSourceImpl
+import com.emotionstorage.remote.dataSourceImpl.ChatWebSocketSDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.DailyReportRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.FcmRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.GoogleRemoteDataSourceImpl
@@ -99,5 +99,5 @@ abstract class RemoteDataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindChatWSDataSource(impl: ChatWSDataSourceImpl): ChatWSDataSource
+    abstract fun bindChatWSDataSource(impl: ChatWebSocketSDataSourceImpl): ChatWebSocketDataSource
 }

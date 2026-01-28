@@ -1,7 +1,7 @@
 package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
-import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
+import com.emotionstorage.data.dataSource.remote.ChatWebSocketDataSource
 import com.emotionstorage.data.modelMapper.ChatMessageMapper
 import com.emotionstorage.data.modelMapper.StartEmotionConversationMapper
 import com.emotionstorage.domain.common.DataState
@@ -15,12 +15,12 @@ import javax.inject.Inject
 class ChatRepositoryImpl
     @Inject
     constructor(
-        private val chatRemoteDataSource: ChatRemoteDataSource,
-        private val chatWSDataSource: ChatWSDataSource,
+        private val chatRemote: ChatRemoteDataSource,
+        private val chatWebSocket: ChatWebSocketDataSource,
     ) : ChatRepository {
         override suspend fun startEmotionChat(): DataState<EmotionChatSession> =
             try {
-                when (val result = chatRemoteDataSource.startEmotionChat()) {
+                when (val result = chatRemote.startEmotionChat()) {
                     is DataState.Success -> {
                         DataState.Success(StartEmotionConversationMapper.toDomain(result.data))
                     }
@@ -41,7 +41,7 @@ class ChatRepositoryImpl
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
-                    val isConnected = chatWSDataSource.connectChatRoom()
+                    val isConnected = chatWebSocket.connectChatRoom()
                     emit(DataState.Success(isConnected))
                     emit(DataState.Loading(isLoading = false))
                 } catch (e: Exception) {
@@ -53,8 +53,8 @@ class ChatRepositoryImpl
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
-                    chatRemoteDataSource.deleteChatRoom(roomId)
-                    val isDisconnected = chatWSDataSource.disconnectChatRoom()
+                    chatRemote.deleteChatRoom(roomId)
+                    val isDisconnected = chatWebSocket.disconnectChatRoom()
                     emit(DataState.Success(isDisconnected))
                     emit(DataState.Loading(isLoading = false))
                 } catch (e: Exception) {
@@ -63,7 +63,7 @@ class ChatRepositoryImpl
             }
 
         override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
-            chatWSDataSource.observeChatMessages(roomId)
+            chatWebSocket.observeChatMessages(roomId)
 
         override suspend fun sendChatMessage(
             roomId: Long,
@@ -72,7 +72,7 @@ class ChatRepositoryImpl
             flow {
                 emit(DataState.Loading(isLoading = true))
                 try {
-                    val isSent = chatWSDataSource.sendChatMessage(chatMessage)
+                    val isSent = chatWebSocket.sendChatMessage(chatMessage)
                     emit(DataState.Success(isSent))
                     emit(DataState.Loading(isLoading = false))
                 } catch (e: Exception) {
@@ -82,21 +82,21 @@ class ChatRepositoryImpl
 
         override suspend fun tempSaveChatRoom(roomId: Long): DataState<Long> =
             try {
-                chatRemoteDataSource.tempSaveChatRoom(roomId)
+                chatRemote.tempSaveChatRoom(roomId)
             } catch (e: Exception) {
                 DataState.Error(e)
             }
 
         override suspend fun deleteChatRoom(roomId: Long): DataState<Boolean> =
             try {
-                chatRemoteDataSource.deleteChatRoom(roomId)
+                chatRemote.deleteChatRoom(roomId)
             } catch (e: Exception) {
                 DataState.Error(e)
             }
 
         override suspend fun getChatRoomMessages(cursor: Long?): DataState<List<ChatMessage>> =
             try {
-                when (val result = chatRemoteDataSource.getChatRoomMessages(cursor)) {
+                when (val result = chatRemote.getChatRoomMessages(cursor)) {
                     is DataState.Success -> {
                         val messages = ChatMessageMapper.toDomainMessages(result.data)
                         DataState.Success(messages)

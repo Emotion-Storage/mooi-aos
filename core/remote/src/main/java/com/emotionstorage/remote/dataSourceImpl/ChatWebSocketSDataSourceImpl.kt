@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
+import com.emotionstorage.data.dataSource.remote.ChatWebSocketDataSource
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
@@ -27,10 +27,10 @@ import javax.inject.Inject
 
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
-class ChatWSDataSourceImpl @Inject constructor(
+class ChatWebSocketSDataSourceImpl @Inject constructor(
     private val json: Json,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-) : ChatWSDataSource {
+) : ChatWebSocketDataSource {
     private val client =
         StompClient(
             webSocketClient =

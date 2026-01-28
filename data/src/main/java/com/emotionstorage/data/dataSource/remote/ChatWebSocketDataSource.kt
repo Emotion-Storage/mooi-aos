@@ -3,7 +3,7 @@ package com.emotionstorage.data.dataSource.remote
 import com.emotionstorage.domain.model.ChatMessage
 import kotlinx.coroutines.flow.Flow
 
-interface ChatWSDataSource {
+interface ChatWebSocketDataSource {
     suspend fun connectChatRoom(): Boolean
 
     suspend fun disconnectChatRoom(): Boolean
