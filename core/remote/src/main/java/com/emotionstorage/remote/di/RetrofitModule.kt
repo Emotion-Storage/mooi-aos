@@ -56,7 +56,7 @@ object RetrofitModule {
 
     @Singleton
     @Provides
-    fun provideLogginInterceptor() = HttpLoggingInterceptor().apply {
+    fun provideLoggingInterceptor() = HttpLoggingInterceptor().apply {
         level =
             if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
