@@ -1,7 +1,5 @@
 package com.emotionstorage.ai_chat.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
@@ -11,6 +9,9 @@ import com.emotionstorage.domain.useCase.chat.ObserveChatMessagesUseCase
 import com.emotionstorage.domain.useCase.chat.SendChatMessageUseCase
 import com.emotionstorage.domain.useCase.chat.TempSaveChatRoomUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.CreateTimeCapsuleUseCase
+import com.emotionstorage.presentation.BaseException
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.presentation.BaseViewModel
 import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -19,8 +20,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.viewmodel.container
 import javax.inject.Inject
 
 private const val MIN_PROGRESS = 0.03f
@@ -60,11 +59,7 @@ sealed class AIChatAction {
     object TempSaveChatRoom : AIChatAction()
 }
 
-sealed class AIChatSideEffect {
-    data class ToastMessage(
-        val message: String,
-    ) : AIChatSideEffect()
-
+sealed class AIChatSideEffect() : BaseSideEffect {
     object CanCreateTimesCapsule : AIChatSideEffect()
 
     data class CreateTimeCapsuleSuccess(
@@ -80,14 +75,11 @@ class AIChatViewModel @Inject constructor(
     private val disconnectChatRoom: DisconnectChatRoomUseCase,
     private val sendChatMessage: SendChatMessageUseCase,
     private val observeChatMessages: ObserveChatMessagesUseCase,
-    private val createTimeCapsuleUseCase: CreateTimeCapsuleUseCase,
-    private val tempSaveChatRoomUseCase: TempSaveChatRoomUseCase,
-    private val getChatRoomMessagesUseCase: GetChatRoomMessagesUseCase,
-) : ViewModel(),
-    ContainerHost<AIChatState, AIChatSideEffect> {
+    private val createTimeCapsule: CreateTimeCapsuleUseCase,
+    private val tempSaveChatRoom: TempSaveChatRoomUseCase,
+    private val getChatRoomMessages: GetChatRoomMessagesUseCase,
+) : BaseViewModel<AIChatState>(AIChatState()) {
     private var chatMessageObserverJob: Job? = null
-
-    override val container = container<AIChatState, AIChatSideEffect>(AIChatState())
 
     fun onAction(action: AIChatAction) {
         when (action) {
@@ -118,7 +110,7 @@ class AIChatViewModel @Inject constructor(
     }
 
     private fun handleConnectChatRoom(roomId: Long) =
-        intent {
+        baseIntent {
             // update room id
             reduce {
                 state.copy(roomId = roomId)
@@ -127,63 +119,56 @@ class AIChatViewModel @Inject constructor(
             chatMessageObserverJob?.cancel()
 
             // connect chat room
-            connectChatRoom(roomId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        reduce { state.copy(isLoadingHistory = true) }
+            connectChatRoom(roomId).handle(
+                onSuccess = {
+                    reduce { state.copy(isLoadingHistory = true) }
 
-                        when (val history = getChatRoomMessagesUseCase(cursor = null)) {
-                            is DataState.Success -> {
-                                val historyMessages: List<ChatMessage> = history.data
+                    getChatRoomMessages(cursor = null).handle(
+                        onSuccess = { data ->
+                            val historyMessages: List<ChatMessage> = data
 
-                                val gauge: Int = historyMessages.lastOrNull()?.gaugeScore ?: 0
-                                val computed = (gauge / TIME_CAPSULE_CREATE_SCORE).coerceIn(0f, 1f)
-                                val progress: Float = if (gauge == 0) MIN_PROGRESS else maxOf(MIN_PROGRESS, computed)
-                                val canCreate: Boolean = gauge >= TIME_CAPSULE_CREATE_SCORE
+                            val gauge: Int = historyMessages.lastOrNull()?.gaugeScore ?: 0
+                            val computed = (gauge / TIME_CAPSULE_CREATE_SCORE).coerceIn(0f, 1f)
+                            val progress: Float = if (gauge == 0) MIN_PROGRESS else maxOf(MIN_PROGRESS, computed)
+                            val canCreate: Boolean = gauge >= TIME_CAPSULE_CREATE_SCORE
 
-                                reduce {
-                                    state.copy(
-                                        messages = historyMessages,
-                                        gaugeScore = gauge,
-                                        chatProgress = progress,
-                                        canCreateTimesCapsule = canCreate,
-                                        isLoadingHistory = false,
-                                    )
-                                }
+                            reduce {
+                                state.copy(
+                                    messages = historyMessages,
+                                    gaugeScore = gauge,
+                                    chatProgress = progress,
+                                    canCreateTimesCapsule = canCreate,
+                                    isLoadingHistory = false,
+                                )
                             }
-
-                            is DataState.Error -> {
-                                reduce { state.copy(isLoadingHistory = false) }
-                                Logger.e("history load failed: ${history.throwable}")
-                            }
-
-                            is DataState.Loading -> {
-                                Unit
-                            }
+                        },
+                        onError = { throwable, code, data ->
+                            reduce { state.copy(isLoadingHistory = false) }
+                            Logger.e("history load failed: $throwable")
                         }
-
-                        // start observing chat messages
-                        launchChatMessageObserver(roomId)
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e("chat room connection failed, ${result.throwable}")
-                    }
-
-                    is DataState.Loading -> {
-                        Logger.d("chat room connection loading...")
-                    }
+                    )
+                    // start observing chat messages
+                    launchChatMessageObserver(roomId)
+                },
+                onError = { throwable, code, data ->
+                    Logger.e("chat room connection failed, $throwable")
+                    throw BaseException(
+                        message = throwable.message ?: "chat room connection failed",
+                        code = code,
+                        cause = throwable
+                    )
                 }
-            }
+            )
+
         }
 
     private fun launchChatMessageObserver(roomId: Long): Job =
-        intent {
+        baseIntent {
             // cancel previous message observer job, if exists
             chatMessageObserverJob?.cancel()
 
             chatMessageObserverJob =
-                viewModelScope.launch {
+                baseViewModelScope.launch {
                     observeChatMessages(roomId)
                         .onEach { message ->
                             val isComplete = message.isComplete
@@ -260,8 +245,8 @@ class AIChatViewModel @Inject constructor(
         }
 
     private fun handleSendMessage(message: String) =
-        intent {
-            if (message.isBlank() || state.isWaitingReply) return@intent
+        baseIntent {
+            if (message.isBlank() || state.isWaitingReply) return@baseIntent
             val outgoing =
                 ChatMessage.newClientMessage(
                     roomId = state.roomId,
@@ -275,127 +260,103 @@ class AIChatViewModel @Inject constructor(
                 )
             }
 
-            sendChatMessage(
-                state.roomId,
-                outgoing,
-            ).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        Logger.i("chat message sent")
+            sendChatMessage(state.roomId, outgoing).handle(
+                onSuccess = {
+                    Logger.i("chat message sent")
+                },
+                onError = { throwable, code, data ->
+                    Logger.e("chat message sending failed, $throwable")
+                    reduce {
+                        state.copy(
+                            messages = state.messages.filterNot { it.clientId == outgoing.clientId },
+                            isWaitingReply = false,
+                            isMooiTyping = false,
+                        )
                     }
-
-                    is DataState.Error -> {
-                        Logger.e("chat message sending failed, ${result.throwable}")
-                        postSideEffect(AIChatSideEffect.ToastMessage("메세지 전송 실패"))
-
-                        reduce {
-                            state.copy(
-                                messages = state.messages.filterNot { it.clientId == outgoing.clientId },
-                                isWaitingReply = false,
-                                isMooiTyping = false,
-                            )
-                        }
-                    }
-
-                    is DataState.Loading -> {
-                        Logger.d("chat message sending loading...")
-                    }
+                    throw BaseException(
+                        message = throwable.message ?: "chat message sending failed",
+                        code = code,
+                        cause = throwable
+                    )
                 }
-            }
+            )
             // updateChatProgress()
         }
 
     private fun handleExitChatRoom() =
-        intent {
+        baseIntent {
             // cancel current message observer job
             chatMessageObserverJob?.cancel()
 
-            disconnectChatRoom(state.roomId).collect { result ->
-                when (result) {
-                    is DataState.Success -> {
-                        Logger.d("chat room disconnected + $result")
-                    }
-
-                    is DataState.Error -> {
-                        Logger.e("chat room disconnection failed, ${result.throwable}")
-                    }
-
-                    is DataState.Loading -> {
-                        Logger.d("chat room disconnection loading...")
-                    }
-                }
-            }
+            disconnectChatRoom(state.roomId).handle(
+                onSuccess = {
+                    Logger.d("chat room disconnected")
+                },
+                onError = { throwable, code, data ->
+                    Logger.e("chat room disconnection failed, $throwable")
+                    throw BaseException(
+                        message = throwable.message ?: "chat room disconnection failed",
+                        code = code,
+                        cause = throwable,
+                    )
+                },
+            )
         }
 
     private fun handleCreateTimeCapsule() =
-        intent {
+        baseIntent {
             if (!state.canCreateTimesCapsule) {
                 Logger.w("Can't create time capsule yet")
-                return@intent
+                return@baseIntent
             }
-
-            val roomId = state.roomId
-            if (roomId == 0L) {
-                Logger.e("Invalid roomId: $roomId")
-                return@intent
-            }
-
             reduce { state.copy(isCreatingTimeCapsule = true) }
 
             try {
-                when (val result = createTimeCapsuleUseCase(roomId)) {
-                    is DataState.Success -> {
-                        val capsuleId = result.data
-
+                createTimeCapsule(state.roomId).handle(
+                    onSuccess = { capsuleId ->
                         handleExitChatRoom()
                         postSideEffect(
                             AIChatSideEffect.CreateTimeCapsuleSuccess(capsuleId),
                         )
-                    }
+                    },
+                    onError = { throwable, code, data ->
+                        Logger.e("createTimeCapsule error: $throwable")
 
-                    is DataState.Error -> {
-                        Logger.e("createTimeCapsule error: ${result.throwable}")
-                    }
-
-                    is DataState.Loading -> {
-                        // no - op
-                    }
-                }
+                        throw BaseException(
+                            message = throwable.message ?: "createTimeCapsule error",
+                            code = code,
+                            cause = throwable,
+                        )
+                    },
+                )
             } finally {
                 reduce { state.copy(isCreatingTimeCapsule = false) }
             }
         }
 
     private fun handleForceQuitSheet() =
-        intent {
+        baseIntent {
             reduce {
                 state.copy(showForceQuitBottomSheet = false)
             }
         }
 
     private fun handleTempSave() =
-        intent {
+        baseIntent {
             chatMessageObserverJob?.cancel()
 
-            val roomId = state.roomId
-            if (roomId == 0L) {
-                postSideEffect(AIChatSideEffect.NavigateBack)
-                return@intent
-            }
-
-            when (tempSaveChatRoomUseCase(roomId)) {
-                is DataState.Success -> {
-                }
-
-                is DataState.Error -> {
+            tempSaveChatRoom(state.roomId).handle(
+                onSuccess = {
+                    postSideEffect(AIChatSideEffect.NavigateBack)
+                },
+                onError = { throwable, code, data ->
                     Logger.e("temp save error")
+                    throw BaseException(
+                        message = throwable.message ?: "temp save error",
+                        code = code,
+                        cause = throwable,
+                    )
                 }
-
-                else -> {
-                    Unit
-                }
-            }
-
-            postSideEffect(AIChatSideEffect.NavigateBack)
+            )
         }
 }
