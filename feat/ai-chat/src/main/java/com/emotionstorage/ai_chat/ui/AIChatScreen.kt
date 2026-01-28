@@ -94,12 +94,12 @@ fun AIChatScreen(
                     navToBack()
                 }
 
-                is BaseSideEffect.TemporalError -> {
-                    setModalState(AIModalState.TempError)
-                }
-
                 is BaseSideEffect.SessionExpired -> {
                     setModalState(AIModalState.LoginSessionExpired)
+                }
+
+                else -> {
+                    setModalState(AIModalState.TempError)
                 }
             }
         }
