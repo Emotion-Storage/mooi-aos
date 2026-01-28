@@ -1,5 +1,6 @@
 package com.emotionstorage.time_capsule_detail.ui.modal
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.component.modal.Modal
@@ -28,6 +29,8 @@ fun ExitTempTimeCapsuleModal(
         topDescriptionHighlights = listOf("24시간"),
         title = "페이지를 나가시겠어요?",
         confirmLabel = "아니요, 계속할래요.",
+        contentBasePadding = 12.dp,
+        contentPadding = PaddingValues(top = 28.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
         onConfirm = {
             // do nothing on dismiss
         },

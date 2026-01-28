@@ -46,6 +46,7 @@ fun Modal(
     onDismiss: () -> Unit = {},
     modalWidth: Dp = 293.dp,
     contentPadding: PaddingValues = PaddingValues(top = 22.dp, bottom = 28.dp, start = 27.dp, end = 27.dp),
+    contentBasePadding: Dp = 6.dp,
     verticalSpacing: Dp = 18.dp,
     topOuterContent: @Composable (() -> Unit)? = null,
     content: @Composable (() -> Unit)? = null,
@@ -79,7 +80,7 @@ fun Modal(
                 // title & descriptions
                 Column(
                     modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalArrangement = Arrangement.spacedBy(contentBasePadding),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     if (!topDescription.isNullOrEmpty()) {
