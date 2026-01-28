@@ -1,6 +1,5 @@
 package com.emotionstorage.ai_chat.presentation
 
-import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.chat.ConnectChatRoomUseCase
 import com.emotionstorage.domain.useCase.chat.DisconnectChatRoomUseCase
@@ -191,6 +190,11 @@ class AIChatViewModel @Inject constructor(
                                 }
                             }
 
+                            val isNewlyCreatable = canCreate && !state.canCreateTimesCapsule
+                            if(isNewlyCreatable){
+                                postSideEffect(AIChatSideEffect.CanCreateTimesCapsule)
+                            }
+
                             reduce {
                                 val rawTurnCountScore = message.turnCountScore
 
@@ -201,7 +205,6 @@ class AIChatViewModel @Inject constructor(
                                         else -> state.turnScore + 1
                                     }
 
-                                val isNewlyCreatable = canCreate && !state.canCreateTimesCapsule
                                 val quitTriggerTurn =
                                     when {
                                         state.forceQuitTriggerTurn != null -> state.forceQuitTriggerTurn
