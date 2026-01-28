@@ -11,6 +11,7 @@ import com.orhanobut.logger.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
@@ -29,7 +30,7 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
     private val client: StompClient,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWebSocketDataSource {
-    private lateinit var session: StompSession
+    private var session: StompSession? = null
 
     override suspend fun connectChatRoom(): Boolean {
         try {
@@ -45,7 +46,7 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
 
     override suspend fun disconnectChatRoom(): Boolean {
         try {
-            session.disconnect()
+            session?.disconnect()
             return true
         } catch (e: Exception) {
             throw Throwable("disconnectChatRoom() failed", e)
@@ -55,8 +56,8 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
         session
-            .subscribeText("/sub/chatroom/$roomId")
-            .flatMapConcat { raw ->
+            ?.subscribeText("/sub/chatroom/$roomId")
+            ?.flatMapConcat { raw ->
                 flow {
                     raw
                         .lines()
@@ -91,7 +92,7 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
                             }
                         }
                 }
-            }
+            } ?: emptyFlow()
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
@@ -102,14 +103,14 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
                     ChatMessageMapper.toRemote(chatMessage),
                 )
             Logger.d("sendChatMessage() messageJson: $messageJson")
-            session.send(
+            session?.send(
                 headers =
                     StompSendHeaders(
                         destination = "/pub/v1/chat",
                         customHeaders = mapOf("Authorization" to "Bearer $token"),
                     ),
                 body = FrameBody.Text(messageJson),
-            )
+            ) ?: throw IllegalStateException("채팅 세션이 없어 메세지 전송이 불가능 합니다.")
             return true
         } catch (e: Exception) {
             throw Throwable("sendChatMessage() failed", e)
