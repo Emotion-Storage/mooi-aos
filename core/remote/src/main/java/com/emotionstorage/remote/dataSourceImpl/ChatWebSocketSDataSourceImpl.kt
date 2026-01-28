@@ -73,7 +73,7 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
 
                                 if (content.isBlank() && !isComplete) return@forEach
                                 if (!isComplete) {
-                                    delay(1500L)
+                                    delay(800L)
                                 }
 
                                 // Server에서 내려오는 값이 없어 UUID로 식별
