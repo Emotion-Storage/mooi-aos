@@ -26,9 +26,9 @@ class FailResponseInterceptor @Inject constructor(
             }.getOrNull()
 
         // handle unauthorized error with TokenAuthenticator, if it is not social token error
-        if (httpResponse.code == 401
-            && responseDto?.code != "INVALID_ID_TOKEN"
-            && responseDto?.code != "INVALID_KAKAO_ACCESS_TOKEN"
+        if (httpResponse.code == 401 &&
+            responseDto?.code != "INVALID_ID_TOKEN" &&
+            responseDto?.code != "INVALID_KAKAO_ACCESS_TOKEN"
         ) {
             return httpResponse
         }
