@@ -1,7 +1,6 @@
 package com.emotionstorage.emotionstorage
 
 import android.app.Activity
-import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -10,7 +9,6 @@ import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
@@ -33,7 +31,7 @@ class GoogleCredentialManager(
                                         serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID,
                                     ).build(),
                             ).build()
-                }catch (e: Exception) {
+                } catch (e: Exception) {
                     throw Exception("build credential request error, ${e.message}", e)
                 }
 
@@ -46,7 +44,7 @@ class GoogleCredentialManager(
                             request = credentialRequest,
                             context = activity,
                         )
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     throw Exception("get credential result error, ${e.message}", e)
                 }
 

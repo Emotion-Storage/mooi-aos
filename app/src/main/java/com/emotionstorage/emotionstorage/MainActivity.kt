@@ -10,7 +10,6 @@ import androidx.lifecycle.lifecycleScope
 import com.emotionstorage.emotionstorage.ui.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.MooiTheme
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -27,7 +26,7 @@ class MainActivity : ComponentActivity() {
                             activity = this@MainActivity,
                             coroutineScope = lifecycleScope,
                         ).getIdToken()
-                    }
+                    },
                 )
             }
         }

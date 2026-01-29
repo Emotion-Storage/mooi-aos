@@ -1,6 +1,5 @@
 package com.emotionstorage.emotionstorage.ui
 
-import android.content.Context
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
