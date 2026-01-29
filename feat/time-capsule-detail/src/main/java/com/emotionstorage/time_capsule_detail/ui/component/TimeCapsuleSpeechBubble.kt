@@ -65,7 +65,7 @@ fun TimeCapsuleSpeechBubble(
             cornerRadius = 100.dp,
         ) {
             Column(
-                modifier = Modifier,
+                modifier = Modifier.padding(vertical = 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (!isNewTimeCapsule) {

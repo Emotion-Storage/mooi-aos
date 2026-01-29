@@ -136,8 +136,8 @@ private fun StatelessArrivedTimeCapsulesScreen(
                         painter = painterResource(id = R.drawable.ic_lock_open),
                         modifier =
                             Modifier
-                                .width(12.dp)
-                                .height(14.dp),
+                                .width(13.dp)
+                                .height(16.dp),
                         contentDescription = "arrived",
                         colorFilter = ColorFilter.tint(MooiTheme.colorScheme.gray600),
                     )

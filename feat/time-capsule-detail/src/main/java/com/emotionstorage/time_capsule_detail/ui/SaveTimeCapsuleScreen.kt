@@ -249,8 +249,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                             .offset(
                                 x = 34.dp,
                                 y = 73.dp,
-                            )
-                            .size(310.dp, 144.dp),
+                            ).size(310.dp, 144.dp),
                     painter =
                         painterResource(
                             com
@@ -487,8 +486,7 @@ private fun RowScope.OpenAfterGridItem(
                     enabled = isSelected,
                     defaultBackground = Color.Black,
                     shape = RoundedCornerShape(10.dp),
-                )
-                .clickable {
+                ).clickable {
                     onSelect()
                 },
     ) {
@@ -508,8 +506,7 @@ private fun RowScope.OpenAfterGridItem(
                     .subBackground(enabled = true, shape = RoundedCornerShape(10.dp))
                     .clickable {
                         onDatePickerClick?.invoke()
-                    }
-                    .padding(
+                    }.padding(
                         start = 17.dp,
                         end = 20.dp,
                     ),
