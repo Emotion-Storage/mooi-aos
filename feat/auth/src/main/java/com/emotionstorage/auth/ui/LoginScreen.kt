@@ -89,8 +89,12 @@ fun LoginScreen(
                     navToOnBoarding(effect.provider, effect.idToken)
                 }
 
-                is LoginSideEffect.SocialLoginError -> {
+                is LoginSideEffect.SocialTokenIssueError -> {
                     snackbarHostState.showSnackbar("소셜 로그인 실패")
+                }
+
+                is LoginSideEffect.InvalidSocialTokenError -> {
+                    snackbarHostState.showSnackbar("소셜 로그인 토큰 인증 실패")
                 }
 
                 is LoginSideEffect.RetryHandleLogin -> {

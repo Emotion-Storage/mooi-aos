@@ -22,26 +22,30 @@ class AuthRepositoryImpl @Inject constructor(
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
     private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-    override suspend fun login(provider: AuthProvider): DataState<String> =
+    override suspend fun login(provider: AuthProvider): DataState<String> {
+        var idToken: String? = null
+
+        // get id token from providers
         try {
-            // get id token from providers
-            val idToken =
+            idToken =
                 when (provider) {
                     AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
                     AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
                 }
-            Napier.d("GetIdToken success, provider: $provider, idToken: ${idToken.take(6) + "..."}")
-
-            loginWithIdToken(provider, idToken)
+            Napier.d("GetIdToken success, provider: $provider")
         } catch (e: Exception) {
-            DataState.Error(
-                e,
-                when (provider) {
-                    AuthProvider.GOOGLE -> ErrorCode.INVALID_ID_TOKEN
-                    AuthProvider.KAKAO -> ErrorCode.INVALID_KAKAO_ACCESS_TOKEN
-                },
+            return DataState.Error(
+                throwable = e,
+                code = ErrorCode.CLIENT_ID_TOKEN_ISSUE_FAIL,
             )
         }
+        // login with id token
+        return try {
+            loginWithIdToken(provider, idToken)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
 
     override suspend fun loginWithIdToken(
         provider: AuthProvider,

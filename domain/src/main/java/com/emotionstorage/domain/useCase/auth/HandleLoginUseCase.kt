@@ -32,7 +32,7 @@ class HandleLoginUseCase @Inject constructor(
             }
         } catch (e: Exception) {
             Napier.e("handle login client error", e)
-            return DataState.Error(e, ErrorCode.LOGIN_CLIENT_ERROR, accessToken)
+            return DataState.Error(e, ErrorCode.CLIENT_LOGIN_ERROR, accessToken)
         }
     }
 }

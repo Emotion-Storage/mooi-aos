@@ -17,16 +17,21 @@ class FailResponseInterceptor @Inject constructor(
         val httpResponse = chain.proceed(httpRequest)
         // return successful response
         if (httpResponse.code in 200..226) return httpResponse
-        // return 401 error for token authenticator to handle
-        if (httpResponse.code == 401) return httpResponse
 
         // parse error response body & throw custom error
         val httpResponseBody = httpResponse.peekBody(Long.MAX_VALUE).string()
-
         val responseDto =
             runCatching {
                 json.decodeFromString<ResponseDto<String>>(httpResponseBody)
             }.getOrNull()
+
+        // handle unauthorized error with TokenAuthenticator, if it is not social token error
+        if (httpResponse.code == 401 &&
+            responseDto?.code != "INVALID_ID_TOKEN" &&
+            responseDto?.code != "INVALID_KAKAO_ACCESS_TOKEN"
+        ) {
+            return httpResponse
+        }
 
         throw CustomHttpException(
             status = ResponseStatus.fromCode(responseDto?.status ?: httpResponse.code),
