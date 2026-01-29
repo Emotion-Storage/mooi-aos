@@ -105,7 +105,6 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
                 )
             Logger.d("sendChatMessage() messageJson: $messageJson")
 
-
             if (session == null) {
                 throw IllegalStateException("채팅 세션이 없어 메세지 전송이 불가능 합니다.")
             } else {

@@ -1,8 +1,6 @@
 package com.emotionstorage.time_capsule.ui
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.EaseOutElastic
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -451,7 +449,7 @@ private fun CalendarTodayButton(
             slideOutVertically {
                 with(density) { 100.dp.roundToPx() }
             },
-        ) {
+    ) {
         Image(
             modifier =
                 Modifier
