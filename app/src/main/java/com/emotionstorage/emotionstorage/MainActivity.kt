@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         setContent {
             MooiTheme {
-                AppNavHost()
+                AppNavHost(this@MainActivity)
             }
         }
     }

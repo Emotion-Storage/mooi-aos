@@ -1,5 +1,6 @@
 package com.emotionstorage.emotionstorage.ui
 
+import android.content.Context
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,6 +21,7 @@ import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.alarm.ui.PushNotificationScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
+import com.emotionstorage.auth.util.GoogleCredentialManager
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
 import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.domain.model.User.AuthProvider
@@ -139,10 +141,13 @@ internal sealed class AppDestination {
 
 @Composable
 internal fun AppNavHost(
+    activityContext: Context,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel(),
 ) {
+    val googleCredentialManager = GoogleCredentialManager(activityContext)
+
     val introSeen = aiChatIntroViewModel.introSeen.collectAsState()
 
     val bottomAppBar: @Composable () -> Unit = {
@@ -213,6 +218,9 @@ internal fun AppNavHost(
 
         composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
+                getGoogleIdToken = {
+                  googleCredentialManager.getIdToken()
+                },
                 navToHome = {
                     navController.navigateWithClearStack(AppDestination.Home)
                 },
