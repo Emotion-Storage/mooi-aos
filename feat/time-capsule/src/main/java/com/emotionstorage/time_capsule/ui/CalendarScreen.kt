@@ -448,14 +448,10 @@ private fun CalendarTodayButton(
                 with(density) { 100.dp.roundToPx() }
             },
         exit =
-            slideOutVertically(
-                // delay exit animation by 1s
-                animationSpec = tween(durationMillis = 2000, delayMillis = 1000, easing = EaseOutElastic),
-                targetOffsetY = {
-                    with(density) { 100.dp.roundToPx() }
-                },
-            ),
-    ) {
+            slideOutVertically {
+                with(density) { 100.dp.roundToPx() }
+            },
+        ) {
         Image(
             modifier =
                 Modifier
