@@ -92,7 +92,7 @@ class LoginViewModel
                         Logger.d("login error - need sign up")
                         retryCount = 0
                         postSideEffect(LoginSideEffect.NeedSignUp(provider, data as String))
-                    } else if (code == ErrorCode.LOGIN_CLIENT_ERROR) {
+                    } else if (code == ErrorCode.CLIENT_LOGIN_ERROR) {
                         Logger.d("login error - client error")
                         retryCount++
                         postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))

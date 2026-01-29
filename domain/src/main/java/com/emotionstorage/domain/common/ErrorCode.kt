@@ -27,8 +27,8 @@ enum class ErrorCode {
     INVALID_NICKNAME,
 
     // auth client
-    SOCIAL_ID_TOKEN_ISSUE_FAIL,
-    LOGIN_CLIENT_ERROR,
+    CLIENT_ID_TOKEN_ISSUE_FAIL,
+    CLIENT_LOGIN_ERROR,
 
     // chat remote
     CHAT_ROOM_NOT_FOUND,

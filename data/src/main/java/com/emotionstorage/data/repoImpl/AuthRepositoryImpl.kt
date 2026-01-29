@@ -36,7 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             return DataState.Error(
                 throwable = e,
-                code = ErrorCode.SOCIAL_ID_TOKEN_ISSUE_FAIL,
+                code = ErrorCode.CLIENT_ID_TOKEN_ISSUE_FAIL,
             )
         }
         // login with id token
