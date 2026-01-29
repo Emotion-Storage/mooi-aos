@@ -90,7 +90,7 @@ fun LoginScreen(
                 }
 
                 is LoginSideEffect.SocialTokenIssueError -> {
-                    snackbarHostState.showSnackbar("소셜 로그인 실패")
+                    snackbarHostState.showSnackbar("소셜 로그인 토큰 발급 실패")
                 }
 
                 is LoginSideEffect.InvalidSocialTokenError -> {
