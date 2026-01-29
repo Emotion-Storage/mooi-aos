@@ -87,7 +87,10 @@ class LoginViewModel
 
             val result =
                 when (provider) {
-                    AuthProvider.KAKAO -> login(provider)
+                    AuthProvider.KAKAO -> {
+                        login(provider)
+                    }
+
                     AuthProvider.GOOGLE -> {
                         val googleCredentialManager = GoogleCredentialManager(context)
                         val idToken = googleCredentialManager.getIdToken()

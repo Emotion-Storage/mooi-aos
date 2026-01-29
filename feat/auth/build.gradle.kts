@@ -1,8 +1,7 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-fun getLocalProperty(propertyKey: String): String {
-    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
-}
+fun getLocalProperty(propertyKey: String) =
+    System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(propertyKey)
 
 plugins {
     id("com.emotionstorage.convention.android.library")
