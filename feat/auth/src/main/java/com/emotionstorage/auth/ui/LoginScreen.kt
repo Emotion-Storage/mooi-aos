@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
@@ -175,6 +176,8 @@ private fun StatelessLoginScreen(
     state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
 ) {
+    val context = LocalContext.current
+
     Scaffold(
         modifier =
             modifier
@@ -269,14 +272,14 @@ private fun StatelessLoginScreen(
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
                     onClick = {
-                        onAction(LoginAction.Login(AuthProvider.KAKAO))
+                        onAction(LoginAction.Login(context, AuthProvider.KAKAO))
                     },
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
-                        onAction(LoginAction.Login(AuthProvider.GOOGLE))
+                        onAction(LoginAction.Login(context, AuthProvider.GOOGLE))
                     },
                 )
             }

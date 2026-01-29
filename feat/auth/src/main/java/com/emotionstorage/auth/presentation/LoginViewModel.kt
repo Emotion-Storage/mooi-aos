@@ -1,7 +1,10 @@
 package com.emotionstorage.auth.presentation
 
+import android.content.Context
+import com.emotionstorage.auth.util.GoogleCredentialManager
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
+import com.emotionstorage.domain.useCase.auth.GoogleLoginUseCase
 import com.emotionstorage.domain.useCase.auth.HandleLoginUseCase
 import com.emotionstorage.domain.useCase.auth.LoginUseCase
 import com.emotionstorage.presentation.BaseException
@@ -18,6 +21,7 @@ data class LoginState(
 
 sealed class LoginAction {
     data class Login(
+        val context: Context,
         val provider: AuthProvider,
     ) : LoginAction()
 
@@ -53,6 +57,7 @@ sealed class LoginSideEffect : BaseSideEffect {
 class LoginViewModel
     @Inject constructor(
         private val login: LoginUseCase,
+        private val googleLogin: GoogleLoginUseCase,
         private val handleLoginUseCase: HandleLoginUseCase,
     ) : BaseViewModel<LoginState>(
             LoginState(),
@@ -62,7 +67,7 @@ class LoginViewModel
         fun onAction(action: LoginAction) {
             when (action) {
                 is LoginAction.Login -> {
-                    handleLogin(action.provider)
+                    handleLogin(action.context, action.provider)
                 }
 
                 is LoginAction.RetryLogin -> {
@@ -71,13 +76,23 @@ class LoginViewModel
             }
         }
 
-        private fun handleLogin(provider: AuthProvider) =
+        private fun handleLogin(context: Context, provider: AuthProvider) =
             baseIntent {
                 reduce {
                     state.copy(isLoading = true)
                 }
                 retryCount = 0
-                login(provider).handle(onSuccess = {
+
+                val result = when(provider){
+                    AuthProvider.KAKAO -> login(provider)
+                    AuthProvider.GOOGLE -> {
+                        val googleCredentialManager = GoogleCredentialManager(context)
+                        val idToken = googleCredentialManager.getIdToken()
+                        googleLogin(idToken)
+                    }
+                }
+
+                result.handle(onSuccess = {
                     reduce {
                         state.copy(isLoading = false)
                     }
@@ -87,7 +102,7 @@ class LoginViewModel
                         state.copy(isLoading = false)
                     }
                     if (code == ErrorCode.CLIENT_ID_TOKEN_ISSUE_FAIL) {
-                        Logger.d("login error - social token issue fail")
+                        Logger.d("login error - social token issue fail, ${throwable.message}")
                         retryCount = 0
                         postSideEffect(LoginSideEffect.SocialTokenIssueError)
                     } else if (code == ErrorCode.NEED_SIGN_UP) {

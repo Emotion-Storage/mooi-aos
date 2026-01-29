@@ -6,7 +6,6 @@ import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatWebSocketDataSource
 import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.FcmRemoteDataSource
-import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.HomeRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.MyPageRemoteDataSource
@@ -21,7 +20,6 @@ import com.emotionstorage.remote.dataSourceImpl.ChatRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.ChatWebSocketSDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.DailyReportRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.FcmRemoteDataSourceImpl
-import com.emotionstorage.remote.dataSourceImpl.GoogleRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.HomeRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.KakaoRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.MyPageRemoteDataSourceImpl
@@ -50,10 +48,6 @@ abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindKakaoRemoteDataSource(impl: KakaoRemoteDataSourceImpl): KakaoRemoteDataSource
-
-    @Binds
-    @Singleton
-    abstract fun bindGoogleRemoteDataSource(impl: GoogleRemoteDataSourceImpl): GoogleRemoteDataSource
 
     @Binds
     @Singleton

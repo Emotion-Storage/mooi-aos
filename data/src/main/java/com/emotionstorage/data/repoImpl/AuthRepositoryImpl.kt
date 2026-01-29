@@ -2,7 +2,6 @@ package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
-import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ReissueRemoteDataSource
 import com.emotionstorage.data.model.SessionEntity
@@ -20,8 +19,18 @@ class AuthRepositoryImpl @Inject constructor(
     private val sessionLocalDataSource: SessionLocalDataSource,
     private val reissueRemoteDataSource: ReissueRemoteDataSource,
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
-    private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
+
+    override suspend fun googleLogin(idToken: String): DataState<String> {
+        // login with id token
+        return try {
+            loginWithIdToken(AuthProvider.GOOGLE, idToken)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+
     override suspend fun login(provider: AuthProvider): DataState<String> {
         var idToken: String? = null
 
@@ -30,7 +39,7 @@ class AuthRepositoryImpl @Inject constructor(
             idToken =
                 when (provider) {
                     AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-                    AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
+                    else -> throw Exception("Invalid provider")
                 }
             Napier.d("GetIdToken success, provider: $provider")
         } catch (e: Exception) {
