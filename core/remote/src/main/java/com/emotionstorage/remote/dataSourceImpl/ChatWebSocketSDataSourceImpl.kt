@@ -97,23 +97,29 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
             val token = getAccessTokenUseCase() ?: throw IllegalStateException("토큰이 없어 메세지 전송이 불가능 합니다.")
+
             val messageJson =
                 json.encodeToString(
                     ChatMessageRequestBody.serializer(),
                     ChatMessageMapper.toRemote(chatMessage),
                 )
             Logger.d("sendChatMessage() messageJson: $messageJson")
-            session?.send(
-                headers =
-                    StompSendHeaders(
-                        destination = "/pub/v1/chat",
-                        customHeaders = mapOf("Authorization" to "Bearer $token"),
-                    ),
-                body = FrameBody.Text(messageJson),
-            ) ?: throw IllegalStateException("채팅 세션이 없어 메세지 전송이 불가능 합니다.")
+
+            if (session == null) {
+                throw IllegalStateException("채팅 세션이 없어 메세지 전송이 불가능 합니다.")
+            } else {
+                session!!.send(
+                    headers =
+                        StompSendHeaders(
+                            destination = "/pub/v1/chat",
+                            customHeaders = mapOf("Authorization" to "Bearer $token"),
+                        ),
+                    body = FrameBody.Text(messageJson),
+                )
+            }
             return true
         } catch (e: Exception) {
-            throw Throwable("sendChatMessage() failed", e)
+            throw Throwable(e.message ?: "sendChatMessage() failed", e)
         }
     }
 }
