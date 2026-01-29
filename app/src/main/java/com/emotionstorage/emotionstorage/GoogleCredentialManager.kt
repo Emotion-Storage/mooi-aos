@@ -1,24 +1,26 @@
-package com.emotionstorage.auth.util
+package com.emotionstorage.emotionstorage
 
+import android.app.Activity
 import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetCredentialResponse
-import com.emotionstorage.emotionstorage.BuildConfig
 import com.google.android.libraries.identity.googleid.GetSignInWithGoogleOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 
 class GoogleCredentialManager(
-    private val context: Context,
+    private val activity: Activity,
+    private val coroutineScope: CoroutineScope,
 ) {
     suspend fun getIdToken(): String {
         val deferredResult =
-            CoroutineScope(Dispatchers.Default).async {
+            coroutineScope.async {
                 var credentialRequest: GetCredentialRequest? = null
                 try {
                     // credential request for google login
@@ -38,11 +40,11 @@ class GoogleCredentialManager(
                 var credentialResult: GetCredentialResponse? = null
                 try {
                     // create credential manager & get result
-                    val credentialManager = CredentialManager.create(context)
+                    val credentialManager = CredentialManager.create(activity)
                     credentialResult =
                         credentialManager.getCredential(
                             request = credentialRequest,
-                            context = context,
+                            context = activity,
                         )
                 }catch (e: Exception){
                     throw Exception("get credential result error, ${e.message}", e)

@@ -21,7 +21,6 @@ import com.emotionstorage.ai_chat.ui.AIChatScreen
 import com.emotionstorage.alarm.ui.PushNotificationScreen
 import com.emotionstorage.auth.ui.LoginScreen
 import com.emotionstorage.auth.ui.SignupCompleteScreen
-import com.emotionstorage.auth.util.GoogleCredentialManager
 import com.emotionstorage.daily_report.ui.DailyReportDetailScreen
 import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.domain.model.User.AuthProvider

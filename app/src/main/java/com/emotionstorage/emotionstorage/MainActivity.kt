@@ -6,15 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.emotionstorage.auth.util.GoogleCredentialManager
+import androidx.lifecycle.lifecycleScope
 import com.emotionstorage.emotionstorage.ui.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    val googleCredentialManager = GoogleCredentialManager(this)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -24,7 +23,10 @@ class MainActivity : ComponentActivity() {
             MooiTheme {
                 AppNavHost(
                     getGoogleIdToken = {
-                        googleCredentialManager.getIdToken()
+                        GoogleCredentialManager(
+                            activity = this@MainActivity,
+                            coroutineScope = lifecycleScope,
+                        ).getIdToken()
                     }
                 )
             }
