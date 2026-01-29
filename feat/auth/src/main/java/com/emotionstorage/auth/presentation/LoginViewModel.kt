@@ -7,6 +7,7 @@ import com.emotionstorage.domain.useCase.auth.LoginUseCase
 import com.emotionstorage.presentation.BaseException
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.presentation.BaseViewModel
+import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import javax.inject.Inject
@@ -84,19 +85,19 @@ class LoginViewModel
                         state.copy(isLoading = false)
                     }
                     if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN) {
-                        // invalid social id - show toast
+                        Logger.d("login error - invalid social id")
                         retryCount = 0
                         postSideEffect(LoginSideEffect.SocialLoginError)
                     } else if (code == ErrorCode.NEED_SIGN_UP) {
-                        // need sign up - nav to on boarding
+                        Logger.d("login error - need sign up")
                         retryCount = 0
                         postSideEffect(LoginSideEffect.NeedSignUp(provider, data as String))
                     } else if (code == ErrorCode.LOGIN_CLIENT_ERROR) {
-                        // client login handling error - show login error modal
+                        Logger.d("login error - client error")
                         retryCount++
                         postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
                     } else {
-                        // throw base exception for base viewmodel to handle
+                        Logger.e("login error - unknown error, code: $code, throwable: $throwable")
                         throw BaseException(
                             code = code,
                             message = throwable.message,
