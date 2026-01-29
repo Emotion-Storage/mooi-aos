@@ -229,11 +229,7 @@ class CalendarViewModel @Inject constructor(
                             isNewDailyReport = false,
                         )
                     }
-                    throw BaseException(
-                        message = "Failed to get daily report of date",
-                        code = ErrorCode.UNKNOWN,
-                        cause = throwable,
-                    )
+                    // do not throw exception on daily report api fail
                 },
             )
         }

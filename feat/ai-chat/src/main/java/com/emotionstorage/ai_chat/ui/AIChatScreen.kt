@@ -1,6 +1,6 @@
 package com.emotionstorage.ai_chat.ui
 
-import android.widget.Toast
+import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,46 +47,66 @@ import com.emotionstorage.ai_chat.ui.component.ChatProgressBar
 import com.emotionstorage.ai_chat.ui.component.EmptyChatScreen
 import com.emotionstorage.ai_chat.ui.component.TimeCapsuleCreateTopbarContent
 import com.emotionstorage.ai_chat.ui.modal.AIChatExitModal
-import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateAlert
 import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
+import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.ui.R
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingOverlay
+import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
+import com.emotionstorage.ui.component.modal.TempErrorModal
+import com.emotionstorage.ui.component.toast.AppSnackbarController
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
-import kotlinx.coroutines.delay
+
+private enum class AIModalState { None, TempError, LoginSessionExpired }
 
 @Composable
 fun AIChatScreen(
     roomId: Long,
+    navToBack: () -> Unit,
+    navToTimeCapsuleDetail: (capsuleId: Long) -> Unit,
+    navToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: AIChatViewModel = hiltViewModel(),
-    navToBack: () -> Unit = {},
-    navToTimeCapsuleDetail: (capsuleId: Long) -> Unit = {},
 ) {
+    val context = LocalContext.current
     val state = viewModel.container.stateFlow.collectAsState()
+    val (modalState, setModalState) = remember { mutableStateOf(AIModalState.None) }
+    val snackState = remember { SnackbarHostState() }
+    val snackbarController = remember { AppSnackbarController(snackState) }
+
     LaunchedEffect(roomId) {
         viewModel.onAction(AIChatAction.ConnectChatRoom(roomId))
     }
 
-    val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
-                is AIChatSideEffect.ToastMessage -> {
-                    // toast message for debugging
-                    Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
-                }
-
                 is AIChatSideEffect.CreateTimeCapsuleSuccess -> {
                     navToTimeCapsuleDetail(sideEffect.capsuleId)
                 }
 
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
-                    // TODO : SOMETHING
+                    snackState.showSnackbar(
+                        "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
+                    )
                 }
 
                 is AIChatSideEffect.NavigateBack -> {
                     navToBack()
+                }
+
+                is BaseSideEffect.TemporalError -> {
+                    setModalState(AIModalState.TempError)
+                }
+
+                is BaseSideEffect.SessionExpired -> {
+                    setModalState(AIModalState.LoginSessionExpired)
+                }
+
+                is BaseSideEffect.NetworkError -> {
+                    snackState.showSnackbar(context.getString(R.string.toast_network_error))
                 }
             }
         }
@@ -93,15 +114,38 @@ fun AIChatScreen(
 
     StatelessAIChatScreen(
         modifier = modifier,
+        snackState = snackState,
+        snackbarController = snackbarController,
         state = state.value,
         onAction = viewModel::onAction,
     )
+
+    when (modalState) {
+        AIModalState.None -> {
+            // no modal
+        }
+
+        AIModalState.TempError -> {
+            TempErrorModal(
+                onDismissRequest = { setModalState(AIModalState.None) },
+            )
+        }
+
+        AIModalState.LoginSessionExpired -> {
+            LoginSessionExpiredModal(
+                onDismissRequest = { setModalState(AIModalState.None) },
+                navToLogin = navToLogin,
+            )
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun StatelessAIChatScreen(
     modifier: Modifier = Modifier,
+    snackState: SnackbarHostState = SnackbarHostState(),
+    snackbarController: AppSnackbarController? = null,
     state: AIChatState = AIChatState(),
     onAction: (action: AIChatAction) -> Unit = {},
 ) {
@@ -111,8 +155,6 @@ private fun StatelessAIChatScreen(
 
     val listState = remember { LazyListState() }
 
-    val canMakeTimeCapsule = state.canCreateTimesCapsule
-    var showTimeCapsuleCreateAlert by remember { mutableStateOf(false) }
     var showFinishBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     val density = LocalDensity.current
@@ -156,14 +198,6 @@ private fun StatelessAIChatScreen(
         prevKeyboardVisible = isKeyboardVisible
     }
 
-    LaunchedEffect(canMakeTimeCapsule) {
-        if (canMakeTimeCapsule) {
-            showTimeCapsuleCreateAlert = true
-            delay(3000L)
-            showTimeCapsuleCreateAlert = false
-        }
-    }
-
     AIChatExitModal(
         isModalOpen = isExitModalOpen,
         onDismissRequest = { setExitModalOpen(false) },
@@ -188,7 +222,7 @@ private fun StatelessAIChatScreen(
                     setExitModalOpen(true)
                 },
                 rightComponent = {
-                    if (canMakeTimeCapsule) {
+                    if (state.canCreateTimesCapsule) {
                         TimeCapsuleCreateTopbarContent(
                             onClick = {
                                 showFinishBottomSheet = true
@@ -196,6 +230,13 @@ private fun StatelessAIChatScreen(
                         )
                     }
                 },
+            )
+        },
+        snackbarHost = {
+            AppSnackbarHost(
+                hostState = snackState,
+                gravity = Gravity.TOP,
+                customDataFlow = snackbarController?.currentData,
             )
         },
     ) { innerPadding ->
@@ -215,12 +256,6 @@ private fun StatelessAIChatScreen(
                         Modifier
                             .fillMaxWidth(),
                 )
-
-                if (showTimeCapsuleCreateAlert) {
-                    TimeCapsuleCreateAlert(
-                        modifier = Modifier.padding(start = 13.dp, end = 13.dp, top = 18.dp),
-                    )
-                }
 
                 Box(
                     modifier =
@@ -251,7 +286,7 @@ private fun StatelessAIChatScreen(
                     }
                 }
 
-                if (canMakeTimeCapsule && showFinishBottomSheet) {
+                if (state.canCreateTimesCapsule && showFinishBottomSheet) {
                     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
                     ProposeQuitChatBottomSheet(
                         onDismissRequest = { showFinishBottomSheet = false },

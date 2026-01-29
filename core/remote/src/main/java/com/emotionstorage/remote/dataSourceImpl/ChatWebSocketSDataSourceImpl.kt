@@ -1,6 +1,6 @@
 package com.emotionstorage.remote.dataSourceImpl
 
-import com.emotionstorage.data.dataSource.remote.ChatWSDataSource
+import com.emotionstorage.data.dataSource.remote.ChatWebSocketDataSource
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.useCase.auth.GetAccessTokenUseCase
 import com.emotionstorage.remote.BuildConfig
@@ -11,38 +11,26 @@ import com.orhanobut.logger.Logger
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flow
 import kotlinx.serialization.json.Json
-import okhttp3.OkHttpClient
 import org.hildan.krossbow.stomp.StompClient
 import org.hildan.krossbow.stomp.StompSession
 import org.hildan.krossbow.stomp.frame.FrameBody
 import org.hildan.krossbow.stomp.headers.StompSendHeaders
 import org.hildan.krossbow.stomp.subscribeText
-import org.hildan.krossbow.websocket.okhttp.OkHttpWebSocketClient
-import java.time.Duration
 import java.util.UUID
 import javax.inject.Inject
 
 private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
 
-class ChatWSDataSourceImpl @Inject constructor(
+class ChatWebSocketSDataSourceImpl @Inject constructor(
     private val json: Json,
+    private val client: StompClient,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
-) : ChatWSDataSource {
-    private val client =
-        StompClient(
-            webSocketClient =
-                OkHttpWebSocketClient(
-                    OkHttpClient
-                        .Builder()
-                        .pingInterval(Duration.ofSeconds(10))
-                        .build(),
-                ),
-        )
-
-    private lateinit var session: StompSession
+) : ChatWebSocketDataSource {
+    private var session: StompSession? = null
 
     override suspend fun connectChatRoom(): Boolean {
         try {
@@ -58,7 +46,7 @@ class ChatWSDataSourceImpl @Inject constructor(
 
     override suspend fun disconnectChatRoom(): Boolean {
         try {
-            session.disconnect()
+            session?.disconnect()
             return true
         } catch (e: Exception) {
             throw Throwable("disconnectChatRoom() failed", e)
@@ -68,8 +56,8 @@ class ChatWSDataSourceImpl @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     override suspend fun observeChatMessages(roomId: Long): Flow<ChatMessage> =
         session
-            .subscribeText("/sub/chatroom/$roomId")
-            .flatMapConcat { raw ->
+            ?.subscribeText("/sub/chatroom/$roomId")
+            ?.flatMapConcat { raw ->
                 flow {
                     raw
                         .lines()
@@ -83,7 +71,7 @@ class ChatWSDataSourceImpl @Inject constructor(
 
                                 if (content.isBlank() && !isComplete) return@forEach
                                 if (!isComplete) {
-                                    delay(1500L)
+                                    delay(800L)
                                 }
 
                                 // Server에서 내려오는 값이 없어 UUID로 식별
@@ -104,7 +92,7 @@ class ChatWSDataSourceImpl @Inject constructor(
                             }
                         }
                 }
-            }
+            } ?: emptyFlow()
 
     override suspend fun sendChatMessage(chatMessage: ChatMessage): Boolean {
         try {
@@ -115,14 +103,14 @@ class ChatWSDataSourceImpl @Inject constructor(
                     ChatMessageMapper.toRemote(chatMessage),
                 )
             Logger.d("sendChatMessage() messageJson: $messageJson")
-            session.send(
+            session?.send(
                 headers =
                     StompSendHeaders(
                         destination = "/pub/v1/chat",
                         customHeaders = mapOf("Authorization" to "Bearer $token"),
                     ),
                 body = FrameBody.Text(messageJson),
-            )
+            ) ?: throw IllegalStateException("채팅 세션이 없어 메세지 전송이 불가능 합니다.")
             return true
         } catch (e: Exception) {
             throw Throwable("sendChatMessage() failed", e)
