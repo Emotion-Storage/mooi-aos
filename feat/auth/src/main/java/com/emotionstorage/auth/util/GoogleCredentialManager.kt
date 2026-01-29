@@ -61,7 +61,7 @@ class GoogleCredentialManager(
                         }
                     }
                 } catch (e: Exception) {
-                    throw Exception("Google credential failed", e)
+                    throw Exception(e.message ?: "Google credential failed", e)
                 }
             }
         return deferredResult.await() as String
