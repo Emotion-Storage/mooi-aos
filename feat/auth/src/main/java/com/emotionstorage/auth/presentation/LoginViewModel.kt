@@ -1,12 +1,11 @@
 package com.emotionstorage.auth.presentation
 
-import android.content.Context
-import com.emotionstorage.auth.util.GoogleCredentialManager
+import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.model.User.AuthProvider
 import com.emotionstorage.domain.useCase.auth.GoogleLoginUseCase
 import com.emotionstorage.domain.useCase.auth.HandleLoginUseCase
-import com.emotionstorage.domain.useCase.auth.LoginUseCase
+import com.emotionstorage.domain.useCase.auth.KakaoLoginUseCase
 import com.emotionstorage.presentation.BaseException
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.presentation.BaseViewModel
@@ -20,9 +19,10 @@ data class LoginState(
 )
 
 sealed class LoginAction {
-    data class Login(
-        val context: Context,
-        val provider: AuthProvider,
+    object KakaoLogin : LoginAction()
+
+    data class GoogleLogin(
+        val getGoogleIdToken: suspend () -> String,
     ) : LoginAction()
 
     data class RetryLogin(
@@ -56,7 +56,7 @@ sealed class LoginSideEffect : BaseSideEffect {
 @HiltViewModel
 class LoginViewModel
 @Inject constructor(
-    private val login: LoginUseCase,
+    private val kakaoLogin: KakaoLoginUseCase,
     private val googleLogin: GoogleLoginUseCase,
     private val handleLoginUseCase: HandleLoginUseCase,
 ) : BaseViewModel<LoginState>(
@@ -66,8 +66,12 @@ class LoginViewModel
 
     fun onAction(action: LoginAction) {
         when (action) {
-            is LoginAction.Login -> {
-                handleLogin(action.context, action.provider)
+            is LoginAction.KakaoLogin -> {
+                handleKakaoLogin()
+            }
+
+            is LoginAction.GoogleLogin -> {
+                handleGoogleLogin(action.getGoogleIdToken)
             }
 
             is LoginAction.RetryLogin -> {
@@ -76,39 +80,40 @@ class LoginViewModel
         }
     }
 
-    private fun handleLogin(
-        context: Context,
-        provider: AuthProvider,
-    ) = baseIntent {
+    private fun handleKakaoLogin() = baseIntent {
         reduce {
             state.copy(isLoading = true)
         }
         retryCount = 0
 
-        val result =
-            when (provider) {
-                AuthProvider.KAKAO -> {
-                    login(provider)
-                }
+        handleLoginResult(loginResult = kakaoLogin(), provider = AuthProvider.KAKAO)
+    }
 
-                AuthProvider.GOOGLE -> {
-                    val googleCredentialManager = GoogleCredentialManager(context)
-                    var idToken: String? = null
-                    try {
-                        idToken = googleCredentialManager.getIdToken()
-                    } catch (e: Exception) {
-                        reduce {
-                            state.copy(isLoading = false)
-                        }
-                        Logger.e("google id token issue error: $e")
-                        postSideEffect(LoginSideEffect.SocialTokenIssueError)
-                        return@baseIntent
-                    }
-                    googleLogin(idToken)
-                }
+    private fun handleGoogleLogin(getGoogleIdToken: suspend () -> String) = baseIntent {
+        reduce {
+            state.copy(isLoading = true)
+        }
+        retryCount = 0
+
+        var idToken: String? = null
+        try {
+            idToken = getGoogleIdToken()
+        } catch (e: Exception) {
+            reduce {
+                state.copy(isLoading = false)
             }
+            Logger.e("google id token issue error: $e")
+            postSideEffect(LoginSideEffect.SocialTokenIssueError)
+            return@baseIntent
+        }
+        handleLoginResult(googleLogin(idToken), AuthProvider.GOOGLE)
+    }
 
-        result.handle(onSuccess = {
+    private suspend fun handleLoginResult(
+        loginResult: DataState<String>,
+        provider: AuthProvider,
+    ) = subIntent {
+        loginResult.handle(onSuccess = {
             reduce {
                 state.copy(isLoading = false)
             }

@@ -68,6 +68,7 @@ private sealed class ModalState {
 
 @Composable
 fun LoginScreen(
+    getGoogleIdToken: suspend () -> String,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
@@ -129,6 +130,7 @@ fun LoginScreen(
         snackbarHostState = snackbarHostState,
         state = state.value,
         onAction = viewModel::onAction,
+        getGoogleIdToken = getGoogleIdToken,
     )
 
     when (modalState) {
@@ -175,9 +177,8 @@ private fun StatelessLoginScreen(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
+    getGoogleIdToken: suspend () -> String = { "" },
 ) {
-    val context = LocalContext.current
-
     Scaffold(
         modifier =
             modifier
@@ -272,14 +273,14 @@ private fun StatelessLoginScreen(
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
                     onClick = {
-                        onAction(LoginAction.Login(context, AuthProvider.KAKAO))
+                        onAction(LoginAction.KakaoLogin)
                     },
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
-                        onAction(LoginAction.Login(context, AuthProvider.GOOGLE))
+                        onAction(LoginAction.GoogleLogin(getGoogleIdToken))
                     },
                 )
             }
