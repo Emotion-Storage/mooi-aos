@@ -20,7 +20,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val reissueRemoteDataSource: ReissueRemoteDataSource,
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
 ) : AuthRepository {
-
     override suspend fun googleLogin(idToken: String): DataState<String> {
         // login with id token
         return try {
@@ -29,7 +28,6 @@ class AuthRepositoryImpl @Inject constructor(
             DataState.Error(e)
         }
     }
-
 
     override suspend fun login(provider: AuthProvider): DataState<String> {
         var idToken: String? = null

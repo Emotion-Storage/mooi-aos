@@ -14,7 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 
 class GoogleCredentialManager(
-    private val context: Context
+    private val context: Context,
 ) {
     private val credentialManager: CredentialManager by lazy {
         CredentialManager.create(context)
