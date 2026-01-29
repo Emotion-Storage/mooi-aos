@@ -6,6 +6,11 @@ import com.emotionstorage.domain.common.ErrorCode.REFRESH_TOKEN_EXPIRED
 import com.emotionstorage.domain.common.ErrorCode.REFRESH_TOKEN_NOT_FOUND
 import com.emotionstorage.domain.common.ErrorCode.UNAUTHORIZED
 
+/**
+ * Error Code
+ * - common/remote error: 서버 측 오류 코드, 응답 code와 동일하게 네이밍
+ * - client error: 앱 클라이언트 측 오류 코드, CLIENT_로 시작하는 이름으로 네이밍
+ */
 enum class ErrorCode {
     // common
     UNKNOWN,
