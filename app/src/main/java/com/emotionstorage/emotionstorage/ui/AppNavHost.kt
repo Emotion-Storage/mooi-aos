@@ -219,7 +219,7 @@ internal fun AppNavHost(
         composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
                 getGoogleIdToken = {
-                  googleCredentialManager.getIdToken()
+                    googleCredentialManager.getIdToken()
                 },
                 navToHome = {
                     navController.navigateWithClearStack(AppDestination.Home)

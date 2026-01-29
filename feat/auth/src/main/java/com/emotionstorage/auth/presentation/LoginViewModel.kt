@@ -55,130 +55,132 @@ sealed class LoginSideEffect : BaseSideEffect {
 @OptIn(OrbitExperimental::class)
 @HiltViewModel
 class LoginViewModel
-@Inject constructor(
-    private val kakaoLogin: KakaoLoginUseCase,
-    private val googleLogin: GoogleLoginUseCase,
-    private val handleLoginUseCase: HandleLoginUseCase,
-) : BaseViewModel<LoginState>(
-    LoginState(),
-) {
-    private var retryCount: Int = 0
+    @Inject constructor(
+        private val kakaoLogin: KakaoLoginUseCase,
+        private val googleLogin: GoogleLoginUseCase,
+        private val handleLoginUseCase: HandleLoginUseCase,
+    ) : BaseViewModel<LoginState>(
+            LoginState(),
+        ) {
+        private var retryCount: Int = 0
 
-    fun onAction(action: LoginAction) {
-        when (action) {
-            is LoginAction.KakaoLogin -> {
-                handleKakaoLogin()
-            }
+        fun onAction(action: LoginAction) {
+            when (action) {
+                is LoginAction.KakaoLogin -> {
+                    handleKakaoLogin()
+                }
 
-            is LoginAction.GoogleLogin -> {
-                handleGoogleLogin(action.getGoogleIdToken)
-            }
+                is LoginAction.GoogleLogin -> {
+                    handleGoogleLogin(action.getGoogleIdToken)
+                }
 
-            is LoginAction.RetryLogin -> {
-                handleRetryLogin(action.accessToken)
+                is LoginAction.RetryLogin -> {
+                    handleRetryLogin(action.accessToken)
+                }
             }
         }
-    }
 
-    private fun handleKakaoLogin() = baseIntent {
-        reduce {
-            state.copy(isLoading = true)
-        }
-        retryCount = 0
-
-        handleLoginResult(loginResult = kakaoLogin(), provider = AuthProvider.KAKAO)
-    }
-
-    private fun handleGoogleLogin(getGoogleIdToken: suspend () -> String) = baseIntent {
-        reduce {
-            state.copy(isLoading = true)
-        }
-        retryCount = 0
-
-        var idToken: String? = null
-        try {
-            idToken = getGoogleIdToken()
-        } catch (e: Exception) {
-            reduce {
-                state.copy(isLoading = false)
-            }
-            Logger.e("google id token issue error: $e")
-            postSideEffect(LoginSideEffect.SocialTokenIssueError)
-            return@baseIntent
-        }
-        handleLoginResult(googleLogin(idToken), AuthProvider.GOOGLE)
-    }
-
-    private suspend fun handleLoginResult(
-        loginResult: DataState<String>,
-        provider: AuthProvider,
-    ) = subIntent {
-        loginResult.handle(onSuccess = {
-            reduce {
-                state.copy(isLoading = false)
-            }
-            postSideEffect(LoginSideEffect.LoginSuccess)
-        }, onError = { throwable, code, data ->
-            reduce {
-                state.copy(isLoading = false)
-            }
-            if (code == ErrorCode.CLIENT_ID_TOKEN_ISSUE_FAIL) {
-                Logger.d("login error - social token issue fail, ${throwable.message}")
+        private fun handleKakaoLogin() =
+            baseIntent {
+                reduce {
+                    state.copy(isLoading = true)
+                }
                 retryCount = 0
-                postSideEffect(LoginSideEffect.SocialTokenIssueError)
-            } else if (code == ErrorCode.NEED_SIGN_UP) {
-                Logger.d("login error - need sign up")
+
+                handleLoginResult(loginResult = kakaoLogin(), provider = AuthProvider.KAKAO)
+            }
+
+        private fun handleGoogleLogin(getGoogleIdToken: suspend () -> String) =
+            baseIntent {
+                reduce {
+                    state.copy(isLoading = true)
+                }
                 retryCount = 0
-                postSideEffect(LoginSideEffect.NeedSignUp(provider, data as String))
-            } else if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN) {
-                Logger.d("login error - invalid social id")
-                retryCount = 0
-                postSideEffect(LoginSideEffect.InvalidSocialTokenError)
-            } else if (code == ErrorCode.CLIENT_LOGIN_ERROR) {
-                Logger.d("login error - client error")
-                retryCount++
-                postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
-            } else {
-                Logger.e("login error - unknown error, code: $code, throwable: $throwable")
-                throw BaseException(
-                    code = code,
-                    message = throwable.message,
-                    cause = throwable,
+
+                var idToken: String? = null
+                try {
+                    idToken = getGoogleIdToken()
+                } catch (e: Exception) {
+                    reduce {
+                        state.copy(isLoading = false)
+                    }
+                    Logger.e("google id token issue error: $e")
+                    postSideEffect(LoginSideEffect.SocialTokenIssueError)
+                    return@baseIntent
+                }
+                handleLoginResult(googleLogin(idToken), AuthProvider.GOOGLE)
+            }
+
+        private suspend fun handleLoginResult(
+            loginResult: DataState<String>,
+            provider: AuthProvider,
+        ) = subIntent {
+            loginResult.handle(onSuccess = {
+                reduce {
+                    state.copy(isLoading = false)
+                }
+                postSideEffect(LoginSideEffect.LoginSuccess)
+            }, onError = { throwable, code, data ->
+                reduce {
+                    state.copy(isLoading = false)
+                }
+                if (code == ErrorCode.CLIENT_ID_TOKEN_ISSUE_FAIL) {
+                    Logger.d("login error - social token issue fail, ${throwable.message}")
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.SocialTokenIssueError)
+                } else if (code == ErrorCode.NEED_SIGN_UP) {
+                    Logger.d("login error - need sign up")
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.NeedSignUp(provider, data as String))
+                } else if (code == ErrorCode.INVALID_ID_TOKEN || code == ErrorCode.INVALID_KAKAO_ACCESS_TOKEN) {
+                    Logger.d("login error - invalid social id")
+                    retryCount = 0
+                    postSideEffect(LoginSideEffect.InvalidSocialTokenError)
+                } else if (code == ErrorCode.CLIENT_LOGIN_ERROR) {
+                    Logger.d("login error - client error")
+                    retryCount++
+                    postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
+                } else {
+                    Logger.e("login error - unknown error, code: $code, throwable: $throwable")
+                    throw BaseException(
+                        code = code,
+                        message = throwable.message,
+                        cause = throwable,
+                    )
+                }
+            })
+        }
+
+        private fun handleRetryLogin(accessToken: String) =
+            baseIntent {
+                reduce {
+                    state.copy(isLoading = true)
+                }
+                handleLoginUseCase(accessToken).handle(
+                    onSuccess = {
+                        reduce {
+                            state.copy(isLoading = false)
+                        }
+                        retryCount = 0
+                        postSideEffect(LoginSideEffect.LoginSuccess)
+                    },
+                    onError = { throwable, code, data ->
+                        reduce {
+                            state.copy(isLoading = false)
+                        }
+                        if (retryCount < 3) {
+                            retryCount++
+                            postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
+                        } else {
+                            retryCount = 0
+                            postSideEffect(
+                                LoginSideEffect.InquireLoginError(
+                                    code,
+                                    throwable,
+                                ),
+                            )
+                        }
+                    },
                 )
             }
-        })
     }
-
-    private fun handleRetryLogin(accessToken: String) =
-        baseIntent {
-            reduce {
-                state.copy(isLoading = true)
-            }
-            handleLoginUseCase(accessToken).handle(
-                onSuccess = {
-                    reduce {
-                        state.copy(isLoading = false)
-                    }
-                    retryCount = 0
-                    postSideEffect(LoginSideEffect.LoginSuccess)
-                },
-                onError = { throwable, code, data ->
-                    reduce {
-                        state.copy(isLoading = false)
-                    }
-                    if (retryCount < 3) {
-                        retryCount++
-                        postSideEffect(LoginSideEffect.RetryHandleLogin(data as String))
-                    } else {
-                        retryCount = 0
-                        postSideEffect(
-                            LoginSideEffect.InquireLoginError(
-                                code,
-                                throwable,
-                            ),
-                        )
-                    }
-                },
-            )
-        }
-}
