@@ -58,6 +58,7 @@ import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
+import com.orhanobut.logger.Logger
 
 private enum class AIModalState { None, TempError, LoginSessionExpired }
 
@@ -98,6 +99,7 @@ fun AIChatScreen(
                 }
 
                 is BaseSideEffect.TemporalError -> {
+                    Logger.d("show temp error modal, $sideEffect")
                     setModalState(AIModalState.TempError)
                 }
 

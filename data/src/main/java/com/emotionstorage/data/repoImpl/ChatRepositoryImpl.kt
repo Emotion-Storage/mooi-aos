@@ -8,6 +8,7 @@ import com.emotionstorage.domain.common.DataState
 import com.emotionstorage.domain.model.ChatMessage
 import com.emotionstorage.domain.model.EmotionChatSession
 import com.emotionstorage.domain.repo.ChatRepository
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -64,6 +65,7 @@ class ChatRepositoryImpl
                 val isSent = chatWebSocket.sendChatMessage(chatMessage)
                 DataState.Success(isSent)
             } catch (e: Exception) {
+                Napier.e("sendChatMessage error: $e")
                 DataState.Error(e)
             }
 
