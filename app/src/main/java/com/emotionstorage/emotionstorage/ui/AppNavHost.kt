@@ -141,13 +141,11 @@ internal sealed class AppDestination {
 
 @Composable
 internal fun AppNavHost(
-    activityContext: Context,
+    getGoogleIdToken: suspend () -> String,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel(),
 ) {
-    val googleCredentialManager = GoogleCredentialManager(activityContext)
-
     val introSeen = aiChatIntroViewModel.introSeen.collectAsState()
 
     val bottomAppBar: @Composable () -> Unit = {
@@ -218,9 +216,7 @@ internal fun AppNavHost(
 
         composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
-                getGoogleIdToken = {
-                    googleCredentialManager.getIdToken()
-                },
+                getGoogleIdToken = getGoogleIdToken,
                 navToHome = {
                     navController.navigateWithClearStack(AppDestination.Home)
                 },
