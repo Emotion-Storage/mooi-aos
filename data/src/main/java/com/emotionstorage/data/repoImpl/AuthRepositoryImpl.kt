@@ -29,17 +29,13 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(provider: AuthProvider): DataState<String> {
+    override suspend fun kakaoLogin(): DataState<String> {
         var idToken: String? = null
 
-        // get id token from providers
+        // get id token from provider
         try {
-            idToken =
-                when (provider) {
-                    AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-                    else -> throw Exception("Invalid provider")
-                }
-            Napier.d("GetIdToken success, provider: $provider")
+            idToken = kakaoRemoteDataSource.getIdToken()
+            Napier.d("Get kakao id token success")
         } catch (e: Exception) {
             return DataState.Error(
                 throwable = e,
@@ -48,7 +44,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
         // login with id token
         return try {
-            loginWithIdToken(provider, idToken)
+            loginWithIdToken(AuthProvider.KAKAO, idToken)
         } catch (e: Exception) {
             DataState.Error(e)
         }
