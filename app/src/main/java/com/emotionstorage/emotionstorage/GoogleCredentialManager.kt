@@ -16,16 +16,13 @@ import kotlinx.coroutines.async
 class GoogleCredentialManager(
     private val context: Context,
 ) {
-    private val credentialManager: CredentialManager by lazy {
-        CredentialManager.create(context)
-    }
-
     suspend fun getIdToken(): String {
         val deferredResult =
             CoroutineScope(Dispatchers.Default).async {
+                var credentialRequest: GetCredentialRequest? = null
                 try {
                     // credential request for google login
-                    val credentialRequest =
+                    credentialRequest =
                         GetCredentialRequest
                             .Builder()
                             .addCredentialOption(
@@ -34,14 +31,24 @@ class GoogleCredentialManager(
                                         serverClientId = BuildConfig.GOOGLE_SERVER_CLIENT_ID,
                                     ).build(),
                             ).build()
+                }catch (e: Exception) {
+                    throw Exception("build credential request error, ${e.message}", e)
+                }
 
-                    // get credential result
-                    val credentialResult: GetCredentialResponse =
+                var credentialResult: GetCredentialResponse? = null
+                try {
+                    // create credential manager & get result
+                    val credentialManager = CredentialManager.create(context)
+                    credentialResult =
                         credentialManager.getCredential(
                             request = credentialRequest,
                             context = context,
                         )
+                }catch (e: Exception){
+                    throw Exception("get credential result error, ${e.message}", e)
+                }
 
+                try {
                     // parse credential result
                     credentialResult.credential.apply {
                         if (
@@ -54,14 +61,14 @@ class GoogleCredentialManager(
                                         .createFrom(this.data)
                                 return@async googleIdTokenCredential.idToken
                             } catch (e: GoogleIdTokenParsingException) {
-                                throw Exception("Invalid Google ID token", e)
+                                throw Exception("google ID token parse exception, ${e.message}", e)
                             }
                         } else {
                             throw Exception("Unexpected type of credential")
                         }
                     }
                 } catch (e: Exception) {
-                    throw Exception(e.message ?: "Google credential failed", e)
+                    throw Exception("parse credential result error, ${e.message}", e)
                 }
             }
         return deferredResult.await() as String
