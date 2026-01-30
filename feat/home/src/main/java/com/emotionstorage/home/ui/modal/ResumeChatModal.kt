@@ -27,7 +27,7 @@ import com.emotionstorage.ui.theme.MooiTheme
 fun ResumeChatModal(
     onDismissRequest: () -> Unit = {},
     onResume: () -> Unit = {},
-    onDropAndStartNew: () -> Unit = {},
+    onDeleteChat: () -> Unit = {},
 ) {
     Modal(
         onDismissRequest = onDismissRequest,
@@ -39,7 +39,7 @@ fun ResumeChatModal(
         confirmLabel = "대화를 이어서 진행할게요.",
         onConfirm = onResume,
         dismissLabel = "이전 대화를 그만할래요.",
-        onDismiss = onDropAndStartNew,
+        onDismiss = onDeleteChat,
     )
 }
 
