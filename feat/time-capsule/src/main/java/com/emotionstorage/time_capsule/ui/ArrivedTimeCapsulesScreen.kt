@@ -34,6 +34,7 @@ import com.emotionstorage.time_capsule.presentation.ArrivedTimeCapsulesViewModel
 import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleItem
 import com.emotionstorage.time_capsule.ui.model.TimeCapsuleItemState
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
@@ -198,5 +199,13 @@ private fun StatelessArrivedTimeCapsulesScreen(
                 }
             }
         }
+    }
+}
+
+@PreviewScreenRatios
+@Composable
+private fun ArrivedTimeCapsuleScreenPreview() {
+    MooiTheme {
+        StatelessArrivedTimeCapsulesScreen()
     }
 }

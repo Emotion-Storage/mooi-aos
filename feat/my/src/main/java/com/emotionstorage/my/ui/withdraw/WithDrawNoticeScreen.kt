@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.common.ErrorCode
@@ -24,6 +23,7 @@ import com.emotionstorage.my.presentation.WithdrawNoticeViewModel
 import com.emotionstorage.my.ui.modal.ConfirmWithdrawModal
 import com.emotionstorage.my.ui.modal.InquireWithdrawErrorModal
 import com.emotionstorage.my.ui.modal.WithdrawSuccessModal
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.button.CtaButtonType
@@ -178,7 +178,7 @@ private fun StatelessWithDrawNoticeScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun WithDrawNoticeScreenPreview() {
     MooiTheme {

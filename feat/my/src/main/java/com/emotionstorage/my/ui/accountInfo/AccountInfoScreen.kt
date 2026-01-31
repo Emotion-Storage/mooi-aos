@@ -18,12 +18,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.AccountInfoState
 import com.emotionstorage.my.presentation.AccountInfoViewModel
 import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
@@ -147,7 +147,7 @@ fun StatelessAccountInfoScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 fun PreviewAccountInfoScreenPreview() {
     MooiTheme {

@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.domain.model.SignupForm.GENDER
@@ -30,6 +29,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthEvent
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.GenderBirthViewModel.State
 import com.emotionstorage.tutorial.ui.component.OnBoardingTitle
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.picker.ScrollPicker
 import com.emotionstorage.ui.component.appBar.TopAppBar
@@ -304,7 +304,7 @@ private fun BirthInput(
     }
 }
 
-@PreviewScreenSizes
+@PreviewScreenRatios
 @Composable
 private fun GenderBirthScreenPreview() {
     MooiTheme {

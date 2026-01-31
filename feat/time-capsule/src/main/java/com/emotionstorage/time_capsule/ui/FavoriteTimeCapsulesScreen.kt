@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,6 +46,7 @@ import com.emotionstorage.time_capsule.ui.component.timeCapsuleItem.TimeCapsuleI
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.button.RoundedToggleButton
 import com.emotionstorage.ui.component.loading.LoadingDots
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
@@ -312,7 +312,7 @@ private fun StatelessFavoriteTimeCapsulesScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun FavoriteTimeCapsulesScreenPreview() {
     MooiTheme {
