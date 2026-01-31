@@ -12,10 +12,10 @@ import androidx.compose.ui.unit.dp
 fun rememberAdaptiveHeightDp(
     baseDp: Dp,
     referenceHeightDp: Int = 800,
-    minDp: Dp = 0.dp,
-    maxDp: Dp = 1000.dp,
 ): Dp {
     val config = LocalConfiguration.current
+    val minDp = baseDp * 0.9f
+    val maxDp = baseDp * 1.1f
 
     return remember(config.screenHeightDp, baseDp, referenceHeightDp, minDp, maxDp) {
         val ratio = baseDp.value / referenceHeightDp.toFloat()

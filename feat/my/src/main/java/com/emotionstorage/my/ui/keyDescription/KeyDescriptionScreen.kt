@@ -136,8 +136,6 @@ fun StatelessKeyDescriptionScreen(
                             bottom =
                                 rememberAdaptiveHeightDp(
                                     baseDp = 47.dp,
-                                    minDp = 28.dp,
-                                    maxDp = 60.dp,
                                 ),
                         ),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -163,8 +161,6 @@ fun StatelessKeyDescriptionScreen(
                         Modifier.size(
                             rememberAdaptiveHeightDp(
                                 baseDp = 58.dp,
-                                minDp = 36.dp,
-                                maxDp = 90.dp,
                             ),
                         ),
                 )
@@ -182,10 +178,9 @@ fun StatelessKeyDescriptionScreen(
                                 min =
                                     rememberAdaptiveHeightDp(
                                         baseDp = 48.dp,
-                                        minDp = 28.dp,
-                                        maxDp = 72.dp,
                                     ),
-                            ).weight(1f, fill = true),
+                            )
+                            .weight(1f, fill = true),
                 )
 
                 Text(
@@ -204,8 +199,6 @@ fun StatelessKeyDescriptionScreen(
                         Modifier.size(
                             rememberAdaptiveHeightDp(
                                 baseDp = 93.dp,
-                                minDp = 60.dp,
-                                maxDp = 126.dp,
                             ),
                         ),
                 )

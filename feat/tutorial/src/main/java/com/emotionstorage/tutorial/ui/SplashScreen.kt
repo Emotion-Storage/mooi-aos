@@ -60,16 +60,12 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
         val logoTopPadding =
             rememberAdaptiveHeightDp(
                 baseDp = 316.dp,
-                minDp = 266.dp,
-                maxDp = 366.dp,
             )
 
         val logoWidth =
             com.emotionstorage.ui.util.rememberAdaptiveWidthDp(
                 baseDp = 209.dp,
                 referenceWidthDp = 360,
-                minDp = 170.dp,
-                maxDp = 260.dp,
             )
 
         val logoHeight = logoWidth * (104f / 209f)
