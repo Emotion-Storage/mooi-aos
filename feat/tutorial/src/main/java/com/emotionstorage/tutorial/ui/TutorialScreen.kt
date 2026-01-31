@@ -67,8 +67,6 @@ fun TutorialScreen(
         val safeHeight = (maxHeight - topInset - bottomInset).coerceAtLeast(0.dp)
         val scaleY = (safeHeight / GUIDE_HEIGHT.dp).coerceAtLeast(0f)
 
-        val isTablet = maxWidth >= 600.dp
-
         val topFromStatus = 78.dp.scaledBy(scaleY).clamp(56.dp, 120.dp)
         val bottomFromNav = 41.dp.scaledBy(scaleY).clamp(28.dp, 72.dp)
 
@@ -111,7 +109,6 @@ fun TutorialScreen(
                                     modifier = Modifier.align(Alignment.Center),
                                     resId = R.drawable.graphic_tutorial_greeting,
                                     safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -130,7 +127,6 @@ fun TutorialScreen(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_chat,
                                     safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -149,7 +145,6 @@ fun TutorialScreen(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_timecapsule,
                                     safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -169,7 +164,6 @@ fun TutorialScreen(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_report,
                                     safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
 
                                 CtaButton(
@@ -258,7 +252,6 @@ private fun BoxScope.TutorialGraphicImage(
     modifier: Modifier = Modifier,
     @DrawableRes resId: Int,
     safeHeight: Dp,
-    isTablet: Boolean,
 ) {
     BoxWithConstraints(modifier.fillMaxSize()) {
         Image(
@@ -266,7 +259,7 @@ private fun BoxScope.TutorialGraphicImage(
                 Modifier
                     .sizeIn(
                         maxWidth = Dp.Unspecified,
-                        maxHeight = if (isTablet) safeHeight * 0.83f else safeHeight * 1.1f,
+                        maxHeight = safeHeight * 1.1f,
                     ).fillMaxWidth()
                     .aspectRatio(360f / 752f),
             painter = painterResource(resId),
