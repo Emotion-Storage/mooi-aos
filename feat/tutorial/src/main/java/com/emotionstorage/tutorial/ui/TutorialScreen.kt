@@ -251,7 +251,7 @@ private fun BoxScope.TutorialGraphicImage(
     Box(
         modifier
             .fillMaxSize()
-            .clipToBounds()
+            .clipToBounds(),
     ) {
         Image(
             modifier =
@@ -261,7 +261,7 @@ private fun BoxScope.TutorialGraphicImage(
             painter = painterResource(resId),
             contentScale = ContentScale.Crop,
             contentDescription = null,
-            alignment = Alignment.TopCenter
+            alignment = Alignment.TopCenter,
         )
     }
 }
