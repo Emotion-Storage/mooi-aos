@@ -19,11 +19,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -108,7 +108,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier.align(Alignment.Center),
                                     resId = R.drawable.graphic_tutorial_greeting,
-                                    safeHeight = safeHeight,
                                 )
                             }
                         }
@@ -126,7 +125,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_chat,
-                                    safeHeight = safeHeight,
                                 )
                             }
                         }
@@ -144,7 +142,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_timecapsule,
-                                    safeHeight = safeHeight,
                                 )
                             }
                         }
@@ -163,7 +160,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_report,
-                                    safeHeight = safeHeight,
                                 )
 
                                 CtaButton(
@@ -251,20 +247,21 @@ private fun ColumnScope.TutorialPage(
 private fun BoxScope.TutorialGraphicImage(
     modifier: Modifier = Modifier,
     @DrawableRes resId: Int,
-    safeHeight: Dp,
 ) {
-    BoxWithConstraints(modifier.fillMaxSize()) {
+    Box(
+        modifier
+            .fillMaxSize()
+            .clipToBounds()
+    ) {
         Image(
             modifier =
                 Modifier
-                    .sizeIn(
-                        maxWidth = Dp.Unspecified,
-                        maxHeight = safeHeight * 1.1f,
-                    ).fillMaxWidth()
-                    .aspectRatio(360f / 752f),
+                    .fillMaxWidth()
+                    .aspectRatio(360f / 752f, matchHeightConstraintsFirst = true),
             painter = painterResource(resId),
             contentScale = ContentScale.Crop,
             contentDescription = null,
+            alignment = Alignment.TopCenter
         )
     }
 }
