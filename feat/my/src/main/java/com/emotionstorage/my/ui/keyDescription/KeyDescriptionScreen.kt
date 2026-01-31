@@ -179,8 +179,7 @@ fun StatelessKeyDescriptionScreen(
                                     rememberAdaptiveHeightDp(
                                         baseDp = 48.dp,
                                     ),
-                            )
-                            .weight(1f, fill = true),
+                            ).weight(1f, fill = true),
                 )
 
                 Text(
