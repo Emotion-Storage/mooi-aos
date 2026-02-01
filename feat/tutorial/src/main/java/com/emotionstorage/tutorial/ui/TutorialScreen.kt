@@ -19,11 +19,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -67,8 +67,6 @@ fun TutorialScreen(
         val safeHeight = (maxHeight - topInset - bottomInset).coerceAtLeast(0.dp)
         val scaleY = (safeHeight / GUIDE_HEIGHT.dp).coerceAtLeast(0f)
 
-        val isTablet = maxWidth >= 600.dp
-
         val topFromStatus = 78.dp.scaledBy(scaleY).clamp(56.dp, 120.dp)
         val bottomFromNav = 41.dp.scaledBy(scaleY).clamp(28.dp, 72.dp)
 
@@ -110,8 +108,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier.align(Alignment.Center),
                                     resId = R.drawable.graphic_tutorial_greeting,
-                                    safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -129,8 +125,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_chat,
-                                    safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -148,8 +142,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_timecapsule,
-                                    safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
                             }
                         }
@@ -168,8 +160,6 @@ fun TutorialScreen(
                                 TutorialGraphicImage(
                                     modifier = Modifier,
                                     resId = R.drawable.graphic_tutorial_report,
-                                    safeHeight = safeHeight,
-                                    isTablet = isTablet,
                                 )
 
                                 CtaButton(
@@ -257,21 +247,21 @@ private fun ColumnScope.TutorialPage(
 private fun BoxScope.TutorialGraphicImage(
     modifier: Modifier = Modifier,
     @DrawableRes resId: Int,
-    safeHeight: Dp,
-    isTablet: Boolean,
 ) {
-    BoxWithConstraints(modifier.fillMaxSize()) {
+    Box(
+        modifier
+            .fillMaxSize()
+            .clipToBounds(),
+    ) {
         Image(
             modifier =
                 Modifier
-                    .sizeIn(
-                        maxWidth = Dp.Unspecified,
-                        maxHeight = if (isTablet) safeHeight * 0.83f else safeHeight * 1.1f,
-                    ).fillMaxWidth()
-                    .aspectRatio(360f / 752f),
+                    .fillMaxWidth()
+                    .aspectRatio(360f / 752f, matchHeightConstraintsFirst = true),
             painter = painterResource(resId),
             contentScale = ContentScale.Crop,
             contentDescription = null,
+            alignment = Alignment.TopCenter,
         )
     }
 }

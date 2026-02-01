@@ -31,7 +31,6 @@ import androidx.compose.ui.platform.ClipEntry
 import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -45,6 +44,7 @@ import com.emotionstorage.my.ui.modal.LogoutErrorModal
 import com.emotionstorage.my.ui.myPage.component.MenuSection
 import com.emotionstorage.my.ui.myPage.component.ProfileHeader
 import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
@@ -275,7 +275,7 @@ private fun StatelessMyPageScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun MyPageScreenPreview() {
     MooiTheme {

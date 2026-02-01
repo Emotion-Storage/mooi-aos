@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.content.PrivacyPolicyContent
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.theme.MooiTheme
@@ -35,7 +35,7 @@ fun PrivacyPolicyDetailScreen(navToBack: () -> Unit = {}) {
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun PrivacyPolicyDetailScreenPreview() {
     MooiTheme {

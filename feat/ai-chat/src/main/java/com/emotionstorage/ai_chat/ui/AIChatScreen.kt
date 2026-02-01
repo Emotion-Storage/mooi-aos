@@ -32,7 +32,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.ai_chat.presentation.AIChatAction
@@ -50,6 +49,7 @@ import com.emotionstorage.ai_chat.ui.modal.AIChatExitModal
 import com.emotionstorage.ai_chat.ui.modal.TimeCapsuleCreateLoadingModal
 import com.emotionstorage.presentation.BaseSideEffect
 import com.emotionstorage.ui.R
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.appBar.TopAppBar
 import com.emotionstorage.ui.component.loading.LoadingOverlay
@@ -336,7 +336,7 @@ private fun StatelessAIChatScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun ChatScreenPreview() {
     MooiTheme {

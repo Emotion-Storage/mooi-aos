@@ -25,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.tutorial.R as tutorialR
@@ -34,6 +33,7 @@ import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel
 import com.emotionstorage.tutorial.presentation.onBoarding.NicknameViewModel.State.InputState
 import com.emotionstorage.tutorial.ui.component.OnBoardingTitle
 import com.emotionstorage.tutorial.ui.modal.OnBoardingExitModal
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.text.TextInput
@@ -186,7 +186,7 @@ private fun StatelessNicknameScreen(
     }
 }
 
-@PreviewScreenSizes
+@PreviewScreenRatios
 @Composable
 private fun NicknameScreenPreview() {
     MooiTheme {

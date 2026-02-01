@@ -21,6 +21,7 @@ import com.emotionstorage.tutorial.presentation.SplashViewModel
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.theme.MooiTheme
+import com.emotionstorage.ui.util.rememberAdaptiveHeightDp
 
 @Composable
 fun SplashScreen(
@@ -55,6 +56,20 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
             modifier
                 .fillMaxSize(),
     ) { padding ->
+
+        val logoTopPadding =
+            rememberAdaptiveHeightDp(
+                baseDp = 316.dp,
+            )
+
+        val logoWidth =
+            com.emotionstorage.ui.util.rememberAdaptiveWidthDp(
+                baseDp = 209.dp,
+                referenceWidthDp = 360,
+            )
+
+        val logoHeight = logoWidth * (104f / 209f)
+
         Box(
             modifier =
                 Modifier
@@ -66,9 +81,9 @@ private fun StatelessSplashScreen(modifier: Modifier = Modifier) {
                 modifier =
                     Modifier
                         .align(Alignment.TopCenter)
-                        .padding(top = 316.dp)
-                        .width(209.dp)
-                        .height(104.dp),
+                        .padding(top = logoTopPadding)
+                        .width(logoWidth)
+                        .height(logoHeight),
                 painter = painterResource(R.drawable.graphic_logo),
                 contentDescription = "MOOI",
             )

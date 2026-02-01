@@ -29,13 +29,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.emotionstorage.my.presentation.InputNicknameEvent
 import com.emotionstorage.my.presentation.NicknameChangeViewModel
 import com.emotionstorage.my.presentation.NicknameChangeViewModel.State.InputState
 import com.emotionstorage.presentation.BaseSideEffect
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.component.button.CtaButton
 import com.emotionstorage.ui.component.HideKeyboard
 import com.emotionstorage.ui.component.text.TextInput
@@ -223,7 +223,7 @@ fun NicknameChangeTitle() {
     )
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 fun NicknameChangeScreenPreview() {
     MooiTheme {

@@ -17,8 +17,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.emotionstorage.ui.annotation.PreviewScreenRatios
 import com.emotionstorage.ui.content.PrivacyPolicyContent
 import com.emotionstorage.ui.content.TermsOfServiceContent
 import com.emotionstorage.ui.component.appBar.TopAppBar
@@ -99,7 +99,7 @@ fun TermsAndPrivacyScreen(
     }
 }
 
-@Preview
+@PreviewScreenRatios
 @Composable
 private fun TermsAndPrivacyScreenPreview() {
     MooiTheme {
