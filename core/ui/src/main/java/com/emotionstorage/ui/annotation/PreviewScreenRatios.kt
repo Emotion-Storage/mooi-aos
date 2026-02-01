@@ -19,4 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 @Preview(name = "Galaxy S+ Series (384x784)", widthDp = 384, heightDp = 784, showBackground = true)
 @Preview(name = "Design Base + Galaxy S Series (360x752dp)", widthDp = 360, heightDp = 752, showBackground = true)
 @Preview(name = "Galaxy S Series(360x732)", widthDp = 360, heightDp = 732, showBackground = true)
+@Preview(name = "Galaxy Z Flip4 (412x1004)", widthDp = 412, heightDp = 1004, showBackground = true)
+@Preview(name = "Galaxy Z Fold4 (691x654)", widthDp = 691, heightDp = 654, showBackground = true)
+@Preview(name = "Galaxy Z Fold4 Folded(345x746)", widthDp = 345, heightDp = 746, showBackground = true)
+@Preview(name = "Galaxy Z Fold5 (691x703)", widthDp = 691, heightDp = 703, showBackground = true)
+@Preview(name = "Galaxy Z Fold5 Folded(354x794)", widthDp = 354, heightDp = 794, showBackground = true)
 annotation class PreviewScreenRatios
