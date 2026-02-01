@@ -67,6 +67,7 @@ private sealed class ModalState {
 
 @Composable
 fun LoginScreen(
+    getGoogleIdToken: suspend () -> String,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel(),
     navToHome: () -> Unit = {},
@@ -90,7 +91,7 @@ fun LoginScreen(
                 }
 
                 is LoginSideEffect.SocialTokenIssueError -> {
-                    snackbarHostState.showSnackbar("소셜 로그인 실패")
+                    snackbarHostState.showSnackbar("소셜 로그인 토큰 발급 실패")
                 }
 
                 is LoginSideEffect.InvalidSocialTokenError -> {
@@ -128,6 +129,7 @@ fun LoginScreen(
         snackbarHostState = snackbarHostState,
         state = state.value,
         onAction = viewModel::onAction,
+        getGoogleIdToken = getGoogleIdToken,
     )
 
     when (modalState) {
@@ -174,6 +176,7 @@ private fun StatelessLoginScreen(
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
     state: LoginState = LoginState(),
     onAction: (LoginAction) -> Unit = {},
+    getGoogleIdToken: suspend () -> String = { "" },
 ) {
     Scaffold(
         modifier =
@@ -269,14 +272,14 @@ private fun StatelessLoginScreen(
                 SocialLoginButton(
                     provider = AuthProvider.KAKAO,
                     onClick = {
-                        onAction(LoginAction.Login(AuthProvider.KAKAO))
+                        onAction(LoginAction.KakaoLogin)
                     },
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 SocialLoginButton(
                     provider = AuthProvider.GOOGLE,
                     onClick = {
-                        onAction(LoginAction.Login(AuthProvider.GOOGLE))
+                        onAction(LoginAction.GoogleLogin(getGoogleIdToken))
                     },
                 )
             }

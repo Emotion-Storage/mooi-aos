@@ -1,10 +1,9 @@
 import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
-fun getLocalProperty(propertyKey: String): String {
-    return System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
+fun getLocalProperty(propertyKey: String) =
+    System.getenv(propertyKey) ?: gradleLocalProperties(rootDir, providers).getProperty(
         propertyKey,
     )
-}
 
 plugins {
     id("com.emotionstorage.convention.android.application")
@@ -34,6 +33,12 @@ android {
             "String",
             "KAKAO_NATIVE_APP_KEY",
             getLocalProperty("KAKAO_NATIVE_APP_KEY"),
+        )
+
+        buildConfigField(
+            "String",
+            "GOOGLE_SERVER_CLIENT_ID",
+            getLocalProperty("GOOGLE_SERVER_CLIENT_ID"),
         )
     }
 
@@ -87,4 +92,5 @@ dependencies {
     implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.kakao.sdk.user)
+    implementation(libs.bundles.credentials)
 }
