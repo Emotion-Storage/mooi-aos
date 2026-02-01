@@ -185,8 +185,8 @@ private fun StatelessDailyReportDetailScreen(
             Text(
                 modifier = Modifier.fillMaxWidth(),
                 text =
-                    "하루의 대화를 바탕으로 작성된 일일리포트는\n" +
-                        "당일 마지막 감정 대화 기준 24시간 후 업데이트 됩니다.",
+                    "일일리포트는 하루의 감정 대화를 한눈에 정리해줘요.\n" +
+                        "감정 대화가 쌓일수록 하루의 흐름이 선명해져요.",
                 style = MooiTheme.typography.caption7.copy(fontWeight = FontWeight.Normal, lineHeight = 22.sp),
                 color = MooiTheme.colorScheme.gray400,
                 textAlign = TextAlign.Center,
