@@ -5,7 +5,9 @@ import com.emotionstorage.domain.model.SignupForm
 import com.emotionstorage.domain.model.User
 
 interface AuthRepository {
-    suspend fun login(provider: User.AuthProvider): DataState<String>
+    suspend fun googleLogin(idToken: String): DataState<String>
+
+    suspend fun kakaoLogin(): DataState<String>
 
     suspend fun loginWithIdToken(
         provider: User.AuthProvider,

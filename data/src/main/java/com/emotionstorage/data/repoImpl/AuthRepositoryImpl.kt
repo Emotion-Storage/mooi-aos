@@ -2,7 +2,6 @@ package com.emotionstorage.data.repoImpl
 
 import com.emotionstorage.data.dataSource.local.SessionLocalDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
-import com.emotionstorage.data.dataSource.remote.GoogleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.KakaoRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ReissueRemoteDataSource
 import com.emotionstorage.data.model.SessionEntity
@@ -20,19 +19,23 @@ class AuthRepositoryImpl @Inject constructor(
     private val sessionLocalDataSource: SessionLocalDataSource,
     private val reissueRemoteDataSource: ReissueRemoteDataSource,
     private val kakaoRemoteDataSource: KakaoRemoteDataSource,
-    private val googleRemoteDataSource: GoogleRemoteDataSource,
 ) : AuthRepository {
-    override suspend fun login(provider: AuthProvider): DataState<String> {
+    override suspend fun googleLogin(idToken: String): DataState<String> {
+        // login with id token
+        return try {
+            loginWithIdToken(AuthProvider.GOOGLE, idToken)
+        } catch (e: Exception) {
+            DataState.Error(e)
+        }
+    }
+
+    override suspend fun kakaoLogin(): DataState<String> {
         var idToken: String? = null
 
-        // get id token from providers
+        // get id token from provider
         try {
-            idToken =
-                when (provider) {
-                    AuthProvider.KAKAO -> kakaoRemoteDataSource.getIdToken()
-                    AuthProvider.GOOGLE -> googleRemoteDataSource.getIdToken()
-                }
-            Napier.d("GetIdToken success, provider: $provider")
+            idToken = kakaoRemoteDataSource.getIdToken()
+            Napier.d("Get kakao id token success")
         } catch (e: Exception) {
             return DataState.Error(
                 throwable = e,
@@ -41,7 +44,7 @@ class AuthRepositoryImpl @Inject constructor(
         }
         // login with id token
         return try {
-            loginWithIdToken(provider, idToken)
+            loginWithIdToken(AuthProvider.KAKAO, idToken)
         } catch (e: Exception) {
             DataState.Error(e)
         }

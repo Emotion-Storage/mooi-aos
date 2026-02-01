@@ -139,6 +139,7 @@ internal sealed class AppDestination {
 
 @Composable
 internal fun AppNavHost(
+    getGoogleIdToken: suspend () -> String,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     aiChatIntroViewModel: AiChatIntroViewModel = hiltViewModel(),
@@ -213,6 +214,7 @@ internal fun AppNavHost(
 
         composable<AppDestination.Login> { backstackEntry ->
             LoginScreen(
+                getGoogleIdToken = getGoogleIdToken,
                 navToHome = {
                     navController.navigateWithClearStack(AppDestination.Home)
                 },

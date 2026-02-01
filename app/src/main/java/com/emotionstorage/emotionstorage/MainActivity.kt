@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.lifecycleScope
 import com.emotionstorage.emotionstorage.ui.AppNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import com.emotionstorage.ui.theme.MooiTheme
@@ -19,7 +20,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge(statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT))
         setContent {
             MooiTheme {
-                AppNavHost()
+                AppNavHost(
+                    getGoogleIdToken = {
+                        GoogleCredentialManager(
+                            activity = this@MainActivity,
+                            coroutineScope = lifecycleScope,
+                        ).getIdToken()
+                    },
+                )
             }
         }
     }
