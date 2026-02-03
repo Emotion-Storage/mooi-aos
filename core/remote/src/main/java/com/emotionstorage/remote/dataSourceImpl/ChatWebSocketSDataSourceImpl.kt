@@ -29,7 +29,7 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWebSocketDataSource {
     private val wsUrl =
-        "ws://" + (if (BuildConfig.DEBUG) BuildConfig.MOOI_DEV_SERVER_URL else BuildConfig.MOOI_PROD_SERVER_URL)+"ws"
+        "ws://" + (if (BuildConfig.DEBUG) BuildConfig.MOOI_DEV_SERVER_URL else BuildConfig.MOOI_PROD_SERVER_URL) + "ws"
     private var session: StompSession? = null
 
     override suspend fun connectChatRoom(): Boolean {
