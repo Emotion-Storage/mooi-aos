@@ -23,13 +23,13 @@ import org.hildan.krossbow.stomp.subscribeText
 import java.util.UUID
 import javax.inject.Inject
 
-private const val WS_URL = "ws://${BuildConfig.MOOI_DEV_SERVER_URL}ws"
-
 class ChatWebSocketSDataSourceImpl @Inject constructor(
     private val json: Json,
     private val client: StompClient,
     private val getAccessTokenUseCase: GetAccessTokenUseCase,
 ) : ChatWebSocketDataSource {
+    private val wsUrl =
+        "ws://" + (if (BuildConfig.DEBUG) BuildConfig.MOOI_DEV_SERVER_URL else BuildConfig.MOOI_PROD_SERVER_URL)+"ws"
     private var session: StompSession? = null
 
     override suspend fun connectChatRoom(): Boolean {
@@ -37,7 +37,7 @@ class ChatWebSocketSDataSourceImpl @Inject constructor(
             val token = getAccessTokenUseCase() ?: throw IllegalStateException("토큰이 없어 연결이 불가능합니다.")
             val connectHeaders = mapOf("Authorization" to "Bearer $token")
 
-            session = client.connect(url = WS_URL, customStompConnectHeaders = connectHeaders)
+            session = client.connect(url = wsUrl, customStompConnectHeaders = connectHeaders)
             return true
         } catch (e: Exception) {
             throw Throwable("connectChatRoom() failed", e)
