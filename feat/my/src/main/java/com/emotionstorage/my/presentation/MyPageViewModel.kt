@@ -17,7 +17,7 @@ data class MyPageState(
     val keyCount: Int = 0,
     val replyEmail: String = BuildConfig.MOOI_REPLY_EMAIL,
     // todo: 버전명 동적으로 표시되어야 함
-    val versionName: String = if(BuildConfig.DEBUG) "0.0.0" else "1.0.0",
+    val versionName: String = if (BuildConfig.DEBUG) "0.0.0" else "1.0.0",
     val isLoading: Boolean = false,
 )
 
