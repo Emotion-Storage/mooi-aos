@@ -38,15 +38,6 @@ private object TimeCapsuleCalendarDesignToken {
     val dateWidth = 30
 }
 
-private val DUMMY_TIME_CAPSULE_DATES =
-    (1..31)
-        .toList()
-        .filter {
-            it % 3 == 0
-        }.map {
-            LocalDate.of(LocalDate.now().year, LocalDate.now().month, it)
-        }
-
 @Composable
 fun TimeCapsuleCalendar(
     modifier: Modifier = Modifier,
@@ -200,7 +191,7 @@ private fun TimeCapsuleCalendarPreview() {
                 modifier = Modifier.align(Alignment.TopCenter),
                 calendarYearMonth = calendarYearMonth,
                 onCalendarYearMonthSelect = setCalendarYearMonth,
-                timeCapsuleDates = DUMMY_TIME_CAPSULE_DATES,
+                timeCapsuleDates = emptyList(),
             )
         }
     }
