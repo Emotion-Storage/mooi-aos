@@ -17,6 +17,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -33,6 +34,7 @@ private const val SNACKBAR_VERTICAL_PADDING = 30
 data class CustomSnackbarData(
     val message: String,
     val iconResId: Int?,
+    val yOffset: Dp,
 )
 
 class AppSnackbarController(
@@ -44,8 +46,9 @@ class AppSnackbarController(
     suspend fun showSnackbar(
         message: String,
         iconResId: Int? = null,
+        yOffset: Dp = 0.dp,
     ) {
-        _currentData.emit(CustomSnackbarData(message, iconResId))
+        _currentData.emit(CustomSnackbarData(message, iconResId, yOffset))
         snackbarHostState.showSnackbar(message)
     }
 }
@@ -57,10 +60,11 @@ fun AppSnackbarHost(
     customDataFlow: StateFlow<CustomSnackbarData?>? = null,
     gravity: Int = Gravity.BOTTOM,
     paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
-    hostContent: @Composable (message: String, iconId: Int?) -> Unit = { message, iconId ->
+    hostContent: @Composable (message: String, iconId: Int?, yOffset: Dp) -> Unit = { message, iconId, yOffset ->
         Toast(
             message = message,
             iconId = iconId,
+            yOffSet = yOffset,
         )
     },
 ) {
@@ -129,7 +133,11 @@ fun AppSnackbarHost(
                     backgroundContent = {},
                 ) {
                     SnackbarHost(hostState = hostState) {
-                        hostContent(it.visuals.message, customData?.value?.iconResId)
+                        hostContent(
+                            it.visuals.message,
+                            customData?.value?.iconResId,
+                            customData?.value?.yOffset ?: 0.dp
+                        )
                     }
                 }
             }

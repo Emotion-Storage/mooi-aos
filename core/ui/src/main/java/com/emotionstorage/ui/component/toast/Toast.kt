@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -19,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.emotionstorage.ui.theme.MooiTheme
 
@@ -27,15 +30,18 @@ fun Toast(
     message: String,
     modifier: Modifier = Modifier,
     iconId: Int? = null,
-    paddingValues: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 13.dp),
+    yOffSet: Dp = 0.dp,
+    innerPadding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 13.dp),
 ) {
     Row(
         modifier =
             modifier
+                .offset(y = yOffSet)
                 .background(
                     Color(0xFF0E0C12).copy(alpha = 0.8f),
                     RoundedCornerShape(100),
-                ).padding(paddingValues),
+                )
+                .padding(innerPadding),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {
@@ -65,13 +71,15 @@ private fun ToastPreview() {
             modifier =
                 Modifier
                     .background(MooiTheme.colorScheme.backgroundDefault)
-                    .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+                    .fillMaxSize()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Toast(
-                "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
-                paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
+                yOffSet = (40).dp,
+                message =
+                    "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
+                innerPadding = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
             )
         }
     }

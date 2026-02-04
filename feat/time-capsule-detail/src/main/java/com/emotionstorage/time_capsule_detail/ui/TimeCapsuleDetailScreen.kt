@@ -394,11 +394,11 @@ private fun StatelessTimeCapsuleDetailScreen(
                     hostState = snackState,
                     customDataFlow = snackbarController?.currentData,
                     gravity = Gravity.BOTTOM,
-                ) { message, iconId ->
+                ) { message, iconId, _ ->
                     Toast(
                         message = message,
                         iconId = iconId,
-                        paddingValues = PaddingValues(horizontal = 25.dp, vertical = 16.dp),
+                        innerPadding = PaddingValues(horizontal = 25.dp, vertical = 16.dp),
                     )
                 }
             },

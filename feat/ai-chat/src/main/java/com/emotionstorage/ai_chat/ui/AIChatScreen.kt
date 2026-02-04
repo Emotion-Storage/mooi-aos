@@ -89,8 +89,9 @@ fun AIChatScreen(
                 }
 
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
-                    snackState.showSnackbar(
-                        "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
+                    snackbarController.showSnackbar(
+                        message = "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
+                        yOffset = 85.dp,
                     )
                 }
 

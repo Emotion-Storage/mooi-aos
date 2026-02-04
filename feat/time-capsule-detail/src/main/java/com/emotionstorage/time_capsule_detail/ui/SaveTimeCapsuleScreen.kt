@@ -223,11 +223,11 @@ private fun StatelessSaveTimeCapsuleScreen(
             AppSnackbarHost(
                 hostState = snackbarState,
                 gravity = Gravity.TOP,
-            ) { message, iconId ->
+            ) { message, iconId, _->
                 Toast(
                     message = message,
                     iconId = iconId,
-                    paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
+                    innerPadding = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
                 )
             }
         },
