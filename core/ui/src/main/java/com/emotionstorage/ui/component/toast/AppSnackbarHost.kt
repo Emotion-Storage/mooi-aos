@@ -129,7 +129,10 @@ fun AppSnackbarHost(
                     backgroundContent = {},
                 ) {
                     SnackbarHost(hostState = hostState) {
-                        hostContent(it.visuals.message, customData?.value?.iconResId)
+                        hostContent(
+                            it.visuals.message,
+                            customData?.value?.iconResId,
+                        )
                     }
                 }
             }

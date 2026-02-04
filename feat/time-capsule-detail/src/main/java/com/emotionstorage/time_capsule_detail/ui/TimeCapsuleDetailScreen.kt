@@ -398,7 +398,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     Toast(
                         message = message,
                         iconId = iconId,
-                        paddingValues = PaddingValues(horizontal = 25.dp, vertical = 16.dp),
+                        innerPadding = PaddingValues(horizontal = 25.dp, vertical = 16.dp),
                     )
                 }
             },

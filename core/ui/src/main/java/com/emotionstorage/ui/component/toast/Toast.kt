@@ -3,10 +3,12 @@ package com.emotionstorage.ui.component.toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -27,33 +29,36 @@ fun Toast(
     message: String,
     modifier: Modifier = Modifier,
     iconId: Int? = null,
-    paddingValues: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 13.dp),
+    outerPaddingValues: PaddingValues = PaddingValues(0.dp),
+    innerPadding: PaddingValues = PaddingValues(horizontal = 20.dp, vertical = 13.dp),
 ) {
-    Row(
-        modifier =
-            modifier
-                .background(
-                    Color(0xFF0E0C12).copy(alpha = 0.8f),
-                    RoundedCornerShape(100),
-                ).padding(paddingValues),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        if (iconId != null) {
-            Image(
-                modifier = Modifier.size(18.dp),
-                painter = painterResource(iconId),
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.width(9.dp))
-        }
+    Box(modifier = modifier.padding(outerPaddingValues)) {
+        Row(
+            modifier =
+                Modifier
+                    .background(
+                        Color(0xFF0E0C12).copy(alpha = 0.8f),
+                        RoundedCornerShape(100),
+                    ).padding(innerPadding),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            if (iconId != null) {
+                Image(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(iconId),
+                    contentDescription = null,
+                )
+                Spacer(modifier = Modifier.width(9.dp))
+            }
 
-        Text(
-            text = message,
-            style = MooiTheme.typography.body7,
-            color = Color.White,
-            textAlign = TextAlign.Center,
-        )
+            Text(
+                text = message,
+                style = MooiTheme.typography.body7,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+            )
+        }
     }
 }
 
@@ -65,13 +70,15 @@ private fun ToastPreview() {
             modifier =
                 Modifier
                     .background(MooiTheme.colorScheme.backgroundDefault)
-                    .padding(10.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterVertically),
+                    .fillMaxSize()
+                    .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Toast(
-                "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
-                paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
+                message =
+                    "아직 보관을 확정하지 않은 감정이에요.\n오늘을 기준으로 타임캡슐\n회고 날짜를 지정해주세요.",
+                outerPaddingValues = PaddingValues(top = 85.dp),
+                innerPadding = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
             )
         }
     }

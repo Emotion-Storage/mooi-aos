@@ -227,7 +227,7 @@ private fun StatelessSaveTimeCapsuleScreen(
                 Toast(
                     message = message,
                     iconId = iconId,
-                    paddingValues = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
+                    innerPadding = PaddingValues(horizontal = 25.dp, vertical = 13.dp),
                 )
             }
         },

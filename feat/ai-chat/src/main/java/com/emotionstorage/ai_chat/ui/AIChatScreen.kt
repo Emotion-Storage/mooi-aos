@@ -4,6 +4,7 @@ import android.view.Gravity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -57,6 +58,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarController
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.theme.MooiTheme
 import com.orhanobut.logger.Logger
 
@@ -89,8 +91,8 @@ fun AIChatScreen(
                 }
 
                 is AIChatSideEffect.CanCreateTimesCapsule -> {
-                    snackState.showSnackbar(
-                        "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
+                    snackbarController.showSnackbar(
+                        message = "감정이 충분히 수집되어, 타임캡슐을 만들 수 있어요.",
                     )
                 }
 
@@ -239,7 +241,14 @@ private fun StatelessAIChatScreen(
                 hostState = snackState,
                 gravity = Gravity.TOP,
                 customDataFlow = snackbarController?.currentData,
-            )
+            ) { message, iconId ->
+                Toast(
+                    message = message,
+                    iconId = iconId,
+                    // padding to prevent top overlapping
+                    outerPaddingValues = PaddingValues(top = 60.dp),
+                )
+            }
         },
     ) { innerPadding ->
         HideKeyboard {
