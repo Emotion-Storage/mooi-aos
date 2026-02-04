@@ -110,6 +110,10 @@ class AIChatViewModel @Inject constructor(
 
     private fun handleConnectChatRoom(roomId: Long) =
         baseIntent {
+            // todo: delete toast test code
+            postSideEffect(AIChatSideEffect.CanCreateTimesCapsule)
+
+
             // update room id
             reduce {
                 state.copy(roomId = roomId)

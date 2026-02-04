@@ -34,7 +34,6 @@ private const val SNACKBAR_VERTICAL_PADDING = 30
 data class CustomSnackbarData(
     val message: String,
     val iconResId: Int?,
-    val yOffset: Dp,
 )
 
 class AppSnackbarController(
@@ -46,9 +45,8 @@ class AppSnackbarController(
     suspend fun showSnackbar(
         message: String,
         iconResId: Int? = null,
-        yOffset: Dp = 0.dp,
     ) {
-        _currentData.emit(CustomSnackbarData(message, iconResId, yOffset))
+        _currentData.emit(CustomSnackbarData(message, iconResId))
         snackbarHostState.showSnackbar(message)
     }
 }
@@ -60,11 +58,10 @@ fun AppSnackbarHost(
     customDataFlow: StateFlow<CustomSnackbarData?>? = null,
     gravity: Int = Gravity.BOTTOM,
     paddingValues: PaddingValues = PaddingValues(vertical = SNACKBAR_VERTICAL_PADDING.dp),
-    hostContent: @Composable (message: String, iconId: Int?, yOffset: Dp) -> Unit = { message, iconId, yOffset ->
+    hostContent: @Composable (message: String, iconId: Int?) -> Unit = { message, iconId ->
         Toast(
             message = message,
             iconId = iconId,
-            yOffSet = yOffset,
         )
     },
 ) {
@@ -136,7 +133,6 @@ fun AppSnackbarHost(
                         hostContent(
                             it.visuals.message,
                             customData?.value?.iconResId,
-                            customData?.value?.yOffset ?: 0.dp
                         )
                     }
                 }

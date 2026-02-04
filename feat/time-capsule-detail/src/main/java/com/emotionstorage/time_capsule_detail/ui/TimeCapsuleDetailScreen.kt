@@ -394,7 +394,7 @@ private fun StatelessTimeCapsuleDetailScreen(
                     hostState = snackState,
                     customDataFlow = snackbarController?.currentData,
                     gravity = Gravity.BOTTOM,
-                ) { message, iconId, _ ->
+                ) { message, iconId ->
                     Toast(
                         message = message,
                         iconId = iconId,
