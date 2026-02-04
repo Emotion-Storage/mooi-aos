@@ -11,6 +11,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
             MOOI_DEV_SERVER_URL: ${{ secrets.MOOI_DEV_SERVER_URL }}
+            MOOI_PROD_SERVER_URL: ${{ secrets.MOOI_PROD_SERVER_URL }}
             MOOI_REPLY_EMAIL: ${{ secrets.MOOI_REPLY_EMAIL }}
             GOOGLE_SERVER_CLIENT_ID: ${{ secrets.GOOGLE_SERVER_CLIENT_ID }}
             KAKAO_NATIVE_APP_KEY: ${{ secrets.KAKAO_NATIVE_APP_KEY }}
@@ -20,6 +21,13 @@ jobs:
 
             -   name: Decode debug keystore
                 run: echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > debug.keystore
+
+            -   name: Set signing env vars
+                run: |
+                    echo "RELEASE_KEYSTORE_PATH=$GITHUB_WORKSPACE/release.keystore" >> $GITHUB_ENV
+                    echo "RELEASE_KEYSTORE_PASSWORD=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+                    echo "RELEASE_KEY_ALIAS=${{ secrets.RELEASE_KEY_ALIAS }}" >> $GITHUB_ENV
+                    echo "RELEASE_KEY_PASSWORD=${{ secrets.RELEASE_KEY_PASSWORD }}" >> $GITHUB_ENV
 
             -   name: Create Google Services JSON File
                 env:

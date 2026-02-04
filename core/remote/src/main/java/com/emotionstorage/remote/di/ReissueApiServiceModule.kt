@@ -19,7 +19,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ReissueApiServiceModule {
-    private const val BASE_URL = "http://${BuildConfig.MOOI_DEV_SERVER_URL}"
+    private val BASE_URL =
+        "http://" + (if (BuildConfig.DEBUG) BuildConfig.MOOI_DEV_SERVER_URL else BuildConfig.MOOI_PROD_SERVER_URL)
     private const val TIMEOUT = 20L
 
     /**

@@ -17,7 +17,7 @@ android {
     defaultConfig {
         applicationId = "com.emotionstorage.emotionstorage"
         versionCode = 4
-        versionName = "0.0.1"
+        versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -49,6 +49,13 @@ android {
             keyAlias = "androiddebugkey"
             keyPassword = "android"
         }
+
+        create("release") {
+            storeFile = file(System.getenv("RELEASE_KEYSTORE_PATH"))
+            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("RELEASE_KEY_ALIAS")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
+        }
     }
 
     buildTypes {
@@ -57,6 +64,7 @@ android {
         }
 
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

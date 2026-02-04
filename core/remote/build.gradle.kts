@@ -22,6 +22,11 @@ android {
             "MOOI_DEV_SERVER_URL",
             getLocalProperty("MOOI_DEV_SERVER_URL"),
         )
+        buildConfigField(
+            "String",
+            "MOOI_PROD_SERVER_URL",
+            getLocalProperty("MOOI_PROD_SERVER_URL"),
+        )
     }
 
     buildTypes {
