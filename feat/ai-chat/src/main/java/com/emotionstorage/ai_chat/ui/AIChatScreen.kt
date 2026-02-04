@@ -246,7 +246,7 @@ private fun StatelessAIChatScreen(
                     message = message,
                     iconId = iconId,
                     // padding to prevent top overlapping
-                    outerPaddingValues = PaddingValues(top = 85.dp),
+                    outerPaddingValues = PaddingValues(top = 60.dp),
                 )
             }
         },
