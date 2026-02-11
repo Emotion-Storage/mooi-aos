@@ -51,18 +51,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun BoxScope.DebugTag(){
+private fun BoxScope.DebugTag()  {
     Box(
-        modifier = Modifier
-            .align(Alignment.TopCenter)
-            .zIndex(100f)
-            .background(MooiTheme.colorScheme.error)
-            .padding(2.dp),
+        modifier =
+            Modifier
+                .align(Alignment.TopCenter)
+                .zIndex(100f)
+                .background(MooiTheme.colorScheme.error)
+                .padding(2.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = "Debug",
-            color = androidx.compose.ui.graphics.Color.White,
+            color =
+                androidx
+                    .compose
+                    .ui
+                    .graphics
+                    .Color
+                    .White,
         )
     }
 }
