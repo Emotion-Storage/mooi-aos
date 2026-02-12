@@ -388,7 +388,7 @@ private fun StatelessHomeScreen(
                         setSnackbarGravity(Gravity.BOTTOM)
                         coroutineScope.launch {
                             snackbarState.showSnackbar(
-                                "하루에 최대 10번까지 감정대화를 나눌 수 있어요.\n" +
+                                "하루에 최대 ${state.ticketLimit}번까지 감정대화를 나눌 수 있어요.\n" +
                                     "자정 이후에는 횟수가 다시 충전돼요.",
                             )
                         }
