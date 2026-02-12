@@ -29,7 +29,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -46,8 +45,6 @@ import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.domain.model.ChatEntry
-import com.emotionstorage.domain.model.TimeCapsule
-import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.home.presentation.AttendanceAction
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
@@ -68,7 +65,6 @@ import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 
 private sealed class ModalState {
     object None : ModalState()
@@ -364,7 +360,6 @@ private fun StatelessHomeScreen(
 
                 StartChatButton(
                     ticketCount = state.ticketCount,
-
                     isChatTempSaved = state.isChatTempSaved,
                     onChatStart = {
                         onAction(HomeAction.EnterChat)
@@ -376,7 +371,7 @@ private fun StatelessHomeScreen(
                         coroutineScope.launch {
                             snackbarState.showSnackbar(
                                 "하루에 최대 10번까지 감정대화를 나눌 수 있어요.\n" +
-                                    "자정 이후에는 횟수가 다시 충전돼요."
+                                    "자정 이후에는 횟수가 다시 충전돼요.",
                             )
                         }
                     },
@@ -401,7 +396,7 @@ private fun StartChatButton(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
         // chat start/resume button
         CtaButton(
@@ -409,8 +404,7 @@ private fun StartChatButton(
                 modifier
                     .width(
                         if (canStartChat) 198.dp else 197.dp,
-                    )
-                    .height(
+                    ).height(
                         if (canStartChat) 54.dp else 65.dp,
                     ),
             enabled = canStartChat,
@@ -491,9 +485,10 @@ private fun StartChatButton(
             }
         } else {
             Row(
-                modifier = Modifier.clickable(
-                    onClick = onTicketInfoClick,
-                ),
+                modifier =
+                    Modifier.clickable(
+                        onClick = onTicketInfoClick,
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
@@ -509,14 +504,15 @@ private fun StartChatButton(
                     color = MooiTheme.colorScheme.secondaryBlue700,
                 )
                 Text(
-                    text = "${ticketCount}/${ticketLimit}",
+                    text = "$ticketCount/$ticketLimit",
                     style = MooiTheme.typography.body7,
                     color = MooiTheme.colorScheme.secondaryBlue700,
                 )
                 Icon(
-                    modifier = Modifier
-                        .size(12.dp)
-                        .offset(y = (-7).dp),
+                    modifier =
+                        Modifier
+                            .size(12.dp)
+                            .offset(y = (-7).dp),
                     painter = painterResource(id = R.drawable.ic_question),
                     tint = MooiTheme.colorScheme.gray600,
                     contentDescription = "ticket info",
@@ -554,7 +550,6 @@ class HomeStateProvider(
         )
 }
 
-
 @Preview
 @Composable
 private fun HomeScreenPreview(
@@ -567,22 +562,21 @@ private fun HomeScreenPreview(
     }
 }
 
-
 @PreviewScreenRatios
 @Composable
-private fun HomeScreenPreview2(
-) {
+private fun HomeScreenPreview2() {
     MooiTheme {
         StatelessHomeScreen(
-            state = HomeState(
-                nickname = "찡찡이",
-                roomId = 1,
-                keyCount = 10,
-                ticketCount = 10,
-                newNotificationArrived = true,
-                newTimeCapsuleArrived = true,
-                newReportArrived = true,
-            ),
+            state =
+                HomeState(
+                    nickname = "찡찡이",
+                    roomId = 1,
+                    keyCount = 10,
+                    ticketCount = 10,
+                    newNotificationArrived = true,
+                    newTimeCapsuleArrived = true,
+                    newReportArrived = true,
+                ),
         )
     }
 }
