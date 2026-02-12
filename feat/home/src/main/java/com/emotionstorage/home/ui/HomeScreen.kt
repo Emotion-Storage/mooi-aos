@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -63,6 +65,7 @@ import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.theme.MooiTheme
 import kotlinx.coroutines.launch
 
@@ -94,6 +97,7 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState.collectAsState()
     val snackbarState = remember { SnackbarHostState() }
+    val (snackbarGravity, setSnackbarGravity) = remember { mutableIntStateOf(Gravity.TOP) }
     val (modalState, setModalState) = remember { mutableStateOf<ModalState>(ModalState.None) }
 
     val summary = attendanceState.value.summary
@@ -108,6 +112,7 @@ fun HomeScreen(
         viewModel.container.sideEffectFlow.collect { sideEffect ->
             when (sideEffect) {
                 is HomeSideEffect.TicketNotEnough -> {
+                    setSnackbarGravity(Gravity.TOP)
                     snackbarState.showSnackbar("감정 대화 티켓이 부족해요 😢")
                 }
 
@@ -118,6 +123,7 @@ fun HomeScreen(
                 }
 
                 is BaseSideEffect.NetworkError -> {
+                    setSnackbarGravity(Gravity.TOP)
                     snackbarState.showSnackbar(context.getString(R.string.toast_network_error))
                 }
 
@@ -142,6 +148,8 @@ fun HomeScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
         state = state.value,
+        snackbarGravity = snackbarGravity,
+        setSnackbarGravity = setSnackbarGravity,
         snackbarState = snackbarState,
         setModalState = setModalState,
         onAction = viewModel::onAction,
@@ -207,6 +215,8 @@ private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
+    snackbarGravity: Int = Gravity.TOP,
+    setSnackbarGravity: (Int) -> Unit = {},
     snackbarState: SnackbarHostState = SnackbarHostState(),
     setModalState: (ModalState) -> Unit = {},
     onAction: (HomeAction) -> Unit = {},
@@ -224,7 +234,14 @@ private fun StatelessHomeScreen(
                 .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
         snackbarHost = {
-            AppSnackbarHost(hostState = snackbarState, gravity = Gravity.TOP)
+            AppSnackbarHost(hostState = snackbarState, gravity = snackbarGravity) { message, iconId ->
+                Toast(
+                    message = message,
+                    iconId = iconId,
+                    // padding to prevent bottom overlapping
+                    outerPaddingValues = PaddingValues(bottom = 100.dp),
+                )
+            }
         },
     ) { innerPadding ->
         Box(
@@ -368,6 +385,7 @@ private fun StatelessHomeScreen(
                         setModalState(ModalState.ResumeChat)
                     },
                     onTicketInfoClick = {
+                        setSnackbarGravity(Gravity.BOTTOM)
                         coroutineScope.launch {
                             snackbarState.showSnackbar(
                                 "하루에 최대 10번까지 감정대화를 나눌 수 있어요.\n" +
