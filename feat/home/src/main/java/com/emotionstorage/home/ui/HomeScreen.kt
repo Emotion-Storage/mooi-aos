@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -65,6 +67,7 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 
 private sealed class ModalState {
@@ -216,6 +219,8 @@ private fun StatelessHomeScreen(
     navToDailyReport: (id: Long) -> Unit = { },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         modifier =
             modifier
@@ -356,43 +361,26 @@ private fun StatelessHomeScreen(
                     color = MooiTheme.colorScheme.gray500,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    StartChatButton(
-                        ticketCount = state.ticketCount,
-                        isChatTempSaved = state.isChatTempSaved,
-                        onChatStart = {
-                            onAction(HomeAction.EnterChat)
-                        },
-                        onChatResume = {
-                            setModalState(ModalState.ResumeChat)
-                        },
-                    )
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    ) {
-                        Image(
-                            modifier = Modifier.size(18.dp),
-                            painter = painterResource(id = R.drawable.ic_ticket),
-                            contentDescription = "ticket",
-                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondaryBlue700),
-                        )
-                        Text(
-                            text = "감정 대화 티켓",
-                            style = MooiTheme.typography.body7,
-                            color = MooiTheme.colorScheme.secondaryBlue700,
-                        )
-                        Text(
-                            text = "${state.ticketCount}/${state.ticketLimit}",
-                            style = MooiTheme.typography.body7,
-                            color = MooiTheme.colorScheme.secondaryBlue700,
-                        )
-                    }
-                }
+                StartChatButton(
+                    ticketCount = state.ticketCount,
+
+                    isChatTempSaved = state.isChatTempSaved,
+                    onChatStart = {
+                        onAction(HomeAction.EnterChat)
+                    },
+                    onChatResume = {
+                        setModalState(ModalState.ResumeChat)
+                    },
+                    onTicketInfoClick = {
+                        coroutineScope.launch {
+                            snackbarState.showSnackbar(
+                                "하루에 최대 10번까지 감정대화를 나눌 수 있어요.\n" +
+                                    "자정 이후에는 횟수가 다시 충전돼요."
+                            )
+                        }
+                    },
+                )
             }
         }
     }
@@ -404,82 +392,141 @@ private fun StartChatButton(
     isChatTempSaved: Boolean,
     onChatResume: () -> Unit,
     onChatStart: () -> Unit,
+    onTicketInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
+    ticketLimit: Int = 10,
 ) {
-    val canStartChat = remember(ticketCount, isChatTempSaved) {
-        isChatTempSaved || (ticketCount > 0)
-    }
+    val canStartChat = isChatTempSaved || (ticketCount > 0)
+    val isOnGoingLastChat = isChatTempSaved && ticketCount == 0
 
-    CtaButton(
-        modifier =
-            modifier
-                .width(
-                    if (canStartChat) 198.dp else 197.dp,
-                )
-                .height(
-                    if (canStartChat) 54.dp else 65.dp,
-                ),
-        enabled = canStartChat,
-        onClick = {
-            if (isChatTempSaved) {
-                onChatResume()
-            } else {
-                onChatStart()
-            }
-        },
-        radius = 10,
-        isDefaultHeight = false,
-        isDefaultWidth = false,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        if (canStartChat) {
-            if (isChatTempSaved) {
-                Text(
-                    modifier = Modifier.padding(end = 7.dp),
-                    text = "대화 이어하기",
-                    style = MooiTheme.typography.mainButton,
-                )
-            } else {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
+        // chat start/resume button
+        CtaButton(
+            modifier =
+                modifier
+                    .width(
+                        if (canStartChat) 198.dp else 197.dp,
+                    )
+                    .height(
+                        if (canStartChat) 54.dp else 65.dp,
+                    ),
+            enabled = canStartChat,
+            onClick = {
+                if (isChatTempSaved) {
+                    onChatResume()
+                } else {
+                    onChatStart()
+                }
+            },
+            radius = 10,
+            isDefaultHeight = false,
+            isDefaultWidth = false,
+        ) {
+            if (canStartChat) {
+                if (isChatTempSaved) {
                     Text(
                         modifier = Modifier.padding(end = 7.dp),
+                        text = "대화 이어하기",
+                        style = MooiTheme.typography.mainButton,
+                    )
+                } else {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(end = 7.dp),
+                            text = "대화 시작하기",
+                            style = MooiTheme.typography.mainButton,
+                        )
+                        Icon(
+                            modifier = Modifier.size(18.dp),
+                            painter = painterResource(id = R.drawable.ic_ticket),
+                            contentDescription = "ticket",
+                            tint = Color.White.copy(alpha = 0.7f),
+                        )
+                        Text(
+                            text = "-1",
+                            style = MooiTheme.typography.mainButton,
+                            color = Color.White.copy(alpha = 0.7f),
+                        )
+                    }
+                }
+            } else {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
                         text = "대화 시작하기",
                         style = MooiTheme.typography.mainButton,
                     )
-                    Image(
-                        modifier = Modifier.size(18.dp),
-                        painter = painterResource(id = R.drawable.ic_ticket),
-                        contentDescription = "ticket",
-                        colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
-                    )
                     Text(
-                        text = "-1",
-                        style = MooiTheme.typography.mainButton,
-                        color = Color.White.copy(alpha = 0.7f),
+                        text = "(대화 티켓 부족)",
+                        style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
                     )
                 }
             }
-        } else {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+        }
+
+        // ticket info
+        if (isOnGoingLastChat) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                Text(
-                    text = "대화 시작하기",
-                    style = MooiTheme.typography.mainButton,
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    painter = painterResource(id = R.drawable.ic_caution),
+                    contentDescription = null,
+                    tint = MooiTheme.colorScheme.secondaryBlue700,
                 )
                 Text(
-                    text = "(대화 티켓 부족)",
-                    style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+                    text = "마지막 대화가 진행 중이에요.",
+                    style = MooiTheme.typography.body7,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
+                )
+            }
+        } else {
+            Row(
+                modifier = Modifier.clickable(
+                    onClick = onTicketInfoClick,
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
+            ) {
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(id = R.drawable.ic_ticket),
+                    contentDescription = "ticket",
+                    tint = MooiTheme.colorScheme.secondaryBlue700,
+                )
+                Text(
+                    text = "감정 대화 티켓",
+                    style = MooiTheme.typography.body7,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
+                )
+                Text(
+                    text = "${ticketCount}/${ticketLimit}",
+                    style = MooiTheme.typography.body7,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
+                )
+                Icon(
+                    modifier = Modifier
+                        .size(12.dp)
+                        .offset(y = (-7).dp),
+                    painter = painterResource(id = R.drawable.ic_question),
+                    tint = MooiTheme.colorScheme.gray600,
+                    contentDescription = "ticket info",
                 )
             }
         }
     }
 }
 
-
-internal class HomeStateProvider(
+class HomeStateProvider(
     sampleState: HomeState =
         HomeState(
             nickname = "찡찡이",
