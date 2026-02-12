@@ -65,7 +65,7 @@ fun WhenToUseKeyDialog(
                                 .height(28.dp),
                     ) {
                         Icon(
-                            painter = painterResource(R.drawable.graphic__key),
+                            painter = painterResource(R.drawable.graphic_key),
                             contentDescription = "열쇠",
                             tint = MooiTheme.colorScheme.primaryBlue500,
                             modifier =

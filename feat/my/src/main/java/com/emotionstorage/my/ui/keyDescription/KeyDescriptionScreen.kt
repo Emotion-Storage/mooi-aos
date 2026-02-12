@@ -167,7 +167,7 @@ fun StatelessKeyDescriptionScreen(
 
                 Image(
                     modifier = Modifier.size(157.dp),
-                    painter = painterResource(R.drawable.graphic__key),
+                    painter = painterResource(R.drawable.graphic_key),
                     contentDescription = "열쇠",
                 )
 
