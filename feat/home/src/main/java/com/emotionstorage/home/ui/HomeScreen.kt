@@ -35,12 +35,17 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.emotionstorage.domain.model.ChatEntry
+import com.emotionstorage.domain.model.TimeCapsule
+import com.emotionstorage.domain.model.TimeCapsule.Emotion
 import com.emotionstorage.home.presentation.AttendanceAction
 import com.emotionstorage.home.presentation.AttendanceViewModel
 import com.emotionstorage.home.presentation.HomeAction
@@ -60,13 +65,12 @@ import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
+import java.time.LocalDateTime
 
 private sealed class ModalState {
     object None : ModalState()
 
-    data class ResumeChat(
-        val pendingRoomId: Long,
-    ) : ModalState()
+    object ResumeChat : ModalState()
 
     object LoginSessionExpired : ModalState()
 
@@ -102,19 +106,16 @@ fun HomeScreen(
         attendanceViewModel.onAction(AttendanceAction.Init)
 
         // collect side effect
-        viewModel.container.sideEffectFlow.collect {
-            when (it) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
                 is HomeSideEffect.TicketNotEnough -> {
-                    // todo: 티켓 개수 부족한 경우 에러 처리 - 기획과 상의 필요
                     snackbarState.showSnackbar("감정 대화 티켓이 부족해요 😢")
                 }
 
-                is HomeSideEffect.ShowResumeChatModal -> {
-                    setModalState(ModalState.ResumeChat(it.pendingRoomId))
-                }
-
                 is HomeSideEffect.EnterChatRoom -> {
-                    navToChat(it.roomId, it.entry)
+                    state.value.roomId?.let {
+                        navToChat(it, sideEffect.entry)
+                    }
                 }
 
                 is BaseSideEffect.NetworkError -> {
@@ -143,6 +144,7 @@ fun HomeScreen(
         bottomAppBar = bottomAppBar,
         state = state.value,
         snackbarState = snackbarState,
+        setModalState = setModalState,
         onAction = viewModel::onAction,
         navToKey = navToKey,
         navToAlarm = navToAlarm,
@@ -174,10 +176,10 @@ fun HomeScreen(
                     setModalState(ModalState.None)
                 },
                 onResume = {
-                    viewModel.onAction(HomeAction.ResumeChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.EnterChat)
                 },
                 onDeleteChat = {
-                    viewModel.onAction(HomeAction.DeleteChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.DeleteChat)
                 },
             )
         }
@@ -207,6 +209,7 @@ private fun StatelessHomeScreen(
     bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
     snackbarState: SnackbarHostState = SnackbarHostState(),
+    setModalState: (ModalState) -> Unit = {},
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
@@ -358,9 +361,13 @@ private fun StatelessHomeScreen(
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     StartChatButton(
-                        canStartChat = state.ticketCount > 0,
+                        ticketCount = state.ticketCount,
+                        isChatTempSaved = state.isChatTempSaved,
                         onChatStart = {
                             onAction(HomeAction.EnterChat)
+                        },
+                        onChatResume = {
+                            setModalState(ModalState.ResumeChat)
                         },
                     )
 
@@ -393,44 +400,65 @@ private fun StatelessHomeScreen(
 
 @Composable
 private fun StartChatButton(
+    ticketCount: Int,
+    isChatTempSaved: Boolean,
+    onChatResume: () -> Unit,
+    onChatStart: () -> Unit,
     modifier: Modifier = Modifier,
-    canStartChat: Boolean = true,
-    onChatStart: () -> Unit = {},
 ) {
+    val canStartChat = remember(ticketCount, isChatTempSaved) {
+        isChatTempSaved || (ticketCount > 0)
+    }
+
     CtaButton(
         modifier =
             modifier
                 .width(
                     if (canStartChat) 198.dp else 197.dp,
-                ).height(
+                )
+                .height(
                     if (canStartChat) 54.dp else 65.dp,
                 ),
         enabled = canStartChat,
-        onClick = onChatStart,
+        onClick = {
+            if (isChatTempSaved) {
+                onChatResume()
+            } else {
+                onChatStart()
+            }
+        },
         radius = 10,
         isDefaultHeight = false,
         isDefaultWidth = false,
     ) {
         if (canStartChat) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
+            if (isChatTempSaved) {
                 Text(
                     modifier = Modifier.padding(end = 7.dp),
-                    text = "대화 시작하기",
+                    text = "대화 이어하기",
                     style = MooiTheme.typography.mainButton,
                 )
-                Image(
-                    modifier = Modifier.size(18.dp),
-                    painter = painterResource(id = R.drawable.ic_ticket),
-                    contentDescription = "ticket",
-                    colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
-                )
-                Text(
-                    text = "-1",
-                    style = MooiTheme.typography.mainButton,
-                    color = Color.White.copy(alpha = 0.7f),
-                )
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Text(
+                        modifier = Modifier.padding(end = 7.dp),
+                        text = "대화 시작하기",
+                        style = MooiTheme.typography.mainButton,
+                    )
+                    Image(
+                        modifier = Modifier.size(18.dp),
+                        painter = painterResource(id = R.drawable.ic_ticket),
+                        contentDescription = "ticket",
+                        colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
+                    )
+                    Text(
+                        text = "-1",
+                        style = MooiTheme.typography.mainButton,
+                        color = Color.White.copy(alpha = 0.7f),
+                    )
+                }
             }
         } else {
             Column(
@@ -450,38 +478,64 @@ private fun StartChatButton(
     }
 }
 
-@PreviewScreenRatios
+
+internal class HomeStateProvider(
+    sampleState: HomeState =
+        HomeState(
+            nickname = "찡찡이",
+            roomId = 1,
+            keyCount = 10,
+            ticketCount = 10,
+            newNotificationArrived = true,
+            newTimeCapsuleArrived = true,
+            newReportArrived = true,
+        ),
+) : PreviewParameterProvider<HomeState> {
+    override val values =
+        sequenceOf<HomeState>(
+            sampleState,
+            sampleState.copy(
+                isChatTempSaved = true,
+            ),
+            sampleState.copy(
+                isChatTempSaved = true,
+                ticketCount = 0,
+            ),
+            sampleState.copy(
+                ticketCount = 0,
+            ),
+        )
+}
+
+
+@Preview
 @Composable
-private fun HomeScreenPreview() {
+private fun HomeScreenPreview(
+    @PreviewParameter(HomeStateProvider::class) state: HomeState,
+) {
     MooiTheme {
         StatelessHomeScreen(
-            state =
-                HomeState(
-                    nickname = "찡찡이",
-                    keyCount = 3,
-                    ticketCount = 5,
-                    newNotificationArrived = true,
-                    newTimeCapsuleArrived = true,
-                    newReportArrived = true,
-                ),
+            state = state,
         )
     }
 }
 
+
 @PreviewScreenRatios
 @Composable
-private fun HomeScreenPreview2() {
+private fun HomeScreenPreview2(
+) {
     MooiTheme {
         StatelessHomeScreen(
-            state =
-                HomeState(
-                    nickname = "찡찡이",
-                    keyCount = 3,
-                    ticketCount = 5,
-                    newNotificationArrived = true,
-                    newTimeCapsuleArrived = false,
-                    newReportArrived = false,
-                ),
+            state = HomeState(
+                nickname = "찡찡이",
+                roomId = 1,
+                keyCount = 10,
+                ticketCount = 10,
+                newNotificationArrived = true,
+                newTimeCapsuleArrived = true,
+                newReportArrived = true,
+            ),
         )
     }
 }
