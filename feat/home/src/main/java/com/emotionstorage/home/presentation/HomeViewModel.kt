@@ -94,7 +94,7 @@ class HomeViewModel
                     baseViewModelScope.launch {
                         initChatState()
                     }
-                joinAll(nicknameJob, homeStateJob)
+                joinAll(nicknameJob, homeStateJob, chatStateJob)
                 reduce {
                     state.copy(isLoading = false)
                 }
