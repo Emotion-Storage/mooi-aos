@@ -1,6 +1,5 @@
 package com.emotionstorage.home.presentation
 
-import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.collectDataState
 import com.emotionstorage.domain.model.ChatEntry
 import com.emotionstorage.domain.useCase.chat.DeleteChatRoomUseCase
@@ -21,8 +20,12 @@ data class HomeState(
     val isLoading: Boolean = true,
     val nickname: String = "",
     val keyCount: Int? = null,
+    // chat & ticket info
+    val roomId: Long? = null,
+    val isChatTempSaved: Boolean = false,
     val ticketCount: Int = 0,
-    val ticketLimit: Int = 0,
+    val ticketLimit: Int = 10,
+    // home conditional icon info
     val newNotificationArrived: Boolean = false,
     val newTimeCapsuleArrived: Boolean = false,
     val newReportArrived: Boolean = false,
@@ -34,24 +37,13 @@ sealed class HomeAction {
 
     object EnterChat : HomeAction()
 
-    data class ResumeChat(
-        val roomId: Long,
-    ) : HomeAction()
-
-    data class DeleteChat(
-        val roomId: Long,
-    ) : HomeAction()
+    object DeleteChat : HomeAction()
 }
 
 sealed class HomeSideEffect : BaseSideEffect {
     object TicketNotEnough : HomeSideEffect()
 
-    data class ShowResumeChatModal(
-        val pendingRoomId: Long,
-    ) : HomeSideEffect()
-
     data class EnterChatRoom(
-        val roomId: Long,
         val entry: ChatEntry,
     ) : HomeSideEffect()
 }
@@ -78,12 +70,8 @@ class HomeViewModel
                     handleEnterChat()
                 }
 
-                is HomeAction.ResumeChat -> {
-                    handleEnterPendingChat(action.roomId)
-                }
-
                 is HomeAction.DeleteChat -> {
-                    handleDeletePendingChat(action.roomId)
+                    handleDeletePendingChat()
                 }
             }
         }
@@ -94,15 +82,19 @@ class HomeViewModel
                     state.copy(isLoading = true)
                 }
 
-                val job1 =
+                val nicknameJob =
                     baseViewModelScope.launch {
                         initNickname()
                     }
-                val job2 =
+                val homeStateJob =
                     baseViewModelScope.launch {
                         initHomeState()
                     }
-                joinAll(job1, job2)
+                val chatStateJob =
+                    baseViewModelScope.launch {
+                        initChatState()
+                    }
+                joinAll(nicknameJob, homeStateJob, chatStateJob)
                 reduce {
                     state.copy(isLoading = false)
                 }
@@ -162,47 +154,61 @@ class HomeViewModel
                 )
             }
 
-        private fun handleEnterChat() =
-            baseIntent {
-                if (state.ticketCount <= 0) {
-                    postSideEffect(HomeSideEffect.TicketNotEnough)
-                    return@baseIntent
-                }
-
+        private suspend fun initChatState() =
+            subIntent {
                 getChatRoomSession().handle(
                     onSuccess = { session ->
-                        if (session.isTempSave) {
-                            postSideEffect(HomeSideEffect.ShowResumeChatModal(session.roomId))
-                        } else {
-                            postSideEffect(HomeSideEffect.EnterChatRoom(session.roomId, ChatEntry.New))
+                        reduce {
+                            state.copy(
+                                roomId = session.roomId,
+                                isChatTempSaved = session.isTempSave,
+                            )
                         }
                     },
                     onError = { throwable, code, data ->
-                        Logger.e("HomeViewModel: handleEnterChat error: $throwable $code $data")
-                        if (code == ErrorCode.TICKET_NOT_ENOUGH) {
-                            postSideEffect(HomeSideEffect.TicketNotEnough)
-                        } else {
-                            throw BaseException(
-                                cause = throwable,
-                                code = code,
-                                message = throwable.message ?: "Home enter chat error",
-                            )
+                        reduce {
+                            state.copy(isLoading = false)
                         }
+                        Logger.e("HomeViewModel: init chat state error: $throwable")
+                        throw BaseException(
+                            cause = throwable,
+                            code = code,
+                            message = throwable.message ?: "Home init error",
+                        )
                     },
                 )
             }
 
-        private fun handleEnterPendingChat(roomId: Long) =
+        private fun handleEnterChat() =
             baseIntent {
-                // TODO : 채팅방 불러오기 작업
-                postSideEffect(HomeSideEffect.EnterChatRoom(roomId, ChatEntry.Resume))
+                if (state.roomId == null) {
+                    throw IllegalStateException("chatRoomId is null")
+                }
+
+                if (state.isChatTempSaved) {
+                    postSideEffect(HomeSideEffect.EnterChatRoom(ChatEntry.Resume))
+                } else if (state.ticketCount <= 0) {
+                    postSideEffect(HomeSideEffect.TicketNotEnough)
+                    return@baseIntent
+                } else {
+                    postSideEffect(HomeSideEffect.EnterChatRoom(ChatEntry.New))
+                }
             }
 
-        private fun handleDeletePendingChat(roomId: Long) =
+        private fun handleDeletePendingChat() =
             baseIntent {
-                deleteChatRoom(roomId).handle(
+                if (state.roomId == null) {
+                    throw IllegalStateException("chatRoomId is null")
+                }
+
+                reduce {
+                    state.copy(isLoading = true)
+                }
+                deleteChatRoom(state.roomId!!).handle(
                     onSuccess = {
                         Logger.d("HomeViewModel: exitChatRoom success")
+                        // refresh chat state
+                        initChatState()
                     },
                     onError = { throwable, code, data ->
                         Logger.e("HomeViewModel: exitChatRoom failed $throwable")
@@ -213,5 +219,8 @@ class HomeViewModel
                         )
                     },
                 )
+                reduce {
+                    state.copy(isLoading = false)
+                }
             }
     }
