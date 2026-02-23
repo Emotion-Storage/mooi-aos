@@ -51,7 +51,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun BoxScope.DebugTag()  {
+private fun BoxScope.DebugTag() {
     Box(
         modifier =
             Modifier
