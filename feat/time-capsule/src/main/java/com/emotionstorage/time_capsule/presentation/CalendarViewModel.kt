@@ -5,6 +5,7 @@ import androidx.paging.cachedIn
 import androidx.paging.map
 import com.emotionstorage.domain.common.ErrorCode
 import com.emotionstorage.domain.common.collectDataState
+import com.emotionstorage.domain.useCase.calendar.GetCalendarContentDatesUseCase
 import com.emotionstorage.domain.useCase.dailyReport.GetDailyReportOfDateUseCase
 import com.emotionstorage.domain.useCase.key.GetKeyCountUseCase
 import com.emotionstorage.domain.useCase.timeCapsule.GetHasNewTimeCapsuleUseCase
@@ -19,6 +20,8 @@ import com.orhanobut.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.orbitmvi.orbit.annotation.OrbitExperimental
 import java.time.LocalDate
 import java.time.YearMonth
@@ -35,6 +38,7 @@ data class CalendarState(
     val timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
     val dailyReportId: Long? = null,
     val isNewDailyReport: Boolean = false,
+    val isDailyReportChecked: Boolean = false,
 )
 
 sealed class CalendarAction {
@@ -53,6 +57,12 @@ sealed class CalendarAction {
 
     // reset bottom sheet states
     object ClearBottomSheet : CalendarAction()
+
+    // check item count
+    data class TimeCapsulesLoaded(
+        val date: LocalDate,
+        val itemCount: Int,
+    ) : CalendarAction()
 }
 
 sealed class CalendarSideEffect : BaseSideEffect {
@@ -67,7 +77,11 @@ class CalendarViewModel @Inject constructor(
     private val getTimeCapsuleDates: GetTimeCapsuleDatesUseCase,
     private val getTimeCapsulesOfDate: GetPagedTimeCapsulesOfDateUseCase,
     private val getDailyReportOfDate: GetDailyReportOfDateUseCase,
+    private val getCalendarContentDates: GetCalendarContentDatesUseCase,
 ) : BaseViewModel<CalendarState>(CalendarState()) {
+    private val monthContentDatesCache: MutableMap<YearMonth, Set<LocalDate>> = mutableMapOf()
+    private val cacheMutex = Mutex()
+
     fun onAction(action: CalendarAction) {
         when (action) {
             is CalendarAction.Initiate -> {
@@ -84,6 +98,10 @@ class CalendarViewModel @Inject constructor(
 
             is CalendarAction.ClearBottomSheet -> {
                 handleClearBottomSheet()
+            }
+
+            is CalendarAction.TimeCapsulesLoaded -> {
+                handleTimeCapsulesLoaded(action.date, action.itemCount)
             }
         }
     }
@@ -174,10 +192,16 @@ class CalendarViewModel @Inject constructor(
             require(date in state.calendarTimeCapsuleDates)
 
             reduce {
-                state.copy(calendarSelectedDate = date)
+                state.copy(
+                    calendarSelectedDate = date,
+                    timeCapsulesFlow = null,
+                    dailyReportId = null,
+                    isNewDailyReport = false,
+                    isDailyReportChecked = false,
+                )
             }
+
             setTimeCapsulesFlow(date)
-            setDailyReportState(date)
 
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
         }
@@ -210,6 +234,59 @@ class CalendarViewModel @Inject constructor(
             }
         }
 
+    private fun handleTimeCapsulesLoaded(
+        date: LocalDate,
+        itemCount: Int,
+    ) = baseIntent {
+        if (state.calendarSelectedDate != date) return@baseIntent
+        if (state.isDailyReportChecked) return@baseIntent
+
+        if (itemCount > 0) {
+            setDailyReportState(date)
+            reduce { state.copy(isDailyReportChecked = true) }
+        } else {
+            val ym = YearMonth.from(date)
+            val monthDates = ensureMonthContentDatesCached(ym)
+            val hasDailyReport = monthDates.contains(date)
+
+            if (hasDailyReport) {
+                setDailyReportState(date)
+            } else {
+                reduce {
+                    state.copy(
+                        dailyReportId = null,
+                        isNewDailyReport = false,
+                    )
+                }
+            }
+
+            reduce { state.copy(isDailyReportChecked = true) }
+        }
+    }
+
+    private suspend fun ensureMonthContentDatesCached(yearMonth: YearMonth): Set<LocalDate> {
+        cacheMutex.withLock {
+            val cached = monthContentDatesCache[yearMonth]
+            if (cached != null) return cached
+        }
+
+        val fetched =
+            runCatching {
+                getCalendarContentDates(
+                    year = yearMonth.year,
+                    month = yearMonth.monthValue,
+                )
+            }.getOrElse {
+                emptySet()
+            }
+
+        cacheMutex.withLock {
+            monthContentDatesCache[yearMonth] = fetched
+        }
+
+        return fetched
+    }
+
     private suspend fun setDailyReportState(date: LocalDate) =
         subIntent {
             getDailyReportOfDate(date).handle(
@@ -229,7 +306,6 @@ class CalendarViewModel @Inject constructor(
                             isNewDailyReport = false,
                         )
                     }
-                    // do not throw exception on daily report api fail
                 },
             )
         }

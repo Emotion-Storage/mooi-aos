@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -55,11 +56,24 @@ fun TimeCapsuleBottomSheet(
     timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
     onToggleFavorite: (id: Long, prevFavorite: Boolean) -> Unit = { _, _ -> },
     navToTimeCapsuleDetail: (id: Long) -> Unit = {},
+    onTimeCapsulesLoaded: (date: LocalDate, itemCount: Int) -> Unit = { _, _ -> },
     navToDailyReport: (() -> Unit)? = null,
     isNewDailyReport: Boolean = false,
 ) {
     val lazyTimeCapsules = timeCapsulesFlow?.collectAsLazyPagingItems()
     val dailyReportButtonEnabled = navToDailyReport != null
+
+    if (lazyTimeCapsules != null) {
+        val refresh = lazyTimeCapsules.loadState.refresh
+        val itemCount = lazyTimeCapsules.itemCount
+        val isNotLoading = refresh is LoadState.NotLoading
+
+        LaunchedEffect(date, isNotLoading, itemCount) {
+            if (isNotLoading) {
+                onTimeCapsulesLoaded(date, itemCount)
+            }
+        }
+    }
 
     BottomSheet(
         modifier = modifier,
@@ -107,6 +121,19 @@ fun TimeCapsuleBottomSheet(
                                 onFavoriteClick = { onToggleFavorite(this.id, this.isFavorite) },
                             )
                         }
+                    }
+                } else {
+                    item {
+                        Text(
+                            modifier =
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 24.dp),
+                            text = "이 날은 타임캡슐이 비어있어요.",
+                            style = MooiTheme.typography.body5,
+                            color = MooiTheme.colorScheme.gray600,
+                            textAlign = TextAlign.Center,
+                        )
                     }
                 }
             } else {
