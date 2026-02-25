@@ -313,7 +313,7 @@ private fun StatelessCalendarScreen(
                     },
                     timeCapsuleDates = state.calendarTimeCapsuleDates,
                     onDateSelect = {
-                        if (it in state.calendarTimeCapsuleDates) {
+                        if (it in state.calendarTimeCapsuleDates || it in state.calendarContentDates) {
                             onAction(CalendarAction.OpenCalendarBottomSheet(it))
                         }
                     },

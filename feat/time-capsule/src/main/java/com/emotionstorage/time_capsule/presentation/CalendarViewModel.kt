@@ -33,6 +33,7 @@ data class CalendarState(
     // calendar states
     val calendarYearMonth: YearMonth = YearMonth.now(),
     val calendarTimeCapsuleDates: List<LocalDate> = emptyList(),
+    val calendarContentDates: Set<LocalDate> = emptySet(),
     val calendarSelectedDate: LocalDate? = null,
     // bottom sheet states
     val timeCapsulesFlow: Flow<PagingData<TimeCapsuleItemState>>? = null,
@@ -163,10 +164,12 @@ class CalendarViewModel @Inject constructor(
             collectDataState(
                 flow = getTimeCapsuleDates(yearMonth),
                 onSuccess = { data ->
+                    val contentDates = ensureMonthContentDatesCached(yearMonth)
                     reduce {
                         state.copy(
                             calendarYearMonth = yearMonth,
                             calendarTimeCapsuleDates = data,
+                            calendarContentDates = contentDates,
                         )
                     }
                 },
@@ -189,7 +192,10 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarDate(date: LocalDate) =
         baseIntent {
-            require(date in state.calendarTimeCapsuleDates)
+            val canOpen =
+                (date in state.calendarTimeCapsuleDates) || (date in state.calendarContentDates)
+
+            if (!canOpen) return@baseIntent
 
             reduce {
                 state.copy(
@@ -202,6 +208,7 @@ class CalendarViewModel @Inject constructor(
             }
 
             setTimeCapsulesFlow(date)
+            setDailyReportState(date)
 
             postSideEffect(CalendarSideEffect.ShowTimeCapsuleBottomSheet)
         }
@@ -266,8 +273,7 @@ class CalendarViewModel @Inject constructor(
 
     private suspend fun ensureMonthContentDatesCached(yearMonth: YearMonth): Set<LocalDate> {
         cacheMutex.withLock {
-            val cached = monthContentDatesCache[yearMonth]
-            if (cached != null) return cached
+            monthContentDatesCache[yearMonth]?.let { return it }
         }
 
         val fetched =
