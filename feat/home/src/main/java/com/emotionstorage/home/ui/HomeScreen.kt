@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,18 +17,20 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -35,6 +38,9 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -59,14 +65,14 @@ import com.emotionstorage.ui.component.loading.LoadingOverlay
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarHost
+import com.emotionstorage.ui.component.toast.Toast
 import com.emotionstorage.ui.theme.MooiTheme
+import kotlinx.coroutines.launch
 
 private sealed class ModalState {
     object None : ModalState()
 
-    data class ResumeChat(
-        val pendingRoomId: Long,
-    ) : ModalState()
+    object ResumeChat : ModalState()
 
     object LoginSessionExpired : ModalState()
 
@@ -91,6 +97,7 @@ fun HomeScreen(
     val state = viewModel.container.stateFlow.collectAsState()
     val attendanceState = attendanceViewModel.uiState.collectAsState()
     val snackbarState = remember { SnackbarHostState() }
+    val (snackbarGravity, setSnackbarGravity) = remember { mutableIntStateOf(Gravity.TOP) }
     val (modalState, setModalState) = remember { mutableStateOf<ModalState>(ModalState.None) }
 
     val summary = attendanceState.value.summary
@@ -102,22 +109,21 @@ fun HomeScreen(
         attendanceViewModel.onAction(AttendanceAction.Init)
 
         // collect side effect
-        viewModel.container.sideEffectFlow.collect {
-            when (it) {
+        viewModel.container.sideEffectFlow.collect { sideEffect ->
+            when (sideEffect) {
                 is HomeSideEffect.TicketNotEnough -> {
-                    // todo: 티켓 개수 부족한 경우 에러 처리 - 기획과 상의 필요
+                    setSnackbarGravity(Gravity.TOP)
                     snackbarState.showSnackbar("감정 대화 티켓이 부족해요 😢")
                 }
 
-                is HomeSideEffect.ShowResumeChatModal -> {
-                    setModalState(ModalState.ResumeChat(it.pendingRoomId))
-                }
-
                 is HomeSideEffect.EnterChatRoom -> {
-                    navToChat(it.roomId, it.entry)
+                    state.value.roomId?.let {
+                        navToChat(it, sideEffect.entry)
+                    }
                 }
 
                 is BaseSideEffect.NetworkError -> {
+                    setSnackbarGravity(Gravity.TOP)
                     snackbarState.showSnackbar(context.getString(R.string.toast_network_error))
                 }
 
@@ -142,7 +148,10 @@ fun HomeScreen(
         modifier = modifier,
         bottomAppBar = bottomAppBar,
         state = state.value,
+        snackbarGravity = snackbarGravity,
+        setSnackbarGravity = setSnackbarGravity,
         snackbarState = snackbarState,
+        setModalState = setModalState,
         onAction = viewModel::onAction,
         navToKey = navToKey,
         navToAlarm = navToAlarm,
@@ -174,10 +183,10 @@ fun HomeScreen(
                     setModalState(ModalState.None)
                 },
                 onResume = {
-                    viewModel.onAction(HomeAction.ResumeChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.EnterChat)
                 },
                 onDeleteChat = {
-                    viewModel.onAction(HomeAction.DeleteChat(modalState.pendingRoomId))
+                    viewModel.onAction(HomeAction.DeleteChat)
                 },
             )
         }
@@ -206,13 +215,18 @@ private fun StatelessHomeScreen(
     modifier: Modifier = Modifier,
     bottomAppBar: @Composable () -> Unit = {},
     state: HomeState = HomeState(),
+    snackbarGravity: Int = Gravity.TOP,
+    setSnackbarGravity: (Int) -> Unit = {},
     snackbarState: SnackbarHostState = SnackbarHostState(),
+    setModalState: (ModalState) -> Unit = {},
     onAction: (HomeAction) -> Unit = {},
     navToKey: () -> Unit = {},
     navToAlarm: () -> Unit = {},
     navToDailyReport: (id: Long) -> Unit = { },
     navToArrivedTimeCapsules: () -> Unit = {},
 ) {
+    val coroutineScope = rememberCoroutineScope()
+
     Scaffold(
         modifier =
             modifier
@@ -220,7 +234,14 @@ private fun StatelessHomeScreen(
                 .background(MooiTheme.colorScheme.backgroundDefault),
         bottomBar = bottomAppBar,
         snackbarHost = {
-            AppSnackbarHost(hostState = snackbarState, gravity = Gravity.TOP)
+            AppSnackbarHost(hostState = snackbarState, gravity = snackbarGravity) { message, iconId ->
+                Toast(
+                    message = message,
+                    iconId = iconId,
+                    // padding to prevent bottom overlapping
+                    outerPaddingValues = PaddingValues(bottom = 100.dp),
+                )
+            }
         },
     ) { innerPadding ->
         Box(
@@ -353,39 +374,26 @@ private fun StatelessHomeScreen(
                     color = MooiTheme.colorScheme.gray500,
                 )
                 Spacer(modifier = Modifier.height(20.dp))
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
-                ) {
-                    StartChatButton(
-                        canStartChat = state.ticketCount > 0,
-                        onChatStart = {
-                            onAction(HomeAction.EnterChat)
-                        },
-                    )
 
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(5.dp),
-                    ) {
-                        Image(
-                            modifier = Modifier.size(18.dp),
-                            painter = painterResource(id = R.drawable.ic_ticket),
-                            contentDescription = "ticket",
-                            colorFilter = ColorFilter.tint(MooiTheme.colorScheme.secondaryBlue700),
-                        )
-                        Text(
-                            text = "감정 대화 티켓",
-                            style = MooiTheme.typography.body7,
-                            color = MooiTheme.colorScheme.secondaryBlue700,
-                        )
-                        Text(
-                            text = "${state.ticketCount}/${state.ticketLimit}",
-                            style = MooiTheme.typography.body7,
-                            color = MooiTheme.colorScheme.secondaryBlue700,
-                        )
-                    }
-                }
+                StartChatButton(
+                    ticketCount = state.ticketCount,
+                    isChatTempSaved = state.isChatTempSaved,
+                    onChatStart = {
+                        onAction(HomeAction.EnterChat)
+                    },
+                    onChatResume = {
+                        setModalState(ModalState.ResumeChat)
+                    },
+                    onTicketInfoClick = {
+                        setSnackbarGravity(Gravity.BOTTOM)
+                        coroutineScope.launch {
+                            snackbarState.showSnackbar(
+                                "하루에 최대 ${state.ticketLimit}번까지 감정대화를 나눌 수 있어요.\n" +
+                                    "자정 이후에는 횟수가 다시 충전돼요.",
+                            )
+                        }
+                    },
+                )
             }
         }
     }
@@ -393,77 +401,181 @@ private fun StatelessHomeScreen(
 
 @Composable
 private fun StartChatButton(
+    ticketCount: Int,
+    isChatTempSaved: Boolean,
+    onChatResume: () -> Unit,
+    onChatStart: () -> Unit,
+    onTicketInfoClick: () -> Unit,
     modifier: Modifier = Modifier,
-    canStartChat: Boolean = true,
-    onChatStart: () -> Unit = {},
+    ticketLimit: Int = 10,
 ) {
-    CtaButton(
-        modifier =
-            modifier
-                .width(
-                    if (canStartChat) 198.dp else 197.dp,
-                ).height(
-                    if (canStartChat) 54.dp else 65.dp,
-                ),
-        enabled = canStartChat,
-        onClick = onChatStart,
-        radius = 10,
-        isDefaultHeight = false,
-        isDefaultWidth = false,
+    val canStartChat = isChatTempSaved || (ticketCount > 0)
+    val isOnGoingLastChat = isChatTempSaved && ticketCount == 0
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        if (canStartChat) {
+        // chat start/resume button
+        CtaButton(
+            modifier =
+                modifier
+                    .width(
+                        if (canStartChat) 198.dp else 197.dp,
+                    ).height(
+                        if (canStartChat) 54.dp else 65.dp,
+                    ),
+            enabled = canStartChat,
+            onClick = {
+                if (isChatTempSaved) {
+                    onChatResume()
+                } else {
+                    onChatStart()
+                }
+            },
+            radius = 10,
+            isDefaultHeight = false,
+            isDefaultWidth = false,
+        ) {
+            if (canStartChat) {
+                if (isChatTempSaved) {
+                    Text(
+                        modifier = Modifier.padding(end = 7.dp),
+                        text = "대화 이어하기",
+                        style = MooiTheme.typography.mainButton,
+                    )
+                } else {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(end = 7.dp),
+                            text = "대화 시작하기",
+                            style = MooiTheme.typography.mainButton,
+                        )
+                        Icon(
+                            modifier = Modifier.size(18.dp),
+                            painter = painterResource(id = R.drawable.ic_ticket),
+                            contentDescription = "ticket",
+                            tint = Color.White.copy(alpha = 0.7f),
+                        )
+                        Text(
+                            text = "-1",
+                            style = MooiTheme.typography.mainButton,
+                            color = Color.White.copy(alpha = 0.7f),
+                        )
+                    }
+                }
+            } else {
+                Column(
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Text(
+                        text = "대화 시작하기",
+                        style = MooiTheme.typography.mainButton,
+                    )
+                    Text(
+                        text = "(대화 티켓 부족)",
+                        style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+                    )
+                }
+            }
+        }
+
+        // ticket info
+        if (isOnGoingLastChat) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                Text(
-                    modifier = Modifier.padding(end = 7.dp),
-                    text = "대화 시작하기",
-                    style = MooiTheme.typography.mainButton,
-                )
-                Image(
-                    modifier = Modifier.size(18.dp),
-                    painter = painterResource(id = R.drawable.ic_ticket),
-                    contentDescription = "ticket",
-                    colorFilter = ColorFilter.tint(Color.White.copy(alpha = 0.7f)),
+                Icon(
+                    modifier = Modifier.size(16.dp),
+                    painter = painterResource(id = R.drawable.ic_caution),
+                    contentDescription = null,
+                    tint = MooiTheme.colorScheme.secondaryBlue700,
                 )
                 Text(
-                    text = "-1",
-                    style = MooiTheme.typography.mainButton,
-                    color = Color.White.copy(alpha = 0.7f),
+                    text = "마지막 대화가 진행 중이에요.",
+                    style = MooiTheme.typography.body7,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
                 )
             }
         } else {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+            Row(
+                modifier =
+                    Modifier.clickable(
+                        onClick = onTicketInfoClick,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(5.dp),
             ) {
-                Text(
-                    text = "대화 시작하기",
-                    style = MooiTheme.typography.mainButton,
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    painter = painterResource(id = R.drawable.ic_ticket),
+                    contentDescription = "ticket",
+                    tint = MooiTheme.colorScheme.secondaryBlue700,
                 )
                 Text(
-                    text = "(대화 티켓 부족)",
-                    style = MooiTheme.typography.body4.copy(lineHeight = 20.sp),
+                    text = "감정 대화 티켓",
+                    style = MooiTheme.typography.body7,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
+                )
+                Text(
+                    text = "$ticketCount/$ticketLimit",
+                    style = MooiTheme.typography.body7,
+                    color = MooiTheme.colorScheme.secondaryBlue700,
+                )
+                Icon(
+                    modifier =
+                        Modifier
+                            .size(12.dp)
+                            .offset(y = (-7).dp),
+                    painter = painterResource(id = R.drawable.ic_question),
+                    tint = MooiTheme.colorScheme.gray600,
+                    contentDescription = "ticket info",
                 )
             }
         }
     }
 }
 
-@PreviewScreenRatios
+class HomeStateProvider(
+    sampleState: HomeState =
+        HomeState(
+            nickname = "찡찡이",
+            roomId = 1,
+            keyCount = 10,
+            ticketCount = 10,
+            newNotificationArrived = true,
+            newTimeCapsuleArrived = true,
+            newReportArrived = true,
+        ),
+) : PreviewParameterProvider<HomeState> {
+    override val values =
+        sequenceOf<HomeState>(
+            sampleState,
+            sampleState.copy(
+                isChatTempSaved = true,
+            ),
+            sampleState.copy(
+                isChatTempSaved = true,
+                ticketCount = 0,
+            ),
+            sampleState.copy(
+                ticketCount = 0,
+            ),
+        )
+}
+
+@Preview
 @Composable
-private fun HomeScreenPreview() {
+private fun HomeScreenPreview(
+    @PreviewParameter(HomeStateProvider::class) state: HomeState,
+) {
     MooiTheme {
         StatelessHomeScreen(
-            state =
-                HomeState(
-                    nickname = "찡찡이",
-                    keyCount = 3,
-                    ticketCount = 5,
-                    newNotificationArrived = true,
-                    newTimeCapsuleArrived = true,
-                    newReportArrived = true,
-                ),
+            state = state,
         )
     }
 }
@@ -476,11 +588,12 @@ private fun HomeScreenPreview2() {
             state =
                 HomeState(
                     nickname = "찡찡이",
-                    keyCount = 3,
-                    ticketCount = 5,
+                    roomId = 1,
+                    keyCount = 10,
+                    ticketCount = 10,
                     newNotificationArrived = true,
-                    newTimeCapsuleArrived = false,
-                    newReportArrived = false,
+                    newTimeCapsuleArrived = true,
+                    newReportArrived = true,
                 ),
         )
     }
