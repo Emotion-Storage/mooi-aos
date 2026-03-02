@@ -279,12 +279,14 @@ class CalendarViewModel @Inject constructor(
             monthContentDatesCache[yearMonth]?.let { return it }
         }
 
-        val fetched =
+        val fetchedResult =
             runCatching {
                 getCalendarContentDates(year = yearMonth.year, month = yearMonth.monthValue)
             }.onFailure { e ->
                 Logger.e("get calendar content date failed", e)
-            }.getOrElse { emptySet() }
+            }
+
+        val fetched = fetchedResult.getOrNull() ?: return emptySet()
 
         cacheMutex.withLock {
             monthContentDatesCache[yearMonth] = fetched
