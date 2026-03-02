@@ -128,7 +128,8 @@ fun TimeCapsuleBottomSheet(
                             modifier =
                                 Modifier
                                     .fillMaxWidth()
-                                    .padding(vertical = 24.dp),
+                                    .padding(top = 24.dp)
+                                    .align(Alignment.CenterHorizontally),
                             text = "이 날은 타임캡슐이 비어있어요.",
                             style = MooiTheme.typography.body5,
                             color = MooiTheme.colorScheme.gray600,

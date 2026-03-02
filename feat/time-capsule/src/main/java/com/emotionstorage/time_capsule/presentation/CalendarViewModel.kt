@@ -161,10 +161,11 @@ class CalendarViewModel @Inject constructor(
 
     private fun handleSelectCalendarYearMonth(yearMonth: YearMonth) =
         baseIntent {
+            val contentDates = ensureMonthContentDatesCached(yearMonth)
+
             collectDataState(
                 flow = getTimeCapsuleDates(yearMonth),
                 onSuccess = { data ->
-                    val contentDates = ensureMonthContentDatesCached(yearMonth)
                     reduce {
                         state.copy(
                             calendarYearMonth = yearMonth,
@@ -179,6 +180,7 @@ class CalendarViewModel @Inject constructor(
                         state.copy(
                             calendarYearMonth = yearMonth,
                             calendarTimeCapsuleDates = emptyList(),
+                            calendarContentDates = contentDates,
                         )
                     }
                     throw BaseException(
@@ -272,19 +274,18 @@ class CalendarViewModel @Inject constructor(
     }
 
     private suspend fun ensureMonthContentDatesCached(yearMonth: YearMonth): Set<LocalDate> {
+        Logger.d("ensureMonthContentDatesCached: $yearMonth")
         cacheMutex.withLock {
             monthContentDatesCache[yearMonth]?.let { return it }
         }
 
         val fetched =
             runCatching {
-                getCalendarContentDates(
-                    year = yearMonth.year,
-                    month = yearMonth.monthValue,
-                )
-            }.getOrElse {
-                emptySet()
-            }
+                Logger.d("CAL_TRACE: calling /calendar/date ym=$yearMonth")
+                getCalendarContentDates(year = yearMonth.year, month = yearMonth.monthValue)
+            }.onFailure { e ->
+                Logger.e("CAL_TRACE: /calendar/date failed", e)
+            }.getOrElse { emptySet() }
 
         cacheMutex.withLock {
             monthContentDatesCache[yearMonth] = fetched

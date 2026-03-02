@@ -311,11 +311,12 @@ private fun StatelessCalendarScreen(
                     onDropDownIconClick = {
                         setSheetState(SheetState.YearMonth)
                     },
-                    timeCapsuleDates = state.calendarTimeCapsuleDates,
+                    timeCapsuleDates =
+                        (state.calendarTimeCapsuleDates + state.calendarContentDates.toList())
+                            .distinct()
+                            .sorted(),
                     onDateSelect = {
-                        if (it in state.calendarTimeCapsuleDates || it in state.calendarContentDates) {
-                            onAction(CalendarAction.OpenCalendarBottomSheet(it))
-                        }
+                        onAction(CalendarAction.OpenCalendarBottomSheet(it))
                     },
                 )
             }
