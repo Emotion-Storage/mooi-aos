@@ -281,10 +281,9 @@ class CalendarViewModel @Inject constructor(
 
         val fetched =
             runCatching {
-                Logger.d("CAL_TRACE: calling /calendar/date ym=$yearMonth")
                 getCalendarContentDates(year = yearMonth.year, month = yearMonth.monthValue)
             }.onFailure { e ->
-                Logger.e("CAL_TRACE: /calendar/date failed", e)
+                Logger.e("get calendar content date failed", e)
             }.getOrElse { emptySet() }
 
         cacheMutex.withLock {
