@@ -2,6 +2,7 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.data.dataSource.remote.AttendanceRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.AuthRemoteDataSource
+import com.emotionstorage.data.dataSource.remote.CalendarRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.ChatWebSocketDataSource
 import com.emotionstorage.data.dataSource.remote.DailyReportRemoteDataSource
@@ -16,6 +17,7 @@ import com.emotionstorage.data.dataSource.remote.TimeCapsuleRemoteDataSource
 import com.emotionstorage.data.dataSource.remote.UserRemoteDataSource
 import com.emotionstorage.remote.dataSourceImpl.AttendanceRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.AuthRemoteDataSourceImpl
+import com.emotionstorage.remote.dataSourceImpl.CalendarRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.ChatRemoteDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.ChatWebSocketSDataSourceImpl
 import com.emotionstorage.remote.dataSourceImpl.DailyReportRemoteDataSourceImpl
@@ -94,4 +96,8 @@ abstract class RemoteDataSourceModule {
     @Binds
     @Singleton
     abstract fun bindChatWSDataSource(impl: ChatWebSocketSDataSourceImpl): ChatWebSocketDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindCalendarRemoteDataSource(impl: CalendarRemoteDataSourceImpl): CalendarRemoteDataSource
 }

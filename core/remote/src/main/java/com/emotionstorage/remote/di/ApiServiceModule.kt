@@ -2,6 +2,7 @@ package com.emotionstorage.remote.di
 
 import com.emotionstorage.remote.api.AttendanceApiService
 import com.emotionstorage.remote.api.AuthApiService
+import com.emotionstorage.remote.api.CalendarApiService
 import com.emotionstorage.remote.api.ChatApiService
 import com.emotionstorage.remote.api.DailyReportApiService
 import com.emotionstorage.remote.api.FcmApiService
@@ -63,4 +64,9 @@ object ApiServiceModule {
     @Singleton
     @Provides
     fun provideChatApiService(retrofit: Retrofit): ChatApiService = retrofit.create(ChatApiService::class.java)
+
+    @Singleton
+    @Provides
+    fun provideCalendarApiService(retrofit: Retrofit): CalendarApiService =
+        retrofit.create(CalendarApiService::class.java)
 }

@@ -52,16 +52,16 @@ import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.Sho
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteSideEffect.ShowFavoriteSuccessToast
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteState
 import com.emotionstorage.time_capsule.presentation.ToggleFavoriteViewModel
-import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
-import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.time_capsule.ui.component.TimeCapsuleBottomSheet
+import com.emotionstorage.time_capsule.ui.component.TimeCapsuleCalendar
 import com.emotionstorage.ui.R
 import com.emotionstorage.ui.annotation.PreviewScreenRatios
-import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.component.IconWithCount
+import com.emotionstorage.ui.component.bottomSheet.YearMonthPickerBottomSheet
 import com.emotionstorage.ui.component.modal.LoginSessionExpiredModal
 import com.emotionstorage.ui.component.modal.TempErrorModal
 import com.emotionstorage.ui.component.toast.AppSnackbarController
+import com.emotionstorage.ui.component.toast.AppSnackbarHost
 import com.emotionstorage.ui.theme.MooiTheme
 import com.emotionstorage.ui.util.subBackground
 import kotlinx.coroutines.flow.map
@@ -311,11 +311,12 @@ private fun StatelessCalendarScreen(
                     onDropDownIconClick = {
                         setSheetState(SheetState.YearMonth)
                     },
-                    timeCapsuleDates = state.calendarTimeCapsuleDates,
+                    timeCapsuleDates =
+                        (state.calendarTimeCapsuleDates + state.calendarContentDates.toList())
+                            .distinct()
+                            .sorted(),
                     onDateSelect = {
-                        if (it in state.calendarTimeCapsuleDates) {
-                            onAction(CalendarAction.OpenCalendarBottomSheet(it))
-                        }
+                        onAction(CalendarAction.OpenCalendarBottomSheet(it))
                     },
                 )
             }
@@ -381,6 +382,9 @@ private fun StatelessCalendarScreen(
                                     }
                                 },
                             isNewDailyReport = state.isNewDailyReport,
+                            onTimeCapsulesLoaded = { date, itemCount ->
+                                onAction(CalendarAction.TimeCapsulesLoaded(date, itemCount))
+                            },
                         )
                     }
                 }
