@@ -20,8 +20,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ReissueApiServiceModule {
     private val BASE_URL =
-        if (BuildConfig.DEBUG) ("http://" + BuildConfig.MOOI_DEV_SERVER_URL)
-        else ("https://" + BuildConfig.MOOI_PROD_SERVER_URL)
+        "https://${if (BuildConfig.DEBUG) BuildConfig.MOOI_DEV_SERVER_URL else BuildConfig.MOOI_PROD_SERVER_URL}/"
     private const val TIMEOUT = 20L
 
     /**
